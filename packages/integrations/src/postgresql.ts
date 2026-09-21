@@ -3,6 +3,7 @@ import {
   evidence,
   existingEnvKeys,
   notDetected,
+  textDeclaresPythonPackage,
   type DetectionContext,
   type DetectionResult,
   type VerificationContext,
@@ -11,6 +12,8 @@ import {
 
 import { DATABASE_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
+import { pythonManifestText } from "./python-detect.js";
+import { supportsNodeOrPython } from "./python-support.js";
 import { failVerify, mergeVerify } from "./verify.js";
 
 export const postgresqlIntegration = defineIntegration({
@@ -25,19 +28,19 @@ export const postgresqlIntegration = defineIntegration({
   verification: { verifiedAt: "2026-09-22" },
   conflicts: DATABASE_CONFLICTS,
   supports(context) {
-    if (context.runtimeId !== "node") {
-      return { supported: false, reason: "This phase supports PostgreSQL with Node.js only." };
-    }
-
-    return { supported: true };
+    return supportsNodeOrPython(context);
   },
   async detect(context: DetectionContext): Promise<DetectionResult> {
     const schema = await context.files.readText("prisma/schema.prisma");
     const hasProvider = schema !== undefined && /provider\s*=\s*"postgresql"/.test(schema);
     const envExample = await context.files.readText(".env.example");
     const hasUrl = envExample !== undefined && /DATABASE_URL\s*=\s*"?postgresql:/.test(envExample);
+    const sqlalchemyDeclared = textDeclaresPythonPackage(
+      await pythonManifestText(context),
+      "SQLAlchemy",
+    );
 
-    if (!hasProvider && !hasUrl) {
+    if (!hasProvider && !hasUrl && !sqlalchemyDeclared) {
       return notDetected();
     }
 
@@ -56,8 +59,11 @@ export const postgresqlIntegration = defineIntegration({
         evidence("file", ".env.example documents a postgresql: DATABASE_URL", ".env.example"),
       );
     }
+    if (sqlalchemyDeclared) {
+      items.push(evidence("dependency", "project declares SQLAlchemy", "pyproject.toml"));
+    }
 
-    return detectedResult(hasProvider ? "certain" : "likely", items);
+    return detectedResult(hasProvider || hasUrl ? "certain" : "likely", items);
   },
   plan() {
     return [
@@ -76,7 +82,7 @@ export const postgresqlIntegration = defineIntegration({
             placeholder: "postgresql://USER:PASSWORD@localhost:5432/DATABASE?schema=public",
           },
         ],
-        description: "Document the Prisma PostgreSQL DATABASE_URL placeholder",
+        description: "Document the PostgreSQL DATABASE_URL placeholder",
       },
     ];
   },

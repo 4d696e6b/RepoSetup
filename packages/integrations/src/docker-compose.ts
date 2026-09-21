@@ -12,6 +12,7 @@ import {
 import { defineIntegration } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
 import { hasSelectedIntegration } from "./operations.js";
+import { supportsNodeOrPython } from "./python-support.js";
 import { missingAnyFile } from "./verify.js";
 
 const COMPOSE_PATHS = [
@@ -55,8 +56,9 @@ export const dockerComposeIntegration = defineIntegration({
     },
   ],
   supports(context) {
-    if (context.runtimeId !== "node") {
-      return { supported: false, reason: "This phase supports Compose for Node.js projects." };
+    const runtime = supportsNodeOrPython(context);
+    if (!runtime.supported) {
+      return runtime;
     }
 
     if (!context.integrationIds.includes("postgresql")) {

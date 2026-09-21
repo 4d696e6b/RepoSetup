@@ -7,6 +7,7 @@ import {
 } from "@reposetup/core";
 
 import { defineIntegration } from "./define.js";
+import { supportsNodeOrPython } from "./python-support.js";
 
 export const dockerIntegration = defineIntegration({
   id: "docker",
@@ -18,11 +19,7 @@ export const dockerIntegration = defineIntegration({
   keywords: ["container", "infrastructure"],
   verification: { verifiedAt: "2026-09-22" },
   supports(context) {
-    if (context.runtimeId !== "node") {
-      return { supported: false, reason: "This phase documents Docker for Node.js projects." };
-    }
-
-    return { supported: true };
+    return supportsNodeOrPython(context);
   },
   async detect(context: DetectionContext): Promise<DetectionResult> {
     const dockerfile = await context.files.exists("Dockerfile");
