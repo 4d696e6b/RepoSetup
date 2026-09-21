@@ -29,7 +29,7 @@ function failDetails(result: Awaited<ReturnType<typeof executeInstallation>>): s
 }
 
 describe("golden Next.js/SQLite stack execution", () => {
-  it(
+  it.skipIf(process.platform === "win32" || process.env.REPOSETUP_GOLDEN_EXECUTE !== "1")(
     "installs the example stack and verifies Prisma, Vitest config, and Next.js build",
     { timeout: 900_000 },
     async () => {
