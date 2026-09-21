@@ -1,6 +1,7 @@
 import type { RepoSetupConfig } from "../config/types.js";
 import type { IntegrationDefinition, SupportContext } from "../integrations/definition.js";
 import { collectConflicts } from "./conflicts.js";
+import { includeRegisteredContextIntegrations } from "./context-integrations.js";
 import { sortSelectedIntegrations } from "./graph.js";
 import { normalizeConfig } from "./normalize.js";
 import { collectRecommendations } from "./recommendations.js";
@@ -12,17 +13,22 @@ import type { ResolutionResult, ResolvedIntegration } from "./types.js";
 
 export function resolveConfig(config: RepoSetupConfig, registry: RegistryLookup): ResolutionResult {
   const normalized = normalizeConfig(config);
-  const definitions = lookUpDefinitions(normalized.selected, registry);
-  const supportContext = supportContextFrom(normalized.config, normalized.selected);
+  const selected = includeRegisteredContextIntegrations(
+    normalized.config,
+    normalized.selected,
+    registry,
+  );
+  const definitions = lookUpDefinitions(selected, registry);
+  const supportContext = supportContextFrom(normalized.config, selected);
 
   const errors = [
-    ...collectUnknownIntegrations(normalized.selected, definitions),
-    ...collectMissingRequirements(normalized.selected, definitions),
-    ...collectConflicts(normalized.selected, definitions),
-    ...collectUnsupportedContexts(normalized.selected, definitions, supportContext),
+    ...collectUnknownIntegrations(selected, definitions),
+    ...collectMissingRequirements(selected, definitions),
+    ...collectConflicts(selected, definitions),
+    ...collectUnsupportedContexts(selected, definitions, supportContext),
   ];
 
-  const warnings = collectRecommendations(normalized.selected, definitions);
+  const warnings = collectRecommendations(selected, definitions);
   const sortedErrors = sortResolutionErrors(errors);
   const sortedWarnings = sortResolutionWarnings(warnings);
 
@@ -37,7 +43,7 @@ export function resolveConfig(config: RepoSetupConfig, registry: RegistryLookup)
     };
   }
 
-  const sorted = sortSelectedIntegrations(normalized.selected, definitions);
+  const sorted = sortSelectedIntegrations(selected, definitions);
   if (!sorted.ok) {
     return {
       valid: false,
@@ -53,7 +59,7 @@ export function resolveConfig(config: RepoSetupConfig, registry: RegistryLookup)
     valid: true,
     config: normalized.config,
     orderedIntegrations: sorted.order.map((id) =>
-      toResolvedIntegration(id, definitions.get(id), normalized.selected),
+      toResolvedIntegration(id, definitions.get(id), selected),
     ),
     warnings: sortedWarnings,
     errors: [],

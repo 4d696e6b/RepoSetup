@@ -39,6 +39,18 @@ describe("pnpmAdapter", () => {
     expectArgs(result, ["add", "--save-dev", "vitest"]);
   });
 
+  it("adds an exact version pin with --save-exact", () => {
+    const result = pnpmAdapter.add({
+      packages: ["prettier"],
+      cwd: ".",
+      description: "Install Prettier",
+      dev: true,
+      exact: true,
+    });
+
+    expectArgs(result, ["add", "--save-dev", "--save-exact", "prettier"]);
+  });
+
   it("installs the project with pnpm install", () => {
     const result = pnpmAdapter.install({
       cwd: ".",

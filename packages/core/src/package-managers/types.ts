@@ -8,6 +8,7 @@ export interface AddPackagesRequest {
   cwd: ProjectRelativePath;
   description: string;
   dev?: boolean;
+  exact?: boolean;
 }
 
 export interface InstallProjectRequest {

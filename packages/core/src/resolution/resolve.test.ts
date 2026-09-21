@@ -266,4 +266,17 @@ describe("resolveConfig", () => {
       { id: "fake-db", options: { engine: "sqlite" } },
     ]);
   });
+
+  it("includes registered runtime and package-manager integrations from config", () => {
+    const node = fakeIntegration({ id: "node", category: "runtime" });
+    const pnpm = fakeIntegration({ id: "pnpm", category: "package-manager" });
+    const result = resolveConfig(config(), lookup([framework, node, pnpm]));
+
+    expect(result.valid).toBe(true);
+    expect(result.orderedIntegrations.map((item) => item.id)).toEqual([
+      "fake-framework",
+      "node",
+      "pnpm",
+    ]);
+  });
 });

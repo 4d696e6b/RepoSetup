@@ -202,6 +202,9 @@ importers:
       '@reposetup/core':
         specifier: workspace:*
         version: link:../core
+      '@reposetup/integrations':
+        specifier: workspace:*
+        version: link:../integrations
       '@reposetup/registry':
         specifier: workspace:*
         version: link:../registry
@@ -242,6 +245,16 @@ importers:
         version: 5.0.1(@types/node@22.20.4)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.27.7))
 
   packages/integrations:
+    dependencies:
+      '@reposetup/core':
+        specifier: workspace:*
+        version: link:../core
+      '@reposetup/registry':
+        specifier: workspace:*
+        version: link:../registry
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
     devDependencies:
       '@types/node':
         specifier: ^22.20.4

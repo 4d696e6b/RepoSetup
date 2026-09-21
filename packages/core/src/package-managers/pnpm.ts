@@ -1,5 +1,6 @@
-import type { AddPackagesRequest, InstallProjectRequest, PackageManagerAdapter } from "./types.js";
+import { pnpmAddArgs } from "./add-args.js";
 import { createPackageManagerCommand } from "./command.js";
+import type { AddPackagesRequest, InstallProjectRequest, PackageManagerAdapter } from "./types.js";
 import { validateCwd, validatePackageSpecs } from "./validate.js";
 
 /**
@@ -26,13 +27,11 @@ export const pnpmAdapter: PackageManagerAdapter = {
       return { ok: false, error: specError };
     }
 
-    const args = request.dev === true ? ["add", "--save-dev"] : ["add"];
-
     return {
       ok: true,
       operation: createPackageManagerCommand({
         command: "pnpm",
-        args: [...args, ...request.packages],
+        args: pnpmAddArgs(request),
         cwd: request.cwd,
         description: request.description,
       }),

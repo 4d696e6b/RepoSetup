@@ -39,6 +39,18 @@ describe("npmAdapter", () => {
     expectArgs(result, "npm", ["install", "--save-dev", "vitest"]);
   });
 
+  it("adds an exact version pin with --save-exact", () => {
+    const result = npmAdapter.add({
+      packages: ["prettier"],
+      cwd: ".",
+      description: "Install Prettier",
+      dev: true,
+      exact: true,
+    });
+
+    expectArgs(result, "npm", ["install", "--save-dev", "--save-exact", "prettier"]);
+  });
+
   it("installs the project from the lockfile with npm install", () => {
     const result = npmAdapter.install({
       cwd: ".",
