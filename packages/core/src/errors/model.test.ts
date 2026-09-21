@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { ERROR_CODES } from "./codes.js";
 import { createRepoSetupError, isRepoSetupError } from "./model.js";
 
 describe("RepoSetupError", () => {
@@ -28,5 +29,9 @@ describe("RepoSetupError", () => {
 
     expect("details" in error).toBe(false);
     expect("suggestion" in error).toBe(false);
+  });
+
+  it("includes duplicate integration as a stable error code", () => {
+    expect(ERROR_CODES).toContain("DUPLICATE_INTEGRATION");
   });
 });

@@ -13,7 +13,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --clean --sourcemap",
+    "build": "tsup src/index.ts --format esm --dts --clean --sourcemap --external @reposetup/core",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -22,5 +22,8 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^5.0.1"
+  },
+  "dependencies": {
+    "@reposetup/core": "workspace:*"
   }
 }
