@@ -2,6 +2,8 @@
   "name": "@reposetup/registry",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
+  "description": "RepoSetup integration registry lookup and validation.",
   "type": "module",
   "exports": {
     ".": {

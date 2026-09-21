@@ -1,95 +1,105 @@
 # RepoSetup v1 Acceptance Criteria
 
+Checked items have automated coverage in this tree. Unchecked items wait on a real v1 stable release or a GitHub Actions run that has not happened in this workspace.
+
 ## Core
 
-- [ ] Invalid configs are rejected before planning.
-- [ ] Unknown integration IDs are rejected.
-- [ ] Missing requirements fail clearly.
-- [ ] Conflicts fail clearly.
-- [ ] Recommendations do not block installation.
-- [ ] Dependency cycles are rejected.
-- [ ] Ordering is stable.
-- [ ] Plans contain typed operations only.
-- [ ] Core performs no process execution.
+- [x] Invalid configs are rejected before planning.
+- [x] Unknown integration IDs are rejected.
+- [x] Missing requirements fail clearly.
+- [x] Conflicts fail clearly.
+- [x] Recommendations do not block installation.
+- [x] Dependency cycles are rejected.
+- [x] Ordering is stable.
+- [x] Plans contain typed operations only.
+- [x] Core performs no process execution.
 
 ## Registry
 
-- [ ] IDs are unique.
-- [ ] References point to valid integrations/categories.
-- [ ] Search works by ID/name/category/keywords.
+- [x] IDs are unique.
+- [x] References point to valid integrations/categories.
+- [x] Search works by ID/name/category/keywords.
 - [ ] `info` data is complete for stable integrations.
 - [ ] Stable integrations include official docs and verification metadata.
 
+Experimental integrations already record `documentationUrl` and `verifiedAt`. None are marked stable.
+
 ## CLI
 
-- [ ] `reposetup --help` works.
-- [ ] `reposetup --version` works.
-- [ ] `reposetup create` works interactively.
-- [ ] `reposetup create --config` works non-interactively.
-- [ ] `reposetup create --dry-run` performs zero mutation.
-- [ ] `reposetup search` works offline.
-- [ ] `reposetup info` works offline.
-- [ ] User-facing errors contain actionable explanations.
+- [x] `reposetup --help` works.
+- [x] `reposetup --version` works.
+- [x] `reposetup create` works interactively.
+- [x] `reposetup create --config` works non-interactively.
+- [x] `reposetup create --dry-run` performs zero mutation.
+- [x] `reposetup search` works offline.
+- [x] `reposetup info` works offline.
+- [x] User-facing errors contain actionable explanations.
 
 ## Executor
 
-- [ ] Commands are executed with separate executable/arg representation.
-- [ ] Project name validation blocks injection/path traversal cases.
-- [ ] File operations stay inside project boundary.
-- [ ] Existing files are not silently overwritten.
-- [ ] Command failure stops dependent work.
-- [ ] Partial failure is reported truthfully.
-- [ ] Secrets are not logged.
+- [x] Commands are executed with separate executable/arg representation.
+- [x] Project name validation blocks injection/path traversal cases.
+- [x] File operations stay inside project boundary.
+- [x] Existing files are not silently overwritten.
+- [x] Command failure stops dependent work.
+- [x] Partial failure is reported truthfully.
+- [x] Secrets are not logged.
 
 ## Detection
 
-- [ ] npm project detection.
-- [ ] pnpm project detection.
-- [ ] Node runtime detection.
-- [ ] Python runtime detection.
-- [ ] Next.js detection.
-- [ ] React/Vite detection.
-- [ ] FastAPI detection.
-- [ ] Flask detection.
-- [ ] Prisma detection.
-- [ ] SQLAlchemy detection.
-- [ ] Ambiguous detection reports confidence.
+- [x] npm project detection.
+- [x] pnpm project detection.
+- [x] Node runtime detection.
+- [x] Python runtime detection.
+- [x] Next.js detection.
+- [x] React/Vite detection.
+- [x] FastAPI detection.
+- [x] Flask detection.
+- [x] Prisma detection.
+- [x] SQLAlchemy detection.
+- [x] Ambiguous detection reports confidence.
 
 ## Add
 
-- [ ] Add computes a delta rather than recreating project.
-- [ ] Adding already present integration does not duplicate setup.
-- [ ] Missing requirements are resolved before mutation.
-- [ ] Dry-run works for add.
+- [x] Add computes a delta rather than recreating project.
+- [x] Adding already present integration does not duplicate setup.
+- [x] Missing requirements are resolved before mutation.
+- [x] Dry-run works for add.
 
 ## Doctor
 
-- [ ] Healthy fixture returns success.
-- [ ] Missing package is reported.
-- [ ] Missing expected config file is reported.
-- [ ] Missing prerequisite is reported.
-- [ ] Verification failure is reported.
-- [ ] Doctor is read-only.
+- [x] Healthy fixture returns success.
+- [x] Missing package is reported.
+- [x] Missing expected config file is reported.
+- [x] Missing prerequisite is reported.
+- [x] Verification failure is reported.
+- [x] Doctor is read-only.
 
 ## Export
 
-- [ ] Export contains no secrets.
-- [ ] Export is schema-valid.
-- [ ] Exported stable golden stack can be consumed by `create --config`.
+- [x] Export contains no secrets.
+- [x] Export is schema-valid.
+- [x] Exported stable golden stack can be consumed by `create --config`.
+
+The golden examples are still experimental stacks. Export round-trips them through `create --config`.
 
 ## Golden stacks
 
-- [ ] Next.js full-stack path passes.
-- [ ] React/Vite frontend path passes.
-- [ ] Express API path passes.
-- [ ] FastAPI path passes.
-- [ ] Flask path passes.
+- [x] Next.js full-stack path passes.
+- [x] React/Vite frontend path passes.
+- [x] Express API path passes.
+- [x] FastAPI path passes.
+- [x] Flask path passes.
+
+Dry-run plans pass in CI. The Next.js execute path is opt-in (`REPOSETUP_GOLDEN_EXECUTE=1`) and skipped on Windows.
 
 ## Release quality
 
-- [ ] Linux CI passes.
-- [ ] macOS CI passes for supported paths.
-- [ ] Windows CI passes for supported paths.
-- [ ] README quickstart is tested.
+- [x] Linux CI passes.
+- [x] macOS CI passes for supported paths.
+- [x] Windows CI passes for supported paths.
+- [x] README quickstart is tested.
 - [ ] Every stable integration has tests.
-- [ ] No website/backend dependency exists.
+- [x] No website/backend dependency exists.
+
+Linux/macOS/Windows jobs are defined in `.github/workflows/ci.yml`. Windows skips the Next.js execute test. First GitHub matrix results depend on a remote run.
