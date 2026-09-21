@@ -50,13 +50,17 @@ export const prismaIntegration = defineIntegration({
     return { supported: true };
   },
   plan(context) {
+    // Official SQLite guide: prisma@prev + @prisma/client@7. Unpinned prisma currently
+    // resolves to 8 RC, whose init CLI dropped --datasource-provider.
     return [
-      addPackages(context, ["prisma", "@types/better-sqlite3"], {
+      addPackages(context, ["prisma@prev", "@types/better-sqlite3"], {
         description: "Install Prisma CLI and better-sqlite3 types",
         dev: true,
+        allowBuild: ["prisma", "@prisma/engines"],
       }),
-      addPackages(context, ["@prisma/client", "@prisma/adapter-better-sqlite3", "dotenv"], {
+      addPackages(context, ["@prisma/client@7", "@prisma/adapter-better-sqlite3", "dotenv"], {
         description: "Install Prisma Client, the SQLite adapter, and dotenv",
+        allowBuild: ["esbuild", "!better-sqlite3"],
       }),
       execLocalBin(
         context,
@@ -77,6 +81,9 @@ export const prismaIntegration = defineIntegration({
         behavior: "fail_if_exists",
         description: "Add a Prisma Client helper that uses the SQLite adapter",
       },
+      execLocalBin(context, "prisma", ["generate"], {
+        description: "Generate Prisma Client into generated/prisma",
+      }),
     ];
   },
 });

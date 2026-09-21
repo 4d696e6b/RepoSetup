@@ -49,9 +49,19 @@ export const tailwindIntegration = defineIntegration({
         description: "Add the official Tailwind PostCSS plugin config",
       },
       {
-        type: "show_message",
-        message: 'Add `@import "tailwindcss";` to app/globals.css.',
-        description: "Import Tailwind in the Next.js global stylesheet",
+        type: "modify_text",
+        path: "app/globals.css",
+        oldText: `:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}`,
+        newText: `@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}`,
+        description: "Import Tailwind in app/globals.css",
       },
     ];
   },

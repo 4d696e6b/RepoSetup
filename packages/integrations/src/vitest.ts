@@ -1,5 +1,5 @@
 import { defineIntegration, VERIFIED_AT } from "./define.js";
-import { addPackages } from "./operations.js";
+import { addPackages, execLocalBin } from "./operations.js";
 
 const VITEST_CONFIG_TS = `import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
@@ -74,6 +74,7 @@ export const vitestIntegration = defineIntegration({
       addPackages(context, packages, {
         description: "Install Vitest and the official Next.js test packages",
         dev: true,
+        allowBuild: ["esbuild"],
       }),
       {
         type: "create_file",
@@ -89,6 +90,9 @@ export const vitestIntegration = defineIntegration({
         behavior: "merge",
         description: "Add the test script from the Next.js Vitest guide",
       },
+      execLocalBin(context, "vitest", ["run", "--passWithNoTests"], {
+        description: "Load the Vitest config with no project tests yet",
+      }),
     ];
   },
 });
