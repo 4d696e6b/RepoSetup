@@ -24,14 +24,15 @@ async function tempRoot(): Promise<string> {
 
 function recordingRunner(
   runs: ProcessRunRequest[],
-  result: { exitCode?: number; notFound?: boolean } = {},
+  result: { exitCode?: number; notFound?: boolean; stdout?: string; stderr?: string } = {},
 ): ProcessRunner {
   return async (request) => {
     runs.push(request);
     const response = {
       exitCode: result.exitCode ?? 0,
-      stdout: "",
-      stderr: result.exitCode === undefined || result.exitCode === 0 ? "" : "failed",
+      stdout: result.stdout ?? "",
+      stderr:
+        result.stderr ?? (result.exitCode === undefined || result.exitCode === 0 ? "" : "failed"),
     };
     if (result.notFound === true) {
       return { ...response, exitCode: 1, notFound: true };
@@ -253,6 +254,41 @@ describe("executeInstallation", () => {
     expect(result.executed).toBe(1);
     expect(await readFile(path.join(root, "before.txt"), "utf8")).toBe("ok\n");
     await expect(readFile(path.join(root, "after.txt"), "utf8")).rejects.toThrow();
+  });
+
+  it("does not attach command stdout or stderr to COMMAND_FAILED details", async () => {
+    const root = await tempRoot();
+    const result = await executeInstallation(
+      [
+        {
+          type: "run_command",
+          command: "node",
+          args: ["-e", "process.exit(2)"],
+          cwd: ".",
+          description: "Fail with secrets on stdout",
+        },
+      ],
+      {
+        rootDir: root,
+        runProcess: recordingRunner([], {
+          exitCode: 2,
+          stdout: "DATABASE_URL=super-secret",
+          stderr: "token=super-secret",
+        }),
+      },
+    );
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("COMMAND_FAILED");
+    expect(result.error.details).toEqual({
+      command: "node",
+      args: ["-e", "process.exit(2)"],
+      exitCode: 2,
+    });
+    expect(JSON.stringify(result.error)).not.toContain("super-secret");
   });
 
   it("does not install missing prerequisites", async () => {
