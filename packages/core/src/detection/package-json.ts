@@ -27,6 +27,9 @@ export async function readPackageJson(
     peerDependencies: stringRecord(record.peerDependencies),
   };
 
+  if (typeof record.name === "string" && record.name.length > 0) {
+    summary.name = record.name;
+  }
   if (typeof record.packageManager === "string" && record.packageManager.length > 0) {
     summary.packageManager = record.packageManager;
   }

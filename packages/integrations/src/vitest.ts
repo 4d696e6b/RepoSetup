@@ -35,6 +35,7 @@ export const vitestIntegration = defineIntegration({
   documentationUrl: "https://nextjs.org/docs/app/guides/testing/vitest",
   keywords: ["test", "vite", "rtl"],
   verification: { verifiedAt: VERIFIED_AT },
+  addable: true,
   requirements: [
     {
       kind: "requires",

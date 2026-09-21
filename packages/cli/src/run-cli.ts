@@ -1,5 +1,6 @@
 import { Command, CommanderError } from "commander";
 
+import { handleAdd } from "./add.js";
 import { confirmCreate as defaultConfirmCreate } from "./confirm-create.js";
 import { handleCreate } from "./create.js";
 import { createDefaultRegistry } from "./default-registry.js";
@@ -77,6 +78,32 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
         deps: resolved,
       });
     });
+
+  program
+    .command("add")
+    .description("Add an integration to the current project")
+    .argument("<id>", "integration id")
+    .option("--dry-run", "print the add plan without changing files", false)
+    .option("--yes", "skip confirmation and execute the plan", false)
+    .option("--package-manager <id>", "package manager")
+    .option("--verbose", "include extra detail in output", false)
+    .option("--quiet", "reduce output", false)
+    .action(
+      async (
+        integrationId: string,
+        options: { dryRun: boolean; yes: boolean; packageManager?: string },
+        command: Command,
+      ) => {
+        exitCode = await handleAdd({
+          integrationId,
+          dryRun: options.dryRun,
+          yes: options.yes,
+          packageManager: options.packageManager,
+          globals: readGlobals(command),
+          deps: resolved,
+        });
+      },
+    );
 
   program
     .command("search")

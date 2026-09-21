@@ -40,6 +40,9 @@ export function defineIntegration<TOptions = unknown>(
   if (definition.verification !== undefined) {
     result.verification = definition.verification;
   }
+  if (definition.addable !== undefined) {
+    result.addable = definition.addable;
+  }
   if (definition.detect !== undefined) {
     result.detect = definition.detect;
   }

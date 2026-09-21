@@ -77,7 +77,9 @@ export type {
 } from "./relationships/models.js";
 export type { RegistryLookup } from "./resolution/registry-lookup.js";
 export { resolveConfig } from "./resolution/resolve.js";
-export { planInstallation, toInstallationPlan } from "./planning/plan.js";
+export { planInstallation, planInstallationSubset, toInstallationPlan } from "./planning/plan.js";
+export { planAdd } from "./planning/plan-add.js";
+export type { PlanAddResult } from "./planning/plan-add.js";
 export { validateInstallationPlan } from "./planning/validate-plan.js";
 export type { PlanValidationResult } from "./planning/validate-plan.js";
 export { executeInstallation } from "./executor/execute.js";

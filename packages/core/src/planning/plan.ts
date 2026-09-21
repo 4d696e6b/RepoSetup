@@ -22,11 +22,38 @@ export function planInstallation(
     return resolved;
   }
 
+  return planResolvedIds(
+    resolved,
+    registry,
+    resolved.orderedIntegrations.map((item) => item.id),
+  );
+}
+
+export function planInstallationSubset(
+  config: ResolutionResult["config"],
+  registry: RegistryLookup,
+  ids: readonly string[],
+): ResolutionResult {
+  const resolved = resolveConfig(config, registry);
+  if (!resolved.valid) {
+    return resolved;
+  }
+
+  return planResolvedIds(resolved, registry, ids);
+}
+
+function planResolvedIds(
+  resolved: ResolutionResult,
+  registry: RegistryLookup,
+  ids: readonly string[],
+): ResolutionResult {
   const planned: unknown[] = [];
   const errors: RepoSetupError[] = [];
   const projectRoot = projectRootFrom(resolved);
+  const selected = new Set(ids);
+  const ordered = resolved.orderedIntegrations.filter((item) => selected.has(item.id));
 
-  for (const item of resolved.orderedIntegrations) {
+  for (const item of ordered) {
     const generated = planIntegration(item, resolved, registry, projectRoot);
     if (!generated.ok) {
       errors.push(generated.error);
@@ -47,6 +74,7 @@ export function planInstallation(
 
   return {
     ...resolved,
+    orderedIntegrations: ordered,
     operations: validation.operations,
   };
 }

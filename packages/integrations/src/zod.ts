@@ -12,6 +12,7 @@ export const zodIntegration = defineIntegration({
   documentationUrl: "https://zod.dev",
   keywords: ["schema", "typescript", "validation"],
   verification: { verifiedAt: VERIFIED_AT },
+  addable: true,
   requirements: [
     {
       kind: "requires",
