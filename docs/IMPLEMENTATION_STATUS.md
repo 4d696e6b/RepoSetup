@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 15 — Export/config stability** (complete)
+**Phase 16 — Safe remove support** (complete)
 
 ## Phase status
 
@@ -24,21 +24,23 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 13 — JS ecosystem expansion
 - [x] Phase 14 — Python ecosystem
 - [x] Phase 15 — Export/config stability
-- [ ] Phase 16 — Safe remove support
+- [x] Phase 16 — Safe remove support
 - [ ] Phase 17 — v1 hardening
 
 ## Last completed work
 
-Phase 15 adds `reposetup export` and keeps `schemaVersion` 1 as the only accepted config version. Export writes `reposetup.json` from the detected stack, omits secrets and absolute paths, and refuses to overwrite an existing file unless `--yes` is passed. `--dry-run` prints the JSON without writing. Exported Next.js/SQLite and FastAPI fixtures parse and produce a valid `create --config` plan.
+Phase 16 adds `reposetup remove` for integrations with an explicit `remove()` recipe. It never inverts `plan()`. This phase uninstalls packages only for `zod`, `prettier`, `pydantic`, `pytest`, and `ruff`. Prettier config files are left in place. Prisma, frameworks, ORMs, and other integrations print `RepoSetup cannot safely remove this integration automatically.` pip is refused because `pip uninstall` does not rewrite `requirements.txt`.
 
-Migration policy: `docs/CONFIG_MIGRATION.md`. Unsupported `schemaVersion` values are rejected; RepoSetup does not rewrite or download a replacement config.
+Verified uninstall argv from current official docs: `pnpm remove`, `npm uninstall`, `uv remove` (no invented `--dev`). `--dry-run` prints the plan; `--yes` skips confirmation.
 
 Acceptance gate passed locally:
 
-- Exported Next.js/SQLite config recreates the golden dry-run plan
-- Exported FastAPI config is schema-valid and plans successfully
-- Export does not copy `.env.example` values
-- Existing `reposetup.json` is not overwritten without `--yes`
+- Zod dry-run emits `pnpm remove zod` and does not reverse the Next.js scaffold
+- Prettier remove does not delete `.prettierrc` / `.prettierignore`
+- Prisma and Next.js print the unsafe-removal sentence
+- Pydantic dry-run emits `uv remove pydantic`
+- pip remove is refused
+- Absent packages are a no-op
 - `pnpm build`
 - `pnpm test`
 - `pnpm typecheck`
@@ -46,7 +48,7 @@ Acceptance gate passed locally:
 
 ## Known blockers
 
-None for Phase 15. Integrations remain experimental. `remove` still needs a later phase. `import` is not a separate command; `create --config` applies exported configs.
+None for Phase 16. Integrations remain experimental. Phase 17 is v1 hardening (golden stacks, security review, CI, docs, publishing). `import` is not a separate command; `create --config` applies exported configs.
 
 ## Notes
 
@@ -56,4 +58,4 @@ Do not mark Phase 7, Phase 13, or Phase 14 integrations stable. DoD-stable requi
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Work is on `feat/phase-15-export`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-16-remove`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
