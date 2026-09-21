@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 12 — Doctor** (complete)
+**Phase 13 — JS ecosystem expansion** (complete)
 
 ## Phase status
 
@@ -21,7 +21,7 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 10 — Project detection
 - [x] Phase 11 — Add
 - [x] Phase 12 — Doctor
-- [ ] Phase 13 — JS ecosystem expansion
+- [x] Phase 13 — JS ecosystem expansion
 - [ ] Phase 14 — Python ecosystem
 - [ ] Phase 15 — Export/config stability
 - [ ] Phase 16 — Safe remove support
@@ -29,18 +29,19 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-Phase 12 adds `reposetup doctor` as a read-only health check for detected projects.
+Phase 13 adds experimental JavaScript-ecosystem integrations with plan, detect, and verify coverage. RepoSetup still does not install Docker, PostgreSQL, MongoDB, or Playwright browsers.
 
-Doctor checks node, npm, and pnpm on PATH when those tools are detected, then runs each detected integration's `verify()`. Checks cover missing packages, expected config files, and `.env.example` placeholders. Doctor never writes files, never runs generate/build, and has no `--fix`. Exit 0 when healthy, 2 when no project is found, 4 when a prerequisite is missing, and 5 when verification fails.
+New IDs: `react-vite`, `express`, `fastify`, `postgresql`, `mongodb`, `drizzle`, `mongoose`, `playwright`, `eslint`, `shadcn`, `docker`, `docker-compose`, `github-actions`. Prisma now plans SQLite or PostgreSQL. Tailwind and Vitest support React + Vite (and Vitest also supports Express/Fastify). A `framework` requirement is satisfied by `backend-framework` so Express/Fastify stacks can include Zod, Prisma, and Prettier without reordering Next.js package installs before `create-next-app`.
+
+Example dry-run configs: `examples/reposetup.react-vite.json`, `examples/reposetup.express-postgres.json`, `examples/reposetup.fastify-mongo.json`.
 
 Acceptance gate passed locally:
 
-- Healthy Next.js fixture succeeds
-- Missing `next` package is reported
-- Missing Prettier config is reported
-- Missing Node.js on PATH is reported
-- Prisma without `DATABASE_URL` in `.env.example` is reported
-- Doctor does not mutate fixtures
+- Built-in registry validates with 23 integrations
+- React + Vite, Express + PostgreSQL, and Fastify + Mongo example plans are valid
+- Next.js/SQLite golden dry-run order is unchanged
+- Conflicts reject Next.js + React + Vite and Prisma + Drizzle
+- Doctor still does not mutate fixtures
 - `pnpm build`
 - `pnpm test`
 - `pnpm typecheck`
@@ -48,14 +49,14 @@ Acceptance gate passed locally:
 
 ## Known blockers
 
-None for Phase 12. Integrations remain experimental. `export` and `remove` still need later phases. PATH checks cover node/npm/pnpm only, matching Phase 8.
+None for Phase 13. Integrations remain experimental. `export` and `remove` still need later phases. PATH checks cover node/npm/pnpm only, matching Phase 8. Docker/Postgres/Mongo/browsers are documented, not installed.
 
 ## Notes
 
 Do not mark a phase complete unless its acceptance gate in `docs/IMPLEMENTATION_PLAN.md` passes.
 
-Do not mark Phase 7 integrations stable. DoD-stable requires detection/verify tests in later phases.
+Do not mark Phase 7 or Phase 13 integrations stable. DoD-stable requires detection/verify tests in later phases plus a tested compatible execute path.
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Work is on `feat/phase-12-doctor`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-13-js-ecosystem`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
