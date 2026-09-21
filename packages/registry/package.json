@@ -13,7 +13,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --clean --sourcemap",
+    "build": "tsup src/index.ts --format esm --dts --clean --sourcemap --external @reposetup/core",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
