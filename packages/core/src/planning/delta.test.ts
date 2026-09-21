@@ -88,4 +88,51 @@ describe("filterSatisfiedOperations", () => {
       expect.objectContaining({ description: "Install missing package" }),
     ]);
   });
+
+  it("drops uv add when pyproject.toml already declares the package", async () => {
+    const files = createMemoryDetectionFs({
+      "pyproject.toml": '[project]\ndependencies = ["fastapi[standard]"]\n',
+    });
+    const remaining = await filterSatisfiedOperations(
+      [
+        {
+          type: "run_command",
+          command: "uv",
+          args: ["add", "fastapi[standard]"],
+          cwd: ".",
+          description: "Install FastAPI",
+        },
+        {
+          type: "run_command",
+          command: "uv",
+          args: ["add", "flask"],
+          cwd: ".",
+          description: "Install Flask",
+        },
+      ],
+      files,
+      undefined,
+    );
+    expect(remaining).toEqual([expect.objectContaining({ description: "Install Flask" })]);
+  });
+
+  it("drops uv init when pyproject.toml already exists", async () => {
+    const files = createMemoryDetectionFs({
+      "pyproject.toml": "[project]\nname = 'demo'\n",
+    });
+    const remaining = await filterSatisfiedOperations(
+      [
+        {
+          type: "run_command",
+          command: "uv",
+          args: ["init", ".", "--bare", "--name", "demo"],
+          cwd: ".",
+          description: "Create a minimal uv pyproject.toml",
+        },
+      ],
+      files,
+      undefined,
+    );
+    expect(remaining).toEqual([]);
+  });
 });

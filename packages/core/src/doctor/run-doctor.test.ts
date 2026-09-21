@@ -205,7 +205,7 @@ describe("runDoctor", () => {
     );
   });
 
-  it("does not PATH-check python or bun in this phase", async () => {
+  it("PATH-checks python and uv for a uv project", async () => {
     const root = await fixture({
       "pyproject.toml": "[project]\nname = 'demo'\n",
       "uv.lock": "version = 1\n",
@@ -225,7 +225,33 @@ describe("runDoctor", () => {
     if (!result.ok) {
       return;
     }
-    expect(commands).toEqual([]);
-    expect(result.result.checks).toEqual([]);
+    expect(commands).toEqual(["python", "uv"]);
+    expect(failedDoctorChecks(result.result)).toEqual([
+      expect.objectContaining({ id: "prerequisite:python", code: "PREREQUISITE_MISSING" }),
+      expect.objectContaining({ id: "prerequisite:uv", code: "PREREQUISITE_MISSING" }),
+    ]);
+  });
+
+  it("does not PATH-check bun in this phase", async () => {
+    const root = await fixture({
+      "package.json": JSON.stringify({ name: "bun-app" }),
+      "bun.lock": "{}\n",
+    });
+    const commands: string[] = [];
+
+    const result = await runDoctor({
+      startDir: root,
+      registry: lookup([]),
+      commandExists: async (command) => {
+        commands.push(command);
+        return false;
+      },
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(commands).not.toContain("bun");
   });
 });

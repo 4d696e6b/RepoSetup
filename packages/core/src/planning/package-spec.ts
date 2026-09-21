@@ -27,5 +27,13 @@ export function isPackageAddCommand(command: string, args: readonly string[]): b
     return packageSpecsFromAddArgs(args).length > 0;
   }
 
+  if (command === "uv" && args[0] === "add") {
+    return packageSpecsFromAddArgs(args).length > 0;
+  }
+
+  if (command === "python" && args[0] === "-m" && args[1] === "pip" && args[2] === "install") {
+    return args.slice(3).filter((arg) => !arg.startsWith("-")).length > 0;
+  }
+
   return false;
 }

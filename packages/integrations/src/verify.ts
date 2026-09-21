@@ -1,11 +1,13 @@
 import {
   existingEnvKeys,
   hasPackageDependency,
+  textDeclaresPythonPackage,
   type VerificationContext,
   type VerificationResult,
 } from "@reposetup/core";
 
 import { firstExistingPath } from "./first-existing.js";
+import { pythonManifestText } from "./python-detect.js";
 
 export function failVerify(message: string, suggestion: string): VerificationResult {
   return { ok: false, message, suggestion };
@@ -32,6 +34,21 @@ export function mergeVerify(
     result.suggestion = suggestion;
   }
   return result;
+}
+
+export async function missingPythonPackage(
+  context: VerificationContext,
+  packageName: string,
+): Promise<VerificationResult | undefined> {
+  const manifest = await pythonManifestText(context);
+  if (textDeclaresPythonPackage(manifest, packageName)) {
+    return undefined;
+  }
+
+  return failVerify(
+    `The Python project does not declare ${packageName}.`,
+    `Add ${packageName} with uv add or pip install. Doctor does not install packages.`,
+  );
 }
 
 export function missingPackage(

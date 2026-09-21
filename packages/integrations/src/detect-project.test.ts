@@ -166,4 +166,41 @@ describe("built-in detection of fixture projects", () => {
       "prisma",
     ]);
   });
+
+  it("identifies a FastAPI uv fixture", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-stack-fixture-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "pyproject.toml"),
+      '[project]\nname = "example-fastapi-app"\ndependencies = ["fastapi[standard]", "pydantic", "SQLAlchemy", "alembic"]\n[dependency-groups]\ndev = ["pytest", "ruff"]\n',
+    );
+    await writeFile(path.join(root, "uv.lock"), "version = 1\n");
+    await writeFile(path.join(root, "main.py"), "from fastapi import FastAPI\n");
+    await writeFile(path.join(root, "alembic.ini"), "[alembic]\n");
+    await writeFile(
+      path.join(root, ".env.example"),
+      "DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/DATABASE?schema=public\n",
+    );
+
+    const result = await detectProject({
+      startDir: root,
+      registry: createBuiltInRegistry(),
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(result.stack.runtimes.map((item) => item.id)).toEqual(["python"]);
+    expect(result.stack.packageManagers.map((item) => item.id)).toEqual(["uv"]);
+    expect(result.stack.frameworks.map((item) => item.id)).toEqual(["fastapi"]);
+    expect(result.stack.integrations.map((item) => item.id).sort()).toEqual([
+      "alembic",
+      "postgresql",
+      "pydantic",
+      "pytest",
+      "ruff",
+      "sqlalchemy",
+    ]);
+  });
 });

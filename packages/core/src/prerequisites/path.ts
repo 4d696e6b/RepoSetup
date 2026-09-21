@@ -16,13 +16,25 @@ const PATH_PREREQUISITES = {
     command: "pnpm",
     hint: "Install pnpm from https://pnpm.io/installation and ensure it is on PATH.",
   },
+  python: {
+    command: "python",
+    hint: "Install Python 3.9 or later from https://www.python.org and ensure python is on PATH. RepoSetup will not install Python.",
+  },
+  uv: {
+    command: "uv",
+    hint: "Install uv from https://docs.astral.sh/uv/getting-started/installation/ and ensure uv is on PATH. RepoSetup will not install uv.",
+  },
+  pip: {
+    command: "python",
+    hint: "Install Python, which provides python -m pip, and ensure python is on PATH. RepoSetup will not install pip.",
+  },
 } as const satisfies Record<string, PathPrerequisite>;
 
 export type PathPrerequisiteId = keyof typeof PATH_PREREQUISITES;
 
 export function pathPrerequisite(id: string): PathPrerequisite | undefined {
-  if (id === "node" || id === "npm" || id === "pnpm") {
-    return PATH_PREREQUISITES[id];
+  if (Object.hasOwn(PATH_PREREQUISITES, id)) {
+    return PATH_PREREQUISITES[id as PathPrerequisiteId];
   }
 
   return undefined;

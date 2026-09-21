@@ -563,12 +563,64 @@ describe("runCli", () => {
     expect(await snapshotTree(root)).toEqual(before);
   });
 
+  it("dry-runs the FastAPI example without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-fastapi-"));
+    tempDirs.push(root);
+    const examplePath = path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../../examples/reposetup.fastapi.json",
+    );
+    await writeFile(path.join(root, "reposetup.json"), await readFile(examplePath, "utf8"));
+    await writeFile(path.join(root, "marker.txt"), "keep me\n");
+
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Dry-run for example-fastapi-app");
+    expect(captured.stdout()).toContain("fastapi");
+    expect(captured.stdout()).toContain("uv init . --bare --name example-fastapi-app");
+    expect(captured.stdout()).toContain("uv add fastapi[standard]");
+    expect(captured.stdout()).toContain("uv run alembic init alembic");
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("dry-runs the Flask example without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-flask-"));
+    tempDirs.push(root);
+    const examplePath = path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../../examples/reposetup.flask.json",
+    );
+    await writeFile(path.join(root, "reposetup.json"), await readFile(examplePath, "utf8"));
+    await writeFile(path.join(root, "marker.txt"), "keep me\n");
+
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Dry-run for example-flask-app");
+    expect(captured.stdout()).toContain("flask");
+    expect(captured.stdout()).toContain("uv add Flask");
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
   it("validates the built-in registry by default", async () => {
     const captured = captureIo();
     const result = await runCli(["registry", "validate"], { io: captured.io });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toContain("Registry is valid (23 integrations).");
+    expect(captured.stdout()).toContain("Registry is valid (33 integrations).");
   });
 
   it("reports PROJECT_NOT_FOUND for stack outside a project", async () => {

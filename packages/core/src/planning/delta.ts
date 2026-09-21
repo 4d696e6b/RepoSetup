@@ -1,8 +1,9 @@
+import { hasPackageDependency } from "../detection/package-json.js";
+import { pythonDistributionName, textDeclaresPythonPackage } from "../detection/python-package.js";
 import { existingEnvKeys } from "../executor/env-example.js";
 import { parseJsonObject } from "../executor/json.js";
 import type { DetectionFileSystem, PackageJsonSummary } from "../integrations/definition.js";
 import type { InstallationOperation } from "../operations/types.js";
-import { hasPackageDependency } from "../detection/package-json.js";
 
 import {
   isPackageAddCommand,
@@ -71,6 +72,20 @@ function packagesAlreadyPresent(
   return specs.every((spec) => hasPackageDependency(packageJson, packageNameFromSpec(spec)));
 }
 
+async function pythonPackagesAlreadyPresent(
+  specs: readonly string[],
+  files: DetectionFileSystem,
+): Promise<boolean> {
+  if (specs.length === 0) {
+    return false;
+  }
+
+  const pyproject = await files.readText("pyproject.toml");
+  const requirements = await files.readText("requirements.txt");
+  const text = `${pyproject ?? ""}\n${requirements ?? ""}`;
+  return specs.every((spec) => textDeclaresPythonPackage(text, pythonDistributionName(spec)));
+}
+
 async function isRunCommandSatisfied(
   command: string,
   args: readonly string[],
@@ -78,7 +93,22 @@ async function isRunCommandSatisfied(
   packageJson: PackageJsonSummary | undefined,
 ): Promise<boolean> {
   if (isPackageAddCommand(command, args)) {
-    return packagesAlreadyPresent(packageSpecsFromAddArgs(args), packageJson);
+    const specs =
+      command === "python"
+        ? args.slice(3).filter((arg) => !arg.startsWith("-"))
+        : packageSpecsFromAddArgs(args);
+    if (await pythonPackagesAlreadyPresent(specs, files)) {
+      return true;
+    }
+    return packagesAlreadyPresent(specs, packageJson);
+  }
+
+  if (command === "uv" && args.includes("init")) {
+    return files.exists("pyproject.toml");
+  }
+
+  if (args.includes("alembic") && args.includes("init")) {
+    return files.exists("alembic.ini");
   }
 
   if (args.includes("init") && args.includes("prisma")) {
