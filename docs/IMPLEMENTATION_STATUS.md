@@ -4,12 +4,12 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 1 — Domain model and schemas** (not started)
+**Phase 2 — Registry** (not started)
 
 ## Phase status
 
 - [x] Phase 0 — Repository foundation
-- [ ] Phase 1 — Domain model and schemas
+- [x] Phase 1 — Domain model and schemas
 - [ ] Phase 2 — Registry
 - [ ] Phase 3 — Resolver
 - [ ] Phase 4 — Planner
@@ -29,11 +29,20 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-Phase 0 repository foundation is in place: a pnpm workspace, TypeScript base config, stub packages (`@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli`), Vitest, ESLint/Prettier, tsup build scripts, and a GitHub Actions CI skeleton.
+Phase 1 domain model and schemas now live in `@reposetup/core`:
+
+- `RepoSetupConfig` Zod schema and `parseRepoSetupConfig`;
+- integration categories;
+- relationship models (`requires`, `recommends`, `conflicts`, `includes`, `alternative`);
+- installation operation discriminated union;
+- `ResolutionResult` / `InstallationPlan` types;
+- stable error codes and `RepoSetupError`.
+
+Schema tests cover valid configs (including `examples/reposetup.next-sqlite.json`) and invalid configs (wrong shape, traversal names/paths, unknown enums, extra command-like fields).
 
 Acceptance gate passed locally:
 
-- `pnpm install`
+- `pnpm install` (Zod added to `@reposetup/core`)
 - `pnpm build`
 - `pnpm test`
 - `pnpm typecheck`
@@ -41,14 +50,14 @@ Acceptance gate passed locally:
 
 ## Known blockers
 
-None for Phase 0.
+None for Phase 1.
 
 ## Notes
 
 Do not mark a phase complete unless its acceptance gate in `docs/IMPLEMENTATION_PLAN.md` passes.
 
-`.cursor/rules/` is listed in `PACK_MANIFEST.json` (`00-project-scope.mdc`, `01-architecture.mdc`, `02-testing.mdc`, `03-command-safety.mdc`) but is not present in this repository. Phase 0 did not invent those files.
+`.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Local git history now lives on `dev`. `.github/workflows/ci.yml` was added because Phase 0 requires a CI skeleton and `docs/ARCHITECTURE.md` specifies GitHub Actions. There is still no GitHub remote.
+Phase 1 does not look up integration IDs in a registry, generate plans, or execute commands. Unknown IDs remain structurally valid until Phase 2.
 
-No real integrations, CLI commands, or website were implemented.
+Work is on `feat/phase-1-domain-model`, extracted from `phase-0`. `main` remains the pre-Phase 0 baseline.
