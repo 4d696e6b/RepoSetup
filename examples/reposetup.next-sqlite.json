@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "example-next-app"
+  },
+  "runtime": {
+    "id": "node"
+  },
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "nextjs",
+    "options": {
+      "typescript": true
+    }
+  },
+  "integrations": [
+    { "id": "tailwind" },
+    { "id": "sqlite" },
+    { "id": "prisma" },
+    { "id": "zod" },
+    { "id": "vitest" },
+    { "id": "prettier" }
+  ]
+}

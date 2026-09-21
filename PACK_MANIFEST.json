@@ -1,0 +1,24 @@
+{
+  "name": "RepoSetup Cursor Implementation Pack",
+  "purpose": "Terminal-first RepoSetup v1 source-of-truth and Cursor project instructions",
+  "version": "1.0",
+  "entrypoint": "CURSOR_START_HERE.md",
+  "cursor_instruction_files": [
+    "AGENTS.md",
+    ".cursor/rules/00-project-scope.mdc",
+    ".cursor/rules/01-architecture.mdc",
+    ".cursor/rules/02-testing.mdc",
+    ".cursor/rules/03-command-safety.mdc"
+  ],
+  "primary_docs": [
+    "docs/PRODUCT_REQUIREMENTS.md",
+    "docs/ARCHITECTURE.md",
+    "docs/INTEGRATION_SYSTEM.md",
+    "docs/CLI_SPEC.md",
+    "docs/PROJECT_DETECTION.md",
+    "docs/SECURITY_AND_SAFETY.md",
+    "docs/IMPLEMENTATION_PLAN.md",
+    "docs/ACCEPTANCE_TESTS.md",
+    "docs/V1_INTEGRATION_REGISTRY.md"
+  ]
+}
