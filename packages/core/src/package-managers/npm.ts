@@ -1,5 +1,6 @@
-import type { AddPackagesRequest, InstallProjectRequest, PackageManagerAdapter } from "./types.js";
+import { npmAddArgs } from "./add-args.js";
 import { createPackageManagerCommand } from "./command.js";
+import type { AddPackagesRequest, InstallProjectRequest, PackageManagerAdapter } from "./types.js";
 import { validateCwd, validatePackageSpecs } from "./validate.js";
 
 /**
@@ -25,13 +26,11 @@ export const npmAdapter: PackageManagerAdapter = {
       return { ok: false, error: specError };
     }
 
-    const args = request.dev === true ? ["install", "--save-dev"] : ["install"];
-
     return {
       ok: true,
       operation: createPackageManagerCommand({
         command: "npm",
-        args: [...args, ...request.packages],
+        args: npmAddArgs(request),
         cwd: request.cwd,
         description: request.description,
       }),
