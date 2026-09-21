@@ -4,11 +4,11 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 0 — Repository foundation**
+**Phase 1 — Domain model and schemas** (not started)
 
 ## Phase status
 
-- [ ] Phase 0 — Repository foundation
+- [x] Phase 0 — Repository foundation
 - [ ] Phase 1 — Domain model and schemas
 - [ ] Phase 2 — Registry
 - [ ] Phase 3 — Resolver
@@ -29,12 +29,26 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-None yet.
+Phase 0 repository foundation is in place: a pnpm workspace, TypeScript base config, stub packages (`@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli`), Vitest, ESLint/Prettier, tsup build scripts, and a GitHub Actions CI skeleton.
+
+Acceptance gate passed locally:
+
+- `pnpm install`
+- `pnpm build`
+- `pnpm test`
+- `pnpm typecheck`
+- `pnpm lint`
 
 ## Known blockers
 
-None yet.
+None for Phase 0.
 
 ## Notes
 
 Do not mark a phase complete unless its acceptance gate in `docs/IMPLEMENTATION_PLAN.md` passes.
+
+`.cursor/rules/` is listed in `PACK_MANIFEST.json` (`00-project-scope.mdc`, `01-architecture.mdc`, `02-testing.mdc`, `03-command-safety.mdc`) but is not present in this repository. Phase 0 did not invent those files.
+
+Local git history now lives on `dev`. `.github/workflows/ci.yml` was added because Phase 0 requires a CI skeleton and `docs/ARCHITECTURE.md` specifies GitHub Actions. There is still no GitHub remote.
+
+No real integrations, CLI commands, or website were implemented.
