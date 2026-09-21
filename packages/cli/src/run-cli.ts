@@ -4,6 +4,7 @@ import { handleAdd } from "./add.js";
 import { confirmCreate as defaultConfirmCreate } from "./confirm-create.js";
 import { handleCreate } from "./create.js";
 import { createDefaultRegistry } from "./default-registry.js";
+import { handleDoctor } from "./doctor.js";
 import { EXIT_CODES } from "./exit-codes.js";
 import { handleInfo } from "./info.js";
 import { createDefaultFs, createDefaultIo, writeLine } from "./io.js";
@@ -131,6 +132,16 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .description("Detect and print the current project stack")
     .action(async (_options: unknown, command: Command) => {
       exitCode = await handleStack({
+        globals: readGlobals(command),
+        deps: resolved,
+      });
+    });
+
+  program
+    .command("doctor")
+    .description("Run read-only health checks for the current project")
+    .action(async (_options: unknown, command: Command) => {
+      exitCode = await handleDoctor({
         globals: readGlobals(command),
         deps: resolved,
       });
