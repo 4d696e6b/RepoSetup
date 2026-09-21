@@ -2,6 +2,16 @@ import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages } from "./operations.js";
+import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
+
+const PRETTIER_CONFIG_PATHS = [
+  ".prettierrc",
+  ".prettierrc.json",
+  ".prettierrc.js",
+  ".prettierrc.mjs",
+  "prettier.config.js",
+  "prettier.config.mjs",
+] as const;
 
 export const prettierIntegration = defineIntegration({
   id: "prettier",
@@ -28,14 +38,7 @@ export const prettierIntegration = defineIntegration({
     return { supported: true };
   },
   detect(context: DetectionContext): Promise<DetectionResult> {
-    return detectNpmPackage(context, "prettier", [
-      ".prettierrc",
-      ".prettierrc.json",
-      ".prettierrc.js",
-      ".prettierrc.mjs",
-      "prettier.config.js",
-      "prettier.config.mjs",
-    ]);
+    return detectNpmPackage(context, "prettier", PRETTIER_CONFIG_PATHS);
   },
   plan(context) {
     return [
@@ -59,5 +62,11 @@ export const prettierIntegration = defineIntegration({
         description: "Ignore build artifacts from Prettier",
       },
     ];
+  },
+  async verify(context) {
+    return mergeVerify([
+      missingPackage(context, "prettier"),
+      await missingAnyFile(context, PRETTIER_CONFIG_PATHS, "a Prettier config file"),
+    ]);
   },
 });

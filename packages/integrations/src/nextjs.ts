@@ -10,10 +10,20 @@ import {
   type InstallationOperation,
   type PlanContext,
   type SupportContext,
+  type VerificationContext,
+  type VerificationResult,
 } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
+import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
+
+const NEXT_CONFIG_PATHS = [
+  "next.config.ts",
+  "next.config.mjs",
+  "next.config.js",
+  "next.config.mts",
+] as const;
 
 const nextjsOptionsSchema = z.strictObject({
   typescript: z.boolean().optional(),
@@ -60,12 +70,7 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
   async detect(context: DetectionContext): Promise<DetectionResult> {
     const pkg = context.packageJson;
     const hasNext = pkg !== undefined && hasPackageDependency(pkg, "next");
-    const config = await firstExistingPath(context.files, [
-      "next.config.ts",
-      "next.config.mjs",
-      "next.config.js",
-      "next.config.mts",
-    ]);
+    const config = await firstExistingPath(context.files, NEXT_CONFIG_PATHS);
     const appDir = await firstExistingPath(context.files, ["app", "src/app", "pages", "src/pages"]);
 
     if (!hasNext && config === undefined && appDir === undefined) {
@@ -125,5 +130,15 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
           };
 
     return [operation];
+  },
+  async verify(context: VerificationContext): Promise<VerificationResult> {
+    return mergeVerify([
+      missingPackage(context, "next"),
+      await missingAnyFile(
+        context,
+        NEXT_CONFIG_PATHS,
+        "a Next.js config (next.config.ts, next.config.mjs, next.config.js, or next.config.mts)",
+      ),
+    ]);
   },
 });

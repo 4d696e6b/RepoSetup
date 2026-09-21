@@ -5,11 +5,17 @@ import {
   notDetected,
   type DetectionContext,
   type DetectionResult,
+  type VerificationContext,
+  type VerificationResult,
 } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
 import { addPackages } from "./operations.js";
+import { failVerify, mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
+
+const POSTCSS_CONFIG_PATHS = ["postcss.config.mjs", "postcss.config.js"] as const;
+const GLOBAL_CSS_PATHS = ["app/globals.css", "src/app/globals.css"] as const;
 
 const POSTCSS_CONFIG = `const config = {
   plugins: {
@@ -49,14 +55,8 @@ export const tailwindIntegration = defineIntegration({
   async detect(context: DetectionContext): Promise<DetectionResult> {
     const pkg = context.packageJson;
     const hasTailwind = pkg !== undefined && hasPackageDependency(pkg, "tailwindcss");
-    const postcss = await firstExistingPath(context.files, [
-      "postcss.config.mjs",
-      "postcss.config.js",
-    ]);
-    const cssPath = await firstExistingPath(context.files, [
-      "app/globals.css",
-      "src/app/globals.css",
-    ]);
+    const postcss = await firstExistingPath(context.files, POSTCSS_CONFIG_PATHS);
+    const cssPath = await firstExistingPath(context.files, GLOBAL_CSS_PATHS);
     const css = cssPath === undefined ? undefined : await context.files.readText(cssPath);
     const hasImport = css !== undefined && css.includes('@import "tailwindcss"');
 
@@ -111,5 +111,26 @@ export const tailwindIntegration = defineIntegration({
         description: "Import Tailwind in app/globals.css",
       },
     ];
+  },
+  async verify(context: VerificationContext): Promise<VerificationResult> {
+    const cssPath = await firstExistingPath(context.files, GLOBAL_CSS_PATHS);
+    const css = cssPath === undefined ? undefined : await context.files.readText(cssPath);
+    const missingImport =
+      cssPath !== undefined && (css === undefined || !css.includes('@import "tailwindcss"'))
+        ? failVerify(
+            `${cssPath} does not import Tailwind.`,
+            `Add @import "tailwindcss"; to ${cssPath}. Doctor does not edit CSS.`,
+          )
+        : undefined;
+
+    return mergeVerify([
+      missingPackage(context, "tailwindcss"),
+      await missingAnyFile(
+        context,
+        POSTCSS_CONFIG_PATHS,
+        "a Tailwind PostCSS config (postcss.config.mjs or postcss.config.js)",
+      ),
+      missingImport,
+    ]);
   },
 });

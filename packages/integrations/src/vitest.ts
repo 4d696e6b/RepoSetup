@@ -2,6 +2,7 @@ import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, execLocalBin } from "./operations.js";
+import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
 const VITEST_CONFIG_TS = `import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
@@ -25,6 +26,13 @@ export default defineConfig({
   },
 })
 `;
+
+const VITEST_CONFIG_PATHS = [
+  "vitest.config.mts",
+  "vitest.config.ts",
+  "vitest.config.js",
+  "vitest.config.mjs",
+] as const;
 
 export const vitestIntegration = defineIntegration({
   id: "vitest",
@@ -55,12 +63,7 @@ export const vitestIntegration = defineIntegration({
     return { supported: true };
   },
   detect(context: DetectionContext): Promise<DetectionResult> {
-    return detectNpmPackage(context, "vitest", [
-      "vitest.config.mts",
-      "vitest.config.ts",
-      "vitest.config.js",
-      "vitest.config.mjs",
-    ]);
+    return detectNpmPackage(context, "vitest", VITEST_CONFIG_PATHS);
   },
   plan(context) {
     const typescript = context.config.framework.options?.typescript !== false;
@@ -105,5 +108,15 @@ export const vitestIntegration = defineIntegration({
         description: "Load the Vitest config with no project tests yet",
       }),
     ];
+  },
+  async verify(context) {
+    return mergeVerify([
+      missingPackage(context, "vitest"),
+      await missingAnyFile(
+        context,
+        VITEST_CONFIG_PATHS,
+        "a Vitest config (vitest.config.mts, vitest.config.ts, vitest.config.js, or vitest.config.mjs)",
+      ),
+    ]);
   },
 });

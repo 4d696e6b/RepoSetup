@@ -2,6 +2,7 @@ import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages } from "./operations.js";
+import { mergeVerify, missingPackage } from "./verify.js";
 
 export const zodIntegration = defineIntegration({
   id: "zod",
@@ -36,5 +37,8 @@ export const zodIntegration = defineIntegration({
         description: "Install Zod",
       }),
     ];
+  },
+  async verify(context) {
+    return mergeVerify([missingPackage(context, "zod")]);
   },
 });
