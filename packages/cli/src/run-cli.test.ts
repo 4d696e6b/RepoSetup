@@ -61,6 +61,9 @@ function fakeIntegration(
   if (overrides.verification !== undefined) {
     definition.verification = overrides.verification;
   }
+  if (overrides.detect !== undefined) {
+    definition.detect = overrides.detect;
+  }
 
   return definition;
 }
@@ -184,6 +187,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("create");
     expect(captured.stdout()).toContain("search");
     expect(captured.stdout()).toContain("info");
+    expect(captured.stdout()).toContain("stack");
     expect(captured.stdout()).toContain("registry");
   });
 
@@ -438,5 +442,76 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Registry is valid (10 integrations).");
+  });
+
+  it("reports PROJECT_NOT_FOUND for stack outside a project", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-stack-"));
+    tempDirs.push(root);
+    const captured = captureIo();
+    const result = await runCli(["stack"], {
+      cwd: root,
+      io: captured.io,
+      registry: testRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.INVALID_INPUT);
+    expect(captured.stderr()).toContain("PROJECT_NOT_FOUND");
+  });
+
+  it("prints the detected stack for a fixture project without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-stack-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({
+        name: "fixture-next",
+        dependencies: { next: "16.0.0", prisma: "7.10.0" },
+        devDependencies: { typescript: "5.9.0" },
+      }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    await writeFile(path.join(root, "tsconfig.json"), "{}\n");
+    await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
+    const before = await snapshotTree(root);
+
+    const captured = captureIo();
+    const result = await runCli(["stack"], {
+      cwd: root,
+      io: captured.io,
+      registry: createRegistry([
+        fakeIntegration({
+          id: "nextjs",
+          name: "Next.js",
+          category: "framework",
+          detect: async () => ({
+            detected: true,
+            confidence: "certain",
+            evidence: [
+              { kind: "dependency", detail: "package.json includes next", path: "package.json" },
+            ],
+          }),
+        }),
+        fakeIntegration({
+          id: "prisma",
+          name: "Prisma",
+          category: "orm",
+          detect: async () => ({
+            detected: true,
+            confidence: "likely",
+            evidence: [{ kind: "dependency", detail: "package.json includes prisma" }],
+          }),
+        }),
+      ]),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Runtime");
+    expect(captured.stdout()).toContain("Node.js");
+    expect(captured.stdout()).toContain("Package mgr");
+    expect(captured.stdout()).toContain("pnpm");
+    expect(captured.stdout()).toContain("Next.js");
+    expect(captured.stdout()).toContain("TypeScript");
+    expect(captured.stdout()).toContain("Prisma (likely)");
+    expect(await snapshotTree(root)).toEqual(before);
   });
 });
