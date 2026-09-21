@@ -42,8 +42,14 @@ export function fakeIntegration(overrides: FakeOverrides): IntegrationDefinition
   if (overrides.addable !== undefined) {
     definition.addable = overrides.addable;
   }
+  if (overrides.removable !== undefined) {
+    definition.removable = overrides.removable;
+  }
   if (overrides.detect !== undefined) {
     definition.detect = overrides.detect;
+  }
+  if (overrides.remove !== undefined) {
+    definition.remove = overrides.remove;
   }
   if (overrides.verify !== undefined) {
     definition.verify = overrides.verify;

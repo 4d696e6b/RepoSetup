@@ -37,3 +37,24 @@ export function isPackageAddCommand(command: string, args: readonly string[]): b
 
   return false;
 }
+
+export function packageSpecsFromRemoveArgs(args: readonly string[]): string[] {
+  const start = args[0] === "remove" || args[0] === "uninstall" ? 1 : 0;
+  return args.slice(start).filter((arg) => !arg.startsWith("-"));
+}
+
+export function isPackageRemoveCommand(command: string, args: readonly string[]): boolean {
+  if (command === "pnpm" && args[0] === "remove") {
+    return packageSpecsFromRemoveArgs(args).length > 0;
+  }
+
+  if (command === "npm" && args[0] === "uninstall") {
+    return packageSpecsFromRemoveArgs(args).length > 0;
+  }
+
+  if (command === "uv" && args[0] === "remove") {
+    return packageSpecsFromRemoveArgs(args).length > 0;
+  }
+
+  return false;
+}
