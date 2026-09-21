@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 16 — Safe remove support** (complete)
+**Phase 17 — v1 hardening** (complete)
 
 ## Phase status
 
@@ -25,22 +25,24 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 14 — Python ecosystem
 - [x] Phase 15 — Export/config stability
 - [x] Phase 16 — Safe remove support
-- [ ] Phase 17 — v1 hardening
+- [x] Phase 17 — v1 hardening
 
 ## Last completed work
 
-Phase 16 adds `reposetup remove` for integrations with an explicit `remove()` recipe. It never inverts `plan()`. This phase uninstalls packages only for `zod`, `prettier`, `pydantic`, `pytest`, and `ruff`. Prettier config files are left in place. Prisma, frameworks, ORMs, and other integrations print `RepoSetup cannot safely remove this integration automatically.` pip is refused because `pip uninstall` does not rewrite `requirements.txt`.
+Phase 17 hardens the pre-v1 tree without publishing packages or marking integrations stable.
 
-Verified uninstall argv from current official docs: `pnpm remove`, `npm uninstall`, `uv remove` (no invented `--dev`). `--dry-run` prints the plan; `--yes` skips confirmation.
+- Golden dry-run stacks for Next.js, React/Vite, Express, FastAPI, and Flask stay in the test suite. The Next.js execute path is opt-in (`REPOSETUP_GOLDEN_EXECUTE=1`) and skipped on Windows.
+- Security review is in `docs/SECURITY_REVIEW.md`. Command failures no longer copy stdout/stderr into error details.
+- CI runs on `ubuntu-latest`, `macos-latest`, and `windows-latest`, including the `dev` branch. Tag `v*` packs tarballs and does not npm-publish.
+- README, CONTRIBUTING, CHANGELOG, LICENSE, and `docs/RELEASE.md` are in the repo.
+- Every built-in integration must have `https://` docs and an ISO `verifiedAt` date. `reposetup info` prints that freshness metadata.
+- Workspace packages stay `private` at `0.0.0`.
 
 Acceptance gate passed locally:
 
-- Zod dry-run emits `pnpm remove zod` and does not reverse the Next.js scaffold
-- Prettier remove does not delete `.prettierrc` / `.prettierignore`
-- Prisma and Next.js print the unsafe-removal sentence
-- Pydantic dry-run emits `uv remove pydantic`
-- pip remove is refused
-- Absent packages are a no-op
+- Catalog freshness test
+- README quickstart test
+- COMMAND_FAILED omits process output
 - `pnpm build`
 - `pnpm test`
 - `pnpm typecheck`
@@ -48,14 +50,14 @@ Acceptance gate passed locally:
 
 ## Known blockers
 
-None for Phase 16. Integrations remain experimental. Phase 17 is v1 hardening (golden stacks, security review, CI, docs, publishing). `import` is not a separate command; `create --config` applies exported configs.
+Integrations remain experimental. Packages are unpublished. Windows/macOS CI needs a GitHub Actions run to prove the new matrix. `import` is not a separate command; `create --config` applies exported configs. There is no website.
 
 ## Notes
 
 Do not mark a phase complete unless its acceptance gate in `docs/IMPLEMENTATION_PLAN.md` passes.
 
-Do not mark Phase 7, Phase 13, or Phase 14 integrations stable. DoD-stable requires detection/verify tests in later phases plus a tested compatible execute path.
+Do not mark Phase 7, Phase 13, or Phase 14 integrations stable. DoD-stable requires detection/verify tests plus a tested compatible execute path.
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Work is on `feat/phase-16-remove`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-17-hardening`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
