@@ -7,7 +7,7 @@ import {
 } from "@reposetup/core";
 
 import { defineIntegration } from "./define.js";
-import { addPackages, afterPythonPackageInstall } from "./operations.js";
+import { addPackages, afterPythonPackageInstall, removePackages } from "./operations.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingPythonPackage } from "./verify.js";
@@ -24,6 +24,7 @@ export const ruffIntegration = defineIntegration({
   keywords: ["format", "lint", "python"],
   verification: { verifiedAt: "2026-09-22" },
   addable: true,
+  removable: true,
   requirements: [
     {
       kind: "requires",
@@ -44,6 +45,13 @@ export const ruffIntegration = defineIntegration({
         dev: true,
       }),
       ...afterPythonPackageInstall(context, "ruff"),
+    ];
+  },
+  remove(context) {
+    return [
+      removePackages(context, ["ruff"], {
+        description: "Remove Ruff",
+      }),
     ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {

@@ -1,8 +1,10 @@
 import {
+  createRepoSetupError,
   getPackageManagerAdapter,
   type InstallationOperation,
   type PlanContext,
   type RunCommandOperation,
+  UNSAFE_REMOVE_MESSAGE,
 } from "@reposetup/core";
 
 export function addPackages(
@@ -28,6 +30,34 @@ export function addPackages(
 
   if (!result.ok) {
     throw new Error(result.error.message);
+  }
+
+  return result.operation;
+}
+
+export function removePackages(
+  context: PlanContext,
+  packages: readonly string[],
+  options: { description: string },
+): InstallationOperation {
+  const adapter = getPackageManagerAdapter(context.config.packageManager);
+  if (adapter === undefined) {
+    throw createRepoSetupError({
+      code: "UNSUPPORTED_CONTEXT",
+      message: UNSAFE_REMOVE_MESSAGE,
+      details: { packageManager: context.config.packageManager },
+      suggestion: "Use npm, pnpm, or uv. pip uninstall does not update requirements.txt.",
+    });
+  }
+
+  const result = adapter.remove({
+    packages: [...packages],
+    cwd: context.projectRoot,
+    description: options.description,
+  });
+
+  if (!result.ok) {
+    throw result.error;
   }
 
   return result.operation;

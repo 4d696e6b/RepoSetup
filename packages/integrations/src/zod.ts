@@ -1,7 +1,7 @@
 import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
-import { addPackages } from "./operations.js";
+import { addPackages, removePackages } from "./operations.js";
 import { mergeVerify, missingPackage } from "./verify.js";
 
 export const zodIntegration = defineIntegration({
@@ -14,6 +14,7 @@ export const zodIntegration = defineIntegration({
   keywords: ["schema", "typescript", "validation"],
   verification: { verifiedAt: VERIFIED_AT },
   addable: true,
+  removable: true,
   requirements: [
     {
       kind: "requires",
@@ -35,6 +36,13 @@ export const zodIntegration = defineIntegration({
     return [
       addPackages(context, ["zod"], {
         description: "Install Zod",
+      }),
+    ];
+  },
+  remove(context) {
+    return [
+      removePackages(context, ["zod"], {
+        description: "Remove Zod",
       }),
     ];
   },

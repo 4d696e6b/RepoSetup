@@ -7,7 +7,7 @@ import {
 } from "@reposetup/core";
 
 import { defineIntegration } from "./define.js";
-import { addPackages, afterPythonPackageInstall } from "./operations.js";
+import { addPackages, afterPythonPackageInstall, removePackages } from "./operations.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingPythonPackage } from "./verify.js";
@@ -22,6 +22,7 @@ export const pytestIntegration = defineIntegration({
   keywords: ["python", "test"],
   verification: { verifiedAt: "2026-09-22" },
   addable: true,
+  removable: true,
   requirements: [
     {
       kind: "requires",
@@ -42,6 +43,13 @@ export const pytestIntegration = defineIntegration({
         dev: true,
       }),
       ...afterPythonPackageInstall(context, "pytest"),
+    ];
+  },
+  remove(context) {
+    return [
+      removePackages(context, ["pytest"], {
+        description: "Remove pytest",
+      }),
     ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {

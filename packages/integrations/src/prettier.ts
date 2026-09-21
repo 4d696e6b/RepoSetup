@@ -1,7 +1,7 @@
 import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
-import { addPackages } from "./operations.js";
+import { addPackages, removePackages } from "./operations.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
 const PRETTIER_CONFIG_PATHS = [
@@ -23,6 +23,7 @@ export const prettierIntegration = defineIntegration({
   keywords: ["format", "style"],
   verification: { verifiedAt: VERIFIED_AT },
   addable: true,
+  removable: true,
   requirements: [
     {
       kind: "requires",
@@ -60,6 +61,19 @@ export const prettierIntegration = defineIntegration({
         content: "# Ignore artifacts:\nbuild\ncoverage\n",
         behavior: "fail_if_exists",
         description: "Ignore build artifacts from Prettier",
+      },
+    ];
+  },
+  remove(context) {
+    return [
+      removePackages(context, ["prettier"], {
+        description: "Remove Prettier",
+      }),
+      {
+        type: "show_message",
+        message:
+          "RepoSetup will not delete .prettierrc or .prettierignore. Remove those files yourself if you no longer need them.",
+        description: "Leave Prettier config files in place",
       },
     ];
   },
