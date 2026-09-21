@@ -12,6 +12,7 @@ export const prettierIntegration = defineIntegration({
   documentationUrl: "https://prettier.io/docs/install",
   keywords: ["format", "style"],
   verification: { verifiedAt: VERIFIED_AT },
+  addable: true,
   requirements: [
     {
       kind: "requires",

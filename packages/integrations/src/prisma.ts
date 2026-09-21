@@ -31,6 +31,7 @@ export const prismaIntegration = defineIntegration({
   documentationUrl: "https://www.prisma.io/docs/v7/prisma-orm/add-to-existing-project/sqlite",
   keywords: ["orm", "sqlite", "migrate"],
   verification: { verifiedAt: VERIFIED_AT },
+  addable: true,
   requirements: [
     {
       kind: "requires",
