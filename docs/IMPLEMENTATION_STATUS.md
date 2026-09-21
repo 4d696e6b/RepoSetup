@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 7 — First framework/integrations** (complete)
+**Phase 8 — Executor** (complete)
 
 ## Phase status
 
@@ -16,7 +16,7 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 5 — CLI skeleton + dry-run
 - [x] Phase 6 — Package-manager adapters
 - [x] Phase 7 — First framework/integrations
-- [ ] Phase 8 — Executor
+- [x] Phase 8 — Executor
 - [ ] Phase 9 — First complete golden stack
 - [ ] Phase 10 — Project detection
 - [ ] Phase 11 — Add
@@ -29,26 +29,18 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-Phase 7 built-in integrations live in `@reposetup/integrations` and emit typed operations only. The CLI default registry is `createBuiltInRegistry()`. Status is experimental. Detection and verify hooks are not implemented.
+Phase 8 executor lives in `@reposetup/core`. Only the executor mutates files or spawns processes. Commands use `spawn(command, args, { shell: false })`. Project-relative paths are resolved inside the workspace root. Existing files are not overwritten unless the operation says so.
 
-Registered IDs: `node`, `npm`, `pnpm`, `nextjs`, `tailwind`, `sqlite`, `prisma`, `zod`, `vitest`, `prettier`.
+Supported operations: `check_prerequisite`, `install_package`, `run_command`, `create_directory`, `create_file`, `modify_json`, `modify_text`, `add_env_example`, `show_message`, `verify`.
 
-Resolver auto-includes registered `runtime.id` and `packageManager` integrations when those IDs exist in the registry.
+`install_package` expands through package-manager adapters into argv arrays. Missing `node`/`npm`/`pnpm` fail with `PREREQUISITE_MISSING` and install instructions. RepoSetup does not install system software.
 
-External commands were verified from official docs on 2026-09-21:
-
-- create-next-app: `--ts`/`--js`, `--eslint`, `--app`, `--no-tailwind`, `--use-pnpm`/`--use-npm`, `--yes`
-- Tailwind v4 Next.js: `tailwindcss`, `@tailwindcss/postcss`, `postcss`, `postcss.config.mjs`
-- Prisma v7 SQLite: `prisma init --datasource-provider sqlite --output ../generated/prisma`
-- Zod: `pnpm add zod` / `npm install zod`
-- Vitest (Next.js guide): official test packages plus `vitest.config.mts`
-- Prettier: `--save-dev --save-exact prettier`, `.prettierrc`, `.prettierignore`
-
-create-next-app always receives `--no-tailwind` so the Tailwind integration owns v4 PostCSS setup. SQLite is file-based; RepoSetup does not install a database server.
+`reposetup create` executes the plan after confirmation. `--yes` skips the prompt. `--dry-run` still mutates nothing.
 
 Acceptance gate passed locally:
 
-- Golden Next.js/SQLite dry-run plan is stable
+- Fixture tests with a fake process runner
+- Controlled real test: files + local `node -e` (no network, no create-next-app)
 - `pnpm build`
 - `pnpm test`
 - `pnpm typecheck`
@@ -56,14 +48,14 @@ Acceptance gate passed locally:
 
 ## Known blockers
 
-None for Phase 7. Real install execution is Phase 8.
+None for Phase 8. The golden Next.js/SQLite *install* is Phase 9.
 
 ## Notes
 
 Do not mark a phase complete unless its acceptance gate in `docs/IMPLEMENTATION_PLAN.md` passes.
 
-Do not mark these integrations stable. DoD-stable requires detection/verify tests in later phases.
+Do not mark Phase 7 integrations stable. DoD-stable requires detection/verify tests in later phases.
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Work is on `feat/phase-7-first-integrations`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-8-executor`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
