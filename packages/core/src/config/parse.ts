@@ -9,6 +9,7 @@ import type {
   RepoSetupConfig,
   RuntimeConfig,
 } from "./types.js";
+import { SCHEMA_VERSION } from "./types.js";
 
 export type ConfigParseSuccess = {
   success: true;
@@ -42,7 +43,7 @@ export function parseRepoSetupConfig(input: unknown): ConfigParseResult {
 
 function normalizeConfig(input: ParsedConfig): RepoSetupConfig {
   return {
-    schemaVersion: 1,
+    schemaVersion: SCHEMA_VERSION,
     project: normalizeProject(input.project),
     runtime: normalizeRuntime(input.runtime),
     packageManager: input.packageManager,

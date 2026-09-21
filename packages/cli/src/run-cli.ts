@@ -6,6 +6,7 @@ import { handleCreate } from "./create.js";
 import { createDefaultRegistry } from "./default-registry.js";
 import { handleDoctor } from "./doctor.js";
 import { EXIT_CODES } from "./exit-codes.js";
+import { handleExport } from "./export.js";
 import { handleInfo } from "./info.js";
 import { createDefaultFs, createDefaultIo, writeLine } from "./io.js";
 import { promptCreate } from "./prompt-create.js";
@@ -146,6 +147,29 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
         deps: resolved,
       });
     });
+
+  program
+    .command("export")
+    .description("Write a schemaVersion 1 reposetup.json for the current project")
+    .option("--dry-run", "print the config without writing a file", false)
+    .option("--yes", "overwrite an existing reposetup.json", false)
+    .option("--package-manager <id>", "package manager when more than one is detected")
+    .option("--verbose", "include extra detail in output", false)
+    .option("--quiet", "reduce output", false)
+    .action(
+      async (
+        options: { dryRun: boolean; yes: boolean; packageManager?: string },
+        command: Command,
+      ) => {
+        exitCode = await handleExport({
+          dryRun: options.dryRun,
+          yes: options.yes,
+          packageManager: options.packageManager,
+          globals: readGlobals(command),
+          deps: resolved,
+        });
+      },
+    );
 
   const registryCommand = program.command("registry").description("Registry maintenance commands");
 

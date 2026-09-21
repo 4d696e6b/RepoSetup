@@ -261,6 +261,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("info");
     expect(captured.stdout()).toContain("stack");
     expect(captured.stdout()).toContain("doctor");
+    expect(captured.stdout()).toContain("export");
     expect(captured.stdout()).toContain("registry");
   });
 
@@ -901,4 +902,106 @@ describe("runCli", () => {
     expect(result.exitCode).toBe(EXIT_CODES.VERIFICATION_FAILURE);
     expect(captured.stdout()).toContain(".env.example is missing DATABASE_URL.");
   });
+
+  it("dry-runs export without writing reposetup.json", async () => {
+    const root = await nextExportFixture();
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["export", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain('"schemaVersion": 1');
+    expect(captured.stdout()).toContain('"id": "nextjs"');
+    expect(captured.stdout()).toContain("Would write reposetup.json.");
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(captured.stdout()).not.toContain("DATABASE_URL");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("writes reposetup.json that create --config can dry-run", async () => {
+    const source = await nextExportFixture();
+    const exportResult = await runCli(["export"], {
+      cwd: source,
+      io: captureIo().io,
+    });
+    expect(exportResult.exitCode).toBe(EXIT_CODES.SUCCESS);
+
+    const exported = await readFile(path.join(source, "reposetup.json"), "utf8");
+    expect(exported).toContain('"schemaVersion": 1');
+    expect(exported).not.toContain("DATABASE_URL");
+    expect(exported).not.toContain(source);
+
+    const target = await mkdtemp(path.join(os.tmpdir(), "reposetup-recreate-"));
+    tempDirs.push(target);
+    await writeFile(path.join(target, "reposetup.json"), exported);
+    await writeFile(path.join(target, "marker.txt"), "keep me\n");
+    const before = await snapshotTree(target);
+    const captured = captureIo();
+    const recreate = await runCli(["create", "--config", "reposetup.json", "--dry-run"], {
+      cwd: target,
+      io: captured.io,
+    });
+
+    expect(recreate.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Dry-run for example-next-app");
+    expect(captured.stdout()).toContain("create-next-app");
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(await snapshotTree(target)).toEqual(before);
+  });
+
+  it("does not overwrite reposetup.json without --yes", async () => {
+    const root = await nextExportFixture();
+    await writeFile(path.join(root, "reposetup.json"), '{"keep":true}\n');
+    const captured = captureIo();
+    const result = await runCli(["export"], {
+      cwd: root,
+      io: captured.io,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.GENERAL_FAILURE);
+    expect(captured.stderr()).toContain("FILE_ALREADY_EXISTS");
+    expect(await readFile(path.join(root, "reposetup.json"), "utf8")).toBe('{"keep":true}\n');
+  });
 });
+
+async function nextExportFixture(): Promise<string> {
+  const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-export-cli-"));
+  tempDirs.push(root);
+  await writeFile(
+    path.join(root, "package.json"),
+    JSON.stringify({
+      name: "example-next-app",
+      dependencies: {
+        next: "16.0.0",
+        "@prisma/client": "7.10.0",
+        tailwindcss: "4.0.0",
+        zod: "4.0.0",
+      },
+      devDependencies: {
+        prisma: "7.10.0",
+        typescript: "5.9.0",
+        vitest: "5.0.0",
+        prettier: "3.0.0",
+      },
+      packageManager: "pnpm@12.5.1",
+    }),
+  );
+  await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+  await writeFile(path.join(root, "tsconfig.json"), "{}\n");
+  await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
+  await writeFile(path.join(root, "postcss.config.mjs"), "export default {};\n");
+  await writeFile(path.join(root, "vitest.config.mts"), "export default {};\n");
+  await writeFile(path.join(root, ".prettierrc"), "{}\n");
+  await writeFile(path.join(root, ".env.example"), "DATABASE_URL=file:./dev.db\n");
+  await mkdir(path.join(root, "app"));
+  await writeFile(path.join(root, "app", "globals.css"), '@import "tailwindcss";\n');
+  await mkdir(path.join(root, "prisma"));
+  await writeFile(
+    path.join(root, "prisma", "schema.prisma"),
+    'generator client {\n  provider = "prisma-client"\n}\n\ndatasource db {\n  provider = "sqlite"\n}\n',
+  );
+  return root;
+}

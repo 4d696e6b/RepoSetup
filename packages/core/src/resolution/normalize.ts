@@ -1,4 +1,8 @@
-import type { IntegrationSelection, RepoSetupConfig } from "../config/types.js";
+import {
+  SCHEMA_VERSION,
+  type IntegrationSelection,
+  type RepoSetupConfig,
+} from "../config/types.js";
 
 export interface SelectedIntegration {
   id: string;
@@ -30,7 +34,7 @@ export function normalizeConfig(config: RepoSetupConfig): NormalizedResolutionIn
 
   return {
     config: {
-      schemaVersion: 1,
+      schemaVersion: SCHEMA_VERSION,
       project: config.project,
       runtime: config.runtime,
       packageManager: config.packageManager,

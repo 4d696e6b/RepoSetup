@@ -121,6 +121,8 @@ interface RepoSetupConfig {
 }
 ```
 
+`schemaVersion` is a required literal `1`. See `docs/CONFIG_MIGRATION.md` for the v1 compatibility policy. Unknown versions and unknown top-level keys are rejected.
+
 ### ResolutionResult
 
 ```ts

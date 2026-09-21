@@ -196,7 +196,13 @@ Exit codes should distinguish healthy vs issues.
 
 ## 9. `reposetup export`
 
-Creates `reposetup.json` representing the detected or known stack.
+Creates `reposetup.json` in the detected project root.
+
+The file is always `schemaVersion` 1 and can be consumed by `create --config`.
+
+`--dry-run` prints the JSON without writing.
+
+An existing `reposetup.json` is not overwritten unless `--yes` is passed.
 
 Do not include:
 - secrets;

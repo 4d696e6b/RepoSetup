@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 import { isSafeProjectName, isSafeProjectRelativePath } from "../paths/project-path.js";
-import { PACKAGE_MANAGERS, RUNTIME_IDS } from "./types.js";
+import { PACKAGE_MANAGERS, RUNTIME_IDS, SCHEMA_VERSION } from "./types.js";
 
 const jsonObjectSchema = z.record(z.string(), z.unknown());
 
@@ -36,7 +36,7 @@ export const integrationSelectionSchema = z.strictObject({
 export const packageManagerSchema = z.enum(PACKAGE_MANAGERS);
 
 export const repoSetupConfigSchema = z.strictObject({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(SCHEMA_VERSION),
   project: projectConfigSchema,
   runtime: runtimeConfigSchema,
   packageManager: packageManagerSchema,

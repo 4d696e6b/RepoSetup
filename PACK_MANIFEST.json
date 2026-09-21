@@ -19,6 +19,7 @@
     "docs/SECURITY_AND_SAFETY.md",
     "docs/IMPLEMENTATION_PLAN.md",
     "docs/ACCEPTANCE_TESTS.md",
-    "docs/V1_INTEGRATION_REGISTRY.md"
+    "docs/V1_INTEGRATION_REGISTRY.md",
+    "docs/CONFIG_MIGRATION.md"
   ]
 }
