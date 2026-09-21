@@ -9,6 +9,7 @@ export interface AddPackagesRequest {
   description: string;
   dev?: boolean;
   exact?: boolean;
+  allowBuild?: readonly string[];
 }
 
 export interface InstallProjectRequest {

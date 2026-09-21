@@ -51,6 +51,40 @@ describe("pnpmAdapter", () => {
     expectArgs(result, ["add", "--save-dev", "--save-exact", "prettier"]);
   });
 
+  it("allows named dependency build scripts with --allow-build", () => {
+    const result = pnpmAdapter.add({
+      packages: ["prisma"],
+      cwd: ".",
+      description: "Install Prisma CLI",
+      dev: true,
+      allowBuild: ["prisma", "@prisma/engines"],
+    });
+
+    expectArgs(result, [
+      "add",
+      "--save-dev",
+      "--allow-build=prisma",
+      "--allow-build=@prisma/engines",
+      "prisma",
+    ]);
+  });
+
+  it("denies a named dependency build script with --allow-build=!", () => {
+    const result = pnpmAdapter.add({
+      packages: ["@prisma/adapter-better-sqlite3"],
+      cwd: ".",
+      description: "Install Prisma SQLite adapter",
+      allowBuild: ["esbuild", "!better-sqlite3"],
+    });
+
+    expectArgs(result, [
+      "add",
+      "--allow-build=esbuild",
+      "--allow-build=!better-sqlite3",
+      "@prisma/adapter-better-sqlite3",
+    ]);
+  });
+
   it("installs the project with pnpm install", () => {
     const result = pnpmAdapter.install({
       cwd: ".",

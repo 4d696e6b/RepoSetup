@@ -206,6 +206,7 @@ function commandFailure(
       command,
       args: [...args],
       exitCode: result.exitCode,
+      stdout: result.stdout,
       stderr: result.stderr,
     },
     suggestion: "Inspect the command output, fix the project, and re-run the plan.",
