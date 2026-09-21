@@ -23,16 +23,30 @@ export type { RepoSetupError } from "./errors/model.js";
 export type {
   DetectionConfidence,
   DetectionContext,
+  DetectionEvidence,
+  DetectionEvidenceKind,
+  DetectionFileSystem,
   DetectionResult,
   IntegrationDefinition,
   IntegrationStatus,
   IntegrationVerificationMetadata,
+  PackageJsonSummary,
   PlanContext,
   SupportContext,
   SupportResult,
   VerificationContext,
   VerificationResult,
 } from "./integrations/definition.js";
+export { detectProject } from "./detection/detect-project.js";
+export type { DetectProjectResult } from "./detection/detect-project.js";
+export { createDetectionContext } from "./detection/context.js";
+export { detectEcosystem } from "./detection/ecosystem.js";
+export { createMemoryDetectionFs, createNodeDetectionFs } from "./detection/filesystem.js";
+export { detectNpmPackage } from "./detection/npm-package.js";
+export { hasPackageDependency, readPackageJson } from "./detection/package-json.js";
+export { findProjectRoot, PROJECT_ROOT_MARKERS } from "./detection/project-root.js";
+export { detectedResult, evidence, notDetected } from "./detection/result.js";
+export type { DetectedItem, DetectedLanguage, DetectedStack } from "./detection/types.js";
 export { installationOperationSchema } from "./operations/schema.js";
 export type {
   AddEnvExampleOperation,

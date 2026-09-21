@@ -38,4 +38,8 @@ describe("RepoSetupError", () => {
   it("includes plan invalid as a stable error code", () => {
     expect(ERROR_CODES).toContain("PLAN_INVALID");
   });
+
+  it("includes project not found as a stable error code", () => {
+    expect(ERROR_CODES).toContain("PROJECT_NOT_FOUND");
+  });
 });
