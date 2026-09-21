@@ -8,30 +8,17 @@ import type {
   VerifyOperation,
 } from "../operations/types.js";
 
+import { pathPrerequisite } from "../prerequisites/path.js";
+
 import { isSafeExecutableName, isSafeProcessArg } from "./command-name.js";
 import { resolveInsideRoot } from "./resolve-path.js";
 import type { ExecutionContext, ProcessRunResult } from "./types.js";
-
-const PREREQUISITES: Record<string, { command: string; hint: string }> = {
-  node: {
-    command: "node",
-    hint: "Install Node.js 20.9 or later from https://nodejs.org and ensure it is on PATH.",
-  },
-  npm: {
-    command: "npm",
-    hint: "Install Node.js, which includes npm, and ensure npm is on PATH.",
-  },
-  pnpm: {
-    command: "pnpm",
-    hint: "Install pnpm from https://pnpm.io/installation and ensure it is on PATH.",
-  },
-};
 
 export async function executeCheckPrerequisite(
   operation: CheckPrerequisiteOperation,
   context: ExecutionContext,
 ): Promise<RepoSetupError | undefined> {
-  const spec = PREREQUISITES[operation.id];
+  const spec = pathPrerequisite(operation.id);
   if (spec === undefined) {
     return createRepoSetupError({
       code: "PLAN_INVALID",
