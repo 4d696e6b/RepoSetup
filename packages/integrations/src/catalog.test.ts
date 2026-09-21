@@ -44,4 +44,17 @@ describe("built-in catalog", () => {
   it("passes registry validation", () => {
     expect(createBuiltInRegistry().validate()).toEqual({ valid: true, errors: [] });
   });
+
+  it("records freshness metadata for every built-in integration", () => {
+    const isoDate = /^\d{4}-\d{2}-\d{2}$/;
+
+    for (const definition of builtInIntegrations) {
+      expect(definition.status).toBe("experimental");
+      expect(definition.documentationUrl.startsWith("https://")).toBe(true);
+      expect(definition.verification?.verifiedAt).toMatch(isoDate);
+      expect(Number.isNaN(Date.parse(`${definition.verification?.verifiedAt}T00:00:00Z`))).toBe(
+        false,
+      );
+    }
+  });
 });

@@ -2,6 +2,8 @@
   "name": "reposetup",
   "private": true,
   "type": "module",
+  "license": "MIT",
+  "description": "Terminal-first stack composer and installer (pnpm workspace).",
   "packageManager": "pnpm@12.5.1",
   "engines": {
     "node": ">=20"
@@ -11,7 +13,8 @@
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
     "lint": "eslint . && prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "pack:packages": "pnpm -r --filter \"./packages/**\" pack"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -17,9 +17,11 @@
     "docs/CLI_SPEC.md",
     "docs/PROJECT_DETECTION.md",
     "docs/SECURITY_AND_SAFETY.md",
+    "docs/SECURITY_REVIEW.md",
     "docs/IMPLEMENTATION_PLAN.md",
     "docs/ACCEPTANCE_TESTS.md",
     "docs/V1_INTEGRATION_REGISTRY.md",
-    "docs/CONFIG_MIGRATION.md"
+    "docs/CONFIG_MIGRATION.md",
+    "docs/RELEASE.md"
   ]
 }

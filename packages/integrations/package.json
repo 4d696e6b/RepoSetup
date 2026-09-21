@@ -2,6 +2,8 @@
   "name": "@reposetup/integrations",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
+  "description": "Built-in RepoSetup integration definitions.",
   "type": "module",
   "exports": {
     ".": {

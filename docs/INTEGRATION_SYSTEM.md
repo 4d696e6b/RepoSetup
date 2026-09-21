@@ -175,6 +175,9 @@ interface IntegrationVerificationMetadata {
 
 Do not claim broad version compatibility without tests or documented evidence.
 
+Phase 17 requires every built-in integration to set `verification.verifiedAt` (ISO date `YYYY-MM-DD`) and an `https://` `documentationUrl`. `packageRange` and `runtimeRange` remain optional until an execute path proves them.
+
+
 ## 11. Safe remove
 
 `remove()` is an explicit recipe. Never invert `plan()`.

@@ -282,6 +282,14 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("registry");
   });
 
+  it("prints the CLI version", async () => {
+    const captured = captureIo();
+    const result = await runCli(["--version"], { io: captured.io });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toMatch(/0\.0\.0/);
+  });
+
   it("flows config through validation, resolve, plan, and human-readable dry-run", async () => {
     const captured = captureIo();
     const cwd = "/virtual-project";
@@ -479,6 +487,9 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("fake-orm");
     expect(captured.stdout()).toContain("category          orm");
     expect(captured.stdout()).toContain("requirements      fake-db");
+    expect(captured.stdout()).toContain("verified          not recorded");
+    expect(captured.stdout()).toContain("package range     not recorded");
+    expect(captured.stdout()).toContain("runtime range     not recorded");
     expect(captured.stdout()).toContain("removable         no");
     expect(captured.stdout()).toContain("https://example.test/integrations/fake-orm");
   });
