@@ -39,6 +39,9 @@ export function fakeIntegration(overrides: FakeOverrides): IntegrationDefinition
   if (overrides.verification !== undefined) {
     definition.verification = overrides.verification;
   }
+  if (overrides.addable !== undefined) {
+    definition.addable = overrides.addable;
+  }
   if (overrides.detect !== undefined) {
     definition.detect = overrides.detect;
   }

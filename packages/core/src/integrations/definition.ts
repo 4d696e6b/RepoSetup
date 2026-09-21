@@ -26,6 +26,7 @@ export interface DetectionEvidence {
 }
 
 export interface PackageJsonSummary {
+  name?: string;
   dependencies: Record<string, string>;
   devDependencies: Record<string, string>;
   optionalDependencies: Record<string, string>;
@@ -99,6 +100,7 @@ export interface IntegrationDefinition<TOptions = unknown> {
   includes?: IntegrationIncludes[];
   alternatives?: IntegrationAlternative[];
   verification?: IntegrationVerificationMetadata;
+  addable?: boolean;
   supports(context: SupportContext): SupportResult;
   detect?(context: DetectionContext): Promise<DetectionResult>;
   plan(context: PlanContext<TOptions>): InstallationOperation[];
