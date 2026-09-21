@@ -1,13 +1,17 @@
 import {
   detectedResult,
   evidence,
+  existingEnvKeys,
   hasPackageDependency,
   notDetected,
   type DetectionContext,
   type DetectionResult,
+  type VerificationContext,
+  type VerificationResult,
 } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
+import { failVerify, mergeVerify } from "./verify.js";
 
 export const sqliteIntegration = defineIntegration({
   id: "sqlite",
@@ -67,5 +71,27 @@ export const sqliteIntegration = defineIntegration({
         description: "Explain that SQLite needs no system package",
       },
     ];
+  },
+  async verify(context: VerificationContext): Promise<VerificationResult> {
+    const schema = await context.files.readText("prisma/schema.prisma");
+    const providerIssue =
+      schema !== undefined && !/provider\s*=\s*"sqlite"/.test(schema)
+        ? failVerify(
+            'prisma/schema.prisma does not set provider = "sqlite".',
+            'Use provider = "sqlite" for this database selection. Doctor does not rewrite schemas.',
+          )
+        : undefined;
+    const env = await context.files.readText(".env.example");
+    const envIssue =
+      env !== undefined &&
+      existingEnvKeys(env).has("DATABASE_URL") &&
+      !/DATABASE_URL\s*=\s*"?file:/.test(env)
+        ? failVerify(
+            ".env.example DATABASE_URL is not a SQLite file: URL.",
+            "Use a file: DATABASE_URL placeholder for SQLite. Doctor does not write env files.",
+          )
+        : undefined;
+
+    return mergeVerify([providerIssue, envIssue]);
   },
 });

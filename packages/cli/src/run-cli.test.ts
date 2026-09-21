@@ -260,6 +260,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("search");
     expect(captured.stdout()).toContain("info");
     expect(captured.stdout()).toContain("stack");
+    expect(captured.stdout()).toContain("doctor");
     expect(captured.stdout()).toContain("registry");
   });
 
@@ -669,5 +670,129 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(await readFile(path.join(root, ".prettierrc"), "utf8")).toBe("{}\n");
+  });
+
+  it("reports PROJECT_NOT_FOUND for doctor outside a project", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-doctor-"));
+    tempDirs.push(root);
+    const captured = captureIo();
+    const result = await runCli(["doctor"], {
+      cwd: root,
+      io: captured.io,
+      commandExists: async () => true,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.INVALID_INPUT);
+    expect(captured.stderr()).toContain("PROJECT_NOT_FOUND");
+  });
+
+  it("passes doctor for a healthy Next.js fixture without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-doctor-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "healthy-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["doctor"], {
+      cwd: root,
+      io: captured.io,
+      commandExists: async () => true,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Doctor passed.");
+    expect(captured.stdout()).toContain("Node.js");
+    expect(captured.stdout()).toContain("Next.js");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("reports a missing Next.js package", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-doctor-"));
+    tempDirs.push(root);
+    await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "broken-next" }));
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["doctor"], {
+      cwd: root,
+      io: captured.io,
+      commandExists: async () => true,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.VERIFICATION_FAILURE);
+    expect(captured.stdout()).toContain("package.json does not include next.");
+    expect(captured.stdout()).toContain("Doctor found");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("reports a missing Prettier config file", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-doctor-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "broken-prettier", devDependencies: { prettier: "3.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["doctor"], {
+      cwd: root,
+      io: captured.io,
+      commandExists: async () => true,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.VERIFICATION_FAILURE);
+    expect(captured.stdout()).toContain("Expected a Prettier config file.");
+  });
+
+  it("reports a missing Node.js prerequisite", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-doctor-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "healthy-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
+    const captured = captureIo();
+    const result = await runCli(["doctor"], {
+      cwd: root,
+      io: captured.io,
+      commandExists: async (command) => command !== "node",
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.PREREQUISITE_MISSING);
+    expect(captured.stdout()).toContain("node was not found on PATH.");
+  });
+
+  it("reports a Prisma verification failure when DATABASE_URL is missing", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-doctor-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({
+        name: "broken-prisma",
+        dependencies: { "@prisma/client": "7.10.0", prisma: "7.10.0" },
+      }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    await mkdir(path.join(root, "prisma"));
+    await writeFile(
+      path.join(root, "prisma", "schema.prisma"),
+      'datasource db {\n  provider = "sqlite"\n}\n',
+    );
+    const captured = captureIo();
+    const result = await runCli(["doctor"], {
+      cwd: root,
+      io: captured.io,
+      commandExists: async () => true,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.VERIFICATION_FAILURE);
+    expect(captured.stdout()).toContain(".env.example is missing DATABASE_URL.");
   });
 });

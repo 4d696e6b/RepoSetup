@@ -24,7 +24,7 @@ export async function detectProject(input: {
         message: "No project root was found from the current directory.",
         details: { startDir: input.startDir },
         suggestion:
-          "Run reposetup stack from a Node or Python project directory (package.json, pyproject.toml, or a lockfile).",
+          "Run this command from a Node or Python project directory (package.json, pyproject.toml, or a lockfile).",
       }),
     };
   }

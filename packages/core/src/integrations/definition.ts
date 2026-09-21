@@ -69,14 +69,12 @@ export interface PlanContext<TOptions = unknown> {
   projectRoot: ProjectRelativePath;
 }
 
-export interface VerificationContext {
-  projectRoot: ProjectRelativePath;
-  config: RepoSetupConfig;
-}
+export type VerificationContext = DetectionContext;
 
 export interface VerificationResult {
   ok: boolean;
   message?: string;
+  suggestion?: string;
 }
 
 export interface IntegrationVerificationMetadata {

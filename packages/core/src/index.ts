@@ -39,6 +39,11 @@ export type {
 } from "./integrations/definition.js";
 export { detectProject } from "./detection/detect-project.js";
 export type { DetectProjectResult } from "./detection/detect-project.js";
+export { errorsFromDoctor, failedDoctorChecks, runDoctor } from "./doctor/run-doctor.js";
+export type { DoctorCheck, DoctorResult, RunDoctorResult } from "./doctor/run-doctor.js";
+export { existingEnvKeys } from "./executor/env-example.js";
+export { pathPrerequisite } from "./prerequisites/path.js";
+export type { PathPrerequisite, PathPrerequisiteId } from "./prerequisites/path.js";
 export { createDetectionContext } from "./detection/context.js";
 export { detectEcosystem } from "./detection/ecosystem.js";
 export { createMemoryDetectionFs, createNodeDetectionFs } from "./detection/filesystem.js";

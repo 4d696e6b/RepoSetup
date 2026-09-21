@@ -5,10 +5,13 @@ import {
   notDetected,
   type DetectionContext,
   type DetectionResult,
+  type VerificationContext,
+  type VerificationResult,
 } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, execLocalBin } from "./operations.js";
+import { failVerify, mergeVerify, missingAnyFile, missingEnvKeys } from "./verify.js";
 
 const PRISMA_CLIENT = `import "dotenv/config";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
@@ -118,5 +121,23 @@ export const prismaIntegration = defineIntegration({
         description: "Generate Prisma Client into generated/prisma",
       }),
     ];
+  },
+  async verify(context: VerificationContext): Promise<VerificationResult> {
+    const pkg = context.packageJson;
+    const hasPrismaDep =
+      pkg !== undefined &&
+      (hasPackageDependency(pkg, "prisma") || hasPackageDependency(pkg, "@prisma/client"));
+    const missingDeps = hasPrismaDep
+      ? undefined
+      : failVerify(
+          "package.json does not include prisma or @prisma/client.",
+          "Add prisma and @prisma/client. Doctor does not install packages.",
+        );
+
+    return mergeVerify([
+      missingDeps,
+      await missingAnyFile(context, ["prisma/schema.prisma"], "prisma/schema.prisma"),
+      await missingEnvKeys(context, ".env.example", ["DATABASE_URL"]),
+    ]);
   },
 });
