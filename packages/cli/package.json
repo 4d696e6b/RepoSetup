@@ -22,5 +22,11 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^5.0.1"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.7.2",
+    "@reposetup/core": "workspace:*",
+    "@reposetup/registry": "workspace:*",
+    "commander": "^15.0.0"
   }
 }
