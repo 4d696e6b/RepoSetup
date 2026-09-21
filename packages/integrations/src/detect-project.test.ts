@@ -93,4 +93,77 @@ describe("built-in detection of fixture projects", () => {
     expect(result.stack.packageManagers.map((item) => item.id)).toEqual(["npm"]);
     expect(result.stack.frameworks).toEqual([]);
   });
+
+  it("identifies a React + Vite fixture without treating it as Next.js", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-stack-fixture-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({
+        name: "example-react-app",
+        dependencies: { react: "19.0.0", vite: "6.0.0", tailwindcss: "4.0.0" },
+        devDependencies: { vitest: "5.0.0", eslint: "9.0.0" },
+      }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    await writeFile(path.join(root, "vite.config.ts"), "export default {};\n");
+    await writeFile(path.join(root, "vitest.config.ts"), "export default {};\n");
+    await writeFile(path.join(root, "eslint.config.js"), "export default [];\n");
+    await writeFile(path.join(root, "tsconfig.json"), "{}\n");
+
+    const result = await detectProject({
+      startDir: root,
+      registry: createBuiltInRegistry(),
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(result.stack.frameworks.map((item) => item.id)).toEqual(["react-vite"]);
+    expect(result.stack.integrations.map((item) => item.id).sort()).toEqual([
+      "eslint",
+      "tailwind",
+      "vitest",
+    ]);
+  });
+
+  it("identifies an Express + PostgreSQL fixture", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-stack-fixture-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({
+        name: "example-express-app",
+        dependencies: { express: "5.0.0", "@prisma/client": "7.10.0" },
+      }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    await mkdir(path.join(root, "src"));
+    await writeFile(path.join(root, "src", "app.ts"), "export {};\n");
+    await mkdir(path.join(root, "prisma"));
+    await writeFile(
+      path.join(root, "prisma", "schema.prisma"),
+      'datasource db {\n  provider = "postgresql"\n}\n',
+    );
+    await writeFile(
+      path.join(root, ".env.example"),
+      "DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/DATABASE?schema=public\n",
+    );
+
+    const result = await detectProject({
+      startDir: root,
+      registry: createBuiltInRegistry(),
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(result.stack.frameworks.map((item) => item.id)).toEqual(["express"]);
+    expect(result.stack.integrations.map((item) => item.id).sort()).toEqual([
+      "postgresql",
+      "prisma",
+    ]);
+  });
 });

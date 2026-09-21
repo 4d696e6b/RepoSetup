@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "example-express-app"
+  },
+  "runtime": {
+    "id": "node"
+  },
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "express",
+    "options": {
+      "typescript": true
+    }
+  },
+  "integrations": [
+    { "id": "postgresql" },
+    { "id": "prisma" },
+    { "id": "zod" },
+    { "id": "prettier" },
+    { "id": "docker" },
+    { "id": "docker-compose" },
+    { "id": "github-actions" }
+  ]
+}

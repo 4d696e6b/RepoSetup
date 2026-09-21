@@ -1,12 +1,25 @@
 export const packageName = "@reposetup/integrations" as const;
 
 export { builtInIntegrations, createBuiltInRegistry } from "./catalog.js";
+export { dockerComposeIntegration } from "./docker-compose.js";
+export { dockerIntegration } from "./docker.js";
+export { drizzleIntegration } from "./drizzle.js";
+export { eslintIntegration } from "./eslint.js";
+export { expressIntegration } from "./express.js";
+export { fastifyIntegration } from "./fastify.js";
+export { githubActionsIntegration } from "./github-actions.js";
+export { mongodbIntegration } from "./mongodb.js";
+export { mongooseIntegration } from "./mongoose.js";
 export { nextjsIntegration } from "./nextjs.js";
 export { nodeIntegration } from "./node.js";
 export { npmIntegration } from "./npm.js";
+export { playwrightIntegration } from "./playwright.js";
 export { pnpmIntegration } from "./pnpm.js";
+export { postgresqlIntegration } from "./postgresql.js";
 export { prettierIntegration } from "./prettier.js";
 export { prismaIntegration } from "./prisma.js";
+export { reactViteIntegration } from "./react-vite.js";
+export { shadcnIntegration } from "./shadcn.js";
 export { sqliteIntegration } from "./sqlite.js";
 export { tailwindIntegration } from "./tailwind.js";
 export { vitestIntegration } from "./vitest.js";

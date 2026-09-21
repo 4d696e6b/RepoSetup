@@ -509,12 +509,66 @@ describe("runCli", () => {
     expect(await snapshotTree(root)).toEqual(before);
   });
 
+  it("dry-runs the React + Vite example without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-react-vite-"));
+    tempDirs.push(root);
+    const examplePath = path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../../examples/reposetup.react-vite.json",
+    );
+    await writeFile(path.join(root, "reposetup.json"), await readFile(examplePath, "utf8"));
+    await writeFile(path.join(root, "marker.txt"), "keep me\n");
+
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Dry-run for example-react-app");
+    expect(captured.stdout()).toContain("react-vite");
+    expect(captured.stdout()).toContain("pnpm create vite . --template react-ts --no-interactive");
+    expect(captured.stdout()).toContain("pnpm dlx shadcn@latest init --yes -t vite");
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("dry-runs the Express + PostgreSQL example without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-express-pg-"));
+    tempDirs.push(root);
+    const examplePath = path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../../examples/reposetup.express-postgres.json",
+    );
+    await writeFile(path.join(root, "reposetup.json"), await readFile(examplePath, "utf8"));
+    await writeFile(path.join(root, "marker.txt"), "keep me\n");
+
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Dry-run for example-express-app");
+    expect(captured.stdout()).toContain("express");
+    expect(captured.stdout()).toContain("postgresql");
+    expect(captured.stdout()).toContain(
+      "pnpm exec prisma init --datasource-provider postgresql --output ../generated/prisma",
+    );
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
   it("validates the built-in registry by default", async () => {
     const captured = captureIo();
     const result = await runCli(["registry", "validate"], { io: captured.io });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toContain("Registry is valid (10 integrations).");
+    expect(captured.stdout()).toContain("Registry is valid (23 integrations).");
   });
 
   it("reports PROJECT_NOT_FOUND for stack outside a project", async () => {
