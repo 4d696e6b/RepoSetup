@@ -1,8 +1,9 @@
-import type {
-  FrameworkConfig,
-  IntegrationSelection,
-  ProjectConfig,
-  RepoSetupConfig,
+import {
+  SCHEMA_VERSION,
+  type FrameworkConfig,
+  type IntegrationSelection,
+  type ProjectConfig,
+  type RepoSetupConfig,
 } from "@reposetup/core";
 
 import type { CreateAnswers } from "./types.js";
@@ -19,7 +20,7 @@ export function configFromAnswers(answers: CreateAnswers): RepoSetupConfig {
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: SCHEMA_VERSION,
     project,
     runtime: { id: answers.runtimeId },
     packageManager: answers.packageManager,
