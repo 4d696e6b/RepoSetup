@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 4 — Planner** (not started)
+**Phase 5 — CLI skeleton + dry-run** (not started)
 
 ## Phase status
 
@@ -12,7 +12,7 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 1 — Domain model and schemas
 - [x] Phase 2 — Registry
 - [x] Phase 3 — Resolver
-- [ ] Phase 4 — Planner
+- [x] Phase 4 — Planner
 - [ ] Phase 5 — CLI skeleton + dry-run
 - [ ] Phase 6 — Package-manager adapters
 - [ ] Phase 7 — First framework/integrations
@@ -29,16 +29,15 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-Phase 3 resolver now lives in `@reposetup/core` as `resolveConfig(config, registry)`:
+Phase 4 planner now lives in `@reposetup/core` as `planInstallation(config, registry)`:
 
-- configuration normalization (unique selections, framework first);
-- unknown integration lookup;
-- requirement resolution and conflict detection;
-- recommendation collection as warnings, not errors;
-- support checks;
-- requirement graph and stable topological order.
+- calls `resolveConfig` first;
+- asks each ordered fake/test integration for typed operations;
+- validates operations against the operation schema;
+- rejects shell-string args, path traversal, and invalid option schemas;
+- returns a stable sequence for the same config and registry.
 
-Tests prove missing requirements fail, conflicts fail, recommendations do not block, valid graphs have stable order, and cycles fail. Operations stay empty until Phase 4.
+`resolveConfig` still does not plan. No process execution was added.
 
 Acceptance gate passed locally:
 
@@ -49,7 +48,7 @@ Acceptance gate passed locally:
 
 ## Known blockers
 
-None for Phase 3.
+None for Phase 4.
 
 ## Notes
 
@@ -57,6 +56,4 @@ Do not mark a phase complete unless its acceptance gate in `docs/IMPLEMENTATION_
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-`@reposetup/core` does not depend on `@reposetup/registry`. The resolver uses a `RegistryLookup` port.
-
-Work is on `feat/phase-3-resolver`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-4-planner`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.

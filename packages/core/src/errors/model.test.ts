@@ -34,4 +34,8 @@ describe("RepoSetupError", () => {
   it("includes duplicate integration as a stable error code", () => {
     expect(ERROR_CODES).toContain("DUPLICATE_INTEGRATION");
   });
+
+  it("includes plan invalid as a stable error code", () => {
+    expect(ERROR_CODES).toContain("PLAN_INVALID");
+  });
 });
