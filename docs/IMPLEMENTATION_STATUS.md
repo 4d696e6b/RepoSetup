@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 5 — CLI skeleton + dry-run** (not started)
+**Phase 6 — Package manager adapters** (not started)
 
 ## Phase status
 
@@ -13,7 +13,7 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 2 — Registry
 - [x] Phase 3 — Resolver
 - [x] Phase 4 — Planner
-- [ ] Phase 5 — CLI skeleton + dry-run
+- [x] Phase 5 — CLI skeleton + dry-run
 - [ ] Phase 6 — Package-manager adapters
 - [ ] Phase 7 — First framework/integrations
 - [ ] Phase 8 — Executor
@@ -29,15 +29,13 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-Phase 4 planner now lives in `@reposetup/core` as `planInstallation(config, registry)`:
+Phase 5 CLI lives in `@reposetup/cli` as injectable `runCli(argv, deps)`:
 
-- calls `resolveConfig` first;
-- asks each ordered fake/test integration for typed operations;
-- validates operations against the operation schema;
-- rejects shell-string args, path traversal, and invalid option schemas;
-- returns a stable sequence for the same config and registry.
-
-`resolveConfig` still does not plan. No process execution was added.
+- Commander commands: `create`, `search`, `info`, `registry validate`;
+- Inquirer interactive `create`, overridable in tests;
+- `--config` + `--dry-run` flows parse → resolve → plan → human-readable output;
+- `create` without `--dry-run` still mutates nothing and reports that execution is not implemented;
+- the default registry is empty until Phase 7; tests inject fake integrations.
 
 Acceptance gate passed locally:
 
@@ -48,7 +46,7 @@ Acceptance gate passed locally:
 
 ## Known blockers
 
-None for Phase 4.
+None for Phase 5.
 
 ## Notes
 
@@ -56,4 +54,4 @@ Do not mark a phase complete unless its acceptance gate in `docs/IMPLEMENTATION_
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Work is on `feat/phase-4-planner`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-5-cli-dry-run`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
