@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import type { IntegrationDefinition, RepoSetupConfig } from "@reposetup/core";
 import { createRegistry } from "@reposetup/registry";
@@ -361,5 +362,42 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Registry is valid (3 integrations).");
+  });
+
+  it("dry-runs the golden Next.js/SQLite example without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-golden-"));
+    tempDirs.push(root);
+    const examplePath = path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../../examples/reposetup.next-sqlite.json",
+    );
+    await writeFile(path.join(root, "reposetup.json"), await readFile(examplePath, "utf8"));
+    await writeFile(path.join(root, "marker.txt"), "keep me\n");
+
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Dry-run for example-next-app");
+    expect(captured.stdout()).toContain("nextjs");
+    expect(captured.stdout()).toContain("prisma");
+    expect(captured.stdout()).toContain(
+      "pnpm create next-app@latest . --ts --eslint --app --no-tailwind --use-pnpm --yes",
+    );
+    expect(captured.stdout()).toContain("pnpm add --save-dev --save-exact prettier");
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("validates the built-in registry by default", async () => {
+    const captured = captureIo();
+    const result = await runCli(["registry", "validate"], { io: captured.io });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Registry is valid (10 integrations).");
   });
 });

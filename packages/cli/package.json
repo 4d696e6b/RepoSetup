@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts src/bin.ts --format esm --dts --clean --sourcemap --external commander --external @inquirer/prompts --external @reposetup/core --external @reposetup/registry",
+    "build": "tsup src/index.ts src/bin.ts --format esm --dts --clean --sourcemap --external commander --external @inquirer/prompts --external @reposetup/core --external @reposetup/registry --external @reposetup/integrations",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -29,6 +29,7 @@
   "dependencies": {
     "@inquirer/prompts": "^8.7.2",
     "@reposetup/core": "workspace:*",
+    "@reposetup/integrations": "workspace:*",
     "@reposetup/registry": "workspace:*",
     "commander": "^15.0.0"
   }

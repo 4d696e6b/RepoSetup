@@ -1,5 +1,5 @@
-import { createRegistry, type IntegrationRegistry } from "@reposetup/registry";
+import { createBuiltInRegistry } from "@reposetup/integrations";
 
-export function createDefaultRegistry(): IntegrationRegistry {
-  return createRegistry();
+export function createDefaultRegistry() {
+  return createBuiltInRegistry();
 }
