@@ -1,4 +1,13 @@
+import {
+  detectedResult,
+  evidence,
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+} from "@reposetup/core";
+
 import { defineIntegration, VERIFIED_AT } from "./define.js";
+import { firstExistingPath } from "./first-existing.js";
 
 export const npmIntegration = defineIntegration({
   id: "npm",
@@ -22,6 +31,30 @@ export const npmIntegration = defineIntegration({
     }
 
     return { supported: true };
+  },
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const lockfile = await firstExistingPath(context.files, [
+      "package-lock.json",
+      "npm-shrinkwrap.json",
+    ]);
+    const field = context.packageJson?.packageManager;
+    const fieldIsNpm = field !== undefined && field.startsWith("npm@");
+
+    if (lockfile === undefined && !fieldIsNpm) {
+      return notDetected();
+    }
+
+    const items = [];
+    if (lockfile !== undefined) {
+      items.push(evidence("lockfile", `Found ${lockfile}`, lockfile));
+    }
+    if (fieldIsNpm && field !== undefined) {
+      items.push(
+        evidence("manifest", `package.json packageManager field is ${field}`, "package.json"),
+      );
+    }
+
+    return detectedResult("certain", items);
   },
   plan() {
     return [

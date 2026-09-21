@@ -1,3 +1,12 @@
+import {
+  detectedResult,
+  evidence,
+  hasPackageDependency,
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+} from "@reposetup/core";
+
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 
 export const sqliteIntegration = defineIntegration({
@@ -16,6 +25,38 @@ export const sqliteIntegration = defineIntegration({
     }
 
     return { supported: true };
+  },
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const schema = await context.files.readText("prisma/schema.prisma");
+    const hasSqliteProvider = schema !== undefined && /provider\s*=\s*"sqlite"/.test(schema);
+    const envExample = await context.files.readText(".env.example");
+    const hasFileUrl = envExample !== undefined && /DATABASE_URL\s*=\s*"?file:/.test(envExample);
+    const pkg = context.packageJson;
+    const hasSqliteDep =
+      pkg !== undefined &&
+      (hasPackageDependency(pkg, "better-sqlite3") || hasPackageDependency(pkg, "sqlite3"));
+
+    if (!hasSqliteProvider && !hasFileUrl && !hasSqliteDep) {
+      return notDetected();
+    }
+
+    const items = [];
+    if (hasSqliteProvider) {
+      items.push(
+        evidence("config", 'prisma/schema.prisma uses provider = "sqlite"', "prisma/schema.prisma"),
+      );
+    }
+    if (hasFileUrl) {
+      items.push(evidence("file", ".env.example documents a file: DATABASE_URL", ".env.example"));
+    }
+    if (hasSqliteDep) {
+      items.push(
+        evidence("dependency", "package.json includes a SQLite driver package", "package.json"),
+      );
+    }
+
+    const confidence = hasSqliteProvider ? "certain" : "likely";
+    return detectedResult(confidence, items);
   },
   plan() {
     return [

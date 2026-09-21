@@ -1,3 +1,12 @@
+import {
+  detectedResult,
+  evidence,
+  hasPackageDependency,
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+} from "@reposetup/core";
+
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, execLocalBin } from "./operations.js";
 
@@ -48,6 +57,29 @@ export const prismaIntegration = defineIntegration({
     }
 
     return { supported: true };
+  },
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const pkg = context.packageJson;
+    const hasPrismaDep =
+      pkg !== undefined &&
+      (hasPackageDependency(pkg, "prisma") || hasPackageDependency(pkg, "@prisma/client"));
+    const hasSchema = await context.files.exists("prisma/schema.prisma");
+
+    if (!hasPrismaDep && !hasSchema) {
+      return notDetected();
+    }
+
+    const items = [];
+    if (hasPrismaDep) {
+      items.push(
+        evidence("dependency", "package.json includes prisma or @prisma/client", "package.json"),
+      );
+    }
+    if (hasSchema) {
+      items.push(evidence("file", "Found prisma/schema.prisma", "prisma/schema.prisma"));
+    }
+
+    return detectedResult(hasPrismaDep && hasSchema ? "certain" : "likely", items);
   },
   plan(context) {
     // Official SQLite guide: prisma@prev + @prisma/client@7. Unpinned prisma currently

@@ -1,3 +1,5 @@
+import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@reposetup/core";
+
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages } from "./operations.js";
 
@@ -23,6 +25,9 @@ export const zodIntegration = defineIntegration({
     }
 
     return { supported: true };
+  },
+  detect(context: DetectionContext): Promise<DetectionResult> {
+    return detectNpmPackage(context, "zod");
   },
   plan(context) {
     return [

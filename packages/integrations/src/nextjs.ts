@@ -1,8 +1,19 @@
 import * as z from "zod";
 
-import type { InstallationOperation, PlanContext, SupportContext } from "@reposetup/core";
+import {
+  detectedResult,
+  evidence,
+  hasPackageDependency,
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+  type InstallationOperation,
+  type PlanContext,
+  type SupportContext,
+} from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
+import { firstExistingPath } from "./first-existing.js";
 
 const nextjsOptionsSchema = z.strictObject({
   typescript: z.boolean().optional(),
@@ -45,6 +56,35 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
     }
 
     return { supported: true };
+  },
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const pkg = context.packageJson;
+    const hasNext = pkg !== undefined && hasPackageDependency(pkg, "next");
+    const config = await firstExistingPath(context.files, [
+      "next.config.ts",
+      "next.config.mjs",
+      "next.config.js",
+      "next.config.mts",
+    ]);
+    const appDir = await firstExistingPath(context.files, ["app", "src/app", "pages", "src/pages"]);
+
+    if (!hasNext && config === undefined && appDir === undefined) {
+      return notDetected();
+    }
+
+    const items = [];
+    if (hasNext) {
+      items.push(evidence("dependency", "package.json includes next", "package.json"));
+    }
+    if (config !== undefined) {
+      items.push(evidence("config", `Found ${config}`, config));
+    }
+    if (appDir !== undefined) {
+      items.push(evidence("directory", `Found ${appDir}`, appDir));
+    }
+
+    const confidence = hasNext ? "certain" : config !== undefined ? "likely" : "possible";
+    return detectedResult(confidence, items);
   },
   plan(context: PlanContext<NextjsOptions>) {
     const directory = context.projectRoot;
