@@ -38,26 +38,31 @@ export const vitestIntegration = defineIntegration({
   id: "vitest",
   name: "Vitest",
   category: "testing",
-  description: "Adds Vitest and React Testing Library to a Next.js app.",
+  description:
+    "Adds Vitest. Next.js uses the official RTL guide; other Node apps install Vitest only.",
   status: "experimental",
-  documentationUrl: "https://nextjs.org/docs/app/guides/testing/vitest",
+  documentationUrl: "https://vitest.dev/guide/",
   keywords: ["test", "vite", "rtl"],
   verification: { verifiedAt: VERIFIED_AT },
   addable: true,
   requirements: [
     {
       kind: "requires",
-      target: { type: "integration", id: "nextjs" },
-      reason: "This phase implements the official Next.js Vitest guide.",
+      target: { type: "category", category: "framework" },
+      reason: "Vitest is added to the scaffolded application.",
     },
   ],
   supports(context) {
-    if (context.frameworkId !== "nextjs") {
-      return { supported: false, reason: "This phase supports Vitest with Next.js only." };
+    if (context.runtimeId !== "node") {
+      return { supported: false, reason: "Vitest requires Node.js." };
     }
 
-    if (context.runtimeId !== "node") {
-      return { supported: false, reason: "Vitest for Next.js requires Node.js." };
+    const allowed = new Set(["nextjs", "react-vite", "express", "fastify"]);
+    if (!allowed.has(context.frameworkId)) {
+      return {
+        supported: false,
+        reason: "This phase supports Vitest with Next.js, React + Vite, Express, or Fastify.",
+      };
     }
 
     return { supported: true };
@@ -66,6 +71,30 @@ export const vitestIntegration = defineIntegration({
     return detectNpmPackage(context, "vitest", VITEST_CONFIG_PATHS);
   },
   plan(context) {
+    if (context.config.framework.id !== "nextjs") {
+      const typescript = context.config.framework.options?.typescript !== false;
+      return [
+        addPackages(context, ["vitest"], {
+          description: "Install Vitest",
+          dev: true,
+        }),
+        {
+          type: "create_file",
+          path: typescript ? "vitest.config.ts" : "vitest.config.js",
+          content: `import { defineConfig } from 'vitest/config'\n\nexport default defineConfig({})\n`,
+          behavior: "fail_if_exists",
+          description: "Add a Vitest config so doctor can find it",
+        },
+        {
+          type: "modify_json",
+          path: "package.json",
+          merge: { scripts: { test: "vitest" } },
+          behavior: "merge",
+          description: "Add the official Vitest test script",
+        },
+      ];
+    }
+
     const typescript = context.config.framework.options?.typescript !== false;
     const packages = typescript
       ? [

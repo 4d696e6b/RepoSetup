@@ -115,6 +115,14 @@ describe("integration plans", () => {
     ]);
   });
 
+  it("installs the official Tailwind Vite plugin for React + Vite", () => {
+    const plan = tailwindIntegration.plan(planContext({ frameworkId: "react-vite" }));
+    expect(runCommands(plan)).toEqual([["pnpm", "add", "tailwindcss", "@tailwindcss/vite"]]);
+    expect(plan).toEqual(
+      expect.arrayContaining([expect.objectContaining({ type: "show_message" })]),
+    );
+  });
+
   it("installs Tailwind v4 PostCSS packages without --save-dev", () => {
     const plan = tailwindIntegration.plan(planContext());
     expect(runCommands(plan)).toEqual([
@@ -221,7 +229,43 @@ describe("integration plans", () => {
     ]);
   });
 
-  it("rejects Prisma unless SQLite is selected", () => {
+  it("initializes Prisma PostgreSQL with the official adapter packages", () => {
+    expect(
+      runCommands(prismaIntegration.plan(planContext({ integrations: [{ id: "postgresql" }] }))),
+    ).toEqual([
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "--allow-build=prisma",
+        "--allow-build=@prisma/engines",
+        "prisma@prev",
+        "@types/pg",
+      ],
+      [
+        "pnpm",
+        "add",
+        "--allow-build=esbuild",
+        "@prisma/client@7",
+        "@prisma/adapter-pg",
+        "pg",
+        "dotenv",
+      ],
+      [
+        "pnpm",
+        "exec",
+        "prisma",
+        "init",
+        "--datasource-provider",
+        "postgresql",
+        "--output",
+        "../generated/prisma",
+      ],
+      ["pnpm", "exec", "prisma", "generate"],
+    ]);
+  });
+
+  it("rejects Prisma unless SQLite or PostgreSQL is selected", () => {
     expect(
       prismaIntegration.supports({
         runtimeId: "node",
@@ -231,7 +275,7 @@ describe("integration plans", () => {
       }),
     ).toEqual({
       supported: false,
-      reason: "This phase implements Prisma with SQLite only.",
+      reason: "This phase implements Prisma with SQLite or PostgreSQL.",
     });
   });
 });

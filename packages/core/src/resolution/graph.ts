@@ -1,6 +1,7 @@
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import type { IntegrationDefinition } from "../integrations/definition.js";
 import type { SelectedIntegration } from "./normalize.js";
+import { categorySatisfiesRequirement } from "./requirements.js";
 
 export type TopologicalSortResult =
   { ok: true; order: string[] } | { ok: false; error: RepoSetupError };
@@ -85,7 +86,10 @@ function prerequisitesFor(
       }
 
       const candidate = definitions.get(item.id);
-      if (candidate?.category === requirement.target.category) {
+      if (
+        candidate !== undefined &&
+        categorySatisfiesRequirement(requirement.target.category, candidate.category)
+      ) {
         prerequisites.add(item.id);
       }
     }

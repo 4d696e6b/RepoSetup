@@ -10,6 +10,7 @@ import {
   type VerificationResult,
 } from "@reposetup/core";
 
+import { DATABASE_CONFLICTS } from "./conflicts.js";
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { failVerify, mergeVerify } from "./verify.js";
 
@@ -23,6 +24,7 @@ export const sqliteIntegration = defineIntegration({
   documentationUrl: "https://www.prisma.io/docs/orm/v7/core-concepts/supported-databases/sqlite",
   keywords: ["database", "file", "libsql"],
   verification: { verifiedAt: VERIFIED_AT },
+  conflicts: DATABASE_CONFLICTS,
   supports(context) {
     if (context.runtimeId !== "node") {
       return { supported: false, reason: "This phase supports SQLite with Node.js only." };

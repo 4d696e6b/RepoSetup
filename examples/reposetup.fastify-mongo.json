@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "example-fastify-app"
+  },
+  "runtime": {
+    "id": "node"
+  },
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "fastify",
+    "options": {
+      "typescript": true
+    }
+  },
+  "integrations": [
+    { "id": "mongodb" },
+    { "id": "mongoose" },
+    { "id": "vitest" },
+    { "id": "playwright" }
+  ]
+}
