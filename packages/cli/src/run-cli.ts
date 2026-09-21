@@ -1,5 +1,6 @@
 import { Command, CommanderError } from "commander";
 
+import { confirmCreate as defaultConfirmCreate } from "./confirm-create.js";
 import { handleCreate } from "./create.js";
 import { createDefaultRegistry } from "./default-registry.js";
 import { EXIT_CODES } from "./exit-codes.js";
@@ -52,7 +53,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .argument("[name]", "project name")
     .option("-c, --config <path>", "path to a RepoSetup JSON config")
     .option("--dry-run", "print the installation plan without changing files", false)
-    .option("--yes", "skip confirmation (unused until execution is implemented)", false)
+    .option("--yes", "skip confirmation and execute the plan", false)
     .option("--framework <id>", "framework integration id")
     .option("--package-manager <id>", "package manager")
     .option("--typescript", "set framework option typescript=true", false)
@@ -129,13 +130,23 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
 }
 
 function resolveDeps(deps: CliDeps): ResolvedCliDeps {
-  return {
+  const resolved: ResolvedCliDeps = {
     registry: deps.registry ?? createDefaultRegistry(),
     io: deps.io ?? createDefaultIo(),
     fs: deps.fs ?? createDefaultFs(),
     promptCreate: deps.promptCreate ?? promptCreate,
+    confirmCreate: deps.confirmCreate ?? defaultConfirmCreate,
     cwd: deps.cwd ?? process.cwd(),
   };
+
+  if (deps.runProcess !== undefined) {
+    resolved.runProcess = deps.runProcess;
+  }
+  if (deps.commandExists !== undefined) {
+    resolved.commandExists = deps.commandExists;
+  }
+
+  return resolved;
 }
 
 function readGlobals(command: Command): GlobalCliOptions {

@@ -1,4 +1,9 @@
-import type { IntegrationSelection, PackageManager, RuntimeId } from "@reposetup/core";
+import type {
+  IntegrationSelection,
+  PackageManager,
+  ProcessRunner,
+  RuntimeId,
+} from "@reposetup/core";
 import type { IntegrationRegistry } from "@reposetup/registry";
 
 export interface CliIo {
@@ -34,6 +39,9 @@ export interface CliDeps {
   io?: CliIo;
   fs?: CliFs;
   promptCreate?: (context: PromptCreateContext) => Promise<CreateAnswers>;
+  confirmCreate?: () => Promise<boolean>;
+  runProcess?: ProcessRunner;
+  commandExists?: (command: string) => Promise<boolean>;
   cwd?: string;
 }
 
@@ -42,6 +50,9 @@ export interface ResolvedCliDeps {
   io: CliIo;
   fs: CliFs;
   promptCreate: (context: PromptCreateContext) => Promise<CreateAnswers>;
+  confirmCreate: () => Promise<boolean>;
+  runProcess?: ProcessRunner;
+  commandExists?: (command: string) => Promise<boolean>;
   cwd: string;
 }
 
