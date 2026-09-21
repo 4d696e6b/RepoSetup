@@ -1,4 +1,5 @@
 import {
+  executeInstallation,
   parseRepoSetupConfig,
   planInstallation,
   type PackageManager,
@@ -51,11 +52,45 @@ export async function handleCreate(input: {
     return EXIT_CODES.SUCCESS;
   }
 
-  writeLine(
-    input.deps.io.writeErr,
-    "Create execution is not implemented yet. Re-run with --dry-run to inspect the plan.",
-  );
-  return EXIT_CODES.GENERAL_FAILURE;
+  if (!input.options.yes) {
+    const proceed = await input.deps.confirmCreate();
+    if (!proceed) {
+      writeLine(
+        input.deps.io.writeErr,
+        "Aborted. Pass --yes to execute without a confirmation prompt.",
+      );
+      return EXIT_CODES.INVALID_INPUT;
+    }
+  }
+
+  const executed = await executeInstallation(planned.operations, {
+    rootDir: input.deps.cwd,
+    logger: {
+      info(message) {
+        if (!input.globals.quiet) {
+          writeLine(input.deps.io.writeOut, message);
+        }
+      },
+      verbose(message) {
+        if (input.globals.verbose) {
+          writeLine(input.deps.io.writeOut, message);
+        }
+      },
+    },
+    ...(input.deps.runProcess === undefined ? {} : { runProcess: input.deps.runProcess }),
+    ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
+  });
+
+  if (!executed.ok) {
+    writeLine(input.deps.io.writeErr, formatError(executed.error));
+    return exitCodeForError(executed.error);
+  }
+
+  if (!input.globals.quiet) {
+    writeLine(input.deps.io.writeOut, `Executed ${executed.executed} operations.`);
+  }
+
+  return EXIT_CODES.SUCCESS;
 }
 
 async function resolveCreateConfig(input: {

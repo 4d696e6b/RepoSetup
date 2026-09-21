@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { IntegrationDefinition, RepoSetupConfig } from "@reposetup/core";
+import type { IntegrationDefinition, ProcessRunRequest, RepoSetupConfig } from "@reposetup/core";
 import { createRegistry } from "@reposetup/registry";
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -242,7 +242,7 @@ describe("runCli", () => {
     expect(await readdir(projectDir)).toEqual(["marker.txt"]);
   });
 
-  it("does not mutate the filesystem when execution is not implemented", async () => {
+  it("refuses to execute without confirmation or --yes", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-create-"));
     tempDirs.push(root);
     await writeFile(path.join(root, "reposetup.json"), `${JSON.stringify(sampleConfig())}\n`);
@@ -253,11 +253,45 @@ describe("runCli", () => {
       cwd: root,
       registry: testRegistry(),
       io: captured.io,
+      confirmCreate: async () => false,
     });
 
-    expect(result.exitCode).toBe(EXIT_CODES.GENERAL_FAILURE);
-    expect(captured.stderr()).toContain("Create execution is not implemented yet.");
+    expect(result.exitCode).toBe(EXIT_CODES.INVALID_INPUT);
+    expect(captured.stderr()).toContain("Aborted.");
     expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("executes the plan with --yes and a fake process runner", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-create-exec-"));
+    tempDirs.push(root);
+    await writeFile(path.join(root, "reposetup.json"), `${JSON.stringify(sampleConfig())}\n`);
+    const captured = captureIo();
+    const runs: ProcessRunRequest[] = [];
+
+    const result = await runCli(["create", "--config", "reposetup.json", "--yes"], {
+      cwd: root,
+      registry: testRegistry(),
+      io: captured.io,
+      runProcess: async (request) => {
+        runs.push(request);
+        return { exitCode: 0, stdout: "", stderr: "" };
+      },
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Executed 3 operations.");
+    expect(captured.stderr()).toBe("");
+    expect(await readdir(root)).toEqual(
+      expect.arrayContaining(["db.txt", "reposetup.json", "src"]),
+    );
+    expect(await readFile(path.join(root, "db.txt"), "utf8")).toBe("engine=sqlite");
+    expect(runs).toEqual([
+      {
+        command: "pnpm",
+        args: ["add", "fake-orm"],
+        cwd: path.resolve(root),
+      },
+    ]);
   });
 
   it("returns invalid input for a malformed config file", async () => {
