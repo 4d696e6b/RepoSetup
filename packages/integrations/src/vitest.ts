@@ -1,3 +1,5 @@
+import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@reposetup/core";
+
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, execLocalBin } from "./operations.js";
 
@@ -50,6 +52,14 @@ export const vitestIntegration = defineIntegration({
     }
 
     return { supported: true };
+  },
+  detect(context: DetectionContext): Promise<DetectionResult> {
+    return detectNpmPackage(context, "vitest", [
+      "vitest.config.mts",
+      "vitest.config.ts",
+      "vitest.config.js",
+      "vitest.config.mjs",
+    ]);
   },
   plan(context) {
     const typescript = context.config.framework.options?.typescript !== false;

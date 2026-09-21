@@ -9,6 +9,7 @@ import { createDefaultFs, createDefaultIo, writeLine } from "./io.js";
 import { promptCreate } from "./prompt-create.js";
 import { handleRegistryValidate } from "./registry-validate.js";
 import { handleSearch } from "./search.js";
+import { handleStack } from "./stack.js";
 import type {
   CliDeps,
   CliResult,
@@ -96,6 +97,16 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .argument("<id>", "integration id")
     .action((id: string) => {
       exitCode = handleInfo({ id, deps: resolved });
+    });
+
+  program
+    .command("stack")
+    .description("Detect and print the current project stack")
+    .action(async (_options: unknown, command: Command) => {
+      exitCode = await handleStack({
+        globals: readGlobals(command),
+        deps: resolved,
+      });
     });
 
   const registryCommand = program.command("registry").description("Registry maintenance commands");

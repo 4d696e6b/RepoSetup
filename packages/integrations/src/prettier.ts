@@ -1,3 +1,5 @@
+import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@reposetup/core";
+
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages } from "./operations.js";
 
@@ -23,6 +25,16 @@ export const prettierIntegration = defineIntegration({
     }
 
     return { supported: true };
+  },
+  detect(context: DetectionContext): Promise<DetectionResult> {
+    return detectNpmPackage(context, "prettier", [
+      ".prettierrc",
+      ".prettierrc.json",
+      ".prettierrc.js",
+      ".prettierrc.mjs",
+      "prettier.config.js",
+      "prettier.config.mjs",
+    ]);
   },
   plan(context) {
     return [

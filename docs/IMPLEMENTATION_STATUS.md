@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 9 — First complete golden stack** (complete)
+**Phase 10 — Project detection** (complete)
 
 ## Phase status
 
@@ -18,7 +18,7 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 7 — First framework/integrations
 - [x] Phase 8 — Executor
 - [x] Phase 9 — First complete golden stack
-- [ ] Phase 10 — Project detection
+- [x] Phase 10 — Project detection
 - [ ] Phase 11 — Add
 - [ ] Phase 12 — Doctor
 - [ ] Phase 13 — JS ecosystem expansion
@@ -29,24 +29,24 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-Phase 9 proves `examples/reposetup.next-sqlite.json` installs without manual repair.
+Phase 10 adds read-only project detection in `@reposetup/core` and `reposetup stack`.
 
-create-next-app uses `--no-src-dir` and `--import-alias @/*` so later official Tailwind/Vitest paths stay under `app/`. Tailwind prepends `@import "tailwindcss"` in `app/globals.css`. Prisma follows the v7 SQLite guide: `prisma@prev`, `@prisma/client@7`, `prisma init --datasource-provider sqlite --output ../generated/prisma`, then `prisma generate`. Vitest loads its config with `vitest run --passWithNoTests`.
+Detection walks up from the working directory to the nearest project marker, then inspects manifests and lockfiles. Node package managers come from lockfiles or `package.json#packageManager`, not from a globally installed tool. Python `uv` is certain from `uv.lock`; `pip` is only likely from `requirements.txt` when no uv lockfile is present. Yarn lockfiles are reported as warnings, not selected.
 
-pnpm 12 ignored-build failures are handled through adapter `allowBuild` (`--allow-build=<name>` and `--allow-build=!better-sqlite3`). The plan does not add a direct `better-sqlite3` dependency or install node-gyp/Python.
+Each built-in integration owns `detect()`. Confidence is `certain` | `likely` | `possible`; uncertain names are labeled in `stack` output. Detection never mutates files.
 
 Acceptance gate passed locally:
 
-- Plan tests for the golden command sequence
-- Controlled network install of the example stack, then `pnpm exec next build`
+- Fixture identification: npm lockfile, pnpm Next.js/SQLite-style tree, Python uv, mixed lockfiles, no-lockfile Node
+- `reposetup stack` CLI tests
 - `pnpm build`
-- `pnpm test`
+- `pnpm test` (Phase 10 packages; golden install test unchanged)
 - `pnpm typecheck`
 - `pnpm lint`
 
 ## Known blockers
 
-None for Phase 9. Integrations remain experimental until later detection/verify work.
+None for Phase 10. Integrations remain experimental. `add`, `doctor`, and `export` still need later phases.
 
 ## Notes
 
@@ -56,4 +56,4 @@ Do not mark Phase 7 integrations stable. DoD-stable requires detection/verify te
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Work is on `feat/phase-9-golden-stack`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-10-project-detection`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.

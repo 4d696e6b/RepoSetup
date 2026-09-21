@@ -16,6 +16,28 @@ export type IntegrationStatus = "stable" | "experimental";
 
 export type DetectionConfidence = "certain" | "likely" | "possible";
 
+export type DetectionEvidenceKind =
+  "file" | "directory" | "dependency" | "lockfile" | "config" | "manifest";
+
+export interface DetectionEvidence {
+  kind: DetectionEvidenceKind;
+  detail: string;
+  path?: string;
+}
+
+export interface PackageJsonSummary {
+  dependencies: Record<string, string>;
+  devDependencies: Record<string, string>;
+  optionalDependencies: Record<string, string>;
+  peerDependencies: Record<string, string>;
+  packageManager?: string;
+}
+
+export interface DetectionFileSystem {
+  exists(relativePath: ProjectRelativePath): Promise<boolean>;
+  readText(relativePath: ProjectRelativePath): Promise<string | undefined>;
+}
+
 export interface SupportContext {
   runtimeId: RepoSetupConfig["runtime"]["id"];
   packageManager: RepoSetupConfig["packageManager"];
@@ -29,13 +51,15 @@ export interface SupportResult {
 }
 
 export interface DetectionContext {
-  projectRoot: ProjectRelativePath;
+  projectRoot: string;
+  files: DetectionFileSystem;
+  packageJson?: PackageJsonSummary;
 }
 
 export interface DetectionResult {
   detected: boolean;
   confidence: DetectionConfidence;
-  evidence?: string[];
+  evidence: DetectionEvidence[];
 }
 
 export interface PlanContext<TOptions = unknown> {

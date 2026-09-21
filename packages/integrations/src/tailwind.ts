@@ -1,4 +1,14 @@
+import {
+  detectedResult,
+  evidence,
+  hasPackageDependency,
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+} from "@reposetup/core";
+
 import { defineIntegration, VERIFIED_AT } from "./define.js";
+import { firstExistingPath } from "./first-existing.js";
 import { addPackages } from "./operations.js";
 
 const POSTCSS_CONFIG = `const config = {
@@ -35,6 +45,43 @@ export const tailwindIntegration = defineIntegration({
     }
 
     return { supported: true };
+  },
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const pkg = context.packageJson;
+    const hasTailwind = pkg !== undefined && hasPackageDependency(pkg, "tailwindcss");
+    const postcss = await firstExistingPath(context.files, [
+      "postcss.config.mjs",
+      "postcss.config.js",
+    ]);
+    const cssPath = await firstExistingPath(context.files, [
+      "app/globals.css",
+      "src/app/globals.css",
+    ]);
+    const css = cssPath === undefined ? undefined : await context.files.readText(cssPath);
+    const hasImport = css !== undefined && css.includes('@import "tailwindcss"');
+
+    if (!hasTailwind && postcss === undefined && !hasImport) {
+      return notDetected();
+    }
+
+    const items = [];
+    if (hasTailwind) {
+      items.push(evidence("dependency", "package.json includes tailwindcss", "package.json"));
+    }
+    if (postcss !== undefined) {
+      items.push(evidence("config", `Found ${postcss}`, postcss));
+    }
+    if (hasImport && cssPath !== undefined) {
+      items.push(evidence("file", `${cssPath} imports Tailwind`, cssPath));
+    }
+
+    const confidence =
+      hasTailwind && (postcss !== undefined || hasImport)
+        ? "certain"
+        : hasTailwind
+          ? "likely"
+          : "possible";
+    return detectedResult(confidence, items);
   },
   plan(context) {
     return [

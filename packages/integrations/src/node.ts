@@ -1,3 +1,11 @@
+import {
+  detectedResult,
+  evidence,
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+} from "@reposetup/core";
+
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 
 export const nodeIntegration = defineIntegration({
@@ -18,6 +26,13 @@ export const nodeIntegration = defineIntegration({
     }
 
     return { supported: true };
+  },
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    if (!(await context.files.exists("package.json"))) {
+      return notDetected();
+    }
+
+    return detectedResult("certain", [evidence("manifest", "Found package.json", "package.json")]);
   },
   plan() {
     return [
