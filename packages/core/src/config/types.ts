@@ -6,6 +6,10 @@ export const RUNTIME_IDS = ["node", "python"] as const;
 
 export type RuntimeId = (typeof RUNTIME_IDS)[number];
 
+export const SCHEMA_VERSION = 1 as const;
+
+export type SchemaVersion = typeof SCHEMA_VERSION;
+
 export interface ProjectConfig {
   name: string;
   path?: string;
@@ -27,7 +31,7 @@ export interface IntegrationSelection {
 }
 
 export interface RepoSetupConfig {
-  schemaVersion: 1;
+  schemaVersion: SchemaVersion;
   project: ProjectConfig;
   runtime: RuntimeConfig;
   packageManager: PackageManager;

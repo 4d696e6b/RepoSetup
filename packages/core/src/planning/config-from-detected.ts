@@ -2,6 +2,7 @@ import path from "node:path";
 
 import {
   PACKAGE_MANAGERS,
+  SCHEMA_VERSION,
   type PackageManager,
   type RepoSetupConfig,
   type RuntimeId,
@@ -104,6 +105,35 @@ export function projectNameFromStack(
   return "existing-project";
 }
 
+export function exportConfigFromDetectedStack(input: {
+  stack: DetectedStack;
+  registry: RegistryLookup;
+  runtimeId: RuntimeId;
+  packageManager: PackageManager;
+  frameworkId: string;
+  projectName: string;
+  typescript: boolean;
+}): RepoSetupConfig {
+  const integrations = presentItems(input.stack.integrations)
+    .filter((item) => input.registry.get(item.id) !== undefined)
+    .filter((item) => item.id !== input.frameworkId)
+    .map((item) => ({ id: item.id }));
+
+  const framework: RepoSetupConfig["framework"] = { id: input.frameworkId };
+  if (input.typescript) {
+    framework.options = { typescript: true };
+  }
+
+  return {
+    schemaVersion: SCHEMA_VERSION,
+    project: { name: input.projectName },
+    runtime: { id: input.runtimeId },
+    packageManager: input.packageManager,
+    framework,
+    integrations,
+  };
+}
+
 export function configFromDetectedStack(input: {
   stack: DetectedStack;
   registry: RegistryLookup;
@@ -114,24 +144,13 @@ export function configFromDetectedStack(input: {
   projectName: string;
   typescript: boolean;
 }): RepoSetupConfig {
-  const integrations = presentItems(input.stack.integrations)
-    .filter((item) => input.registry.get(item.id) !== undefined)
-    .filter((item) => item.id !== input.frameworkId && item.id !== input.requestedId)
-    .map((item) => ({ id: item.id }));
-
+  const exported = exportConfigFromDetectedStack(input);
+  const integrations = exported.integrations.filter((item) => item.id !== input.requestedId);
   integrations.push({ id: input.requestedId });
 
-  const framework: RepoSetupConfig["framework"] = { id: input.frameworkId };
-  if (input.typescript) {
-    framework.options = { typescript: true };
-  }
-
   return {
-    schemaVersion: 1,
+    ...exported,
     project: { name: input.projectName, path: "." },
-    runtime: { id: input.runtimeId },
-    packageManager: input.packageManager,
-    framework,
     integrations,
   };
 }

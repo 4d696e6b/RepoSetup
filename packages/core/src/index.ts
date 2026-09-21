@@ -7,6 +7,8 @@ export {
 export { parseRepoSetupConfig } from "./config/parse.js";
 export type { ConfigParseFailure, ConfigParseResult, ConfigParseSuccess } from "./config/parse.js";
 export { repoSetupConfigSchema } from "./config/schema.js";
+export { serializeRepoSetupConfig } from "./config/serialize.js";
+export { PACKAGE_MANAGERS, RUNTIME_IDS, SCHEMA_VERSION } from "./config/types.js";
 export type {
   FrameworkConfig,
   IntegrationSelection,
@@ -15,8 +17,8 @@ export type {
   RepoSetupConfig,
   RuntimeConfig,
   RuntimeId,
+  SchemaVersion,
 } from "./config/types.js";
-export { PACKAGE_MANAGERS, RUNTIME_IDS } from "./config/types.js";
 export { ERROR_CODES, type ErrorCode } from "./errors/codes.js";
 export { createRepoSetupError, isRepoSetupError } from "./errors/model.js";
 export type { RepoSetupError } from "./errors/model.js";
@@ -86,6 +88,9 @@ export { resolveConfig } from "./resolution/resolve.js";
 export { planInstallation, planInstallationSubset, toInstallationPlan } from "./planning/plan.js";
 export { planAdd } from "./planning/plan-add.js";
 export type { PlanAddResult } from "./planning/plan-add.js";
+export { exportProject } from "./planning/export-project.js";
+export type { ExportProjectResult } from "./planning/export-project.js";
+export { exportConfigFromDetectedStack } from "./planning/config-from-detected.js";
 export { validateInstallationPlan } from "./planning/validate-plan.js";
 export type { PlanValidationResult } from "./planning/validate-plan.js";
 export { executeInstallation } from "./executor/execute.js";
