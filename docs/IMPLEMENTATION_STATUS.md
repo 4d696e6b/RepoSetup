@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 8 — Executor** (complete)
+**Phase 9 — First complete golden stack** (complete)
 
 ## Phase status
 
@@ -17,7 +17,7 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 6 — Package-manager adapters
 - [x] Phase 7 — First framework/integrations
 - [x] Phase 8 — Executor
-- [ ] Phase 9 — First complete golden stack
+- [x] Phase 9 — First complete golden stack
 - [ ] Phase 10 — Project detection
 - [ ] Phase 11 — Add
 - [ ] Phase 12 — Doctor
@@ -29,18 +29,16 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-Phase 8 executor lives in `@reposetup/core`. Only the executor mutates files or spawns processes. Commands use `spawn(command, args, { shell: false })`. Project-relative paths are resolved inside the workspace root. Existing files are not overwritten unless the operation says so.
+Phase 9 proves `examples/reposetup.next-sqlite.json` installs without manual repair.
 
-Supported operations: `check_prerequisite`, `install_package`, `run_command`, `create_directory`, `create_file`, `modify_json`, `modify_text`, `add_env_example`, `show_message`, `verify`.
+create-next-app uses `--no-src-dir` and `--import-alias @/*` so later official Tailwind/Vitest paths stay under `app/`. Tailwind prepends `@import "tailwindcss"` in `app/globals.css`. Prisma follows the v7 SQLite guide: `prisma@prev`, `@prisma/client@7`, `prisma init --datasource-provider sqlite --output ../generated/prisma`, then `prisma generate`. Vitest loads its config with `vitest run --passWithNoTests`.
 
-`install_package` expands through package-manager adapters into argv arrays. Missing `node`/`npm`/`pnpm` fail with `PREREQUISITE_MISSING` and install instructions. RepoSetup does not install system software.
-
-`reposetup create` executes the plan after confirmation. `--yes` skips the prompt. `--dry-run` still mutates nothing.
+pnpm 12 ignored-build failures are handled through adapter `allowBuild` (`--allow-build=<name>` and `--allow-build=!better-sqlite3`). The plan does not add a direct `better-sqlite3` dependency or install node-gyp/Python.
 
 Acceptance gate passed locally:
 
-- Fixture tests with a fake process runner
-- Controlled real test: files + local `node -e` (no network, no create-next-app)
+- Plan tests for the golden command sequence
+- Controlled network install of the example stack, then `pnpm exec next build`
 - `pnpm build`
 - `pnpm test`
 - `pnpm typecheck`
@@ -48,7 +46,7 @@ Acceptance gate passed locally:
 
 ## Known blockers
 
-None for Phase 8. The golden Next.js/SQLite *install* is Phase 9.
+None for Phase 9. Integrations remain experimental until later detection/verify work.
 
 ## Notes
 
@@ -58,4 +56,4 @@ Do not mark Phase 7 integrations stable. DoD-stable requires detection/verify te
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Work is on `feat/phase-8-executor`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-9-golden-stack`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.

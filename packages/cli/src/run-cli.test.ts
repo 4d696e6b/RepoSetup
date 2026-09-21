@@ -420,8 +420,13 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("nextjs");
     expect(captured.stdout()).toContain("prisma");
     expect(captured.stdout()).toContain(
-      "pnpm create next-app@latest . --ts --eslint --app --no-tailwind --use-pnpm --yes",
+      "pnpm create next-app@latest . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --yes",
     );
+    expect(captured.stdout()).toContain(
+      "pnpm add --save-dev --allow-build=prisma --allow-build=@prisma/engines prisma@prev @types/better-sqlite3",
+    );
+    expect(captured.stdout()).toContain("pnpm exec prisma generate");
+    expect(captured.stdout()).toContain("pnpm exec vitest run --passWithNoTests");
     expect(captured.stdout()).toContain("pnpm add --save-dev --save-exact prettier");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);

@@ -78,7 +78,10 @@ describe("integration plans", () => {
         "--ts",
         "--eslint",
         "--app",
+        "--no-src-dir",
         "--no-tailwind",
+        "--import-alias",
+        "@/*",
         "--use-pnpm",
         "--yes",
       ],
@@ -102,7 +105,10 @@ describe("integration plans", () => {
         "--js",
         "--eslint",
         "--app",
+        "--no-src-dir",
         "--no-tailwind",
+        "--import-alias",
+        "@/*",
         "--use-npm",
         "--yes",
       ],
@@ -110,9 +116,15 @@ describe("integration plans", () => {
   });
 
   it("installs Tailwind v4 PostCSS packages without --save-dev", () => {
-    expect(runCommands(tailwindIntegration.plan(planContext()))).toEqual([
+    const plan = tailwindIntegration.plan(planContext());
+    expect(runCommands(plan)).toEqual([
       ["pnpm", "add", "tailwindcss", "@tailwindcss/postcss", "postcss"],
     ]);
+    expect(plan).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: "modify_text", path: "app/globals.css" }),
+      ]),
+    );
   });
 
   it("does not install a SQLite server package", () => {
@@ -124,8 +136,24 @@ describe("integration plans", () => {
 
   it("initializes Prisma SQLite with the official adapter packages", () => {
     expect(runCommands(prismaIntegration.plan(planContext()))).toEqual([
-      ["pnpm", "add", "--save-dev", "prisma", "@types/better-sqlite3"],
-      ["pnpm", "add", "@prisma/client", "@prisma/adapter-better-sqlite3", "dotenv"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "--allow-build=prisma",
+        "--allow-build=@prisma/engines",
+        "prisma@prev",
+        "@types/better-sqlite3",
+      ],
+      [
+        "pnpm",
+        "add",
+        "--allow-build=esbuild",
+        "--allow-build=!better-sqlite3",
+        "@prisma/client@7",
+        "@prisma/adapter-better-sqlite3",
+        "dotenv",
+      ],
       [
         "pnpm",
         "exec",
@@ -136,6 +164,7 @@ describe("integration plans", () => {
         "--output",
         "../generated/prisma",
       ],
+      ["pnpm", "exec", "prisma", "generate"],
     ]);
   });
 
@@ -151,6 +180,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--allow-build=esbuild",
         "vitest",
         "@vitejs/plugin-react",
         "jsdom",
@@ -158,6 +188,7 @@ describe("integration plans", () => {
         "@testing-library/dom",
         "vite-tsconfig-paths",
       ],
+      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
     ]);
 
     const javascriptPlan = vitestIntegration.plan(
@@ -168,12 +199,14 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--allow-build=esbuild",
         "vitest",
         "@vitejs/plugin-react",
         "jsdom",
         "@testing-library/react",
         "@testing-library/dom",
       ],
+      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
     ]);
     expect(javascriptPlan).toEqual(
       expect.arrayContaining([

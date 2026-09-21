@@ -20,6 +20,9 @@ export function pnpmAddArgs(request: AddPackagesRequest): string[] {
   if (request.exact === true) {
     args.push("--save-exact");
   }
+  for (const name of request.allowBuild ?? []) {
+    args.push(`--allow-build=${name}`);
+  }
   args.push(...request.packages);
   return args;
 }

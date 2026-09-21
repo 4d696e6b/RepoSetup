@@ -53,8 +53,12 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
       typescript ? "--ts" : "--js",
       "--eslint",
       "--app",
+      // --yes can reuse a saved src/ preference. Official Tailwind/Vitest paths use app/.
+      "--no-src-dir",
       // Tailwind v4 is owned by the Tailwind integration, not create-next-app.
       "--no-tailwind",
+      "--import-alias",
+      "@/*",
       context.config.packageManager === "pnpm" ? "--use-pnpm" : "--use-npm",
       "--yes",
     ];

@@ -49,13 +49,32 @@ describe("golden Next.js/SQLite stack", () => {
         "--ts",
         "--eslint",
         "--app",
+        "--no-src-dir",
         "--no-tailwind",
+        "--import-alias",
+        "@/*",
         "--use-pnpm",
         "--yes",
       ],
       ["pnpm", "add", "--save-dev", "--save-exact", "prettier"],
-      ["pnpm", "add", "--save-dev", "prisma", "@types/better-sqlite3"],
-      ["pnpm", "add", "@prisma/client", "@prisma/adapter-better-sqlite3", "dotenv"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "--allow-build=prisma",
+        "--allow-build=@prisma/engines",
+        "prisma@prev",
+        "@types/better-sqlite3",
+      ],
+      [
+        "pnpm",
+        "add",
+        "--allow-build=esbuild",
+        "--allow-build=!better-sqlite3",
+        "@prisma/client@7",
+        "@prisma/adapter-better-sqlite3",
+        "dotenv",
+      ],
       [
         "pnpm",
         "exec",
@@ -66,11 +85,13 @@ describe("golden Next.js/SQLite stack", () => {
         "--output",
         "../generated/prisma",
       ],
+      ["pnpm", "exec", "prisma", "generate"],
       ["pnpm", "add", "tailwindcss", "@tailwindcss/postcss", "postcss"],
       [
         "pnpm",
         "add",
         "--save-dev",
+        "--allow-build=esbuild",
         "vitest",
         "@vitejs/plugin-react",
         "jsdom",
@@ -78,6 +99,7 @@ describe("golden Next.js/SQLite stack", () => {
         "@testing-library/dom",
         "vite-tsconfig-paths",
       ],
+      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
       ["pnpm", "add", "zod"],
     ]);
 
@@ -93,6 +115,10 @@ describe("golden Next.js/SQLite stack", () => {
         expect.objectContaining({
           type: "create_file",
           path: "postcss.config.mjs",
+        }),
+        expect.objectContaining({
+          type: "modify_text",
+          path: "app/globals.css",
         }),
         expect.objectContaining({
           type: "create_file",

@@ -8,7 +8,7 @@ import {
 export function addPackages(
   context: PlanContext,
   packages: readonly string[],
-  options: { description: string; dev?: boolean; exact?: boolean },
+  options: { description: string; dev?: boolean; exact?: boolean; allowBuild?: readonly string[] },
 ): InstallationOperation {
   const adapter = getPackageManagerAdapter(context.config.packageManager);
   if (adapter === undefined) {
@@ -23,6 +23,7 @@ export function addPackages(
     description: options.description,
     ...(options.dev === true ? { dev: true } : {}),
     ...(options.exact === true ? { exact: true } : {}),
+    ...(options.allowBuild === undefined ? {} : { allowBuild: [...options.allowBuild] }),
   });
 
   if (!result.ok) {
