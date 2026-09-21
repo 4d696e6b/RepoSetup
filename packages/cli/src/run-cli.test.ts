@@ -61,6 +61,9 @@ function fakeIntegration(
   if (overrides.verification !== undefined) {
     definition.verification = overrides.verification;
   }
+  if (overrides.addable !== undefined) {
+    definition.addable = overrides.addable;
+  }
   if (overrides.detect !== undefined) {
     definition.detect = overrides.detect;
   }
@@ -128,6 +131,74 @@ function testRegistry() {
   return createRegistry([framework, database, orm]);
 }
 
+function addRegistry() {
+  return createRegistry([
+    fakeIntegration({
+      id: "nextjs",
+      name: "Next.js",
+      category: "framework",
+      detect: async (context) => ({
+        detected: context.packageJson?.dependencies.next !== undefined,
+        confidence: "certain",
+        evidence: [],
+      }),
+      plan: () => [
+        {
+          type: "run_command",
+          command: "pnpm",
+          args: ["create", "next-app@latest", ".", "--yes"],
+          cwd: ".",
+          description: "Scaffold Next.js with create-next-app",
+        },
+      ],
+    }),
+    fakeIntegration({
+      id: "zod",
+      name: "Zod",
+      category: "validation",
+      addable: true,
+      requirements: [
+        {
+          kind: "requires",
+          target: { type: "category", category: "framework" },
+          reason: "Needs a framework",
+        },
+      ],
+      plan: () => [
+        {
+          type: "run_command",
+          command: "pnpm",
+          args: ["add", "zod"],
+          cwd: ".",
+          description: "Install Zod",
+        },
+      ],
+    }),
+    fakeIntegration({
+      id: "prettier",
+      name: "Prettier",
+      category: "formatting",
+      addable: true,
+      requirements: [
+        {
+          kind: "requires",
+          target: { type: "category", category: "framework" },
+          reason: "Needs a framework",
+        },
+      ],
+      plan: () => [
+        {
+          type: "create_file",
+          path: ".prettierrc",
+          content: "{}\n",
+          behavior: "fail_if_exists",
+          description: "Add an empty Prettier config so editors detect Prettier",
+        },
+      ],
+    }),
+  ]);
+}
+
 function sampleConfig(): RepoSetupConfig {
   return {
     schemaVersion: 1,
@@ -185,6 +256,7 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("create");
+    expect(captured.stdout()).toContain("add");
     expect(captured.stdout()).toContain("search");
     expect(captured.stdout()).toContain("info");
     expect(captured.stdout()).toContain("stack");
@@ -513,5 +585,89 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("TypeScript");
     expect(captured.stdout()).toContain("Prisma (likely)");
     expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("dry-runs add for an addable integration without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["add", "zod", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Install Zod");
+    expect(captured.stdout()).toContain("pnpm add zod");
+    expect(captured.stdout()).not.toContain("create-next-app");
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("reports a no-op when adding an already installed integration", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0", zod: "4.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["add", "zod", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain('No changes. Integration "zod" is already present.');
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("rejects adding a non-addable integration", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["add", "nextjs"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.RESOLUTION_FAILURE);
+    expect(captured.stderr()).toContain("UNSUPPORTED_CONTEXT");
+  });
+
+  it("executes add with --yes for missing files only", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["add", "prettier", "--yes"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+      runProcess: async () => ({ exitCode: 0, stdout: "", stderr: "" }),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(await readFile(path.join(root, ".prettierrc"), "utf8")).toBe("{}\n");
   });
 });
