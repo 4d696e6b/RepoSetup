@@ -73,6 +73,9 @@ export function selectFrameworkId(stack: DetectedStack): string | undefined {
   if (frameworks.some((item) => item.id === "nextjs")) {
     return "nextjs";
   }
+  if (frameworks.some((item) => item.id === "react-vite")) {
+    return "react-vite";
+  }
   if (frameworks.length === 1) {
     return frameworks[0]?.id;
   }

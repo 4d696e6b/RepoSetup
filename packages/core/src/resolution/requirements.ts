@@ -1,3 +1,4 @@
+import type { IntegrationCategory } from "../categories/integration-category.js";
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import type { IntegrationDefinition } from "../integrations/definition.js";
 import type { IntegrationRef } from "../relationships/models.js";
@@ -71,7 +72,7 @@ export function isSatisfied(
   }
 
   for (const [id, category] of selectedCategories) {
-    if (id !== sourceId && category === target.category) {
+    if (id !== sourceId && categorySatisfiesRequirement(target.category, category)) {
       return true;
     }
   }
@@ -93,6 +94,19 @@ export function categoriesOf(
   }
 
   return categories;
+}
+
+export function categorySatisfiesRequirement(
+  required: IntegrationCategory | string,
+  actual: string,
+): boolean {
+  if (required === actual) {
+    return true;
+  }
+
+  // backend-framework is the application scaffold for APIs. Integrations that
+  // attach to "a framework" should also resolve against Express/Fastify.
+  return required === "framework" && actual === "backend-framework";
 }
 
 function missingRequirementMessage(

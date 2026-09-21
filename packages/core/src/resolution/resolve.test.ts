@@ -279,4 +279,32 @@ describe("resolveConfig", () => {
       "pnpm",
     ]);
   });
+
+  it("treats backend-framework as a framework requirement", () => {
+    const backend = fakeIntegration({
+      id: "fake-express",
+      category: "backend-framework",
+    });
+    const validation = fakeIntegration({
+      id: "fake-zod",
+      category: "validation",
+      requirements: [
+        {
+          kind: "requires",
+          target: { type: "category", category: "framework" },
+          reason: "Needs an application scaffold",
+        },
+      ],
+    });
+    const result = resolveConfig(
+      config({
+        framework: { id: "fake-express" },
+        integrations: [{ id: "fake-zod" }],
+      }),
+      lookup([backend, validation]),
+    );
+
+    expect(result.valid).toBe(true);
+    expect(result.orderedIntegrations.map((item) => item.id)).toEqual(["fake-express", "fake-zod"]);
+  });
 });
