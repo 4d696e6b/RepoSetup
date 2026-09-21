@@ -14,6 +14,7 @@ import {
   type VerificationResult,
 } from "@reposetup/core";
 
+import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
@@ -44,6 +45,7 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
     verifiedAt: VERIFIED_AT,
     runtimeRange: ">=20.9",
   },
+  conflicts: APP_FRAMEWORK_CONFLICTS,
   requirements: [
     {
       kind: "requires",
