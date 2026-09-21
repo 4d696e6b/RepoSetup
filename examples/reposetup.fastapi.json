@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "example-fastapi-app"
+  },
+  "runtime": {
+    "id": "python"
+  },
+  "packageManager": "uv",
+  "framework": {
+    "id": "fastapi"
+  },
+  "integrations": [
+    { "id": "pydantic" },
+    { "id": "postgresql" },
+    { "id": "sqlalchemy" },
+    { "id": "alembic" },
+    { "id": "pytest" },
+    { "id": "ruff" },
+    { "id": "docker" },
+    { "id": "docker-compose" }
+  ]
+}

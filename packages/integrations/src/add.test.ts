@@ -143,3 +143,66 @@ describe("built-in add plans", () => {
     ).toBe(true);
   });
 });
+
+describe("built-in add plans for Python", () => {
+  async function fastapiApp(extra: Record<string, string> = {}): Promise<string> {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-python-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "pyproject.toml"),
+      extra["pyproject.toml"] ??
+        '[project]\nname = "example-fastapi-app"\ndependencies = ["fastapi[standard]"]\n',
+    );
+    await writeFile(path.join(root, "uv.lock"), extra["uv.lock"] ?? "version = 1\n");
+    await writeFile(
+      path.join(root, "main.py"),
+      extra["main.py"] ?? "from fastapi import FastAPI\n",
+    );
+    for (const [relative, content] of Object.entries(extra)) {
+      if (relative === "pyproject.toml" || relative === "uv.lock" || relative === "main.py") {
+        continue;
+      }
+      const full = path.join(root, relative);
+      await mkdir(path.dirname(full), { recursive: true });
+      await writeFile(full, content);
+    }
+    return root;
+  }
+
+  it("adds Pydantic to a FastAPI fixture", async () => {
+    const root = await fastapiApp();
+    const result = await planAdd({
+      startDir: root,
+      integrationId: "pydantic",
+      registry: createBuiltInRegistry(),
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.result.valid).toBe(true);
+    expect(result.result.operations).toEqual([
+      expect.objectContaining({
+        type: "run_command",
+        args: expect.arrayContaining(["add", "pydantic"]),
+      }),
+    ]);
+  });
+
+  it("is a no-op when Pydantic is already declared", async () => {
+    const root = await fastapiApp({
+      "pyproject.toml":
+        '[project]\nname = "example-fastapi-app"\ndependencies = ["fastapi[standard]", "pydantic"]\n',
+    });
+    const result = await planAdd({
+      startDir: root,
+      integrationId: "pydantic",
+      registry: createBuiltInRegistry(),
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(result.result.operations).toEqual([]);
+  });
+});

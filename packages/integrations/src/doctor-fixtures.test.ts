@@ -153,4 +153,32 @@ describe("built-in doctor fixtures", () => {
     ]);
     expect(await readFile(path.join(root, "prisma/schema.prisma"), "utf8")).toBe(before);
   });
+
+  it("reports a missing Python prerequisite without mutating files", async () => {
+    const files = {
+      "pyproject.toml": '[project]\nname = "demo"\ndependencies = ["fastapi[standard]"]\n',
+      "uv.lock": "version = 1\n",
+      "main.py": "from fastapi import FastAPI\n",
+    };
+    const root = await fixture(files);
+    const before = await readFile(path.join(root, "pyproject.toml"), "utf8");
+
+    const result = await runDoctor({
+      startDir: root,
+      registry: createBuiltInRegistry(),
+      commandExists: async (command) => command !== "python",
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+    expect(failedDoctorChecks(result.result)).toEqual([
+      expect.objectContaining({
+        id: "prerequisite:python",
+        code: "PREREQUISITE_MISSING",
+      }),
+    ]);
+    expect(await readFile(path.join(root, "pyproject.toml"), "utf8")).toBe(before);
+  });
 });

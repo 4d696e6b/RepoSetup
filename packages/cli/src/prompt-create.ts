@@ -24,7 +24,7 @@ const OPTIONAL_PROMPT_GROUPS: Array<{
   { title: "Styling", categories: ["styling"] },
   { title: "UI", categories: ["ui"] },
   { title: "Database", categories: ["database"] },
-  { title: "ORM/data layer", categories: ["orm"] },
+  { title: "ORM/data layer", categories: ["orm", "migration"] },
   { title: "Validation", categories: ["validation"] },
   { title: "Testing", categories: ["testing"] },
   { title: "Quality tools", categories: ["linting", "formatting"] },
