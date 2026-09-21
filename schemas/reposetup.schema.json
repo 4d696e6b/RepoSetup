@@ -25,11 +25,18 @@
       "properties": {
         "name": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^[^\\\\/\\x00]+$",
+          "not": {
+            "enum": [".", ".."]
+          },
+          "description": "Single directory-safe project name. Path separators and '..' are rejected."
         },
         "path": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^(?!\\\\)(?!/)(?![A-Za-z]:[\\\\/])(?!.*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$)).+$",
+          "description": "Optional project-relative path. Absolute paths and '..' segments are rejected."
         }
       }
     },
@@ -47,7 +54,8 @@
           ]
         },
         "version": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         }
       }
     },
