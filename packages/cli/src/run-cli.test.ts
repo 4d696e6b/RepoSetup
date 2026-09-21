@@ -64,8 +64,14 @@ function fakeIntegration(
   if (overrides.addable !== undefined) {
     definition.addable = overrides.addable;
   }
+  if (overrides.removable !== undefined) {
+    definition.removable = overrides.removable;
+  }
   if (overrides.detect !== undefined) {
     definition.detect = overrides.detect;
+  }
+  if (overrides.remove !== undefined) {
+    definition.remove = overrides.remove;
   }
 
   return definition;
@@ -157,6 +163,7 @@ function addRegistry() {
       name: "Zod",
       category: "validation",
       addable: true,
+      removable: true,
       requirements: [
         {
           kind: "requires",
@@ -171,6 +178,15 @@ function addRegistry() {
           args: ["add", "zod"],
           cwd: ".",
           description: "Install Zod",
+        },
+      ],
+      remove: () => [
+        {
+          type: "run_command",
+          command: "pnpm",
+          args: ["remove", "zod"],
+          cwd: ".",
+          description: "Remove Zod",
         },
       ],
     }),
@@ -257,6 +273,7 @@ describe("runCli", () => {
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("create");
     expect(captured.stdout()).toContain("add");
+    expect(captured.stdout()).toContain("remove");
     expect(captured.stdout()).toContain("search");
     expect(captured.stdout()).toContain("info");
     expect(captured.stdout()).toContain("stack");
@@ -462,6 +479,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("fake-orm");
     expect(captured.stdout()).toContain("category          orm");
     expect(captured.stdout()).toContain("requirements      fake-db");
+    expect(captured.stdout()).toContain("removable         no");
     expect(captured.stdout()).toContain("https://example.test/integrations/fake-orm");
   });
 
@@ -777,6 +795,105 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(await readFile(path.join(root, ".prettierrc"), "utf8")).toBe("{}\n");
+  });
+
+  it("dry-runs remove for an explicit recipe without mutating files", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-remove-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0", zod: "4.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["remove", "zod", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Remove Zod");
+    expect(captured.stdout()).toContain("pnpm remove zod");
+    expect(captured.stdout()).not.toContain("create-next-app");
+    expect(captured.stdout()).toContain("No files or commands were executed.");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("reports a no-op when removing an integration that is not present", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-remove-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const result = await runCli(["remove", "zod", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain('No changes. Integration "zod" is not present.');
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("refuses remove when no safe recipe exists", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-remove-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["remove", "nextjs"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.RESOLUTION_FAILURE);
+    expect(captured.stderr()).toContain(
+      "RepoSetup cannot safely remove this integration automatically.",
+    );
+  });
+
+  it("executes remove with --yes without deleting leftover Prettier config", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-remove-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({
+        name: "demo-app",
+        dependencies: { next: "16.0.0", zod: "4.0.0" },
+      }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const ran: ProcessRunRequest[] = [];
+    const result = await runCli(["remove", "zod", "--yes"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+      commandExists: async () => true,
+      runProcess: async (request) => {
+        ran.push(request);
+        return { exitCode: 0, stdout: "", stderr: "" };
+      },
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(ran).toEqual([
+      expect.objectContaining({
+        command: "pnpm",
+        args: ["remove", "zod"],
+      }),
+    ]);
   });
 
   it("reports PROJECT_NOT_FOUND for doctor outside a project", async () => {

@@ -11,6 +11,7 @@ import { handleInfo } from "./info.js";
 import { createDefaultFs, createDefaultIo, writeLine } from "./io.js";
 import { promptCreate } from "./prompt-create.js";
 import { handleRegistryValidate } from "./registry-validate.js";
+import { handleRemove } from "./remove.js";
 import { handleSearch } from "./search.js";
 import { handleStack } from "./stack.js";
 import type {
@@ -97,6 +98,32 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
         command: Command,
       ) => {
         exitCode = await handleAdd({
+          integrationId,
+          dryRun: options.dryRun,
+          yes: options.yes,
+          packageManager: options.packageManager,
+          globals: readGlobals(command),
+          deps: resolved,
+        });
+      },
+    );
+
+  program
+    .command("remove")
+    .description("Remove an integration that has an explicit safe removal recipe")
+    .argument("<id>", "integration id")
+    .option("--dry-run", "print the remove plan without changing files", false)
+    .option("--yes", "skip confirmation and execute the plan", false)
+    .option("--package-manager <id>", "package manager")
+    .option("--verbose", "include extra detail in output", false)
+    .option("--quiet", "reduce output", false)
+    .action(
+      async (
+        integrationId: string,
+        options: { dryRun: boolean; yes: boolean; packageManager?: string },
+        command: Command,
+      ) => {
+        exitCode = await handleRemove({
           integrationId,
           dryRun: options.dryRun,
           yes: options.yes,
