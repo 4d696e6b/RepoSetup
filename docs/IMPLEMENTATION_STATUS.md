@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 10 — Project detection** (complete)
+**Phase 11 — Add** (complete)
 
 ## Phase status
 
@@ -19,7 +19,7 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 8 — Executor
 - [x] Phase 9 — First complete golden stack
 - [x] Phase 10 — Project detection
-- [ ] Phase 11 — Add
+- [x] Phase 11 — Add
 - [ ] Phase 12 — Doctor
 - [ ] Phase 13 — JS ecosystem expansion
 - [ ] Phase 14 — Python ecosystem
@@ -29,24 +29,23 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Last completed work
 
-Phase 10 adds read-only project detection in `@reposetup/core` and `reposetup stack`.
+Phase 11 adds `reposetup add <id>` with delta planning for existing projects.
 
-Detection walks up from the working directory to the nearest project marker, then inspects manifests and lockfiles. Node package managers come from lockfiles or `package.json#packageManager`, not from a globally installed tool. Python `uv` is certain from `uv.lock`; `pip` is only likely from `requirements.txt` when no uv lockfile is present. Yarn lockfiles are reported as warnings, not selected.
-
-Each built-in integration owns `detect()`. Confidence is `certain` | `likely` | `possible`; uncertain names are labeled in `stack` output. Detection never mutates files.
+Only integrations marked `addable` can be added: Zod, Prisma (when SQLite is already detected), Vitest, and Prettier. The planner resolves against the detected stack, generates operations for the requested integration only, then drops steps that are already satisfied. Adding an installed integration is a no-op. `--dry-run` mutates nothing. `--yes` skips confirmation.
 
 Acceptance gate passed locally:
 
-- Fixture identification: npm lockfile, pnpm Next.js/SQLite-style tree, Python uv, mixed lockfiles, no-lockfile Node
-- `reposetup stack` CLI tests
+- Already-installed Zod is a no-op
+- Prisma add requires detected SQLite and does not re-run `prisma init` when a schema exists
+- Next.js is not addable
 - `pnpm build`
-- `pnpm test` (Phase 10 packages; golden install test unchanged)
+- `pnpm test` (Phase 11 packages; golden install test unchanged)
 - `pnpm typecheck`
 - `pnpm lint`
 
 ## Known blockers
 
-None for Phase 10. Integrations remain experimental. `add`, `doctor`, and `export` still need later phases.
+None for Phase 11. Integrations remain experimental. `doctor` and `export` still need later phases.
 
 ## Notes
 
@@ -56,4 +55,4 @@ Do not mark Phase 7 integrations stable. DoD-stable requires detection/verify te
 
 `.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
 
-Work is on `feat/phase-10-project-detection`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-11-add`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
