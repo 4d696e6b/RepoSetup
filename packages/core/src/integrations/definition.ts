@@ -67,6 +67,7 @@ export interface IntegrationDefinition<TOptions = unknown> {
   description: string;
   status: IntegrationStatus;
   documentationUrl: string;
+  keywords?: string[];
   optionSchema?: ZodType<TOptions>;
   requirements?: IntegrationRequirement[];
   recommendations?: IntegrationRecommendation[];
