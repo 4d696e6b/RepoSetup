@@ -61,6 +61,8 @@ export type {
   IntegrationRelationship,
   IntegrationRequirement,
 } from "./relationships/models.js";
+export type { RegistryLookup } from "./resolution/registry-lookup.js";
+export { resolveConfig } from "./resolution/resolve.js";
 export type {
   InstallationPlan,
   ResolutionError,
