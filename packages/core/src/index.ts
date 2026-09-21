@@ -66,6 +66,13 @@ export { resolveConfig } from "./resolution/resolve.js";
 export { planInstallation, toInstallationPlan } from "./planning/plan.js";
 export { validateInstallationPlan } from "./planning/validate-plan.js";
 export type { PlanValidationResult } from "./planning/validate-plan.js";
+export { getPackageManagerAdapter, toPackageManagerCommand } from "./package-managers/lookup.js";
+export type {
+  AddPackagesRequest,
+  InstallProjectRequest,
+  PackageManagerAdapter,
+  PackageManagerCommandResult,
+} from "./package-managers/types.js";
 export type {
   InstallationPlan,
   ResolutionError,
