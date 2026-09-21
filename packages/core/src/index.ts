@@ -48,6 +48,7 @@ export { createDetectionContext } from "./detection/context.js";
 export { detectEcosystem } from "./detection/ecosystem.js";
 export { createMemoryDetectionFs, createNodeDetectionFs } from "./detection/filesystem.js";
 export { detectNpmPackage } from "./detection/npm-package.js";
+export { pythonDistributionName, textDeclaresPythonPackage } from "./detection/python-package.js";
 export { hasPackageDependency, readPackageJson } from "./detection/package-json.js";
 export { findProjectRoot, PROJECT_ROOT_MARKERS } from "./detection/project-root.js";
 export { detectedResult, evidence, notDetected } from "./detection/result.js";

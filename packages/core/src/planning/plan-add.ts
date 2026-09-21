@@ -47,7 +47,7 @@ export async function planAdd(input: {
         message: `Integration "${input.integrationId}" cannot be added to an existing project yet.`,
         details: { integrationId: input.integrationId },
         suggestion:
-          "This phase supports add for zod, prisma, vitest, prettier, drizzle, and mongoose. Use reposetup create for new apps.",
+          "This phase supports add for zod, prisma, vitest, prettier, drizzle, mongoose, pydantic, pytest, and ruff. Use reposetup create for new apps.",
       }),
     };
   }
