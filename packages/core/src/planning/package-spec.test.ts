@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   isPackageAddCommand,
+  isPackageRemoveCommand,
   packageNameFromSpec,
   packageSpecsFromAddArgs,
 } from "./package-spec.js";
@@ -35,5 +36,15 @@ describe("isPackageAddCommand", () => {
     expect(isPackageAddCommand("npm", ["install", "--save-dev", "prettier"])).toBe(true);
     expect(isPackageAddCommand("npm", ["install"])).toBe(false);
     expect(isPackageAddCommand("pnpm", ["exec", "prisma", "init"])).toBe(false);
+  });
+});
+
+describe("isPackageRemoveCommand", () => {
+  it("recognizes pnpm remove, npm uninstall, and uv remove", () => {
+    expect(isPackageRemoveCommand("pnpm", ["remove", "zod"])).toBe(true);
+    expect(isPackageRemoveCommand("npm", ["uninstall", "prettier"])).toBe(true);
+    expect(isPackageRemoveCommand("uv", ["remove", "pydantic"])).toBe(true);
+    expect(isPackageRemoveCommand("pnpm", ["add", "zod"])).toBe(false);
+    expect(isPackageRemoveCommand("python", ["-m", "pip", "uninstall", "pydantic"])).toBe(false);
   });
 });

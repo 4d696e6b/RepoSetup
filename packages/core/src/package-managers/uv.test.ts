@@ -47,4 +47,14 @@ describe("uvAdapter", () => {
 
     expectArgs(result, ["sync"]);
   });
+
+  it("removes packages with uv remove and does not invent --dev", () => {
+    const result = uvAdapter.remove({
+      packages: ["pydantic", "ruff"],
+      cwd: ".",
+      description: "Remove packages",
+    });
+
+    expectArgs(result, ["remove", "pydantic", "ruff"]);
+  });
 });

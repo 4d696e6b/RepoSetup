@@ -24,11 +24,16 @@ interface IntegrationDefinition<TOptions = unknown> {
   recommendations?: IntegrationRecommendation[];
   conflicts?: IntegrationConflict[];
 
+  addable?: boolean;
+  removable?: boolean;
+
   supports(context: SupportContext): SupportResult;
 
   detect?(context: DetectionContext): Promise<DetectionResult>;
 
   plan(context: PlanContext<TOptions>): InstallationOperation[];
+
+  remove?(context: PlanContext<TOptions>): InstallationOperation[];
 
   verify?(context: VerificationContext): Promise<VerificationResult>;
 }
@@ -169,3 +174,11 @@ interface IntegrationVerificationMetadata {
 ```
 
 Do not claim broad version compatibility without tests or documented evidence.
+
+## 11. Safe remove
+
+`remove()` is an explicit recipe. Never invert `plan()`.
+
+An integration is removable only when `removable` is true and `remove()` returns typed operations.
+
+This phase uninstalls packages through package-manager adapters. It does not delete user config or schema files.

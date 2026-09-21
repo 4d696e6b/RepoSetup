@@ -132,6 +132,15 @@ RepoSetup cannot safely remove this integration automatically.
 
 Never reverse arbitrary installation steps heuristically.
 
+This phase uninstalls packages only for `zod`, `prettier`, `pydantic`, `pytest`, and `ruff`. Prettier config files are left in place. pip projects are refused because `pip uninstall` does not rewrite `requirements.txt`.
+
+```text
+--dry-run
+--yes
+--package-manager
+--verbose
+```
+
 ## 5. `reposetup search`
 
 ```bash

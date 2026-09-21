@@ -18,6 +18,12 @@ export interface InstallProjectRequest {
   requirementsFile?: ProjectRelativePath;
 }
 
+export interface RemovePackagesRequest {
+  packages: readonly string[];
+  cwd: ProjectRelativePath;
+  description: string;
+}
+
 export type PackageManagerCommandResult =
   { ok: true; operation: RunCommandOperation } | { ok: false; error: RepoSetupError };
 
@@ -26,4 +32,5 @@ export interface PackageManagerAdapter {
   readonly runtimeId: RuntimeId;
   add(request: AddPackagesRequest): PackageManagerCommandResult;
   install(request: InstallProjectRequest): PackageManagerCommandResult;
+  remove(request: RemovePackagesRequest): PackageManagerCommandResult;
 }

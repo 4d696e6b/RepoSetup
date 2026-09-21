@@ -93,4 +93,24 @@ describe("pnpmAdapter", () => {
 
     expectArgs(result, ["install"]);
   });
+
+  it("removes packages with pnpm remove", () => {
+    const result = pnpmAdapter.remove({
+      packages: ["zod", "prettier"],
+      cwd: ".",
+      description: "Remove packages",
+    });
+
+    expectArgs(result, ["remove", "zod", "prettier"]);
+  });
+
+  it("does not add --save-dev when removing a package", () => {
+    const result = pnpmAdapter.remove({
+      packages: ["prettier"],
+      cwd: ".",
+      description: "Remove Prettier",
+    });
+
+    expectArgs(result, ["remove", "prettier"]);
+  });
 });

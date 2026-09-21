@@ -43,8 +43,14 @@ export function defineIntegration<TOptions = unknown>(
   if (definition.addable !== undefined) {
     result.addable = definition.addable;
   }
+  if (definition.removable !== undefined) {
+    result.removable = definition.removable;
+  }
   if (definition.detect !== undefined) {
     result.detect = definition.detect;
+  }
+  if (definition.remove !== undefined) {
+    result.remove = definition.remove;
   }
   if (definition.verify !== undefined) {
     result.verify = definition.verify;

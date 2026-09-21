@@ -22,6 +22,7 @@ export type {
 export { ERROR_CODES, type ErrorCode } from "./errors/codes.js";
 export { createRepoSetupError, isRepoSetupError } from "./errors/model.js";
 export type { RepoSetupError } from "./errors/model.js";
+export { UNSAFE_REMOVE_MESSAGE } from "./errors/unsafe-remove.js";
 export type {
   DetectionConfidence,
   DetectionContext,
@@ -88,6 +89,8 @@ export { resolveConfig } from "./resolution/resolve.js";
 export { planInstallation, planInstallationSubset, toInstallationPlan } from "./planning/plan.js";
 export { planAdd } from "./planning/plan-add.js";
 export type { PlanAddResult } from "./planning/plan-add.js";
+export { planRemove } from "./planning/plan-remove.js";
+export type { PlanRemoveResult } from "./planning/plan-remove.js";
 export { exportProject } from "./planning/export-project.js";
 export type { ExportProjectResult } from "./planning/export-project.js";
 export { exportConfigFromDetectedStack } from "./planning/config-from-detected.js";
@@ -110,6 +113,7 @@ export type {
   InstallProjectRequest,
   PackageManagerAdapter,
   PackageManagerCommandResult,
+  RemovePackagesRequest,
 } from "./package-managers/types.js";
 export type {
   InstallationPlan,

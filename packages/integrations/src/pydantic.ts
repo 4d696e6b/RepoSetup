@@ -7,7 +7,7 @@ import {
 } from "@reposetup/core";
 
 import { defineIntegration } from "./define.js";
-import { addPackages, afterPythonPackageInstall } from "./operations.js";
+import { addPackages, afterPythonPackageInstall, removePackages } from "./operations.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingPythonPackage } from "./verify.js";
@@ -22,6 +22,7 @@ export const pydanticIntegration = defineIntegration({
   keywords: ["python", "schema", "validation"],
   verification: { verifiedAt: "2026-09-22" },
   addable: true,
+  removable: true,
   requirements: [
     {
       kind: "requires",
@@ -41,6 +42,13 @@ export const pydanticIntegration = defineIntegration({
         description: "Install Pydantic",
       }),
       ...afterPythonPackageInstall(context, "pydantic"),
+    ];
+  },
+  remove(context) {
+    return [
+      removePackages(context, ["pydantic"], {
+        description: "Remove Pydantic",
+      }),
     ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {

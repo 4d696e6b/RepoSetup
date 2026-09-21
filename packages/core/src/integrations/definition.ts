@@ -99,8 +99,10 @@ export interface IntegrationDefinition<TOptions = unknown> {
   alternatives?: IntegrationAlternative[];
   verification?: IntegrationVerificationMetadata;
   addable?: boolean;
+  removable?: boolean;
   supports(context: SupportContext): SupportResult;
   detect?(context: DetectionContext): Promise<DetectionResult>;
   plan(context: PlanContext<TOptions>): InstallationOperation[];
+  remove?(context: PlanContext<TOptions>): InstallationOperation[];
   verify?(context: VerificationContext): Promise<VerificationResult>;
 }

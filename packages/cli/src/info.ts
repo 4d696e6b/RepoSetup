@@ -39,6 +39,8 @@ function formatInfo(definition: IntegrationDefinition): string {
     `  options           ${definition.optionSchema === undefined ? "none" : "schema provided"}`,
     `  supports          checked at resolve time against runtime, package manager, and framework`,
     `  verified          ${definition.verification?.verifiedAt ?? "not recorded"}`,
+    `  addable           ${definition.addable === true ? "yes" : "no"}`,
+    `  removable         ${definition.removable === true ? "yes" : "no"}`,
     `  docs              ${definition.documentationUrl}`,
   ];
 

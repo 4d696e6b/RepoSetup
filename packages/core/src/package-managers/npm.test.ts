@@ -87,4 +87,28 @@ describe("npmAdapter", () => {
     }
     expect(result.error.code).toBe("PLAN_INVALID");
   });
+
+  it("removes packages with npm uninstall", () => {
+    const result = npmAdapter.remove({
+      packages: ["zod"],
+      cwd: ".",
+      description: "Remove Zod",
+    });
+
+    expectArgs(result, "npm", ["uninstall", "zod"]);
+  });
+
+  it("rejects a package spec that would be parsed as a CLI flag on remove", () => {
+    const result = npmAdapter.remove({
+      packages: ["--ignore-scripts"],
+      cwd: ".",
+      description: "Unsafe spec",
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("PLAN_INVALID");
+  });
 });

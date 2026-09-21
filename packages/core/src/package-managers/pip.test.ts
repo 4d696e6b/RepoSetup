@@ -75,4 +75,21 @@ describe("pipAdapter", () => {
     }
     expect(result.error.code).toBe("PLAN_INVALID");
   });
+
+  it("refuses remove because pip uninstall does not update requirements.txt", () => {
+    const result = pipAdapter.remove({
+      packages: ["pydantic"],
+      cwd: ".",
+      description: "Remove Pydantic",
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("UNSUPPORTED_CONTEXT");
+    expect(result.error.message).toBe(
+      "RepoSetup cannot safely remove this integration automatically.",
+    );
+  });
 });
