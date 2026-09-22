@@ -121,7 +121,8 @@ Do not mark `stable` without evidence. This alpha does not claim `1.0.0` stabili
 
 ## Known limitations
 
-- Disk on this workspace is nearly full (~551 MiB). Full Next.js `node_modules` + `next build` can fail with `ENOSPC`.
+- Disk on this workspace is nearly full (~475 MiB). Next.js golden execute is skipped locally (`CI` or `REPOSETUP_GOLDEN_NEXT=1`).
+- `uv` was not installed here; FastAPI/Flask goldens skip without it.
 - No GitHub Actions run of the new matrix has been observed in this workspace.
 - Bun is unimplemented.
 - `remove` is package-only for zod, prettier, pydantic, pytest, ruff.

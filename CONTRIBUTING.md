@@ -1,56 +1,78 @@
 # Contributing
 
-RepoSetup is a TypeScript pnpm monorepo. Domain logic belongs in `@reposetup/core`. Integrations generate typed operations and must not spawn processes.
+RepoSetup is a TypeScript pnpm monorepo. Domain logic belongs in `@reposetup/core`. Integrations generate typed operations and must not spawn processes. Only the executor runs commands or writes files.
 
-## Setup
+## Development setup
+
+Requires Node.js 20+ and pnpm 12.5.1 (`packageManager` in the root `package.json`).
 
 ```bash
 pnpm install
 pnpm test
 pnpm typecheck
 pnpm lint
+pnpm build
 ```
 
-The default suite is dry-run and unit tests. To run the network-heavy Next.js execute path:
+Optional:
 
 ```bash
-REPOSETUP_GOLDEN_EXECUTE=1 pnpm --filter @reposetup/integrations test -- src/golden-stack.execute.test.ts
+pnpm registry:validate
+pnpm test:e2e
+pnpm test:golden
 ```
 
-That path is skipped on Windows and is not part of default CI.
+`pnpm test` is the default unit/dry-run suite. `pnpm test:e2e` packs/smokes the CLI and checks failure/dry-run behavior. `pnpm test:golden` creates real projects in `os.tmpdir()` (never against this repo). Next.js full execute is CI-oriented (`CI=true` or `REPOSETUP_GOLDEN_NEXT=1`).
 
-Node.js 20+ and pnpm 12.5.1 are required (`packageManager` in the root `package.json`).
+## Architecture
 
-## Workflow
+| Package | Role |
+| --- | --- |
+| `@reposetup/core` | Config, resolve, plan, execute, detection, doctor |
+| `@reposetup/registry` | Registry lookup and validation |
+| `@reposetup/integrations` | Built-in integration definitions |
+| `@reposetup/cli` | Commander CLI, prompts, rendering |
 
-1. Inspect existing code and `docs/` before editing.
-2. Implement one concerned change; do not mix unrelated phases.
-3. Add or update tests.
-4. Run targeted tests, then `pnpm typecheck`, `pnpm lint`, and `pnpm build` when packages change.
-5. Update `docs/IMPLEMENTATION_STATUS.md` when a planned phase finishes.
+`@reposetup/core` must not depend on Commander, Inquirer, Ink, React, or Firebase.
 
-Do not claim work is complete if tests or typecheck fail.
+## Adding an integration
 
-## Integrations
+1. Read `docs/INTEGRATION_SYSTEM.md` and `docs/V1_INTEGRATION_REGISTRY.md`.
+2. Add a definition under `packages/integrations/src/` using `defineIntegration`.
+3. Generate typed `InstallationOperation`s only. Do not call `spawn` from the definition.
+4. Use package-manager adapters; do not hardcode `pnpm add` argv in the integration.
+5. Register the ID in `packages/integrations/src/catalog.ts`.
+6. Add plan, detect, and doctor/verify tests.
+7. Start as `experimental`. Do not mark `stable` without real execute + platform evidence.
 
-- Keep IDs stable once v1 is released. They are still experimental.
-- Do not mark an integration `stable` unless it meets the Definition of Done in `docs/INTEGRATION_SYSTEM.md`.
-- Do not hardcode package-manager argv inside an integration. Use adapters.
-- Do not reverse `plan()` to implement `remove()`. Write an explicit recipe.
-- When a flag or generator option comes from another project, verify it from current official docs. Use `docs/EXTERNAL_COMMAND_RESEARCH_TEMPLATE.md`. Do not guess.
+### Command research
 
-## Safety
+When a flag or generator option comes from another project, verify it from current official docs. Use `docs/EXTERNAL_COMMAND_RESEARCH_TEMPLATE.md`. Record `verification.verifiedAt` and `documentationUrl`. Do not guess replacements.
 
-- Never interpolate untrusted input into a shell string.
-- Prefer `spawn(command, args, { shell: false })`.
-- Config files must stay declarative. No scripts, callbacks, or remote plugin URLs.
-- Generate `.env.example` placeholders. Never persist real secrets.
-- Do not silently overwrite user files or install system software.
+## Definition of done
 
-## Out of scope for v1
+- Tests, typecheck, and lint pass
+- Registry validation passes when the catalog changes
+- Errors use explicit machine-readable codes
+- `--dry-run` still uses the real planner
+- No secrets in fixtures or logs
 
-Do not add a website, Firebase, user accounts, payments, a hosted registry, remote executable plugins, or AI-generated installation plans.
+## Pull requests
+
+- One concerned change; do not mix unrelated phases
+- Update `docs/IMPLEMENTATION_STATUS.md` when a planned phase finishes
+- Keep `CHANGELOG.md` current for user-visible behavior
+- Do not target `main` for feature work; `main` stays the pre-Phase 0 baseline until a qualified release
+
+## Security restrictions
+
+- Never interpolate untrusted input into a shell string
+- Prefer `spawn(command, args, { shell: false })`
+- Config files stay declarative
+- Generate `.env.example` placeholders only
+- Do not silently overwrite user files or install system software
+- Do not add a website, Firebase, accounts, hosted registry, remote executable plugins, or AI-generated plans in v1
 
 ## Releases
 
-See `docs/RELEASE.md`. Keep `CHANGELOG.md` current when behavior changes.
+See `docs/RELEASE.md` and `docs/RELEASE_HARDENING.md`.

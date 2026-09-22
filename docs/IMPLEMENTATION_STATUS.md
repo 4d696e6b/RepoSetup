@@ -8,7 +8,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current release candidate
 
-`0.1.0-alpha.1` (not `1.0.0`)
+`0.1.0-alpha.1` (not `1.0.0`) on `feat/phase-18-hardening`. `main` is untouched.
 
 ## Phase status
 
@@ -31,57 +31,60 @@ Cursor/maintainers should update this file as phases are completed.
 - [x] Phase 16 — Safe remove support
 - [x] Phase 17 — v1 hardening
 - [ ] Phase 18 — Release Hardening and Prerelease Qualification
-  - [ ] 18.0 Documentation and baseline
-  - [ ] 18.1 Golden-stack real execution tests
-  - [ ] 18.2 Cross-platform CI qualification
-  - [ ] 18.3 npm package/artifact qualification
-  - [ ] 18.4 Failure-path and safety qualification
-  - [ ] 18.5 Integration maturity classification
-  - [ ] 18.6 Release documentation
-  - [ ] 18.7 Release automation
-  - [ ] 18.8 Alpha release candidate validation
+  - [x] 18.0 Documentation and baseline
+  - [x] 18.1 Golden-stack real execution tests (harness + B/C local; A/D/E blocked here)
+  - [x] 18.2 Cross-platform CI qualification (workflows added; remote run pending)
+  - [x] 18.3 npm package/artifact qualification
+  - [x] 18.4 Failure-path and safety qualification
+  - [x] 18.5 Integration maturity classification (candidates; none stable)
+  - [x] 18.6 Release documentation
+  - [x] 18.7 Release automation (publish remains opt-in / unconfigured)
+  - [ ] 18.8 Alpha release candidate validation (Next.js, FastAPI, Flask, OS matrix still open)
 
 ## Last completed work
 
-Phase 17 is complete on `dev`. Phase 18.0 baseline (2026-09-22, this workspace):
+Phase 18 local hardening (2026-09-22):
 
 | Check | Result |
 | --- | --- |
-| `pnpm test` | pass (311 tests; Next.js execute skipped unless `REPOSETUP_GOLDEN_EXECUTE=1`) |
-| `pnpm typecheck` | pass |
+| `pnpm test` | pass (150+15+98+68; Next.js execute skipped unless `REPOSETUP_GOLDEN_EXECUTE=1`) |
+| `pnpm typecheck` | pass (after `pnpm build`) |
 | `pnpm lint` | pass |
 | `pnpm build` | pass |
-| `reposetup registry validate` | pass (33 integrations) |
-| Node requirement | `>=20` (`engines`); local `22.12.0` |
+| `pnpm registry:validate` | pass (33 integrations) |
+| `pnpm test:e2e` | pass (12 tests including pack-install) |
+| `pnpm test:golden` | React/Vite and Express generation pass; Next.js skipped (disk); FastAPI/Flask skipped (no `uv`) |
+| Node requirement | `>=20` (`engines`); local `22.12.0`; Vite/Next need 20.19+/20.9+ |
 | pnpm requirement | `12.5.1` |
-| Package versions | `0.0.0` before 18.3 |
-| Privacy | all workspace packages `private: true` before 18.3 |
+| Package versions | `0.1.0-alpha.1` |
+| Privacy | public packages not `private`; root workspace private |
 
 ## Known blockers
 
-- Developer volume ~551 MiB free. Full Next.js execute can fail with `ENOSPC`.
-- GitHub Actions matrix has not been observed to run in this workspace.
+- Developer volume ~475 MiB free. Next.js execute is skipped locally.
+- `uv` is not installed here, so FastAPI/Flask goldens did not run.
+- GitHub Actions platform/golden jobs have not been observed in this workspace.
 - No npm ownership or trusted-publisher config exists here.
-- `main` stays pre-Phase 0 until qualification succeeds.
-- Integrations must not be labeled `stable` without real execute + platform evidence.
+- `main` stays pre-Phase 0 until remaining gates pass.
+- No integration is `stable`.
 
 ## Golden stacks proven
 
 | Stack | Dry-run plan | Real execute |
 | --- | --- | --- |
-| Next.js / SQLite | yes | pending 18.1 |
-| React + Vite | yes | pending 18.1 |
-| Express / Postgres config | yes | pending 18.1 (no live DB) |
-| FastAPI | yes | pending 18.1 |
-| Flask | yes | pending 18.1 |
+| Next.js / SQLite | yes | pending CI / `REPOSETUP_GOLDEN_NEXT=1` |
+| React + Vite | yes | yes (this host, `pnpm test:golden`) |
+| Express / Postgres config | yes | yes generation + `tsc --noEmit`; no live DB |
+| FastAPI | yes | pending `uv` |
+| Flask | yes | pending `uv` |
 
 ## OS environments proven
 
 | OS | Local | GitHub Actions |
 | --- | --- | --- |
-| macOS | unit/lint/build (this host) | workflow defined, run pending |
-| Linux | unit via previous ubuntu workflow | workflow defined, run pending |
-| Windows | not run here | workflow defined, run pending |
+| macOS | unit/lint/build/e2e/golden B+C (this host) | platform workflow defined, run pending |
+| Linux | not run here | ci + platform + golden workflows defined |
+| Windows | not run here | platform workflow defined, run pending |
 
 ## Integrations promoted to stable
 
@@ -89,20 +92,20 @@ None.
 
 ## Integrations remaining experimental
 
-All 33 catalog IDs until 18.5 classifies candidates. Bun is not in the catalog.
+fastify, shadcn, postgresql, mongodb, drizzle, mongoose, playwright, docker, docker-compose, github-actions.
+
+Candidates (not stable): node, python, npm, pnpm, uv, pip, nextjs, react-vite, express, fastapi, flask, tailwind, sqlite, prisma, zod, prettier, vitest, pydantic, pytest, ruff, sqlalchemy, alembic, eslint.
 
 ## Release artifact status
 
-Not packed for 0.1.0-alpha.1 yet.
+`pnpm test:e2e` packed all four packages, installed them with npm in a temp project, and ran `--help`, `--version`, `search`, `info`, and `create --dry-run`.
 
 ## npm publishing status
 
-Not published. Do not publish from this phase unless every gate passes and the owner requests it.
+Not published. Release workflow publish job is opt-in (`workflow_dispatch` + `publish=true`) and needs npm trusted publisher setup.
 
 ## Notes
 
-Do not mark Phase 18 complete unless the Release Qualification gates in `docs/ACCEPTANCE_TESTS.md` pass.
+Do not mark Phase 18 complete unless the remaining Release Qualification gates pass.
 
-`.cursor/rules/` is listed in `PACK_MANIFEST.json` but is not present in this repository.
-
-Work is on `feat/phase-18-hardening`, extracted from `dev`. `main` remains the pre-Phase 0 baseline.
+Work is on `feat/phase-18-hardening`. `main` remains the pre-Phase 0 baseline.

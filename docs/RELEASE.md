@@ -1,30 +1,44 @@
 # Release process
 
-RepoSetup is pre-v1. Workspace packages are version `0.0.0` and `"private": true`. Do not `npm publish` until those fields change in a dedicated release.
+Target: **`0.1.0-alpha.1`**. This is not `1.0.0`.
 
-## Before a tag
+Public packages (`@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli`) use that version and `publishConfig.access: public`. The root workspace stays private.
 
-1. Golden dry-run stacks still pass (`pnpm test`).
-2. `CHANGELOG.md` describes the user-visible change.
-3. Integration `verifiedAt` dates are still accurate for commands that depend on upstream CLIs.
-4. `pnpm typecheck`, `pnpm lint`, `pnpm build`, and `pnpm test` pass.
+Do not publish, push release tags, or merge `main` unless every Release Qualification gate in `docs/ACCEPTANCE_TESTS.md` passes **and** the owner requests publication.
 
-## Cut a tag
+## Qualification
 
-```bash
-git tag v0.0.0
-git push origin v0.0.0
-```
+1. `pnpm install && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm registry:validate`
+2. `pnpm test:e2e` (packed CLI, dry-run, failures)
+3. `pnpm test:golden` on a machine/CI with disk and network (`CI=true` includes Next.js)
+4. Inspect tarballs from `pnpm pack:packages`
+5. Cut `release/0.1.0-alpha.1` from qualified `dev`
 
-`.github/workflows/release.yml` runs checks and `pnpm pack:packages`, then uploads `packages/*/*.tgz`. It does **not** publish to npm.
+See `docs/RELEASE_CHECKLIST.md` and `docs/RELEASE_HARDENING.md`.
 
-## Future public publish
+## GitHub Actions
 
-When v1 is actually released:
+| Workflow | Role |
+| --- | --- |
+| `ci.yml` | Fast PR/push checks (Ubuntu, Node 22) |
+| `platform.yml` | Ubuntu / macOS / Windows, Node 22, plus Ubuntu Node 20 |
+| `golden.yml` | Real golden stacks on Ubuntu (Node 22, Python 3.12, uv) |
+| `release.yml` | Qualify + pack on `workflow_dispatch` or `v*` tags. Publish only if dispatch `publish=true` |
 
-1. Set matching semver on `packages/*/package.json`.
-2. Flip `"private"` to `false` only on packages that should be public.
-3. Add registry authentication in CI (do not store tokens in the repo).
-4. Publish with `pnpm publish -r --access public` from a clean tag, after packing succeeds.
+## npm trusted publishing (owner)
 
-Until then, install from a git clone as described in `README.md`.
+Packages have never been published from this workspace. First publish needs:
+
+1. An npm user/org that will own `@reposetup/*`
+2. Create empty packages or use npm's trusted publisher UI to attach this GitHub repository and the `Release` workflow
+3. OIDC is already requested on the publish job (`id-token: write`)
+4. Dispatch **Release** with `publish=true` only after gates pass
+
+Do not commit npm tokens. Do not invent package ownership.
+
+Until that bootstrap exists, stop at **READY FOR PUBLICATION**.
+
+## Rollback
+
+- Unpublished alpha: drop the unpushed tag; fix `dev`.
+- Published alpha: ship a newer prerelease (`0.1.0-alpha.2`). Do not force-push `main`.
