@@ -14,6 +14,7 @@ import { handleRegistryValidate } from "./registry-validate.js";
 import { handleRemove } from "./remove.js";
 import { handleSearch } from "./search.js";
 import { handleStack } from "./stack.js";
+import { cliVersion } from "./version.js";
 import type {
   CliDeps,
   CliResult,
@@ -30,7 +31,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
   program
     .name("reposetup")
     .description("Compose and inspect a project stack from a local integration registry.")
-    .version("0.0.0")
+    .version(cliVersion())
     .option("--verbose", "include extra detail in output", false)
     .option("--quiet", "reduce output", false)
     .option("--no-color", "disable ANSI color (output is already plain)")

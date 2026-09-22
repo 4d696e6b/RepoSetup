@@ -12,7 +12,9 @@ import type {
   IntegrationRequirement,
 } from "../relationships/models.js";
 
-export type IntegrationStatus = "stable" | "experimental";
+export const INTEGRATION_STATUSES = ["stable", "candidate", "experimental", "deprecated"] as const;
+
+export type IntegrationStatus = (typeof INTEGRATION_STATUSES)[number];
 
 export type DetectionConfidence = "certain" | "likely" | "possible";
 

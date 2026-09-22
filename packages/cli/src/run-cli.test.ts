@@ -10,6 +10,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { EXIT_CODES } from "./exit-codes.js";
 import { runCli } from "./run-cli.js";
 import type { CliFs, CliIo, CreateAnswers } from "./types.js";
+import { cliVersion } from "./version.js";
 
 function captureIo(): { io: CliIo; stdout: () => string; stderr: () => string } {
   let stdout = "";
@@ -287,7 +288,7 @@ describe("runCli", () => {
     const result = await runCli(["--version"], { io: captured.io });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toMatch(/0\.0\.0/);
+    expect(captured.stdout().trim()).toBe(cliVersion());
   });
 
   it("flows config through validation, resolve, plan, and human-readable dry-run", async () => {

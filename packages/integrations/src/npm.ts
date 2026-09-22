@@ -14,7 +14,7 @@ export const npmIntegration = defineIntegration({
   name: "npm",
   category: "package-manager",
   description: "Detects npm before installing JavaScript packages.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://docs.npmjs.com/cli/v12/commands/npm-install/",
   keywords: ["node", "packages"],
   verification: { verifiedAt: VERIFIED_AT },

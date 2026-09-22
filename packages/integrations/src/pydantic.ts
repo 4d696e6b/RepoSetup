@@ -17,7 +17,7 @@ export const pydanticIntegration = defineIntegration({
   name: "Pydantic",
   category: "validation",
   description: "Adds Pydantic data validation.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://docs.pydantic.dev/latest/install/",
   keywords: ["python", "schema", "validation"],
   verification: { verifiedAt: "2026-09-22" },

@@ -37,7 +37,7 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
   name: "Next.js",
   category: "framework",
   description: "Scaffolds a Next.js App Router project with create-next-app.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://nextjs.org/docs/app/getting-started/installation",
   keywords: ["react", "app-router", "vercel"],
   optionSchema: nextjsOptionsSchema,

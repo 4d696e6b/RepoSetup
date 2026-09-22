@@ -13,7 +13,7 @@ export const pnpmIntegration = defineIntegration({
   name: "pnpm",
   category: "package-manager",
   description: "Detects pnpm before installing JavaScript packages.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://pnpm.io/cli/add",
   keywords: ["node", "packages"],
   verification: { verifiedAt: VERIFIED_AT },

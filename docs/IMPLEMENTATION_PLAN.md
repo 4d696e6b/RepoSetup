@@ -325,3 +325,74 @@ Before v1 stable:
 - integration freshness metadata.
 
 Do not build the website in this phase.
+
+---
+
+## Phase 18 — Release Hardening and Prerelease Qualification
+
+Transform the Phase 17 tree into a qualified public prerelease. Target version: `0.1.0-alpha.1`. This is not `1.0.0`.
+
+Do not add integrations to increase catalog size. Do not build a website. Do not modify `main` until qualification succeeds. Do not npm-publish or push release tags from this phase unless the owner explicitly requests publication after every gate passes.
+
+### 18.0 Documentation and baseline
+
+Update source-of-truth docs. Record baseline `pnpm test`, `typecheck`, `lint`, `build`, and registry validation.
+
+#### Gate
+Docs describe Phase 18. Baseline commands pass.
+
+### 18.1 Golden-stack real execution tests
+
+Prove generated projects in isolated temporary directories. Separate generation from live database connectivity.
+
+#### Gate
+Harness exists (`pnpm test:e2e`, `pnpm test:golden`). Golden A–E have execution evidence or an explicit documented blocker.
+
+### 18.2 Cross-platform CI qualification
+
+Split CI: fast PR checks, OS matrix, optional golden job. Test Node minimum and primary where practical.
+
+#### Gate
+Workflows exist for Linux, macOS, and Windows without an uncontrolled Cartesian explosion.
+
+### 18.3 npm package/artifact qualification
+
+Public packages use `0.1.0-alpha.1`. Packed CLI works outside the monorepo.
+
+#### Gate
+Tarball install runs `--help`, `--version`, `search`, `info`, and `create --dry-run`.
+
+### 18.4 Failure-path and safety qualification
+
+Cover invalid config, missing tools, path traversal, dry-run non-mutation, and add idempotency.
+
+#### Gate
+Failure and dry-run tests pass. Command-safety audit is recorded.
+
+### 18.5 Integration maturity classification
+
+Statuses: `experimental`, `candidate`, `stable`, `deprecated`. Promote only with evidence.
+
+#### Gate
+Registry, `info`, and docs show honest maturity. No fabricated stable labels.
+
+### 18.6 Release documentation
+
+README, CONTRIBUTING, SECURITY.md, CHANGELOG, LICENSE, issue templates, release notes.
+
+#### Gate
+Docs distinguish implemented / experimental / release-qualified / stable.
+
+### 18.7 Release automation
+
+Controlled release workflow (tag or `workflow_dispatch`). OIDC-ready publish job. No tokens in the repo. Publish remains opt-in.
+
+#### Gate
+Qualification jobs run before any publish job. Default trigger does not publish.
+
+### 18.8 Alpha release candidate validation
+
+Create `release/0.1.0-alpha.1` from qualified `dev`. Do not merge `main` on a failed gate.
+
+#### Gate
+Release-blocking checklist in `docs/ACCEPTANCE_TESTS.md` is either checked with evidence or Phase 18 stays incomplete.

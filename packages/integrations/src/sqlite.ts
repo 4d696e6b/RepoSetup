@@ -20,7 +20,7 @@ export const sqliteIntegration = defineIntegration({
   category: "database",
   description:
     "Selects SQLite as a file-based database. RepoSetup does not install a database server.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://www.prisma.io/docs/orm/v7/core-concepts/supported-databases/sqlite",
   keywords: ["database", "file", "libsql"],
   verification: { verifiedAt: VERIFIED_AT },

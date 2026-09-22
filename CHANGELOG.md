@@ -2,24 +2,35 @@
 
 All notable changes to this project are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project uses a `0.0.0` pre-release version until the first public tag.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+RepoSetup has not published a prior npm release. This file starts at the first intended prerelease.
+
+## [0.1.0-alpha.1] - 2026-09-22
 
 ### Added
 
-- Phase 0–16 product surface: create, add, remove, search, info, stack, doctor, export, and registry validate.
-- Experimental JavaScript and Python integration catalog with dry-run golden stacks.
-- Explicit package-only `remove()` recipes for zod, prettier, pydantic, pytest, and ruff.
-- Linux, macOS, and Windows CI; tag workflow that packs workspace tarballs without publishing.
-- Integration freshness metadata required on every built-in definition (`verifiedAt` plus docs URL).
+- CLI: `create`, `add`, `remove`, `search`, `info`, `stack`, `doctor`, `export`, `registry validate`.
+- Monorepo packages `@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli` at `0.1.0-alpha.1`.
+- Golden-stack real execution harness (`pnpm test:golden`) and packed-artifact smoke tests (`pnpm test:e2e`).
+- Fast / platform / golden GitHub Actions workflows and an OIDC-ready release workflow that does not publish on push.
+- Integration maturity labels: `experimental`, `candidate`, `stable`, `deprecated`.
 
-### Security
+### Changed
 
-- Command failures no longer copy child stdout/stderr into error details.
-- Process execution uses `spawn` with `shell: false` and project-root path checks.
+- CLI `--version` reads `packages/cli/package.json` instead of a hardcoded string.
+- Workspace packages are public-ready (not `private: true`) at the alpha version. The root workspace remains private.
 
-### Notes
+### Fixed
 
-- Built-in integrations remain experimental. Packages remain private and unpublished.
+- `stack` / `doctor` warn when `package.json` exists but is not valid JSON, instead of inventing Node dependencies.
+- Prisma client helper now imports `../generated/prisma/client.js` so Express `nodenext` typecheck succeeds.
+
+### Known limitations
+
+- This is an alpha prerelease, not `1.0.0`.
+- No integration is labeled `stable`.
+- PostgreSQL/MongoDB paths are generation/config only unless a live database is provided separately.
+- Next.js full execute is intended for CI or a machine with enough disk.
+- Bun is unimplemented. `remove` is package-only for a small set of IDs. pip uninstall is refused.
+- npm publish still requires the owner to configure trusted publishing.

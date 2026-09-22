@@ -14,7 +14,7 @@ export const pythonIntegration = defineIntegration({
   name: "Python",
   category: "runtime",
   description: "Detects the Python runtime before project setup.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://docs.python.org/3/using/index.html",
   keywords: ["python", "runtime"],
   verification: {

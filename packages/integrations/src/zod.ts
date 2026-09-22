@@ -9,7 +9,7 @@ export const zodIntegration = defineIntegration({
   name: "Zod",
   category: "validation",
   description: "Adds Zod schema validation.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://zod.dev",
   keywords: ["schema", "typescript", "validation"],
   verification: { verifiedAt: VERIFIED_AT },

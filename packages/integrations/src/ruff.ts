@@ -19,7 +19,7 @@ export const ruffIntegration = defineIntegration({
   name: "Ruff",
   category: "linting",
   description: "Adds Ruff as a development dependency.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://docs.astral.sh/ruff/installation/",
   keywords: ["format", "lint", "python"],
   verification: { verifiedAt: "2026-09-22" },

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "golden-flask-app"
+  },
+  "runtime": {
+    "id": "python"
+  },
+  "packageManager": "uv",
+  "framework": {
+    "id": "flask"
+  },
+  "integrations": [
+    { "id": "postgresql" },
+    { "id": "sqlalchemy" },
+    { "id": "alembic" },
+    { "id": "pytest" },
+    { "id": "ruff" }
+  ]
+}

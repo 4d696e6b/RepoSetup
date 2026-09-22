@@ -30,7 +30,7 @@ export const fastapiIntegration = defineIntegration({
   name: "FastAPI",
   category: "backend-framework",
   description: "Adds FastAPI with the official first-steps main.py app.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://fastapi.tiangolo.com/tutorial/",
   keywords: ["api", "http", "python", "server"],
   verification: { verifiedAt: "2026-09-22" },

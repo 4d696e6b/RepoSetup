@@ -2,11 +2,40 @@
 
 RepoSetup is a terminal-first stack composer. It turns a declarative config into a typed installation plan, then dry-runs or executes that plan.
 
-This tree is a **pre-v1** monorepo. Built-in integrations are **experimental**. Do not treat IDs as stable until a real v1 release.
+**This is an alpha prerelease (`0.1.0-alpha.1`). It is not `1.0.0`.** Some integrations remain experimental. Use `--dry-run` before applying changes to an important project.
 
-## Quickstart
+## Status labels
 
-From a clone:
+| Label | Meaning |
+| --- | --- |
+| implemented | Code exists in the catalog. Not a publish promise. |
+| experimental | Implemented; complete supported paths are not release-qualified. |
+| candidate | Official commands verified and automated tests exist; cross-platform or real execute evidence is incomplete. |
+| release-qualified | A golden stack that includes the integration passed real execution. Not the same as stable. |
+| stable | Real execute + advertised-platform evidence. **None in this alpha.** |
+
+Do not treat every registry ID as equally mature. `reposetup info <id>` prints the current status.
+
+## Installation
+
+Packages are not published to npm until the owner completes trusted publishing. From a clone:
+
+```bash
+pnpm install
+pnpm build
+node packages/cli/dist/bin.js --help
+```
+
+After a public publish:
+
+```bash
+npx @reposetup/cli --help
+pnpm dlx @reposetup/cli --help
+```
+
+The binary name is `reposetup`. Requires **Node.js 20+** (Vite stacks need 20.19+; Next.js needs 20.9+). Python stacks need **Python 3.9+** and **uv**.
+
+## Quick start
 
 ```bash
 pnpm install
@@ -14,15 +43,13 @@ pnpm build
 node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.json --dry-run
 ```
 
-Dry-run resolves the same plan as a real run and must not write files or spawn installers.
+Dry-run uses the same resolver and planner as a real run. It must not write files or spawn installers.
 
-Other examples live in `examples/`:
+Create for real (isolated directory, confirmation skipped):
 
-- `examples/reposetup.next-sqlite.json`
-- `examples/reposetup.react-vite.json`
-- `examples/reposetup.express-postgres.json`
-- `examples/reposetup.fastapi.json`
-- `examples/reposetup.flask.json`
+```bash
+node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.json --yes
+```
 
 ## Commands
 
@@ -38,18 +65,51 @@ reposetup export
 reposetup registry validate
 ```
 
+Examples:
+
+```bash
+node packages/cli/dist/bin.js search prisma
+node packages/cli/dist/bin.js info prisma
+node packages/cli/dist/bin.js add zod --dry-run
+node packages/cli/dist/bin.js stack
+node packages/cli/dist/bin.js doctor
+```
+
 `import` is not a separate command. Apply an exported file with `create --config`.
 
-## Packages
+## Golden stacks
 
-| Package | Role |
-| --- | --- |
-| `@reposetup/core` | Config, resolve, plan, execute |
-| `@reposetup/registry` | Registry lookup and validation |
-| `@reposetup/integrations` | Built-in integration definitions |
-| `@reposetup/cli` | Commander CLI |
+| ID | Stack | Notes |
+| --- | --- | --- |
+| A | Next.js, pnpm, TypeScript, Tailwind, SQLite, Prisma, Zod, Vitest, Prettier | `examples/reposetup.next-sqlite.json` |
+| B | React + Vite, pnpm, TypeScript, Tailwind, Zod, Vitest, Prettier | `tests/e2e/fixtures/golden-react-vite.json` |
+| C | Express, pnpm, TypeScript, PostgreSQL **config**, Prisma, Zod, Vitest, Prettier | Generation only; no live Postgres |
+| D | FastAPI, uv, Pydantic, SQLAlchemy, Alembic, pytest, Ruff | PostgreSQL config placeholder; no live DB |
+| E | Flask, uv, SQLAlchemy, Alembic, pytest, Ruff | Same as D |
 
-Workspace packages stay `private` until a tagged public release. See `docs/RELEASE.md`.
+`pnpm test:golden` runs real `create --yes` in temporary directories. Next.js full execute runs in CI (or with `REPOSETUP_GOLDEN_NEXT=1`) because local disk may be too small.
+
+## Supported platforms
+
+Advertised for this alpha:
+
+- macOS, Linux, Windows (unit tests; GitHub Actions matrix on `dev` / `release/**`)
+- Node.js 20 (current 20.x) and 22
+- Python 3.12 in golden CI; integrations document Python 3.9+
+
+## Supported integrations
+
+See `docs/V1_INTEGRATION_REGISTRY.md` and `docs/INTEGRATION_SUPPORT.md`. Catalog IDs include Node/Python runtimes, npm/pnpm/uv/pip, Next.js, React + Vite, Express, Fastify, FastAPI, Flask, Tailwind, shadcn, SQLite, PostgreSQL, MongoDB, Prisma, Drizzle, Mongoose, SQLAlchemy, Alembic, Zod, Pydantic, Vitest, Playwright, pytest, ESLint, Prettier, Ruff, Docker, Docker Compose, and GitHub Actions.
+
+Bun is not implemented. PostgreSQL/MongoDB integrations do not install a database server.
+
+## Limitations
+
+- Alpha quality. Prefer `--dry-run`.
+- `remove` is package-only for zod, prettier, pydantic, pytest, and ruff.
+- pip uninstall is refused.
+- RepoSetup does not install Node, Python, Docker, or databases.
+- Config files are declarative only.
 
 ## Development
 
@@ -57,13 +117,17 @@ Workspace packages stay `private` until a tagged public release. See `docs/RELEA
 pnpm test
 pnpm typecheck
 pnpm lint
+pnpm build
+pnpm registry:validate
+pnpm test:e2e
+pnpm test:golden
 ```
 
 Read `CONTRIBUTING.md` before changing integrations. Do not guess third-party CLI flags.
 
-## Safety
+## Security
 
-RepoSetup does not install Node, Python, Docker, or databases for you. Config files are declarative only. Process execution uses `spawn` with `shell: false`.
+See `SECURITY.md`. Process execution uses `spawn` with `shell: false`. Exports never include `.env` secrets.
 
 ## License
 

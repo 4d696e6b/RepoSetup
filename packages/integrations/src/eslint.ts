@@ -38,7 +38,7 @@ export const eslintIntegration = defineIntegration({
   name: "ESLint",
   category: "linting",
   description: "Adds ESLint with the official flat config recommended rules.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://eslint.org/docs/latest/use/getting-started",
   keywords: ["lint", "quality"],
   verification: { verifiedAt: "2026-09-22" },

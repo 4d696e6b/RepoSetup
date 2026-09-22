@@ -22,6 +22,9 @@
     "docs/ACCEPTANCE_TESTS.md",
     "docs/V1_INTEGRATION_REGISTRY.md",
     "docs/CONFIG_MIGRATION.md",
-    "docs/RELEASE.md"
+    "docs/RELEASE.md",
+    "docs/RELEASE_HARDENING.md",
+    "docs/RELEASE_CHECKLIST.md",
+    "docs/INTEGRATION_SUPPORT.md"
   ]
 }

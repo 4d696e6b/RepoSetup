@@ -17,7 +17,7 @@ export const pytestIntegration = defineIntegration({
   name: "pytest",
   category: "testing",
   description: "Adds pytest as a development dependency. Does not write sample tests.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://docs.pytest.org/en/stable/getting-started.html",
   keywords: ["python", "test"],
   verification: { verifiedAt: "2026-09-22" },

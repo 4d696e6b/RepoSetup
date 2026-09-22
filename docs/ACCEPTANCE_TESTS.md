@@ -103,3 +103,38 @@ Dry-run plans pass in CI. The Next.js execute path is opt-in (`REPOSETUP_GOLDEN_
 - [x] No website/backend dependency exists.
 
 Linux/macOS/Windows jobs are defined in `.github/workflows/ci.yml`. Windows skips the Next.js execute test. First GitHub matrix results depend on a remote run.
+
+## Release Qualification
+
+Phase 18 gates for `0.1.0-alpha.1`. Unchecked items block calling Phase 18 complete.
+
+- [x] unit tests pass
+- [x] typecheck passes
+- [x] lint passes
+- [x] build passes
+- [x] registry validation passes
+- [x] packaged CLI works outside monorepo
+- [x] `--version` works
+- [x] `--help` works
+- [ ] Next.js golden stack passes (CI / `REPOSETUP_GOLDEN_NEXT=1`; skipped locally — ~475 MiB free)
+- [x] React/Vite golden stack passes (local `pnpm test:golden`)
+- [ ] FastAPI golden stack passes (`uv` not installed in this workspace)
+- [ ] Flask golden stack passes (`uv` not installed in this workspace)
+- [x] Express generation path passes (local `pnpm test:golden`; no live PostgreSQL)
+- [ ] Linux qualification passes
+- [ ] macOS qualification passes
+- [ ] Windows qualification passes for advertised features
+- [x] dry-run mutation tests pass
+- [x] injection/path tests pass
+- [x] failure behavior tests pass
+- [x] add idempotency tests pass
+- [x] README finished
+- [x] SECURITY.md finished
+- [x] CONTRIBUTING.md finished
+- [x] CHANGELOG.md finished
+- [x] LICENSE confirmed
+- [x] package metadata correct
+- [x] npm tarball inspected/tested
+- [x] release workflow exists
+- [x] release process documented
+

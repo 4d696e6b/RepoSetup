@@ -17,7 +17,7 @@ import { failVerify, mergeVerify, missingAnyFile, missingEnvKeys } from "./verif
 
 const PRISMA_SQLITE_CLIENT = `import "dotenv/config";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-import { PrismaClient } from "../generated/prisma/client";
+import { PrismaClient } from "../generated/prisma/client.js";
 
 const connectionString = \`\${process.env.DATABASE_URL}\`;
 
@@ -29,7 +29,7 @@ export { prisma };
 
 const PRISMA_POSTGRES_CLIENT = `import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client";
+import { PrismaClient } from "../generated/prisma/client.js";
 
 const connectionString = \`\${process.env.DATABASE_URL}\`;
 
@@ -44,7 +44,7 @@ export const prismaIntegration = defineIntegration({
   name: "Prisma",
   category: "orm",
   description: "Adds Prisma ORM with the SQLite or PostgreSQL driver adapter.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://www.prisma.io/docs/v7/prisma-orm/add-to-existing-project/sqlite",
   keywords: ["orm", "sqlite", "postgresql", "migrate"],
   verification: { verifiedAt: VERIFIED_AT },

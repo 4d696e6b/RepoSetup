@@ -40,7 +40,7 @@ export const vitestIntegration = defineIntegration({
   category: "testing",
   description:
     "Adds Vitest. Next.js uses the official RTL guide; other Node apps install Vitest only.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://vitest.dev/guide/",
   keywords: ["test", "vite", "rtl"],
   verification: { verifiedAt: VERIFIED_AT },

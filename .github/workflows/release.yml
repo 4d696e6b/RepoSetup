@@ -1,14 +1,20 @@
-name: Release pack
+name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish public packages to npm (requires trusted publisher setup)"
+        type: boolean
+        default: false
   push:
     tags:
       - "v*"
 
 jobs:
-  pack:
+  qualify:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -16,13 +22,39 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm lint
-      - run: pnpm build
       - run: pnpm test
+      - run: pnpm registry:validate
+      - run: pnpm test:e2e
       - run: pnpm pack:packages
       - uses: actions/upload-artifact@v4
         with:
           name: reposetup-packs
           path: packages/*/*.tgz
+
+  publish:
+    needs: qualify
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Publish (OIDC trusted publishing)
+        run: pnpm publish -r --filter "./packages/**" --access public --tag alpha --no-git-checks
+        env:
+          NPM_CONFIG_PROVENANCE: true

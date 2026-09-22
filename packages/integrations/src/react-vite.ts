@@ -31,7 +31,7 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
   name: "React + Vite",
   category: "framework",
   description: "Scaffolds a React app with the official create-vite templates.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://vite.dev/guide/",
   keywords: ["react", "vite", "spa"],
   optionSchema: reactViteOptionsSchema,

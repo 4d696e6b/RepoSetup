@@ -13,7 +13,7 @@ export const uvIntegration = defineIntegration({
   name: "uv",
   category: "package-manager",
   description: "Detects uv before installing Python packages.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://docs.astral.sh/uv/reference/cli/#uv-add",
   keywords: ["python", "packages"],
   verification: { verifiedAt: "2026-09-22" },
