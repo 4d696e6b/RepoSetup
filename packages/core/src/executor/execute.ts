@@ -59,6 +59,38 @@ export async function executeInstallation(
     return { ok: false, executed: 0, error: preflightError, logs: context.logs };
   }
 
+  const acquired =
+    options.executionLock === undefined
+      ? undefined
+      : await options.executionLock.acquire(context.rootDir);
+  if (acquired !== undefined && !acquired.ok) {
+    return {
+      ok: false,
+      executed: 0,
+      error: createRepoSetupError({
+        code: "EXECUTION_LOCKED",
+        message:
+          acquired.reason === "already_locked"
+            ? "Another RepoSetup execution is already changing this project."
+            : "RepoSetup could not reserve this project for safe execution.",
+        details: { rootDir: context.rootDir, reason: acquired.reason },
+        suggestion: "Wait for the other RepoSetup command to finish, then retry.",
+      }),
+      logs: context.logs,
+    };
+  }
+
+  try {
+    return await executeOperations(operations, context);
+  } finally {
+    await acquired?.handle.release();
+  }
+}
+
+async function executeOperations(
+  operations: readonly InstallationOperation[],
+  context: ExecutionContext,
+): Promise<ExecuteResult> {
   let executed = 0;
   for (const operation of operations) {
     if (operation.type !== "check_prerequisite") {

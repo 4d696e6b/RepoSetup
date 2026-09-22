@@ -1,23 +1,59 @@
 import { spawn } from "node:child_process";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import {
   access,
   appendFile,
   mkdir,
   readFile,
   realpath,
+  rm,
   rename,
   stat,
   unlink,
   writeFile,
 } from "node:fs/promises";
 import path from "node:path";
+import os from "node:os";
 
-import { redactProcessOutput, type ExecutorFileSystem, type ProcessRunner } from "@reposetup/core";
+import {
+  redactProcessOutput,
+  type ExecutionLock,
+  type ExecutorFileSystem,
+  type ProcessRunner,
+} from "@reposetup/core";
 
 export const DEFAULT_COMMAND_TIMEOUT_MS = 5 * 60_000;
 export const DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS = 30 * 60_000;
 export const MAX_CAPTURED_OUTPUT_BYTES = 128 * 1024;
+
+export function createDefaultExecutionLock(): ExecutionLock {
+  return {
+    async acquire(rootDir) {
+      const lockRoot = path.join(os.tmpdir(), "reposetup-locks");
+      const lockId = createHash("sha256").update(rootDir).digest("hex");
+      const lockPath = path.join(lockRoot, lockId);
+
+      try {
+        await mkdir(lockRoot, { recursive: true, mode: 0o700 });
+        await mkdir(lockPath, { mode: 0o700 });
+      } catch (error) {
+        return {
+          ok: false,
+          reason: isAlreadyExists(error) ? "already_locked" : "unavailable",
+        };
+      }
+
+      return {
+        ok: true,
+        handle: {
+          async release() {
+            await rm(lockPath, { recursive: true, force: true });
+          },
+        },
+      };
+    },
+  };
+}
 
 export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
   return {
@@ -193,6 +229,10 @@ export function createDefaultCommandExists(
 
 function isNotFound(error: unknown): boolean {
   return typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT";
+}
+
+function isAlreadyExists(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error && error.code === "EEXIST";
 }
 
 function appendOutput(

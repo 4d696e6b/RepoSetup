@@ -38,6 +38,18 @@ export interface ProcessRunResult {
 
 export type ProcessRunner = (request: ProcessRunRequest) => Promise<ProcessRunResult>;
 
+export interface ExecutionLockHandle {
+  release(): Promise<void>;
+}
+
+export type ExecutionLockAcquireResult =
+  | { ok: true; handle: ExecutionLockHandle }
+  | { ok: false; reason: "already_locked" | "unavailable" };
+
+export interface ExecutionLock {
+  acquire(rootDir: string): Promise<ExecutionLockAcquireResult>;
+}
+
 export interface ExecutorLogger {
   info(message: string): void;
   verbose(message: string): void;
@@ -48,6 +60,7 @@ export interface ExecuteOptions {
   rootDir: string;
   fs: ExecutorFileSystem;
   runProcess: ProcessRunner;
+  executionLock?: ExecutionLock;
   commandExists?: (command: string) => Promise<boolean>;
   logger?: ExecutorLogger;
   signal?: AbortSignal;

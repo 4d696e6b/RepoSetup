@@ -102,6 +102,9 @@ export { executeInstallation } from "./executor/execute.js";
 export type {
   ExecuteOptions,
   ExecuteResult,
+  ExecutionLock,
+  ExecutionLockAcquireResult,
+  ExecutionLockHandle,
   ExecutorFileSystem,
   ExecutorLogger,
   ProcessRunRequest,

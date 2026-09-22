@@ -639,6 +639,74 @@ describe("executeInstallation", () => {
     expect(runs).toEqual([]);
   });
 
+  it("refuses a concurrent execution before commands or mutations begin", async () => {
+    const root = await tempRoot();
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "create_file",
+          path: "should-not-exist.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Must not write",
+        },
+      ],
+      {
+        rootDir: root,
+        runProcess: recordingRunner(runs),
+        executionLock: {
+          async acquire() {
+            return { ok: false, reason: "already_locked" };
+          },
+        },
+      },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("EXECUTION_LOCKED");
+    expect(runs).toEqual([]);
+    await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
+  });
+
+  it("releases an acquired execution lock after a failed operation", async () => {
+    const root = await tempRoot();
+    let releases = 0;
+    const result = await executeInstallation(
+      [
+        {
+          type: "run_command",
+          command: "node",
+          args: ["-e", "process.exit(2)"],
+          cwd: ".",
+          description: "Fail",
+        },
+      ],
+      {
+        rootDir: root,
+        runProcess: recordingRunner([], { exitCode: 2 }),
+        executionLock: {
+          async acquire() {
+            return {
+              ok: true,
+              handle: {
+                async release() {
+                  releases += 1;
+                },
+              },
+            };
+          },
+        },
+      },
+    );
+
+    expect(result.ok).toBe(false);
+    expect(releases).toBe(1);
+  });
+
   it("rejects unknown prerequisite ids instead of executing them", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];

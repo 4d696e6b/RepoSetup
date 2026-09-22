@@ -9,6 +9,7 @@ import { EXIT_CODES } from "./exit-codes.js";
 import { handleExport } from "./export.js";
 import {
   createDefaultCommandExists,
+  createDefaultExecutionLock,
   createDefaultExecutorFileSystem,
   createDefaultProcessRunner,
 } from "./execution-adapters.js";
@@ -245,6 +246,7 @@ function resolveDeps(deps: CliDeps): ResolvedCliDeps {
     confirmCreate: deps.confirmCreate ?? defaultConfirmCreate,
     executorFs: deps.executorFs ?? createDefaultExecutorFileSystem(),
     runProcess,
+    executionLock: deps.executionLock ?? createDefaultExecutionLock(),
     commandExists: deps.commandExists ?? createDefaultCommandExists(runProcess),
     cwd: deps.cwd ?? process.cwd(),
   };

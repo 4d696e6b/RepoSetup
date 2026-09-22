@@ -2,6 +2,7 @@ import type {
   IntegrationSelection,
   PackageManager,
   ExecutorFileSystem,
+  ExecutionLock,
   ProcessRunner,
   RuntimeId,
 } from "@reposetup/core";
@@ -43,6 +44,7 @@ export interface CliDeps {
   confirmCreate?: () => Promise<boolean>;
   executorFs?: ExecutorFileSystem;
   runProcess?: ProcessRunner;
+  executionLock?: ExecutionLock;
   commandExists?: (command: string) => Promise<boolean>;
   signal?: AbortSignal;
   cwd?: string;
@@ -56,6 +58,7 @@ export interface ResolvedCliDeps {
   confirmCreate: () => Promise<boolean>;
   executorFs: ExecutorFileSystem;
   runProcess: ProcessRunner;
+  executionLock: ExecutionLock;
   commandExists: (command: string) => Promise<boolean>;
   signal?: AbortSignal;
   cwd: string;

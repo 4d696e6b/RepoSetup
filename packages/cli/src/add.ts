@@ -91,6 +91,7 @@ export async function handleAdd(input: {
     rootDir: planned.projectRoot,
     fs: input.deps.executorFs,
     runProcess: input.deps.runProcess,
+    executionLock: input.deps.executionLock,
     ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
     commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
     longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,

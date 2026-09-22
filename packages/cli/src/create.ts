@@ -71,6 +71,7 @@ export async function handleCreate(input: {
     rootDir: input.deps.cwd,
     fs: input.deps.executorFs,
     runProcess: input.deps.runProcess,
+    executionLock: input.deps.executionLock,
     ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
     commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
     longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,

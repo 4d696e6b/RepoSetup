@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import {
   MAX_CAPTURED_OUTPUT_BYTES,
   createDefaultExecutorFileSystem,
+  createDefaultExecutionLock,
   createDefaultProcessRunner,
 } from "./execution-adapters.js";
 
@@ -30,6 +31,32 @@ describe("createDefaultExecutorFileSystem", () => {
         rm(root, { recursive: true, force: true }),
         rm(outside, { recursive: true, force: true }),
       ]);
+    }
+  });
+});
+
+describe("createDefaultExecutionLock", () => {
+  it("prevents a second lock for the same project and releases the first", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-lock-project-"));
+    const lock = createDefaultExecutionLock();
+
+    try {
+      const first = await lock.acquire(root);
+      expect(first.ok).toBe(true);
+      const second = await lock.acquire(root);
+      expect(second).toEqual({ ok: false, reason: "already_locked" });
+
+      if (!first.ok) {
+        return;
+      }
+      await first.handle.release();
+      const third = await lock.acquire(root);
+      expect(third).toMatchObject({ ok: true });
+      if (third.ok) {
+        await third.handle.release();
+      }
+    } finally {
+      await rm(root, { recursive: true, force: true });
     }
   });
 });
