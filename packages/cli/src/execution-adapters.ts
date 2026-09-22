@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { constants } from "node:fs";
 import { createHash, randomUUID } from "node:crypto";
 import {
   access,
@@ -109,6 +110,15 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
       try {
         const info = await stat(filePath);
         return info.isDirectory();
+      } catch {
+        return false;
+      }
+    },
+
+    async canWrite(filePath) {
+      try {
+        await access(filePath, constants.W_OK);
+        return true;
       } catch {
         return false;
       }

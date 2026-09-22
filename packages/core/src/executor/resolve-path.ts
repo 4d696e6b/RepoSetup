@@ -71,7 +71,7 @@ export async function assertRealPathInsideRoot(
   }
 }
 
-async function nearestExistingAncestor(
+export async function nearestExistingAncestor(
   pathToCheck: string,
   fs: ExecutorFileSystem,
 ): Promise<string> {

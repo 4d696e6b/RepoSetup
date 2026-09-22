@@ -47,6 +47,14 @@ const testFileSystem: ExecutorFileSystem = {
       return false;
     }
   },
+  async canWrite(filePath) {
+    try {
+      await access(filePath);
+      return true;
+    } catch {
+      return false;
+    }
+  },
   async realpath(filePath) {
     return realpath(filePath);
   },
@@ -709,6 +717,35 @@ describe("executeInstallation", () => {
     }
     expect(result.error.code).toBe("PROJECT_NOT_FOUND");
     expect(runs).toEqual([]);
+  });
+
+  it("fails writable-location preflight before commands or mutations", async () => {
+    const root = await tempRoot();
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeCoreInstallation(
+      [
+        {
+          type: "create_file",
+          path: "should-not-exist.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Must not write",
+        },
+      ],
+      {
+        rootDir: root,
+        fs: { ...testFileSystem, canWrite: async () => false },
+        runProcess: recordingRunner(runs),
+      },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("FILE_MUTATION_FAILED");
+    expect(runs).toEqual([]);
+    await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
   });
 
   it("refuses a concurrent execution before commands or mutations begin", async () => {

@@ -37,6 +37,14 @@ const testFileSystem: ExecutorFileSystem = {
       return false;
     }
   },
+  async canWrite(filePath) {
+    try {
+      await access(filePath);
+      return true;
+    } catch {
+      return false;
+    }
+  },
   async realpath(filePath) {
     return realpath(filePath);
   },

@@ -4,6 +4,7 @@ import type { InstallationOperation } from "../operations/types.js";
 export interface ExecutorFileSystem {
   exists(path: string): Promise<boolean>;
   isDirectory(path: string): Promise<boolean>;
+  canWrite(path: string): Promise<boolean>;
   realpath(path: string): Promise<string>;
   mkdir(path: string): Promise<void>;
   readFile(path: string): Promise<string>;
