@@ -3,9 +3,11 @@ import type { RepoSetupError } from "../errors/model.js";
 export interface ExecutorFileSystem {
   exists(path: string): Promise<boolean>;
   isDirectory(path: string): Promise<boolean>;
+  realpath(path: string): Promise<string>;
   mkdir(path: string): Promise<void>;
   readFile(path: string): Promise<string>;
   writeFile(path: string, content: string): Promise<void>;
+  writeFileExclusive(path: string, content: string): Promise<void>;
   appendFile(path: string, content: string): Promise<void>;
 }
 

@@ -12,7 +12,7 @@ import { pathPrerequisite } from "../prerequisites/path.js";
 
 import { isSafeExecutableName, isSafeProcessArg } from "./command-name.js";
 import { commandFailureSuggestion, summarizeFailedProcessOutput } from "./output-snippet.js";
-import { resolveInsideRoot } from "./resolve-path.js";
+import { assertRealPathInsideRoot, resolveInsideRoot } from "./resolve-path.js";
 import type { ExecutionContext, ProcessRunResult } from "./types.js";
 
 export async function executeCheckPrerequisite(
@@ -72,6 +72,10 @@ export async function executeRunCommand(
   if (!cwd.ok) {
     return cwd.error;
   }
+  const realPath = await assertRealPathInsideRoot(context.rootDir, cwd.absolutePath, context.fs);
+  if (!realPath.ok) {
+    return realPath.error;
+  }
 
   context.logger.verbose(`${operation.command} ${operation.args.join(" ")}`);
 
@@ -103,6 +107,10 @@ export async function executeVerify(
   const cwd = resolveInsideRoot(context.rootDir, operation.cwd);
   if (!cwd.ok) {
     return cwd.error;
+  }
+  const realPath = await assertRealPathInsideRoot(context.rootDir, cwd.absolutePath, context.fs);
+  if (!realPath.ok) {
+    return realPath.error;
   }
 
   context.logger.verbose(`${operation.command} ${args.join(" ")}`);

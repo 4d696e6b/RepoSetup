@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { access, appendFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { access, appendFile, mkdir, readFile, realpath, stat, writeFile } from "node:fs/promises";
 
 import type { ExecutorFileSystem, ProcessRunner } from "@reposetup/core";
 
@@ -27,6 +27,10 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
       }
     },
 
+    async realpath(filePath) {
+      return realpath(filePath);
+    },
+
     async mkdir(filePath) {
       await mkdir(filePath, { recursive: true });
     },
@@ -37,6 +41,10 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
 
     async writeFile(filePath, content) {
       await writeFile(filePath, content, "utf8");
+    },
+
+    async writeFileExclusive(filePath, content) {
+      await writeFile(filePath, content, { encoding: "utf8", flag: "wx" });
     },
 
     async appendFile(filePath, content) {

@@ -4,8 +4,10 @@ import {
   mkdir,
   mkdtemp,
   readFile,
+  realpath,
   rm,
   stat,
+  symlink,
   writeFile,
 } from "node:fs/promises";
 import os from "node:os";
@@ -42,6 +44,9 @@ const testFileSystem: ExecutorFileSystem = {
       return false;
     }
   },
+  async realpath(filePath) {
+    return realpath(filePath);
+  },
   async mkdir(filePath) {
     await mkdir(filePath, { recursive: true });
   },
@@ -50,6 +55,9 @@ const testFileSystem: ExecutorFileSystem = {
   },
   async writeFile(filePath, content) {
     await writeFile(filePath, content, "utf8");
+  },
+  async writeFileExclusive(filePath, content) {
+    await writeFile(filePath, content, { encoding: "utf8", flag: "wx" });
   },
   async appendFile(filePath, content) {
     await appendFile(filePath, content, "utf8");
@@ -167,6 +175,32 @@ describe("executeInstallation", () => {
     expect(result.executed).toBe(0);
     expect(await readFile(path.join(root, "keep.txt"), "utf8")).toBe("one\n");
     await expect(readFile(path.join(root, "other.txt"), "utf8")).rejects.toThrow();
+  });
+
+  it("refuses a file path that escapes through a symlink", async () => {
+    const root = await tempRoot();
+    const outside = await tempRoot();
+    await symlink(outside, path.join(root, "linked"));
+
+    const result = await executeInstallation(
+      [
+        {
+          type: "create_file",
+          path: "linked/escaped.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Must not escape",
+        },
+      ],
+      { rootDir: root, runProcess: recordingRunner([]) },
+    );
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("PLAN_INVALID");
+    await expect(readFile(path.join(outside, "escaped.txt"), "utf8")).rejects.toThrow();
   });
 
   it("merges JSON, replaces unique text, and appends missing env keys", async () => {

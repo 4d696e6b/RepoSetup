@@ -4,6 +4,7 @@ import {
   mkdir,
   mkdtemp,
   readFile,
+  realpath,
   rm,
   stat,
   writeFile,
@@ -35,6 +36,9 @@ const testFileSystem: ExecutorFileSystem = {
       return false;
     }
   },
+  async realpath(filePath) {
+    return realpath(filePath);
+  },
   async mkdir(filePath) {
     await mkdir(filePath, { recursive: true });
   },
@@ -43,6 +47,9 @@ const testFileSystem: ExecutorFileSystem = {
   },
   async writeFile(filePath, content) {
     await writeFile(filePath, content, "utf8");
+  },
+  async writeFileExclusive(filePath, content) {
+    await writeFile(filePath, content, { encoding: "utf8", flag: "wx" });
   },
   async appendFile(filePath, content) {
     await appendFile(filePath, content, "utf8");
