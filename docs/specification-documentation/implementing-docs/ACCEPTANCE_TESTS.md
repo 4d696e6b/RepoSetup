@@ -1,4 +1,6 @@
-# RepoSetup v1 Acceptance Criteria
+# RepoSetup acceptance criteria
+
+The checked Phase 0–18 entries below are historical coverage records. They do not establish the frozen `0.2.0` support contract. See [Phase 19 baseline and acceptance scope](./PHASE_19_BASELINE.md) for current source/artifact evidence, explicit blockers, and the replacement gates.
 
 Checked items have automated coverage in this tree. Unchecked items wait on a real v1 stable release or a GitHub Actions run that has not happened in this workspace.
 
@@ -104,7 +106,7 @@ Dry-run plans pass in CI. The Next.js execute path is opt-in (`REPOSETUP_GOLDEN_
 
 Linux/macOS/Windows jobs are defined in `.github/workflows/ci.yml`. Windows skips the Next.js execute test. First GitHub matrix results depend on a remote run.
 
-## Release Qualification
+## Historical 0.1.x release qualification
 
 Phase 18 gates for `0.1.0`. Unchecked items block calling Phase 18 complete. GitHub source launch may proceed with documented blockers; it is not `1.0.0`.
 
@@ -137,4 +139,3 @@ Phase 18 gates for `0.1.0`. Unchecked items block calling Phase 18 complete. Git
 - [x] npm tarball inspected/tested
 - [x] release workflow exists
 - [x] release process documented
-

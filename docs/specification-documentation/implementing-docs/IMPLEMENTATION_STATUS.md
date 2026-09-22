@@ -4,11 +4,48 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 18 — Release Hardening and Prerelease Qualification** (GitHub `0.1.0` launch; remaining golden/OS evidence still open)
+**Phase 19 — Baseline and acceptance scope: complete.** Next: Phase 20 — Safe executor and adapter boundaries. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+
+See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
 
 ## Current release
 
-`0.1.0` public GitHub source launch. npm package `reposetup` is prepared (Model A) and not published until authentication + qualification.
+The observed npm dist-tag is `rsetup@0.1.1`; the source, tag, integrity, and remaining unobserved GitHub evidence are recorded in [Phase 19 baseline](./PHASE_19_BASELINE.md).
+
+## Planning checkpoint — 2026-09-22
+
+Inspected baseline: `a0e48a1` on `main`, macOS, Node 22.12.0, pnpm 12.5.1.
+
+- [x] Inspect architecture, executor, planner, integration helpers, golden/pack tests, CI, and release workflows.
+- [x] Write the phased 0.2.0 roadmap, including researched platform/cache guidance and explicit research-required integration details.
+- [x] `pnpm test`: 335 passed, 1 skipped.
+- [x] `pnpm typecheck`: passed.
+- [x] `pnpm lint`: passed on the inspected baseline.
+- [x] `pnpm build`: passed.
+- [x] `node packages/cli/dist/bin.js registry validate`: passed, 33 integrations.
+- [x] `pnpm test:e2e`: 12 passed, including isolated packed CLI installation.
+- [x] Sequential golden baseline: 2 passed, 3 conditionally skipped; details in Phase 19 baseline.
+- [ ] Linux/Windows execution and remote workflow results: unobserved; Phase 21/27 release blockers.
+- [x] Planning/process-count baseline recorded; no speed improvement claimed.
+
+Phase 19 changed planning and evidence documentation only. No product code, package versions, integration maturity labels, releases, or external publication changed.
+
+### 0.2.0 implementation
+
+- [x] Phase 19 — Baseline and acceptance scope
+- [ ] Phase 20 — Safe executor and adapter boundaries
+- [ ] Phase 21 — Cross-platform execution
+- [ ] Phase 22 — Reproducible recipes and compatibility
+- [ ] Phase 23 — Measured installation performance
+- [ ] Phase 24 — Daily CLI usability and recovery guidance
+- [ ] Phase 25 — Existing integration qualification
+- [ ] Phase 26 — Important new integrations
+- [ ] Phase 27 — Release-candidate qualification
+- [ ] Phase 28 — 0.2.0 publication and delivery verification
+
+## Historical Phase 18 checkpoint
+
+The remaining sections preserve the earlier 0.1.0 launch record. Their publication, CI, and local-environment entries are historical, not current verified status. Phase 19 must reconcile them against observed evidence; do not use their checked boxes to qualify 0.2.0.
 
 ## Phase status
 

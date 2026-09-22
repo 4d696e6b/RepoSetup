@@ -274,6 +274,8 @@ There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
 
 ## Roadmap
 
+See the [phased roadmap to 0.2.0](docs/specification-documentation/implementing-docs/ROADMAP_0.2.0.md) for cross-platform qualification, faster installation, usability improvements, integration priorities, and release gates.
+
 - Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
 - Promote integrations to `stable` only with that evidence
 - Configure npm trusted publishing so tag workflows can release without a local token
