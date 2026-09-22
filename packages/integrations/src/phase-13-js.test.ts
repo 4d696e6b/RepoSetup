@@ -194,6 +194,11 @@ describe("Phase 13 JS ecosystem plans", () => {
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "react-vite" })))).toEqual(
       [["pnpm", "dlx", "shadcn@latest", "init", "--yes", "-t", "vite"]],
     );
+    expect(
+      runCommands(
+        shadcnIntegration.plan(planContext({ packageManager: "npm", frameworkId: "nextjs" })),
+      ),
+    ).toEqual([["npx", "--yes", "shadcn@latest", "init", "--yes", "-t", "next"]]);
   });
 
   it("does not install Docker and writes Compose without starting it", () => {

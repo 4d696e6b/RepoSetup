@@ -100,6 +100,7 @@ describe("integration plans", () => {
     ).toEqual([
       [
         "npx",
+        "--yes",
         "create-next-app@latest",
         "app",
         "--js",

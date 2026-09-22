@@ -124,7 +124,9 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
         : {
             type: "run_command",
             command: "npx",
-            args: ["create-next-app@latest", directory, ...flags],
+            // npx flags must come before the package. --yes suppresses the
+            // "Ok to proceed?" install prompt (npm exec / npx docs).
+            args: ["--yes", "create-next-app@latest", directory, ...flags],
             cwd: ".",
             description: "Scaffold Next.js with create-next-app",
             requiresNetwork: true,

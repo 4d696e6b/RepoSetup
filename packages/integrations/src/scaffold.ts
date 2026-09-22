@@ -103,7 +103,7 @@ export function dlx(
     : {
         type: "run_command",
         command: "npx",
-        args: [pkg, ...args],
+        args: ["--yes", pkg, ...args],
         cwd: context.projectRoot,
         description: options.description,
         requiresNetwork: true,
