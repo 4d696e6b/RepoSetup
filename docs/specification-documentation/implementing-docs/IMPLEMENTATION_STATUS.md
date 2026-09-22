@@ -18,7 +18,8 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 - [x] Verbose subprocess output is line-buffered and redacted, including a secret assignment split across output chunks.
 - [x] A per-root temporary lock rejects concurrent RepoSetup executions without creating files in the user project; operation events expose safe timing/status data.
 - [x] Read-only writable-location preflight rejects injected permission failures before mutations; failed runs retain a hashed, content-free temporary journal.
-- [ ] Disk-space preflight, safe rollback policy, and the remaining injected failure/cross-platform tests.
+- [x] Disk-space preflight requires 512 MiB free before CLI execution; recovery policy forbids automatic rollback and limits any future restore to verified RepoSetup-owned files.
+- [ ] Remaining injected failure and cross-platform tests.
 
 ## Current release
 
