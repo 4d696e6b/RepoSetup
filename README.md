@@ -6,6 +6,7 @@ RepoSetup is an open-source CLI that composes, validates, and configures develop
 
 A modern project often means piecing together setup instructions from several documentation sites. RepoSetup turns supported combinations into a **deterministic installation plan** you can preview with `--dry-run` before anything on disk changes.
 
+[![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 RepoSetup is currently an **early-stage** open-source project (`v0.1.0`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
@@ -43,9 +44,11 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 ## Quick start
 
-Requires **Node.js 20+** and **pnpm 12.5.1**. From a clone of this repository:
+Requires **Node.js 20+** and **pnpm 12.5.1**.
 
 ```bash
+git clone https://github.com/4d696e6b/RepoSetup.git
+cd RepoSetup
 pnpm install
 pnpm build
 node packages/cli/dist/bin.js --help

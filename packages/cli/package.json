@@ -2,6 +2,14 @@
   "name": "@reposetup/cli",
   "version": "0.1.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4d696e6b/RepoSetup.git"
+  },
+  "bugs": {
+    "url": "https://github.com/4d696e6b/RepoSetup/issues"
+  },
+  "homepage": "https://github.com/4d696e6b/RepoSetup#readme",
   "description": "RepoSetup command-line interface.",
   "type": "module",
   "engines": {
