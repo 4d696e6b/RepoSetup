@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import { packageName, runCli } from "./index.js";
 
-describe("@pacharapolpimpa/reposetup", () => {
+describe("rsetup", () => {
   it("exposes a stable package identity", () => {
-    expect(packageName).toBe("@pacharapolpimpa/reposetup");
+    expect(packageName).toBe("rsetup");
   });
 
   it("exports an injectable CLI runner", () => {

@@ -59,30 +59,31 @@ Do not claim untested runtime minors.
 **Model A — single public package** (chosen):
 
 ```text
-@pacharapolpimpa/reposetup
+rsetup
 ```
 
 The public CLI bundles `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` at build time. Those workspace packages are `private: true` and are **not** published to npm.
 
-Runtime npm dependencies of `@pacharapolpimpa/reposetup` are only:
+Runtime npm dependencies of `rsetup` are only:
 
 ```text
 commander
 @inquirer/prompts
 ```
 
-The workspace root is `@reposetup/workspace` (`private: true`). Unscoped `reposetup` and `reposetup-cli` cannot be used: npm rejected them as too similar to existing `repo-setup` and `repo-setup-cli`. The owner chose `@pacharapolpimpa/reposetup`. The `bin` name remains `reposetup`.
+The workspace root is `@reposetup/workspace` (`private: true`). Unscoped `reposetup` and `reposetup-cli` cannot be used: npm rejected them as too similar to existing `repo-setup` and `repo-setup-cli`. The owner chose `rsetup`. Bins are `rsetup` and `reposetup`.
 
 Install after publication:
 
 ```bash
-npx @pacharapolpimpa/reposetup
-npx @pacharapolpimpa/reposetup --help
-npm install -g @pacharapolpimpa/reposetup
+npx rsetup
+npx rsetup --help
+npm install -g rsetup
+rsetup --version
 reposetup --version
 ```
 
-`npx @pacharapolpimpa/reposetup` runs the package. After a global install, the executable on PATH is `reposetup`. `npx reposetup` is not this project.
+`npx rsetup` runs the package. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project.
 
 Do not publish the four workspace directories as separate npm packages. That would be Model B and is not required for the current runtime.
 
@@ -123,7 +124,7 @@ Do not mark `stable` without evidence. This alpha does not claim `1.0.0` stabili
 1. `pnpm install && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm registry:validate`
 2. `pnpm test:e2e`
 3. `pnpm test:golden` when disk/network allow
-4. Inspect the public tarball (`pnpm pack:packages` → `pacharapolpimpa-reposetup-0.1.0.tgz`)
+4. Inspect the public tarball (`pnpm pack:packages` → `rsetup-0.1.0.tgz`)
 5. First publish: maintainer `npm login`, then `npm publish --access public` from `packages/cli`
 6. Attach GitHub Actions trusted publishing (`docs/NPM_TRUSTED_PUBLISHING_SETUP.md`)
 7. Later versions: tag `vX.Y.Z` on `main`; `.github/workflows/publish-npm.yml` publishes

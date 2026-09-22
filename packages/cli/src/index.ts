@@ -1,4 +1,4 @@
-export const packageName = "@pacharapolpimpa/reposetup" as const;
+export const packageName = "rsetup" as const;
 
 export { EXIT_CODES } from "./exit-codes.js";
 export { runCli } from "./run-cli.js";

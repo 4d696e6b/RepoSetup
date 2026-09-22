@@ -16,7 +16,7 @@ Requirements verified from that page:
 
 | Field | Value |
 | --- | --- |
-| Public package name | `@pacharapolpimpa/reposetup` |
+| Public package name | `rsetup` |
 | First version | `0.1.0` |
 | GitHub repository | `https://github.com/4d696e6b/RepoSetup` |
 | Workflow file | `publish-npm.yml` (filename only; must include `.yml`) |
@@ -24,7 +24,7 @@ Requirements verified from that page:
 | GitHub repository name | `RepoSetup` |
 | GitHub environment | none (leave empty unless you add a protected environment later) |
 
-The npm **username** is `pacharapolpimpa` (the scope of the public package). Do not assume it equals the GitHub login (`4d696e6b`).
+The npm **username** is whatever account owns `rsetup` after the first publish. Do not assume it equals the GitHub login (`4d696e6b`).
 
 ## First publish (bootstrap)
 
@@ -38,9 +38,9 @@ npm publish --access public
 
 Use the account's 2FA / OTP / granular-token flow. Do not disable 2FA. Do not commit tokens, passwords, or OTP codes.
 
-## After `@pacharapolpimpa/reposetup` exists on npm
+## After `rsetup` exists on npm
 
-1. Open `https://www.npmjs.com/package/@pacharapolpimpa/reposetup`.
+1. Open `https://www.npmjs.com/package/rsetup`.
 2. Package **Settings** → **Trusted Publisher**.
 3. Choose **GitHub Actions**.
 4. Fill in exactly:
@@ -69,7 +69,7 @@ Optional later hardening (after a successful Actions publish):
 5. Create annotated tag `vX.Y.Z` on that commit (do not move an existing tag).
 6. Push the tag.
 7. `.github/workflows/publish-npm.yml` runs quality gates, then publishes with OIDC.
-8. Confirm `npm view @pacharapolpimpa/reposetup@version version`.
+8. Confirm `npm view rsetup@version version`.
 9. Publish or update the GitHub Release for the same tag.
 
 The workflow skips `npm publish` when that exact version already exists. npm versions are immutable; never force-overwrite.

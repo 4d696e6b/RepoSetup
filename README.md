@@ -11,7 +11,7 @@ A modern project often means piecing together setup instructions from several do
 
 RepoSetup is currently an **early-stage** open-source project (`v0.1.0`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
-**npm is not live yet.** The public package name is `@pacharapolpimpa/reposetup`. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`. Until publication succeeds, run from a clone.
+**npm is not live yet.** The public package name is `rsetup`. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`. Until publication succeeds, run from a clone.
 
 ## Why RepoSetup
 
@@ -72,19 +72,20 @@ Always try `--dry-run` first on a project you care about.
 Intended npm install after the package is published (not live yet):
 
 ```text
-npx @pacharapolpimpa/reposetup
-npx @pacharapolpimpa/reposetup --help
-npx @pacharapolpimpa/reposetup --version
+npx rsetup
+npx rsetup --help
+npx rsetup --version
 ```
 
 Optionally:
 
 ```text
-npm install -g @pacharapolpimpa/reposetup
+npm install -g rsetup
+rsetup --help
 reposetup --help
 ```
 
-`npx` uses the scoped package name. After a global install the executable is `reposetup`. `npx reposetup` is not this project. Python stacks also need **Python 3.9+** and **uv**.
+`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project. Python stacks also need **Python 3.9+** and **uv**.
 
 ## Example
 
@@ -275,7 +276,7 @@ There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
 
 - Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
 - Promote integrations to `stable` only with that evidence
-- Publish `@pacharapolpimpa/reposetup@0.1.0` to npm (gated on authentication and qualification)
+- Publish `rsetup@0.1.0` to npm (gated on authentication and qualification)
 - A website is explicitly out of scope for this architecture
 
 ## License

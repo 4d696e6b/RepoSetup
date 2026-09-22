@@ -31,7 +31,7 @@ pnpm test:golden
 | `@reposetup/core` | Config, resolve, plan, execute, detection, doctor (private workspace library) |
 | `@reposetup/registry` | Registry lookup and validation (private workspace library) |
 | `@reposetup/integrations` | Built-in integration definitions (private workspace library) |
-| `packages/cli` (`@pacharapolpimpa/reposetup`) | Public CLI: Commander, prompts, rendering; bundles the libraries above |
+| `packages/cli` (`rsetup`) | Public CLI: Commander, prompts, rendering; bundles the libraries above |
 
 `@reposetup/core` must not depend on Commander, Inquirer, Ink, React, or Firebase. Integrations generate typed operations and must not spawn processes. Only the executor runs commands or writes files.
 

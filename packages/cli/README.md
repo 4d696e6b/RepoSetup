@@ -1,12 +1,12 @@
-# @pacharapolpimpa/reposetup
+# rsetup
 
 Terminal-first CLI that composes, validates, and configures development stacks.
 
 ```bash
-npx @pacharapolpimpa/reposetup --help
+npx rsetup --help
 ```
 
-The executable name is `reposetup`. After `npm install -g @pacharapolpimpa/reposetup`, run `reposetup`.
+This is the public npm name for RepoSetup. After `npm install -g rsetup`, both `rsetup` and `reposetup` work.
 
 This is an **early-stage** `0.1.0` release. Integrations are not all equally mature. Use `--dry-run` before changing an important project.
 
