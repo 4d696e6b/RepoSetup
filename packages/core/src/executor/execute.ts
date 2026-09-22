@@ -3,7 +3,6 @@ import path from "node:path";
 import type { RepoSetupError } from "../errors/model.js";
 import type { InstallationOperation } from "../operations/types.js";
 
-import { createDefaultExecutorFileSystem } from "./filesystem.js";
 import {
   executeAddEnvExample,
   executeCreateDirectory,
@@ -11,7 +10,6 @@ import {
   executeModifyJson,
   executeModifyText,
 } from "./file-operations.js";
-import { createDefaultProcessRunner } from "./process.js";
 import {
   executeCheckPrerequisite,
   executeInstallPackage,
@@ -32,8 +30,8 @@ export async function executeInstallation(
 ): Promise<ExecuteResult> {
   const context: ExecutionContext = {
     rootDir: path.resolve(options.rootDir),
-    fs: options.fs ?? createDefaultExecutorFileSystem(),
-    runProcess: options.runProcess ?? createDefaultProcessRunner(),
+    fs: options.fs,
+    runProcess: options.runProcess,
     logger: options.logger ?? silentLogger,
     logs: [],
   };

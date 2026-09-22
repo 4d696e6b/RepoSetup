@@ -31,8 +31,8 @@ export interface ExecutorLogger {
 
 export interface ExecuteOptions {
   rootDir: string;
-  fs?: ExecutorFileSystem;
-  runProcess?: ProcessRunner;
+  fs: ExecutorFileSystem;
+  runProcess: ProcessRunner;
   commandExists?: (command: string) => Promise<boolean>;
   logger?: ExecutorLogger;
 }

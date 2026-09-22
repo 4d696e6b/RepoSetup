@@ -65,6 +65,8 @@ export async function handleCreate(input: {
 
   const executed = await executeInstallation(planned.operations, {
     rootDir: input.deps.cwd,
+    fs: input.deps.executorFs,
+    runProcess: input.deps.runProcess,
     logger: {
       info(message) {
         if (!input.globals.quiet) {
@@ -77,7 +79,6 @@ export async function handleCreate(input: {
         }
       },
     },
-    ...(input.deps.runProcess === undefined ? {} : { runProcess: input.deps.runProcess }),
     ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
   });
 

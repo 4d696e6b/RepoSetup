@@ -13,7 +13,7 @@ export async function handleDoctor(input: {
   const result = await runDoctor({
     startDir: input.deps.cwd,
     registry: input.deps.registry,
-    ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
+    commandExists: input.deps.commandExists,
   });
 
   if (!result.ok) {

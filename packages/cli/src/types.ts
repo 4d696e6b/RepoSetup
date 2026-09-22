@@ -1,6 +1,7 @@
 import type {
   IntegrationSelection,
   PackageManager,
+  ExecutorFileSystem,
   ProcessRunner,
   RuntimeId,
 } from "@reposetup/core";
@@ -40,6 +41,7 @@ export interface CliDeps {
   fs?: CliFs;
   promptCreate?: (context: PromptCreateContext) => Promise<CreateAnswers>;
   confirmCreate?: () => Promise<boolean>;
+  executorFs?: ExecutorFileSystem;
   runProcess?: ProcessRunner;
   commandExists?: (command: string) => Promise<boolean>;
   cwd?: string;
@@ -51,8 +53,9 @@ export interface ResolvedCliDeps {
   fs: CliFs;
   promptCreate: (context: PromptCreateContext) => Promise<CreateAnswers>;
   confirmCreate: () => Promise<boolean>;
-  runProcess?: ProcessRunner;
-  commandExists?: (command: string) => Promise<boolean>;
+  executorFs: ExecutorFileSystem;
+  runProcess: ProcessRunner;
+  commandExists: (command: string) => Promise<boolean>;
   cwd: string;
 }
 

@@ -85,6 +85,8 @@ export async function handleRemove(input: {
 
   const executed = await executeInstallation(planned.result.operations, {
     rootDir: planned.projectRoot,
+    fs: input.deps.executorFs,
+    runProcess: input.deps.runProcess,
     logger: {
       info(message) {
         if (!input.globals.quiet) {
@@ -97,7 +99,6 @@ export async function handleRemove(input: {
         }
       },
     },
-    ...(input.deps.runProcess === undefined ? {} : { runProcess: input.deps.runProcess }),
     ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
   });
 

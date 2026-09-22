@@ -1,4 +1,13 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import {
+  access,
+  appendFile,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -7,10 +16,52 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { InstallationOperation } from "../operations/types.js";
 
 import { isSafeExecutableName } from "./command-name.js";
-import { executeInstallation } from "./execute.js";
-import type { ProcessRunRequest, ProcessRunner } from "./types.js";
+import { executeInstallation as executeCoreInstallation } from "./execute.js";
+import type {
+  ExecuteOptions,
+  ExecutorFileSystem,
+  ProcessRunRequest,
+  ProcessRunner,
+} from "./types.js";
 
 const tempDirs: string[] = [];
+
+const testFileSystem: ExecutorFileSystem = {
+  async exists(filePath) {
+    try {
+      await access(filePath);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  async isDirectory(filePath) {
+    try {
+      return (await stat(filePath)).isDirectory();
+    } catch {
+      return false;
+    }
+  },
+  async mkdir(filePath) {
+    await mkdir(filePath, { recursive: true });
+  },
+  async readFile(filePath) {
+    return readFile(filePath, "utf8");
+  },
+  async writeFile(filePath, content) {
+    await writeFile(filePath, content, "utf8");
+  },
+  async appendFile(filePath, content) {
+    await appendFile(filePath, content, "utf8");
+  },
+};
+
+function executeInstallation(
+  operations: Parameters<typeof executeCoreInstallation>[0],
+  options: Omit<ExecuteOptions, "fs">,
+) {
+  return executeCoreInstallation(operations, { ...options, fs: testFileSystem });
+}
 
 afterEach(async () => {
   await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
