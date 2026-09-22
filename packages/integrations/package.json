@@ -1,6 +1,6 @@
 {
   "name": "@reposetup/integrations",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -11,12 +11,10 @@
   },
   "homepage": "https://github.com/4d696e6b/RepoSetup#readme",
   "description": "Built-in RepoSetup integration definitions.",
+  "private": true,
   "type": "module",
   "engines": {
     "node": ">=20"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "exports": {
     ".": {

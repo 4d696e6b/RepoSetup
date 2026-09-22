@@ -11,6 +11,7 @@ import type {
 import { pathPrerequisite } from "../prerequisites/path.js";
 
 import { isSafeExecutableName, isSafeProcessArg } from "./command-name.js";
+import { commandFailureSuggestion, summarizeFailedProcessOutput } from "./output-snippet.js";
 import { resolveInsideRoot } from "./resolve-path.js";
 import type { ExecutionContext, ProcessRunResult } from "./types.js";
 
@@ -80,7 +81,7 @@ export async function executeRunCommand(
     cwd: cwd.absolutePath,
   });
 
-  return commandFailure(operation.command, operation.args, result);
+  return commandFailure(operation.command, operation.args, result, context);
 }
 
 export async function executeVerify(
@@ -110,7 +111,7 @@ export async function executeVerify(
     cwd: cwd.absolutePath,
   });
 
-  const failed = commandFailure(operation.command, args, result);
+  const failed = commandFailure(operation.command, args, result, context);
   if (failed === undefined) {
     return undefined;
   }
@@ -171,6 +172,7 @@ function commandFailure(
   command: string,
   args: readonly string[],
   result: ProcessRunResult,
+  context: ExecutionContext,
 ): RepoSetupError | undefined {
   if (result.notFound === true) {
     return createRepoSetupError({
@@ -186,14 +188,21 @@ function commandFailure(
     return undefined;
   }
 
+  const snippet = summarizeFailedProcessOutput(result.stdout, result.stderr);
+  if (snippet !== undefined) {
+    context.logger.info(snippet);
+    context.logs.push(snippet);
+  }
+
+  const summary = `Command "${command}" exited with code ${result.exitCode}.`;
   return createRepoSetupError({
     code: "COMMAND_FAILED",
-    message: `Command "${command}" exited with code ${result.exitCode}.`,
+    message: snippet === undefined ? summary : `${summary}\n${snippet}`,
     details: {
       command,
       args: [...args],
       exitCode: result.exitCode,
     },
-    suggestion: "Inspect the command output, fix the project, and re-run the plan.",
+    suggestion: commandFailureSuggestion(snippet),
   });
 }

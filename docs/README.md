@@ -40,6 +40,7 @@ Specifications live in [`specification-documentation/`](./specification-document
 - [Release process](./specification-documentation/release-docs/RELEASE.md)
 - [Release checklist](./specification-documentation/release-docs/RELEASE_CHECKLIST.md)
 - [Release hardening](./specification-documentation/release-docs/RELEASE_HARDENING.md)
+- [npm trusted publishing setup](./NPM_TRUSTED_PUBLISHING_SETUP.md)
 - [0.1.0 notes](./specification-documentation/release-docs/release-notes-0.1.0.md)
 - [0.1.0-alpha.1 notes](./specification-documentation/release-docs/release-notes-0.1.0-alpha.1.md)
 

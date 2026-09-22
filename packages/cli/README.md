@@ -1,15 +1,15 @@
-# @reposetup/cli
+# rsetup
 
-Command-line interface for RepoSetup. Binary name: `reposetup`.
-
-This package is **not published to npm yet**. From a clone of the monorepo:
+Terminal-first CLI that composes, validates, and configures development stacks.
 
 ```bash
-pnpm install
-pnpm build
-node packages/cli/dist/bin.js --help
+npx rsetup --help
 ```
 
-This is an **early-stage** `0.1.0` release. Integrations are not all equally mature. Use `--dry-run` before changing an important project.
+This is the public npm name for RepoSetup. After `npm install -g rsetup`, both `rsetup` and `reposetup` work.
 
-The library packages `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` are runtime dependencies of this CLI.
+This is an **early-stage** `0.1.1` release. Integrations are not all equally mature. Use `--dry-run` before changing an important project.
+
+The workspace libraries `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` are bundled into this package. They are not published separately.
+
+Unscoped `reposetup` and `reposetup-cli` cannot be used: npm rejects them as too similar to existing `repo-setup` and `repo-setup-cli`.

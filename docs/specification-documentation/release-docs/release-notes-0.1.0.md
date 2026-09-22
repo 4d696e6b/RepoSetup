@@ -4,7 +4,7 @@ The first **public GitHub** release of RepoSetup.
 
 This is an **early-stage** project. Some integrations remain experimental. Use `--dry-run` before applying changes to important projects.
 
-**npm is not published in this release.** From a clone: `pnpm install && pnpm build && node packages/cli/dist/bin.js --help`.
+**npm is not published in this GitHub tag.** Intended command after publication: `npx rsetup`. From a clone: `pnpm install && pnpm build && node packages/cli/dist/bin.js --help`.
 
 ## Highlights
 

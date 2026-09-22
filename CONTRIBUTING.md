@@ -28,10 +28,10 @@ pnpm test:golden
 
 | Package | Role |
 | --- | --- |
-| `@reposetup/core` | Config, resolve, plan, execute, detection, doctor |
-| `@reposetup/registry` | Registry lookup and validation |
-| `@reposetup/integrations` | Built-in integration definitions |
-| `@reposetup/cli` | Commander CLI, prompts, rendering |
+| `@reposetup/core` | Config, resolve, plan, execute, detection, doctor (private workspace library) |
+| `@reposetup/registry` | Registry lookup and validation (private workspace library) |
+| `@reposetup/integrations` | Built-in integration definitions (private workspace library) |
+| `packages/cli` (`rsetup`) | Public CLI: Commander, prompts, rendering; bundles the libraries above |
 
 `@reposetup/core` must not depend on Commander, Inquirer, Ink, React, or Firebase. Integrations generate typed operations and must not spawn processes. Only the executor runs commands or writes files.
 
@@ -77,4 +77,4 @@ See `docs/specification-documentation/security-docs/SECURITY_AND_SAFETY.md` and 
 
 ## Releases
 
-See `docs/specification-documentation/release-docs/RELEASE.md` and `docs/specification-documentation/release-docs/RELEASE_HARDENING.md`.
+See `docs/specification-documentation/release-docs/RELEASE.md`, `docs/specification-documentation/release-docs/RELEASE_HARDENING.md`, and `docs/NPM_TRUSTED_PUBLISHING_SETUP.md`.
