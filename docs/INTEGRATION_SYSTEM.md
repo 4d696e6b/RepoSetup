@@ -15,7 +15,7 @@ interface IntegrationDefinition<TOptions = unknown> {
   category: IntegrationCategory;
   description: string;
 
-  status: "stable" | "experimental";
+  status: "stable" | "candidate" | "experimental" | "deprecated";
   documentationUrl: string;
 
   optionSchema?: ZodType<TOptions>;
@@ -147,6 +147,19 @@ v1 integrations are shipped with the RepoSetup package.
 Do not download executable integration definitions from the network.
 
 Future community integrations require a separate security design and are not a v1 concern.
+
+## 8.1 Maturity
+
+| Status | Meaning |
+| --- | --- |
+| `implemented` | Code exists in the catalog. Not a publish label. |
+| `experimental` | Implemented; complete supported paths are not release-qualified. |
+| `candidate` | Official commands verified and automated tests exist; cross-platform or real execute evidence is incomplete. |
+| `release-qualified` | A golden stack that includes the integration passed real execution. Not the same as `stable`. |
+| `stable` | Meets the Definition of Done below **and** has real execute + advertised-platform evidence. |
+| `deprecated` | Still recognized; not recommended for new setup. |
+
+Do not treat every registry ID as equally mature.
 
 ## 9. Definition of done for an integration
 
