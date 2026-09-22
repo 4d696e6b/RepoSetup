@@ -23,7 +23,7 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "registry:validate": "pnpm build && node packages/cli/dist/bin.js registry validate",
-    "pack:packages": "pnpm --filter reposetup-cli pack",
+    "pack:packages": "pnpm --filter @pacharapolpimpa/reposetup pack",
     "test:e2e": "pnpm build && vitest run --config tests/e2e/vitest.config.ts",
     "test:golden": "pnpm build && vitest run --config tests/e2e/vitest.golden.config.ts",
     "prepublishOnly": "node -e \"process.stderr.write('Do not publish the workspace root. From packages/cli run: npm publish --access public\\n'); process.exit(1)\""

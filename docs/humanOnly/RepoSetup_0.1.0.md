@@ -1,6 +1,6 @@
 # RepoSetup v0.1.0 — human guide
 
-**For humans.** This is the first **public GitHub** release of RepoSetup. It is an early-stage `0.1.0`. It is not `1.0.0`. The public npm name is `reposetup-cli`. It is **not on npm** until the maintainer publishes from `packages/cli`.
+**For humans.** This is the first **public GitHub** release of RepoSetup. It is an early-stage `0.1.0`. It is not `1.0.0`. The public npm name is `@pacharapolpimpa/reposetup`. It is **not on npm** until the maintainer publishes from `packages/cli`.
 
 Date: 22 September 2026.
 
@@ -26,7 +26,7 @@ node packages/cli/dist/bin.js --version
 After npm publication:
 
 ```bash
-npx reposetup-cli --help
+npx @pacharapolpimpa/reposetup --help
 ```
 
 Preview:

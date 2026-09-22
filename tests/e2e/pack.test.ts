@@ -30,7 +30,7 @@ describe("npm pack artifact", () => {
 
     const packed = await runProcess(
       "pnpm",
-      ["--filter", "reposetup-cli", "pack", "--pack-destination", packDir],
+      ["--filter", "@pacharapolpimpa/reposetup", "pack", "--pack-destination", packDir],
       {
         cwd: repoRoot,
       },
@@ -38,7 +38,7 @@ describe("npm pack artifact", () => {
     expect(packed.exitCode, packed.stderr).toBe(0);
 
     const tarballs = (await readdir(packDir)).filter((name) => name.endsWith(".tgz")).sort();
-    expect(tarballs).toEqual(["reposetup-cli-0.1.0.tgz"]);
+    expect(tarballs).toEqual(["pacharapolpimpa-reposetup-0.1.0.tgz"]);
 
     const tarballPath = path.join(packDir, tarballs[0] as string);
     const listing = await runProcess("tar", ["-tzf", tarballPath], { cwd: packDir });
@@ -67,7 +67,7 @@ describe("npm pack artifact", () => {
       bin?: { reposetup?: string };
       dependencies?: Record<string, string>;
     };
-    expect(packedManifest.name).toBe("reposetup-cli");
+    expect(packedManifest.name).toBe("@pacharapolpimpa/reposetup");
     expect(packedManifest.version).toBe("0.1.0");
     expect(packedManifest.bin?.reposetup).toBe("./dist/bin.js");
     expect(packedManifest.dependencies?.["@reposetup/core"]).toBeUndefined();
@@ -87,7 +87,14 @@ describe("npm pack artifact", () => {
     const installed = await runProcess("npm", ["install", tarballPath], { cwd: installDir });
     expect(installed.exitCode, `${installed.stderr}\n${installed.stdout}`).toBe(0);
 
-    const artifactBin = path.join(installDir, "node_modules", "reposetup-cli", "dist", "bin.js");
+    const artifactBin = path.join(
+      installDir,
+      "node_modules",
+      "@pacharapolpimpa",
+      "reposetup",
+      "dist",
+      "bin.js",
+    );
     const help = await runNodeCli(artifactBin, ["--help"], { cwd: installDir });
     expect(help.exitCode, help.stderr).toBe(0);
     expect(help.stdout).toContain("Usage: reposetup");

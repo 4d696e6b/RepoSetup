@@ -16,7 +16,7 @@ Use for `0.1.0` GitHub source + npm CLI packaging.
 ## Artifact
 
 - [x] Versions are `0.1.0`
-- [x] Public CLI package is `reposetup-cli`; workspace libraries are private
+- [x] Public CLI package is `@pacharapolpimpa/reposetup`; workspace libraries are private
 - [x] `reposetup --version` matches package.json (`0.1.0`)
 - [x] Packed CLI works outside the monorepo (`pnpm test:e2e`)
 - [x] Tarball layout: `dist/`, types, bin; no tests or secrets (covered by e2e pack test)
