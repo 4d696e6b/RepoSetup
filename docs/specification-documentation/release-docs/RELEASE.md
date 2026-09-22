@@ -4,7 +4,7 @@ Target: **`0.1.0-alpha.1`**. This is not `1.0.0`.
 
 Public packages (`@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli`) use that version and `publishConfig.access: public`. The root workspace stays private.
 
-Do not publish, push release tags, or merge `main` unless every Release Qualification gate in `docs/ACCEPTANCE_TESTS.md` passes **and** the owner requests publication.
+Do not publish, push release tags, or merge `main` unless every Release Qualification gate in `docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md` passes **and** the owner requests publication.
 
 ## Qualification
 
@@ -14,7 +14,7 @@ Do not publish, push release tags, or merge `main` unless every Release Qualific
 4. Inspect tarballs from `pnpm pack:packages`
 5. Cut `release/0.1.0-alpha.1` from qualified `dev`
 
-See `docs/RELEASE_CHECKLIST.md` and `docs/RELEASE_HARDENING.md`.
+See `docs/specification-documentation/release-docs/RELEASE_CHECKLIST.md` and `docs/specification-documentation/release-docs/RELEASE_HARDENING.md`.
 
 ## GitHub Actions
 

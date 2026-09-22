@@ -1,6 +1,6 @@
 # Security review (Phase 17)
 
-Reviewed against `docs/SECURITY_AND_SAFETY.md` on 2026-09-22. This is an in-repo design review of the current executor, config, and CLI paths. It is not a third-party pentest.
+Reviewed against `docs/specification-documentation/security-docs/SECURITY_AND_SAFETY.md` on 2026-09-22. This is an in-repo design review of the current executor, config, and CLI paths. It is not a third-party pentest.
 
 ## Scope
 

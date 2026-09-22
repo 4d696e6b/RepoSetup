@@ -106,6 +106,6 @@ Not published. Release workflow publish job is opt-in (`workflow_dispatch` + `pu
 
 ## Notes
 
-Do not mark Phase 18 complete unless the remaining Release Qualification gates pass.
+Do not mark Phase 18 complete unless the remaining Release Qualification gates in `docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md` pass.
 
 Work is on `feat/phase-18-hardening`. `main` remains the pre-Phase 0 baseline.

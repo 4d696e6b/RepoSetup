@@ -25,7 +25,7 @@ Do not tag, npm-publish, or merge `main` until every blocking gate passes **and*
 
 ## Release gates
 
-See `docs/ACCEPTANCE_TESTS.md` (Release Qualification) and `docs/RELEASE_CHECKLIST.md`.
+See `docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md` (Release Qualification) and `docs/specification-documentation/release-docs/RELEASE_CHECKLIST.md`.
 
 ## Golden stacks
 
@@ -78,7 +78,7 @@ Repository / homepage / bugs URLs are omitted until the owner sets a public git 
 
 ## Safety audit
 
-Reviewed in Phase 17 (`docs/SECURITY_REVIEW.md`) and re-checked in Phase 18.4.
+Reviewed in Phase 17 (`docs/specification-documentation/security-docs/SECURITY_REVIEW.md`) and re-checked in Phase 18.4.
 
 | Check | Result |
 | --- | --- |

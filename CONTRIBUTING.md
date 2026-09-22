@@ -37,7 +37,7 @@ pnpm test:golden
 
 ## Adding an integration
 
-1. Read `docs/INTEGRATION_SYSTEM.md` and `docs/V1_INTEGRATION_REGISTRY.md`.
+1. Read `docs/specification-documentation/product-docs/INTEGRATION_SYSTEM.md` and `docs/specification-documentation/product-docs/V1_INTEGRATION_REGISTRY.md`.
 2. Add a definition under `packages/integrations/src/` using `defineIntegration`.
 3. Generate typed `InstallationOperation`s only. Do not call `spawn` from the definition.
 4. Use package-manager adapters; do not hardcode `pnpm add` argv in the integration.
@@ -47,7 +47,7 @@ pnpm test:golden
 
 ### Command research
 
-When a flag or generator option comes from another project, verify it from current official docs. Use `docs/EXTERNAL_COMMAND_RESEARCH_TEMPLATE.md`. Record `verification.verifiedAt` and `documentationUrl`. Do not guess replacements.
+When a flag or generator option comes from another project, verify it from current official docs. Use `docs/specification-documentation/implementing-docs/EXTERNAL_COMMAND_RESEARCH_TEMPLATE.md`. Record `verification.verifiedAt` and `documentationUrl`. Do not guess replacements.
 
 ## Definition of done
 
@@ -60,11 +60,13 @@ When a flag or generator option comes from another project, verify it from curre
 ## Pull requests
 
 - One concerned change; do not mix unrelated phases
-- Update `docs/IMPLEMENTATION_STATUS.md` when a planned phase finishes
+- Update `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md` when a planned phase finishes
 - Keep `CHANGELOG.md` current for user-visible behavior
 - Do not target `main` for feature work; `main` stays the pre-Phase 0 baseline until a qualified release
 
 ## Security restrictions
+
+See `docs/specification-documentation/security-docs/SECURITY_AND_SAFETY.md` and `docs/specification-documentation/security-docs/SECURITY_REVIEW.md`.
 
 - Never interpolate untrusted input into a shell string
 - Prefer `spawn(command, args, { shell: false })`
@@ -75,4 +77,4 @@ When a flag or generator option comes from another project, verify it from curre
 
 ## Releases
 
-See `docs/RELEASE.md` and `docs/RELEASE_HARDENING.md`.
+See `docs/specification-documentation/release-docs/RELEASE.md` and `docs/specification-documentation/release-docs/RELEASE_HARDENING.md`.

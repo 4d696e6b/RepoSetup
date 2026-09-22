@@ -51,11 +51,11 @@ When requirements conflict, use this priority:
 
 1. `AGENTS.md`
 2. `.cursor/rules/*.mdc`
-3. `docs/PRODUCT_REQUIREMENTS.md`
-4. `docs/ARCHITECTURE.md`
-5. `docs/INTEGRATION_SYSTEM.md`
-6. `docs/CLI_SPEC.md`
-7. `docs/IMPLEMENTATION_PLAN.md`
+3. `docs/specification-documentation/product-docs/PRODUCT_REQUIREMENTS.md`
+4. `docs/specification-documentation/product-docs/ARCHITECTURE.md`
+5. `docs/specification-documentation/product-docs/INTEGRATION_SYSTEM.md`
+6. `docs/specification-documentation/product-docs/CLI_SPEC.md`
+7. `docs/specification-documentation/implementing-docs/IMPLEMENTATION_PLAN.md`
 8. other documentation
 
 Do not silently invent behavior not described by the source of truth.
@@ -72,7 +72,7 @@ Before making substantial changes:
 6. Implement the smallest complete vertical slice.
 7. Run relevant tests, typecheck, lint, and build.
 8. Fix failures before moving to the next task.
-9. Update `docs/IMPLEMENTATION_STATUS.md`.
+9. Update `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md`.
 10. Do not jump ahead to later phases simply because they appear easy.
 
 ## First implementation target

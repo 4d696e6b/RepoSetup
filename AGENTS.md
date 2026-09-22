@@ -84,4 +84,6 @@ Do not implement:
 
 ## Documentation behavior
 
+Product and implementation specifications live in `docs/specification-documentation/`, grouped as `product-docs`, `implementing-docs`, `security-docs`, and `release-docs`.
+
 When a CLI flag, package command, framework generator flag, or setup behavior depends on an external project, do not guess. Mark it as research-required until verified from current official documentation.

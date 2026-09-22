@@ -1,12 +1,12 @@
 # Initial Prompt to Give Cursor
 
-Read `CURSOR_START_HERE.md`, `AGENTS.md`, all applicable `.cursor/rules/*.mdc`, and the documents under `docs/`.
+Read `CURSOR_START_HERE.md`, `AGENTS.md`, all applicable `.cursor/rules/*.mdc`, and the documents under `docs/specification-documentation/`.
 
 Treat these files as the source of truth for RepoSetup.
 
 Do not attempt to implement the entire product in one pass.
 
-Start with **Phase 0 only** from `docs/IMPLEMENTATION_PLAN.md`.
+Start with **Phase 0 only** from `docs/specification-documentation/implementing-docs/IMPLEMENTATION_PLAN.md`.
 
 Tasks:
 1. inspect the repository before editing;
@@ -18,7 +18,7 @@ Tasks:
 7. do not build a website;
 8. run install/build/test/typecheck/lint;
 9. fix failures;
-10. update `docs/IMPLEMENTATION_STATUS.md`;
+10. update `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md`;
 11. summarize exactly what was created and any unresolved issue.
 
 Stop after the Phase 0 acceptance gate passes. Do not proceed to Phase 1 until I ask.

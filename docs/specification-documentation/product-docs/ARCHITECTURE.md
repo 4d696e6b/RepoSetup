@@ -23,6 +23,12 @@ reposetup/
 ├── .cursor/
 │   └── rules/
 ├── docs/
+│   ├── README.md
+│   └── specification-documentation/
+│       ├── product-docs/
+│       ├── implementing-docs/
+│       ├── security-docs/
+│       └── release-docs/
 ├── packages/
 │   ├── core/
 │   ├── registry/
@@ -121,7 +127,7 @@ interface RepoSetupConfig {
 }
 ```
 
-`schemaVersion` is a required literal `1`. See `docs/CONFIG_MIGRATION.md` for the v1 compatibility policy. Unknown versions and unknown top-level keys are rejected.
+`schemaVersion` is a required literal `1`. See `docs/specification-documentation/product-docs/CONFIG_MIGRATION.md` for the v1 compatibility policy. Unknown versions and unknown top-level keys are rejected.
 
 ### ResolutionResult
 
