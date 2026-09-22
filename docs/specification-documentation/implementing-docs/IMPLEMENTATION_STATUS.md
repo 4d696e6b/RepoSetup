@@ -8,6 +8,16 @@ Cursor/maintainers should update this file as phases are completed.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
 
+### Phase 20 progress — 2026-09-22
+
+- [x] Core executor accepts injected filesystem and process adapters; Node implementations live in the CLI package.
+- [x] Subprocesses have bounded capture, regular/long-running timeouts, and `SIGINT` cancellation propagation.
+- [x] Paths are checked against their canonical location before filesystem mutation or command execution; escaping symlinks are rejected.
+- [x] `fail_if_exists` writes are exclusive, and JSON/text/env updates use temporary-file replacement.
+- [x] Read-only executor preflight validates the root and canonical operation paths; all prerequisite checks run before project mutation.
+- [x] Verbose subprocess output is line-buffered and redacted, including a secret assignment split across output chunks.
+- [ ] Writable-location and disk-space preflight, failure journaling, safe rollback policy, and the remaining injected failure/cross-platform tests.
+
 ## Current release
 
 The observed npm dist-tag is `rsetup@0.1.1`; the source, tag, integrity, and remaining unobserved GitHub evidence are recorded in [Phase 19 baseline](./PHASE_19_BASELINE.md).
