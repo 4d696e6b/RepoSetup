@@ -74,4 +74,24 @@ describe("createDefaultProcessRunner", () => {
     expect(Buffer.byteLength(result.stdout)).toBeLessThanOrEqual(MAX_CAPTURED_OUTPUT_BYTES);
     expect(result.stdout).toMatch(/x+$/);
   });
+
+  it("redacts a secret assignment split across output chunks before emitting it", async () => {
+    const runner = createDefaultProcessRunner();
+    const output: string[] = [];
+    const result = await runner({
+      command: process.execPath,
+      args: [
+        "-e",
+        "process.stdout.write('TOKEN=super'); setTimeout(() => process.stdout.write('-secret\\n'), 10)",
+      ],
+      cwd: process.cwd(),
+      onOutput(event) {
+        output.push(event.text);
+      },
+    });
+
+    expect(result.exitCode).toBe(0);
+    expect(output.join("")).toContain("TOKEN=<redacted>");
+    expect(output.join("")).not.toContain("super-secret");
+  });
 });

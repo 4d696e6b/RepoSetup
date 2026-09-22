@@ -105,6 +105,13 @@ export async function handleAdd(input: {
           writeLine(input.deps.io.writeOut, message);
         }
       },
+      ...(input.globals.verbose && !input.globals.quiet
+        ? {
+            output(message: string) {
+              input.deps.io.writeOut(message);
+            },
+          }
+        : {}),
     },
     ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
   });

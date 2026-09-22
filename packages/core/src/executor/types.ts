@@ -18,6 +18,12 @@ export interface ProcessRunRequest {
   cwd: string;
   signal?: AbortSignal;
   timeoutMs?: number;
+  onOutput?: (event: ProcessOutputEvent) => void;
+}
+
+export interface ProcessOutputEvent {
+  stream: "stdout" | "stderr";
+  text: string;
 }
 
 export interface ProcessRunResult {
@@ -35,6 +41,7 @@ export type ProcessRunner = (request: ProcessRunRequest) => Promise<ProcessRunRe
 export interface ExecutorLogger {
   info(message: string): void;
   verbose(message: string): void;
+  output?(message: string): void;
 }
 
 export interface ExecuteOptions {

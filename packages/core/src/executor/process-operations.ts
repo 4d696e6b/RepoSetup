@@ -13,7 +13,7 @@ import { pathPrerequisite } from "../prerequisites/path.js";
 import { isSafeExecutableName, isSafeProcessArg } from "./command-name.js";
 import { commandFailureSuggestion, summarizeFailedProcessOutput } from "./output-snippet.js";
 import { assertRealPathInsideRoot, resolveInsideRoot } from "./resolve-path.js";
-import type { ExecutionContext, ProcessRunResult } from "./types.js";
+import type { ExecutionContext, ProcessRunRequest, ProcessRunResult } from "./types.js";
 
 export async function executeCheckPrerequisite(
   operation: CheckPrerequisiteOperation,
@@ -84,6 +84,7 @@ export async function executeRunCommand(
     args: operation.args,
     cwd: cwd.absolutePath,
     ...(context.signal === undefined ? {} : { signal: context.signal }),
+    ...outputHandler(context),
     ...timeoutFor(operation, context),
   });
 
@@ -120,6 +121,7 @@ export async function executeVerify(
     args,
     cwd: cwd.absolutePath,
     ...(context.signal === undefined ? {} : { signal: context.signal }),
+    ...outputHandler(context),
     ...timeoutFor(operation, context),
   });
 
@@ -247,4 +249,12 @@ function timeoutFor(
       : context.commandTimeoutMs;
 
   return timeoutMs === undefined ? {} : { timeoutMs };
+}
+
+function outputHandler(context: ExecutionContext): Pick<ProcessRunRequest, "onOutput"> {
+  if (context.logger.output === undefined) {
+    return {};
+  }
+
+  return { onOutput: (event) => context.logger.output?.(event.text) };
 }

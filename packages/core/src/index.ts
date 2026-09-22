@@ -46,6 +46,7 @@ export type { DetectProjectResult } from "./detection/detect-project.js";
 export { errorsFromDoctor, failedDoctorChecks, runDoctor } from "./doctor/run-doctor.js";
 export type { DoctorCheck, DoctorResult, RunDoctorResult } from "./doctor/run-doctor.js";
 export { existingEnvKeys } from "./executor/env-example.js";
+export { redactProcessOutput, summarizeFailedProcessOutput } from "./executor/output-snippet.js";
 export { pathPrerequisite } from "./prerequisites/path.js";
 export type { PathPrerequisite, PathPrerequisiteId } from "./prerequisites/path.js";
 export { createDetectionContext } from "./detection/context.js";
@@ -104,6 +105,7 @@ export type {
   ExecutorFileSystem,
   ExecutorLogger,
   ProcessRunRequest,
+  ProcessOutputEvent,
   ProcessRunResult,
   ProcessRunner,
 } from "./executor/types.js";

@@ -13,7 +13,7 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 
-import type { ExecutorFileSystem, ProcessRunner } from "@reposetup/core";
+import { redactProcessOutput, type ExecutorFileSystem, type ProcessRunner } from "@reposetup/core";
 
 export const DEFAULT_COMMAND_TIMEOUT_MS = 5 * 60_000;
 export const DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS = 30 * 60_000;
@@ -102,6 +102,8 @@ export function createDefaultProcessRunner(): ProcessRunner {
       let timedOut = false;
       let settled = false;
       let timer: NodeJS.Timeout | undefined;
+      const stdoutOutput = createOutputEmitter("stdout", request.onOutput);
+      const stderrOutput = createOutputEmitter("stderr", request.onOutput);
 
       const finish = (result: {
         exitCode: number;
@@ -117,6 +119,8 @@ export function createDefaultProcessRunner(): ProcessRunner {
           clearTimeout(timer);
         }
         request.signal?.removeEventListener("abort", abort);
+        stdoutOutput.flush();
+        stderrOutput.flush();
         resolve({
           ...result,
           ...(aborted ? { aborted: true } : {}),
@@ -135,12 +139,16 @@ export function createDefaultProcessRunner(): ProcessRunner {
       };
       const abort = () => terminate("abort");
 
-      child.stdout?.on("data", (chunk: Buffer) => {
+      child.stdout?.setEncoding("utf8");
+      child.stderr?.setEncoding("utf8");
+      child.stdout?.on("data", (chunk: string) => {
+        stdoutOutput.write(chunk);
         const appended = appendOutput(stdout, chunk);
         stdout = appended.output;
         outputTruncated ||= appended.truncated;
       });
-      child.stderr?.on("data", (chunk: Buffer) => {
+      child.stderr?.on("data", (chunk: string) => {
+        stderrOutput.write(chunk);
         const appended = appendOutput(stderr, chunk);
         stderr = appended.output;
         outputTruncated ||= appended.truncated;
@@ -189,9 +197,9 @@ function isNotFound(error: unknown): boolean {
 
 function appendOutput(
   existing: Buffer<ArrayBufferLike>,
-  chunk: Buffer<ArrayBufferLike>,
+  chunk: string,
 ): { output: Buffer<ArrayBufferLike>; truncated: boolean } {
-  const combined = Buffer.concat([existing, chunk]);
+  const combined = Buffer.concat([existing, Buffer.from(chunk)]);
   if (combined.byteLength <= MAX_CAPTURED_OUTPUT_BYTES) {
     return { output: combined, truncated: false };
   }
@@ -199,5 +207,34 @@ function appendOutput(
   return {
     output: combined.subarray(combined.byteLength - MAX_CAPTURED_OUTPUT_BYTES),
     truncated: true,
+  };
+}
+
+function createOutputEmitter(
+  stream: "stdout" | "stderr",
+  onOutput: ((event: { stream: "stdout" | "stderr"; text: string }) => void) | undefined,
+): { write(chunk: string): void; flush(): void } {
+  let pending = "";
+
+  const emit = (text: string) => {
+    if (text.length > 0) {
+      onOutput?.({ stream, text: redactProcessOutput(text) });
+    }
+  };
+
+  return {
+    write(chunk) {
+      pending += chunk;
+      const lastNewline = Math.max(pending.lastIndexOf("\n"), pending.lastIndexOf("\r"));
+      if (lastNewline < 0) {
+        return;
+      }
+      emit(pending.slice(0, lastNewline + 1));
+      pending = pending.slice(lastNewline + 1);
+    },
+    flush() {
+      emit(pending);
+      pending = "";
+    },
   };
 }
