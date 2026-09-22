@@ -28,6 +28,11 @@ export async function preflightInstallation(
     return nonWritableError(context.rootDir);
   }
 
+  const diskError = await checkAvailableDiskSpace(context);
+  if (diskError !== undefined) {
+    return diskError;
+  }
+
   for (const operation of operations) {
     const relativePath = operationPath(operation);
     if (relativePath === undefined) {
@@ -69,6 +74,60 @@ function nonWritableError(target: string): RepoSetupError {
     message: `RepoSetup cannot write to "${target}".`,
     details: { path: target, reason: "not writable" },
     suggestion: "Choose a writable project directory and re-run the plan.",
+  });
+}
+
+async function checkAvailableDiskSpace(
+  context: ExecutionContext,
+): Promise<RepoSetupError | undefined> {
+  if (context.minimumFreeDiskBytes === undefined) {
+    return undefined;
+  }
+  if (context.minimumFreeDiskBytes < 0) {
+    return createRepoSetupError({
+      code: "PLAN_INVALID",
+      message: "Minimum free disk space cannot be negative.",
+      details: { minimumFreeDiskBytes: context.minimumFreeDiskBytes },
+      suggestion: "Use a non-negative disk-space threshold.",
+    });
+  }
+  if (context.fs.availableDiskBytes === undefined) {
+    return createRepoSetupError({
+      code: "FILE_MUTATION_FAILED",
+      message: "RepoSetup cannot determine available disk space for this project.",
+      details: { path: context.rootDir },
+      suggestion: "Use a supported filesystem and re-run the plan.",
+    });
+  }
+
+  let availableBytes: number;
+  try {
+    availableBytes = await context.fs.availableDiskBytes(context.rootDir);
+  } catch (error) {
+    return createRepoSetupError({
+      code: "FILE_MUTATION_FAILED",
+      message: "RepoSetup cannot determine available disk space for this project.",
+      details: {
+        path: context.rootDir,
+        reason: error instanceof Error ? error.message : "disk-space check failed",
+      },
+      suggestion: "Use a supported filesystem and re-run the plan.",
+    });
+  }
+
+  if (availableBytes >= context.minimumFreeDiskBytes) {
+    return undefined;
+  }
+
+  return createRepoSetupError({
+    code: "FILE_MUTATION_FAILED",
+    message: "RepoSetup does not have enough free disk space to execute this plan.",
+    details: {
+      availableBytes,
+      minimumFreeDiskBytes: context.minimumFreeDiskBytes,
+      path: context.rootDir,
+    },
+    suggestion: "Free disk space or choose another project directory, then re-run the plan.",
   });
 }
 

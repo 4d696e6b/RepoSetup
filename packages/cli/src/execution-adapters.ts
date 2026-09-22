@@ -10,6 +10,7 @@ import {
   rm,
   rename,
   stat,
+  statfs,
   unlink,
   writeFile,
 } from "node:fs/promises";
@@ -27,6 +28,7 @@ import {
 export const DEFAULT_COMMAND_TIMEOUT_MS = 5 * 60_000;
 export const DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS = 30 * 60_000;
 export const MAX_CAPTURED_OUTPUT_BYTES = 128 * 1024;
+export const DEFAULT_MINIMUM_FREE_DISK_BYTES = 512 * 1024 * 1024;
 
 export function createDefaultExecutionLock(): ExecutionLock {
   return {
@@ -122,6 +124,11 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
       } catch {
         return false;
       }
+    },
+
+    async availableDiskBytes(filePath) {
+      const info = await statfs(filePath, { bigint: true });
+      return Number(info.bsize * info.bavail);
     },
 
     async realpath(filePath) {

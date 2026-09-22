@@ -4,6 +4,7 @@ import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js
 import {
   DEFAULT_COMMAND_TIMEOUT_MS,
   DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+  DEFAULT_MINIMUM_FREE_DISK_BYTES,
 } from "./execution-adapters.js";
 import { formatError } from "./format-error.js";
 import { writeLine } from "./io.js";
@@ -96,6 +97,7 @@ export async function handleAdd(input: {
     ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
     commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
     longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+    minimumFreeDiskBytes: DEFAULT_MINIMUM_FREE_DISK_BYTES,
     logger: {
       info(message) {
         if (!input.globals.quiet) {

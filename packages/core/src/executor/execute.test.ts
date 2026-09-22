@@ -748,6 +748,36 @@ describe("executeInstallation", () => {
     await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
   });
 
+  it("fails disk-space preflight before commands or mutations", async () => {
+    const root = await tempRoot();
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeCoreInstallation(
+      [
+        {
+          type: "create_file",
+          path: "should-not-exist.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Must not write",
+        },
+      ],
+      {
+        rootDir: root,
+        fs: { ...testFileSystem, availableDiskBytes: async () => 0 },
+        runProcess: recordingRunner(runs),
+        minimumFreeDiskBytes: 1,
+      },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("FILE_MUTATION_FAILED");
+    expect(runs).toEqual([]);
+    await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
+  });
+
   it("refuses a concurrent execution before commands or mutations begin", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];

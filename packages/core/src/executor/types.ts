@@ -5,6 +5,7 @@ export interface ExecutorFileSystem {
   exists(path: string): Promise<boolean>;
   isDirectory(path: string): Promise<boolean>;
   canWrite(path: string): Promise<boolean>;
+  availableDiskBytes?(path: string): Promise<number>;
   realpath(path: string): Promise<string>;
   mkdir(path: string): Promise<void>;
   readFile(path: string): Promise<string>;
@@ -108,6 +109,7 @@ export interface ExecuteOptions {
   signal?: AbortSignal;
   commandTimeoutMs?: number;
   longRunningCommandTimeoutMs?: number;
+  minimumFreeDiskBytes?: number;
 }
 
 export interface ExecutionContext {
@@ -120,6 +122,7 @@ export interface ExecutionContext {
   signal?: AbortSignal;
   commandTimeoutMs?: number;
   longRunningCommandTimeoutMs?: number;
+  minimumFreeDiskBytes?: number;
   onEvent?: (event: ExecutionEvent) => void;
   executionJournal?: ExecutionJournal;
 }

@@ -50,6 +50,9 @@ export async function executeInstallation(
   if (options.longRunningCommandTimeoutMs !== undefined) {
     context.longRunningCommandTimeoutMs = options.longRunningCommandTimeoutMs;
   }
+  if (options.minimumFreeDiskBytes !== undefined) {
+    context.minimumFreeDiskBytes = options.minimumFreeDiskBytes;
+  }
   if (options.onEvent !== undefined) {
     context.onEvent = options.onEvent;
   }

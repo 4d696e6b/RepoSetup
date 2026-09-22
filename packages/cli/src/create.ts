@@ -12,6 +12,7 @@ import { configFromAnswers } from "./config-from-answers.js";
 import {
   DEFAULT_COMMAND_TIMEOUT_MS,
   DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+  DEFAULT_MINIMUM_FREE_DISK_BYTES,
 } from "./execution-adapters.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import { formatError } from "./format-error.js";
@@ -76,6 +77,7 @@ export async function handleCreate(input: {
     ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
     commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
     longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+    minimumFreeDiskBytes: DEFAULT_MINIMUM_FREE_DISK_BYTES,
     logger: {
       info(message) {
         if (!input.globals.quiet) {
