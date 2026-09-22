@@ -38,13 +38,20 @@ export async function detectProject(input: {
   const frameworks = fromRegistry.frameworks;
   const integrations = fromRegistry.integrations;
 
+  const warnings = [...ecosystem.warnings];
+  if ((await context.files.exists("package.json")) && context.packageJson === undefined) {
+    warnings.push(
+      "package.json exists but is not valid JSON; Node dependency detection was skipped.",
+    );
+  }
+
   const stack: DetectedStack = {
     projectRoot,
     runtimes,
     packageManagers,
     frameworks,
     integrations,
-    warnings: ecosystem.warnings,
+    warnings,
   };
   if (ecosystem.language !== undefined) {
     stack.language = ecosystem.language;

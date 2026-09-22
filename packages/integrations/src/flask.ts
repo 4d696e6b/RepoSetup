@@ -29,7 +29,7 @@ export const flaskIntegration = defineIntegration({
   name: "Flask",
   category: "backend-framework",
   description: "Adds Flask with the official quickstart app.py so flask run works without --app.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://flask.palletsprojects.com/en/stable/installation/",
   keywords: ["api", "http", "python", "server"],
   verification: { verifiedAt: "2026-09-22" },

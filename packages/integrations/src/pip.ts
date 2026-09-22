@@ -13,7 +13,7 @@ export const pipIntegration = defineIntegration({
   name: "pip",
   category: "package-manager",
   description: "Detects pip from a requirements file before installing Python packages.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://pip.pypa.io/en/stable/cli/pip_install/",
   keywords: ["python", "packages"],
   verification: { verifiedAt: "2026-09-22" },

@@ -23,6 +23,7 @@ export { ERROR_CODES, type ErrorCode } from "./errors/codes.js";
 export { createRepoSetupError, isRepoSetupError } from "./errors/model.js";
 export type { RepoSetupError } from "./errors/model.js";
 export { UNSAFE_REMOVE_MESSAGE } from "./errors/unsafe-remove.js";
+export { INTEGRATION_STATUSES } from "./integrations/definition.js";
 export type {
   DetectionConfidence,
   DetectionContext,

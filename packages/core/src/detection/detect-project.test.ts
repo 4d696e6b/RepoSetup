@@ -124,4 +124,23 @@ describe("detectProject", () => {
     expect(after.mtimeMs).toBe(before.mtimeMs);
     expect(after.size).toBe(before.size);
   });
+
+  it("warns when package.json is malformed and does not invent dependencies", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-detect-"));
+    tempDirs.push(root);
+    await writeFile(path.join(root, "package.json"), "{ not json");
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+
+    const result = await detectProject({ startDir: root, registry: lookup([]) });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(result.stack.runtimes.map((item) => item.id)).toEqual([]);
+    expect(result.stack.packageManagers.map((item) => item.id)).toEqual(["pnpm"]);
+    expect(result.stack.warnings).toContain(
+      "package.json exists but is not valid JSON; Node dependency detection was skipped.",
+    );
+  });
 });

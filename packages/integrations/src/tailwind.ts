@@ -30,7 +30,7 @@ export const tailwindIntegration = defineIntegration({
   name: "Tailwind CSS",
   category: "styling",
   description: "Adds Tailwind CSS v4 using the official Next.js PostCSS or Vite plugin guides.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://tailwindcss.com/docs/installation/framework-guides/nextjs",
   keywords: ["css", "postcss", "styling"],
   verification: { verifiedAt: VERIFIED_AT },

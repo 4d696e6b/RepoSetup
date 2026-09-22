@@ -18,7 +18,7 @@ export const sqlalchemyIntegration = defineIntegration({
   name: "SQLAlchemy",
   category: "orm",
   description: "Adds SQLAlchemy. RepoSetup does not install a PostgreSQL DBAPI.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://docs.sqlalchemy.org/en/20/intro.html",
   keywords: ["orm", "postgresql", "python", "sql"],
   verification: { verifiedAt: "2026-09-22" },

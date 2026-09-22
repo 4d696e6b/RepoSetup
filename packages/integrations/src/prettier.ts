@@ -18,7 +18,7 @@ export const prettierIntegration = defineIntegration({
   name: "Prettier",
   category: "formatting",
   description: "Adds Prettier with an exact local version and starter config files.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://prettier.io/docs/install",
   keywords: ["format", "style"],
   verification: { verifiedAt: VERIFIED_AT },

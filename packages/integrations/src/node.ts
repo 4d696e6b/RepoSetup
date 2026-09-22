@@ -13,7 +13,7 @@ export const nodeIntegration = defineIntegration({
   name: "Node.js",
   category: "runtime",
   description: "Detects the Node.js runtime before project setup.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://nextjs.org/docs/app/getting-started/installation",
   keywords: ["nodejs", "javascript", "runtime"],
   verification: {

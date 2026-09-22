@@ -65,7 +65,7 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
   name: "Express",
   category: "backend-framework",
   description: "Adds Express 5 with the official Hello World server.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://expressjs.com/en/5x/starter/installing/",
   keywords: ["api", "http", "server"],
   optionSchema: expressOptionsSchema,

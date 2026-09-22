@@ -17,7 +17,7 @@ export const alembicIntegration = defineIntegration({
   name: "Alembic",
   category: "migration",
   description: "Adds Alembic and initializes the official alembic/ environment.",
-  status: "experimental",
+  status: "candidate",
   documentationUrl: "https://alembic.sqlalchemy.org/en/latest/tutorial.html",
   keywords: ["migration", "python", "sqlalchemy"],
   verification: { verifiedAt: "2026-09-22" },
