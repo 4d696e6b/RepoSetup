@@ -395,4 +395,4 @@ Qualification jobs run before any publish job. Default trigger does not publish.
 Create `release/0.1.0-alpha.1` from qualified `dev`. Do not merge `main` on a failed gate.
 
 #### Gate
-Release-blocking checklist in `docs/ACCEPTANCE_TESTS.md` is either checked with evidence or Phase 18 stays incomplete.
+Release-blocking checklist in `docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md` is either checked with evidence or Phase 18 stays incomplete.

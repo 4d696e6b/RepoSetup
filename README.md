@@ -99,7 +99,7 @@ Advertised for this alpha:
 
 ## Supported integrations
 
-See `docs/V1_INTEGRATION_REGISTRY.md` and `docs/INTEGRATION_SUPPORT.md`. Catalog IDs include Node/Python runtimes, npm/pnpm/uv/pip, Next.js, React + Vite, Express, Fastify, FastAPI, Flask, Tailwind, shadcn, SQLite, PostgreSQL, MongoDB, Prisma, Drizzle, Mongoose, SQLAlchemy, Alembic, Zod, Pydantic, Vitest, Playwright, pytest, ESLint, Prettier, Ruff, Docker, Docker Compose, and GitHub Actions.
+See `docs/specification-documentation/product-docs/V1_INTEGRATION_REGISTRY.md` and `docs/specification-documentation/implementing-docs/INTEGRATION_SUPPORT.md`. Catalog IDs include Node/Python runtimes, npm/pnpm/uv/pip, Next.js, React + Vite, Express, Fastify, FastAPI, Flask, Tailwind, shadcn, SQLite, PostgreSQL, MongoDB, Prisma, Drizzle, Mongoose, SQLAlchemy, Alembic, Zod, Pydantic, Vitest, Playwright, pytest, ESLint, Prettier, Ruff, Docker, Docker Compose, and GitHub Actions.
 
 Bun is not implemented. PostgreSQL/MongoDB integrations do not install a database server.
 
@@ -124,6 +124,10 @@ pnpm test:golden
 ```
 
 Read `CONTRIBUTING.md` before changing integrations. Do not guess third-party CLI flags.
+
+## Documentation
+
+See [`docs/README.md`](docs/README.md). Specifications are grouped as product, implementing, security, and release docs under `docs/specification-documentation/`.
 
 ## Security
 

@@ -1,6 +1,6 @@
 # Integration support report (`0.1.0-alpha.1`)
 
-Statuses below are **not fabricated as stable**. `candidate` means plan/detect/verify tests exist. `experimental` means implemented but not treated as a qualified path. Real execute evidence is recorded separately in `docs/IMPLEMENTATION_STATUS.md`.
+Statuses below are **not fabricated as stable**. `candidate` means plan/detect/verify tests exist. `experimental` means implemented but not treated as a qualified path. Real execute evidence is recorded separately in `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md`.
 
 | Integration | Status | Proven paths |
 | --- | --- | --- |

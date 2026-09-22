@@ -68,4 +68,4 @@ P1 follows only after the related base ecosystem is stable.
 
 ## Alpha maturity
 
-"Planned" and "P0" do not mean `stable`. RepoSetup `0.1.0-alpha.1` classifies each ID as `experimental`, `candidate`, `stable`, or `deprecated`. See `docs/INTEGRATION_SUPPORT.md` and `reposetup info <id>`. No catalog ID is `stable` in this prerelease.
+"Planned" and "P0" do not mean `stable`. RepoSetup `0.1.0-alpha.1` classifies each ID as `experimental`, `candidate`, `stable`, or `deprecated`. See `docs/specification-documentation/implementing-docs/INTEGRATION_SUPPORT.md` and `reposetup info <id>`. No catalog ID is `stable` in this prerelease.
