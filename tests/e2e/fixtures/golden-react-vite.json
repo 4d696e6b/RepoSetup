@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "golden-react-app"
+  },
+  "runtime": {
+    "id": "node"
+  },
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "react-vite",
+    "options": {
+      "typescript": true
+    }
+  },
+  "integrations": [{ "id": "tailwind" }, { "id": "zod" }, { "id": "vitest" }, { "id": "prettier" }]
+}

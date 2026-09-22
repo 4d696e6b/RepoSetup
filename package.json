@@ -1,0 +1,33 @@
+{
+  "name": "reposetup",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Terminal-first stack composer and installer (pnpm workspace).",
+  "packageManager": "pnpm@12.5.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r --if-present build",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "registry:validate": "pnpm build && node packages/cli/dist/bin.js registry validate",
+    "pack:packages": "pnpm -r --filter \"./packages/**\" pack",
+    "test:e2e": "pnpm build && vitest run --config tests/e2e/vitest.config.ts",
+    "test:golden": "pnpm build && vitest run --config tests/e2e/vitest.golden.config.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.4",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.8",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.70.0",
+    "vitest": "^5.0.1"
+  }
+}

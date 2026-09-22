@@ -11,14 +11,20 @@
     ".cursor/rules/03-command-safety.mdc"
   ],
   "primary_docs": [
-    "docs/PRODUCT_REQUIREMENTS.md",
-    "docs/ARCHITECTURE.md",
-    "docs/INTEGRATION_SYSTEM.md",
-    "docs/CLI_SPEC.md",
-    "docs/PROJECT_DETECTION.md",
-    "docs/SECURITY_AND_SAFETY.md",
-    "docs/IMPLEMENTATION_PLAN.md",
-    "docs/ACCEPTANCE_TESTS.md",
-    "docs/V1_INTEGRATION_REGISTRY.md"
+    "docs/specification-documentation/product-docs/PRODUCT_REQUIREMENTS.md",
+    "docs/specification-documentation/product-docs/ARCHITECTURE.md",
+    "docs/specification-documentation/product-docs/INTEGRATION_SYSTEM.md",
+    "docs/specification-documentation/product-docs/CLI_SPEC.md",
+    "docs/specification-documentation/product-docs/PROJECT_DETECTION.md",
+    "docs/specification-documentation/security-docs/SECURITY_AND_SAFETY.md",
+    "docs/specification-documentation/security-docs/SECURITY_REVIEW.md",
+    "docs/specification-documentation/implementing-docs/IMPLEMENTATION_PLAN.md",
+    "docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md",
+    "docs/specification-documentation/product-docs/V1_INTEGRATION_REGISTRY.md",
+    "docs/specification-documentation/product-docs/CONFIG_MIGRATION.md",
+    "docs/specification-documentation/release-docs/RELEASE.md",
+    "docs/specification-documentation/release-docs/RELEASE_HARDENING.md",
+    "docs/specification-documentation/release-docs/RELEASE_CHECKLIST.md",
+    "docs/specification-documentation/implementing-docs/INTEGRATION_SUPPORT.md"
   ]
 }

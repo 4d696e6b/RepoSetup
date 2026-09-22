@@ -1,0 +1,47 @@
+{
+  "name": "@reposetup/cli",
+  "version": "0.1.0-alpha.1",
+  "license": "MIT",
+  "description": "RepoSetup command-line interface.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "reposetup": "./dist/bin.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/bin.ts --format esm --dts --clean --sourcemap --external commander --external @inquirer/prompts --external @reposetup/core --external @reposetup/registry --external @reposetup/integrations",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.7.2",
+    "@reposetup/core": "workspace:*",
+    "@reposetup/integrations": "workspace:*",
+    "@reposetup/registry": "workspace:*",
+    "commander": "^15.0.0"
+  }
+}

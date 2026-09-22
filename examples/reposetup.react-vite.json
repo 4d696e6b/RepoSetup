@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "example-react-app"
+  },
+  "runtime": {
+    "id": "node"
+  },
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "react-vite",
+    "options": {
+      "typescript": true
+    }
+  },
+  "integrations": [
+    { "id": "tailwind" },
+    { "id": "shadcn" },
+    { "id": "vitest" },
+    { "id": "eslint" },
+    { "id": "prettier" }
+  ]
+}

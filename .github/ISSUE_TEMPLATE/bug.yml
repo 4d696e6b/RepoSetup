@@ -1,0 +1,62 @@
+name: Bug report
+description: Report an installation or CLI failure
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do **not** paste secrets, `.env` files, tokens, credentials, or connection strings.
+        Prefer `--dry-run` output when it reproduces the issue.
+  - type: input
+    id: version
+    attributes:
+      label: RepoSetup version
+      description: Output of `reposetup --version`
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: macOS 14, Ubuntu 24.04, Windows 11
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Node / Python version
+      placeholder: Node 22.12.0, Python 3.12.x
+    validations:
+      required: true
+  - type: input
+    id: package_manager
+    attributes:
+      label: Package manager
+      placeholder: pnpm 12.5.1, npm, uv
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command executed
+      placeholder: reposetup create --config reposetup.json --dry-run
+    validations:
+      required: true
+  - type: input
+    id: stack
+    attributes:
+      label: Selected stack
+      placeholder: nextjs + sqlite + prisma, fastapi + uv, ...
+  - type: textarea
+    id: error
+    attributes:
+      label: Error output
+      description: Paste stderr. Redact secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: verbose
+    attributes:
+      label: Verbose output (if safe)
+      description: Optional reposetup --verbose output with secrets removed.
