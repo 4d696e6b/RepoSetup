@@ -106,6 +106,8 @@ export type {
   ExecutionLockAcquireResult,
   ExecutionLockHandle,
   ExecutionEvent,
+  ExecutionJournal,
+  ExecutionJournalEntry,
   ExecutorFileSystem,
   ExecutorLogger,
   ProcessRunRequest,

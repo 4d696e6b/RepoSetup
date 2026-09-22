@@ -23,6 +23,7 @@ import { executeInstallation as executeCoreInstallation } from "./execute.js";
 import type {
   ExecuteOptions,
   ExecutionEvent,
+  ExecutionJournalEntry,
   ExecutorFileSystem,
   ProcessRunRequest,
   ProcessRunner,
@@ -179,6 +180,44 @@ describe("executeInstallation", () => {
         durationMs: expect.any(Number),
       }),
     ]);
+  });
+
+  it("records only safe operation identities in the failure journal", async () => {
+    const root = await tempRoot();
+    const entries: ExecutionJournalEntry[] = [];
+    const outcomes: string[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "create_file",
+          path: "safe.txt",
+          content: "TOKEN=must-not-appear",
+          behavior: "fail_if_exists",
+          description: "Write a secret-like value",
+        },
+      ],
+      {
+        rootDir: root,
+        runProcess: recordingRunner([]),
+        executionJournal: {
+          async start() {},
+          async record(entry) {
+            entries.push(entry);
+          },
+          async finish(outcome) {
+            outcomes.push(outcome);
+          },
+        },
+      },
+    );
+
+    expect(result.ok).toBe(true);
+    expect(entries).toEqual([
+      expect.objectContaining({ index: 0, operationType: "create_file", status: "started" }),
+      expect.objectContaining({ index: 0, operationType: "create_file", status: "succeeded" }),
+    ]);
+    expect(JSON.stringify(entries)).not.toContain("must-not-appear");
+    expect(outcomes).toEqual(["succeeded"]);
   });
 
   it("refuses to overwrite when fail_if_exists is set", async () => {

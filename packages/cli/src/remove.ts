@@ -92,6 +92,7 @@ export async function handleRemove(input: {
     fs: input.deps.executorFs,
     runProcess: input.deps.runProcess,
     executionLock: input.deps.executionLock,
+    executionJournal: input.deps.executionJournal,
     ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
     commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
     longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,

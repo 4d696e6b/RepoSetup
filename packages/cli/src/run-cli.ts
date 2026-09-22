@@ -10,6 +10,7 @@ import { handleExport } from "./export.js";
 import {
   createDefaultCommandExists,
   createDefaultExecutionLock,
+  createDefaultExecutionJournal,
   createDefaultExecutorFileSystem,
   createDefaultProcessRunner,
 } from "./execution-adapters.js";
@@ -247,6 +248,7 @@ function resolveDeps(deps: CliDeps): ResolvedCliDeps {
     executorFs: deps.executorFs ?? createDefaultExecutorFileSystem(),
     runProcess,
     executionLock: deps.executionLock ?? createDefaultExecutionLock(),
+    executionJournal: deps.executionJournal ?? createDefaultExecutionJournal(),
     commandExists: deps.commandExists ?? createDefaultCommandExists(runProcess),
     cwd: deps.cwd ?? process.cwd(),
   };

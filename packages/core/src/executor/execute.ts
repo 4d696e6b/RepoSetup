@@ -17,6 +17,7 @@ import {
   executeShowMessage,
   executeVerify,
 } from "./process-operations.js";
+import { journalEntryForOperation } from "./journal.js";
 import { preflightInstallation } from "./preflight.js";
 import type { ExecuteOptions, ExecuteResult, ExecutionContext, ExecutorLogger } from "./types.js";
 
@@ -52,6 +53,9 @@ export async function executeInstallation(
   if (options.onEvent !== undefined) {
     context.onEvent = options.onEvent;
   }
+  if (options.executionJournal !== undefined) {
+    context.executionJournal = options.executionJournal;
+  }
 
   if (isCancelled(context)) {
     return abortedResult(0, context);
@@ -84,7 +88,10 @@ export async function executeInstallation(
   }
 
   try {
-    return await executeOperations(operations, context);
+    await recordJournalStart(context);
+    const result = await executeOperations(operations, context);
+    await recordJournalFinish(context, result.ok ? "succeeded" : "failed");
+    return result;
   } finally {
     await acquired?.handle.release();
   }
@@ -158,6 +165,7 @@ async function executeTrackedOperation<T extends InstallationOperation>(
     operationType: operation.type,
     description: operation.description,
   });
+  await recordJournal(context, journalEntryForOperation({ operation, index, status: "started" }));
   context.logger.info(operation.description);
   context.logs.push(operation.description);
 
@@ -172,6 +180,16 @@ async function executeTrackedOperation<T extends InstallationOperation>(
       durationMs,
       errorCode: error.code,
     });
+    await recordJournal(
+      context,
+      journalEntryForOperation({
+        operation,
+        index,
+        status: "failed",
+        durationMs,
+        errorCode: error.code,
+      }),
+    );
     return error;
   }
 
@@ -182,7 +200,29 @@ async function executeTrackedOperation<T extends InstallationOperation>(
     description: operation.description,
     durationMs,
   });
+  await recordJournal(
+    context,
+    journalEntryForOperation({ operation, index, status: "succeeded", durationMs }),
+  );
   return undefined;
+}
+
+async function recordJournalStart(context: ExecutionContext): Promise<void> {
+  await context.executionJournal?.start(context.rootDir).catch(() => undefined);
+}
+
+async function recordJournal(
+  context: ExecutionContext,
+  entry: import("./types.js").ExecutionJournalEntry,
+): Promise<void> {
+  await context.executionJournal?.record(entry).catch(() => undefined);
+}
+
+async function recordJournalFinish(
+  context: ExecutionContext,
+  outcome: "succeeded" | "failed",
+): Promise<void> {
+  await context.executionJournal?.finish(outcome).catch(() => undefined);
 }
 
 function abortedResult(executed: number, context: ExecutionContext): ExecuteResult {

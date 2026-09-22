@@ -18,6 +18,7 @@ import os from "node:os";
 import {
   redactProcessOutput,
   type ExecutionLock,
+  type ExecutionJournal,
   type ExecutorFileSystem,
   type ProcessRunner,
 } from "@reposetup/core";
@@ -51,6 +52,44 @@ export function createDefaultExecutionLock(): ExecutionLock {
           },
         },
       };
+    },
+  };
+}
+
+export function createDefaultExecutionJournal(
+  options: { directory?: string } = {},
+): ExecutionJournal {
+  let journalPath: string | undefined;
+  const directory = options.directory ?? path.join(os.tmpdir(), "reposetup-journals");
+
+  return {
+    async start(rootDir) {
+      const rootHash = createHash("sha256").update(rootDir).digest("hex");
+      await mkdir(directory, { recursive: true, mode: 0o700 });
+      journalPath = path.join(directory, `${rootHash}-${randomUUID()}.jsonl`);
+      await writeFile(
+        journalPath,
+        `${JSON.stringify({ version: 1, rootHash, status: "started" })}\n`,
+        { encoding: "utf8", flag: "wx", mode: 0o600 },
+      );
+    },
+
+    async record(entry) {
+      if (journalPath !== undefined) {
+        await appendFile(journalPath, `${JSON.stringify(entry)}\n`, "utf8");
+      }
+    },
+
+    async finish(outcome) {
+      if (journalPath === undefined) {
+        return;
+      }
+      if (outcome === "succeeded") {
+        await unlink(journalPath);
+      } else {
+        await appendFile(journalPath, `${JSON.stringify({ status: outcome })}\n`, "utf8");
+      }
+      journalPath = undefined;
     },
   };
 }

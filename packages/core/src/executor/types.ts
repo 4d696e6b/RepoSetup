@@ -51,6 +51,21 @@ export interface ExecutionLock {
   acquire(rootDir: string): Promise<ExecutionLockAcquireResult>;
 }
 
+export interface ExecutionJournalEntry {
+  operationId: string;
+  index: number;
+  operationType: InstallationOperation["type"];
+  status: "started" | "succeeded" | "failed";
+  durationMs?: number;
+  errorCode?: RepoSetupError["code"];
+}
+
+export interface ExecutionJournal {
+  start(rootDir: string): Promise<void>;
+  record(entry: ExecutionJournalEntry): Promise<void>;
+  finish(outcome: "succeeded" | "failed"): Promise<void>;
+}
+
 export type ExecutionEvent =
   | {
       type: "operation_started";
@@ -85,6 +100,7 @@ export interface ExecuteOptions {
   fs: ExecutorFileSystem;
   runProcess: ProcessRunner;
   executionLock?: ExecutionLock;
+  executionJournal?: ExecutionJournal;
   onEvent?: (event: ExecutionEvent) => void;
   commandExists?: (command: string) => Promise<boolean>;
   logger?: ExecutorLogger;
@@ -104,6 +120,7 @@ export interface ExecutionContext {
   commandTimeoutMs?: number;
   longRunningCommandTimeoutMs?: number;
   onEvent?: (event: ExecutionEvent) => void;
+  executionJournal?: ExecutionJournal;
 }
 
 export type ExecuteResult =
