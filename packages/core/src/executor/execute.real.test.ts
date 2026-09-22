@@ -5,6 +5,7 @@ import {
   mkdtemp,
   readFile,
   realpath,
+  rename,
   rm,
   stat,
   writeFile,
@@ -47,6 +48,11 @@ const testFileSystem: ExecutorFileSystem = {
   },
   async writeFile(filePath, content) {
     await writeFile(filePath, content, "utf8");
+  },
+  async writeFileAtomic(filePath, content) {
+    const temporaryPath = `${filePath}.reposetup-test-tmp`;
+    await writeFile(temporaryPath, content, "utf8");
+    await rename(temporaryPath, filePath);
   },
   async writeFileExclusive(filePath, content) {
     await writeFile(filePath, content, { encoding: "utf8", flag: "wx" });

@@ -1,5 +1,17 @@
 import { spawn } from "node:child_process";
-import { access, appendFile, mkdir, readFile, realpath, stat, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import {
+  access,
+  appendFile,
+  mkdir,
+  readFile,
+  realpath,
+  rename,
+  stat,
+  unlink,
+  writeFile,
+} from "node:fs/promises";
+import path from "node:path";
 
 import type { ExecutorFileSystem, ProcessRunner } from "@reposetup/core";
 
@@ -41,6 +53,21 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
 
     async writeFile(filePath, content) {
       await writeFile(filePath, content, "utf8");
+    },
+
+    async writeFileAtomic(filePath, content) {
+      const temporaryPath = path.join(
+        path.dirname(filePath),
+        `.${path.basename(filePath)}.reposetup-${randomUUID()}.tmp`,
+      );
+
+      try {
+        await writeFile(temporaryPath, content, { encoding: "utf8", flag: "wx" });
+        await rename(temporaryPath, filePath);
+      } catch (error) {
+        await unlink(temporaryPath).catch(() => undefined);
+        throw error;
+      }
     },
 
     async writeFileExclusive(filePath, content) {

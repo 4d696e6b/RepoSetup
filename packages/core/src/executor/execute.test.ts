@@ -5,6 +5,7 @@ import {
   mkdtemp,
   readFile,
   realpath,
+  rename,
   rm,
   stat,
   symlink,
@@ -55,6 +56,11 @@ const testFileSystem: ExecutorFileSystem = {
   },
   async writeFile(filePath, content) {
     await writeFile(filePath, content, "utf8");
+  },
+  async writeFileAtomic(filePath, content) {
+    const temporaryPath = `${filePath}.reposetup-test-tmp`;
+    await writeFile(temporaryPath, content, "utf8");
+    await rename(temporaryPath, filePath);
   },
   async writeFileExclusive(filePath, content) {
     await writeFile(filePath, content, { encoding: "utf8", flag: "wx" });
@@ -201,6 +207,34 @@ describe("executeInstallation", () => {
     }
     expect(result.error.code).toBe("PLAN_INVALID");
     await expect(readFile(path.join(outside, "escaped.txt"), "utf8")).rejects.toThrow();
+  });
+
+  it("refuses a final-component symlink without writing outside the root", async () => {
+    const root = await tempRoot();
+    const outside = await tempRoot();
+    const outsideFile = path.join(outside, "package.json");
+    await writeFile(outsideFile, '{"outside":true}\n', "utf8");
+    await symlink(outsideFile, path.join(root, "package.json"));
+
+    const result = await executeInstallation(
+      [
+        {
+          type: "modify_json",
+          path: "package.json",
+          merge: { name: "inside" },
+          behavior: "merge",
+          description: "Update package metadata",
+        },
+      ],
+      { rootDir: root, runProcess: recordingRunner([]) },
+    );
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("PLAN_INVALID");
+    expect(await readFile(outsideFile, "utf8")).toBe('{"outside":true}\n');
   });
 
   it("merges JSON, replaces unique text, and appends missing env keys", async () => {

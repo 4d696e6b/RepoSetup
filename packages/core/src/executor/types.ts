@@ -7,6 +7,7 @@ export interface ExecutorFileSystem {
   mkdir(path: string): Promise<void>;
   readFile(path: string): Promise<string>;
   writeFile(path: string, content: string): Promise<void>;
+  writeFileAtomic(path: string, content: string): Promise<void>;
   writeFileExclusive(path: string, content: string): Promise<void>;
   appendFile(path: string, content: string): Promise<void>;
 }

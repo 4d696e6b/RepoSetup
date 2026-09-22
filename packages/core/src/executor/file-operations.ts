@@ -147,7 +147,7 @@ export async function executeModifyJson(
   }
 
   try {
-    await context.fs.writeFile(
+    await context.fs.writeFileAtomic(
       resolved.absolutePath,
       stringifyJson(mergeJsonObjects(parsed.value, operation.merge)),
     );
@@ -217,7 +217,7 @@ export async function executeModifyText(
   }
 
   try {
-    await context.fs.writeFile(
+    await context.fs.writeFileAtomic(
       resolved.absolutePath,
       content.replace(operation.oldText, operation.newText),
     );
@@ -288,7 +288,7 @@ export async function executeAddEnvExample(
   }
 
   try {
-    await context.fs.writeFile(resolved.absolutePath, appendEnvLines(content, lines));
+    await context.fs.writeFileAtomic(resolved.absolutePath, appendEnvLines(content, lines));
   } catch (error) {
     return mutationFailed(`Could not write env example "${operation.path}".`, {
       path: operation.path,
