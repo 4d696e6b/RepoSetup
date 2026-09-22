@@ -106,7 +106,7 @@ Linux/macOS/Windows jobs are defined in `.github/workflows/ci.yml`. Windows skip
 
 ## Release Qualification
 
-Phase 18 gates for `0.1.0-alpha.1`. Unchecked items block calling Phase 18 complete.
+Phase 18 gates for `0.1.0`. Unchecked items block calling Phase 18 complete. GitHub source launch may proceed with documented blockers; it is not `1.0.0`.
 
 - [x] unit tests pass
 - [x] typecheck passes

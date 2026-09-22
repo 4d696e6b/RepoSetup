@@ -9,8 +9,10 @@ Users should be able to install a packed artifact and run the CLI outside this m
 ## Release target
 
 ```text
-0.1.0-alpha.1
+0.1.0
 ```
+
+(Historical candidate branch: `release/0.1.0-alpha.1`. Public GitHub launch uses `0.1.0`.)
 
 ## Branch strategy
 

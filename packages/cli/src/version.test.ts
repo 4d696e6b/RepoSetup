@@ -13,6 +13,6 @@ const packageJson = JSON.parse(
 describe("cliVersion", () => {
   it("matches packages/cli/package.json", () => {
     expect(cliVersion()).toBe(packageJson.version);
-    expect(cliVersion()).toBe("0.1.0-alpha.1");
+    expect(cliVersion()).toBe("0.1.0");
   });
 });

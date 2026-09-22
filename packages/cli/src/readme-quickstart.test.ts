@@ -16,7 +16,8 @@ describe("README quickstart", () => {
     expect(readme).toContain("examples/reposetup.next-sqlite.json");
     expect(readme).toContain("--dry-run");
     expect(readme).toContain("reposetup create");
-    expect(readme).toContain("alpha prerelease");
+    expect(readme).toContain("early-stage");
+    expect(readme).toContain("0.1.0");
     expect(readme).toContain("npx @reposetup/cli");
   });
 });

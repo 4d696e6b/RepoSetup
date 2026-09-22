@@ -183,7 +183,7 @@ RepoSetup detects these. v1 does not automatically install them.
 
 RepoSetup v1 is not considered stable until these workflows are covered by end-to-end or fixture-based integration tests.
 
-Alpha `0.1.0-alpha.1` qualifies a **subset** of these stacks (see README). Catalog entries that appear in this list are not automatically `stable`.
+Alpha `0.1.0` qualifies a **subset** of these stacks (see README). Catalog entries that appear in this list are not automatically `stable`.
 
 ### Golden stack A — Next.js full stack
 

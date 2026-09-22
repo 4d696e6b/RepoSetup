@@ -1,0 +1,6 @@
+---
+description: Testing and definition of done
+alwaysApply: true
+---
+
+Do not claim work complete if tests, typecheck, or lint fail. Every integration needs tests before it is considered supported. Do not mark an integration `stable` without real execute and platform evidence. Prefer `--dry-run` coverage for mutation paths.

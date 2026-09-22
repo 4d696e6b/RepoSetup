@@ -77,7 +77,7 @@ describe("npm pack artifact", () => {
       dependencies?: Record<string, string>;
     };
     expect(packedManifest.name).toBe("@reposetup/cli");
-    expect(packedManifest.version).toBe("0.1.0-alpha.1");
+    expect(packedManifest.version).toBe("0.1.0");
     expect(packedManifest.bin?.reposetup).toBe("./dist/bin.js");
     for (const name of PUBLIC_PACKAGES.filter((id) => id !== "@reposetup/cli")) {
       const range = packedManifest.dependencies?.[name];

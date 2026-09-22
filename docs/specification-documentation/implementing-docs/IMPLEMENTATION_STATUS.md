@@ -4,11 +4,11 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 18 — Release Hardening and Prerelease Qualification** (in progress)
+**Phase 18 — Release Hardening and Prerelease Qualification** (GitHub `0.1.0` launch; remaining golden/OS evidence still open)
 
-## Current release candidate
+## Current release
 
-`0.1.0-alpha.1` (not `1.0.0`). Owner requested this as the first version on `main` on 2026-09-22. npm is still unpublished.
+`0.1.0` public GitHub source launch (not `1.0.0`, not npm).
 
 ## Phase status
 
@@ -39,45 +39,26 @@ Cursor/maintainers should update this file as phases are completed.
   - [x] 18.5 Integration maturity classification (candidates; none stable)
   - [x] 18.6 Release documentation
   - [x] 18.7 Release automation (publish remains opt-in / unconfigured)
-  - [ ] 18.8 Alpha release candidate validation (Next.js, FastAPI, Flask, OS matrix still open)
+  - [ ] 18.8 Alpha/release-candidate validation (Next.js, FastAPI, Flask, OS matrix still open locally)
 
 ## Last completed work
 
-First-version recheck (2026-09-22, this host):
-
-| Check | Result |
-| --- | --- |
-| `pnpm test` | pass (150+15+98+68) |
-| `pnpm typecheck` | pass (after `pnpm build`) |
-| `pnpm lint` | pass |
-| `pnpm build` | pass |
-| `pnpm registry:validate` | pass (33 integrations) |
-| `pnpm test:e2e` | pass (12 tests including pack-install) |
-| `pnpm test:golden` | React/Vite and Express generation pass; Next.js skipped (disk); FastAPI/Flask skipped (no `uv`) |
-| `reposetup --version` | `0.1.0-alpha.1` |
-| Packed tarballs | `dist/`, LICENSE, README; no tests or secrets |
-| Node requirement | `>=20` (`engines`); local `22.12.0` |
-| pnpm requirement | `12.5.1` |
-| Package versions | `0.1.0-alpha.1` |
-| Privacy | public packages not `private`; root workspace private |
-
-Human guide: `docs/humanOnly/RepoSetup_0.1.0-alpha.1.md`.
+Public GitHub launch prep (2026-09-22): packages and CLI version `0.1.0`; public README; issue/PR templates; `.gitignore` hardening.
 
 ## Known blockers
 
-- Developer volume ~400 MiB free. Next.js execute is skipped locally.
-- `uv` is not installed here, so FastAPI/Flask goldens did not run.
-- GitHub Actions platform/golden jobs have not been observed in this workspace.
-- No npm ownership or trusted-publisher config exists here.
+- Next.js execute skipped locally when disk is tight.
+- `uv` may be missing locally, so FastAPI/Flask goldens skip.
+- First GitHub Actions run happens after origin exists.
+- No npm trusted-publisher config. **Do not npm-publish in this launch.**
 - No integration is `stable`.
-- Phase 18.8 stays open even after the first-version `main` merge.
 
 ## Golden stacks proven
 
 | Stack | Dry-run plan | Real execute |
 | --- | --- | --- |
 | Next.js / SQLite | yes | pending CI / `REPOSETUP_GOLDEN_NEXT=1` |
-| React + Vite | yes | yes (this host, `pnpm test:golden`) |
+| React + Vite | yes | yes (local `pnpm test:golden`) |
 | Express / Postgres config | yes | yes generation + `tsc --noEmit`; no live DB |
 | FastAPI | yes | pending `uv` |
 | Flask | yes | pending `uv` |
@@ -86,30 +67,18 @@ Human guide: `docs/humanOnly/RepoSetup_0.1.0-alpha.1.md`.
 
 | OS | Local | GitHub Actions |
 | --- | --- | --- |
-| macOS | unit/lint/build/e2e/golden B+C (this host) | platform workflow defined, run pending |
-| Linux | not run here | ci + platform + golden workflows defined |
-| Windows | not run here | platform workflow defined, run pending |
+| macOS | unit/lint/build/e2e/golden B+C | platform workflow on `main`/`dev` |
+| Linux | not run here | ci + platform + golden workflows |
+| Windows | not run here | platform workflow |
 
 ## Integrations promoted to stable
 
 None.
 
-## Integrations remaining experimental
-
-fastify, shadcn, postgresql, mongodb, drizzle, mongoose, playwright, docker, docker-compose, github-actions.
-
-Candidates (not stable): node, python, npm, pnpm, uv, pip, nextjs, react-vite, express, fastapi, flask, tailwind, sqlite, prisma, zod, prettier, vitest, pydantic, pytest, ruff, sqlalchemy, alembic, eslint.
-
-## Release artifact status
-
-`pnpm test:e2e` packed all four packages, installed them with npm in a temp project, and ran `--help`, `--version`, `search`, `info`, and `create --dry-run`. Rechecked 2026-09-22.
-
 ## npm publishing status
 
-Not published. Release workflow publish job is opt-in (`workflow_dispatch` + `publish=true`) and needs npm trusted publisher setup.
+Not published. Release workflow publish job is opt-in (`workflow_dispatch` + `publish=true`).
 
 ## Notes
 
-Do not mark Phase 18 complete unless the remaining Release Qualification gates in `docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md` pass.
-
-The owner requested the first **alpha** on `main`. That is not `1.0.0`, not an npm publish, and not a GitHub Release tag.
+Do not mark Phase 18 complete unless remaining Release Qualification gates in `ACCEPTANCE_TESTS.md` pass. GitHub `v0.1.0` is a source launch, not `1.0.0`.

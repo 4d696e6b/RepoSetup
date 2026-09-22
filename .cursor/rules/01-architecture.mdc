@@ -1,0 +1,6 @@
+---
+description: Architecture package boundaries
+alwaysApply: true
+---
+
+TypeScript + pnpm workspaces. Domain logic in `@reposetup/core`. Registry in `@reposetup/registry`. Integration definitions in `@reposetup/integrations`. CLI UI in `@reposetup/cli`. Integrations generate typed operations only. Only the executor may spawn processes or mutate files. `@reposetup/core` must not depend on Commander, Inquirer, Ink, React, or Firebase.

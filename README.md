@@ -1,60 +1,140 @@
 # RepoSetup
 
-RepoSetup is a terminal-first stack composer. It turns a declarative config into a typed installation plan, then dry-runs or executes that plan.
+**Build your stack from the terminal.**
 
-**This is an alpha prerelease (`0.1.0-alpha.1`). It is not `1.0.0`.** Some integrations remain experimental. Use `--dry-run` before applying changes to an important project.
+RepoSetup is an open-source CLI that composes, validates, and configures development stacks from a curated integration registry.
 
-## Status labels
+A modern project often means piecing together setup instructions from several documentation sites. RepoSetup turns supported combinations into a **deterministic installation plan** you can preview with `--dry-run` before anything on disk changes.
 
-| Label | Meaning |
-| --- | --- |
-| implemented | Code exists in the catalog. Not a publish promise. |
-| experimental | Implemented; complete supported paths are not release-qualified. |
-| candidate | Official commands verified and automated tests exist; cross-platform or real execute evidence is incomplete. |
-| release-qualified | A golden stack that includes the integration passed real execution. Not the same as stable. |
-| stable | Real execute + advertised-platform evidence. **None in this alpha.** |
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Do not treat every registry ID as equally mature. `reposetup info <id>` prints the current status.
+RepoSetup is currently an **early-stage** open-source project (`v0.1.0`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
-## Installation
+**npm packages are not published yet.** Use a clone of this repository until the next publishing step.
 
-Packages are not published to npm until the owner completes trusted publishing. From a clone:
+## Why RepoSetup
+
+RepoSetup is not “run `npm install` on a list of packages.”
+
+The useful work is:
+
+- compatibility and requirement resolution
+- stable installation ordering
+- typed configuration generation
+- existing-project detection
+- health checks (`doctor`)
+- a plan you can inspect before mutation
+
+Configs are declarative. They cannot carry shell scripts, callbacks, or remote executable plugins.
+
+## Features
+
+- Interactive `reposetup create` and flag-driven create
+- Declarative `reposetup.json` (`schemaVersion` 1)
+- Compatibility resolution and dependency ordering
+- `--dry-run` using the real planner (no writes, no installers)
+- Existing-project detection (`stack`)
+- Add supported integrations to an existing project
+- Safe `remove` where an explicit recipe exists
+- Project health checks (`doctor`)
+- Config export with no secrets
+- Built-in local registry (JavaScript/TypeScript and Python ecosystems)
+- argv-based process execution (`spawn` with `shell: false`)
+
+## Quick start
+
+Requires **Node.js 20+** and **pnpm 12.5.1**. From a clone of this repository:
 
 ```bash
 pnpm install
 pnpm build
 node packages/cli/dist/bin.js --help
+node packages/cli/dist/bin.js --version   # 0.1.0
 ```
 
-After a public publish:
+Preview a Next.js example without changing files:
 
 ```bash
-npx @reposetup/cli --help
-pnpm dlx @reposetup/cli --help
-```
-
-The binary name is `reposetup`. Requires **Node.js 20+** (Vite stacks need 20.19+; Next.js needs 20.9+). Python stacks need **Python 3.9+** and **uv**.
-
-## Quick start
-
-```bash
-pnpm install
-pnpm build
 node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.json --dry-run
 ```
 
-Dry-run uses the same resolver and planner as a real run. It must not write files or spawn installers.
-
-Create for real (isolated directory, confirmation skipped):
+Create for real (skips the confirmation prompt):
 
 ```bash
 node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.json --yes
 ```
 
-## Commands
+Always try `--dry-run` first on a project you care about.
+
+After a future npm publish (not available in this release):
 
 ```text
-reposetup create
+npx @reposetup/cli --help
+```
+
+The binary name is `reposetup`. Python stacks also need **Python 3.9+** and **uv**.
+
+## Example
+
+Interactive create (prompts are skipped when you pass flags or `--config`):
+
+```text
+$ node packages/cli/dist/bin.js create
+
+? Project name my-app
+? Runtime node
+? Package manager pnpm
+? Framework Next.js
+? Use TypeScript? Yes
+? Styling Tailwind CSS (tailwind)
+? Database SQLite (sqlite)
+? ORM/data layer Prisma (prisma)
+? Validation Zod (zod)
+? Testing Vitest (vitest)
+? Quality tools Prettier (prettier)
+```
+
+A dry-run prints the real plan, then stops:
+
+```text
+$ node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.json --dry-run
+
+Dry-run for example-next-app
+  runtime          node
+  package manager  pnpm
+  framework        nextjs
+
+Resolved integrations:
+  node                 runtime
+  pnpm                 package-manager
+  nextjs               framework
+  ...
+
+Operations (N):
+  1. check_prerequisite  ...
+  2. run_command         ...
+
+No files or commands were executed.
+```
+
+Without `--dry-run`, the CLI asks `Proceed with installation?` unless you pass `--yes`.
+
+Flag form (only flags that exist today):
+
+```bash
+node packages/cli/dist/bin.js create my-app \
+  --framework nextjs \
+  --package-manager pnpm \
+  --typescript \
+  --dry-run
+```
+
+Styling, database, ORM, and other options go in the interactive flow or in `reposetup.json` — they are not separate CLI flags.
+
+## CLI commands
+
+```text
+reposetup create [name]
 reposetup add <id>
 reposetup remove <id>
 reposetup search [query]
@@ -65,51 +145,105 @@ reposetup export
 reposetup registry validate
 ```
 
-Examples:
+| Command | What it does |
+| --- | --- |
+| `create` | Plan (and optionally execute) a new stack from prompts or `--config` |
+| `add` | Plan a delta for one integration on an existing project |
+| `remove` | Remove an integration that has an explicit safe recipe |
+| `search` | Search the local registry (offline) |
+| `info` | Show category, status, requirements, and docs URL for one ID |
+| `stack` | Detect the current project |
+| `doctor` | Read-only health checks |
+| `export` | Write `reposetup.json` (IDs and options only; no `.env` secrets) |
+| `registry validate` | Validate the built-in catalog |
 
-```bash
-node packages/cli/dist/bin.js search prisma
-node packages/cli/dist/bin.js info prisma
-node packages/cli/dist/bin.js add zod --dry-run
-node packages/cli/dist/bin.js stack
-node packages/cli/dist/bin.js doctor
+There is no separate `import` command. Apply an exported file with `create --config`.
+
+`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in v0.1.0.**
+
+## Integration status
+
+Status is per ID, not “the catalog is production-ready.”
+
+| Status | Meaning in v0.1.0 |
+| --- | --- |
+| **stable** | Real execute + advertised-platform evidence. **None yet.** |
+| **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |
+| **experimental** | Implemented; not treated as a qualified path. |
+| **deprecated** | None. |
+
+### Catalog
+
+| Category | IDs | Maturity |
+| --- | --- | --- |
+| Runtime | `node`, `python` | candidate |
+| Package manager | `npm`, `pnpm`, `uv`, `pip` | candidate (`bun` is not in the catalog) |
+| Framework | `nextjs`, `react-vite` | candidate |
+| Backend | `express`, `fastapi`, `flask` | candidate |
+| Backend | `fastify` | experimental |
+| Styling / UI | `tailwind` | candidate |
+| Styling / UI | `shadcn` | experimental |
+| Database | `sqlite` | candidate |
+| Database | `postgresql`, `mongodb` | experimental (config only; no server install) |
+| ORM / data | `prisma`, `sqlalchemy`, `alembic` | candidate |
+| ORM / data | `drizzle`, `mongoose` | experimental |
+| Validation | `zod`, `pydantic` | candidate |
+| Testing | `vitest`, `pytest` | candidate |
+| Testing | `playwright` | experimental |
+| Quality | `eslint`, `prettier`, `ruff` | candidate |
+| Infrastructure / CI | `docker`, `docker-compose`, `github-actions` | experimental |
+
+`remove` currently has package-only recipes for `zod`, `prettier`, `pydantic`, `pytest`, and `ruff`. `pip uninstall` is refused.
+
+## Tested stack recipes
+
+| Recipe | Dry-run plan | Real execute |
+| --- | --- | --- |
+| Next.js + TypeScript + Tailwind + SQLite + Prisma + Zod + Vitest + Prettier | yes | pending CI / a machine with enough disk |
+| React + Vite + TypeScript + Tailwind + Zod + Vitest + Prettier | yes | yes (local `pnpm test:golden`) |
+| Express + TypeScript + Prisma (PostgreSQL **config** only) | yes | generation + `tsc`; no live database |
+| FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` in this workspace |
+| Flask + uv + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` |
+
+Example configs live in `examples/`.
+
+## How it works
+
+```text
+Config or prompts
+  → schema validation
+  → registry lookup
+  → requirements / conflicts
+  → dependency order
+  → typed InstallationPlan
+  → dry-run renderer  or  executor
+  → verification
 ```
 
-`import` is not a separate command. Apply an exported file with `create --config`.
+Integrations only generate typed operations. Only the executor runs processes or writes files.
 
-## Golden stacks
+## Safety
 
-| ID | Stack | Notes |
-| --- | --- | --- |
-| A | Next.js, pnpm, TypeScript, Tailwind, SQLite, Prisma, Zod, Vitest, Prettier | `examples/reposetup.next-sqlite.json` |
-| B | React + Vite, pnpm, TypeScript, Tailwind, Zod, Vitest, Prettier | `tests/e2e/fixtures/golden-react-vite.json` |
-| C | Express, pnpm, TypeScript, PostgreSQL **config**, Prisma, Zod, Vitest, Prettier | Generation only; no live Postgres |
-| D | FastAPI, uv, Pydantic, SQLAlchemy, Alembic, pytest, Ruff | PostgreSQL config placeholder; no live DB |
-| E | Flask, uv, SQLAlchemy, Alembic, pytest, Ruff | Same as D |
+RepoSetup can modify real projects. The safety model is part of the product:
 
-`pnpm test:golden` runs real `create --yes` in temporary directories. Next.js full execute runs in CI (or with `REPOSETUP_GOLDEN_NEXT=1`) because local disk may be too small.
+- `--dry-run` uses the same resolver and planner as a real run
+- plans are typed operations, not shell strings
+- process execution uses `spawn(command, args, { shell: false })`
+- configs cannot contain arbitrary commands
+- missing Node/Python/Docker/databases are reported, not silently installed
+- existing files are not silently overwritten
+- `.env.example` placeholders only; exports never include `.env` secrets
+- compatibility failures stop before filesystem mutation
 
-## Supported platforms
+See [`SECURITY.md`](SECURITY.md).
 
-Advertised for this alpha:
+## Open source
 
-- macOS, Linux, Windows (unit tests; GitHub Actions matrix on `dev` / `release/**`)
-- Node.js 20 (current 20.x) and 22
-- Python 3.12 in golden CI; integrations document Python 3.9+
+RepoSetup is built in the open.
 
-## Supported integrations
+Contributions are welcome — especially integration improvements, platform testing, bug reports, and new verified setup recipes. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-See `docs/specification-documentation/product-docs/V1_INTEGRATION_REGISTRY.md` and `docs/specification-documentation/implementing-docs/INTEGRATION_SUPPORT.md`. Catalog IDs include Node/Python runtimes, npm/pnpm/uv/pip, Next.js, React + Vite, Express, Fastify, FastAPI, Flask, Tailwind, shadcn, SQLite, PostgreSQL, MongoDB, Prisma, Drizzle, Mongoose, SQLAlchemy, Alembic, Zod, Pydantic, Vitest, Playwright, pytest, ESLint, Prettier, Ruff, Docker, Docker Compose, and GitHub Actions.
-
-Bun is not implemented. PostgreSQL/MongoDB integrations do not install a database server.
-
-## Limitations
-
-- Alpha quality. Prefer `--dry-run`.
-- `remove` is package-only for zod, prettier, pydantic, pytest, and ruff.
-- pip uninstall is refused.
-- RepoSetup does not install Node, Python, Docker, or databases.
-- Config files are declarative only.
+Please do not include secrets in issues.
 
 ## Development
 
@@ -123,16 +257,15 @@ pnpm test:e2e
 pnpm test:golden
 ```
 
-Read `CONTRIBUTING.md` before changing integrations. Do not guess third-party CLI flags.
+There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
 
-## Documentation
+## Roadmap
 
-See [`docs/README.md`](docs/README.md). The first-version human guide is [`docs/humanOnly/RepoSetup_0.1.0-alpha.1.md`](docs/humanOnly/RepoSetup_0.1.0-alpha.1.md). Specifications are grouped as product, implementing, security, and release docs under `docs/specification-documentation/`.
-
-## Security
-
-See `SECURITY.md`. Process execution uses `spawn` with `shell: false`. Exports never include `.env` secrets.
+- Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
+- Promote integrations to `stable` only with that evidence
+- Publish `@reposetup/cli` to npm (separate task; not part of this GitHub launch)
+- A website is explicitly out of scope for this architecture
 
 ## License
 
-MIT
+[MIT](LICENSE)
