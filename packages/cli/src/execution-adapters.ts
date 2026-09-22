@@ -185,6 +185,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,
+        detached: process.platform !== "win32",
       });
 
       let stdout: Buffer<ArrayBufferLike> = Buffer.alloc(0);
@@ -227,7 +228,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
         } else {
           timedOut = true;
         }
-        child.kill();
+        terminateProcessTree(child);
       };
       const abort = () => terminate("abort");
 
@@ -268,6 +269,19 @@ export function createDefaultProcessRunner(): ProcessRunner {
       }
     });
   };
+}
+
+function terminateProcessTree(child: ReturnType<typeof spawn>): void {
+  if (process.platform !== "win32" && child.pid !== undefined) {
+    try {
+      process.kill(-child.pid, "SIGTERM");
+      return;
+    } catch {
+      // The process may have exited before its process group was signalled.
+    }
+  }
+
+  child.kill("SIGTERM");
 }
 
 export function createDefaultCommandExists(

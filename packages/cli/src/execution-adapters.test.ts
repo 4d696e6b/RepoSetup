@@ -129,6 +129,45 @@ describe("createDefaultProcessRunner", () => {
     expect(result.aborted).toBe(true);
   });
 
+  it.skipIf(process.platform === "win32")(
+    "terminates a descendant process when execution is cancelled",
+    async () => {
+      const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-process-tree-"));
+      const marker = path.join(root, "descendant-ran.txt");
+      const runner = createDefaultProcessRunner();
+      const controller = new AbortController();
+      let ready: (() => void) | undefined;
+      const childReady = new Promise<void>((resolve) => {
+        ready = resolve;
+      });
+
+      try {
+        const pending = runner({
+          command: process.execPath,
+          args: [
+            "-e",
+            `require('node:child_process').spawn(process.execPath, ['-e', ${JSON.stringify(`setTimeout(() => require('node:fs').writeFileSync(${JSON.stringify(marker)}, 'ran'), 400)`)}], { stdio: 'ignore' }); console.log('ready'); setTimeout(() => {}, 10_000)`,
+          ],
+          cwd: root,
+          signal: controller.signal,
+          onOutput(event) {
+            if (event.text.includes("ready")) {
+              ready?.();
+            }
+          },
+        });
+        await childReady;
+        controller.abort();
+
+        expect(await pending).toMatchObject({ aborted: true });
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        await expect(readFile(marker, "utf8")).rejects.toThrow();
+      } finally {
+        await rm(root, { recursive: true, force: true });
+      }
+    },
+  );
+
   it("bounds captured output while retaining the latest bytes", async () => {
     const runner = createDefaultProcessRunner();
     const result = await runner({
