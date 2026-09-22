@@ -13,7 +13,7 @@ First public open-source launch of RepoSetup.
 ### Added
 
 - Terminal-first CLI: `create`, `add`, `remove`, `search`, `info`, `stack`, `doctor`, `export`, `registry validate`.
-- Public npm package name `reposetup` (single bundled CLI). Workspace libraries `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` stay private.
+- Public npm package name `reposetup-cli` (single bundled CLI; executable `reposetup`). Unscoped `reposetup` is blocked by npm as too similar to `repo-setup`. Workspace libraries `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` stay private.
 - Declarative `reposetup.json` (`schemaVersion` 1) with dry-run planning.
 - Built-in registry of 33 integration IDs across JavaScript/TypeScript and Python ecosystems.
 - Integration maturity labels: `experimental`, `candidate`, `stable`, `deprecated` (none are `stable` in this release).
@@ -38,7 +38,7 @@ First public open-source launch of RepoSetup.
 ### Known limitations
 
 - Early-stage release, not `1.0.0`. No integration is labeled `stable`.
-- `reposetup@0.1.0` is prepared for npm; publication waits on maintainer `npm login` and qualification.
+- `reposetup-cli@0.1.0` is prepared for npm; publication waits on maintainer 2FA after `npm login`.
 - PostgreSQL/MongoDB paths are generation/config only.
 - Next.js full execute is intended for CI or a machine with enough disk.
 - FastAPI/Flask real execute needs `uv`.

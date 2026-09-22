@@ -11,7 +11,7 @@ A modern project often means piecing together setup instructions from several do
 
 RepoSetup is currently an **early-stage** open-source project (`v0.1.0`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
-**npm is not live yet.** The public package name is `reposetup`. Until publication succeeds, run from a clone.
+**npm is not live yet.** The public package name is `reposetup-cli` (`npx reposetup` is not available: npm blocks unscoped `reposetup` as too similar to `repo-setup`). Until publication succeeds, run from a clone.
 
 ## Why RepoSetup
 
@@ -72,19 +72,19 @@ Always try `--dry-run` first on a project you care about.
 Intended npm install after the package is published (not live yet):
 
 ```text
-npx reposetup
-npx reposetup --help
-npx reposetup --version
+npx reposetup-cli
+npx reposetup-cli --help
+npx reposetup-cli --version
 ```
 
 Optionally:
 
 ```text
-npm install -g reposetup
+npm install -g reposetup-cli
 reposetup --help
 ```
 
-The binary name is `reposetup`. Python stacks also need **Python 3.9+** and **uv**.
+`npx` uses the package name `reposetup-cli`. After a global install the executable is `reposetup`. Python stacks also need **Python 3.9+** and **uv**.
 
 ## Example
 
@@ -275,7 +275,7 @@ There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
 
 - Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
 - Promote integrations to `stable` only with that evidence
-- Publish `reposetup@0.1.0` to npm (gated on authentication and qualification)
+- Publish `reposetup-cli@0.1.0` to npm (gated on authentication and qualification)
 - A website is explicitly out of scope for this architecture
 
 ## License

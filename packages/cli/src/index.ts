@@ -1,4 +1,4 @@
-export const packageName = "reposetup" as const;
+export const packageName = "reposetup-cli" as const;
 
 export { EXIT_CODES } from "./exit-codes.js";
 export { runCli } from "./run-cli.js";
