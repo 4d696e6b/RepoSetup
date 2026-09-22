@@ -1,6 +1,10 @@
 import { executeInstallation, planAdd, type PackageManager } from "@reposetup/core";
 
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
+import {
+  DEFAULT_COMMAND_TIMEOUT_MS,
+  DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+} from "./execution-adapters.js";
 import { formatError } from "./format-error.js";
 import { writeLine } from "./io.js";
 import { isKnownPackageManager } from "./prompt-create.js";
@@ -87,6 +91,9 @@ export async function handleAdd(input: {
     rootDir: planned.projectRoot,
     fs: input.deps.executorFs,
     runProcess: input.deps.runProcess,
+    ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
+    commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
+    longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
     logger: {
       info(message) {
         if (!input.globals.quiet) {

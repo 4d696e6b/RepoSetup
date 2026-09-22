@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import type { RepoSetupError } from "../errors/model.js";
+import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import type { InstallationOperation } from "../operations/types.js";
 
 import {
@@ -39,10 +39,32 @@ export async function executeInstallation(
   if (options.commandExists !== undefined) {
     context.commandExists = options.commandExists;
   }
+  if (options.signal !== undefined) {
+    context.signal = options.signal;
+  }
+  if (options.commandTimeoutMs !== undefined) {
+    context.commandTimeoutMs = options.commandTimeoutMs;
+  }
+  if (options.longRunningCommandTimeoutMs !== undefined) {
+    context.longRunningCommandTimeoutMs = options.longRunningCommandTimeoutMs;
+  }
 
   let executed = 0;
 
   for (const operation of operations) {
+    if (context.signal?.aborted === true) {
+      return {
+        ok: false,
+        executed,
+        error: createRepoSetupError({
+          code: "EXECUTION_ABORTED",
+          message: "Execution was cancelled before the next operation began.",
+          suggestion: "Review completed changes before retrying the plan.",
+        }),
+        logs: context.logs,
+      };
+    }
+
     context.logger.info(operation.description);
     context.logs.push(operation.description);
 

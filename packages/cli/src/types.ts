@@ -44,6 +44,7 @@ export interface CliDeps {
   executorFs?: ExecutorFileSystem;
   runProcess?: ProcessRunner;
   commandExists?: (command: string) => Promise<boolean>;
+  signal?: AbortSignal;
   cwd?: string;
 }
 
@@ -56,6 +57,7 @@ export interface ResolvedCliDeps {
   executorFs: ExecutorFileSystem;
   runProcess: ProcessRunner;
   commandExists: (command: string) => Promise<boolean>;
+  signal?: AbortSignal;
   cwd: string;
 }
 

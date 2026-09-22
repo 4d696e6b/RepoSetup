@@ -9,6 +9,10 @@ import {
 } from "@reposetup/core";
 
 import { configFromAnswers } from "./config-from-answers.js";
+import {
+  DEFAULT_COMMAND_TIMEOUT_MS,
+  DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+} from "./execution-adapters.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import { formatError } from "./format-error.js";
 import { writeLine } from "./io.js";
@@ -67,6 +71,9 @@ export async function handleCreate(input: {
     rootDir: input.deps.cwd,
     fs: input.deps.executorFs,
     runProcess: input.deps.runProcess,
+    ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
+    commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
+    longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
     logger: {
       info(message) {
         if (!input.globals.quiet) {

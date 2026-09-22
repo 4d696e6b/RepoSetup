@@ -3,6 +3,10 @@ import { access, appendFile, mkdir, readFile, stat, writeFile } from "node:fs/pr
 
 import type { ExecutorFileSystem, ProcessRunner } from "@reposetup/core";
 
+export const DEFAULT_COMMAND_TIMEOUT_MS = 5 * 60_000;
+export const DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS = 30 * 60_000;
+export const MAX_CAPTURED_OUTPUT_BYTES = 128 * 1024;
+
 export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
   return {
     async exists(filePath) {
@@ -42,8 +46,12 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
 }
 
 export function createDefaultProcessRunner(): ProcessRunner {
-  return (request) =>
-    new Promise((resolve) => {
+  return (request) => {
+    if (request.signal?.aborted === true) {
+      return Promise.resolve({ exitCode: 1, stdout: "", stderr: "", aborted: true });
+    }
+
+    return new Promise((resolve) => {
       const child = spawn(request.command, [...request.args], {
         cwd: request.cwd,
         env: process.env,
@@ -52,18 +60,59 @@ export function createDefaultProcessRunner(): ProcessRunner {
         windowsHide: true,
       });
 
-      const stdoutChunks: Buffer[] = [];
-      const stderrChunks: Buffer[] = [];
+      let stdout: Buffer<ArrayBufferLike> = Buffer.alloc(0);
+      let stderr: Buffer<ArrayBufferLike> = Buffer.alloc(0);
+      let outputTruncated = false;
+      let aborted = false;
+      let timedOut = false;
+      let settled = false;
+      let timer: NodeJS.Timeout | undefined;
+
+      const finish = (result: {
+        exitCode: number;
+        stdout: string;
+        stderr: string;
+        notFound?: boolean;
+      }) => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        if (timer !== undefined) {
+          clearTimeout(timer);
+        }
+        request.signal?.removeEventListener("abort", abort);
+        resolve({
+          ...result,
+          ...(aborted ? { aborted: true } : {}),
+          ...(timedOut ? { timedOut: true } : {}),
+          ...(outputTruncated ? { outputTruncated: true } : {}),
+        });
+      };
+
+      const terminate = (reason: "abort" | "timeout") => {
+        if (reason === "abort") {
+          aborted = true;
+        } else {
+          timedOut = true;
+        }
+        child.kill();
+      };
+      const abort = () => terminate("abort");
 
       child.stdout?.on("data", (chunk: Buffer) => {
-        stdoutChunks.push(chunk);
+        const appended = appendOutput(stdout, chunk);
+        stdout = appended.output;
+        outputTruncated ||= appended.truncated;
       });
       child.stderr?.on("data", (chunk: Buffer) => {
-        stderrChunks.push(chunk);
+        const appended = appendOutput(stderr, chunk);
+        stderr = appended.output;
+        outputTruncated ||= appended.truncated;
       });
 
       child.on("error", (error) => {
-        resolve({
+        finish({
           exitCode: 1,
           stdout: "",
           stderr: error.message,
@@ -72,13 +121,18 @@ export function createDefaultProcessRunner(): ProcessRunner {
       });
 
       child.on("close", (code) => {
-        resolve({
+        finish({
           exitCode: code ?? 1,
-          stdout: Buffer.concat(stdoutChunks).toString("utf8"),
-          stderr: Buffer.concat(stderrChunks).toString("utf8"),
+          stdout: stdout.toString("utf8"),
+          stderr: stderr.toString("utf8"),
         });
       });
+      request.signal?.addEventListener("abort", abort, { once: true });
+      if (request.timeoutMs !== undefined && request.timeoutMs > 0) {
+        timer = setTimeout(() => terminate("timeout"), request.timeoutMs);
+      }
     });
+  };
 }
 
 export function createDefaultCommandExists(
@@ -96,4 +150,19 @@ export function createDefaultCommandExists(
 
 function isNotFound(error: unknown): boolean {
   return typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT";
+}
+
+function appendOutput(
+  existing: Buffer<ArrayBufferLike>,
+  chunk: Buffer<ArrayBufferLike>,
+): { output: Buffer<ArrayBufferLike>; truncated: boolean } {
+  const combined = Buffer.concat([existing, chunk]);
+  if (combined.byteLength <= MAX_CAPTURED_OUTPUT_BYTES) {
+    return { output: combined, truncated: false };
+  }
+
+  return {
+    output: combined.subarray(combined.byteLength - MAX_CAPTURED_OUTPUT_BYTES),
+    truncated: true,
+  };
 }

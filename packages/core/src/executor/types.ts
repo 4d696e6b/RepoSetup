@@ -13,6 +13,8 @@ export interface ProcessRunRequest {
   command: string;
   args: readonly string[];
   cwd: string;
+  signal?: AbortSignal;
+  timeoutMs?: number;
 }
 
 export interface ProcessRunResult {
@@ -20,6 +22,9 @@ export interface ProcessRunResult {
   stdout: string;
   stderr: string;
   notFound?: boolean;
+  aborted?: boolean;
+  timedOut?: boolean;
+  outputTruncated?: boolean;
 }
 
 export type ProcessRunner = (request: ProcessRunRequest) => Promise<ProcessRunResult>;
@@ -35,6 +40,9 @@ export interface ExecuteOptions {
   runProcess: ProcessRunner;
   commandExists?: (command: string) => Promise<boolean>;
   logger?: ExecutorLogger;
+  signal?: AbortSignal;
+  commandTimeoutMs?: number;
+  longRunningCommandTimeoutMs?: number;
 }
 
 export interface ExecutionContext {
@@ -44,6 +52,9 @@ export interface ExecutionContext {
   commandExists?: (command: string) => Promise<boolean>;
   logger: ExecutorLogger;
   logs: string[];
+  signal?: AbortSignal;
+  commandTimeoutMs?: number;
+  longRunningCommandTimeoutMs?: number;
 }
 
 export type ExecuteResult =

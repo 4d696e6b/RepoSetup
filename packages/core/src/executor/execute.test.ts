@@ -307,6 +307,100 @@ describe("executeInstallation", () => {
     await expect(readFile(path.join(root, "after.txt"), "utf8")).rejects.toThrow();
   });
 
+  it("does not begin an operation after cancellation", async () => {
+    const root = await tempRoot();
+    const controller = new AbortController();
+    controller.abort();
+    const runs: ProcessRunRequest[] = [];
+
+    const result = await executeInstallation(
+      [
+        {
+          type: "create_file",
+          path: "should-not-exist.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Must not write",
+        },
+      ],
+      {
+        rootDir: root,
+        runProcess: recordingRunner(runs),
+        signal: controller.signal,
+      },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("EXECUTION_ABORTED");
+    expect(runs).toEqual([]);
+    await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
+  });
+
+  it("classifies cancelled and timed-out commands without continuing", async () => {
+    const root = await tempRoot();
+    const operation: InstallationOperation = {
+      type: "run_command",
+      command: "node",
+      args: ["-e", "process.exit(0)"],
+      cwd: ".",
+      description: "Run Node",
+    };
+
+    const cancelled = await executeInstallation([operation], {
+      rootDir: root,
+      runProcess: async () => ({ exitCode: 1, stdout: "", stderr: "", aborted: true }),
+    });
+    expect(cancelled).toMatchObject({ ok: false, executed: 0 });
+    if (!cancelled.ok) {
+      expect(cancelled.error.code).toBe("EXECUTION_ABORTED");
+    }
+
+    const timedOut = await executeInstallation([operation], {
+      rootDir: root,
+      runProcess: async () => ({ exitCode: 1, stdout: "", stderr: "", timedOut: true }),
+    });
+    expect(timedOut).toMatchObject({ ok: false, executed: 0 });
+    if (!timedOut.ok) {
+      expect(timedOut.error.code).toBe("COMMAND_TIMED_OUT");
+    }
+  });
+
+  it("passes distinct regular and long-running timeout limits to process runners", async () => {
+    const root = await tempRoot();
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "run_command",
+          command: "node",
+          args: ["--version"],
+          cwd: ".",
+          description: "Regular command",
+        },
+        {
+          type: "run_command",
+          command: "node",
+          args: ["--version"],
+          cwd: ".",
+          longRunning: true,
+          description: "Long-running command",
+        },
+      ],
+      {
+        rootDir: root,
+        runProcess: recordingRunner(runs),
+        commandTimeoutMs: 123,
+        longRunningCommandTimeoutMs: 456,
+      },
+    );
+
+    expect(result.ok).toBe(true);
+    expect(runs.map((run) => run.timeoutMs)).toEqual([123, 456]);
+  });
+
   it("does not attach command stdout or stderr to COMMAND_FAILED details", async () => {
     const root = await tempRoot();
     const result = await executeInstallation(

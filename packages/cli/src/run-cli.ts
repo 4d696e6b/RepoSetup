@@ -249,6 +249,10 @@ function resolveDeps(deps: CliDeps): ResolvedCliDeps {
     cwd: deps.cwd ?? process.cwd(),
   };
 
+  if (deps.signal !== undefined) {
+    resolved.signal = deps.signal;
+  }
+
   return resolved;
 }
 

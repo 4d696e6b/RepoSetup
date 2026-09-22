@@ -79,6 +79,8 @@ export async function executeRunCommand(
     command: operation.command,
     args: operation.args,
     cwd: cwd.absolutePath,
+    ...(context.signal === undefined ? {} : { signal: context.signal }),
+    ...timeoutFor(operation, context),
   });
 
   return commandFailure(operation.command, operation.args, result, context);
@@ -109,6 +111,8 @@ export async function executeVerify(
     command: operation.command,
     args,
     cwd: cwd.absolutePath,
+    ...(context.signal === undefined ? {} : { signal: context.signal }),
+    ...timeoutFor(operation, context),
   });
 
   const failed = commandFailure(operation.command, args, result, context);
@@ -174,6 +178,24 @@ function commandFailure(
   result: ProcessRunResult,
   context: ExecutionContext,
 ): RepoSetupError | undefined {
+  if (result.aborted === true) {
+    return createRepoSetupError({
+      code: "EXECUTION_ABORTED",
+      message: `Command "${command}" was cancelled.`,
+      details: { command, args: [...args] },
+      suggestion: "Review completed changes before retrying the plan.",
+    });
+  }
+
+  if (result.timedOut === true) {
+    return createRepoSetupError({
+      code: "COMMAND_TIMED_OUT",
+      message: `Command "${command}" exceeded its execution time limit.`,
+      details: { command, args: [...args] },
+      suggestion: "Check network, package-manager, and project state before retrying the plan.",
+    });
+  }
+
   if (result.notFound === true) {
     return createRepoSetupError({
       code: "COMMAND_FAILED",
@@ -205,4 +227,16 @@ function commandFailure(
     },
     suggestion: commandFailureSuggestion(snippet),
   });
+}
+
+function timeoutFor(
+  operation: RunCommandOperation | VerifyOperation,
+  context: ExecutionContext,
+): { timeoutMs?: number } {
+  const timeoutMs =
+    operation.type === "run_command" && operation.longRunning === true
+      ? context.longRunningCommandTimeoutMs
+      : context.commandTimeoutMs;
+
+  return timeoutMs === undefined ? {} : { timeoutMs };
 }
