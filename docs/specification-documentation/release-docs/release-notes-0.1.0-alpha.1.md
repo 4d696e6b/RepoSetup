@@ -10,6 +10,8 @@ npx @reposetup/cli --help
 
 Until publish, run from a clone: `pnpm install && pnpm build && node packages/cli/dist/bin.js --help`.
 
+A human-readable guide for this version is `docs/humanOnly/RepoSetup_0.1.0-alpha.1.md`.
+
 ## Qualified stacks
 
 See README golden stacks A–E. Express/FastAPI/Flask include PostgreSQL **configuration placeholders** only. RepoSetup does not start a database server.

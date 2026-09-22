@@ -4,7 +4,9 @@ Target: **`0.1.0-alpha.1`**. This is not `1.0.0`.
 
 Public packages (`@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli`) use that version and `publishConfig.access: public`. The root workspace stays private.
 
-Do not publish, push release tags, or merge `main` unless every Release Qualification gate in `docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md` passes **and** the owner requests publication.
+Do not npm-publish or push release tags unless every Release Qualification gate in `docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md` passes **and** the owner requests publication.
+
+On 2026-09-22 the owner requested the first **alpha** (`0.1.0-alpha.1`) on `main`. That merge is not `1.0.0` and is not an npm publish. Next.js execute, FastAPI/Flask (`uv`), and observed Linux/Windows CI remain open.
 
 ## Qualification
 
