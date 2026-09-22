@@ -1,0 +1,6 @@
+---
+description: Terminal-first scope for RepoSetup v1
+alwaysApply: true
+---
+
+RepoSetup v1 is a terminal-first stack composer. Do not add a website, Firebase, user accounts, payments, hosted registry, remote executable plugins, or AI-generated installation plans.

@@ -1,10 +1,10 @@
 # Contributing
 
-RepoSetup is a TypeScript pnpm monorepo. Domain logic belongs in `@reposetup/core`. Integrations generate typed operations and must not spawn processes. Only the executor runs commands or writes files.
+RepoSetup is built in the open. Contributions are welcome — especially integration improvements, platform testing, bug reports, and verified setup recipes.
 
 ## Development setup
 
-Requires Node.js 20+ and pnpm 12.5.1 (`packageManager` in the root `package.json`).
+Requires **Node.js 20+** and **pnpm 12.5.1** (`packageManager` in the root `package.json`).
 
 ```bash
 pnpm install
@@ -14,7 +14,7 @@ pnpm lint
 pnpm build
 ```
 
-Optional:
+Also useful:
 
 ```bash
 pnpm registry:validate
@@ -22,7 +22,7 @@ pnpm test:e2e
 pnpm test:golden
 ```
 
-`pnpm test` is the default unit/dry-run suite. `pnpm test:e2e` packs/smokes the CLI and checks failure/dry-run behavior. `pnpm test:golden` creates real projects in `os.tmpdir()` (never against this repo). Next.js full execute is CI-oriented (`CI=true` or `REPOSETUP_GOLDEN_NEXT=1`).
+`pnpm test` is the unit/dry-run suite. `pnpm test:e2e` packs/smokes the CLI and checks failure/dry-run behavior. `pnpm test:golden` creates real projects in `os.tmpdir()` (never against this repo). Next.js full execute is CI-oriented (`CI=true` or `REPOSETUP_GOLDEN_NEXT=1`).
 
 ## Architecture
 
@@ -33,7 +33,7 @@ pnpm test:golden
 | `@reposetup/integrations` | Built-in integration definitions |
 | `@reposetup/cli` | Commander CLI, prompts, rendering |
 
-`@reposetup/core` must not depend on Commander, Inquirer, Ink, React, or Firebase.
+`@reposetup/core` must not depend on Commander, Inquirer, Ink, React, or Firebase. Integrations generate typed operations and must not spawn processes. Only the executor runs commands or writes files.
 
 ## Adding an integration
 
@@ -59,14 +59,14 @@ When a flag or generator option comes from another project, verify it from curre
 
 ## Pull requests
 
-- One concerned change; do not mix unrelated phases
+- Prefer one concerned change; do not mix unrelated work
 - Update `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md` when a planned phase finishes
 - Keep `CHANGELOG.md` current for user-visible behavior
-- Do not target `main` for feature work; `main` stays the pre-Phase 0 baseline until a qualified release
+- Target **`dev`** for feature work. `main` is the public release branch.
 
 ## Security restrictions
 
-See `docs/specification-documentation/security-docs/SECURITY_AND_SAFETY.md` and `docs/specification-documentation/security-docs/SECURITY_REVIEW.md`.
+See `docs/specification-documentation/security-docs/SECURITY_AND_SAFETY.md` and `SECURITY.md`.
 
 - Never interpolate untrusted input into a shell string
 - Prefer `spawn(command, args, { shell: false })`

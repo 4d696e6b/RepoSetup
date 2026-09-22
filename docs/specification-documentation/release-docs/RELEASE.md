@@ -1,12 +1,12 @@
 # Release process
 
-Target: **`0.1.0-alpha.1`**. This is not `1.0.0`.
+Target: **`0.1.0`** public GitHub launch. This is not `1.0.0` and is not an npm publish.
 
-Public packages (`@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli`) use that version and `publishConfig.access: public`. The root workspace stays private.
+Public packages (`@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli`) use `0.1.0` and `publishConfig.access: public`. The root workspace stays private.
 
-Do not npm-publish or push release tags unless every Release Qualification gate in `docs/specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md` passes **and** the owner requests publication.
+Do not npm-publish unless the owner requests publication after qualification. GitHub source + `v0.1.0` tag is a separate launch step.
 
-On 2026-09-22 the owner requested the first **alpha** (`0.1.0-alpha.1`) on `main`. That merge is not `1.0.0` and is not an npm publish. Next.js execute, FastAPI/Flask (`uv`), and observed Linux/Windows CI remain open.
+On 2026-09-22 the owner requested a public GitHub launch of **`0.1.0`**. Next.js execute, FastAPI/Flask (`uv`), and observed Linux/Windows CI may still be open locally; GitHub Actions is expected to close OS/golden evidence after the first remote run.
 
 ## Qualification
 
@@ -14,7 +14,7 @@ On 2026-09-22 the owner requested the first **alpha** (`0.1.0-alpha.1`) on `main
 2. `pnpm test:e2e` (packed CLI, dry-run, failures)
 3. `pnpm test:golden` on a machine/CI with disk and network (`CI=true` includes Next.js)
 4. Inspect tarballs from `pnpm pack:packages`
-5. Cut `release/0.1.0-alpha.1` from qualified `dev`
+5. Tag `v0.1.0` on `main` after quality checks (GitHub source launch)
 
 See `docs/specification-documentation/release-docs/RELEASE_CHECKLIST.md` and `docs/specification-documentation/release-docs/RELEASE_HARDENING.md`.
 
@@ -42,5 +42,6 @@ Until that bootstrap exists, stop at **READY FOR PUBLICATION**.
 
 ## Rollback
 
-- Unpublished alpha: drop the unpushed tag; fix `dev`.
-- Published alpha: ship a newer prerelease (`0.1.0-alpha.2`). Do not force-push `main`.
+- Unpublished GitHub tag: delete the unpushed tag; fix `main`/`dev`.
+- After GitHub Release exists: ship a newer patch (`0.1.1`) rather than rewriting `v0.1.0`.
+- Do not force-push `main`.

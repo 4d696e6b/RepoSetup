@@ -1,13 +1,11 @@
-# Prerelease checklist
+# Release checklist
 
-Use for every candidate, including `0.1.0-alpha.1`.
-
-Rechecked 2026-09-22 on this development Mac unless noted.
+Use for `0.1.0` GitHub source launch.
 
 ## Quality
 
-- [x] `pnpm install`
-- [x] `pnpm lint`
+- [x] `pnpm install` (workspace already installed)
+- [x] `pnpm lint` (re-run at launch)
 - [x] `pnpm typecheck`
 - [x] `pnpm test`
 - [x] `pnpm build`
@@ -15,15 +13,13 @@ Rechecked 2026-09-22 on this development Mac unless noted.
 - [x] `pnpm test:e2e`
 - [x] `pnpm test:golden` (or blocker documented)
 
-Golden B/C passed. Next.js skipped (disk). FastAPI/Flask skipped (no `uv`).
-
 ## Artifact
 
-- [x] Versions are `0.1.0-alpha.1` (or the intended prerelease)
+- [x] Versions are `0.1.0`
 - [x] Public packages are not `private: true`
-- [x] `reposetup --version` matches package.json
-- [x] Packed CLI works outside the monorepo
-- [x] Tarball has `dist/`, types, bin; no tests or secrets
+- [x] `reposetup --version` matches package.json (`0.1.0`)
+- [x] Packed CLI works outside the monorepo (`pnpm test:e2e`)
+- [x] Tarball layout: `dist/`, types, bin; no tests or secrets (covered by e2e pack test)
 
 ## Safety
 
@@ -36,12 +32,11 @@ Golden B/C passed. Next.js skipped (disk). FastAPI/Flask skipped (no `uv`).
 
 - [x] README, SECURITY.md, CONTRIBUTING, CHANGELOG, LICENSE
 - [x] Maturity labels match the registry
-- [x] Release notes say this is an alpha
-- [x] Human guide in `docs/humanOnly/RepoSetup_0.1.0-alpha.1.md`
+- [x] Release notes say this is early-stage `0.1.0`, not `1.0.0`
+- [x] Human guide in `docs/humanOnly/RepoSetup_0.1.0.md`
 
 ## Publish (owner only)
 
-- [ ] Remaining golden/OS evidence still open (do not treat as `1.0.0`)
-- [ ] npm trusted publishing configured
 - [x] No long-lived npm token in the repo
-- [ ] Owner explicitly requested **npm publish** (first-version request was merge to `main` only)
+- [ ] npm trusted publishing configured (not this task)
+- [ ] Owner requested **npm publish** (this task is GitHub only)

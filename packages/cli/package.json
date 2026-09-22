@@ -1,6 +1,6 @@
 {
   "name": "@reposetup/cli",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "license": "MIT",
   "description": "RepoSetup command-line interface.",
   "type": "module",

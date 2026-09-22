@@ -1,0 +1,6 @@
+---
+description: Command and filesystem safety
+alwaysApply: true
+---
+
+Never interpolate untrusted input into a shell string. Prefer `spawn(command, args, { shell: false })`. Config files are declarative only. Generate `.env.example` placeholders, never persist real secrets. Fail compatibility checks before mutating. Do not silently overwrite user files or install system software.

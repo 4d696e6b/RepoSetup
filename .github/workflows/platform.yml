@@ -2,7 +2,7 @@ name: Platform
 
 on:
   push:
-    branches: [dev, "release/**"]
+    branches: [main, dev, "release/**"]
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
