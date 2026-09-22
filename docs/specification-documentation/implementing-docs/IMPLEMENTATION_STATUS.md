@@ -16,6 +16,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 - [x] `fail_if_exists` writes are exclusive, and JSON/text/env updates use temporary-file replacement.
 - [x] Read-only executor preflight validates the root and canonical operation paths; all prerequisite checks run before project mutation.
 - [x] Verbose subprocess output is line-buffered and redacted, including a secret assignment split across output chunks.
+- [x] A per-root temporary lock rejects concurrent RepoSetup executions without creating files in the user project; operation events expose safe timing/status data.
 - [ ] Writable-location and disk-space preflight, failure journaling, safe rollback policy, and the remaining injected failure/cross-platform tests.
 
 ## Current release
