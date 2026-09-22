@@ -168,7 +168,10 @@ describe("runCli failure qualifications", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.GENERAL_FAILURE);
     expect(captured.stderr()).toContain("COMMAND_FAILED");
+    expect(captured.stderr()).toContain("boom");
+    expect(captured.stderr()).toContain("SECRET=<redacted>");
     expect(captured.stderr()).not.toContain("SECRET=1");
+    expect(captured.stdout()).not.toContain("SECRET=1");
     expect(captured.stdout()).not.toContain("Executed ");
     expect(await readFile(path.join(root, "keep.txt"), "utf8")).toBe("ok\n");
     await expect(readFile(path.join(root, "after.txt"), "utf8")).rejects.toThrow();

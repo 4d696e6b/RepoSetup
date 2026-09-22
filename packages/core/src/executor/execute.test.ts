@@ -291,6 +291,50 @@ describe("executeInstallation", () => {
     expect(JSON.stringify(result.error)).not.toContain("super-secret");
   });
 
+  it("prints a redacted command snippet on failure without putting it in error details", async () => {
+    const root = await tempRoot();
+    const messages: string[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "run_command",
+          command: "npx",
+          args: ["--yes", "create-next-app@latest"],
+          cwd: ".",
+          description: "Scaffold Next.js",
+        },
+      ],
+      {
+        rootDir: root,
+        logger: {
+          info(message) {
+            messages.push(message);
+          },
+          verbose() {},
+        },
+        runProcess: recordingRunner([], {
+          exitCode: 243,
+          stderr:
+            "npm error code EACCES\nYour cache folder contains root-owned files, due to a bug\ntoken=super-secret",
+        }),
+      },
+    );
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.details).not.toHaveProperty("stderr");
+    expect(result.error.message).toContain("exited with code 243");
+    expect(result.error.message).toContain("cache folder contains root-owned files");
+    expect(result.error.message).toContain("token=<redacted>");
+    expect(JSON.stringify(result.error)).not.toContain("super-secret");
+    expect(result.error.suggestion).toContain("will not run sudo");
+    expect(messages.join("\n")).toContain("cache folder contains root-owned files");
+    expect(messages.join("\n")).toContain("token=<redacted>");
+    expect(messages.join("\n")).not.toContain("super-secret");
+  });
+
   it("does not install missing prerequisites", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];
