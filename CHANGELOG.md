@@ -4,7 +4,20 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-This is the first public GitHub release. There is no prior npm publication.
+## [0.1.1] - 2026-09-22
+
+Patch release. `rsetup@0.1.0` is on npm; this fixes the first failures real users hit.
+
+### Fixed
+
+- npm scaffold paths now pass `npx --yes` **before** the package name. `npx` treats anything after the package as package arguments, so `create-next-app` and other `dlx` scaffolds could stall on npm's "Ok to proceed?" prompt.
+- `COMMAND_FAILED` now prints a trimmed snippet of the failed command's output instead of only an exit code. Failures such as npm `EACCES` on a root-owned `~/.npm/_npx` cache are now readable, and the npm cache-ownership case gets a targeted suggestion.
+
+### Safety
+
+- The printed snippet redacts secret-looking assignments (`*SECRET*`, `*TOKEN*`, `*PASSWORD*`, `*API_KEY*`, `*CREDENTIAL*`, `DATABASE_URL`) and is capped in lines and characters.
+- Machine-readable error details still omit `stdout` and `stderr`.
+- RepoSetup still refuses to run `sudo`; it reports the command the user must run.
 
 ## [0.1.0] - 2026-09-22
 

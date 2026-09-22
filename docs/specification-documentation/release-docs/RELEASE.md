@@ -1,19 +1,19 @@
 # Release process
 
-Target: **`0.1.0`**. This is not `1.0.0`.
+Target: **`0.1.1`**. This is not `1.0.0`.
 
 The public npm package is **`rsetup`** (Model A: one bundled CLI; executables `rsetup` and `reposetup`). Workspace libraries stay private. The root workspace is `@reposetup/workspace`. Unscoped `reposetup` and `reposetup-cli` are blocked by npm similarity to `repo-setup` and `repo-setup-cli`.
 
-Do not npm-publish unless qualification passes **and** the maintainer is authenticated to npm. Do not move GitHub tag `v0.1.0`.
+Do not npm-publish unless qualification passes **and** the maintainer is authenticated to npm. Do not move existing GitHub tags (`v0.1.0`, `v0.1.1`).
 
-On 2026-09-22 the owner requested a public GitHub launch of **`0.1.0`**, then a complete npm deployment of the same version. Next.js execute, FastAPI/Flask (`uv`), and observed Linux/Windows CI may still be open locally.
+On 2026-09-22 the owner requested a public GitHub launch of **`0.1.0`**, then a complete npm deployment of the same version. `rsetup@0.1.0` is live on npm. `0.1.1` is the first patch on top of it (npx scaffold flags, readable command failures). Next.js execute, FastAPI/Flask (`uv`), and observed Linux/Windows CI may still be open locally.
 
 ## Qualification
 
 1. `pnpm install && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm registry:validate`
 2. `pnpm test:e2e` (packed CLI, dry-run, failures)
 3. `pnpm test:golden` on a machine/CI with disk and network (`CI=true` includes Next.js)
-4. Inspect `packages/cli/rsetup-0.1.0.tgz` from `pnpm pack:packages`
+4. Inspect `packages/cli/rsetup-0.1.1.tgz` from `pnpm pack:packages`
 5. Install that tarball in a directory outside the monorepo and run `--version` / `--help` / `search` / `info` / `create --dry-run`
 
 See `docs/specification-documentation/release-docs/RELEASE_CHECKLIST.md` and `docs/specification-documentation/release-docs/RELEASE_HARDENING.md`.
@@ -61,5 +61,5 @@ Until `npm whoami` succeeds, stop at **READY FOR NPM AUTHENTICATION**.
 ## Rollback
 
 - Unpublished GitHub tag: delete the unpushed tag; fix `main`/`dev`.
-- After GitHub Release or npm version exists: ship a newer patch (`0.1.1`) rather than rewriting `v0.1.0` or unpublishing.
+- After GitHub Release or npm version exists: ship a newer patch (for example `0.1.2`) rather than rewriting an existing tag or unpublishing.
 - Do not force-push `main`.

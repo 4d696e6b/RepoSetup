@@ -4,10 +4,11 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-const readme = readFileSync(
-  join(dirname(fileURLToPath(import.meta.url)), "../../../README.md"),
-  "utf8",
-);
+const here = dirname(fileURLToPath(import.meta.url));
+const readme = readFileSync(join(here, "../../../README.md"), "utf8");
+const { version } = JSON.parse(readFileSync(join(here, "../package.json"), "utf8")) as {
+  version: string;
+};
 
 describe("README quickstart", () => {
   it("documents a dry-run create from the Next.js example", () => {
@@ -17,7 +18,7 @@ describe("README quickstart", () => {
     expect(readme).toContain("--dry-run");
     expect(readme).toContain("reposetup create");
     expect(readme).toContain("early-stage");
-    expect(readme).toContain("0.1.0");
+    expect(readme).toContain(version);
     expect(readme).toContain("npx rsetup");
   });
 });

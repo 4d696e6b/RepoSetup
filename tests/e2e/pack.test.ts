@@ -38,7 +38,7 @@ describe("npm pack artifact", () => {
     expect(packed.exitCode, packed.stderr).toBe(0);
 
     const tarballs = (await readdir(packDir)).filter((name) => name.endsWith(".tgz")).sort();
-    expect(tarballs).toEqual(["rsetup-0.1.0.tgz"]);
+    expect(tarballs).toEqual(["rsetup-0.1.1.tgz"]);
 
     const tarballPath = path.join(packDir, tarballs[0] as string);
     const listing = await runProcess("tar", ["-tzf", tarballPath], { cwd: packDir });
@@ -68,7 +68,7 @@ describe("npm pack artifact", () => {
       dependencies?: Record<string, string>;
     };
     expect(packedManifest.name).toBe("rsetup");
-    expect(packedManifest.version).toBe("0.1.0");
+    expect(packedManifest.version).toBe("0.1.1");
     expect(packedManifest.bin?.rsetup).toBe("./dist/bin.js");
     expect(packedManifest.bin?.reposetup).toBe("./dist/bin.js");
     expect(packedManifest.dependencies?.["@reposetup/core"]).toBeUndefined();
