@@ -2,41 +2,46 @@
 
 Use for every candidate, including `0.1.0-alpha.1`.
 
+Rechecked 2026-09-22 on this development Mac unless noted.
+
 ## Quality
 
-- [ ] `pnpm install`
-- [ ] `pnpm lint`
-- [ ] `pnpm typecheck`
-- [ ] `pnpm test`
-- [ ] `pnpm build`
-- [ ] `pnpm registry:validate`
-- [ ] `pnpm test:e2e`
-- [ ] `pnpm test:golden` (or blocker documented)
+- [x] `pnpm install`
+- [x] `pnpm lint`
+- [x] `pnpm typecheck`
+- [x] `pnpm test`
+- [x] `pnpm build`
+- [x] `pnpm registry:validate`
+- [x] `pnpm test:e2e`
+- [x] `pnpm test:golden` (or blocker documented)
+
+Golden B/C passed. Next.js skipped (disk). FastAPI/Flask skipped (no `uv`).
 
 ## Artifact
 
-- [ ] Versions are `0.1.0-alpha.1` (or the intended prerelease)
-- [ ] Public packages are not `private: true`
-- [ ] `reposetup --version` matches package.json
-- [ ] Packed CLI works outside the monorepo
-- [ ] Tarball has `dist/`, types, bin; no tests or secrets
+- [x] Versions are `0.1.0-alpha.1` (or the intended prerelease)
+- [x] Public packages are not `private: true`
+- [x] `reposetup --version` matches package.json
+- [x] Packed CLI works outside the monorepo
+- [x] Tarball has `dist/`, types, bin; no tests or secrets
 
 ## Safety
 
-- [ ] Dry-run does not mutate
-- [ ] Path traversal rejected
-- [ ] Failure exit codes are non-zero
-- [ ] No secrets in export or error details
+- [x] Dry-run does not mutate
+- [x] Path traversal rejected
+- [x] Failure exit codes are non-zero
+- [x] No secrets in export or error details
 
 ## Docs
 
-- [ ] README, SECURITY.md, CONTRIBUTING, CHANGELOG, LICENSE
-- [ ] Maturity labels match the registry
-- [ ] Release notes say this is an alpha
+- [x] README, SECURITY.md, CONTRIBUTING, CHANGELOG, LICENSE
+- [x] Maturity labels match the registry
+- [x] Release notes say this is an alpha
+- [x] Human guide in `docs/humanOnly/RepoSetup_0.1.0-alpha.1.md`
 
 ## Publish (owner only)
 
-- [ ] `main` still untouched until gates pass
+- [ ] Remaining golden/OS evidence still open (do not treat as `1.0.0`)
 - [ ] npm trusted publishing configured
-- [ ] No long-lived npm token in the repo
-- [ ] Owner explicitly requested publish
+- [x] No long-lived npm token in the repo
+- [ ] Owner explicitly requested **npm publish** (first-version request was merge to `main` only)

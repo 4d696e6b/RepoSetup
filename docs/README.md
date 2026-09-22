@@ -1,5 +1,7 @@
 # Documentation
 
+Human-facing notes for this version live in [`humanOnly/`](./humanOnly/). Start with [`humanOnly/RepoSetup_0.1.0-alpha.1.md`](./humanOnly/RepoSetup_0.1.0-alpha.1.md).
+
 Specifications live in [`specification-documentation/`](./specification-documentation/), grouped by topic.
 
 ## Product docs
@@ -40,4 +42,4 @@ Specifications live in [`specification-documentation/`](./specification-document
 - [Release hardening](./specification-documentation/release-docs/RELEASE_HARDENING.md)
 - [0.1.0-alpha.1 notes](./specification-documentation/release-docs/release-notes-0.1.0-alpha.1.md)
 
-Root files such as `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, and `AGENTS.md` stay at the repository root. The PDF under `humanOnly/` is not part of the specification set.
+Root files such as `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, and `AGENTS.md` stay at the repository root. Files under `humanOnly/` are for people, not for Cursor.

@@ -13,6 +13,7 @@ RepoSetup has not published a prior npm release. This file starts at the first i
 - CLI: `create`, `add`, `remove`, `search`, `info`, `stack`, `doctor`, `export`, `registry validate`.
 - Monorepo packages `@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli` at `0.1.0-alpha.1`.
 - Golden-stack real execution harness (`pnpm test:golden`) and packed-artifact smoke tests (`pnpm test:e2e`).
+- Human-facing first-version guide in `docs/humanOnly/RepoSetup_0.1.0-alpha.1.md`.
 - Fast / platform / golden GitHub Actions workflows and an OIDC-ready release workflow that does not publish on push.
 - Integration maturity labels: `experimental`, `candidate`, `stable`, `deprecated`.
 

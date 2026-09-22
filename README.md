@@ -127,7 +127,7 @@ Read `CONTRIBUTING.md` before changing integrations. Do not guess third-party CL
 
 ## Documentation
 
-See [`docs/README.md`](docs/README.md). Specifications are grouped as product, implementing, security, and release docs under `docs/specification-documentation/`.
+See [`docs/README.md`](docs/README.md). The first-version human guide is [`docs/humanOnly/RepoSetup_0.1.0-alpha.1.md`](docs/humanOnly/RepoSetup_0.1.0-alpha.1.md). Specifications are grouped as product, implementing, security, and release docs under `docs/specification-documentation/`.
 
 ## Security
 
