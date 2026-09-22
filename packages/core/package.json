@@ -1,18 +1,27 @@
 {
   "name": "@reposetup/core",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0-alpha.1",
   "license": "MIT",
   "description": "RepoSetup config, resolution, planning, and execution library.",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
   },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --clean --sourcemap",

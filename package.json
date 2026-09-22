@@ -14,7 +14,10 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "pack:packages": "pnpm -r --filter \"./packages/**\" pack"
+    "registry:validate": "pnpm build && node packages/cli/dist/bin.js registry validate",
+    "pack:packages": "pnpm -r --filter \"./packages/**\" pack",
+    "test:e2e": "pnpm build && vitest run --config tests/e2e/vitest.config.ts",
+    "test:golden": "pnpm build && vitest run --config tests/e2e/vitest.golden.config.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
