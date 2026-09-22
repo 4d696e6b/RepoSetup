@@ -1,5 +1,5 @@
 {
-  "name": "reposetup",
+  "name": "@reposetup/workspace",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "registry:validate": "pnpm build && node packages/cli/dist/bin.js registry validate",
-    "pack:packages": "pnpm -r --filter \"./packages/**\" pack",
+    "pack:packages": "pnpm --filter reposetup pack",
     "test:e2e": "pnpm build && vitest run --config tests/e2e/vitest.config.ts",
     "test:golden": "pnpm build && vitest run --config tests/e2e/vitest.golden.config.ts"
   },

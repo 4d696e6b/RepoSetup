@@ -13,12 +13,12 @@ First public open-source launch of RepoSetup.
 ### Added
 
 - Terminal-first CLI: `create`, `add`, `remove`, `search`, `info`, `stack`, `doctor`, `export`, `registry validate`.
-- Monorepo packages `@reposetup/core`, `@reposetup/registry`, `@reposetup/integrations`, `@reposetup/cli` at `0.1.0`.
+- Public npm package name `reposetup` (single bundled CLI). Workspace libraries `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` stay private.
 - Declarative `reposetup.json` (`schemaVersion` 1) with dry-run planning.
 - Built-in registry of 33 integration IDs across JavaScript/TypeScript and Python ecosystems.
 - Integration maturity labels: `experimental`, `candidate`, `stable`, `deprecated` (none are `stable` in this release).
 - Golden-stack harness (`pnpm test:golden`) and packed-artifact smoke tests (`pnpm test:e2e`).
-- Fast / platform / golden GitHub Actions and an OIDC-ready release workflow that does not publish npm on push.
+- Fast / platform / golden GitHub Actions. npm publish is a separate tag workflow (`.github/workflows/publish-npm.yml`) and does not run on pull requests.
 
 ### Safety
 
@@ -38,7 +38,7 @@ First public open-source launch of RepoSetup.
 ### Known limitations
 
 - Early-stage release, not `1.0.0`. No integration is labeled `stable`.
-- npm packages are not published in this GitHub launch.
+- `reposetup@0.1.0` is prepared for npm; publication waits on maintainer `npm login` and qualification.
 - PostgreSQL/MongoDB paths are generation/config only.
 - Next.js full execute is intended for CI or a machine with enough disk.
 - FastAPI/Flask real execute needs `uv`.

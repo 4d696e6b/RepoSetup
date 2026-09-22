@@ -1,0 +1,63 @@
+name: Publish npm
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+      - name: Ensure npm CLI supports trusted publishing
+        run: npm install -g npm@^11.5.1
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm registry:validate
+      - run: pnpm test:e2e
+      - run: pnpm pack:packages
+      - name: Skip publish when this version already exists
+        id: existing
+        working-directory: packages/cli
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          echo "name=${NAME}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "npm already has ${NAME}@${VERSION}; skipping publish"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish reposetup
+        if: steps.existing.outputs.exists == 'false'
+        working-directory: packages/cli
+        run: npm publish --access public
+        env:
+          NPM_CONFIG_PROVENANCE: "true"
+      - name: Verify registry version
+        if: steps.existing.outputs.exists == 'false'
+        run: |
+          NAME="${{ steps.existing.outputs.name }}"
+          VERSION="${{ steps.existing.outputs.version }}"
+          PUBLISHED="$(npm view "${NAME}@${VERSION}" version)"
+          test "${PUBLISHED}" = "${VERSION}"
+          npm view "${NAME}" dist-tags

@@ -199,6 +199,10 @@ importers:
       '@inquirer/prompts':
         specifier: ^8.7.2
         version: 8.7.2(@types/node@22.20.4)
+      commander:
+        specifier: ^15.0.0
+        version: 15.0.0
+    devDependencies:
       '@reposetup/core':
         specifier: workspace:*
         version: link:../core
@@ -208,10 +212,6 @@ importers:
       '@reposetup/registry':
         specifier: workspace:*
         version: link:../registry
-      commander:
-        specifier: ^15.0.0
-        version: 15.0.0
-    devDependencies:
       '@types/node':
         specifier: ^22.20.4
         version: 22.20.4

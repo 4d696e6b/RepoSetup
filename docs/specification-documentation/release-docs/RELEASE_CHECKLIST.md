@@ -1,6 +1,6 @@
 # Release checklist
 
-Use for `0.1.0` GitHub source launch.
+Use for `0.1.0` GitHub source + npm CLI packaging.
 
 ## Quality
 
@@ -16,7 +16,7 @@ Use for `0.1.0` GitHub source launch.
 ## Artifact
 
 - [x] Versions are `0.1.0`
-- [x] Public packages are not `private: true`
+- [x] Public CLI package is `reposetup`; workspace libraries are private
 - [x] `reposetup --version` matches package.json (`0.1.0`)
 - [x] Packed CLI works outside the monorepo (`pnpm test:e2e`)
 - [x] Tarball layout: `dist/`, types, bin; no tests or secrets (covered by e2e pack test)
@@ -38,5 +38,6 @@ Use for `0.1.0` GitHub source launch.
 ## Publish (owner only)
 
 - [x] No long-lived npm token in the repo
-- [ ] npm trusted publishing configured (not this task)
-- [ ] Owner requested **npm publish** (this task is GitHub only)
+- [x] Publish workflow prepared (`.github/workflows/publish-npm.yml`)
+- [ ] npm trusted publishing configured on npmjs.com (after first publish)
+- [ ] Maintainer `npm login` + first `npm publish`

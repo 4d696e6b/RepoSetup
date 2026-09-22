@@ -56,27 +56,39 @@ Do not claim untested runtime minors.
 
 ## Package publishing model
 
-**Option A — four public packages** at the same version:
+**Model A — single public package** (chosen):
 
 ```text
-@reposetup/core
-@reposetup/registry
-@reposetup/integrations
-@reposetup/cli
+reposetup
 ```
 
-`@reposetup/cli` exposes the `reposetup` binary. Install with:
+The public CLI bundles `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` at build time. Those workspace packages are `private: true` and are **not** published to npm.
+
+Runtime npm dependencies of `reposetup` are only:
+
+```text
+commander
+@inquirer/prompts
+```
+
+The workspace root is `@reposetup/workspace` (`private: true`) so the public name `reposetup` can be the CLI package.
+
+Install after publication:
 
 ```bash
-npx @reposetup/cli --help
-pnpm dlx @reposetup/cli --help
+npx reposetup
+npx reposetup --help
+npm install -g reposetup
+reposetup --version
 ```
 
-Workspace `workspace:*` dependencies are rewritten to the published version on `pnpm publish`. Internal packages stay implementation modules; the CLI is the user-facing entry.
+`npx reposetup` works because the package name and the `bin` name are both `reposetup`.
 
-The root workspace remains private.
+Do not publish the four workspace directories as separate npm packages. That would be Model B and is not required for the current runtime.
 
-Repository / homepage / bugs URLs are omitted until the owner sets a public git remote. That is a manual publication prerequisite.
+Repository / homepage / bugs URLs on the public package point at `https://github.com/4d696e6b/RepoSetup`.
+
+GitHub tag `v0.1.0` was cut on the pre-bundle source (`@reposetup/cli`). That tag must not be moved. npm `0.1.0` is the bundled CLI artifact from a later commit on `main`.
 
 ## Safety audit
 
@@ -111,9 +123,10 @@ Do not mark `stable` without evidence. This alpha does not claim `1.0.0` stabili
 1. `pnpm install && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm registry:validate`
 2. `pnpm test:e2e`
 3. `pnpm test:golden` when disk/network allow
-4. Inspect packed tarballs (`pnpm pack:packages`)
-5. Cut `release/0.1.0-alpha.1` from `dev`
-6. Owner configures npm trusted publishing (OIDC), then may publish
+4. Inspect the public tarball (`pnpm pack:packages` → `reposetup-0.1.0.tgz`)
+5. First publish: maintainer `npm login`, then `npm publish --access public` from `packages/cli`
+6. Attach GitHub Actions trusted publishing (`docs/NPM_TRUSTED_PUBLISHING_SETUP.md`)
+7. Later versions: tag `vX.Y.Z` on `main`; `.github/workflows/publish-npm.yml` publishes
 
 ## Rollback procedure
 
@@ -130,5 +143,6 @@ Do not mark `stable` without evidence. This alpha does not claim `1.0.0` stabili
 - `remove` is package-only for zod, prettier, pydantic, pytest, ruff.
 - PostgreSQL/MongoDB integrations do not install or start a server.
 - pip uninstall is refused.
-- Packages have not been published.
+- Packages have not been published until the maintainer completes `npm login` and `npm publish`.
+- Trusted publishing is prepared (`publish-npm.yml`) and still needs a manual npmjs.com attachment after the package exists.
 - No website.

@@ -11,7 +11,7 @@ A modern project often means piecing together setup instructions from several do
 
 RepoSetup is currently an **early-stage** open-source project (`v0.1.0`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
-**npm packages are not published yet.** Use a clone of this repository until the next publishing step.
+**npm is not live yet.** The public package name is `reposetup`. Until publication succeeds, run from a clone.
 
 ## Why RepoSetup
 
@@ -69,10 +69,19 @@ node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.jso
 
 Always try `--dry-run` first on a project you care about.
 
-After a future npm publish (not available in this release):
+Intended npm install after the package is published (not live yet):
 
 ```text
-npx @reposetup/cli --help
+npx reposetup
+npx reposetup --help
+npx reposetup --version
+```
+
+Optionally:
+
+```text
+npm install -g reposetup
+reposetup --help
 ```
 
 The binary name is `reposetup`. Python stacks also need **Python 3.9+** and **uv**.
@@ -266,7 +275,7 @@ There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
 
 - Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
 - Promote integrations to `stable` only with that evidence
-- Publish `@reposetup/cli` to npm (separate task; not part of this GitHub launch)
+- Publish `reposetup@0.1.0` to npm (gated on authentication and qualification)
 - A website is explicitly out of scope for this architecture
 
 ## License

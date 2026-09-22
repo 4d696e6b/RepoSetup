@@ -18,6 +18,6 @@ describe("README quickstart", () => {
     expect(readme).toContain("reposetup create");
     expect(readme).toContain("early-stage");
     expect(readme).toContain("0.1.0");
-    expect(readme).toContain("npx @reposetup/cli");
+    expect(readme).toContain("npx reposetup");
   });
 });
