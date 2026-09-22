@@ -3,6 +3,14 @@
   "private": true,
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4d696e6b/RepoSetup.git"
+  },
+  "bugs": {
+    "url": "https://github.com/4d696e6b/RepoSetup/issues"
+  },
+  "homepage": "https://github.com/4d696e6b/RepoSetup#readme",
   "description": "Terminal-first stack composer and installer (pnpm workspace).",
   "packageManager": "pnpm@12.5.1",
   "engines": {
