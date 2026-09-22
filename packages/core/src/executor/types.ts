@@ -1,4 +1,5 @@
 import type { RepoSetupError } from "../errors/model.js";
+import type { InstallationOperation } from "../operations/types.js";
 
 export interface ExecutorFileSystem {
   exists(path: string): Promise<boolean>;
@@ -50,6 +51,29 @@ export interface ExecutionLock {
   acquire(rootDir: string): Promise<ExecutionLockAcquireResult>;
 }
 
+export type ExecutionEvent =
+  | {
+      type: "operation_started";
+      index: number;
+      operationType: InstallationOperation["type"];
+      description: string;
+    }
+  | {
+      type: "operation_succeeded";
+      index: number;
+      operationType: InstallationOperation["type"];
+      description: string;
+      durationMs: number;
+    }
+  | {
+      type: "operation_failed";
+      index: number;
+      operationType: InstallationOperation["type"];
+      description: string;
+      durationMs: number;
+      errorCode: RepoSetupError["code"];
+    };
+
 export interface ExecutorLogger {
   info(message: string): void;
   verbose(message: string): void;
@@ -61,6 +85,7 @@ export interface ExecuteOptions {
   fs: ExecutorFileSystem;
   runProcess: ProcessRunner;
   executionLock?: ExecutionLock;
+  onEvent?: (event: ExecutionEvent) => void;
   commandExists?: (command: string) => Promise<boolean>;
   logger?: ExecutorLogger;
   signal?: AbortSignal;
@@ -78,6 +103,7 @@ export interface ExecutionContext {
   signal?: AbortSignal;
   commandTimeoutMs?: number;
   longRunningCommandTimeoutMs?: number;
+  onEvent?: (event: ExecutionEvent) => void;
 }
 
 export type ExecuteResult =

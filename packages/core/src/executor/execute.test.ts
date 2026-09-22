@@ -22,6 +22,7 @@ import { isSafeExecutableName } from "./command-name.js";
 import { executeInstallation as executeCoreInstallation } from "./execute.js";
 import type {
   ExecuteOptions,
+  ExecutionEvent,
   ExecutorFileSystem,
   ProcessRunRequest,
   ProcessRunner,
@@ -146,6 +147,38 @@ describe("executeInstallation", () => {
     expect(result).toMatchObject({ ok: true, executed: 2 });
     expect(runs).toEqual([]);
     expect(await readFile(path.join(root, "src/app.txt"), "utf8")).toBe("hello\n");
+  });
+
+  it("emits safe operation timing events", async () => {
+    const root = await tempRoot();
+    const events: ExecutionEvent[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "show_message",
+          message: "Ready.",
+          description: "Show readiness",
+        },
+      ],
+      { rootDir: root, runProcess: recordingRunner([]), onEvent: (event) => events.push(event) },
+    );
+
+    expect(result.ok).toBe(true);
+    expect(events).toEqual([
+      {
+        type: "operation_started",
+        index: 0,
+        operationType: "show_message",
+        description: "Show readiness",
+      },
+      expect.objectContaining({
+        type: "operation_succeeded",
+        index: 0,
+        operationType: "show_message",
+        description: "Show readiness",
+        durationMs: expect.any(Number),
+      }),
+    ]);
   });
 
   it("refuses to overwrite when fail_if_exists is set", async () => {

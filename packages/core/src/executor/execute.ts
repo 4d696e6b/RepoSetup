@@ -49,6 +49,9 @@ export async function executeInstallation(
   if (options.longRunningCommandTimeoutMs !== undefined) {
     context.longRunningCommandTimeoutMs = options.longRunningCommandTimeoutMs;
   }
+  if (options.onEvent !== undefined) {
+    context.onEvent = options.onEvent;
+  }
 
   if (isCancelled(context)) {
     return abortedResult(0, context);
@@ -92,7 +95,7 @@ async function executeOperations(
   context: ExecutionContext,
 ): Promise<ExecuteResult> {
   let executed = 0;
-  for (const operation of operations) {
+  for (const [index, operation] of operations.entries()) {
     if (operation.type !== "check_prerequisite") {
       continue;
     }
@@ -101,16 +104,19 @@ async function executeOperations(
       return abortedResult(executed, context);
     }
 
-    context.logger.info(operation.description);
-    context.logs.push(operation.description);
-    const error = await executeCheckPrerequisite(operation, context);
+    const error = await executeTrackedOperation(
+      operation,
+      index,
+      context,
+      executeCheckPrerequisite,
+    );
     if (error !== undefined) {
       return { ok: false, executed, error, logs: context.logs };
     }
     executed += 1;
   }
 
-  for (const operation of operations) {
+  for (const [index, operation] of operations.entries()) {
     if (operation.type === "check_prerequisite") {
       continue;
     }
@@ -119,10 +125,7 @@ async function executeOperations(
       return abortedResult(executed, context);
     }
 
-    context.logger.info(operation.description);
-    context.logs.push(operation.description);
-
-    const error = await executeOperation(operation, context);
+    const error = await executeTrackedOperation(operation, index, context, executeOperation);
     if (error !== undefined) {
       return {
         ok: false,
@@ -140,6 +143,46 @@ async function executeOperations(
     executed,
     logs: context.logs,
   };
+}
+
+async function executeTrackedOperation<T extends InstallationOperation>(
+  operation: T,
+  index: number,
+  context: ExecutionContext,
+  execute: (operation: T, context: ExecutionContext) => Promise<RepoSetupError | undefined>,
+): Promise<RepoSetupError | undefined> {
+  const startedAt = Date.now();
+  context.onEvent?.({
+    type: "operation_started",
+    index,
+    operationType: operation.type,
+    description: operation.description,
+  });
+  context.logger.info(operation.description);
+  context.logs.push(operation.description);
+
+  const error = await execute(operation, context);
+  const durationMs = Date.now() - startedAt;
+  if (error !== undefined) {
+    context.onEvent?.({
+      type: "operation_failed",
+      index,
+      operationType: operation.type,
+      description: operation.description,
+      durationMs,
+      errorCode: error.code,
+    });
+    return error;
+  }
+
+  context.onEvent?.({
+    type: "operation_succeeded",
+    index,
+    operationType: operation.type,
+    description: operation.description,
+    durationMs,
+  });
+  return undefined;
 }
 
 function abortedResult(executed: number, context: ExecutionContext): ExecuteResult {
