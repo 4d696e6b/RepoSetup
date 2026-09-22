@@ -582,6 +582,63 @@ describe("executeInstallation", () => {
     expect(runs).toEqual([]);
   });
 
+  it("checks prerequisites before any planned project mutation", async () => {
+    const root = await tempRoot();
+    const result = await executeInstallation(
+      [
+        {
+          type: "create_file",
+          path: "should-not-exist.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Write only after preflight",
+        },
+        {
+          type: "check_prerequisite",
+          id: "pnpm",
+          description: "Require pnpm",
+        },
+      ],
+      {
+        rootDir: root,
+        runProcess: recordingRunner([]),
+        commandExists: async () => false,
+      },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("PREREQUISITE_MISSING");
+    await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
+  });
+
+  it("fails preflight for a missing project root before running commands", async () => {
+    const root = await tempRoot();
+    const missingRoot = path.join(root, "missing");
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "run_command",
+          command: "node",
+          args: ["--version"],
+          cwd: ".",
+          description: "Must not run",
+        },
+      ],
+      { rootDir: missingRoot, runProcess: recordingRunner(runs) },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("PROJECT_NOT_FOUND");
+    expect(runs).toEqual([]);
+  });
+
   it("rejects unknown prerequisite ids instead of executing them", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];

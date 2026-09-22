@@ -17,6 +17,7 @@ import {
   executeShowMessage,
   executeVerify,
 } from "./process-operations.js";
+import { preflightInstallation } from "./preflight.js";
 import type { ExecuteOptions, ExecuteResult, ExecutionContext, ExecutorLogger } from "./types.js";
 
 const silentLogger: ExecutorLogger = {
@@ -49,20 +50,41 @@ export async function executeInstallation(
     context.longRunningCommandTimeoutMs = options.longRunningCommandTimeoutMs;
   }
 
+  if (isCancelled(context)) {
+    return abortedResult(0, context);
+  }
+
+  const preflightError = await preflightInstallation(operations, context);
+  if (preflightError !== undefined) {
+    return { ok: false, executed: 0, error: preflightError, logs: context.logs };
+  }
+
   let executed = 0;
+  for (const operation of operations) {
+    if (operation.type !== "check_prerequisite") {
+      continue;
+    }
+
+    if (isCancelled(context)) {
+      return abortedResult(executed, context);
+    }
+
+    context.logger.info(operation.description);
+    context.logs.push(operation.description);
+    const error = await executeCheckPrerequisite(operation, context);
+    if (error !== undefined) {
+      return { ok: false, executed, error, logs: context.logs };
+    }
+    executed += 1;
+  }
 
   for (const operation of operations) {
-    if (context.signal?.aborted === true) {
-      return {
-        ok: false,
-        executed,
-        error: createRepoSetupError({
-          code: "EXECUTION_ABORTED",
-          message: "Execution was cancelled before the next operation began.",
-          suggestion: "Review completed changes before retrying the plan.",
-        }),
-        logs: context.logs,
-      };
+    if (operation.type === "check_prerequisite") {
+      continue;
+    }
+
+    if (isCancelled(context)) {
+      return abortedResult(executed, context);
     }
 
     context.logger.info(operation.description);
@@ -86,6 +108,23 @@ export async function executeInstallation(
     executed,
     logs: context.logs,
   };
+}
+
+function abortedResult(executed: number, context: ExecutionContext): ExecuteResult {
+  return {
+    ok: false,
+    executed,
+    error: createRepoSetupError({
+      code: "EXECUTION_ABORTED",
+      message: "Execution was cancelled before the next operation began.",
+      suggestion: "Review completed changes before retrying the plan.",
+    }),
+    logs: context.logs,
+  };
+}
+
+function isCancelled(context: ExecutionContext): boolean {
+  return context.signal?.aborted === true;
 }
 
 async function executeOperation(
