@@ -895,6 +895,28 @@ describe("executeInstallation", () => {
     await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
   });
 
+  it("rejects a conflicting package-manager lockfile before installation", async () => {
+    const root = await tempRoot();
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeCoreInstallation(
+      [
+        {
+          type: "install_package",
+          packageManager: "npm",
+          packages: ["zod"],
+          dev: false,
+          cwd: ".",
+          description: "Install zod",
+        },
+      ],
+      { rootDir: root, fs: testFileSystem, runProcess: recordingRunner(runs) },
+    );
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (!result.ok) expect(result.error.code).toBe("LOCKFILE_CONFLICT");
+    expect(runs).toEqual([]);
+  });
+
   it("refuses a concurrent execution before commands or mutations begin", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];
