@@ -1,4 +1,6 @@
-# Release checklist
+# Release checklist (historical 0.1.x record)
+
+This file preserves the 0.1.x release record. It is not a current qualification checklist for 0.2.0. See [Phase 19 baseline and acceptance scope](../implementing-docs/PHASE_19_BASELINE.md) and the 0.2.0 roadmap for current gates.
 
 Use for `0.1.0` GitHub source + npm CLI packaging.
 

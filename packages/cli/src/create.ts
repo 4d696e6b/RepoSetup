@@ -9,6 +9,11 @@ import {
 } from "@reposetup/core";
 
 import { configFromAnswers } from "./config-from-answers.js";
+import {
+  DEFAULT_COMMAND_TIMEOUT_MS,
+  DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+  DEFAULT_MINIMUM_FREE_DISK_BYTES,
+} from "./execution-adapters.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import { formatError } from "./format-error.js";
 import { writeLine } from "./io.js";
@@ -65,6 +70,15 @@ export async function handleCreate(input: {
 
   const executed = await executeInstallation(planned.operations, {
     rootDir: input.deps.cwd,
+    fs: input.deps.executorFs,
+    runProcess: input.deps.runProcess,
+    resolveExecutable: input.deps.resolveExecutable,
+    executionLock: input.deps.executionLock,
+    executionJournal: input.deps.executionJournal,
+    ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
+    commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
+    longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+    minimumFreeDiskBytes: DEFAULT_MINIMUM_FREE_DISK_BYTES,
     logger: {
       info(message) {
         if (!input.globals.quiet) {
@@ -76,8 +90,14 @@ export async function handleCreate(input: {
           writeLine(input.deps.io.writeOut, message);
         }
       },
+      ...(input.globals.verbose && !input.globals.quiet
+        ? {
+            output(message: string) {
+              input.deps.io.writeOut(message);
+            },
+          }
+        : {}),
     },
-    ...(input.deps.runProcess === undefined ? {} : { runProcess: input.deps.runProcess }),
     ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
   });
 

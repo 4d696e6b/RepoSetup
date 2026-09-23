@@ -9,18 +9,42 @@ on:
 
 jobs:
   golden:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.runner }} / ${{ matrix.architecture }} / Python ${{ matrix.python }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            architecture: x64
+            python: "3.12"
+          - runner: ubuntu-24.04
+            architecture: x64
+            python: "3.13"
+          - runner: macos-15
+            architecture: arm64
+            python: "3.12"
+          - runner: macos-15
+            architecture: arm64
+            python: "3.13"
+          - runner: windows-2025
+            architecture: x64
+            python: "3.12"
+          - runner: windows-2025
+            architecture: x64
+            python: "3.13"
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
           cache: pnpm
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python }}
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
@@ -29,3 +53,15 @@ jobs:
       - run: pnpm test:golden
         env:
           CI: true
+      - name: Write golden qualification evidence
+        run: >-
+          node -e "require('node:fs').writeFileSync('golden-evidence.json',
+          JSON.stringify({ platform: process.platform, architecture: process.arch,
+          node: process.version, python: require('node:child_process').execFileSync('python',
+          ['--version'], { encoding: 'utf8' }).trim(), uv: require('node:child_process').execFileSync('uv',
+          ['--version'], { encoding: 'utf8' }).trim() }, null, 2) + '\\n')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: golden-evidence-${{ matrix.runner }}-python-${{ matrix.python }}
+          path: golden-evidence.json
+          if-no-files-found: error

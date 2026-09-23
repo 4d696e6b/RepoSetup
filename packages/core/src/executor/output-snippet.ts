@@ -10,7 +10,7 @@ export function summarizeFailedProcessOutput(stdout: string, stderr: string): st
     return undefined;
   }
 
-  const redacted = combined.replace(SECRET_ASSIGNMENT, "$1=<redacted>");
+  const redacted = redactProcessOutput(combined);
   const lines = redacted.split(/\r?\n/).slice(-MAX_SNIPPET_LINES);
   let snippet = lines.join("\n");
   if (snippet.length > MAX_SNIPPET_CHARS) {
@@ -18,6 +18,10 @@ export function summarizeFailedProcessOutput(stdout: string, stderr: string): st
   }
 
   return snippet;
+}
+
+export function redactProcessOutput(output: string): string {
+  return output.replace(SECRET_ASSIGNMENT, "$1=<redacted>");
 }
 
 export function commandFailureSuggestion(snippet: string | undefined): string {

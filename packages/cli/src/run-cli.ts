@@ -7,6 +7,14 @@ import { createDefaultRegistry } from "./default-registry.js";
 import { handleDoctor } from "./doctor.js";
 import { EXIT_CODES } from "./exit-codes.js";
 import { handleExport } from "./export.js";
+import {
+  createDefaultCommandExists,
+  createDefaultExecutionLock,
+  createDefaultExecutionJournal,
+  createDefaultExecutableResolver,
+  createDefaultExecutorFileSystem,
+  createDefaultProcessRunner,
+} from "./execution-adapters.js";
 import { handleInfo } from "./info.js";
 import { createDefaultFs, createDefaultIo, writeLine } from "./io.js";
 import { promptCreate } from "./prompt-create.js";
@@ -231,20 +239,24 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
 }
 
 function resolveDeps(deps: CliDeps): ResolvedCliDeps {
+  const runProcess = deps.runProcess ?? createDefaultProcessRunner();
   const resolved: ResolvedCliDeps = {
     registry: deps.registry ?? createDefaultRegistry(),
     io: deps.io ?? createDefaultIo(),
     fs: deps.fs ?? createDefaultFs(),
     promptCreate: deps.promptCreate ?? promptCreate,
     confirmCreate: deps.confirmCreate ?? defaultConfirmCreate,
+    executorFs: deps.executorFs ?? createDefaultExecutorFileSystem(),
+    runProcess,
+    executionLock: deps.executionLock ?? createDefaultExecutionLock(),
+    executionJournal: deps.executionJournal ?? createDefaultExecutionJournal(),
+    commandExists: deps.commandExists ?? createDefaultCommandExists(runProcess),
+    resolveExecutable: deps.resolveExecutable ?? createDefaultExecutableResolver(runProcess),
     cwd: deps.cwd ?? process.cwd(),
   };
 
-  if (deps.runProcess !== undefined) {
-    resolved.runProcess = deps.runProcess;
-  }
-  if (deps.commandExists !== undefined) {
-    resolved.commandExists = deps.commandExists;
+  if (deps.signal !== undefined) {
+    resolved.signal = deps.signal;
   }
 
   return resolved;

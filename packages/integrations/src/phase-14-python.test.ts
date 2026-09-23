@@ -152,6 +152,20 @@ describe("Phase 14 Python ecosystem plans", () => {
     );
   });
 
+  it("fixes Alembic's generated import ordering when Ruff is selected", () => {
+    expect(
+      runCommands(
+        alembicIntegration.plan(
+          planContext({ integrations: [{ id: "sqlalchemy" }, { id: "ruff" }] }),
+        ),
+      ),
+    ).toEqual([
+      ["uv", "add", "alembic"],
+      ["uv", "run", "alembic", "init", "alembic"],
+      ["uv", "run", "ruff", "check", "--fix", "alembic/env.py"],
+    ]);
+  });
+
   it("uses python -m pip install for the pip path", () => {
     expect(
       runCommands(

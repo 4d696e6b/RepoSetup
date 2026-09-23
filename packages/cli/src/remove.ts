@@ -1,6 +1,11 @@
 import { executeInstallation, planRemove, type PackageManager } from "@reposetup/core";
 
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
+import {
+  DEFAULT_COMMAND_TIMEOUT_MS,
+  DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+  DEFAULT_MINIMUM_FREE_DISK_BYTES,
+} from "./execution-adapters.js";
 import { formatError } from "./format-error.js";
 import { writeLine } from "./io.js";
 import { isKnownPackageManager } from "./prompt-create.js";
@@ -85,6 +90,15 @@ export async function handleRemove(input: {
 
   const executed = await executeInstallation(planned.result.operations, {
     rootDir: planned.projectRoot,
+    fs: input.deps.executorFs,
+    runProcess: input.deps.runProcess,
+    resolveExecutable: input.deps.resolveExecutable,
+    executionLock: input.deps.executionLock,
+    executionJournal: input.deps.executionJournal,
+    ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
+    commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
+    longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+    minimumFreeDiskBytes: DEFAULT_MINIMUM_FREE_DISK_BYTES,
     logger: {
       info(message) {
         if (!input.globals.quiet) {
@@ -96,8 +110,14 @@ export async function handleRemove(input: {
           writeLine(input.deps.io.writeOut, message);
         }
       },
+      ...(input.globals.verbose && !input.globals.quiet
+        ? {
+            output(message: string) {
+              input.deps.io.writeOut(message);
+            },
+          }
+        : {}),
     },
-    ...(input.deps.runProcess === undefined ? {} : { runProcess: input.deps.runProcess }),
     ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
   });
 

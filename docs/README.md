@@ -21,6 +21,8 @@ Specifications live in [`specification-documentation/`](./specification-document
 [`specification-documentation/implementing-docs/`](./specification-documentation/implementing-docs/)
 
 - [Implementation plan](./specification-documentation/implementing-docs/IMPLEMENTATION_PLAN.md)
+- [Roadmap to 0.2.0](./specification-documentation/implementing-docs/ROADMAP_0.2.0.md)
+- [Phase 19 baseline and acceptance scope](./specification-documentation/implementing-docs/PHASE_19_BASELINE.md)
 - [Implementation status](./specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md)
 - [Integration support](./specification-documentation/implementing-docs/INTEGRATION_SUPPORT.md)
 - [Acceptance tests](./specification-documentation/implementing-docs/ACCEPTANCE_TESTS.md)

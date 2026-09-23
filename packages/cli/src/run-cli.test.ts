@@ -394,6 +394,7 @@ describe("runCli", () => {
         command: "pnpm",
         args: ["add", "fake-orm"],
         cwd: path.resolve(root),
+        timeoutMs: 300_000,
       },
     ]);
   });

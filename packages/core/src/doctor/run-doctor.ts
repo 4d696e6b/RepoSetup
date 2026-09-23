@@ -4,7 +4,6 @@ import { createNodeDetectionFs } from "../detection/filesystem.js";
 import type { DetectedItem } from "../detection/types.js";
 import type { ErrorCode } from "../errors/codes.js";
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
-import { createDefaultProcessRunner } from "../executor/process.js";
 import type { VerificationContext } from "../integrations/definition.js";
 import { presentItems } from "../planning/config-from-detected.js";
 import { pathPrerequisite } from "../prerequisites/path.js";
@@ -30,7 +29,7 @@ export type RunDoctorResult =
 export async function runDoctor(input: {
   startDir: string;
   registry: RegistryLookup;
-  commandExists?: (command: string) => Promise<boolean>;
+  commandExists: (command: string) => Promise<boolean>;
 }): Promise<RunDoctorResult> {
   const detected = await detectProject({
     startDir: input.startDir,
@@ -42,14 +41,10 @@ export async function runDoctor(input: {
 
   const files = createNodeDetectionFs(detected.stack.projectRoot);
   const detection = await createDetectionContext(detected.stack.projectRoot, files);
-  const commandExists =
-    input.commandExists ??
-    ((command: string) => defaultCommandExists(command, detected.stack.projectRoot));
-
   const checks: DoctorCheck[] = [];
   await collectPathChecks(
     [...presentItems(detected.stack.runtimes), ...presentItems(detected.stack.packageManagers)],
-    commandExists,
+    input.commandExists,
     checks,
   );
   await collectVerifyChecks(
@@ -147,13 +142,4 @@ async function collectVerifyChecks(
       ...(result.suggestion === undefined ? {} : { suggestion: result.suggestion }),
     });
   }
-}
-
-async function defaultCommandExists(command: string, cwd: string): Promise<boolean> {
-  const result = await createDefaultProcessRunner()({
-    command,
-    args: ["--version"],
-    cwd,
-  });
-  return result.notFound !== true && result.exitCode === 0;
 }

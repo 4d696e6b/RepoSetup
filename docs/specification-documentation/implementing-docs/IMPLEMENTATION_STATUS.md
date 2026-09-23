@@ -4,11 +4,75 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 18 — Release Hardening and Prerelease Qualification** (GitHub `0.1.0` launch; remaining golden/OS evidence still open)
+**Phase 22 — Reproducible recipes and compatibility enforcement: in progress.** Phase 20 is complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+
+See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
+
+### Phase 20 progress — 2026-09-22
+
+- [x] Core executor accepts injected filesystem and process adapters; Node implementations live in the CLI package.
+- [x] Subprocesses have bounded capture, regular/long-running timeouts, and `SIGINT` cancellation propagation.
+- [x] Paths are checked against their canonical location before filesystem mutation or command execution; escaping symlinks are rejected.
+- [x] `fail_if_exists` writes are exclusive, and JSON/text/env updates use temporary-file replacement.
+- [x] Read-only executor preflight validates the root and canonical operation paths; all prerequisite checks run before project mutation.
+- [x] Verbose subprocess output is line-buffered and redacted, including a secret assignment split across output chunks.
+- [x] A per-root temporary lock rejects concurrent RepoSetup executions without creating files in the user project; operation events expose safe timing/status data.
+- [x] Read-only writable-location preflight rejects injected permission failures before mutations; failed runs retain a hashed, content-free temporary journal.
+- [x] Disk-space preflight requires 512 MiB free before CLI execution; recovery policy forbids automatic rollback and limits any future restore to verified RepoSetup-owned files.
+- [x] Full workspace tests (355), packed-CLI e2e tests (12), and available golden recipes (2) pass after the executor changes; 3 golden recipes remain environment-gated skips.
+- [x] POSIX cancellation terminates spawned descendant processes; the regression fixture proves the descendant cannot continue and mutate the project after cancellation.
+- [x] Prerequisite preflight verifies the current documented Node 20.9 and Python 3.9 minimums before mutation. The Node 24/Python 3.12–3.13 matrix and Windows-native process handling are Phase 21 qualification requirements.
+
+### Phase 21 progress — 2026-09-23
+
+- [x] The CLI resolves the `python` operation command through a platform adapter: `python3` then `python` on POSIX, and `py`, `python`, then `python3` on Windows. The first working candidate is cached and reused for prerequisite version checks and subsequent planned commands.
+- [x] Windows process execution resolves trusted `PATH` entries. Native `.exe`/`.com` files execute directly; `.cmd`/`.bat` shims use an explicit `cmd.exe` invocation with `shell: false`, and shim paths or arguments containing command metacharacters are rejected before execution.
+- [x] Packed-artifact e2e coverage uses a parent path containing spaces and Unicode, executes both aliases on POSIX native shims, and executes both Windows `.cmd` aliases through npm's native launcher.
+- [x] Executor tests cover Unicode project-file paths below a parent directory containing spaces and Unicode; `.env.example` additions preserve an existing CRLF line-ending convention.
+- [x] Platform CI uses explicit Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64 runners. It runs packed-artifact e2e on Node 22 and 24 across all targets, with Node 20 retained on Ubuntu for the supported floor.
+- [x] The platform matrix runs for pull requests as well as the protected development and release branches.
+- [x] Platform and golden workflow runs retain uniquely named JSON evidence artifacts with their runtime and architecture details for later qualification review.
+- [x] Golden CI now provisions uv and runs the complete recipe suite on every supported runner with Python 3.12 and 3.13.
+- [x] Remote CI and golden qualification passed on Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64. Windows-native package-manager execution, all representative recipe creates, and evidence artifacts were observed in the qualification matrix.
 
 ## Current release
 
-`0.1.0` public GitHub source launch. npm package `reposetup` is prepared (Model A) and not published until authentication + qualification.
+The observed npm dist-tag is `rsetup@0.1.1`; the source, tag, integrity, and remaining unobserved GitHub evidence are recorded in [Phase 19 baseline](./PHASE_19_BASELINE.md).
+
+## Planning checkpoint — 2026-09-22
+
+Inspected baseline: `a0e48a1` on `main`, macOS, Node 22.12.0, pnpm 12.5.1.
+
+- [x] Inspect architecture, executor, planner, integration helpers, golden/pack tests, CI, and release workflows.
+- [x] Write the phased 0.2.0 roadmap, including researched platform/cache guidance and explicit research-required integration details.
+- [x] `pnpm test`: 335 passed, 1 skipped.
+- [x] `pnpm typecheck`: passed.
+- [x] `pnpm lint`: passed on the inspected baseline.
+- [x] `pnpm build`: passed.
+- [x] `node packages/cli/dist/bin.js registry validate`: passed, 33 integrations.
+- [x] `pnpm test:e2e`: 12 passed, including isolated packed CLI installation.
+- [x] Sequential golden baseline: 2 passed, 3 conditionally skipped; details in Phase 19 baseline.
+- [ ] Linux/Windows execution and remote workflow results: unobserved; Phase 21/27 release blockers.
+- [x] Planning/process-count baseline recorded; no speed improvement claimed.
+
+Phase 19 changed planning and evidence documentation only. No product code, package versions, integration maturity labels, releases, or external publication changed.
+
+### 0.2.0 implementation
+
+- [x] Phase 19 — Baseline and acceptance scope
+- [x] Phase 20 — Safe executor and adapter boundaries
+- [x] Phase 21 — Cross-platform execution
+- [ ] Phase 22 — Reproducible recipes and compatibility
+- [ ] Phase 23 — Measured installation performance
+- [ ] Phase 24 — Daily CLI usability and recovery guidance
+- [ ] Phase 25 — Existing integration qualification
+- [ ] Phase 26 — Important new integrations
+- [ ] Phase 27 — Release-candidate qualification
+- [ ] Phase 28 — 0.2.0 publication and delivery verification
+
+## Historical Phase 18 checkpoint
+
+The remaining sections preserve the earlier 0.1.0 launch record. Their publication, CI, and local-environment entries are historical, not current verified status. Phase 19 must reconcile them against observed evidence; do not use their checked boxes to qualify 0.2.0.
 
 ## Phase status
 

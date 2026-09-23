@@ -1,4 +1,4 @@
-import { access } from "node:fs/promises";
+import { access, mkdir } from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
@@ -35,8 +35,12 @@ const runNextGolden = process.env.CI === "true" || process.env.REPOSETUP_GOLDEN_
 const hasUv = await commandAvailable("uv");
 
 async function createProject(configPath: string): Promise<{ cwd: string; created: CliRunResult }> {
-  const cwd = await createTempWorkspace("reposetup-golden-");
-  tempDirs.push(cwd);
+  // Framework generators validate the final directory name. mkdtemp's random
+  // suffix can contain uppercase letters, which Next.js rejects.
+  const parent = await createTempWorkspace("reposetup-golden-");
+  tempDirs.push(parent);
+  const cwd = path.join(parent, "project");
+  await mkdir(cwd);
   const created = await runNodeCli(monorepoBin, ["create", "--config", configPath, "--yes"], {
     cwd,
   });

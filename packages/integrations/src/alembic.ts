@@ -1,6 +1,7 @@
 import {
   type DetectionContext,
   type DetectionResult,
+  type InstallationOperation,
   type SupportContext,
   type VerificationContext,
   type VerificationResult,
@@ -35,7 +36,7 @@ export const alembicIntegration = defineIntegration({
     return detectPythonPackage(context, "alembic", ["alembic.ini"]);
   },
   plan(context) {
-    return [
+    const operations: InstallationOperation[] = [
       addPackages(context, ["alembic"], {
         description: "Install Alembic",
       }),
@@ -50,6 +51,18 @@ export const alembicIntegration = defineIntegration({
         description: "Explain that Alembic migrations are not applied automatically",
       },
     ];
+
+    if (context.config.integrations.some((integration) => integration.id === "ruff")) {
+      operations.splice(
+        operations.length - 1,
+        0,
+        runPythonTool(context, "ruff", ["check", "--fix", "alembic/env.py"], {
+          description: "Fix lint-safe import ordering in Alembic's generated environment",
+        }),
+      );
+    }
+
+    return operations;
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {
     return mergeVerify([
