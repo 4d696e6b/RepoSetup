@@ -51,6 +51,16 @@ describe("npmAdapter", () => {
     expectArgs(result, "npm", ["install", "--save-dev", "--save-exact", "prettier"]);
   });
 
+  it("installs a frozen project with npm ci", () => {
+    const result = npmAdapter.install({
+      cwd: ".",
+      description: "Install from package-lock.json",
+      frozen: true,
+    });
+
+    expectArgs(result, "npm", ["ci"]);
+  });
+
   it("installs the project from the lockfile with npm install", () => {
     const result = npmAdapter.install({
       cwd: ".",

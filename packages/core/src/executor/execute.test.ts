@@ -975,6 +975,36 @@ describe("executeInstallation", () => {
     expect(runs).toEqual([]);
   });
 
+  it("does not run npm ci when the required lockfile is missing", async () => {
+    const root = await tempRoot();
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeCoreInstallation(
+      [
+        {
+          type: "run_command",
+          command: "npm",
+          args: ["ci"],
+          cwd: ".",
+          description: "Install from package-lock.json",
+          requiresLockfile: "package-lock.json",
+        },
+        {
+          type: "create_file",
+          path: "should-not-exist.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Must not write",
+        },
+      ],
+      { rootDir: root, fs: testFileSystem, runProcess: recordingRunner(runs) },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (!result.ok) expect(result.error.code).toBe("LOCKFILE_CONFLICT");
+    expect(runs).toEqual([]);
+    await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
+  });
+
   it("refuses a concurrent execution before commands or mutations begin", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];

@@ -6,7 +6,8 @@ import { parseRepoSetupConfig } from "../config/parse.js";
 import { repoSetupConfigSchema } from "../config/schema.js";
 import type { PackageManager, RepoSetupConfig } from "../config/types.js";
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
-import type { InstallationOperation } from "../operations/types.js";
+import type { InstallationOperation, RunCommandOperation } from "../operations/types.js";
+import { getPackageManagerAdapter } from "../package-managers/lookup.js";
 import type { RegistryLookup } from "../resolution/registry-lookup.js";
 import type { ResolutionResult } from "../resolution/types.js";
 
@@ -129,6 +130,63 @@ export function reproductionRequirements(record: RecipeRecord): ReproductionRequ
     lockfiles: record.lockfiles,
     nativePackagesDifferByPlatform: true,
     summary: `Reproducing this install requires this recipe record and ${record.lockfiles.join(", ")}. The config alone does not freeze transitive dependencies. Native packages such as better-sqlite3 and Prisma engines are not byte-identical across operating systems or CPU architectures.`,
+  };
+}
+
+export function planLockedReproduction(
+  record: RecipeRecord,
+): { ok: true; operation: RunCommandOperation } | { ok: false; error: RepoSetupError } {
+  const expected = lockfileForPackageManager(record.config.packageManager);
+  const declared = record.lockfiles[0];
+  if (expected === undefined || declared === undefined) {
+    return {
+      ok: false,
+      error: createRepoSetupError({
+        code: "UNSUPPORTED_CONTEXT",
+        message: `${record.config.packageManager} has no lockfile, so a repeat install can still resolve different dependencies.`,
+        details: { packageManager: record.config.packageManager },
+        suggestion: "Use npm, pnpm, or uv when the install must be repeated from a lockfile.",
+      }),
+    };
+  }
+
+  if (declared !== expected) {
+    return {
+      ok: false,
+      error: createRepoSetupError({
+        code: "LOCKFILE_CONFLICT",
+        message: `Recipe lockfile ${declared} does not match package manager ${record.config.packageManager}.`,
+        details: { lockfile: declared, packageManager: record.config.packageManager },
+        suggestion: "Keep the lockfile that the package manager wrote with this recipe record.",
+      }),
+    };
+  }
+
+  const adapter = getPackageManagerAdapter(record.config.packageManager);
+  if (adapter === undefined) {
+    return {
+      ok: false,
+      error: createRepoSetupError({
+        code: "UNSUPPORTED_CONTEXT",
+        message: `Package manager "${record.config.packageManager}" cannot install from a lockfile yet.`,
+        details: { packageManager: record.config.packageManager, lockfile: declared },
+        suggestion: "Use npm, pnpm, or uv for a locked repeat install.",
+      }),
+    };
+  }
+
+  const installed = adapter.install({
+    cwd: ".",
+    description: `Install from ${declared} without updating it`,
+    frozen: true,
+  });
+  if (!installed.ok) {
+    return installed;
+  }
+
+  return {
+    ok: true,
+    operation: { ...installed.operation, requiresLockfile: declared },
   };
 }
 

@@ -16,6 +16,9 @@ import { validateCwd, validatePackageSpecs } from "./validate.js";
  * - add: `npm install [<package-spec> ...]`
  * - add (dev): `-D, --save-dev`
  * - install project: `npm install` with no package-spec (uses package-lock.json)
+ * - frozen install: `npm ci` (https://docs.npmjs.com/cli/v11/commands/npm-ci).
+ *   Requires package-lock.json, refuses to update it, and exits if it disagrees
+ *   with package.json.
  * - remove: `npm uninstall <pkg>` (aliases `unlink`, `remove`, `rm`, `r`, `un`; default `--save`)
  */
 export const npmAdapter: PackageManagerAdapter = {
@@ -54,7 +57,7 @@ export const npmAdapter: PackageManagerAdapter = {
       ok: true,
       operation: createPackageManagerCommand({
         command: "npm",
-        args: ["install"],
+        args: request.frozen === true ? ["ci"] : ["install"],
         cwd: request.cwd,
         description: request.description,
       }),

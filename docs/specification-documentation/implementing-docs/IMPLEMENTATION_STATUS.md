@@ -45,7 +45,7 @@ Researched versions are the registry releases observed on this date. Direct spec
 - [x] Identical configs produce identical plan hashes. schemaVersion 1 examples still parse and round-trip. schemaVersion 2 is rejected.
 - [x] Conflicting lockfiles are rejected before a scaffold command runs, including `npx` against an existing `pnpm-lock.yaml`. Plans do not write `.npmrc`, `.pnpmrc`, or `.env`.
 - [x] Qualified Node ranges fail before mutation. Vite 8 requires `^20.19.0 || >=22.12.0`. Vitest 5 requires `^22.12.0 || ^24.0.0 || >=26.0.0`. A version check is omitted from an add plan once that integration's work is already present.
-- [ ] A second install from the saved lockfile was not executed against the public registry in this change. The record states that the config alone does not freeze transitive dependencies.
+- [x] A locked repeat install is `npm ci`, `pnpm install --frozen-lockfile`, or `uv sync --locked`. It does not re-run generators. A missing lockfile or a lockfile for a different package manager fails before `npm ci` can delete `node_modules`. pip has no lockfile and is refused. This was not replayed against the public npm registry.
 - [ ] Published CLI `engines` stay `>=20`. The Phase 19 Node 24-only target is not the product floor until a later release phase changes it.
 
 ## Current release

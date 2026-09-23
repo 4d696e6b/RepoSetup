@@ -85,6 +85,16 @@ describe("pnpmAdapter", () => {
     ]);
   });
 
+  it("installs a frozen project without updating pnpm-lock.yaml", () => {
+    const result = pnpmAdapter.install({
+      cwd: ".",
+      description: "Install from pnpm-lock.yaml",
+      frozen: true,
+    });
+
+    expectArgs(result, ["install", "--frozen-lockfile"]);
+  });
+
   it("installs the project with pnpm install", () => {
     const result = pnpmAdapter.install({
       cwd: ".",

@@ -31,6 +31,9 @@ export async function preflightInstallation(
   const lockfileError = await checkLockfileCompatibility(operations, context);
   if (lockfileError !== undefined) return lockfileError;
 
+  const missingLockfile = await checkRequiredLockfile(operations, context);
+  if (missingLockfile !== undefined) return missingLockfile;
+
   const diskError = await checkAvailableDiskSpace(context);
   if (diskError !== undefined) {
     return diskError;
@@ -62,6 +65,31 @@ export async function preflightInstallation(
         return nonWritableError(ancestor);
       }
     }
+  }
+
+  return undefined;
+}
+
+async function checkRequiredLockfile(
+  operations: readonly InstallationOperation[],
+  context: ExecutionContext,
+): Promise<RepoSetupError | undefined> {
+  for (const operation of operations) {
+    if (operation.type !== "run_command" || operation.requiresLockfile === undefined) {
+      continue;
+    }
+
+    if (await context.fs.exists(`${context.rootDir}/${operation.requiresLockfile}`)) {
+      continue;
+    }
+
+    return createRepoSetupError({
+      code: "LOCKFILE_CONFLICT",
+      message: `Locked install requires ${operation.requiresLockfile}, and that file is not in the project.`,
+      details: { lockfile: operation.requiresLockfile },
+      suggestion:
+        "Restore the lockfile that belongs with this recipe record, then retry. RepoSetup will not resolve a new dependency graph.",
+    });
   }
 
   return undefined;

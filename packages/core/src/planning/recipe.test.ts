@@ -7,6 +7,7 @@ import type { RegistryLookup } from "../resolution/registry-lookup.js";
 import {
   createRecipeRecord,
   parseRecipeRecord,
+  planLockedReproduction,
   planRecipeRecord,
   reproductionRequirements,
 } from "./recipe.js";
@@ -119,5 +120,50 @@ describe("recipe records", () => {
     expect(planned.valid).toBe(false);
     expect(planned.operations).toEqual([]);
     expect(planned.errors[0]?.code).toBe("RECIPE_INVALID");
+  });
+
+  it("repeats an install from the lockfile instead of the generator", () => {
+    const created = createRecipeRecord({
+      config: record.config,
+      registry: registry(),
+      registryRevision: "2026-09-23",
+    });
+    expect(created.ok).toBe(true);
+    if (!created.ok) {
+      return;
+    }
+
+    const first = planLockedReproduction(created.record);
+    const second = planLockedReproduction(created.record);
+    expect(first).toEqual(second);
+    expect(first.ok).toBe(true);
+    if (!first.ok) {
+      return;
+    }
+    expect(first.operation).toMatchObject({
+      command: "pnpm",
+      args: ["install", "--frozen-lockfile"],
+      requiresLockfile: "pnpm-lock.yaml",
+    });
+    expect(JSON.stringify(first.operation)).not.toContain("create");
+    expect(JSON.stringify(first.operation)).not.toContain("@latest");
+  });
+
+  it("refuses a locked repeat when the recipe names the wrong lockfile", () => {
+    const created = createRecipeRecord({
+      config: record.config,
+      registry: registry(),
+      registryRevision: "2026-09-23",
+    });
+    expect(created.ok).toBe(true);
+    if (!created.ok) {
+      return;
+    }
+
+    const planned = planLockedReproduction({
+      ...created.record,
+      lockfiles: ["package-lock.json"],
+    });
+    expect(planned).toMatchObject({ ok: false, error: { code: "LOCKFILE_CONFLICT" } });
   });
 });

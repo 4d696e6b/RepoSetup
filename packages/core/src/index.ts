@@ -93,6 +93,7 @@ export {
   createRecipeRecord,
   lockfileForPackageManager,
   parseRecipeRecord,
+  planLockedReproduction,
   planRecipeRecord,
   recipeContentHash,
   recipeRecordSchema,

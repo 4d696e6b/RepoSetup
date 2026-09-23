@@ -36,6 +36,9 @@ export const runCommandOperationSchema = z.strictObject({
   requiresNetwork: z.boolean().optional(),
   interactive: z.boolean().optional(),
   longRunning: z.boolean().optional(),
+  requiresLockfile: z
+    .enum(["package-lock.json", "pnpm-lock.yaml", "bun.lock", "uv.lock"])
+    .optional(),
 });
 
 export const createDirectoryOperationSchema = z.strictObject({
