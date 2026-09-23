@@ -28,6 +28,9 @@ export async function preflightInstallation(
     return nonWritableError(context.rootDir);
   }
 
+  const lockfileError = await checkLockfileCompatibility(operations, context);
+  if (lockfileError !== undefined) return lockfileError;
+
   const diskError = await checkAvailableDiskSpace(context);
   if (diskError !== undefined) {
     return diskError;
@@ -61,6 +64,38 @@ export async function preflightInstallation(
     }
   }
 
+  return undefined;
+}
+
+async function checkLockfileCompatibility(
+  operations: readonly InstallationOperation[],
+  context: ExecutionContext,
+): Promise<RepoSetupError | undefined> {
+  const managers = new Set(
+    operations
+      .filter((operation) => operation.type === "install_package")
+      .map((operation) => operation.packageManager),
+  );
+  const lockfiles = [
+    { manager: "npm", file: "package-lock.json" },
+    { manager: "pnpm", file: "pnpm-lock.yaml" },
+    { manager: "bun", file: "bun.lock" },
+    { manager: "uv", file: "uv.lock" },
+  ] as const;
+  for (const lockfile of lockfiles) {
+    if (
+      managers.size > 0 &&
+      !managers.has(lockfile.manager) &&
+      (await context.fs.exists(`${context.rootDir}/${lockfile.file}`))
+    )
+      return createRepoSetupError({
+        code: "LOCKFILE_CONFLICT",
+        message: `Found ${lockfile.file}, which conflicts with this plan's package manager.`,
+        details: { lockfile: lockfile.file, managers: [...managers] },
+        suggestion:
+          "Use the package manager recorded by the existing lockfile or remove the conflicting lockfile deliberately.",
+      });
+  }
   return undefined;
 }
 
