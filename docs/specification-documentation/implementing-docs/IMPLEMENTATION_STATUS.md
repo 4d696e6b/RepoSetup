@@ -28,8 +28,9 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 - [x] The CLI resolves the `python` operation command through a platform adapter: `python3` then `python` on POSIX, and `py`, `python`, then `python3` on Windows. The first working candidate is cached and reused for prerequisite version checks and subsequent planned commands.
 - [x] Packed-artifact e2e coverage uses a parent path containing spaces and Unicode, executes both aliases on POSIX native shims, and executes both Windows `.cmd` aliases through npm's native launcher.
 - [x] Executor tests cover Unicode project-file paths below a parent directory containing spaces and Unicode; `.env.example` additions preserve an existing CRLF line-ending convention.
-- [x] The platform workflow now runs the packed-artifact e2e suite on Ubuntu, macOS, and Windows for Node 22 and 24, with Node 20 retained on Ubuntu for the supported floor.
-- [ ] Remote matrix results, Windows-native alias execution, Python 3.12–3.13 qualification, representative create/add recipe runs, and manual Windows transcript remain required before this phase can close.
+- [x] Platform CI uses explicit Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64 runners. It runs packed-artifact e2e on Node 22 and 24 across all targets, with Node 20 retained on Ubuntu for the supported floor.
+- [x] Golden CI now provisions uv and runs the complete recipe suite on every supported runner with Python 3.12 and 3.13.
+- [ ] Remote matrix results, Windows-native package-manager execution, representative create/add transcripts, and a manual Windows transcript remain required before this phase can close.
 
 ## Current release
 
