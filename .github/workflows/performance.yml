@@ -1,0 +1,77 @@
+name: Installation performance
+
+on:
+  workflow_dispatch:
+    inputs:
+      trials:
+        description: Cold and warm trials per recipe
+        required: true
+        default: "5"
+      recipes:
+        description: Comma-separated configured recipe paths
+        required: true
+        default: tests/e2e/fixtures/golden-react-vite.json,tests/e2e/fixtures/golden-express.json
+
+jobs:
+  compare:
+    name: ${{ matrix.runner }} / Node 24
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            architecture: x64
+          - runner: macos-15
+            architecture: arm64
+          - runner: windows-2025
+            architecture: x64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: candidate
+      - uses: actions/checkout@v4
+        with:
+          ref: a0e48a19479dc574c3f2bc3fba4a39608dc33e77
+          path: baseline
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
+          cache: pnpm
+          cache-dependency-path: candidate/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: candidate
+      - run: pnpm build
+        working-directory: candidate
+      - run: pnpm install --frozen-lockfile
+        working-directory: baseline
+      - run: pnpm build
+        working-directory: baseline
+      - name: Measure baseline
+        run: node scripts/benchmark-real-installs.mjs
+        working-directory: candidate
+        env:
+          REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK: "1"
+          REPOSETUP_REAL_BENCHMARK_TRIALS: ${{ inputs.trials }}
+          REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes }}
+          REPOSETUP_REAL_BENCHMARK_OUTPUT: ../baseline-real-installs.json
+          REPOSETUP_BENCHMARK_WORKSPACE_ROOT: ../baseline
+          REPOSETUP_BENCHMARK_CLI_BIN: ../baseline/packages/cli/dist/bin.js
+      - name: Measure candidate
+        run: node scripts/benchmark-real-installs.mjs
+        working-directory: candidate
+        env:
+          REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK: "1"
+          REPOSETUP_REAL_BENCHMARK_TRIALS: ${{ inputs.trials }}
+          REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes }}
+          REPOSETUP_REAL_BENCHMARK_OUTPUT: ../candidate-real-installs.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installation-performance-${{ matrix.runner }}
+          path: |
+            baseline-real-installs.json
+            candidate-real-installs.json
+          if-no-files-found: error

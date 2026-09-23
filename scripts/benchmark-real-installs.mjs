@@ -20,8 +20,10 @@ const recipes =
     : allRecipes.filter((recipe) => selectedRecipes.includes(recipe));
 const trials = Number(process.env.REPOSETUP_REAL_BENCHMARK_TRIALS ?? 5);
 const outputPath = process.env.REPOSETUP_REAL_BENCHMARK_OUTPUT ?? "benchmark-real-installs.json";
-const workspaceRoot = resolve(process.cwd());
-const cliBin = resolve(workspaceRoot, "packages/cli/dist/bin.js");
+const workspaceRoot = resolve(process.env.REPOSETUP_BENCHMARK_WORKSPACE_ROOT ?? process.cwd());
+const cliBin = resolve(
+  process.env.REPOSETUP_BENCHMARK_CLI_BIN ?? join(workspaceRoot, "packages/cli/dist/bin.js"),
+);
 
 if (process.env.REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK !== "1") {
   throw new Error(
