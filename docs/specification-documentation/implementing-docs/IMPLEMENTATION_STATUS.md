@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 22 — Reproducible recipes and compatibility enforcement: in progress.** Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 22 — Reproducible recipes and compatibility enforcement: complete (engines floor deferred).** Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
 
@@ -45,8 +45,12 @@ Researched versions are the registry releases observed on this date. Direct spec
 - [x] Identical configs produce identical plan hashes. schemaVersion 1 examples still parse and round-trip. schemaVersion 2 is rejected.
 - [x] Conflicting lockfiles are rejected before a scaffold command runs, including `npx` against an existing `pnpm-lock.yaml`. Plans do not write `.npmrc`, `.pnpmrc`, or `.env`.
 - [x] Qualified Node ranges fail before mutation. Vite 8 requires `^20.19.0 || >=22.12.0`. Vitest 5 requires `^22.12.0 || ^24.0.0 || >=26.0.0`. A version check is omitted from an add plan once that integration's work is already present.
-- [x] A locked repeat install is `npm ci`, `pnpm install --frozen-lockfile`, or `uv sync --locked`. It does not re-run generators. A missing lockfile or a lockfile for a different package manager fails before `npm ci` can delete `node_modules`. pip has no lockfile and is refused. This was not replayed against the public npm registry.
-- [ ] Published CLI `engines` stay `>=20`. The Phase 19 Node 24-only target is not the product floor until a later release phase changes it.
+- [x] A locked repeat install is `npm ci`, `pnpm install --frozen-lockfile`, or `uv sync --locked`. It does not re-run generators. A missing lockfile or a lockfile for a different package manager fails before `npm ci` can delete `node_modules`. pip has no lockfile and is refused.
+- [x] Hermetic evidence: a local `file:` package is installed twice with `npm ci` through the executor. The lockfile SHA-256 stays identical, the user `.npmrc` is unchanged, and a drifted `package.json` fails before the lockfile can change. This does not claim a public-registry cold install.
+- [x] Experimental catalog IDs that still installed unversioned packages (`fastify`, `mongoose`, `drizzle`) now pin researched direct versions so they cannot quietly float while remaining experimental.
+- [ ] Published CLI `engines` stay `>=20`. Raising the floor to Node 24 is deferred to a later release phase after the Phase 19 qualification target is the product claim.
+
+Phase 22 implementation gates for reproducible recipes are complete. The Node 24 engines floor remains an explicit deferred product-metadata change.
 
 ## Current release
 
@@ -75,7 +79,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 19 — Baseline and acceptance scope
 - [x] Phase 20 — Safe executor and adapter boundaries
 - [x] Phase 21 — Cross-platform execution
-- [ ] Phase 22 — Reproducible recipes and compatibility
+- [x] Phase 22 — Reproducible recipes and compatibility
 - [ ] Phase 23 — Measured installation performance
 - [ ] Phase 24 — Daily CLI usability and recovery guidance
 - [ ] Phase 25 — Existing integration qualification
