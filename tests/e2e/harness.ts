@@ -72,7 +72,7 @@ function windowsLaunch(
   const invocation = [command, ...args].map(quoteWindowsToken).join(" ");
   return {
     command: process.env.ComSpec ?? "cmd.exe",
-    args: ["/d", "/s", "/c", invocation],
+    args: ["/d", "/c", invocation],
   };
 }
 

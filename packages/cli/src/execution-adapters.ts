@@ -320,7 +320,7 @@ export function resolveWindowsLaunch(
 
   return {
     command: environment.ComSpec ?? "cmd.exe",
-    args: ["/d", "/s", "/c", invocation],
+    args: ["/d", "/c", invocation],
   };
 }
 
