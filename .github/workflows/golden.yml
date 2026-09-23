@@ -9,17 +9,29 @@ on:
 
 jobs:
   golden:
-    name: ${{ matrix.runner }} / ${{ matrix.architecture }}
+    name: ${{ matrix.runner }} / ${{ matrix.architecture }} / Python ${{ matrix.python }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - runner: ubuntu-24.04
             architecture: x64
+            python: "3.12"
+          - runner: ubuntu-24.04
+            architecture: x64
+            python: "3.13"
           - runner: macos-15
             architecture: arm64
+            python: "3.12"
+          - runner: macos-15
+            architecture: arm64
+            python: "3.13"
           - runner: windows-2025
             architecture: x64
+            python: "3.12"
+          - runner: windows-2025
+            architecture: x64
+            python: "3.13"
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
     steps:
@@ -32,7 +44,7 @@ jobs:
           cache: pnpm
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python }}
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
