@@ -254,7 +254,7 @@ describe("runCli failure qualifications", () => {
       cwd: root,
       registry: createRegistry([framework]),
       io: captured.io,
-      commandExists: async (command) => command !== "python3" && command !== "python",
+      commandExists: async (command) => !["py", "python3", "python"].includes(command),
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.PREREQUISITE_MISSING);
