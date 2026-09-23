@@ -78,7 +78,7 @@ const testFileSystem: ExecutorFileSystem = {
 function runProcess(cacheDir: string): ProcessRunner {
   return (request) =>
     new Promise((resolve, reject) => {
-      const child = spawn(request.command, [...request.args], {
+      const child = spawn(nodePackageManagerCommand(request.command), [...request.args], {
         cwd: request.cwd,
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
@@ -200,6 +200,10 @@ function lockedNpmInstall() {
   return planned.operation;
 }
 
+function nodePackageManagerCommand(command: string): string {
+  return process.platform === "win32" && command === "npm" ? "npm.cmd" : command;
+}
+
 function npmEnv(cacheDir: string): NodeJS.ProcessEnv {
   return {
     ...process.env,
@@ -220,7 +224,7 @@ function runNpm(
   args: string[],
 ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
-    const child = spawn("npm", args, {
+    const child = spawn(nodePackageManagerCommand("npm"), args, {
       cwd,
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
