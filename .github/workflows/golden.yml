@@ -9,14 +9,26 @@ on:
 
 jobs:
   golden:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.runner }} / ${{ matrix.architecture }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            architecture: x64
+          - runner: macos-15
+            architecture: arm64
+          - runner: windows-2025
+            architecture: x64
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
           cache: pnpm
       - uses: actions/setup-python@v5
         with:
