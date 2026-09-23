@@ -27,7 +27,8 @@
     "test:e2e": "pnpm build && vitest run --config tests/e2e/vitest.config.ts",
     "test:golden": "pnpm build && vitest run --config tests/e2e/vitest.golden.config.ts",
     "prepublishOnly": "node -e \"process.stderr.write('Do not publish the workspace root. From packages/cli run: npm publish --access public\\n'); process.exit(1)\"",
-    "benchmark:plans": "pnpm build && node scripts/benchmark-plans.mjs"
+    "benchmark:plans": "pnpm build && node scripts/benchmark-plans.mjs",
+    "benchmark:real-installs": "pnpm build && node scripts/benchmark-real-installs.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
