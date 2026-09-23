@@ -59,6 +59,7 @@ describe("golden Next.js/SQLite stack", () => {
       [
         "pnpm",
         "install",
+        "--prefer-offline",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
         "--allow-build=esbuild",
@@ -75,7 +76,7 @@ describe("golden Next.js/SQLite stack", () => {
         "../generated/prisma",
       ],
       ["pnpm", "exec", "prisma", "generate"],
-      ["pnpm", "install", "--allow-build=esbuild"],
+      ["pnpm", "install", "--prefer-offline", "--allow-build=esbuild"],
       ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
       ["pnpm", "add", "zod@4.6.5"],
     ]);
