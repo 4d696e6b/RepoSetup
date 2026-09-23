@@ -73,7 +73,7 @@ describe("integration plans", () => {
       [
         "pnpm",
         "create",
-        "next-app@latest",
+        "next-app@16.3.5",
         ".",
         "--ts",
         "--eslint",
@@ -101,7 +101,7 @@ describe("integration plans", () => {
       [
         "npx",
         "--yes",
-        "create-next-app@latest",
+        "create-next-app@16.3.5",
         "app",
         "--js",
         "--eslint",
