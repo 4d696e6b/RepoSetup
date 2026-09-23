@@ -289,6 +289,29 @@ describe("executeInstallation", () => {
     await expect(readFile(path.join(outside, "escaped.txt"), "utf8")).rejects.toThrow();
   });
 
+  it("writes Unicode paths below a project root with spaces in its parent path", async () => {
+    const parent = await mkdtemp(path.join(os.tmpdir(), "RepoSetup parent 日本語 path-"));
+    tempDirs.push(parent);
+    const root = path.join(parent, "project");
+    await mkdir(root);
+
+    const result = await executeInstallation(
+      [
+        {
+          type: "create_file",
+          path: "src/日本語.txt",
+          content: "portable\n",
+          behavior: "fail_if_exists",
+          description: "Write a Unicode project file",
+        },
+      ],
+      { rootDir: root, runProcess: recordingRunner([]) },
+    );
+
+    expect(result).toMatchObject({ ok: true, executed: 1 });
+    expect(await readFile(path.join(root, "src", "日本語.txt"), "utf8")).toBe("portable\n");
+  });
+
   it("refuses a final-component symlink without writing outside the root", async () => {
     const root = await tempRoot();
     const outside = await tempRoot();
