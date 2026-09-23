@@ -3,6 +3,7 @@ name: Platform
 on:
   push:
     branches: [main, dev, "release/**"]
+  pull_request:
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
