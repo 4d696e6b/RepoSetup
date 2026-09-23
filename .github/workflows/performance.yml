@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/performance.yml"
       - "scripts/benchmark-real-installs.mjs"
+      - "packages/cli/src/execution-adapters.ts"
   workflow_dispatch:
     inputs:
       trials:
