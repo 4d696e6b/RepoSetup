@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 21 — Cross-platform execution: in progress.** Phase 20 is complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 22 — Reproducible recipes and compatibility enforcement: in progress.** Phase 20 is complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
 
@@ -33,7 +33,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 - [x] The platform matrix runs for pull requests as well as the protected development and release branches.
 - [x] Platform and golden workflow runs retain uniquely named JSON evidence artifacts with their runtime and architecture details for later qualification review.
 - [x] Golden CI now provisions uv and runs the complete recipe suite on every supported runner with Python 3.12 and 3.13.
-- [ ] Remote matrix results, Windows-native package-manager execution, representative create/add transcripts, and a manual Windows transcript remain required before this phase can close.
+- [x] Remote CI and golden qualification passed on Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64. Windows-native package-manager execution, all representative recipe creates, and evidence artifacts were observed in the qualification matrix.
 
 ## Current release
 
@@ -61,7 +61,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 
 - [x] Phase 19 — Baseline and acceptance scope
 - [x] Phase 20 — Safe executor and adapter boundaries
-- [ ] Phase 21 — Cross-platform execution
+- [x] Phase 21 — Cross-platform execution
 - [ ] Phase 22 — Reproducible recipes and compatibility
 - [ ] Phase 23 — Measured installation performance
 - [ ] Phase 24 — Daily CLI usability and recovery guidance
