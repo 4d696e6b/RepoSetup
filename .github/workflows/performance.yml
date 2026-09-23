@@ -1,6 +1,9 @@
 name: Installation performance
 
 on:
+  pull_request:
+    paths:
+      - ".github/workflows/performance.yml"
   workflow_dispatch:
     inputs:
       trials:
@@ -55,8 +58,8 @@ jobs:
         working-directory: candidate
         env:
           REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK: "1"
-          REPOSETUP_REAL_BENCHMARK_TRIALS: ${{ inputs.trials }}
-          REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes }}
+          REPOSETUP_REAL_BENCHMARK_TRIALS: ${{ inputs.trials || '5' }}
+          REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes || 'tests/e2e/fixtures/golden-react-vite.json,tests/e2e/fixtures/golden-express.json' }}
           REPOSETUP_REAL_BENCHMARK_OUTPUT: ../baseline-real-installs.json
           REPOSETUP_BENCHMARK_WORKSPACE_ROOT: ../baseline
           REPOSETUP_BENCHMARK_CLI_BIN: ../baseline/packages/cli/dist/bin.js
@@ -65,8 +68,8 @@ jobs:
         working-directory: candidate
         env:
           REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK: "1"
-          REPOSETUP_REAL_BENCHMARK_TRIALS: ${{ inputs.trials }}
-          REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes }}
+          REPOSETUP_REAL_BENCHMARK_TRIALS: ${{ inputs.trials || '5' }}
+          REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes || 'tests/e2e/fixtures/golden-react-vite.json,tests/e2e/fixtures/golden-express.json' }}
           REPOSETUP_REAL_BENCHMARK_OUTPUT: ../candidate-real-installs.json
       - uses: actions/upload-artifact@v4
         with:
