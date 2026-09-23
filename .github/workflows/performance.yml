@@ -40,6 +40,20 @@ jobs:
         with:
           ref: a0e48a19479dc574c3f2bc3fba4a39608dc33e77
           path: baseline
+      # The Phase 19 process runner predates the Windows `Path` casing fix from
+      # Phase 21. This harness-only compatibility change lets it find pnpm; it
+      # does not change its package plan or installation operations.
+      - name: Normalize the Phase 19 Windows launcher environment
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: baseline
+        run: |
+          $file = 'packages/core/src/executor/process.ts'
+          $source = Get-Content $file -Raw
+          $old = 'env: process.env,'
+          $new = 'env: { ...process.env, PATH: process.env.Path ?? process.env.PATH },'
+          if (-not $source.Contains($old)) { throw 'Phase 19 process runner shape changed unexpectedly.' }
+          Set-Content -Path $file -Value $source.Replace($old, $new) -NoNewline
       - uses: pnpm/action-setup@v4
         with:
           version: 12.5.1
