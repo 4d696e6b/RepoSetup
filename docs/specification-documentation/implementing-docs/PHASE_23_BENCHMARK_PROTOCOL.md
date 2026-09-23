@@ -18,6 +18,21 @@ This measurement never writes a generated project, contacts a registry, or launc
 
 The default is five trials. `REPOSETUP_BENCHMARK_TRIALS` must be a positive integer. `REPOSETUP_BENCHMARK_OUTPUT` selects a result path so benchmark evidence can be stored outside the working tree or attached to a qualification run.
 
+## Controlled real-install collector
+
+The collector runs real `create` operations only after an explicit opt-in. It creates fresh temporary output directories and benchmark-owned npm, pnpm/XDG, and uv cache directories, then removes only those directories when complete. It does not delete or alter the developer's normal package-manager cache.
+
+```sh
+REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK=1 \
+REPOSETUP_REAL_BENCHMARK_TRIALS=5 \
+REPOSETUP_REAL_BENCHMARK_OUTPUT=tmp/phase23-real-installs.json \
+pnpm benchmark:real-installs
+```
+
+For every required recipe, the collector records five fresh-cache trials and five warm-cache trials. A cold trial resets only the collector's cache for that recipe; a warm trial reuses its immediately preceding collector-owned cache. Every trial uses a fresh project directory and has a 30-minute command limit. The report records source identity, host details, config hash, elapsed time, exit code, timeout status, and bounded diagnostic output. A failed result is retained rather than retried by the collector.
+
+The collector intentionally does not claim peak child-process memory, phase-level setup/verification timing, manager cache-hit counts, or public-network conditions. Record those fields from the CI environment or package-manager reports alongside the raw JSON before making an acceptance decision.
+
 ## Release-comparison procedure
 
 Run the comparison on Ubuntu 24.04 x64, macOS 14 arm64, and Windows 11 x64. Use the Phase 19 baseline commit `a0e48a19479dc574c3f2bc3fba4a39608dc33e77` and the exact candidate commit. Record host model, OS image/version, Node, npm, pnpm, Python, uv, registry endpoint, package-manager settings, available disk, and a brief network-condition note.
