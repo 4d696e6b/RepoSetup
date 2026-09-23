@@ -42,7 +42,9 @@ try {
           await rm(cacheRoot, { recursive: true, force: true });
         }
         await mkdir(cacheRoot, { recursive: true });
-        const projectRoot = await mkdtemp(join(benchmarkRoot, "projects", `${recipeId(recipe)}-`));
+        const trialRoot = await mkdtemp(join(benchmarkRoot, "projects", `${recipeId(recipe)}-`));
+        const projectRoot = join(trialRoot, "project");
+        await mkdir(projectRoot);
         const started = process.hrtime.bigint();
         const result = spawnSync(
           process.execPath,
@@ -62,7 +64,7 @@ try {
           timedOut: result.signal === "SIGTERM",
           stderr: trimOutput(result.stderr ?? result.error?.message ?? ""),
         });
-        await rm(projectRoot, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+        await rm(trialRoot, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
       }
       rows.push({
         recipe,
