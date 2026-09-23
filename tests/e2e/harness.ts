@@ -69,7 +69,14 @@ function windowsLaunch(
     return { command, args };
   }
 
-  const invocation = [command, ...args].map(quoteWindowsToken).join(" ");
+  if ([".exe", ".com"].includes(path.win32.extname(command).toLowerCase())) {
+    return { command, args };
+  }
+  if (!/^[A-Za-z0-9._-]+$/.test(command)) {
+    throw new Error(`Unsafe Windows test executable: ${command}`);
+  }
+
+  const invocation = [command, ...args.map(quoteWindowsToken)].join(" ");
   return {
     command: process.env.ComSpec ?? "cmd.exe",
     args: ["/d", "/c", invocation],
