@@ -92,6 +92,7 @@ export async function handleRemove(input: {
     rootDir: planned.projectRoot,
     fs: input.deps.executorFs,
     runProcess: input.deps.runProcess,
+    resolveExecutable: input.deps.resolveExecutable,
     executionLock: input.deps.executionLock,
     executionJournal: input.deps.executionJournal,
     ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),

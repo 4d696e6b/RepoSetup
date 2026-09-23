@@ -108,6 +108,7 @@ export type {
   ExecutionEvent,
   ExecutionJournal,
   ExecutionJournalEntry,
+  ExecutableResolver,
   ExecutorFileSystem,
   ExecutorLogger,
   ProcessRunRequest,

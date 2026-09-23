@@ -9,6 +9,7 @@ import {
   createDefaultExecutorFileSystem,
   createDefaultExecutionLock,
   createDefaultExecutionJournal,
+  createDefaultExecutableResolver,
   createDefaultProcessRunner,
 } from "./execution-adapters.js";
 
@@ -199,5 +200,26 @@ describe("createDefaultProcessRunner", () => {
     expect(result.exitCode).toBe(0);
     expect(output.join("")).toContain("TOKEN=<redacted>");
     expect(output.join("")).not.toContain("super-secret");
+  });
+});
+
+describe("createDefaultExecutableResolver", () => {
+  it("selects and caches the first platform Python candidate", async () => {
+    const runs: string[] = [];
+    const expected = process.platform === "win32" ? "python" : "python3";
+    const resolver = createDefaultExecutableResolver(async (request) => {
+      runs.push(request.command);
+      return {
+        exitCode: request.command === expected ? 0 : 1,
+        stdout: "Python 3.12.0\n",
+        stderr: "",
+        ...(request.command === expected ? {} : { notFound: true }),
+      };
+    });
+
+    expect(await resolver("python")).toBe(expected);
+    expect(await resolver("python")).toBe(expected);
+    expect(await resolver("pnpm")).toBe("pnpm");
+    expect(runs).toEqual(process.platform === "win32" ? ["py", "python"] : ["python3"]);
   });
 });

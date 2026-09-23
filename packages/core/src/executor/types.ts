@@ -41,6 +41,8 @@ export interface ProcessRunResult {
 
 export type ProcessRunner = (request: ProcessRunRequest) => Promise<ProcessRunResult>;
 
+export type ExecutableResolver = (command: string) => Promise<string | undefined>;
+
 export interface ExecutionLockHandle {
   release(): Promise<void>;
 }
@@ -101,6 +103,7 @@ export interface ExecuteOptions {
   rootDir: string;
   fs: ExecutorFileSystem;
   runProcess: ProcessRunner;
+  resolveExecutable?: ExecutableResolver;
   executionLock?: ExecutionLock;
   executionJournal?: ExecutionJournal;
   onEvent?: (event: ExecutionEvent) => void;
@@ -116,6 +119,7 @@ export interface ExecutionContext {
   rootDir: string;
   fs: ExecutorFileSystem;
   runProcess: ProcessRunner;
+  resolveExecutable?: ExecutableResolver;
   commandExists?: (command: string) => Promise<boolean>;
   logger: ExecutorLogger;
   logs: string[];

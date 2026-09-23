@@ -4,6 +4,7 @@ import type {
   ExecutorFileSystem,
   ExecutionLock,
   ExecutionJournal,
+  ExecutableResolver,
   ProcessRunner,
   RuntimeId,
 } from "@reposetup/core";
@@ -48,6 +49,7 @@ export interface CliDeps {
   executionLock?: ExecutionLock;
   executionJournal?: ExecutionJournal;
   commandExists?: (command: string) => Promise<boolean>;
+  resolveExecutable?: ExecutableResolver;
   signal?: AbortSignal;
   cwd?: string;
 }
@@ -63,6 +65,7 @@ export interface ResolvedCliDeps {
   executionLock: ExecutionLock;
   executionJournal: ExecutionJournal;
   commandExists: (command: string) => Promise<boolean>;
+  resolveExecutable: ExecutableResolver;
   signal?: AbortSignal;
   cwd: string;
 }

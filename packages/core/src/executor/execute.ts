@@ -41,6 +41,9 @@ export async function executeInstallation(
   if (options.commandExists !== undefined) {
     context.commandExists = options.commandExists;
   }
+  if (options.resolveExecutable !== undefined) {
+    context.resolveExecutable = options.resolveExecutable;
+  }
   if (options.signal !== undefined) {
     context.signal = options.signal;
   }

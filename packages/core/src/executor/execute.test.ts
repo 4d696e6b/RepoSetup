@@ -662,6 +662,35 @@ describe("executeInstallation", () => {
     expect(runs).toEqual([]);
   });
 
+  it("uses the selected Python interpreter for prerequisite and planned commands", async () => {
+    const root = await tempRoot();
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeInstallation(
+      [
+        { type: "check_prerequisite", id: "python", description: "Require Python" },
+        {
+          type: "run_command",
+          command: "python",
+          args: ["-m", "pip", "--version"],
+          cwd: ".",
+          description: "Inspect pip",
+        },
+      ],
+      {
+        rootDir: root,
+        commandExists: async (command) => command === "python3",
+        resolveExecutable: async (command) => (command === "python" ? "python3" : command),
+        runProcess: recordingRunner(runs, { stdout: "Python 3.12.0\n" }),
+      },
+    );
+
+    expect(result).toMatchObject({ ok: true, executed: 2 });
+    expect(runs).toEqual([
+      expect.objectContaining({ command: "python3", args: ["--version"] }),
+      expect.objectContaining({ command: "python3", args: ["-m", "pip", "--version"] }),
+    ]);
+  });
+
   it("rejects a prerequisite version below the documented minimum before mutation", async () => {
     const root = await tempRoot();
     const result = await executeInstallation(

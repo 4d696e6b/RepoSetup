@@ -11,6 +11,7 @@ import {
   createDefaultCommandExists,
   createDefaultExecutionLock,
   createDefaultExecutionJournal,
+  createDefaultExecutableResolver,
   createDefaultExecutorFileSystem,
   createDefaultProcessRunner,
 } from "./execution-adapters.js";
@@ -250,6 +251,7 @@ function resolveDeps(deps: CliDeps): ResolvedCliDeps {
     executionLock: deps.executionLock ?? createDefaultExecutionLock(),
     executionJournal: deps.executionJournal ?? createDefaultExecutionJournal(),
     commandExists: deps.commandExists ?? createDefaultCommandExists(runProcess),
+    resolveExecutable: deps.resolveExecutable ?? createDefaultExecutableResolver(runProcess),
     cwd: deps.cwd ?? process.cwd(),
   };
 

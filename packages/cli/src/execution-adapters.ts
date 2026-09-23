@@ -21,6 +21,7 @@ import {
   redactProcessOutput,
   type ExecutionLock,
   type ExecutionJournal,
+  type ExecutableResolver,
   type ExecutorFileSystem,
   type ProcessRunner,
 } from "@reposetup/core";
@@ -295,6 +296,39 @@ export function createDefaultCommandExists(
     });
     return result.notFound !== true && result.exitCode === 0;
   };
+}
+
+export function createDefaultExecutableResolver(runProcess: ProcessRunner): ExecutableResolver {
+  let python: string | undefined;
+  let attemptedPython = false;
+
+  return async (command) => {
+    if (command !== "python") {
+      return command;
+    }
+    if (attemptedPython) {
+      return python;
+    }
+
+    attemptedPython = true;
+    for (const candidate of pythonCandidates()) {
+      const result = await runProcess({
+        command: candidate,
+        args: ["--version"],
+        cwd: process.cwd(),
+      });
+      if (result.notFound !== true && result.exitCode === 0) {
+        python = candidate;
+        return python;
+      }
+    }
+
+    return undefined;
+  };
+}
+
+function pythonCandidates(): readonly string[] {
+  return process.platform === "win32" ? ["py", "python", "python3"] : ["python3", "python"];
 }
 
 function isNotFound(error: unknown): boolean {

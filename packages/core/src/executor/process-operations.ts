@@ -30,12 +30,8 @@ export async function executeCheckPrerequisite(
     });
   }
 
-  const exists =
-    context.commandExists === undefined
-      ? await binaryExists(spec.command, context)
-      : await context.commandExists(spec.command);
-
-  if (!exists) {
+  const command = await resolveExecutable(spec.command, context);
+  if (command === undefined) {
     return createRepoSetupError({
       code: "PREREQUISITE_MISSING",
       message: `${spec.command} was not found on PATH.`,
@@ -44,15 +40,29 @@ export async function executeCheckPrerequisite(
     });
   }
 
+  const exists =
+    context.commandExists === undefined
+      ? await binaryExists(command, context)
+      : await context.commandExists(command);
+
+  if (!exists) {
+    return createRepoSetupError({
+      code: "PREREQUISITE_MISSING",
+      message: `${command} was not found on PATH.`,
+      details: { id: operation.id, command },
+      suggestion: spec.hint,
+    });
+  }
+
   if (spec.minimumVersion !== undefined) {
-    const version = await readCommandVersion(spec.command, context);
+    const version = await readCommandVersion(command, context);
     if (version === undefined || isVersionBelow(version, spec.minimumVersion)) {
       return createRepoSetupError({
         code: "PREREQUISITE_MISSING",
-        message: `${spec.command} does not meet the required version ${formatVersion(spec.minimumVersion)} or later.`,
+        message: `${command} does not meet the required version ${formatVersion(spec.minimumVersion)} or later.`,
         details: {
           id: operation.id,
-          command: spec.command,
+          command,
           ...(version === undefined ? {} : { detectedVersion: formatVersion(version) }),
           minimumVersion: formatVersion(spec.minimumVersion),
         },
@@ -80,7 +90,11 @@ export async function executeRunCommand(
   operation: RunCommandOperation,
   context: ExecutionContext,
 ): Promise<RepoSetupError | undefined> {
-  const commandError = validateCommand(operation.command, operation.args);
+  const command = await resolveExecutable(operation.command, context);
+  if (command === undefined) {
+    return missingCommand(operation.command);
+  }
+  const commandError = validateCommand(command, operation.args);
   if (commandError !== undefined) {
     return commandError;
   }
@@ -94,10 +108,10 @@ export async function executeRunCommand(
     return realPath.error;
   }
 
-  context.logger.verbose(`${operation.command} ${operation.args.join(" ")}`);
+  context.logger.verbose(`${command} ${operation.args.join(" ")}`);
 
   const result = await context.runProcess({
-    command: operation.command,
+    command,
     args: operation.args,
     cwd: cwd.absolutePath,
     ...(context.signal === undefined ? {} : { signal: context.signal }),
@@ -105,7 +119,7 @@ export async function executeRunCommand(
     ...timeoutFor(operation, context),
   });
 
-  return commandFailure(operation.command, operation.args, result, context);
+  return commandFailure(command, operation.args, result, context);
 }
 
 export async function executeVerify(
@@ -117,7 +131,11 @@ export async function executeVerify(
   }
 
   const args = operation.args ?? [];
-  const commandError = validateCommand(operation.command, args);
+  const command = await resolveExecutable(operation.command, context);
+  if (command === undefined) {
+    return missingCommand(operation.command);
+  }
+  const commandError = validateCommand(command, args);
   if (commandError !== undefined) {
     return commandError;
   }
@@ -131,10 +149,10 @@ export async function executeVerify(
     return realPath.error;
   }
 
-  context.logger.verbose(`${operation.command} ${args.join(" ")}`);
+  context.logger.verbose(`${command} ${args.join(" ")}`);
 
   const result = await context.runProcess({
-    command: operation.command,
+    command,
     args,
     cwd: cwd.absolutePath,
     ...(context.signal === undefined ? {} : { signal: context.signal }),
@@ -142,7 +160,7 @@ export async function executeVerify(
     ...timeoutFor(operation, context),
   });
 
-  const failed = commandFailure(operation.command, args, result, context);
+  const failed = commandFailure(command, args, result, context);
   if (failed === undefined) {
     return undefined;
   }
@@ -187,6 +205,23 @@ function validateCommand(command: string, args: readonly string[]): RepoSetupErr
   }
 
   return undefined;
+}
+
+async function resolveExecutable(
+  command: string,
+  context: ExecutionContext,
+): Promise<string | undefined> {
+  return context.resolveExecutable === undefined ? command : context.resolveExecutable(command);
+}
+
+function missingCommand(command: string): RepoSetupError {
+  return createRepoSetupError({
+    code: "COMMAND_FAILED",
+    message: `Command "${command}" was not found.`,
+    details: { command },
+    suggestion:
+      "Install the executable and ensure it is on PATH. RepoSetup will not install it for you.",
+  });
 }
 
 async function binaryExists(command: string, context: ExecutionContext): Promise<boolean> {

@@ -72,6 +72,7 @@ export async function handleCreate(input: {
     rootDir: input.deps.cwd,
     fs: input.deps.executorFs,
     runProcess: input.deps.runProcess,
+    resolveExecutable: input.deps.resolveExecutable,
     executionLock: input.deps.executionLock,
     executionJournal: input.deps.executionJournal,
     ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
