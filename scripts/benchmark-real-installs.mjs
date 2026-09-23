@@ -115,8 +115,12 @@ if (rows.some((row) => row.measurements.some((measurement) => measurement.exitCo
 }
 
 function benchmarkEnvironment(cacheRoot) {
+  const executablePath = process.env.PATH ?? process.env.Path;
   return {
     ...process.env,
+    // Phase 19 only read the uppercase spelling, while Windows runners usually
+    // expose the executable path as `Path`. Normalize it for a fair comparison.
+    ...(executablePath === undefined ? {} : { PATH: executablePath }),
     // Package managers default to frozen lockfiles in CI. The collector measures
     // fresh project creation, where the first install must create that lockfile.
     CI: "false",

@@ -345,7 +345,7 @@ describe("Phase 13 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
-        ["pnpm", "install", "--prefer-offline"],
+        ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
         ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"],
       ]),
     );
@@ -369,7 +369,7 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "install", "--prefer-offline"],
+        ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
         [
           "pnpm",
           "exec",

@@ -534,7 +534,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain(
       "modify_json  Assemble package.json dependencies before a consolidated install",
     );
-    expect(captured.stdout()).toContain("pnpm install --prefer-offline");
+    expect(captured.stdout()).toContain("pnpm install --no-frozen-lockfile --prefer-offline");
     expect(captured.stdout()).toContain("pnpm exec prisma generate");
     expect(captured.stdout()).toContain("pnpm exec vitest run --passWithNoTests");
     expect(captured.stdout()).toContain("No files or commands were executed.");
