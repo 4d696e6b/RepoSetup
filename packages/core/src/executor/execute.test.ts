@@ -1005,6 +1005,34 @@ describe("executeInstallation", () => {
     await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
   });
 
+  it("retries one classified transient failure for a locked install", async () => {
+    const root = await tempRoot();
+    await writeFile(path.join(root, "package-lock.json"), "{}\n");
+    let attempts = 0;
+    const result = await executeCoreInstallation(
+      [
+        {
+          type: "run_command",
+          command: "npm",
+          args: ["ci"],
+          cwd: ".",
+          description: "Locked install",
+          requiresLockfile: "package-lock.json",
+        },
+      ],
+      {
+        rootDir: root,
+        fs: testFileSystem,
+        runProcess: async () =>
+          ++attempts === 1
+            ? { exitCode: 1, stdout: "", stderr: "ETIMEDOUT" }
+            : { exitCode: 0, stdout: "", stderr: "" },
+      },
+    );
+    expect(result).toMatchObject({ ok: true, executed: 1 });
+    expect(attempts).toBe(2);
+  });
+
   it("refuses a concurrent execution before commands or mutations begin", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];

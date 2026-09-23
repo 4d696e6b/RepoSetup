@@ -12,7 +12,11 @@ import { pathPrerequisite } from "../prerequisites/path.js";
 import { isSupportedVersionRange, versionSatisfiesRange } from "../prerequisites/version-range.js";
 
 import { isSafeExecutableName, isSafeProcessArg } from "./command-name.js";
-import { commandFailureSuggestion, summarizeFailedProcessOutput } from "./output-snippet.js";
+import {
+  commandFailureSuggestion,
+  isTransientDownloadFailure,
+  summarizeFailedProcessOutput,
+} from "./output-snippet.js";
 import { assertRealPathInsideRoot, resolveInsideRoot } from "./resolve-path.js";
 import type { ExecutionContext, ProcessRunRequest, ProcessRunResult } from "./types.js";
 
@@ -139,7 +143,7 @@ export async function executeRunCommand(
 
   context.logger.verbose(`${command} ${operation.args.join(" ")}`);
 
-  const result = await context.runProcess({
+  let result = await context.runProcess({
     command,
     args: operation.args,
     cwd: cwd.absolutePath,
@@ -147,6 +151,24 @@ export async function executeRunCommand(
     ...outputHandler(context),
     ...timeoutFor(operation, context),
   });
+
+  // Locked installs do not resolve a new dependency graph, so one retry is safe
+  // for a classified transient download failure. Generators and package adds are
+  // never replayed automatically.
+  if (
+    operation.requiresLockfile !== undefined &&
+    isTransientDownloadFailure(summarizeFailedProcessOutput(result.stdout, result.stderr))
+  ) {
+    await new Promise<void>((resolve) => setTimeout(resolve, 250));
+    result = await context.runProcess({
+      command,
+      args: operation.args,
+      cwd: cwd.absolutePath,
+      ...(context.signal === undefined ? {} : { signal: context.signal }),
+      ...outputHandler(context),
+      ...timeoutFor(operation, context),
+    });
+  }
 
   return commandFailure(command, operation.args, result, context);
 }
