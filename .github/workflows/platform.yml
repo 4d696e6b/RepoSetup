@@ -50,3 +50,14 @@ jobs:
       - run: pnpm build
       - run: pnpm test
       - run: pnpm test:e2e
+      - name: Write platform evidence
+        run: >-
+          node -e "require('node:fs').writeFileSync('platform-evidence.json',
+          JSON.stringify({ platform: process.platform, architecture: process.arch,
+          node: process.version, pnpm: require('node:child_process').execFileSync('pnpm',
+          ['--version'], { encoding: 'utf8' }).trim() }, null, 2) + '\\n')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: platform-evidence-${{ matrix.runner }}-node-${{ matrix.node }}
+          path: platform-evidence.json
+          if-no-files-found: error

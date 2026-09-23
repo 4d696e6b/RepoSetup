@@ -53,3 +53,15 @@ jobs:
       - run: pnpm test:golden
         env:
           CI: true
+      - name: Write golden qualification evidence
+        run: >-
+          node -e "require('node:fs').writeFileSync('golden-evidence.json',
+          JSON.stringify({ platform: process.platform, architecture: process.arch,
+          node: process.version, python: require('node:child_process').execFileSync('python',
+          ['--version'], { encoding: 'utf8' }).trim(), uv: require('node:child_process').execFileSync('uv',
+          ['--version'], { encoding: 'utf8' }).trim() }, null, 2) + '\\n')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: golden-evidence-${{ matrix.runner }}-python-${{ matrix.python }}
+          path: golden-evidence.json
+          if-no-files-found: error
