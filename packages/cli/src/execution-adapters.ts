@@ -332,7 +332,10 @@ function findWindowsExecutable(
     .split(";")
     .map((extension) => extension.toLowerCase())
     .filter((extension) => [".com", ".exe", ".bat", ".cmd"].includes(extension));
-  const directories = (environment.PATH ?? environment.Path ?? "").split(";").filter(Boolean);
+  const directories = [
+    ...(environment.PATH ?? environment.Path ?? "").split(";"),
+    ...(environment.PNPM_HOME === undefined ? [] : [environment.PNPM_HOME]),
+  ].filter(Boolean);
 
   for (const directory of directories) {
     for (const extension of extensions) {

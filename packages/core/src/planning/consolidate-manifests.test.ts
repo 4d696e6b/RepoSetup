@@ -73,7 +73,7 @@ describe("consolidateManifestInstalls", () => {
       {
         type: "run_command",
         command: "pnpm",
-        args: ["install", "--prefer-offline"],
+        args: ["install", "--no-frozen-lockfile", "--prefer-offline"],
         cwd: ".",
         description: "Install assembled package.json dependencies",
         requiresNetwork: true,

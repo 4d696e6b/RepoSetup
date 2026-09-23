@@ -117,6 +117,9 @@ if (rows.some((row) => row.measurements.some((measurement) => measurement.exitCo
 function benchmarkEnvironment(cacheRoot) {
   return {
     ...process.env,
+    // Package managers default to frozen lockfiles in CI. The collector measures
+    // fresh project creation, where the first install must create that lockfile.
+    CI: "false",
     npm_config_cache: join(cacheRoot, "npm"),
     pnpm_config_store_dir: join(cacheRoot, "pnpm-store"),
     UV_CACHE_DIR: join(cacheRoot, "uv"),

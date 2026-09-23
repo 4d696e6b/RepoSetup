@@ -53,7 +53,10 @@ export const pnpmAdapter: PackageManagerAdapter = {
       return { ok: false, error: cwdError };
     }
 
-    const args = request.frozen === true ? ["install", "--frozen-lockfile"] : ["install"];
+    const args =
+      request.frozen === true
+        ? ["install", "--frozen-lockfile"]
+        : ["install", "--no-frozen-lockfile"];
     if (request.preferOffline === true) {
       args.push("--prefer-offline");
     }

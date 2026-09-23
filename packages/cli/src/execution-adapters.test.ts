@@ -205,6 +205,20 @@ describe("createDefaultProcessRunner", () => {
 });
 
 describe("resolveWindowsLaunch", () => {
+  it("resolves pnpm from PNPM_HOME when its launcher directory is not on Path", () => {
+    const launch = resolveWindowsLaunch(
+      "pnpm",
+      ["install"],
+      { PNPM_HOME: "C:\\pnpm", PATHEXT: ".CMD" },
+      (filePath) => filePath === "C:\\pnpm\\pnpm.cmd",
+    );
+
+    expect(launch).toEqual({
+      command: "cmd.exe",
+      args: ["/d", "/v:off", "/c", "C:\\pnpm\\pnpm.cmd", "install"],
+    });
+  });
+
   it("resolves shims from Windows' standard Path environment key", () => {
     const launch = resolveWindowsLaunch(
       "pnpm",
