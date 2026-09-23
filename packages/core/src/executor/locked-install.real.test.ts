@@ -78,7 +78,8 @@ const testFileSystem: ExecutorFileSystem = {
 function runProcess(cacheDir: string): ProcessRunner {
   return (request) =>
     new Promise((resolve, reject) => {
-      const child = spawn(nodePackageManagerCommand(request.command), [...request.args], {
+      const launch = nodePackageManagerLaunch(request.command, request.args);
+      const child = spawn(launch.command, launch.args, {
         cwd: request.cwd,
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
@@ -200,8 +201,15 @@ function lockedNpmInstall() {
   return planned.operation;
 }
 
-function nodePackageManagerCommand(command: string): string {
-  return process.platform === "win32" && command === "npm" ? "npm.cmd" : command;
+function nodePackageManagerLaunch(command: string, args: readonly string[]) {
+  if (process.platform === "win32" && command === "npm") {
+    return {
+      command: process.env.ComSpec ?? "cmd.exe",
+      args: ["/d", "/v:off", "/c", "npm.cmd", ...args],
+    };
+  }
+
+  return { command, args: [...args] };
 }
 
 function npmEnv(cacheDir: string): NodeJS.ProcessEnv {
@@ -224,7 +232,8 @@ function runNpm(
   args: string[],
 ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
-    const child = spawn(nodePackageManagerCommand("npm"), args, {
+    const launch = nodePackageManagerLaunch("npm", args);
+    const child = spawn(launch.command, launch.args, {
       cwd,
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
