@@ -20,8 +20,6 @@ export interface InstallProjectRequest {
   frozen?: boolean;
   /** Prefer cached metadata/packages while allowing cache misses to use the configured registry. */
   preferOffline?: boolean;
-  /** pnpm only: packages allowed to run lifecycle scripts during install. */
-  allowBuild?: readonly string[];
 }
 
 export interface RemovePackagesRequest {

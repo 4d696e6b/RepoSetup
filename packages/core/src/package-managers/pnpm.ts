@@ -57,10 +57,6 @@ export const pnpmAdapter: PackageManagerAdapter = {
     if (request.preferOffline === true) {
       args.push("--prefer-offline");
     }
-    for (const name of request.allowBuild ?? []) {
-      args.push(`--allow-build=${name}`);
-    }
-
     return {
       ok: true,
       operation: createPackageManagerCommand({
