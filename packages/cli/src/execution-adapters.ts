@@ -319,7 +319,7 @@ export function resolveWindowsLaunch(
 
   return {
     command: environment.ComSpec ?? "cmd.exe",
-    args: ["/d", "/c", resolved, ...args],
+    args: ["/d", "/v:off", "/c", resolved, ...args],
   };
 }
 
@@ -356,7 +356,7 @@ function isSimpleExecutableName(value: string): boolean {
 }
 
 function isSafeWindowsShimToken(value: string): boolean {
-  return !value.includes("\0") && !/[\r\n"&|<>^%!]/.test(value);
+  return !value.includes("\0") && !/[\r\n"&|<>^%]/.test(value);
 }
 
 function terminateProcessTree(child: ReturnType<typeof spawn>): void {

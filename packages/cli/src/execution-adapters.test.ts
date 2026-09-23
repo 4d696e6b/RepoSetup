@@ -219,7 +219,29 @@ describe("resolveWindowsLaunch", () => {
 
     expect(launch).toEqual({
       command: "C:\\Windows\\System32\\cmd.exe",
-      args: ["/d", "/c", "C:\\Program Files\\nodejs\\pnpm.cmd", "add", "zod"],
+      args: ["/d", "/v:off", "/c", "C:\\Program Files\\nodejs\\pnpm.cmd", "add", "zod"],
+    });
+  });
+
+  it("preserves a literal exclamation mark with delayed expansion disabled", () => {
+    const launch = resolveWindowsLaunch(
+      "pnpm",
+      ["add", "--allow-build=!better-sqlite3", "better-sqlite3"],
+      { PATH: "C:\\tools", PATHEXT: ".CMD" },
+      (filePath) => filePath === "C:\\tools\\pnpm.cmd",
+    );
+
+    expect(launch).toEqual({
+      command: "cmd.exe",
+      args: [
+        "/d",
+        "/v:off",
+        "/c",
+        "C:\\tools\\pnpm.cmd",
+        "add",
+        "--allow-build=!better-sqlite3",
+        "better-sqlite3",
+      ],
     });
   });
 
