@@ -529,7 +529,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("nextjs");
     expect(captured.stdout()).toContain("prisma");
     expect(captured.stdout()).toContain(
-      "pnpm create next-app@16.3.6 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --yes",
+      "pnpm create next-app@16.3.6 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
     );
     expect(captured.stdout()).toContain(
       "install_package  Install Prisma CLI and better-sqlite3 types",

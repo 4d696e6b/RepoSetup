@@ -13,6 +13,7 @@ import type {
 } from "../resolution/types.js";
 import { validateInstallationPlan } from "./validate-plan.js";
 import { batchInstallPackages } from "./batch-install.js";
+import { ensureScaffoldDependencyInstall } from "./ensure-scaffold-install.js";
 
 export function planInstallation(
   config: ResolutionResult["config"],
@@ -94,9 +95,18 @@ function withBatchedInstalls(result: ResolutionResult): ResolutionResult {
     return invalidPlan(result, [batched.error]);
   }
 
+  const ensured = ensureScaffoldDependencyInstall(
+    batched.operations,
+    result.config.packageManager,
+    projectRootFrom(result),
+  );
+  if (!ensured.ok) {
+    return invalidPlan(result, [ensured.error]);
+  }
+
   return {
     ...result,
-    operations: batched.operations,
+    operations: ensured.operations,
   };
 }
 

@@ -53,6 +53,7 @@ describe("golden Next.js/SQLite stack", () => {
         "--import-alias",
         "@/*",
         "--use-pnpm",
+        "--skip-install",
         "--yes",
       ],
       ["pnpm", "add", "--save-dev", "--save-exact", "prettier@3.9.8"],

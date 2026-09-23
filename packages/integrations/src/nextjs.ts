@@ -108,6 +108,11 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
       "--import-alias",
       "@/*",
       context.config.packageManager === "pnpm" ? "--use-pnpm" : "--use-npm",
+      // Official create-next-app flag: skip the generator's install so later
+      // install_package ops (or a deferred project install) own node_modules.
+      // Verified for create-next-app@16.3.6 via --help and
+      // https://nextjs.org/docs/app/api-reference/cli/create-next-app
+      "--skip-install",
       "--yes",
     ];
 

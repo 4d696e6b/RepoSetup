@@ -82,6 +82,7 @@ describe("integration plans", () => {
         "--import-alias",
         "@/*",
         "--use-pnpm",
+        "--skip-install",
         "--yes",
       ],
     ]);
@@ -110,6 +111,7 @@ describe("integration plans", () => {
         "--import-alias",
         "@/*",
         "--use-npm",
+        "--skip-install",
         "--yes",
       ],
     ]);
