@@ -14,6 +14,7 @@ export const checkPrerequisiteOperationSchema = z.strictObject({
   type: z.literal("check_prerequisite"),
   id: z.string().min(1),
   description: descriptionSchema,
+  versionRange: z.string().min(1).optional(),
 });
 
 export const installPackageOperationSchema = z.strictObject({

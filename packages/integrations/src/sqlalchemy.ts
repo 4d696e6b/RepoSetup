@@ -9,6 +9,7 @@ import {
 import { ORM_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { addPackages, afterPythonPackageInstall } from "./operations.js";
+import { QUALIFIED_VERSIONS, pypiPin } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingPythonPackage } from "./verify.js";
@@ -43,7 +44,7 @@ export const sqlalchemyIntegration = defineIntegration({
   },
   plan(context) {
     return [
-      addPackages(context, ["SQLAlchemy"], {
+      addPackages(context, [pypiPin("SQLAlchemy", QUALIFIED_VERSIONS.sqlalchemy)], {
         description: "Install SQLAlchemy",
       }),
       ...afterPythonPackageInstall(context, "SQLAlchemy"),

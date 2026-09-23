@@ -8,6 +8,7 @@ import {
 
 import { defineIntegration } from "./define.js";
 import { addPackages, afterPythonPackageInstall, removePackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, pypiPin } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingPythonPackage } from "./verify.js";
@@ -38,7 +39,7 @@ export const pytestIntegration = defineIntegration({
   },
   plan(context) {
     return [
-      addPackages(context, ["pytest"], {
+      addPackages(context, [pypiPin("pytest", QUALIFIED_VERSIONS.pytest)], {
         description: "Install pytest",
         dev: true,
       }),

@@ -13,6 +13,7 @@ import {
 import { ORM_CONFLICTS } from "./conflicts.js";
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, execLocalBin, hasSelectedIntegration } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { failVerify, mergeVerify, missingAnyFile, missingEnvKeys } from "./verify.js";
 
 const PRISMA_SQLITE_CLIENT = `import "dotenv/config";
@@ -133,18 +134,33 @@ export const prismaIntegration = defineIntegration({
 });
 
 function sqlitePlan(context: PlanContext) {
-  // Official SQLite guide: prisma@prev + @prisma/client@7. Unpinned prisma currently
-  // resolves to 8 RC, whose init CLI dropped --datasource-provider.
+  // Official SQLite quickstart uses prisma@prev and @prisma/client@7. Those tags
+  // resolved to 7.10.0 on 2026-09-23; the exact versions keep the init flags stable.
   return [
-    addPackages(context, ["prisma@prev", "@types/better-sqlite3"], {
-      description: "Install Prisma CLI and better-sqlite3 types",
-      dev: true,
-      allowBuild: ["prisma", "@prisma/engines"],
-    }),
-    addPackages(context, ["@prisma/client@7", "@prisma/adapter-better-sqlite3", "dotenv"], {
-      description: "Install Prisma Client, the SQLite adapter, and dotenv",
-      allowBuild: ["esbuild", "!better-sqlite3"],
-    }),
+    addPackages(
+      context,
+      [
+        npmPin("prisma", QUALIFIED_VERSIONS.prisma),
+        npmPin("@types/better-sqlite3", QUALIFIED_VERSIONS.typesBetterSqlite3),
+      ],
+      {
+        description: "Install Prisma CLI and better-sqlite3 types",
+        dev: true,
+        allowBuild: ["prisma", "@prisma/engines"],
+      },
+    ),
+    addPackages(
+      context,
+      [
+        npmPin("@prisma/client", QUALIFIED_VERSIONS.prismaClient),
+        npmPin("@prisma/adapter-better-sqlite3", QUALIFIED_VERSIONS.prismaAdapterSqlite),
+        npmPin("dotenv", QUALIFIED_VERSIONS.dotenv),
+      ],
+      {
+        description: "Install Prisma Client, the SQLite adapter, and dotenv",
+        allowBuild: ["esbuild", "!better-sqlite3"],
+      },
+    ),
     execLocalBin(
       context,
       "prisma",
@@ -172,15 +188,31 @@ function sqlitePlan(context: PlanContext) {
 
 function postgresPlan(context: PlanContext) {
   return [
-    addPackages(context, ["prisma@prev", "@types/pg"], {
-      description: "Install Prisma CLI and PostgreSQL types",
-      dev: true,
-      allowBuild: ["prisma", "@prisma/engines"],
-    }),
-    addPackages(context, ["@prisma/client@7", "@prisma/adapter-pg", "pg", "dotenv"], {
-      description: "Install Prisma Client, the PostgreSQL adapter, and dotenv",
-      allowBuild: ["esbuild"],
-    }),
+    addPackages(
+      context,
+      [
+        npmPin("prisma", QUALIFIED_VERSIONS.prisma),
+        npmPin("@types/pg", QUALIFIED_VERSIONS.typesPg),
+      ],
+      {
+        description: "Install Prisma CLI and PostgreSQL types",
+        dev: true,
+        allowBuild: ["prisma", "@prisma/engines"],
+      },
+    ),
+    addPackages(
+      context,
+      [
+        npmPin("@prisma/client", QUALIFIED_VERSIONS.prismaClient),
+        npmPin("@prisma/adapter-pg", QUALIFIED_VERSIONS.prismaAdapterPg),
+        npmPin("pg", QUALIFIED_VERSIONS.pg),
+        npmPin("dotenv", QUALIFIED_VERSIONS.dotenv),
+      ],
+      {
+        description: "Install Prisma Client, the PostgreSQL adapter, and dotenv",
+        allowBuild: ["esbuild"],
+      },
+    ),
     execLocalBin(
       context,
       "prisma",

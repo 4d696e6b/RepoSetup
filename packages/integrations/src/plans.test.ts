@@ -73,7 +73,7 @@ describe("integration plans", () => {
       [
         "pnpm",
         "create",
-        "next-app@16.3.5",
+        "next-app@16.3.6",
         ".",
         "--ts",
         "--eslint",
@@ -101,7 +101,7 @@ describe("integration plans", () => {
       [
         "npx",
         "--yes",
-        "create-next-app@16.3.5",
+        "create-next-app@16.3.6",
         "app",
         "--js",
         "--eslint",
@@ -118,7 +118,9 @@ describe("integration plans", () => {
 
   it("installs the official Tailwind Vite plugin for React + Vite", () => {
     const plan = tailwindIntegration.plan(planContext({ frameworkId: "react-vite" }));
-    expect(runCommands(plan)).toEqual([["pnpm", "add", "tailwindcss", "@tailwindcss/vite"]]);
+    expect(runCommands(plan)).toEqual([
+      ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/vite@4.3.3"],
+    ]);
     expect(plan).toEqual(
       expect.arrayContaining([expect.objectContaining({ type: "show_message" })]),
     );
@@ -127,7 +129,7 @@ describe("integration plans", () => {
   it("installs Tailwind v4 PostCSS packages without --save-dev", () => {
     const plan = tailwindIntegration.plan(planContext());
     expect(runCommands(plan)).toEqual([
-      ["pnpm", "add", "tailwindcss", "@tailwindcss/postcss", "postcss"],
+      ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/postcss@4.3.3", "postcss@8.5.28"],
     ]);
     expect(plan).toEqual(
       expect.arrayContaining([
@@ -151,17 +153,17 @@ describe("integration plans", () => {
         "--save-dev",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
-        "prisma@prev",
-        "@types/better-sqlite3",
+        "prisma@7.10.0",
+        "@types/better-sqlite3@9.6.0",
       ],
       [
         "pnpm",
         "add",
         "--allow-build=esbuild",
         "--allow-build=!better-sqlite3",
-        "@prisma/client@7",
-        "@prisma/adapter-better-sqlite3",
-        "dotenv",
+        "@prisma/client@7.10.0",
+        "@prisma/adapter-better-sqlite3@7.10.0",
+        "dotenv@18.0.3",
       ],
       [
         "pnpm",
@@ -178,7 +180,7 @@ describe("integration plans", () => {
   });
 
   it("installs Zod as a runtime dependency", () => {
-    expect(runCommands(zodIntegration.plan(planContext()))).toEqual([["pnpm", "add", "zod"]]);
+    expect(runCommands(zodIntegration.plan(planContext()))).toEqual([["pnpm", "add", "zod@4.6.5"]]);
   });
 
   it("follows the Next.js Vitest guide for TypeScript and JavaScript", () => {
@@ -190,12 +192,12 @@ describe("integration plans", () => {
         "add",
         "--save-dev",
         "--allow-build=esbuild",
-        "vitest",
-        "@vitejs/plugin-react",
-        "jsdom",
-        "@testing-library/react",
-        "@testing-library/dom",
-        "vite-tsconfig-paths",
+        "vitest@5.0.1",
+        "@vitejs/plugin-react@6.1.1",
+        "jsdom@28.1.0",
+        "@testing-library/react@16.3.3",
+        "@testing-library/dom@10.4.2",
+        "vite-tsconfig-paths@6.1.1",
       ],
       ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
     ]);
@@ -209,11 +211,11 @@ describe("integration plans", () => {
         "add",
         "--save-dev",
         "--allow-build=esbuild",
-        "vitest",
-        "@vitejs/plugin-react",
-        "jsdom",
-        "@testing-library/react",
-        "@testing-library/dom",
+        "vitest@5.0.1",
+        "@vitejs/plugin-react@6.1.1",
+        "jsdom@28.1.0",
+        "@testing-library/react@16.3.3",
+        "@testing-library/dom@10.4.2",
       ],
       ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
     ]);
@@ -226,7 +228,7 @@ describe("integration plans", () => {
 
   it("installs Prettier as an exact dev dependency", () => {
     expect(runCommands(prettierIntegration.plan(planContext()))).toEqual([
-      ["pnpm", "add", "--save-dev", "--save-exact", "prettier"],
+      ["pnpm", "add", "--save-dev", "--save-exact", "prettier@3.9.8"],
     ]);
   });
 
@@ -240,17 +242,17 @@ describe("integration plans", () => {
         "--save-dev",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
-        "prisma@prev",
-        "@types/pg",
+        "prisma@7.10.0",
+        "@types/pg@8.23.1",
       ],
       [
         "pnpm",
         "add",
         "--allow-build=esbuild",
-        "@prisma/client@7",
-        "@prisma/adapter-pg",
-        "pg",
-        "dotenv",
+        "@prisma/client@7.10.0",
+        "@prisma/adapter-pg@7.10.0",
+        "pg@8.23.0",
+        "dotenv@18.0.3",
       ],
       [
         "pnpm",

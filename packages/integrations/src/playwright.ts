@@ -9,6 +9,8 @@ import {
 
 import { defineIntegration } from "./define.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
+import { addPackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { pnpmCreateOrNpmInit, usesTypescript } from "./scaffold.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
@@ -43,13 +45,18 @@ export const playwrightIntegration = defineIntegration({
   },
   plan(context: PlanContext) {
     const lang = usesTypescript(context) ? "TypeScript" : "js";
+    const generator = `playwright@${QUALIFIED_VERSIONS.createPlaywright}`;
     return [
       pnpmCreateOrNpmInit(
         context,
-        { pnpmName: "playwright", npmInit: "playwright@latest" },
+        { pnpmName: generator, npmInit: generator },
         ["--quiet", `--lang=${lang}`, "--no-browsers"],
         { description: "Initialize Playwright without downloading browsers", longRunning: true },
       ),
+      addPackages(context, [npmPin("@playwright/test", QUALIFIED_VERSIONS.playwrightTest)], {
+        description: "Pin Playwright Test to the qualified version",
+        dev: true,
+      }),
       {
         type: "show_message",
         message:

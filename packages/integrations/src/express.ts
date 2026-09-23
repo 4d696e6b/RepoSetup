@@ -14,6 +14,7 @@ import {
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { addPackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { createNodePackageJson, usesTypescript } from "./scaffold.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
@@ -93,15 +94,25 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
     const typescript = usesTypescript(context);
     const operations: InstallationOperation[] = [
       createNodePackageJson(context),
-      addPackages(context, ["express"], { description: "Install Express" }),
+      addPackages(context, [npmPin("express", QUALIFIED_VERSIONS.express)], {
+        description: "Install Express",
+      }),
     ];
 
     if (typescript) {
       operations.push(
-        addPackages(context, ["typescript", "@types/express", "@types/node"], {
-          description: "Install TypeScript and Express type packages",
-          dev: true,
-        }),
+        addPackages(
+          context,
+          [
+            npmPin("typescript", QUALIFIED_VERSIONS.typescript),
+            npmPin("@types/express", QUALIFIED_VERSIONS.typesExpress),
+            npmPin("@types/node", QUALIFIED_VERSIONS.typesNode),
+          ],
+          {
+            description: "Install TypeScript and Express type packages",
+            dev: true,
+          },
+        ),
         {
           type: "create_file",
           path: "tsconfig.json",

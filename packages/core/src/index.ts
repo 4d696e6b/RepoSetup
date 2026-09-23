@@ -90,12 +90,21 @@ export type { RegistryLookup } from "./resolution/registry-lookup.js";
 export { resolveConfig } from "./resolution/resolve.js";
 export { planInstallation, planInstallationSubset, toInstallationPlan } from "./planning/plan.js";
 export {
+  createRecipeRecord,
+  lockfileForPackageManager,
   parseRecipeRecord,
   planRecipeRecord,
+  recipeContentHash,
   recipeRecordSchema,
   RECIPE_RECORD_VERSION,
+  reproductionRequirements,
 } from "./planning/recipe.js";
-export type { RecipeParseResult, RecipeRecord } from "./planning/recipe.js";
+export type {
+  RecipeLockfile,
+  RecipeParseResult,
+  RecipeRecord,
+  ReproductionRequirements,
+} from "./planning/recipe.js";
 export { planAdd } from "./planning/plan-add.js";
 export type { PlanAddResult } from "./planning/plan-add.js";
 export { planRemove } from "./planning/plan-remove.js";

@@ -67,15 +67,32 @@ export async function preflightInstallation(
   return undefined;
 }
 
+function packageManagersInPlan(operations: readonly InstallationOperation[]): Set<string> {
+  const managers = new Set<string>();
+  for (const operation of operations) {
+    if (operation.type === "install_package") {
+      managers.add(operation.packageManager);
+      continue;
+    }
+    if (operation.type !== "run_command") {
+      continue;
+    }
+    if (operation.command === "npm" || operation.command === "npx") {
+      managers.add("npm");
+    } else if (operation.command === "pnpm") {
+      managers.add("pnpm");
+    } else if (operation.command === "uv") {
+      managers.add("uv");
+    }
+  }
+  return managers;
+}
+
 async function checkLockfileCompatibility(
   operations: readonly InstallationOperation[],
   context: ExecutionContext,
 ): Promise<RepoSetupError | undefined> {
-  const managers = new Set(
-    operations
-      .filter((operation) => operation.type === "install_package")
-      .map((operation) => operation.packageManager),
-  );
+  const managers = packageManagersInPlan(operations);
   const lockfiles = [
     { manager: "npm", file: "package-lock.json" },
     { manager: "pnpm", file: "pnpm-lock.yaml" },

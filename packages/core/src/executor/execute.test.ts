@@ -779,6 +779,42 @@ describe("executeInstallation", () => {
     expect(result).toMatchObject({ ok: true, executed: 1 });
   });
 
+  it("rejects a Node version outside a qualified range before mutation", async () => {
+    const root = await tempRoot();
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "check_prerequisite",
+          id: "node",
+          versionRange: "^20.19.0 || >=22.12.0",
+          description: "Require a Vite-compatible Node.js",
+        },
+        {
+          type: "create_file",
+          path: "should-not-exist.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Must not write",
+        },
+      ],
+      {
+        rootDir: root,
+        commandExists: async () => true,
+        runProcess: recordingRunner(runs, { stdout: "v22.11.0\n" }),
+      },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("PREREQUISITE_MISSING");
+    expect(result.error.details).toMatchObject({ versionRange: "^20.19.0 || >=22.12.0" });
+    expect(runs).toEqual([expect.objectContaining({ args: ["--version"] })]);
+    await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
+  });
+
   it("checks prerequisites before any planned project mutation", async () => {
     const root = await tempRoot();
     const result = await executeInstallation(
@@ -912,6 +948,28 @@ describe("executeInstallation", () => {
       ],
       { rootDir: root, fs: testFileSystem, runProcess: recordingRunner(runs) },
     );
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (!result.ok) expect(result.error.code).toBe("LOCKFILE_CONFLICT");
+    expect(runs).toEqual([]);
+  });
+
+  it("rejects a lockfile that conflicts with a scaffold command before spawning it", async () => {
+    const root = await tempRoot();
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const runs: ProcessRunRequest[] = [];
+    const result = await executeCoreInstallation(
+      [
+        {
+          type: "run_command",
+          command: "npx",
+          args: ["--yes", "create-next-app@16.3.6", "app"],
+          cwd: ".",
+          description: "Scaffold Next.js",
+        },
+      ],
+      { rootDir: root, fs: testFileSystem, runProcess: recordingRunner(runs) },
+    );
+
     expect(result).toMatchObject({ ok: false, executed: 0 });
     if (!result.ok) expect(result.error.code).toBe("LOCKFILE_CONFLICT");
     expect(runs).toEqual([]);

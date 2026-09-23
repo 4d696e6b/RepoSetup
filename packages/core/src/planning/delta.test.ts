@@ -116,6 +116,54 @@ describe("filterSatisfiedOperations", () => {
     expect(remaining).toEqual([expect.objectContaining({ description: "Install Flask" })]);
   });
 
+  it("drops a version check once the integration work is already present", async () => {
+    const files = createMemoryDetectionFs({
+      "package.json": JSON.stringify({ devDependencies: { eslint: "9.39.5" } }),
+      "eslint.config.js": "export default [];\n",
+    });
+    const packageJson = await readPackageJson(files);
+    const check: InstallationOperation = {
+      type: "check_prerequisite",
+      id: "node",
+      versionRange: "^18.18.0 || ^20.9.0 || >=21.1.0",
+      description: "Require an ESLint-compatible Node.js",
+    };
+    const present = await filterSatisfiedOperations(
+      [
+        check,
+        {
+          type: "run_command",
+          command: "pnpm",
+          args: ["add", "--save-dev", "eslint@9.39.5"],
+          cwd: ".",
+          description: "Install ESLint",
+        },
+      ],
+      files,
+      packageJson,
+    );
+    expect(present).toEqual([]);
+
+    const missing = await filterSatisfiedOperations(
+      [
+        check,
+        {
+          type: "run_command",
+          command: "pnpm",
+          args: ["add", "--save-dev", "eslint@9.39.5"],
+          cwd: ".",
+          description: "Install ESLint",
+        },
+      ],
+      createMemoryDetectionFs({}),
+      undefined,
+    );
+    expect(missing.map((operation) => operation.type)).toEqual([
+      "check_prerequisite",
+      "run_command",
+    ]);
+  });
+
   it("drops uv init when pyproject.toml already exists", async () => {
     const files = createMemoryDetectionFs({
       "pyproject.toml": "[project]\nname = 'demo'\n",

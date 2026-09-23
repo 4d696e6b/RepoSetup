@@ -9,6 +9,7 @@ export interface CheckPrerequisiteOperation {
   type: "check_prerequisite";
   id: string;
   description: string;
+  versionRange?: string;
 }
 
 export interface InstallPackageOperation {

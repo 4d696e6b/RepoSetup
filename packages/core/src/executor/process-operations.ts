@@ -9,6 +9,7 @@ import type {
 } from "../operations/types.js";
 
 import { pathPrerequisite } from "../prerequisites/path.js";
+import { isSupportedVersionRange, versionSatisfiesRange } from "../prerequisites/version-range.js";
 
 import { isSafeExecutableName, isSafeProcessArg } from "./command-name.js";
 import { commandFailureSuggestion, summarizeFailedProcessOutput } from "./output-snippet.js";
@@ -54,9 +55,12 @@ export async function executeCheckPrerequisite(
     });
   }
 
-  if (spec.minimumVersion !== undefined) {
+  if (spec.minimumVersion !== undefined || operation.versionRange !== undefined) {
     const version = await readCommandVersion(command, context);
-    if (version === undefined || isVersionBelow(version, spec.minimumVersion)) {
+    if (
+      spec.minimumVersion !== undefined &&
+      (version === undefined || isVersionBelow(version, spec.minimumVersion))
+    ) {
       return createRepoSetupError({
         code: "PREREQUISITE_MISSING",
         message: `${command} does not meet the required version ${formatVersion(spec.minimumVersion)} or later.`,
@@ -68,6 +72,31 @@ export async function executeCheckPrerequisite(
         },
         suggestion: spec.hint,
       });
+    }
+
+    if (operation.versionRange !== undefined) {
+      if (!isSupportedVersionRange(operation.versionRange)) {
+        return createRepoSetupError({
+          code: "PLAN_INVALID",
+          message: `Prerequisite "${operation.id}" has an unsupported version range.`,
+          details: { id: operation.id, versionRange: operation.versionRange },
+          suggestion: "Use a range made of >= and ^ comparators joined by ||.",
+        });
+      }
+
+      if (version === undefined || !versionSatisfiesRange(version, operation.versionRange)) {
+        return createRepoSetupError({
+          code: "PREREQUISITE_MISSING",
+          message: `${command} does not satisfy the required range ${operation.versionRange}.`,
+          details: {
+            id: operation.id,
+            command,
+            ...(version === undefined ? {} : { detectedVersion: formatVersion(version) }),
+            versionRange: operation.versionRange,
+          },
+          suggestion: spec.hint,
+        });
+      }
     }
   }
 

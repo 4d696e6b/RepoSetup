@@ -1,7 +1,9 @@
 import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
+import { requireNodeRange } from "./node-range.js";
 import { addPackages, execLocalBin } from "./operations.js";
+import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
 const VITEST_CONFIG_TS = `import { defineConfig } from 'vitest/config'
@@ -74,7 +76,8 @@ export const vitestIntegration = defineIntegration({
     if (context.config.framework.id !== "nextjs") {
       const typescript = context.config.framework.options?.typescript !== false;
       return [
-        addPackages(context, ["vitest"], {
+        requireNodeRange(NODE_ENGINE_RANGES.vitest, `Vitest ${QUALIFIED_VERSIONS.vitest}`),
+        addPackages(context, [npmPin("vitest", QUALIFIED_VERSIONS.vitest)], {
           description: "Install Vitest",
           dev: true,
         }),
@@ -98,22 +101,24 @@ export const vitestIntegration = defineIntegration({
     const typescript = context.config.framework.options?.typescript !== false;
     const packages = typescript
       ? [
-          "vitest",
-          "@vitejs/plugin-react",
-          "jsdom",
-          "@testing-library/react",
-          "@testing-library/dom",
-          "vite-tsconfig-paths",
+          npmPin("vitest", QUALIFIED_VERSIONS.vitest),
+          npmPin("@vitejs/plugin-react", QUALIFIED_VERSIONS.vitePluginReact),
+          npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
+          npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
+          npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
+          npmPin("vite-tsconfig-paths", QUALIFIED_VERSIONS.viteTsconfigPaths),
         ]
       : [
-          "vitest",
-          "@vitejs/plugin-react",
-          "jsdom",
-          "@testing-library/react",
-          "@testing-library/dom",
+          npmPin("vitest", QUALIFIED_VERSIONS.vitest),
+          npmPin("@vitejs/plugin-react", QUALIFIED_VERSIONS.vitePluginReact),
+          npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
+          npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
+          npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
         ];
 
     return [
+      requireNodeRange(NODE_ENGINE_RANGES.vitest, `Vitest ${QUALIFIED_VERSIONS.vitest}`),
+      requireNodeRange(NODE_ENGINE_RANGES.jsdom, `jsdom ${QUALIFIED_VERSIONS.jsdom}`),
       addPackages(context, packages, {
         description: "Install Vitest and the official Next.js test packages",
         dev: true,
