@@ -205,6 +205,20 @@ describe("createDefaultProcessRunner", () => {
 });
 
 describe("resolveWindowsLaunch", () => {
+  it("resolves shims from Windows' standard Path environment key", () => {
+    const launch = resolveWindowsLaunch(
+      "pnpm",
+      ["--version"],
+      { Path: "C:\\tools", PATHEXT: ".CMD" },
+      (filePath) => filePath === "C:\\tools\\pnpm.cmd",
+    );
+
+    expect(launch).toEqual({
+      command: "cmd.exe",
+      args: ["/d", "/v:off", "/c", "C:\\tools\\pnpm.cmd", "--version"],
+    });
+  });
+
   it("runs a trusted .cmd shim through cmd.exe without enabling shell mode", () => {
     const launch = resolveWindowsLaunch(
       "pnpm",
