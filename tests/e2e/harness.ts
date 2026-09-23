@@ -76,18 +76,10 @@ function windowsLaunch(
     throw new Error(`Unsafe Windows test executable: ${command}`);
   }
 
-  const invocation = [command, ...args.map(quoteWindowsToken)].join(" ");
   return {
     command: process.env.ComSpec ?? "cmd.exe",
-    args: ["/d", "/c", invocation],
+    args: ["/d", "/c", command, ...args],
   };
-}
-
-function quoteWindowsToken(token: string): string {
-  if (token.includes("\0") || /[\r\n"&|<>^%!]/.test(token)) {
-    throw new Error(`Unsafe Windows test command token: ${token}`);
-  }
-  return `"${token}"`;
 }
 
 export async function createTempWorkspace(prefix: string): Promise<string> {

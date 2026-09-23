@@ -219,7 +219,7 @@ describe("resolveWindowsLaunch", () => {
 
     expect(launch).toEqual({
       command: "C:\\Windows\\System32\\cmd.exe",
-      args: ["/d", "/c", '"C:\\Program Files\\nodejs\\pnpm.cmd" "add" "zod"'],
+      args: ["/d", "/c", "C:\\Program Files\\nodejs\\pnpm.cmd", "add", "zod"],
     });
   });
 

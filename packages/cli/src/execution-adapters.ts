@@ -309,8 +309,7 @@ export function resolveWindowsLaunch(
     return { command: resolved ?? command, args };
   }
 
-  const invocation = serializeWindowsShimInvocation(resolved, args);
-  if (invocation === undefined) {
+  if (![resolved, ...args].every(isSafeWindowsShimToken)) {
     return {
       error:
         `Refusing to execute the Windows command shim for "${command}" because its path or arguments contain shell metacharacters. ` +
@@ -320,7 +319,7 @@ export function resolveWindowsLaunch(
 
   return {
     command: environment.ComSpec ?? "cmd.exe",
-    args: ["/d", "/c", invocation],
+    args: ["/d", "/c", resolved, ...args],
   };
 }
 
@@ -350,17 +349,6 @@ function findWindowsExecutable(
 function isNativeWindowsExecutable(filePath: string): boolean {
   const extension = path.win32.extname(filePath).toLowerCase();
   return extension === ".exe" || extension === ".com";
-}
-
-function serializeWindowsShimInvocation(
-  filePath: string,
-  args: readonly string[],
-): string | undefined {
-  const tokens = [filePath, ...args];
-  if (tokens.some((token) => !isSafeWindowsShimToken(token))) {
-    return undefined;
-  }
-  return tokens.map((token) => `"${token}"`).join(" ");
 }
 
 function isSimpleExecutableName(value: string): boolean {
