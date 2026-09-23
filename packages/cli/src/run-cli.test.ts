@@ -535,7 +535,7 @@ describe("runCli", () => {
       "modify_json  Assemble package.json dependencies before a consolidated install",
     );
     expect(captured.stdout()).toContain(
-      "pnpm install --allow-build=prisma --allow-build=@prisma/engines --allow-build=esbuild --allow-build=!better-sqlite3",
+      "pnpm install --prefer-offline --allow-build=prisma --allow-build=@prisma/engines --allow-build=esbuild --allow-build=!better-sqlite3",
     );
     expect(captured.stdout()).toContain("pnpm exec prisma generate");
     expect(captured.stdout()).toContain("pnpm exec vitest run --passWithNoTests");
