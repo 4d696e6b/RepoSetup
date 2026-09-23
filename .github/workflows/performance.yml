@@ -50,8 +50,8 @@ jobs:
         run: |
           $file = 'packages/core/src/executor/process.ts'
           $source = Get-Content $file -Raw
-          $old = 'env: process.env,'
-          $new = 'env: { ...process.env, PATH: process.env.Path ?? process.env.PATH },'
+          $old = 'const child = spawn(request.command, [...request.args], {'
+          $new = 'const child = spawn(process.platform === "win32" && request.command === "pnpm" ? process.env.ComSpec ?? "cmd.exe" : request.command, process.platform === "win32" && request.command === "pnpm" ? ["/d", "/v:off", "/c", "pnpm", ...request.args] : [...request.args], {'
           if (-not $source.Contains($old)) { throw 'Phase 19 process runner shape changed unexpectedly.' }
           Set-Content -Path $file -Value $source.Replace($old, $new) -NoNewline
       - uses: pnpm/action-setup@v4
