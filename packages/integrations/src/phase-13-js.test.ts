@@ -248,7 +248,7 @@ describe("Phase 13 JS ecosystem plans", () => {
 
   it("installs Vitest only for non-Next.js frameworks", () => {
     expect(runCommands(vitestIntegration.plan(planContext({ frameworkId: "express" })))).toEqual([
-      ["pnpm", "add", "--save-dev", "vitest@5.0.1"],
+      ["pnpm", "add", "--save-dev", "--allow-build=esbuild", "vitest@5.0.1"],
     ]);
   });
 });
@@ -369,14 +369,7 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        [
-          "pnpm",
-          "install",
-          "--prefer-offline",
-          "--allow-build=esbuild",
-          "--allow-build=prisma",
-          "--allow-build=@prisma/engines",
-        ],
+        ["pnpm", "install", "--prefer-offline"],
         [
           "pnpm",
           "exec",
