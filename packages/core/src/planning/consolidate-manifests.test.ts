@@ -66,7 +66,7 @@ describe("consolidateManifestInstalls", () => {
       {
         type: "run_command",
         command: "pnpm",
-        args: ["install", "--allow-build=prisma", "--allow-build=esbuild"],
+        args: ["install", "--prefer-offline", "--allow-build=prisma", "--allow-build=esbuild"],
         cwd: ".",
         description: "Install assembled package.json dependencies",
         requiresNetwork: true,

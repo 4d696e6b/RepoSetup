@@ -122,3 +122,13 @@ describe("npmAdapter", () => {
     expect(result.error.code).toBe("PLAN_INVALID");
   });
 });
+
+describe("npm cache preference", () => {
+  it("uses prefer-offline without requiring an offline cache hit", () => {
+    expectArgs(
+      npmAdapter.install({ cwd: ".", description: "Cached install", preferOffline: true }),
+      "npm",
+      ["install", "--prefer-offline"],
+    );
+  });
+});

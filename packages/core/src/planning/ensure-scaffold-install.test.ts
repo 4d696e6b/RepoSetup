@@ -49,7 +49,7 @@ describe("ensureScaffoldDependencyInstall", () => {
       {
         type: "run_command",
         command: "pnpm",
-        args: ["install"],
+        args: ["install", "--prefer-offline"],
         cwd: ".",
         description: "Install scaffold dependencies skipped by the generator",
         requiresNetwork: true,
@@ -92,7 +92,7 @@ describe("ensureScaffoldDependencyInstall", () => {
     expect(result.operations[1]).toMatchObject({
       type: "run_command",
       command: "pnpm",
-      args: ["install"],
+      args: ["install", "--prefer-offline"],
     });
     expect(result.operations[2]).toMatchObject({
       args: ["exec", "prisma", "generate"],

@@ -50,6 +50,7 @@ export function ensureScaffoldDependencyInstall(
     const installed = adapter.install({
       cwd: projectRoot,
       description: "Install scaffold dependencies skipped by the generator",
+      preferOffline: true,
     });
     if (!installed.ok) {
       return { ok: false, error: installed.error };

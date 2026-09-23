@@ -57,7 +57,10 @@ export const npmAdapter: PackageManagerAdapter = {
       ok: true,
       operation: createPackageManagerCommand({
         command: "npm",
-        args: request.frozen === true ? ["ci"] : ["install"],
+        args: [
+          ...(request.frozen === true ? ["ci"] : ["install"]),
+          ...(request.preferOffline === true ? ["--prefer-offline"] : []),
+        ],
         cwd: request.cwd,
         description: request.description,
       }),

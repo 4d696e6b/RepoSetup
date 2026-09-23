@@ -139,6 +139,7 @@ function consolidateSegment(segment: readonly InstallationOperation[]): Consolid
   const installed = adapter.install({
     cwd,
     description: "Install assembled package.json dependencies",
+    preferOffline: true,
     ...(packageManager === "pnpm" && allowBuild.size > 0 ? { allowBuild: [...allowBuild] } : {}),
   });
   if (!installed.ok) {

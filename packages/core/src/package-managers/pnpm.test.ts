@@ -124,3 +124,12 @@ describe("pnpmAdapter", () => {
     expectArgs(result, ["remove", "prettier"]);
   });
 });
+
+describe("pnpm cache preference", () => {
+  it("uses prefer-offline without requiring an offline cache hit", () => {
+    expectArgs(
+      pnpmAdapter.install({ cwd: ".", description: "Cached install", preferOffline: true }),
+      ["install", "--prefer-offline"],
+    );
+  });
+});

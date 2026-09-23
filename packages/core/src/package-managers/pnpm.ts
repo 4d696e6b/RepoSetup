@@ -54,6 +54,9 @@ export const pnpmAdapter: PackageManagerAdapter = {
     }
 
     const args = request.frozen === true ? ["install", "--frozen-lockfile"] : ["install"];
+    if (request.preferOffline === true) {
+      args.push("--prefer-offline");
+    }
     for (const name of request.allowBuild ?? []) {
       args.push(`--allow-build=${name}`);
     }
