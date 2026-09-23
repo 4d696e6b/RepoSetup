@@ -155,7 +155,7 @@ function consolidateSegment(segment: readonly InstallationOperation[]): Consolid
           path: pnpmWorkspacePathFor(cwd),
           content: `allowBuilds:\n${[...allowBuild]
             .sort()
-            .map((name) => `  ${name}: true`)
+            .map((name) => `  ${JSON.stringify(name)}: true`)
             .join("\n")}\n`,
           behavior: "create_if_missing" as const,
           description: "Allow approved pnpm dependency build scripts",
