@@ -11,6 +11,7 @@ import {
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { addPackages, afterPythonPackageInstall, initPythonProject } from "./operations.js";
+import { QUALIFIED_VERSIONS, pypiPin } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
@@ -55,7 +56,7 @@ export const flaskIntegration = defineIntegration({
   plan(context: PlanContext) {
     const operations: InstallationOperation[] = [
       ...initPythonProject(context),
-      addPackages(context, ["Flask"], {
+      addPackages(context, [pypiPin("Flask", QUALIFIED_VERSIONS.flask)], {
         description: "Install Flask",
       }),
       ...afterPythonPackageInstall(context, "Flask"),

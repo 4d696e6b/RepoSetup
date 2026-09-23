@@ -55,7 +55,7 @@ describe("built-in add plans", () => {
     expect(result.result.operations).toEqual([
       expect.objectContaining({
         type: "run_command",
-        args: expect.arrayContaining(["add", "zod"]),
+        args: expect.arrayContaining(["add", "zod@4.6.5"]),
       }),
     ]);
   });
@@ -184,7 +184,7 @@ describe("built-in add plans for Python", () => {
     expect(result.result.operations).toEqual([
       expect.objectContaining({
         type: "run_command",
-        args: expect.arrayContaining(["add", "pydantic"]),
+        args: expect.arrayContaining(["add", "pydantic==2.13.5"]),
       }),
     ]);
   });

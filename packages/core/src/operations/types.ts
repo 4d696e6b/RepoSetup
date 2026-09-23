@@ -9,6 +9,7 @@ export interface CheckPrerequisiteOperation {
   type: "check_prerequisite";
   id: string;
   description: string;
+  versionRange?: string;
 }
 
 export interface InstallPackageOperation {
@@ -30,6 +31,7 @@ export interface RunCommandOperation {
   requiresNetwork?: boolean;
   interactive?: boolean;
   longRunning?: boolean;
+  requiresLockfile?: "package-lock.json" | "pnpm-lock.yaml" | "bun.lock" | "uv.lock";
 }
 
 export interface CreateDirectoryOperation {

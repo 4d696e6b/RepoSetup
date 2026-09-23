@@ -2,6 +2,7 @@ import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, removePackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
 const PRETTIER_CONFIG_PATHS = [
@@ -43,7 +44,7 @@ export const prettierIntegration = defineIntegration({
   },
   plan(context) {
     return [
-      addPackages(context, ["prettier"], {
+      addPackages(context, [npmPin("prettier", QUALIFIED_VERSIONS.prettier)], {
         description: "Install Prettier as an exact dev dependency",
         dev: true,
         exact: true,

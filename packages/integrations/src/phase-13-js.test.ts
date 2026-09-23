@@ -91,7 +91,9 @@ describe("Phase 13 JS ecosystem plans", () => {
           planContext({ frameworkId: "react-vite", options: { typescript: true } }),
         ),
       ),
-    ).toEqual([["pnpm", "create", "vite", ".", "--template", "react-ts", "--no-interactive"]]);
+    ).toEqual([
+      ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
+    ]);
 
     expect(
       runCommands(
@@ -106,7 +108,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         ),
       ),
     ).toEqual([
-      ["npm", "create", "vite@latest", "app", "--", "--template", "react", "--no-interactive"],
+      ["npm", "create", "vite@8.3.0", "app", "--", "--template", "react", "--no-interactive"],
     ]);
   });
 
@@ -115,8 +117,15 @@ describe("Phase 13 JS ecosystem plans", () => {
       planContext({ frameworkId: "express", options: { typescript: true } }),
     );
     expect(runCommands(plan)).toEqual([
-      ["pnpm", "add", "express"],
-      ["pnpm", "add", "--save-dev", "typescript", "@types/express", "@types/node"],
+      ["pnpm", "add", "express@5.2.1"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "typescript@5.9.3",
+        "@types/express@5.0.6",
+        "@types/node@22.20.4",
+      ],
     ]);
     expect(plan).toEqual(
       expect.arrayContaining([
@@ -130,7 +139,7 @@ describe("Phase 13 JS ecosystem plans", () => {
     const plan = fastifyIntegration.plan(
       planContext({ frameworkId: "fastify", options: { typescript: true } }),
     );
-    expect(runCommands(plan)).toEqual([["pnpm", "add", "fastify"]]);
+    expect(runCommands(plan)).toEqual([["pnpm", "add", "fastify@5.12.5"]]);
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "src/server.ts" }),
@@ -153,14 +162,14 @@ describe("Phase 13 JS ecosystem plans", () => {
     expect(
       runCommands(drizzleIntegration.plan(planContext({ integrations: [{ id: "postgresql" }] }))),
     ).toEqual([
-      ["pnpm", "add", "drizzle-orm", "pg", "dotenv"],
-      ["pnpm", "add", "--save-dev", "drizzle-kit", "tsx", "@types/pg"],
+      ["pnpm", "add", "drizzle-orm@0.45.3", "pg@8.23.0", "dotenv@18.0.3"],
+      ["pnpm", "add", "--save-dev", "drizzle-kit@0.31.11", "tsx@4.23.15", "@types/pg@8.23.1"],
     ]);
   });
 
   it("installs Mongoose and a connection helper", () => {
     const plan = mongooseIntegration.plan(planContext({ integrations: [{ id: "mongodb" }] }));
-    expect(runCommands(plan)).toEqual([["pnpm", "add", "mongoose"]]);
+    expect(runCommands(plan)).toEqual([["pnpm", "add", "mongoose@9.10.2"]]);
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "src/mongoose.js" }),
@@ -174,7 +183,16 @@ describe("Phase 13 JS ecosystem plans", () => {
         playwrightIntegration.plan(planContext({ frameworkOptions: { typescript: true } })),
       ),
     ).toEqual([
-      ["pnpm", "create", "playwright", ".", "--quiet", "--lang=TypeScript", "--no-browsers"],
+      [
+        "pnpm",
+        "create",
+        "playwright@1.17.139",
+        ".",
+        "--quiet",
+        "--lang=TypeScript",
+        "--no-browsers",
+      ],
+      ["pnpm", "add", "--save-dev", "@playwright/test@1.63.0"],
     ]);
     expect(playwrightIntegration.plan(planContext())).toEqual(
       expect.arrayContaining([expect.objectContaining({ type: "show_message" })]),
@@ -183,22 +201,22 @@ describe("Phase 13 JS ecosystem plans", () => {
 
   it("installs ESLint with the official recommended packages", () => {
     expect(runCommands(eslintIntegration.plan(planContext()))).toEqual([
-      ["pnpm", "add", "--save-dev", "eslint@latest", "@eslint/js@latest"],
+      ["pnpm", "add", "--save-dev", "eslint@9.39.5", "@eslint/js@9.39.5"],
     ]);
   });
 
   it("initializes shadcn/ui with the documented --yes template flags", () => {
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "nextjs" })))).toEqual([
-      ["pnpm", "dlx", "shadcn@latest", "init", "--yes", "-t", "next"],
+      ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "next"],
     ]);
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "react-vite" })))).toEqual(
-      [["pnpm", "dlx", "shadcn@latest", "init", "--yes", "-t", "vite"]],
+      [["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"]],
     );
     expect(
       runCommands(
         shadcnIntegration.plan(planContext({ packageManager: "npm", frameworkId: "nextjs" })),
       ),
-    ).toEqual([["npx", "--yes", "shadcn@latest", "init", "--yes", "-t", "next"]]);
+    ).toEqual([["npx", "--yes", "shadcn@4.21.0", "init", "--yes", "-t", "next"]]);
   });
 
   it("does not install Docker and writes Compose without starting it", () => {
@@ -231,7 +249,7 @@ describe("Phase 13 JS ecosystem plans", () => {
 
   it("installs Vitest only for non-Next.js frameworks", () => {
     expect(runCommands(vitestIntegration.plan(planContext({ frameworkId: "express" })))).toEqual([
-      ["pnpm", "add", "--save-dev", "vitest"],
+      ["pnpm", "add", "--save-dev", "vitest@5.0.1"],
     ]);
   });
 });
@@ -327,9 +345,9 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "create", "vite", ".", "--template", "react-ts", "--no-interactive"],
-        ["pnpm", "add", "tailwindcss", "@tailwindcss/vite"],
-        ["pnpm", "dlx", "shadcn@latest", "init", "--yes", "-t", "vite"],
+        ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
+        ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/vite@4.3.3"],
+        ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"],
       ]),
     );
   });
@@ -352,7 +370,7 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "add", "express"],
+        ["pnpm", "add", "express@5.2.1"],
         [
           "pnpm",
           "exec",

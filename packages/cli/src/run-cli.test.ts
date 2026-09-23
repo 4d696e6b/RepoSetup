@@ -529,14 +529,14 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("nextjs");
     expect(captured.stdout()).toContain("prisma");
     expect(captured.stdout()).toContain(
-      "pnpm create next-app@latest . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --yes",
+      "pnpm create next-app@16.3.6 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --yes",
     );
     expect(captured.stdout()).toContain(
-      "pnpm add --save-dev --allow-build=prisma --allow-build=@prisma/engines prisma@prev @types/better-sqlite3",
+      "pnpm add --save-dev --allow-build=prisma --allow-build=@prisma/engines prisma@7.10.0 @types/better-sqlite3@9.6.0",
     );
     expect(captured.stdout()).toContain("pnpm exec prisma generate");
     expect(captured.stdout()).toContain("pnpm exec vitest run --passWithNoTests");
-    expect(captured.stdout()).toContain("pnpm add --save-dev --save-exact prettier");
+    expect(captured.stdout()).toContain("pnpm add --save-dev --save-exact prettier@3.9.8");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });
@@ -561,8 +561,10 @@ describe("runCli", () => {
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Dry-run for example-react-app");
     expect(captured.stdout()).toContain("react-vite");
-    expect(captured.stdout()).toContain("pnpm create vite . --template react-ts --no-interactive");
-    expect(captured.stdout()).toContain("pnpm dlx shadcn@latest init --yes -t vite");
+    expect(captured.stdout()).toContain(
+      "pnpm create vite@8.3.0 . --template react-ts --no-interactive",
+    );
+    expect(captured.stdout()).toContain("pnpm dlx shadcn@4.21.0 init --yes -t vite");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });

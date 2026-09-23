@@ -8,7 +8,9 @@ import {
 } from "@reposetup/core";
 
 import { defineIntegration } from "./define.js";
+import { requireNodeRange } from "./node-range.js";
 import { addPackages } from "./operations.js";
+import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
@@ -57,10 +59,18 @@ export const eslintIntegration = defineIntegration({
   },
   plan(context: PlanContext) {
     return [
-      addPackages(context, ["eslint@latest", "@eslint/js@latest"], {
-        description: "Install ESLint and @eslint/js",
-        dev: true,
-      }),
+      requireNodeRange(NODE_ENGINE_RANGES.eslint, `ESLint ${QUALIFIED_VERSIONS.eslint}`),
+      addPackages(
+        context,
+        [
+          npmPin("eslint", QUALIFIED_VERSIONS.eslint),
+          npmPin("@eslint/js", QUALIFIED_VERSIONS.eslintJs),
+        ],
+        {
+          description: "Install ESLint and @eslint/js",
+          dev: true,
+        },
+      ),
       {
         type: "create_file",
         path: "eslint.config.js",

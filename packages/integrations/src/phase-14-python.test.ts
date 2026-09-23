@@ -92,7 +92,7 @@ describe("Phase 14 Python ecosystem plans", () => {
     const plan = fastapiIntegration.plan(planContext({ projectName: "awesome-project" }));
     expect(runCommands(plan)).toEqual([
       ["uv", "init", ".", "--bare", "--name", "awesome-project"],
-      ["uv", "add", "fastapi[standard]"],
+      ["uv", "add", "fastapi[standard]==0.141.1"],
     ]);
     expect(plan).toEqual(
       expect.arrayContaining([
@@ -106,7 +106,7 @@ describe("Phase 14 Python ecosystem plans", () => {
     const plan = flaskIntegration.plan(planContext({ frameworkId: "flask" }));
     expect(runCommands(plan)).toEqual([
       ["uv", "init", ".", "--bare", "--name", "demo"],
-      ["uv", "add", "Flask"],
+      ["uv", "add", "Flask==3.1.3"],
     ]);
     expect(plan).toEqual(
       expect.arrayContaining([expect.objectContaining({ type: "create_file", path: "app.py" })]),
@@ -115,18 +115,18 @@ describe("Phase 14 Python ecosystem plans", () => {
 
   it("installs Pydantic, SQLAlchemy, pytest, and Ruff with official package specs", () => {
     expect(runCommands(pydanticIntegration.plan(planContext()))).toEqual([
-      ["uv", "add", "pydantic"],
+      ["uv", "add", "pydantic==2.13.5"],
     ]);
     expect(
       runCommands(
         sqlalchemyIntegration.plan(planContext({ integrations: [{ id: "postgresql" }] })),
       ),
-    ).toEqual([["uv", "add", "SQLAlchemy"]]);
+    ).toEqual([["uv", "add", "SQLAlchemy==2.0.54"]]);
     expect(runCommands(pytestIntegration.plan(planContext()))).toEqual([
-      ["uv", "add", "--dev", "pytest"],
+      ["uv", "add", "--dev", "pytest==9.1.1"],
     ]);
     expect(runCommands(ruffIntegration.plan(planContext()))).toEqual([
-      ["uv", "add", "--dev", "ruff"],
+      ["uv", "add", "--dev", "ruff==0.16.8"],
     ]);
   });
 
@@ -134,7 +134,7 @@ describe("Phase 14 Python ecosystem plans", () => {
     expect(
       runCommands(alembicIntegration.plan(planContext({ integrations: [{ id: "sqlalchemy" }] }))),
     ).toEqual([
-      ["uv", "add", "alembic"],
+      ["uv", "add", "alembic==1.20.0"],
       ["uv", "run", "alembic", "init", "alembic"],
     ]);
   });
@@ -160,7 +160,7 @@ describe("Phase 14 Python ecosystem plans", () => {
         ),
       ),
     ).toEqual([
-      ["uv", "add", "alembic"],
+      ["uv", "add", "alembic==1.20.0"],
       ["uv", "run", "alembic", "init", "alembic"],
       ["uv", "run", "ruff", "check", "--fix", "alembic/env.py"],
     ]);
@@ -171,9 +171,9 @@ describe("Phase 14 Python ecosystem plans", () => {
       runCommands(
         flaskIntegration.plan(planContext({ packageManager: "pip", frameworkId: "flask" })),
       ),
-    ).toEqual([["python", "-m", "pip", "install", "Flask"]]);
+    ).toEqual([["python", "-m", "pip", "install", "Flask==3.1.3"]]);
     expect(runCommands(alembicIntegration.plan(planContext({ packageManager: "pip" })))).toEqual([
-      ["python", "-m", "pip", "install", "alembic"],
+      ["python", "-m", "pip", "install", "alembic==1.20.0"],
       ["alembic", "init", "alembic"],
     ]);
   });
@@ -255,11 +255,11 @@ describe("Phase 14 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["uv", "init", ".", "--bare", "--name", "example-fastapi-app"],
-        ["uv", "add", "fastapi[standard]"],
-        ["uv", "add", "pydantic"],
-        ["uv", "add", "SQLAlchemy"],
-        ["uv", "add", "--dev", "pytest"],
-        ["uv", "add", "--dev", "ruff"],
+        ["uv", "add", "fastapi[standard]==0.141.1"],
+        ["uv", "add", "pydantic==2.13.5"],
+        ["uv", "add", "SQLAlchemy==2.0.54"],
+        ["uv", "add", "--dev", "pytest==9.1.1"],
+        ["uv", "add", "--dev", "ruff==0.16.8"],
         ["uv", "run", "alembic", "init", "alembic"],
       ]),
     );
@@ -291,7 +291,7 @@ describe("Phase 14 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["uv", "init", ".", "--bare", "--name", "example-flask-app"],
-        ["uv", "add", "Flask"],
+        ["uv", "add", "Flask==3.1.3"],
         ["uv", "run", "alembic", "init", "alembic"],
       ]),
     );

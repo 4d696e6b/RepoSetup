@@ -10,6 +10,7 @@ import {
 import { ORM_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { addPackages, hasSelectedIntegration } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { mergeVerify, missingAnyFile, missingEnvKeys, missingPackage } from "./verify.js";
 
@@ -87,13 +88,29 @@ export const drizzleIntegration = defineIntegration({
     }
 
     return [
-      addPackages(context, ["drizzle-orm", "pg", "dotenv"], {
-        description: "Install Drizzle ORM, node-postgres, and dotenv",
-      }),
-      addPackages(context, ["drizzle-kit", "tsx", "@types/pg"], {
-        description: "Install Drizzle Kit and PostgreSQL types",
-        dev: true,
-      }),
+      addPackages(
+        context,
+        [
+          npmPin("drizzle-orm", QUALIFIED_VERSIONS.drizzleOrm),
+          npmPin("pg", QUALIFIED_VERSIONS.pg),
+          npmPin("dotenv", QUALIFIED_VERSIONS.dotenv),
+        ],
+        {
+          description: "Install Drizzle ORM, node-postgres, and dotenv",
+        },
+      ),
+      addPackages(
+        context,
+        [
+          npmPin("drizzle-kit", QUALIFIED_VERSIONS.drizzleKit),
+          npmPin("tsx", QUALIFIED_VERSIONS.tsx),
+          npmPin("@types/pg", QUALIFIED_VERSIONS.typesPg),
+        ],
+        {
+          description: "Install Drizzle Kit and PostgreSQL types",
+          dev: true,
+        },
+      ),
       {
         type: "create_directory",
         path: "src/db",

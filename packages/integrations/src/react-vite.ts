@@ -17,6 +17,8 @@ import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
 import { supportsNodeNpmPnpm, VITE_CONFIG_PATHS } from "./node-support.js";
+import { requireNodeRange } from "./node-range.js";
+import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS } from "./qualified-versions.js";
 import { pnpmOrNpmCreate, usesTypescript } from "./scaffold.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
@@ -82,10 +84,12 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
   },
   plan(context: PlanContext<ReactViteOptions>) {
     const template = usesTypescript(context) ? "react-ts" : "react";
+    const vite = `vite@${QUALIFIED_VERSIONS.vite}`;
     return [
+      requireNodeRange(NODE_ENGINE_RANGES.vite, `Vite ${QUALIFIED_VERSIONS.vite}`),
       pnpmOrNpmCreate(
         context,
-        { pnpmName: "vite", npmName: "vite@latest" },
+        { pnpmName: vite, npmName: vite },
         ["--template", template, "--no-interactive"],
         { description: "Scaffold React with create-vite", longRunning: true },
       ),

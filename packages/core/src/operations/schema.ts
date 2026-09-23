@@ -14,6 +14,7 @@ export const checkPrerequisiteOperationSchema = z.strictObject({
   type: z.literal("check_prerequisite"),
   id: z.string().min(1),
   description: descriptionSchema,
+  versionRange: z.string().min(1).optional(),
 });
 
 export const installPackageOperationSchema = z.strictObject({
@@ -35,6 +36,9 @@ export const runCommandOperationSchema = z.strictObject({
   requiresNetwork: z.boolean().optional(),
   interactive: z.boolean().optional(),
   longRunning: z.boolean().optional(),
+  requiresLockfile: z
+    .enum(["package-lock.json", "pnpm-lock.yaml", "bun.lock", "uv.lock"])
+    .optional(),
 });
 
 export const createDirectoryOperationSchema = z.strictObject({

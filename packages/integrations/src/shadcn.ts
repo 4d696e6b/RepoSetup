@@ -9,6 +9,8 @@ import {
 
 import { defineIntegration } from "./define.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
+import { requireNodeRange } from "./node-range.js";
+import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { dlx } from "./scaffold.js";
 import { mergeVerify, missingAnyFile } from "./verify.js";
 
@@ -53,7 +55,8 @@ export const shadcnIntegration = defineIntegration({
   plan(context: PlanContext) {
     const template = context.config.framework.id === "react-vite" ? "vite" : "next";
     return [
-      dlx(context, "shadcn@latest", ["init", "--yes", "-t", template], {
+      requireNodeRange(NODE_ENGINE_RANGES.shadcn, `shadcn ${QUALIFIED_VERSIONS.shadcn}`),
+      dlx(context, npmPin("shadcn", QUALIFIED_VERSIONS.shadcn), ["init", "--yes", "-t", template], {
         description: "Initialize shadcn/ui in the existing app",
       }),
     ];

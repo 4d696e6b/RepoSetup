@@ -39,6 +39,16 @@ describe("uvAdapter", () => {
     expectArgs(result, ["add", "--dev", "pytest"]);
   });
 
+  it("syncs a frozen project only when uv.lock stays unchanged", () => {
+    const result = uvAdapter.install({
+      cwd: ".",
+      description: "Install from uv.lock",
+      frozen: true,
+    });
+
+    expectArgs(result, ["sync", "--locked"]);
+  });
+
   it("installs the project with uv sync", () => {
     const result = uvAdapter.install({
       cwd: ".",

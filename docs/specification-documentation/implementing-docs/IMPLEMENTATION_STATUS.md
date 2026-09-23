@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 22 — Reproducible recipes and compatibility enforcement: in progress.** Phase 20 is complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 22 — Reproducible recipes and compatibility enforcement: complete (engines floor deferred).** Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
 
@@ -35,6 +35,23 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 - [x] Golden CI now provisions uv and runs the complete recipe suite on every supported runner with Python 3.12 and 3.13.
 - [x] Remote CI and golden qualification passed on Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64. Windows-native package-manager execution, all representative recipe creates, and evidence artifacts were observed in the qualification matrix.
 
+### Phase 22 progress — 2026-09-23
+
+Researched versions are the registry releases observed on this date. Direct specs are exact. Transitive versions stay in the package-manager lockfile named by the recipe record. `node_modules` is not claimed to be byte-identical across operating systems or CPU architectures because `better-sqlite3` and Prisma engines are native.
+
+- [x] Guaranteed recipes and the previously floating generators pin researched versions: `create-next-app@16.3.6`, `vite@8.3.0`, ESLint `9.39.5` with `@eslint/js@9.39.5`, `shadcn@4.21.0`, `create-playwright@1.17.139` plus `@playwright/test@1.63.0`, and the direct npm/PyPI packages those five recipes install.
+- [x] ESLint 10.11.0, jsdom 30.1.1, TypeScript 7.0.2, `@types/node@26`, and Prisma 8 RC were not qualified. Their published engines or major-line status do not match the Node 22.12 and Node 24 hosts this line still runs.
+- [x] Recipe records stay declarative (`recipeVersion` 1). They carry the config, registry revision `2026-09-23`, direct version specs, one lockfile name, and a plan hash. Plans are rebuilt from the built-in registry. Extra command fields and shell-looking specs are rejected. A hash mismatch returns no operations.
+- [x] Identical configs produce identical plan hashes. schemaVersion 1 examples still parse and round-trip. schemaVersion 2 is rejected.
+- [x] Conflicting lockfiles are rejected before a scaffold command runs, including `npx` against an existing `pnpm-lock.yaml`. Plans do not write `.npmrc`, `.pnpmrc`, or `.env`.
+- [x] Qualified Node ranges fail before mutation. Vite 8 requires `^20.19.0 || >=22.12.0`. Vitest 5 requires `^22.12.0 || ^24.0.0 || >=26.0.0`. A version check is omitted from an add plan once that integration's work is already present.
+- [x] A locked repeat install is `npm ci`, `pnpm install --frozen-lockfile`, or `uv sync --locked`. It does not re-run generators. A missing lockfile or a lockfile for a different package manager fails before `npm ci` can delete `node_modules`. pip has no lockfile and is refused.
+- [x] Hermetic evidence: a local `file:` package is installed twice with `npm ci` through the executor. The lockfile SHA-256 stays identical, the user `.npmrc` is unchanged, and a drifted `package.json` fails before the lockfile can change. This does not claim a public-registry cold install.
+- [x] Experimental catalog IDs that still installed unversioned packages (`fastify`, `mongoose`, `drizzle`) now pin researched direct versions so they cannot quietly float while remaining experimental.
+- [ ] Published CLI `engines` stay `>=20`. Raising the floor to Node 24 is deferred to a later release phase after the Phase 19 qualification target is the product claim.
+
+Phase 22 implementation gates for reproducible recipes are complete. The Node 24 engines floor remains an explicit deferred product-metadata change.
+
 ## Current release
 
 The observed npm dist-tag is `rsetup@0.1.1`; the source, tag, integrity, and remaining unobserved GitHub evidence are recorded in [Phase 19 baseline](./PHASE_19_BASELINE.md).
@@ -62,7 +79,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 19 — Baseline and acceptance scope
 - [x] Phase 20 — Safe executor and adapter boundaries
 - [x] Phase 21 — Cross-platform execution
-- [ ] Phase 22 — Reproducible recipes and compatibility
+- [x] Phase 22 — Reproducible recipes and compatibility
 - [ ] Phase 23 — Measured installation performance
 - [ ] Phase 24 — Daily CLI usability and recovery guidance
 - [ ] Phase 25 — Existing integration qualification

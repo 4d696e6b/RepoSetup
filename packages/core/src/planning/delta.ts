@@ -17,13 +17,21 @@ export async function filterSatisfiedOperations(
   packageJson: PackageJsonSummary | undefined,
 ): Promise<InstallationOperation[]> {
   const remaining: InstallationOperation[] = [];
+  let removedWork = false;
 
   for (const operation of operations) {
     if (await isOperationSatisfied(operation, files, packageJson)) {
+      if (operation.type !== "show_message") {
+        removedWork = true;
+      }
       continue;
     }
 
     remaining.push(operation);
+  }
+
+  if (removedWork && remaining.every((operation) => operation.type === "check_prerequisite")) {
+    return [];
   }
 
   return remaining;

@@ -28,6 +28,12 @@ export async function preflightInstallation(
     return nonWritableError(context.rootDir);
   }
 
+  const lockfileError = await checkLockfileCompatibility(operations, context);
+  if (lockfileError !== undefined) return lockfileError;
+
+  const missingLockfile = await checkRequiredLockfile(operations, context);
+  if (missingLockfile !== undefined) return missingLockfile;
+
   const diskError = await checkAvailableDiskSpace(context);
   if (diskError !== undefined) {
     return diskError;
@@ -61,6 +67,80 @@ export async function preflightInstallation(
     }
   }
 
+  return undefined;
+}
+
+async function checkRequiredLockfile(
+  operations: readonly InstallationOperation[],
+  context: ExecutionContext,
+): Promise<RepoSetupError | undefined> {
+  for (const operation of operations) {
+    if (operation.type !== "run_command" || operation.requiresLockfile === undefined) {
+      continue;
+    }
+
+    if (await context.fs.exists(`${context.rootDir}/${operation.requiresLockfile}`)) {
+      continue;
+    }
+
+    return createRepoSetupError({
+      code: "LOCKFILE_CONFLICT",
+      message: `Locked install requires ${operation.requiresLockfile}, and that file is not in the project.`,
+      details: { lockfile: operation.requiresLockfile },
+      suggestion:
+        "Restore the lockfile that belongs with this recipe record, then retry. RepoSetup will not resolve a new dependency graph.",
+    });
+  }
+
+  return undefined;
+}
+
+function packageManagersInPlan(operations: readonly InstallationOperation[]): Set<string> {
+  const managers = new Set<string>();
+  for (const operation of operations) {
+    if (operation.type === "install_package") {
+      managers.add(operation.packageManager);
+      continue;
+    }
+    if (operation.type !== "run_command") {
+      continue;
+    }
+    if (operation.command === "npm" || operation.command === "npx") {
+      managers.add("npm");
+    } else if (operation.command === "pnpm") {
+      managers.add("pnpm");
+    } else if (operation.command === "uv") {
+      managers.add("uv");
+    }
+  }
+  return managers;
+}
+
+async function checkLockfileCompatibility(
+  operations: readonly InstallationOperation[],
+  context: ExecutionContext,
+): Promise<RepoSetupError | undefined> {
+  const managers = packageManagersInPlan(operations);
+  const lockfiles = [
+    { manager: "npm", file: "package-lock.json" },
+    { manager: "pnpm", file: "pnpm-lock.yaml" },
+    { manager: "bun", file: "bun.lock" },
+    { manager: "uv", file: "uv.lock" },
+  ] as const;
+  for (const lockfile of lockfiles) {
+    if (
+      managers.size > 0 &&
+      !managers.has(lockfile.manager) &&
+      (await context.fs.exists(`${context.rootDir}/${lockfile.file}`))
+    )
+      return createRepoSetupError({
+        code: "LOCKFILE_CONFLICT",
+        message: `Found ${lockfile.file}, which conflicts with this plan's package manager.`,
+        details: { lockfile: lockfile.file, managers: [...managers] },
+        suggestion:
+          "Use the package manager recorded by the existing lockfile or remove the conflicting lockfile deliberately.",
+      });
+  }
   return undefined;
 }
 

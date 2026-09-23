@@ -14,6 +14,7 @@ import {
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { addPackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { createNodePackageJson, usesTypescript } from "./scaffold.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
@@ -76,7 +77,9 @@ export const fastifyIntegration = defineIntegration<FastifyOptions>({
     const entry = typescript ? "src/server.ts" : "server.js";
     const operations: InstallationOperation[] = [
       createNodePackageJson(context),
-      addPackages(context, ["fastify"], { description: "Install Fastify" }),
+      addPackages(context, [npmPin("fastify", QUALIFIED_VERSIONS.fastify)], {
+        description: "Install Fastify",
+      }),
     ];
 
     if (typescript) {

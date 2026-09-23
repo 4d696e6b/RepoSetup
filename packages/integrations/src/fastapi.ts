@@ -11,6 +11,7 @@ import {
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { addPackages, afterPythonPackageInstall, initPythonProject } from "./operations.js";
+import { QUALIFIED_VERSIONS } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
@@ -56,7 +57,7 @@ export const fastapiIntegration = defineIntegration({
   plan(context: PlanContext) {
     const operations: InstallationOperation[] = [
       ...initPythonProject(context),
-      addPackages(context, ["fastapi[standard]"], {
+      addPackages(context, [`fastapi[standard]==${QUALIFIED_VERSIONS.fastapi}`], {
         description: "Install FastAPI with the official standard extras",
       }),
       ...afterPythonPackageInstall(context, "fastapi[standard]"),

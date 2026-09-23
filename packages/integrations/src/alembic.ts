@@ -9,6 +9,7 @@ import {
 
 import { defineIntegration } from "./define.js";
 import { addPackages, afterPythonPackageInstall, runPythonTool } from "./operations.js";
+import { QUALIFIED_VERSIONS, pypiPin } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
@@ -37,7 +38,7 @@ export const alembicIntegration = defineIntegration({
   },
   plan(context) {
     const operations: InstallationOperation[] = [
-      addPackages(context, ["alembic"], {
+      addPackages(context, [pypiPin("alembic", QUALIFIED_VERSIONS.alembic)], {
         description: "Install Alembic",
       }),
       ...afterPythonPackageInstall(context, "alembic"),
