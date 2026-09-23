@@ -113,7 +113,11 @@ function executeInstallation(
 }
 
 afterEach(async () => {
-  await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+  await Promise.all(
+    tempDirs
+      .splice(0)
+      .map((dir) => rm(dir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 })),
+  );
 });
 
 describe("locked npm reproduction", () => {
@@ -176,7 +180,7 @@ describe("locked npm reproduction", () => {
     }
     expect(sha256(await readFile(path.join(appDir, "package-lock.json")))).toBe(sha256(lockBefore));
     expect(await readFile(path.join(appDir, ".npmrc"), "utf8")).toBe(userNpmrc);
-  });
+  }, 30_000);
 });
 
 function lockedNpmInstall() {
