@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/performance.yml"
+      - "scripts/benchmark-real-installs.mjs"
   workflow_dispatch:
     inputs:
       trials:
