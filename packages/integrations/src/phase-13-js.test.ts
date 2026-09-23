@@ -91,7 +91,9 @@ describe("Phase 13 JS ecosystem plans", () => {
           planContext({ frameworkId: "react-vite", options: { typescript: true } }),
         ),
       ),
-    ).toEqual([["pnpm", "create", "vite", ".", "--template", "react-ts", "--no-interactive"]]);
+    ).toEqual([
+      ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
+    ]);
 
     expect(
       runCommands(
@@ -106,7 +108,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         ),
       ),
     ).toEqual([
-      ["npm", "create", "vite@latest", "app", "--", "--template", "react", "--no-interactive"],
+      ["npm", "create", "vite@8.3.0", "app", "--", "--template", "react", "--no-interactive"],
     ]);
   });
 
@@ -327,7 +329,7 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "create", "vite", ".", "--template", "react-ts", "--no-interactive"],
+        ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
         ["pnpm", "add", "tailwindcss", "@tailwindcss/vite"],
         ["pnpm", "dlx", "shadcn@latest", "init", "--yes", "-t", "vite"],
       ]),

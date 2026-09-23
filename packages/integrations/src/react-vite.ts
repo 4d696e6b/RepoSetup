@@ -85,7 +85,7 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
     return [
       pnpmOrNpmCreate(
         context,
-        { pnpmName: "vite", npmName: "vite@latest" },
+        { pnpmName: "vite@8.3.0", npmName: "vite@8.3.0" },
         ["--template", template, "--no-interactive"],
         { description: "Scaffold React with create-vite", longRunning: true },
       ),
