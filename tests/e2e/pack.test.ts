@@ -120,17 +120,20 @@ describe("npm pack artifact", () => {
     expect(dryRun.exitCode, dryRun.stderr).toBe(0);
     expect(dryRun.stdout).toContain("No files or commands were executed.");
 
-    if (process.platform !== "win32") {
-      for (const alias of ["rsetup", "reposetup"]) {
+    for (const alias of ["rsetup", "reposetup"]) {
+      if (process.platform !== "win32") {
         const shim = path.join(installDir, "node_modules", ".bin", alias);
         const shimVersion = await runProcess(shim, ["--version"], { cwd: installDir });
         expect(shimVersion.exitCode, shimVersion.stderr).toBe(0);
         expect(shimVersion.stdout.trim()).toBe(cliPackageVersion());
+        continue;
       }
-    } else {
-      const shims = await readdir(path.join(installDir, "node_modules", ".bin"));
-      expect(shims).toContain("rsetup.cmd");
-      expect(shims).toContain("reposetup.cmd");
+
+      const shimVersion = await runProcess("npm", ["exec", "--", alias, "--version"], {
+        cwd: installDir,
+      });
+      expect(shimVersion.exitCode, shimVersion.stderr).toBe(0);
+      expect(shimVersion.stdout.trim()).toBe(cliPackageVersion());
     }
   });
 });
