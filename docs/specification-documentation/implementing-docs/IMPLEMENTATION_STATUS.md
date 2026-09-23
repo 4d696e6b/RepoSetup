@@ -26,7 +26,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 ### Phase 21 progress — 2026-09-23
 
 - [x] The CLI resolves the `python` operation command through a platform adapter: `python3` then `python` on POSIX, and `py`, `python`, then `python3` on Windows. The first working candidate is cached and reused for prerequisite version checks and subsequent planned commands.
-- [x] Packed-artifact e2e coverage uses a parent path containing spaces and Unicode, executes both aliases on POSIX native shims, and verifies both Windows `.cmd` shims are packaged.
+- [x] Packed-artifact e2e coverage uses a parent path containing spaces and Unicode, executes both aliases on POSIX native shims, and executes both Windows `.cmd` aliases through npm's native launcher.
 - [x] The platform workflow now runs the packed-artifact e2e suite on Ubuntu, macOS, and Windows for Node 22 and 24, with Node 20 retained on Ubuntu for the supported floor.
 - [ ] Remote matrix results, Windows-native alias execution, Python 3.12–3.13 qualification, representative create/add recipe runs, and manual Windows transcript remain required before this phase can close.
 
