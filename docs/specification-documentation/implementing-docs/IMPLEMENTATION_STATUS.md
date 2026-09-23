@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 19 — Baseline and acceptance scope: complete.** Next: Phase 20 — Safe executor and adapter boundaries. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 20 — Safe executor and adapter boundaries: complete.** Next: Phase 21 — Cross-platform execution. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
 
@@ -21,7 +21,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 - [x] Disk-space preflight requires 512 MiB free before CLI execution; recovery policy forbids automatic rollback and limits any future restore to verified RepoSetup-owned files.
 - [x] Full workspace tests (355), packed-CLI e2e tests (12), and available golden recipes (2) pass after the executor changes; 3 golden recipes remain environment-gated skips.
 - [x] POSIX cancellation terminates spawned descendant processes; the regression fixture proves the descendant cannot continue and mutate the project after cancellation.
-- [ ] Runtime-version and Windows process-tree qualification are Phase 21 matrix requirements. They cannot be claimed from this macOS/Node 22 host.
+- [x] Prerequisite preflight verifies the current documented Node 20.9 and Python 3.9 minimums before mutation. The Node 24/Python 3.12–3.13 matrix and Windows-native process handling are Phase 21 qualification requirements.
 
 ## Current release
 
@@ -48,7 +48,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 ### 0.2.0 implementation
 
 - [x] Phase 19 — Baseline and acceptance scope
-- [ ] Phase 20 — Safe executor and adapter boundaries
+- [x] Phase 20 — Safe executor and adapter boundaries
 - [ ] Phase 21 — Cross-platform execution
 - [ ] Phase 22 — Reproducible recipes and compatibility
 - [ ] Phase 23 — Measured installation performance
