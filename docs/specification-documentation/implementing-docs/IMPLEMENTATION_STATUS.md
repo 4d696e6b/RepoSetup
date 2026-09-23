@@ -11,7 +11,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 ### Phase 23 progress — 2026-09-23
 
 - [x] Package adds stay typed `install_package` through planning. `exact` and `allowBuild` are on the operation schema and forwarded into adapter argv at execute time. Plans no longer expand adds to `run_command` early.
-- [ ] Deduplicate and batch compatible install requests without crossing generators, migrations, codegen, or verification barriers.
+- [x] Compatible `install_package` ops batch within the same manager/root/dev/exact policy. Soft ops (files, messages, checks) do not block merging. `run_command` and `verify` stay barriers so generators, migrations, codegen, and verification still see dependencies installed first. Conflicting version specs in one policy fail the plan. Add plans filter satisfied packages before the batch pass.
 - [ ] Separate scaffold generation from dependency installation where qualified generators support it (research-required per generator).
 - [ ] Assemble manifests before a consolidated install where safe.
 - [ ] Cache preference and bounded retry for transient downloads (research-required).

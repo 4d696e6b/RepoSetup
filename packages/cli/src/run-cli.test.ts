@@ -625,9 +625,11 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("fastapi");
     expect(captured.stdout()).toContain("uv init . --bare --name example-fastapi-app");
     expect(captured.stdout()).toContain(
-      "install_package  Install FastAPI with the official standard extras",
+      "install_package  Install fastapi[standard]==0.141.1, pydantic==2.13.5, SQLAlchemy==2.0.54, alembic==1.20.0",
     );
-    expect(captured.stdout()).toContain("packages  fastapi[standard]==0.141.1");
+    expect(captured.stdout()).toContain(
+      "packages  fastapi[standard]==0.141.1, pydantic==2.13.5, SQLAlchemy==2.0.54, alembic==1.20.0",
+    );
     expect(captured.stdout()).toContain("uv run alembic init alembic");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
@@ -653,8 +655,12 @@ describe("runCli", () => {
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Dry-run for example-flask-app");
     expect(captured.stdout()).toContain("flask");
-    expect(captured.stdout()).toContain("install_package  Install Flask");
-    expect(captured.stdout()).toContain("packages  Flask==3.1.3");
+    expect(captured.stdout()).toContain(
+      "install_package  Install Flask==3.1.3, SQLAlchemy==2.0.54, alembic==1.20.0",
+    );
+    expect(captured.stdout()).toContain(
+      "packages  Flask==3.1.3, SQLAlchemy==2.0.54, alembic==1.20.0",
+    );
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });

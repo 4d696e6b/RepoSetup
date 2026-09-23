@@ -12,6 +12,7 @@ import type {
   ResolvedIntegration,
 } from "../resolution/types.js";
 import { validateInstallationPlan } from "./validate-plan.js";
+import { batchInstallPackages } from "./batch-install.js";
 
 export function planInstallation(
   config: ResolutionResult["config"],
@@ -22,10 +23,12 @@ export function planInstallation(
     return resolved;
   }
 
-  return planResolvedIds(
-    resolved,
-    registry,
-    resolved.orderedIntegrations.map((item) => item.id),
+  return withBatchedInstalls(
+    planResolvedIds(
+      resolved,
+      registry,
+      resolved.orderedIntegrations.map((item) => item.id),
+    ),
   );
 }
 
@@ -39,6 +42,8 @@ export function planInstallationSubset(
     return resolved;
   }
 
+  // Leave install_package ops unbatched so add deltas can drop satisfied
+  // packages before a final batch pass.
   return planResolvedIds(resolved, registry, ids);
 }
 
@@ -76,6 +81,22 @@ function planResolvedIds(
     ...resolved,
     orderedIntegrations: ordered,
     operations: validation.operations,
+  };
+}
+
+function withBatchedInstalls(result: ResolutionResult): ResolutionResult {
+  if (!result.valid) {
+    return result;
+  }
+
+  const batched = batchInstallPackages(result.operations);
+  if (!batched.ok) {
+    return invalidPlan(result, [batched.error]);
+  }
+
+  return {
+    ...result,
+    operations: batched.operations,
   };
 }
 

@@ -369,7 +369,16 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "add", "express@5.2.1"],
+        [
+          "pnpm",
+          "add",
+          "--allow-build=esbuild",
+          "express@5.2.1",
+          "@prisma/client@7.10.0",
+          "@prisma/adapter-pg@7.10.0",
+          "pg@8.23.0",
+          "dotenv@18.0.3",
+        ],
         [
           "pnpm",
           "exec",
