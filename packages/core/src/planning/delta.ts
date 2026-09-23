@@ -48,6 +48,9 @@ export async function isOperationSatisfied(
     case "show_message":
       return true;
     case "install_package":
+      if (operation.packageManager === "uv" || operation.packageManager === "pip") {
+        return pythonPackagesAlreadyPresent(operation.packages, files);
+      }
       return packagesAlreadyPresent(operation.packages, packageJson);
     case "run_command":
       return isRunCommandSatisfied(operation.command, operation.args, files, packageJson);

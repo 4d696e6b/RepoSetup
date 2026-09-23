@@ -20,6 +20,7 @@ import { dockerIntegration } from "./docker.js";
 import { fastapiIntegration } from "./fastapi.js";
 import { flaskIntegration } from "./flask.js";
 import { pipIntegration } from "./pip.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 import { postgresqlIntegration } from "./postgresql.js";
 import { pydanticIntegration } from "./pydantic.js";
 import { pytestIntegration } from "./pytest.js";
@@ -55,9 +56,7 @@ function planContext<TOptions = unknown>(
 }
 
 function runCommands(operations: ReturnType<typeof fastapiIntegration.plan>) {
-  return operations
-    .filter((operation) => operation.type === "run_command")
-    .map((operation) => [operation.command, ...operation.args]);
+  return plannedCommandArgv(operations);
 }
 
 async function contextOf(files: Record<string, string>): Promise<DetectionContext> {

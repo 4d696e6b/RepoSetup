@@ -6,6 +6,7 @@ import { parseRepoSetupConfig, planInstallation } from "@reposetup/core";
 import { describe, expect, it } from "vitest";
 
 import { createBuiltInRegistry } from "./catalog.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 
 const examplePath = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -36,9 +37,7 @@ describe("golden Next.js/SQLite stack", () => {
       "zod",
     ]);
 
-    const commands = result.operations
-      .filter((operation) => operation.type === "run_command")
-      .map((operation) => [operation.command, ...operation.args]);
+    const commands = plannedCommandArgv(result.operations);
 
     expect(commands).toEqual([
       [

@@ -23,6 +23,7 @@ import { fastifyIntegration } from "./fastify.js";
 import { githubActionsIntegration } from "./github-actions.js";
 import { mongodbIntegration } from "./mongodb.js";
 import { mongooseIntegration } from "./mongoose.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 import { playwrightIntegration } from "./playwright.js";
 import { postgresqlIntegration } from "./postgresql.js";
 import { reactViteIntegration } from "./react-vite.js";
@@ -63,9 +64,7 @@ function planContext<TOptions = unknown>(
 }
 
 function runCommands(operations: ReturnType<typeof expressIntegration.plan>) {
-  return operations
-    .filter((operation) => operation.type === "run_command")
-    .map((operation) => [operation.command, ...operation.args]);
+  return plannedCommandArgv(operations);
 }
 
 async function contextOf(files: Record<string, string>): Promise<DetectionContext> {

@@ -532,11 +532,17 @@ describe("runCli", () => {
       "pnpm create next-app@16.3.6 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --yes",
     );
     expect(captured.stdout()).toContain(
-      "pnpm add --save-dev --allow-build=prisma --allow-build=@prisma/engines prisma@7.10.0 @types/better-sqlite3@9.6.0",
+      "install_package  Install Prisma CLI and better-sqlite3 types",
     );
+    expect(captured.stdout()).toContain("packages  prisma@7.10.0, @types/better-sqlite3@9.6.0");
+    expect(captured.stdout()).toContain("allowBuild  prisma, @prisma/engines");
     expect(captured.stdout()).toContain("pnpm exec prisma generate");
     expect(captured.stdout()).toContain("pnpm exec vitest run --passWithNoTests");
-    expect(captured.stdout()).toContain("pnpm add --save-dev --save-exact prettier@3.9.8");
+    expect(captured.stdout()).toContain(
+      "install_package  Install Prettier as an exact dev dependency",
+    );
+    expect(captured.stdout()).toContain("packages  prettier@3.9.8");
+    expect(captured.stdout()).toContain("exact  true");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });
@@ -618,7 +624,10 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("Dry-run for example-fastapi-app");
     expect(captured.stdout()).toContain("fastapi");
     expect(captured.stdout()).toContain("uv init . --bare --name example-fastapi-app");
-    expect(captured.stdout()).toContain("uv add fastapi[standard]");
+    expect(captured.stdout()).toContain(
+      "install_package  Install FastAPI with the official standard extras",
+    );
+    expect(captured.stdout()).toContain("packages  fastapi[standard]==0.141.1");
     expect(captured.stdout()).toContain("uv run alembic init alembic");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
@@ -644,7 +653,8 @@ describe("runCli", () => {
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Dry-run for example-flask-app");
     expect(captured.stdout()).toContain("flask");
-    expect(captured.stdout()).toContain("uv add Flask");
+    expect(captured.stdout()).toContain("install_package  Install Flask");
+    expect(captured.stdout()).toContain("packages  Flask==3.1.3");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });

@@ -84,6 +84,12 @@ function operationDetails(operation: InstallationOperation, verbose: boolean): s
       if (operation.dev === true) {
         details.push("dev  true");
       }
+      if (operation.exact === true) {
+        details.push("exact  true");
+      }
+      if (operation.allowBuild !== undefined && operation.allowBuild.length > 0) {
+        details.push(`allowBuild  ${operation.allowBuild.join(", ")}`);
+      }
       if (verbose && operation.requiresNetwork === true) {
         details.push("requiresNetwork  true");
       }

@@ -24,6 +24,8 @@ export const installPackageOperationSchema = z.strictObject({
   cwd: projectRelativePathSchema,
   description: descriptionSchema,
   dev: z.boolean().optional(),
+  exact: z.boolean().optional(),
+  allowBuild: z.array(z.string().min(1)).optional(),
   requiresNetwork: z.boolean().optional(),
 });
 

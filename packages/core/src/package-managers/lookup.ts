@@ -41,19 +41,12 @@ export function toPackageManagerCommand(
     };
   }
 
-  const request =
-    operation.dev === true
-      ? {
-          packages: operation.packages,
-          cwd: operation.cwd,
-          description: operation.description,
-          dev: true as const,
-        }
-      : {
-          packages: operation.packages,
-          cwd: operation.cwd,
-          description: operation.description,
-        };
-
-  return adapter.add(request);
+  return adapter.add({
+    packages: operation.packages,
+    cwd: operation.cwd,
+    description: operation.description,
+    ...(operation.dev === true ? { dev: true as const } : {}),
+    ...(operation.exact === true ? { exact: true as const } : {}),
+    ...(operation.allowBuild === undefined ? {} : { allowBuild: operation.allowBuild }),
+  });
 }

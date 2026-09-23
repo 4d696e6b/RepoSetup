@@ -54,8 +54,9 @@ describe("built-in add plans", () => {
     expect(result.result.valid).toBe(true);
     expect(result.result.operations).toEqual([
       expect.objectContaining({
-        type: "run_command",
-        args: expect.arrayContaining(["add", "zod@4.6.5"]),
+        type: "install_package",
+        packages: ["zod@4.6.5"],
+        packageManager: "pnpm",
       }),
     ]);
   });
@@ -183,8 +184,9 @@ describe("built-in add plans for Python", () => {
     expect(result.result.valid).toBe(true);
     expect(result.result.operations).toEqual([
       expect.objectContaining({
-        type: "run_command",
-        args: expect.arrayContaining(["add", "pydantic==2.13.5"]),
+        type: "install_package",
+        packages: ["pydantic==2.13.5"],
+        packageManager: "uv",
       }),
     ]);
   });

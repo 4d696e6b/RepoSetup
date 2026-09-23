@@ -4,9 +4,18 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 22 — Reproducible recipes and compatibility enforcement: complete (engines floor deferred).** Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 23 — Measured installation performance: in progress.** Phase 22 recipe gates are complete (Node 24 engines floor deferred). Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
+
+### Phase 23 progress — 2026-09-23
+
+- [x] Package adds stay typed `install_package` through planning. `exact` and `allowBuild` are on the operation schema and forwarded into adapter argv at execute time. Plans no longer expand adds to `run_command` early.
+- [ ] Deduplicate and batch compatible install requests without crossing generators, migrations, codegen, or verification barriers.
+- [ ] Separate scaffold generation from dependency installation where qualified generators support it (research-required per generator).
+- [ ] Assemble manifests before a consolidated install where safe.
+- [ ] Cache preference and bounded retry for transient downloads (research-required).
+- [ ] Benchmark protocol evidence against the Phase 19 baseline.
 
 ### Phase 20 progress — 2026-09-22
 
