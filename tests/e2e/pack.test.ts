@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, readdir } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -25,8 +25,10 @@ describe("npm pack artifact", () => {
   it("packs the public CLI, inspects the tarball, and runs the installed binary", async () => {
     const packDir = await mkdtemp(path.join(os.tmpdir(), "reposetup-pack-out-"));
     tempDirs.push(packDir);
-    const installDir = await createTempWorkspace("reposetup-pack-install-");
-    tempDirs.push(installDir);
+    const installParent = await createTempWorkspace("RepoSetup packed 日本語 path-");
+    tempDirs.push(installParent);
+    const installDir = path.join(installParent, "package-under-test");
+    await mkdir(installDir);
 
     const packed = await runProcess(
       "pnpm",
@@ -119,10 +121,16 @@ describe("npm pack artifact", () => {
     expect(dryRun.stdout).toContain("No files or commands were executed.");
 
     if (process.platform !== "win32") {
-      const shim = path.join(installDir, "node_modules", ".bin", "rsetup");
-      const shimVersion = await runProcess(shim, ["--version"], { cwd: installDir });
-      expect(shimVersion.exitCode, shimVersion.stderr).toBe(0);
-      expect(shimVersion.stdout.trim()).toBe(cliPackageVersion());
+      for (const alias of ["rsetup", "reposetup"]) {
+        const shim = path.join(installDir, "node_modules", ".bin", alias);
+        const shimVersion = await runProcess(shim, ["--version"], { cwd: installDir });
+        expect(shimVersion.exitCode, shimVersion.stderr).toBe(0);
+        expect(shimVersion.stdout.trim()).toBe(cliPackageVersion());
+      }
+    } else {
+      const shims = await readdir(path.join(installDir, "node_modules", ".bin"));
+      expect(shims).toContain("rsetup.cmd");
+      expect(shims).toContain("reposetup.cmd");
     }
   });
 });
