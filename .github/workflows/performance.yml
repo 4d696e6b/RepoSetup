@@ -39,6 +39,8 @@ jobs:
           ref: a0e48a19479dc574c3f2bc3fba4a39608dc33e77
           path: baseline
       - uses: pnpm/action-setup@v4
+        with:
+          version: 12.5.1
       - uses: actions/setup-node@v4
         with:
           node-version: 24
