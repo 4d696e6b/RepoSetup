@@ -118,7 +118,7 @@ function benchmarkEnvironment(cacheRoot) {
   return {
     ...process.env,
     npm_config_cache: join(cacheRoot, "npm"),
-    PNPM_HOME: join(cacheRoot, "pnpm-home"),
+    pnpm_config_store_dir: join(cacheRoot, "pnpm-store"),
     XDG_CACHE_HOME: join(cacheRoot, "xdg"),
     UV_CACHE_DIR: join(cacheRoot, "uv"),
     npm_config_fund: "false",
