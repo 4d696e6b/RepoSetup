@@ -139,7 +139,7 @@ describe("Phase 13 JS ecosystem plans", () => {
     const plan = fastifyIntegration.plan(
       planContext({ frameworkId: "fastify", options: { typescript: true } }),
     );
-    expect(runCommands(plan)).toEqual([["pnpm", "add", "fastify"]]);
+    expect(runCommands(plan)).toEqual([["pnpm", "add", "fastify@5.12.5"]]);
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "src/server.ts" }),
@@ -162,14 +162,14 @@ describe("Phase 13 JS ecosystem plans", () => {
     expect(
       runCommands(drizzleIntegration.plan(planContext({ integrations: [{ id: "postgresql" }] }))),
     ).toEqual([
-      ["pnpm", "add", "drizzle-orm", "pg", "dotenv"],
-      ["pnpm", "add", "--save-dev", "drizzle-kit", "tsx", "@types/pg"],
+      ["pnpm", "add", "drizzle-orm@0.45.3", "pg@8.23.0", "dotenv@18.0.3"],
+      ["pnpm", "add", "--save-dev", "drizzle-kit@0.31.11", "tsx@4.23.15", "@types/pg@8.23.1"],
     ]);
   });
 
   it("installs Mongoose and a connection helper", () => {
     const plan = mongooseIntegration.plan(planContext({ integrations: [{ id: "mongodb" }] }));
-    expect(runCommands(plan)).toEqual([["pnpm", "add", "mongoose"]]);
+    expect(runCommands(plan)).toEqual([["pnpm", "add", "mongoose@9.10.2"]]);
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "src/mongoose.js" }),
