@@ -6,16 +6,22 @@ import { spawnSync } from "node:child_process";
 import { log } from "node:console";
 import process from "node:process";
 
-const recipes = [
+const allRecipes = [
   "examples/reposetup.next-sqlite.json",
   "tests/e2e/fixtures/golden-react-vite.json",
   "tests/e2e/fixtures/golden-express.json",
   "examples/reposetup.fastapi.json",
   "examples/reposetup.flask.json",
 ];
+const selectedRecipes = process.env.REPOSETUP_REAL_BENCHMARK_RECIPES?.split(",").filter(Boolean);
+const recipes =
+  selectedRecipes === undefined
+    ? allRecipes
+    : allRecipes.filter((recipe) => selectedRecipes.includes(recipe));
 const trials = Number(process.env.REPOSETUP_REAL_BENCHMARK_TRIALS ?? 5);
 const outputPath = process.env.REPOSETUP_REAL_BENCHMARK_OUTPUT ?? "benchmark-real-installs.json";
 const workspaceRoot = resolve(process.cwd());
+const cliBin = resolve(workspaceRoot, "packages/cli/dist/bin.js");
 
 if (process.env.REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK !== "1") {
   throw new Error(
@@ -25,12 +31,15 @@ if (process.env.REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK !== "1") {
 if (!Number.isInteger(trials) || trials < 1) {
   throw new Error("REPOSETUP_REAL_BENCHMARK_TRIALS must be a positive integer");
 }
+if (recipes.length === 0) {
+  throw new Error("REPOSETUP_REAL_BENCHMARK_RECIPES did not select a supported recipe");
+}
 
-const benchmarkRoot = await mkdtemp(
-  join(process.env.TMPDIR ?? "/tmp", "reposetup-real-benchmark-"),
-);
+const temporaryRoot = process.env.TMPDIR ?? process.env.TEMP ?? process.env.TMP ?? "/tmp";
+const benchmarkRoot = await mkdtemp(join(temporaryRoot, "reposetup-real-benchmark-"));
 const rows = [];
 try {
+  await mkdir(join(benchmarkRoot, "projects"), { recursive: true });
   for (const recipe of recipes) {
     const configPath = resolve(workspaceRoot, recipe);
     const config = await readFile(configPath);
@@ -48,7 +57,7 @@ try {
         const started = process.hrtime.bigint();
         const result = spawnSync(
           process.execPath,
-          ["packages/cli/dist/bin.js", "create", "--config", configPath, "--yes"],
+          [cliBin, "create", "--config", configPath, "--yes"],
           {
             cwd: projectRoot,
             encoding: "utf8",
@@ -99,6 +108,9 @@ const report = {
 };
 await writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`);
 log(JSON.stringify(report, null, 2));
+if (rows.some((row) => row.measurements.some((measurement) => measurement.exitCode !== 0))) {
+  process.exitCode = 1;
+}
 
 function benchmarkEnvironment(cacheRoot) {
   return {

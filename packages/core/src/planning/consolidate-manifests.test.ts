@@ -58,6 +58,13 @@ describe("consolidateManifestInstalls", () => {
       },
       {
         type: "create_file",
+        path: "pnpm-workspace.yaml",
+        content: "allowBuilds:\n  esbuild: true\n  prisma: true\n",
+        behavior: "create_if_missing",
+        description: "Allow approved pnpm dependency build scripts",
+      },
+      {
+        type: "create_file",
         path: ".prettierrc",
         content: "{}\n",
         behavior: "fail_if_exists",

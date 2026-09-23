@@ -148,10 +148,26 @@ function consolidateSegment(segment: readonly InstallationOperation[]): Consolid
 
   const rebuilt: InstallationOperation[] = [];
   let insertedManifest = false;
+  const pnpmBuildConfiguration =
+    packageManager === "pnpm" && allowBuild.size > 0
+      ? {
+          type: "create_file" as const,
+          path: pnpmWorkspacePathFor(cwd),
+          content: `allowBuilds:\n${[...allowBuild]
+            .sort()
+            .map((name) => `  ${name}: true`)
+            .join("\n")}\n`,
+          behavior: "create_if_missing" as const,
+          description: "Allow approved pnpm dependency build scripts",
+        }
+      : undefined;
   for (const operation of segment) {
     if (operation.type === "install_package") {
       if (!insertedManifest) {
         rebuilt.push(manifest);
+        if (pnpmBuildConfiguration !== undefined) {
+          rebuilt.push(pnpmBuildConfiguration);
+        }
         insertedManifest = true;
       }
       continue;
@@ -178,6 +194,13 @@ function packageJsonEntry(spec: string): { name: string; version: string } | und
     return undefined;
   }
   return { name, version };
+}
+
+function pnpmWorkspacePathFor(cwd: ProjectRelativePath): ProjectRelativePath {
+  if (cwd === "." || cwd === "") {
+    return "pnpm-workspace.yaml";
+  }
+  return `${cwd}/pnpm-workspace.yaml`;
 }
 
 function packageJsonPathFor(cwd: ProjectRelativePath): ProjectRelativePath {
