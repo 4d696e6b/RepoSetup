@@ -532,17 +532,13 @@ describe("runCli", () => {
       "pnpm create next-app@16.3.6 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
     );
     expect(captured.stdout()).toContain(
-      "install_package  Install Prisma CLI and better-sqlite3 types",
+      "modify_json  Assemble package.json dependencies before a consolidated install",
     );
-    expect(captured.stdout()).toContain("packages  prisma@7.10.0, @types/better-sqlite3@9.6.0");
-    expect(captured.stdout()).toContain("allowBuild  prisma, @prisma/engines");
+    expect(captured.stdout()).toContain(
+      "pnpm install --allow-build=prisma --allow-build=@prisma/engines --allow-build=esbuild --allow-build=!better-sqlite3",
+    );
     expect(captured.stdout()).toContain("pnpm exec prisma generate");
     expect(captured.stdout()).toContain("pnpm exec vitest run --passWithNoTests");
-    expect(captured.stdout()).toContain(
-      "install_package  Install Prettier as an exact dev dependency",
-    );
-    expect(captured.stdout()).toContain("packages  prettier@3.9.8");
-    expect(captured.stdout()).toContain("exact  true");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });

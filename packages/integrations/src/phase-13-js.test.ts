@@ -345,7 +345,7 @@ describe("Phase 13 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
-        ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/vite@4.3.3"],
+        ["pnpm", "install"],
         ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"],
       ]),
     );
@@ -371,13 +371,10 @@ describe("Phase 13 example stacks", () => {
       expect.arrayContaining([
         [
           "pnpm",
-          "add",
+          "install",
           "--allow-build=esbuild",
-          "express@5.2.1",
-          "@prisma/client@7.10.0",
-          "@prisma/adapter-pg@7.10.0",
-          "pg@8.23.0",
-          "dotenv@18.0.3",
+          "--allow-build=prisma",
+          "--allow-build=@prisma/engines",
         ],
         [
           "pnpm",

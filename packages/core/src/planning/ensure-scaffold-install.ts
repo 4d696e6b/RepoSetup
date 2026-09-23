@@ -4,14 +4,17 @@ import type { InstallationOperation } from "../operations/types.js";
 import { getPackageManagerAdapter } from "../package-managers/lookup.js";
 import type { ProjectRelativePath } from "../paths/project-path.js";
 
+import { isProjectInstallCommand } from "./consolidate-manifests.js";
+
 export type EnsureScaffoldInstallResult =
   { ok: true; operations: InstallationOperation[] } | { ok: false; error: RepoSetupError };
 
 /**
  * Generators that use `--skip-install` write a package.json without installing.
  * If a later install_package in the same soft segment will run, that command
- * installs scaffold deps too. Otherwise insert a project install so solo
- * scaffolds still get node_modules.
+ * installs scaffold deps too. A following project install barrier also covers
+ * the scaffold. Otherwise insert a project install so solo scaffolds still get
+ * node_modules.
  */
 export function ensureScaffoldDependencyInstall(
   operations: readonly InstallationOperation[],
@@ -27,7 +30,7 @@ export function ensureScaffoldDependencyInstall(
       continue;
     }
 
-    if (segmentHasInstallPackage(operations, index + 1)) {
+    if (segmentCoversScaffoldInstall(operations, index + 1)) {
       continue;
     }
 
@@ -58,7 +61,7 @@ export function ensureScaffoldDependencyInstall(
   return { ok: true, operations: output };
 }
 
-function segmentHasInstallPackage(
+function segmentCoversScaffoldInstall(
   operations: readonly InstallationOperation[],
   start: number,
 ): boolean {
@@ -67,11 +70,11 @@ function segmentHasInstallPackage(
     if (operation === undefined) {
       return false;
     }
-    if (operation.type === "run_command" || operation.type === "verify") {
-      return false;
-    }
     if (operation.type === "install_package") {
       return true;
+    }
+    if (operation.type === "run_command" || operation.type === "verify") {
+      return isProjectInstallCommand(operation);
     }
   }
   return false;

@@ -53,11 +53,16 @@ export const pnpmAdapter: PackageManagerAdapter = {
       return { ok: false, error: cwdError };
     }
 
+    const args = request.frozen === true ? ["install", "--frozen-lockfile"] : ["install"];
+    for (const name of request.allowBuild ?? []) {
+      args.push(`--allow-build=${name}`);
+    }
+
     return {
       ok: true,
       operation: createPackageManagerCommand({
         command: "pnpm",
-        args: request.frozen === true ? ["install", "--frozen-lockfile"] : ["install"],
+        args,
         cwd: request.cwd,
         description: request.description,
       }),
