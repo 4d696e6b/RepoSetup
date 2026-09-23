@@ -54,7 +54,7 @@ jobs:
         run: >-
           node -e "require('node:fs').writeFileSync('platform-evidence.json',
           JSON.stringify({ platform: process.platform, architecture: process.arch,
-          node: process.version, pnpm: require('node:child_process').execFileSync('pnpm',
+          node: process.version, pnpm: require('node:child_process').execFileSync(process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
           ['--version'], { encoding: 'utf8' }).trim() }, null, 2) + '\\n')"
       - uses: actions/upload-artifact@v4
         with:
