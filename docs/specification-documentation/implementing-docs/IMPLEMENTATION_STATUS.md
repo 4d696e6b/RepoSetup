@@ -4,7 +4,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 20 — Safe executor and adapter boundaries: complete.** Next: Phase 21 — Cross-platform execution. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 21 — Cross-platform execution: in progress.** Phase 20 is complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
 
@@ -22,6 +22,13 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [
 - [x] Full workspace tests (355), packed-CLI e2e tests (12), and available golden recipes (2) pass after the executor changes; 3 golden recipes remain environment-gated skips.
 - [x] POSIX cancellation terminates spawned descendant processes; the regression fixture proves the descendant cannot continue and mutate the project after cancellation.
 - [x] Prerequisite preflight verifies the current documented Node 20.9 and Python 3.9 minimums before mutation. The Node 24/Python 3.12–3.13 matrix and Windows-native process handling are Phase 21 qualification requirements.
+
+### Phase 21 progress — 2026-09-23
+
+- [x] The CLI resolves the `python` operation command through a platform adapter: `python3` then `python` on POSIX, and `py`, `python`, then `python3` on Windows. The first working candidate is cached and reused for prerequisite version checks and subsequent planned commands.
+- [x] Packed-artifact e2e coverage uses a parent path containing spaces and Unicode, executes both aliases on POSIX native shims, and verifies both Windows `.cmd` shims are packaged.
+- [x] The platform workflow now runs the packed-artifact e2e suite on Ubuntu, macOS, and Windows for Node 22 and 24, with Node 20 retained on Ubuntu for the supported floor.
+- [ ] Remote matrix results, Windows-native alias execution, Python 3.12–3.13 qualification, representative create/add recipe runs, and manual Windows transcript remain required before this phase can close.
 
 ## Current release
 
