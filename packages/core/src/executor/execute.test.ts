@@ -390,6 +390,28 @@ describe("executeInstallation", () => {
     );
   });
 
+  it("preserves CRLF when appending to an existing environment example", async () => {
+    const root = await tempRoot();
+    await writeFile(path.join(root, ".env.example"), "EXISTING=value\r\n", "utf8");
+
+    const result = await executeInstallation(
+      [
+        {
+          type: "add_env_example",
+          path: ".env.example",
+          entries: [{ key: "NEW_VALUE", placeholder: "replace-me" }],
+          description: "Add a portable environment placeholder",
+        },
+      ],
+      { rootDir: root, runProcess: recordingRunner([]) },
+    );
+
+    expect(result).toMatchObject({ ok: true, executed: 1 });
+    expect(await readFile(path.join(root, ".env.example"), "utf8")).toBe(
+      "EXISTING=value\r\nNEW_VALUE=replace-me\r\n",
+    );
+  });
+
   it("expands install_package through the package-manager adapter", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];
