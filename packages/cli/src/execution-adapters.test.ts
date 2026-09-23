@@ -11,6 +11,7 @@ import {
   createDefaultExecutionJournal,
   createDefaultExecutableResolver,
   createDefaultProcessRunner,
+  resolveWindowsLaunch,
 } from "./execution-adapters.js";
 
 describe("createDefaultExecutorFileSystem", () => {
@@ -200,6 +201,51 @@ describe("createDefaultProcessRunner", () => {
     expect(result.exitCode).toBe(0);
     expect(output.join("")).toContain("TOKEN=<redacted>");
     expect(output.join("")).not.toContain("super-secret");
+  });
+});
+
+describe("resolveWindowsLaunch", () => {
+  it("runs a trusted .cmd shim through cmd.exe without enabling shell mode", () => {
+    const launch = resolveWindowsLaunch(
+      "pnpm",
+      ["add", "zod"],
+      {
+        PATH: "C:\\Program Files\\nodejs;C:\\tools",
+        PATHEXT: ".EXE;.CMD",
+        ComSpec: "C:\\Windows\\System32\\cmd.exe",
+      },
+      (filePath) => filePath === "C:\\Program Files\\nodejs\\pnpm.cmd",
+    );
+
+    expect(launch).toEqual({
+      command: "C:\\Windows\\System32\\cmd.exe",
+      args: ["/d", "/s", "/c", '"C:\\Program Files\\nodejs\\pnpm.cmd" "add" "zod"'],
+    });
+  });
+
+  it("runs a trusted native executable directly", () => {
+    const launch = resolveWindowsLaunch(
+      "node",
+      ["--version"],
+      { PATH: "C:\\Program Files\\nodejs", PATHEXT: ".EXE;.CMD" },
+      (filePath) => filePath === "C:\\Program Files\\nodejs\\node.exe",
+    );
+
+    expect(launch).toEqual({
+      command: "C:\\Program Files\\nodejs\\node.exe",
+      args: ["--version"],
+    });
+  });
+
+  it("rejects shim arguments that could change the command grammar", () => {
+    const launch = resolveWindowsLaunch(
+      "pnpm",
+      ["add", "safe-package & whoami"],
+      { PATH: "C:\\tools", PATHEXT: ".CMD" },
+      () => true,
+    );
+
+    expect(launch).toMatchObject({ error: expect.stringContaining("shell metacharacters") });
   });
 });
 

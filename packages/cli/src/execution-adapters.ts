@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { constants } from "node:fs";
+import { constants, existsSync } from "node:fs";
 import { createHash, randomUUID } from "node:crypto";
 import {
   access,
@@ -179,8 +179,16 @@ export function createDefaultProcessRunner(): ProcessRunner {
       return Promise.resolve({ exitCode: 1, stdout: "", stderr: "", aborted: true });
     }
 
+    const launch =
+      process.platform === "win32"
+        ? resolveWindowsLaunch(request.command, request.args, process.env, existsSync)
+        : { command: request.command, args: request.args };
+    if ("error" in launch) {
+      return Promise.resolve({ exitCode: 1, stdout: "", stderr: launch.error });
+    }
+
     return new Promise((resolve) => {
-      const child = spawn(request.command, [...request.args], {
+      const child = spawn(launch.command, [...launch.args], {
         cwd: request.cwd,
         env: process.env,
         shell: false,
@@ -270,6 +278,97 @@ export function createDefaultProcessRunner(): ProcessRunner {
       }
     });
   };
+}
+
+interface WindowsLaunch {
+  command: string;
+  args: readonly string[];
+}
+
+interface WindowsLaunchFailure {
+  error: string;
+}
+
+/**
+ * Resolves known Windows executable layouts without setting Node's `shell` option.
+ * `.cmd` and `.bat` shims are explicitly passed to cmd.exe only after every token
+ * has been constrained to characters that cannot alter the command grammar.
+ */
+export function resolveWindowsLaunch(
+  command: string,
+  args: readonly string[],
+  environment: NodeJS.ProcessEnv,
+  exists: (filePath: string) => boolean,
+): WindowsLaunch | WindowsLaunchFailure {
+  if (!isSimpleExecutableName(command)) {
+    return { command, args };
+  }
+
+  const resolved = findWindowsExecutable(command, environment, exists);
+  if (resolved === undefined || isNativeWindowsExecutable(resolved)) {
+    return { command: resolved ?? command, args };
+  }
+
+  const invocation = serializeWindowsShimInvocation(resolved, args);
+  if (invocation === undefined) {
+    return {
+      error:
+        `Refusing to execute the Windows command shim for "${command}" because its path or arguments contain shell metacharacters. ` +
+        "Use a native executable or remove shell metacharacters from the command arguments.",
+    };
+  }
+
+  return {
+    command: environment.ComSpec ?? "cmd.exe",
+    args: ["/d", "/s", "/c", invocation],
+  };
+}
+
+function findWindowsExecutable(
+  command: string,
+  environment: NodeJS.ProcessEnv,
+  exists: (filePath: string) => boolean,
+): string | undefined {
+  const extensions = (environment.PATHEXT ?? ".COM;.EXE;.BAT;.CMD")
+    .split(";")
+    .map((extension) => extension.toLowerCase())
+    .filter((extension) => [".com", ".exe", ".bat", ".cmd"].includes(extension));
+  const directories = (environment.PATH ?? "").split(";").filter(Boolean);
+
+  for (const directory of directories) {
+    for (const extension of extensions) {
+      const candidate = path.win32.join(directory, `${command}${extension}`);
+      if (exists(candidate)) {
+        return candidate;
+      }
+    }
+  }
+
+  return undefined;
+}
+
+function isNativeWindowsExecutable(filePath: string): boolean {
+  const extension = path.win32.extname(filePath).toLowerCase();
+  return extension === ".exe" || extension === ".com";
+}
+
+function serializeWindowsShimInvocation(
+  filePath: string,
+  args: readonly string[],
+): string | undefined {
+  const tokens = [filePath, ...args];
+  if (tokens.some((token) => !isSafeWindowsShimToken(token))) {
+    return undefined;
+  }
+  return tokens.map((token) => `"${token}"`).join(" ");
+}
+
+function isSimpleExecutableName(value: string): boolean {
+  return /^[A-Za-z0-9._-]+$/.test(value);
+}
+
+function isSafeWindowsShimToken(value: string): boolean {
+  return !value.includes("\0") && !/[\r\n"&|<>^%!]/.test(value);
 }
 
 function terminateProcessTree(child: ReturnType<typeof spawn>): void {
