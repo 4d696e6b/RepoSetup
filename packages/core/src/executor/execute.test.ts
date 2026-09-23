@@ -662,6 +662,49 @@ describe("executeInstallation", () => {
     expect(runs).toEqual([]);
   });
 
+  it("rejects a prerequisite version below the documented minimum before mutation", async () => {
+    const root = await tempRoot();
+    const result = await executeInstallation(
+      [
+        { type: "check_prerequisite", id: "node", description: "Require Node.js" },
+        {
+          type: "create_file",
+          path: "should-not-exist.txt",
+          content: "nope\n",
+          behavior: "fail_if_exists",
+          description: "Must not write",
+        },
+      ],
+      {
+        rootDir: root,
+        commandExists: async () => true,
+        runProcess: recordingRunner([], { stdout: "v20.8.0\n" }),
+      },
+    );
+
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("PREREQUISITE_MISSING");
+    expect(result.error.details).toMatchObject({ detectedVersion: "20.8.0" });
+    await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
+  });
+
+  it("accepts a prerequisite version at the documented minimum", async () => {
+    const root = await tempRoot();
+    const result = await executeInstallation(
+      [{ type: "check_prerequisite", id: "node", description: "Require Node.js" }],
+      {
+        rootDir: root,
+        commandExists: async () => true,
+        runProcess: recordingRunner([], { stdout: "v20.9.0\n" }),
+      },
+    );
+
+    expect(result).toMatchObject({ ok: true, executed: 1 });
+  });
+
   it("checks prerequisites before any planned project mutation", async () => {
     const root = await tempRoot();
     const result = await executeInstallation(

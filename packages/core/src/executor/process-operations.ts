@@ -44,6 +44,23 @@ export async function executeCheckPrerequisite(
     });
   }
 
+  if (spec.minimumVersion !== undefined) {
+    const version = await readCommandVersion(spec.command, context);
+    if (version === undefined || isVersionBelow(version, spec.minimumVersion)) {
+      return createRepoSetupError({
+        code: "PREREQUISITE_MISSING",
+        message: `${spec.command} does not meet the required version ${formatVersion(spec.minimumVersion)} or later.`,
+        details: {
+          id: operation.id,
+          command: spec.command,
+          ...(version === undefined ? {} : { detectedVersion: formatVersion(version) }),
+          minimumVersion: formatVersion(spec.minimumVersion),
+        },
+        suggestion: spec.hint,
+      });
+    }
+  }
+
   return undefined;
 }
 
@@ -180,6 +197,44 @@ async function binaryExists(command: string, context: ExecutionContext): Promise
   });
 
   return result.notFound !== true && result.exitCode === 0;
+}
+
+async function readCommandVersion(
+  command: string,
+  context: ExecutionContext,
+): Promise<readonly [number, number, number] | undefined> {
+  const result = await context.runProcess({
+    command,
+    args: ["--version"],
+    cwd: context.rootDir,
+  });
+  if (result.notFound === true || result.exitCode !== 0) {
+    return undefined;
+  }
+
+  const match = `${result.stdout}\n${result.stderr}`.match(
+    /(?:v|Python\s+)?(\d+)\.(\d+)(?:\.(\d+))?/i,
+  );
+  if (match === null) {
+    return undefined;
+  }
+  return [Number(match[1]), Number(match[2]), Number(match[3] ?? 0)];
+}
+
+function isVersionBelow(
+  actual: readonly [number, number, number],
+  minimum: readonly [number, number, number],
+): boolean {
+  for (const index of [0, 1, 2] as const) {
+    if (actual[index] !== minimum[index]) {
+      return actual[index] < minimum[index];
+    }
+  }
+  return false;
+}
+
+function formatVersion(version: readonly [number, number, number]): string {
+  return version.join(".");
 }
 
 function commandFailure(
