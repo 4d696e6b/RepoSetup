@@ -13,7 +13,7 @@ import {
 
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
-import { addPackages } from "./operations.js";
+import { addPackages, hasSelectedIntegration } from "./operations.js";
 import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { createNodePackageJson, usesTypescript } from "./scaffold.js";
@@ -32,7 +32,6 @@ const EXPRESS_TSCONFIG = `{
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
-    "noEmit": true,
     "strict": true,
     "skipLibCheck": true
   }
@@ -41,13 +40,43 @@ const EXPRESS_TSCONFIG = `{
 
 const EXPRESS_APP_TS = `import express, { type Express, type Request, type Response } from 'express';
 
-const app: Express = express();
+export const app: Express = express();
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
 
-app.listen(3000);
+if (process.env.REPOSETUP_NO_LISTEN !== "1") {
+  app.listen(Number(process.env.PORT ?? "3000"));
+}
+`;
+
+const EXPRESS_ENDPOINT_TEST = `import type { Server } from "node:http";
+
+import { afterAll, beforeAll, expect, it } from "vitest";
+
+let server: Server;
+let origin: string;
+
+beforeAll(async () => {
+  process.env.REPOSETUP_NO_LISTEN = "1";
+  const { app } = await import("../src/app.js");
+  await new Promise<void>((resolve) => {
+    server = app.listen(0, "127.0.0.1", resolve);
+  });
+  const address = server.address();
+  if (address === null || typeof address === "string") throw new Error("Server did not bind TCP");
+  origin = \`http://127.0.0.1:\${address.port}\`;
+});
+
+afterAll(() => server.close());
+
+it("returns the Hello World response", async () => {
+  const response = await fetch(origin);
+
+  expect(response.status).toBe(200);
+  expect(await response.text()).toBe("Hello World!");
+});
 `;
 
 const EXPRESS_README = `# Express app
@@ -56,7 +85,7 @@ Run the JavaScript entry with:
 
 \`node app.js\`
 
-For the TypeScript entry, compile with your TypeScript toolchain before starting the output.
+For the TypeScript entry, use \`npm run dev\` while developing, then run \`npm run build\` and \`npm start\`.
 `;
 
 const EXPRESS_APP_JS = `import express from 'express';
@@ -116,9 +145,10 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
             npmPin("typescript", QUALIFIED_VERSIONS.typescript),
             npmPin("@types/express", QUALIFIED_VERSIONS.typesExpress),
             npmPin("@types/node", QUALIFIED_VERSIONS.typesNode),
+            npmPin("tsx", QUALIFIED_VERSIONS.tsx),
           ],
           {
-            description: "Install TypeScript and Express type packages",
+            description: "Install TypeScript, tsx, and Express type packages",
             dev: true,
           },
         ),
@@ -142,7 +172,29 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
           behavior: "fail_if_exists",
           description: "Add the official Express TypeScript Hello World server",
         },
+        {
+          type: "modify_json",
+          path: "package.json",
+          merge: {
+            scripts: {
+              dev: "tsx watch src/app.ts",
+              build: "tsc --outDir dist",
+              start: "node dist/app.js",
+            },
+          },
+          behavior: "merge",
+          description: "Add Express development, build, and start scripts",
+        },
       );
+      if (hasSelectedIntegration(context, "vitest")) {
+        operations.push({
+          type: "create_file",
+          path: "src/app.test.ts",
+          content: EXPRESS_ENDPOINT_TEST,
+          behavior: "fail_if_exists",
+          description: "Add an Express endpoint response test",
+        });
+      }
     } else {
       operations.push({
         type: "create_file",

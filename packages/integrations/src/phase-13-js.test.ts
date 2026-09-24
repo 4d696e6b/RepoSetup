@@ -124,13 +124,35 @@ describe("Phase 13 JS ecosystem plans", () => {
         "typescript@5.9.3",
         "@types/express@5.0.6",
         "@types/node@22.20.4",
+        "tsx@4.23.15",
       ],
     ]);
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "package.json" }),
         expect.objectContaining({ type: "create_file", path: "src/app.ts" }),
+        expect.objectContaining({ type: "modify_json", path: "package.json" }),
         expect.objectContaining({ type: "create_file", path: "README.md" }),
+      ]),
+    );
+  });
+
+  it("adds an HTTP response test when Express is configured with Vitest", () => {
+    const plan = expressIntegration.plan(
+      planContext({
+        frameworkId: "express",
+        options: { typescript: true },
+        integrations: [{ id: "vitest" }],
+      }),
+    );
+
+    expect(plan).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: "src/app.test.ts",
+          content: expect.stringContaining("fetch(origin)"),
+        }),
       ]),
     );
   });
