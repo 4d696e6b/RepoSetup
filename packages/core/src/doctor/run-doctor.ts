@@ -30,6 +30,7 @@ export async function runDoctor(input: {
   startDir: string;
   registry: RegistryLookup;
   commandExists: (command: string) => Promise<boolean>;
+  commandVersion?: (command: string) => Promise<string | undefined>;
 }): Promise<RunDoctorResult> {
   const detected = await detectProject({
     startDir: input.startDir,
@@ -45,6 +46,7 @@ export async function runDoctor(input: {
   await collectPathChecks(
     [...presentItems(detected.stack.runtimes), ...presentItems(detected.stack.packageManagers)],
     input.commandExists,
+    input.commandVersion,
     checks,
   );
   await collectLockfileConflicts(files, checks);
@@ -83,6 +85,7 @@ export function errorsFromDoctor(result: DoctorResult): RepoSetupError[] {
 async function collectPathChecks(
   items: readonly DetectedItem[],
   commandExists: (command: string) => Promise<boolean>,
+  commandVersion: ((command: string) => Promise<string | undefined>) | undefined,
   checks: DoctorCheck[],
 ): Promise<void> {
   for (const item of items) {
@@ -92,11 +95,31 @@ async function collectPathChecks(
     }
 
     if (await commandExists(spec.command)) {
+      const version =
+        spec.minimumVersion === undefined ? undefined : await commandVersion?.(spec.command);
+      if (
+        spec.minimumVersion !== undefined &&
+        commandVersion !== undefined &&
+        (version === undefined || isVersionBelow(version, spec.minimumVersion))
+      ) {
+        checks.push({
+          id: `prerequisite:${item.id}`,
+          name: item.name,
+          ok: false,
+          message: `${spec.command} does not meet the required version ${formatVersion(spec.minimumVersion)} or later.`,
+          code: "PREREQUISITE_MISSING",
+          suggestion: spec.hint,
+        });
+        continue;
+      }
       checks.push({
         id: `prerequisite:${item.id}`,
         name: item.name,
         ok: true,
-        message: `${spec.command} is on PATH.`,
+        message:
+          version === undefined
+            ? `${spec.command} is on PATH.`
+            : `${spec.command} ${version} is on PATH.`,
       });
       continue;
     }
@@ -191,4 +214,25 @@ async function collectVerifyChecks(
       ...(result.suggestion === undefined ? {} : { suggestion: result.suggestion }),
     });
   }
+}
+
+function isVersionBelow(version: string, minimum: readonly [number, number, number]): boolean {
+  const parsed = /(?:v|Python\s+)?(\d+)\.(\d+)(?:\.(\d+))?/.exec(version);
+  if (parsed === null) return true;
+  const actual: [number, number, number] = [
+    Number(parsed[1]),
+    Number(parsed[2]),
+    Number(parsed[3] ?? "0"),
+  ];
+  const [actualMajor, actualMinor, actualPatch] = actual;
+  const [minimumMajor, minimumMinor, minimumPatch] = minimum;
+  return (
+    actualMajor < minimumMajor ||
+    (actualMajor === minimumMajor &&
+      (actualMinor < minimumMinor || (actualMinor === minimumMinor && actualPatch < minimumPatch)))
+  );
+}
+
+function formatVersion(version: readonly [number, number, number]): string {
+  return version.join(".");
 }

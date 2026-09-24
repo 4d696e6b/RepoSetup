@@ -10,11 +10,13 @@ import type { GlobalCliOptions, ResolvedCliDeps } from "./types.js";
 export async function handleDoctor(input: {
   globals: GlobalCliOptions;
   deps: ResolvedCliDeps;
+  commandVersion?: (command: string) => Promise<string | undefined>;
 }): Promise<number> {
   const result = await runDoctor({
     startDir: input.deps.cwd,
     registry: input.deps.registry,
     commandExists: input.deps.commandExists,
+    ...(input.commandVersion === undefined ? {} : { commandVersion: input.commandVersion }),
   });
 
   if (!result.ok) {

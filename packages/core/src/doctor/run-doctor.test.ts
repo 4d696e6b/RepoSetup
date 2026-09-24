@@ -113,6 +113,21 @@ describe("runDoctor", () => {
     ]);
   });
 
+  it("reports a runtime version below the supported minimum", async () => {
+    const root = await fixture(nodeProject);
+    const result = await runDoctor({
+      startDir: root,
+      registry: lookup([]),
+      commandExists: async () => true,
+      commandVersion: async (command) => (command === "node" ? "v20.8.0" : "9.0.0"),
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(failedDoctorChecks(result.result)).toEqual([
+      expect.objectContaining({ id: "prerequisite:node", code: "PREREQUISITE_MISSING" }),
+    ]);
+  });
+
   it("reports a missing Node.js binary as PREREQUISITE_MISSING", async () => {
     const root = await fixture(nodeProject);
 

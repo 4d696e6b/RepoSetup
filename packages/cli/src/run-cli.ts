@@ -9,6 +9,7 @@ import { EXIT_CODES } from "./exit-codes.js";
 import { handleExport } from "./export.js";
 import {
   createDefaultCommandExists,
+  createDefaultCommandVersion,
   createDefaultExecutionLock,
   createDefaultExecutionJournal,
   createDefaultExecutableResolver,
@@ -192,6 +193,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
       exitCode = await handleDoctor({
         globals: readGlobals(command),
         deps: resolved,
+        commandVersion: createDefaultCommandVersion(resolved.runProcess),
       });
     });
 

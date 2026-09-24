@@ -388,6 +388,16 @@ export function createDefaultCommandExists(
   };
 }
 
+export function createDefaultCommandVersion(
+  runProcess: ProcessRunner,
+): (command: string) => Promise<string | undefined> {
+  return async (command) => {
+    const result = await runProcess({ command, args: ["--version"], cwd: process.cwd() });
+    if (result.notFound === true || result.exitCode !== 0) return undefined;
+    return `${result.stdout} ${result.stderr}`.trim() || undefined;
+  };
+}
+
 export function createDefaultExecutableResolver(runProcess: ProcessRunner): ExecutableResolver {
   let python: string | undefined;
   let attemptedPython = false;
