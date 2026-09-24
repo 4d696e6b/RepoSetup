@@ -186,6 +186,17 @@ describe("planAdd", () => {
     expect(framework.error.code).toBe("UNSUPPORTED_CONTEXT");
   });
 
+  it("refuses an ambiguous pnpm workspace root before planning", async () => {
+    const root = await nextFixture({ "pnpm-workspace.yaml": "packages:\n  - apps/*\n" });
+    const result = await planAdd({ startDir: root, integrationId: "zod", registry });
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error).toMatchObject({ code: "UNSUPPORTED_CONTEXT" });
+    expect(result.error.message).toContain("workspace root");
+  });
+
   it("plans only the requested addable integration", async () => {
     const root = await nextFixture();
     const result = await planAdd({ startDir: root, integrationId: "zod", registry });

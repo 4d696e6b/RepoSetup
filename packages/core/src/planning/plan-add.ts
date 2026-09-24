@@ -85,6 +85,11 @@ export async function planAddMany(input: {
     return { ok: false, error: detected.error };
   }
 
+  const files = createNodeDetectionFs(detected.stack.projectRoot);
+  if (await files.exists("pnpm-workspace.yaml")) {
+    return { ok: false, error: workspaceRootError() };
+  }
+
   const runtimeId = selectRuntime(detected.stack);
   if (runtimeId === undefined) {
     return {
@@ -115,7 +120,6 @@ export async function planAddMany(input: {
     };
   }
 
-  const files = createNodeDetectionFs(detected.stack.projectRoot);
   const context = await createDetectionContext(detected.stack.projectRoot, files);
   const config = configFromDetectedStack({
     stack: detected.stack,
@@ -170,4 +174,13 @@ export async function planAddMany(input: {
       operations: consolidated.operations,
     },
   };
+}
+
+function workspaceRootError(): RepoSetupError {
+  return createRepoSetupError({
+    code: "UNSUPPORTED_CONTEXT",
+    message: "Adding integrations from a workspace root is ambiguous.",
+    suggestion:
+      "Run reposetup add from one workspace package directory. RepoSetup does not compose an entire workspace in this release.",
+  });
 }
