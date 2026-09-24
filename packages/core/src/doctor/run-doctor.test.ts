@@ -90,6 +90,29 @@ describe("runDoctor", () => {
     );
   });
 
+  it("reports conflicting lockfiles and missing environment placeholders", async () => {
+    const root = await fixture({
+      ...nodeProject,
+      "package-lock.json": JSON.stringify({ lockfileVersion: 3 }),
+      ".env": "DATABASE_URL=real-secret-value\n",
+    });
+
+    const result = await runDoctor({
+      startDir: root,
+      registry: lookup([]),
+      commandExists: async () => true,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(failedDoctorChecks(result.result)).toEqual([
+      expect.objectContaining({ id: "lockfiles", code: "CONFIG_INVALID" }),
+      expect.objectContaining({ id: "environment-example", code: "VERIFICATION_FAILED" }),
+    ]);
+  });
+
   it("reports a missing Node.js binary as PREREQUISITE_MISSING", async () => {
     const root = await fixture(nodeProject);
 
