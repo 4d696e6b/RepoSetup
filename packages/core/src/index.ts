@@ -108,7 +108,7 @@ export type {
   RecipeRecord,
   ReproductionRequirements,
 } from "./planning/recipe.js";
-export { planAdd } from "./planning/plan-add.js";
+export { planAdd, planAddMany } from "./planning/plan-add.js";
 export type { PlanAddResult } from "./planning/plan-add.js";
 export { planRemove } from "./planning/plan-remove.js";
 export type { PlanRemoveResult } from "./planning/plan-remove.js";

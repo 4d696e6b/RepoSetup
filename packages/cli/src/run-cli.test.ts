@@ -776,6 +776,26 @@ describe("runCli", () => {
     expect(await snapshotTree(root)).toEqual(before);
   });
 
+  it("dry-runs multiple additions as one plan", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["add", "zod", "prettier", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Install Zod");
+    expect(captured.stdout()).toContain("Prettier config");
+  });
+
   it("reports a no-op when adding an already installed integration", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
     tempDirs.push(root);

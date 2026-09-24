@@ -140,13 +140,17 @@ export function configFromDetectedStack(input: {
   runtimeId: RuntimeId;
   packageManager: PackageManager;
   frameworkId: string;
-  requestedId: string;
+  requestedId?: string;
+  requestedIds?: readonly string[];
   projectName: string;
   typescript: boolean;
 }): RepoSetupConfig {
   const exported = exportConfigFromDetectedStack(input);
-  const integrations = exported.integrations.filter((item) => item.id !== input.requestedId);
-  integrations.push({ id: input.requestedId });
+  const requestedIds =
+    input.requestedIds ?? (input.requestedId === undefined ? [] : [input.requestedId]);
+  const requested = new Set(requestedIds);
+  const integrations = exported.integrations.filter((item) => !requested.has(item.id));
+  integrations.push(...requestedIds.map((id) => ({ id })));
 
   return {
     ...exported,

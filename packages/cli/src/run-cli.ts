@@ -97,8 +97,8 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
 
   program
     .command("add")
-    .description("Add an integration to the current project")
-    .argument("<id>", "integration id")
+    .description("Add one or more integrations to the current project")
+    .argument("<ids...>", "one or more integration ids")
     .option("--dry-run", "print the add plan without changing files", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--package-manager <id>", "package manager")
@@ -106,12 +106,12 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .option("--quiet", "reduce output", false)
     .action(
       async (
-        integrationId: string,
+        integrationIds: string[],
         options: { dryRun: boolean; yes: boolean; packageManager?: string },
         command: Command,
       ) => {
         exitCode = await handleAdd({
-          integrationId,
+          integrationIds,
           dryRun: options.dryRun,
           yes: options.yes,
           packageManager: options.packageManager,

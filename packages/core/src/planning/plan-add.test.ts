@@ -8,7 +8,7 @@ import type { IntegrationDefinition } from "../integrations/definition.js";
 import { fakeIntegration } from "../resolution/fake-integration.js";
 import type { RegistryLookup } from "../resolution/registry-lookup.js";
 
-import { planAdd } from "./plan-add.js";
+import { planAdd, planAddMany } from "./plan-add.js";
 
 const tempDirs: string[] = [];
 
@@ -207,6 +207,29 @@ describe("planAdd", () => {
         (operation) => operation.type === "run_command" && operation.args.includes("create"),
       ),
     ).toBe(false);
+  });
+
+  it("plans multiple integrations in one resolved delta", async () => {
+    const root = await nextFixture({
+      "prisma/schema.prisma": 'datasource db {\n  provider = "sqlite"\n}\n',
+    });
+    const result = await planAddMany({
+      startDir: root,
+      integrationIds: ["zod", "prisma", "zod"],
+      registry,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(result.result.valid).toBe(true);
+    expect(result.result.orderedIntegrations.map((item) => item.id)).toEqual(["prisma", "zod"]);
+    expect(result.result.operations.map((operation) => operation.description)).toEqual([
+      "Install Prisma CLI",
+      "Add Prisma helper",
+      "Install Zod",
+    ]);
   });
 
   it("reports a no-op when the integration is already installed", async () => {

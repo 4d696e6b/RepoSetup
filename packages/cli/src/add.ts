@@ -1,4 +1,4 @@
-import { executeInstallation, planAdd, type PackageManager } from "@reposetup/core";
+import { executeInstallation, planAddMany, type PackageManager } from "@reposetup/core";
 
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import {
@@ -13,7 +13,7 @@ import { renderPlan } from "./render-plan.js";
 import type { GlobalCliOptions, ResolvedCliDeps } from "./types.js";
 
 export async function handleAdd(input: {
-  integrationId: string;
+  integrationIds: readonly string[];
   dryRun: boolean;
   yes: boolean;
   packageManager: string | undefined;
@@ -33,9 +33,9 @@ export async function handleAdd(input: {
     return EXIT_CODES.INVALID_INPUT;
   }
 
-  const planned = await planAdd({
+  const planned = await planAddMany({
     startDir: input.deps.cwd,
-    integrationId: input.integrationId,
+    integrationIds: input.integrationIds,
     registry: input.deps.registry,
     ...(input.packageManager !== undefined && isKnownPackageManager(input.packageManager)
       ? { packageManager: input.packageManager as PackageManager }
@@ -62,7 +62,9 @@ export async function handleAdd(input: {
     if (!input.globals.quiet) {
       writeLine(
         input.deps.io.writeOut,
-        `No changes. Integration "${input.integrationId}" is already present.`,
+        input.integrationIds.length === 1
+          ? `No changes. Integration "${input.integrationIds[0]}" is already present.`
+          : `No changes. Requested integrations (${input.integrationIds.join(", ")}) are already present.`,
       );
       if (input.dryRun) {
         writeLine(input.deps.io.writeOut, "No files or commands were executed.");
