@@ -96,6 +96,7 @@ describe("Phase 14 Python ecosystem plans", () => {
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "main.py" }),
+        expect.objectContaining({ type: "create_file", path: "README.md" }),
         expect.objectContaining({ type: "show_message" }),
       ]),
     );
@@ -108,7 +109,10 @@ describe("Phase 14 Python ecosystem plans", () => {
       ["uv", "add", "Flask==3.1.3"],
     ]);
     expect(plan).toEqual(
-      expect.arrayContaining([expect.objectContaining({ type: "create_file", path: "app.py" })]),
+      expect.arrayContaining([
+        expect.objectContaining({ type: "create_file", path: "app.py" }),
+        expect.objectContaining({ type: "create_file", path: "README.md" }),
+      ]),
     );
   });
 

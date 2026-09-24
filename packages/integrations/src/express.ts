@@ -50,6 +50,15 @@ app.get('/', (req: Request, res: Response) => {
 app.listen(3000);
 `;
 
+const EXPRESS_README = `# Express app
+
+Run the JavaScript entry with:
+
+\`node app.js\`
+
+For the TypeScript entry, compile with your TypeScript toolchain before starting the output.
+`;
+
 const EXPRESS_APP_JS = `import express from 'express';
 
 const app = express();
@@ -143,6 +152,14 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
         description: "Add an ESM Express Hello World server",
       });
     }
+
+    operations.push({
+      type: "create_file",
+      path: "README.md",
+      content: EXPRESS_README,
+      behavior: "fail_if_exists",
+      description: "Add Express run instructions",
+    });
 
     return operations;
   },

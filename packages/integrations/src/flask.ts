@@ -16,6 +16,15 @@ import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
 
+const FLASK_README = `# Flask app
+
+From this directory, start the development server with:
+
+\`uv run flask run\`
+
+Run tests with \`uv run pytest\` after adding pytest to the project.
+`;
+
 const FLASK_APP = `from flask import Flask
 
 app = Flask(__name__)
@@ -66,6 +75,13 @@ export const flaskIntegration = defineIntegration({
         content: FLASK_APP,
         behavior: "fail_if_exists",
         description: "Add the official Flask quickstart app as app.py",
+      },
+      {
+        type: "create_file",
+        path: "README.md",
+        content: FLASK_README,
+        behavior: "fail_if_exists",
+        description: "Add Flask run instructions",
       },
       {
         type: "show_message",

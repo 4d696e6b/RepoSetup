@@ -130,6 +130,7 @@ describe("Phase 13 JS ecosystem plans", () => {
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "package.json" }),
         expect.objectContaining({ type: "create_file", path: "src/app.ts" }),
+        expect.objectContaining({ type: "create_file", path: "README.md" }),
       ]),
     );
   });
