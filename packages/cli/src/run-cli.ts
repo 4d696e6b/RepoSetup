@@ -17,6 +17,7 @@ import {
 } from "./execution-adapters.js";
 import { handleInfo } from "./info.js";
 import { createDefaultFs, createDefaultIo, writeLine } from "./io.js";
+import { renderBundledPresets } from "./presets.js";
 import { promptCreate } from "./prompt-create.js";
 import { handleRegistryValidate } from "./registry-validate.js";
 import { handleRemove } from "./remove.js";
@@ -66,6 +67,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .description("Create a project from prompts or a declarative config")
     .argument("[name]", "project name")
     .option("-c, --config <path>", "path to a RepoSetup JSON config")
+    .option("--preset <id>", "use a bundled guaranteed recipe preset")
     .option("--dry-run", "print the installation plan without changing files", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--framework <id>", "framework integration id")
@@ -81,6 +83,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
           yes: options.yes,
           typescript: options.typescript,
           ...(options.config === undefined ? {} : { config: options.config }),
+          ...(options.preset === undefined ? {} : { preset: options.preset }),
           ...(options.framework === undefined ? {} : { framework: options.framework }),
           ...(options.packageManager === undefined
             ? {}
@@ -142,6 +145,13 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
         });
       },
     );
+
+  program
+    .command("presets")
+    .description("List bundled guaranteed recipe presets")
+    .action(() => {
+      writeLine(resolved.io.writeOut, renderBundledPresets());
+    });
 
   program
     .command("search")

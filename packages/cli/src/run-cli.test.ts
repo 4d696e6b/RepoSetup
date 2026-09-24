@@ -281,6 +281,20 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("doctor");
     expect(captured.stdout()).toContain("export");
     expect(captured.stdout()).toContain("registry");
+    expect(captured.stdout()).toContain("presets");
+  });
+
+  it("lists bundled guaranteed presets", async () => {
+    const captured = captureIo();
+    const result = await runCli(["presets"], { io: captured.io });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("next-sqlite");
+    expect(captured.stdout()).toContain("react-vite");
+    expect(captured.stdout()).toContain("express-postgres");
+    expect(captured.stdout()).toContain("fastapi");
+    expect(captured.stdout()).toContain("flask");
+    expect(captured.stdout()).toContain("guaranteed");
   });
 
   it("prints the CLI version", async () => {

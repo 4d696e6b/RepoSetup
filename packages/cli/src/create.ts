@@ -8,6 +8,8 @@ import {
   type RuntimeId,
 } from "@reposetup/core";
 
+import { findBundledPreset } from "./presets.js";
+
 import { configFromAnswers } from "./config-from-answers.js";
 import {
   DEFAULT_COMMAND_TIMEOUT_MS,
@@ -118,8 +120,22 @@ async function resolveCreateConfig(input: {
   options: CreateCommandOptions;
   deps: ResolvedCliDeps;
 }): Promise<{ ok: true; config: RepoSetupConfig } | { ok: false; error: RepoSetupError }> {
-  if (input.options.config !== undefined) {
+  if (input.options.config !== undefined)
     return loadRepoSetupConfigFile(input.options.config, input.deps);
+  if (input.options.preset !== undefined) {
+    const preset = findBundledPreset(input.options.preset);
+    if (preset === undefined)
+      return {
+        ok: false,
+        error: {
+          code: "CONFIG_INVALID",
+          message: `Unknown preset "${input.options.preset}". Run "reposetup presets" to list bundled presets.`,
+          suggestion: "Choose one of the listed preset IDs.",
+        },
+      };
+    const config = structuredClone(preset.config);
+    if (input.name !== undefined) config.project.name = input.name;
+    return { ok: true, config };
   }
 
   if (canBuildFromFlags(input.name, input.options)) {

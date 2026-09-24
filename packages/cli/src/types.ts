@@ -81,6 +81,7 @@ export interface GlobalCliOptions {
 
 export interface CreateCommandOptions {
   config?: string;
+  preset?: string;
   dryRun: boolean;
   yes: boolean;
   framework?: string;
