@@ -148,7 +148,7 @@ describe("built-in doctor fixtures", () => {
       expect.objectContaining({
         id: "prisma",
         code: "VERIFICATION_FAILED",
-        message: ".env.example is missing DATABASE_URL.",
+        message: expect.stringContaining(".env.example is missing DATABASE_URL."),
       }),
     ]);
     expect(await readFile(path.join(root, "prisma/schema.prisma"), "utf8")).toBe(before);

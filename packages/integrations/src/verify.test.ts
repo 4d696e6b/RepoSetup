@@ -88,7 +88,26 @@ describe("integration verify", () => {
     expect(result).toEqual(
       expect.objectContaining({
         ok: false,
-        message: ".env.example is missing DATABASE_URL.",
+        message: expect.stringContaining(".env.example is missing DATABASE_URL."),
+      }),
+    );
+  });
+
+  it("fails Prisma when generated client output is missing", async () => {
+    const result = await prismaIntegration.verify?.(
+      await contextOf({
+        "package.json": JSON.stringify({
+          dependencies: { "@prisma/client": "7.10.0", prisma: "7.10.0" },
+        }),
+        "prisma/schema.prisma": 'datasource db {\n  provider = "sqlite"\n}\n',
+        ".env.example": "DATABASE_URL=file:./dev.db\n",
+      }),
+    );
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        ok: false,
+        message: expect.stringContaining("generated Prisma Client output"),
       }),
     );
   });
@@ -105,7 +124,7 @@ describe("integration verify", () => {
     expect(result).toEqual(
       expect.objectContaining({
         ok: false,
-        message: "package.json does not include prisma or @prisma/client.",
+        message: expect.stringContaining("package.json does not include prisma or @prisma/client."),
       }),
     );
   });
