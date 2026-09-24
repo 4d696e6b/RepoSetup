@@ -18,6 +18,7 @@ import {
 } from "./execution-adapters.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import { formatError } from "./format-error.js";
+import { renderErrorJson, renderPlanJson } from "./machine-output.js";
 import { writeLine } from "./io.js";
 import { loadRepoSetupConfigFile } from "./load-config.js";
 import { isKnownPackageManager } from "./prompt-create.js";
@@ -37,16 +38,21 @@ export async function handleCreate(input: {
 }): Promise<number> {
   const loaded = await resolveCreateConfig(input);
   if (!loaded.ok) {
-    writeLine(input.deps.io.writeErr, formatError(loaded.error));
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json ? renderErrorJson(loaded.error) : formatError(loaded.error),
+    );
     return exitCodeForError(loaded.error);
   }
 
   const planned = planInstallation(loaded.config, input.deps.registry);
-  const rendered = renderPlan(planned, {
-    dryRun: input.options.dryRun,
-    verbose: input.globals.verbose,
-    quiet: input.globals.quiet,
-  });
+  const rendered = input.globals.json
+    ? renderPlanJson(planned, input.options.dryRun)
+    : renderPlan(planned, {
+        dryRun: input.options.dryRun,
+        verbose: input.globals.verbose,
+        quiet: input.globals.quiet,
+      });
 
   if (!planned.valid) {
     writeLine(input.deps.io.writeErr, rendered);
@@ -84,18 +90,18 @@ export async function handleCreate(input: {
     logger: {
       info(message) {
         if (!input.globals.quiet) {
-          writeLine(input.deps.io.writeOut, message);
+          writeLine(input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut, message);
         }
       },
       verbose(message) {
         if (input.globals.verbose) {
-          writeLine(input.deps.io.writeOut, message);
+          writeLine(input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut, message);
         }
       },
       ...(input.globals.verbose && !input.globals.quiet
         ? {
             output(message: string) {
-              input.deps.io.writeOut(message);
+              (input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut)(message);
             },
           }
         : {}),
@@ -104,7 +110,10 @@ export async function handleCreate(input: {
   });
 
   if (!executed.ok) {
-    writeLine(input.deps.io.writeErr, formatError(executed.error));
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json ? renderErrorJson(executed.error) : formatError(executed.error),
+    );
     return exitCodeForError(executed.error);
   }
 

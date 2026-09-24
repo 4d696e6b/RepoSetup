@@ -7,6 +7,7 @@ import {
   DEFAULT_MINIMUM_FREE_DISK_BYTES,
 } from "./execution-adapters.js";
 import { formatError } from "./format-error.js";
+import { renderErrorJson, renderPlanJson } from "./machine-output.js";
 import { writeLine } from "./io.js";
 import { isKnownPackageManager } from "./prompt-create.js";
 import { renderPlan } from "./render-plan.js";
@@ -23,12 +24,19 @@ export async function handleRemove(input: {
   if (input.packageManager !== undefined && !isKnownPackageManager(input.packageManager)) {
     writeLine(
       input.deps.io.writeErr,
-      formatError({
-        code: "CONFIG_INVALID",
-        message: `Unknown package manager "${input.packageManager}".`,
-        details: { packageManager: input.packageManager },
-        suggestion: "Use npm, pnpm, bun, uv, or pip.",
-      }),
+      input.globals.json
+        ? renderErrorJson({
+            code: "CONFIG_INVALID",
+            message: `Unknown package manager "${input.packageManager}".`,
+            details: { packageManager: input.packageManager },
+            suggestion: "Use npm, pnpm, bun, uv, or pip.",
+          })
+        : formatError({
+            code: "CONFIG_INVALID",
+            message: `Unknown package manager "${input.packageManager}".`,
+            details: { packageManager: input.packageManager },
+            suggestion: "Use npm, pnpm, bun, uv, or pip.",
+          }),
     );
     return EXIT_CODES.INVALID_INPUT;
   }
@@ -43,15 +51,20 @@ export async function handleRemove(input: {
   });
 
   if (!planned.ok) {
-    writeLine(input.deps.io.writeErr, formatError(planned.error));
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json ? renderErrorJson(planned.error) : formatError(planned.error),
+    );
     return exitCodeForError(planned.error);
   }
 
-  const rendered = renderPlan(planned.result, {
-    dryRun: input.dryRun,
-    verbose: input.globals.verbose,
-    quiet: input.globals.quiet,
-  });
+  const rendered = input.globals.json
+    ? renderPlanJson(planned.result, input.dryRun)
+    : renderPlan(planned.result, {
+        dryRun: input.dryRun,
+        verbose: input.globals.verbose,
+        quiet: input.globals.quiet,
+      });
 
   if (!planned.result.valid) {
     writeLine(input.deps.io.writeErr, rendered);
@@ -102,18 +115,18 @@ export async function handleRemove(input: {
     logger: {
       info(message) {
         if (!input.globals.quiet) {
-          writeLine(input.deps.io.writeOut, message);
+          writeLine(input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut, message);
         }
       },
       verbose(message) {
         if (input.globals.verbose) {
-          writeLine(input.deps.io.writeOut, message);
+          writeLine(input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut, message);
         }
       },
       ...(input.globals.verbose && !input.globals.quiet
         ? {
             output(message: string) {
-              input.deps.io.writeOut(message);
+              (input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut)(message);
             },
           }
         : {}),
@@ -122,7 +135,10 @@ export async function handleRemove(input: {
   });
 
   if (!executed.ok) {
-    writeLine(input.deps.io.writeErr, formatError(executed.error));
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json ? renderErrorJson(executed.error) : formatError(executed.error),
+    );
     return exitCodeForError(executed.error);
   }
 
