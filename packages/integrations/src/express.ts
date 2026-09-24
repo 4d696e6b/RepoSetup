@@ -61,8 +61,11 @@ let origin: string;
 beforeAll(async () => {
   process.env.REPOSETUP_NO_LISTEN = "1";
   const { app } = await import("../src/app.js");
-  await new Promise<void>((resolve) => {
-    server = app.listen(0, "127.0.0.1", resolve);
+  await new Promise<void>((resolve, reject) => {
+    server = app.listen(0, "127.0.0.1", (error?: Error) => {
+      if (error !== undefined) reject(error);
+      else resolve();
+    });
   });
   const address = server.address();
   if (address === null || typeof address === "string") throw new Error("Server did not bind TCP");
