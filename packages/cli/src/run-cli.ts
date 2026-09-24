@@ -276,10 +276,15 @@ function resolveDeps(deps: CliDeps): ResolvedCliDeps {
 }
 
 function readGlobals(command: Command): GlobalCliOptions {
-  const opts = command.optsWithGlobals() as { verbose?: boolean; quiet?: boolean; json?: boolean };
+  const combined = command.optsWithGlobals() as {
+    verbose?: boolean;
+    quiet?: boolean;
+    json?: boolean;
+  };
+  const local = command.opts() as { verbose?: boolean; quiet?: boolean };
   return {
-    verbose: opts.verbose === true,
-    quiet: opts.quiet === true,
-    json: opts.json === true,
+    verbose: local.verbose === true || combined.verbose === true,
+    quiet: local.quiet === true || combined.quiet === true,
+    json: combined.json === true,
   };
 }

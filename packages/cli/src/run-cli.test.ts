@@ -752,6 +752,26 @@ describe("runCli", () => {
     expect(await snapshotTree(root)).toEqual(before);
   });
 
+  it("keeps quiet and no-color output concise and free of ANSI escapes", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["--no-color", "add", "zod", "--dry-run", "--quiet"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Dry-run succeeded");
+    expect(captured.stdout()).not.toContain("\u001B[");
+  });
+
   it("writes a versioned JSON add plan without progress on stdout", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
     tempDirs.push(root);
