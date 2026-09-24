@@ -58,7 +58,7 @@ try {
             result = { status: 0, stderr: "" };
             for (const group of profile.groups) {
               const args = ["add", ...(group.dev ? ["--save-dev"] : []), ...group.packages];
-              const r = spawnSync("pnpm", args, {
+              const r = runPnpm(args, {
                 cwd: project,
                 encoding: "utf8",
                 env: env(cache),
@@ -88,7 +88,7 @@ try {
               join(project, "package.json"),
               JSON.stringify(manifest, null, 2) + "\n",
             );
-            result = spawnSync("pnpm", ["install", "--no-frozen-lockfile", "--prefer-offline"], {
+            result = runPnpm(["install", "--no-frozen-lockfile", "--prefer-offline"], {
               cwd: project,
               encoding: "utf8",
               env: env(cache),
@@ -144,4 +144,13 @@ function env(cache) {
     npm_config_fund: "false",
     npm_config_update_notifier: "false",
   };
+}
+
+function runPnpm(args, options) {
+  if (process.platform !== "win32") return spawnSync("pnpm", args, options);
+  return spawnSync(
+    process.env.ComSpec ?? "cmd.exe",
+    ["/d", "/v:off", "/c", "pnpm", ...args],
+    options,
+  );
 }
