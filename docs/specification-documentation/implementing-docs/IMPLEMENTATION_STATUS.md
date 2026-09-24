@@ -14,7 +14,8 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Bundled presets, multi-integration `add` planning, versioned JSON for plan/stack/doctor/errors, stderr progress in JSON mode, elapsed execution summaries, and partial-run recovery guidance are implemented and covered by automated tests.
 - [x] Doctor remains read-only and now flags conflicting Node lockfiles and a missing `.env.example` when a local `.env` exists. Existing integration verification continues to diagnose missing dependencies and generated/configuration artifacts.
 - [x] Add/remove refuse ambiguous `pnpm-workspace.yaml` roots; the CLI specification directs users to a single workspace package directory.
-- [ ] Runtime-version mismatch diagnostics, generated README/command qualification for every guaranteed recipe, non-TTY usability sessions, and the full published-install → preview → create → run → test → add → doctor → export evidence remain required before Phase 24 can close.
+- [x] Doctor detects supported runtime-version mismatches. Successful creates print the exact working directory and framework-specific development, build, and available test commands. Express, FastAPI, and Flask plans create a short run guide without overwriting user files.
+- [ ] Non-TTY usability sessions and the full published-install → preview → create → run → test → add → doctor → export evidence on each OS family remain required before Phase 24 can close.
 
 ### Phase 23 progress — 2026-09-23
 
