@@ -144,7 +144,20 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
             longRunning: true,
           };
 
-    return [operation];
+    return [
+      operation,
+      {
+        type: "modify_json",
+        path: "package.json",
+        merge: {
+          devDependencies: {
+            "eslint-config-next": QUALIFIED_VERSIONS.eslintConfigNext,
+          },
+        },
+        behavior: "merge",
+        description: "Pin the qualified Next.js ESLint config release",
+      },
+    ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {
     return mergeVerify([

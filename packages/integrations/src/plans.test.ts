@@ -117,6 +117,18 @@ describe("integration plans", () => {
     ]);
   });
 
+  it("pins the available ESLint config after scaffolding Next.js", () => {
+    expect(nextjsIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_json",
+          path: "package.json",
+          merge: { devDependencies: { "eslint-config-next": "16.3.5" } },
+        }),
+      ]),
+    );
+  });
+
   it("installs the official Tailwind Vite plugin for React + Vite", () => {
     const plan = tailwindIntegration.plan(planContext({ frameworkId: "react-vite" }));
     expect(runCommands(plan)).toEqual([
