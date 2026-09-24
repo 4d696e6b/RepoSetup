@@ -71,29 +71,16 @@ jobs:
         working-directory: baseline
       - run: pnpm build
         working-directory: baseline
-      - name: Measure baseline
-        run: node scripts/benchmark-real-installs.mjs
+      - name: Measure controlled installation passes
+        run: pnpm benchmark:install-passes
         working-directory: candidate
         env:
           REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK: "1"
-          REPOSETUP_REAL_BENCHMARK_TRIALS: ${{ inputs.trials || '5' }}
-          REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes || 'tests/e2e/fixtures/golden-react-vite.json,tests/e2e/fixtures/golden-express.json' }}
-          REPOSETUP_REAL_BENCHMARK_OUTPUT: ../baseline-real-installs.json
-          REPOSETUP_BENCHMARK_WORKSPACE_ROOT: ../baseline
-          REPOSETUP_BENCHMARK_CONFIG_ROOT: ../candidate
-          REPOSETUP_BENCHMARK_CLI_BIN: ../baseline/packages/cli/dist/bin.js
-      - name: Measure candidate
-        run: node scripts/benchmark-real-installs.mjs
-        working-directory: candidate
-        env:
-          REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK: "1"
-          REPOSETUP_REAL_BENCHMARK_TRIALS: ${{ inputs.trials || '5' }}
-          REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes || 'tests/e2e/fixtures/golden-react-vite.json,tests/e2e/fixtures/golden-express.json' }}
-          REPOSETUP_REAL_BENCHMARK_OUTPUT: ../candidate-real-installs.json
+          REPOSETUP_INSTALL_PASS_TRIALS: ${{ inputs.trials || '5' }}
+          REPOSETUP_INSTALL_PASS_OUTPUT: ../install-passes.json
       - uses: actions/upload-artifact@v4
         with:
           name: installation-performance-${{ matrix.runner }}
           path: |
-            baseline-real-installs.json
-            candidate-real-installs.json
+            install-passes.json
           if-no-files-found: error
