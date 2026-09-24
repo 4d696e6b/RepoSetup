@@ -103,6 +103,7 @@ export async function handleAdd(input: {
     }
   }
 
+  const executionStartedAt = Date.now();
   const executed = await executeInstallation(planned.result.operations, {
     rootDir: planned.projectRoot,
     fs: input.deps.executorFs,
@@ -156,7 +157,9 @@ export async function handleAdd(input: {
   }
 
   if (!input.globals.quiet) {
+    const elapsedSeconds = ((Date.now() - executionStartedAt) / 1000).toFixed(1);
     writeLine(input.deps.io.writeOut, `Executed ${executed.executed} operations.`);
+    writeLine(input.deps.io.writeOut, `Elapsed: ${elapsedSeconds}s.`);
   }
 
   return EXIT_CODES.SUCCESS;

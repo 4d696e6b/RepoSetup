@@ -76,6 +76,7 @@ export async function handleCreate(input: {
     }
   }
 
+  const executionStartedAt = Date.now();
   const executed = await executeInstallation(planned.operations, {
     rootDir: input.deps.cwd,
     fs: input.deps.executorFs,
@@ -129,7 +130,17 @@ export async function handleCreate(input: {
   }
 
   if (!input.globals.quiet) {
+    const elapsedSeconds = ((Date.now() - executionStartedAt) / 1000).toFixed(1);
     writeLine(input.deps.io.writeOut, `Executed ${executed.executed} operations.`);
+    writeLine(input.deps.io.writeOut, `Elapsed: ${elapsedSeconds}s.`);
+    writeLine(
+      input.deps.io.writeOut,
+      `Project directory: ${input.deps.cwd}/${planned.config.project.path ?? planned.config.project.name}`,
+    );
+    writeLine(
+      input.deps.io.writeOut,
+      "Next: inspect the generated README and run the framework's documented development command.",
+    );
   }
 
   return EXIT_CODES.SUCCESS;
