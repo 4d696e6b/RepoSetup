@@ -80,6 +80,7 @@ jobs:
           REPOSETUP_REAL_BENCHMARK_RECIPES: ${{ inputs.recipes || 'tests/e2e/fixtures/golden-react-vite.json,tests/e2e/fixtures/golden-express.json' }}
           REPOSETUP_REAL_BENCHMARK_OUTPUT: ../baseline-real-installs.json
           REPOSETUP_BENCHMARK_WORKSPACE_ROOT: ../baseline
+          REPOSETUP_BENCHMARK_CONFIG_ROOT: ../candidate
           REPOSETUP_BENCHMARK_CLI_BIN: ../baseline/packages/cli/dist/bin.js
       - name: Measure candidate
         run: node scripts/benchmark-real-installs.mjs

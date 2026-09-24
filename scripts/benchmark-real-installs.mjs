@@ -21,6 +21,7 @@ const recipes =
 const trials = Number(process.env.REPOSETUP_REAL_BENCHMARK_TRIALS ?? 5);
 const outputPath = process.env.REPOSETUP_REAL_BENCHMARK_OUTPUT ?? "benchmark-real-installs.json";
 const workspaceRoot = resolve(process.env.REPOSETUP_BENCHMARK_WORKSPACE_ROOT ?? process.cwd());
+const configRoot = resolve(process.env.REPOSETUP_BENCHMARK_CONFIG_ROOT ?? workspaceRoot);
 const cliBin = resolve(
   process.env.REPOSETUP_BENCHMARK_CLI_BIN ?? join(workspaceRoot, "packages/cli/dist/bin.js"),
 );
@@ -43,7 +44,7 @@ const rows = [];
 try {
   await mkdir(join(benchmarkRoot, "projects"), { recursive: true });
   for (const recipe of recipes) {
-    const configPath = resolve(workspaceRoot, recipe);
+    const configPath = resolve(configRoot, recipe);
     const config = await readFile(configPath);
     for (const cacheMode of ["cold", "warm"]) {
       const cacheRoot = join(benchmarkRoot, "caches", cacheMode, recipeId(recipe));
