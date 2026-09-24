@@ -105,7 +105,7 @@ describe("golden stack real execution", () => {
     await expectHealthyCli(cwd, ["vite", "react", "pnpm"]);
   });
 
-  it("Golden C — Express generation with PostgreSQL config (no live database)", async () => {
+  it("Golden C — Express endpoint test and PostgreSQL configuration (no live database)", async () => {
     const { cwd, created } = await createProject(fixturePath("golden-express.json"));
     expect(created.exitCode, created.stderr).toBe(0);
 
@@ -116,6 +116,12 @@ describe("golden stack real execution", () => {
 
     const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
     expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);
+
+    const built = await runProcess("pnpm", ["run", "build"], { cwd });
+    expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+
+    const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
+    expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
 
     await expectHealthyCli(cwd, ["express", "prisma", "pnpm"]);
   });
