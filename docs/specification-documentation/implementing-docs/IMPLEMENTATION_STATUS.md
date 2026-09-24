@@ -4,9 +4,22 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 22 — Reproducible recipes and compatibility enforcement: complete (engines floor deferred).** Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 23 — Measured installation performance: complete.** Phase 22 recipe gates are complete (Node 24 engines floor deferred). Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
 
-See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, and [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope, evidence, and blockers.
+See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
+
+### Phase 23 progress — 2026-09-23
+
+- [x] Package adds stay typed `install_package` through planning. `exact` and `allowBuild` are on the operation schema and forwarded into adapter argv at execute time. Plans no longer expand adds to `run_command` early.
+- [x] Compatible `install_package` ops batch within the same manager/root/dev/exact policy. Soft ops (files, messages, checks) do not block merging. `run_command` and `verify` stay barriers so generators, migrations, codegen, and verification still see dependencies installed first. Conflicting version specs in one policy fail the plan. Add plans filter satisfied packages before the batch pass.
+- [x] Next.js scaffolding uses verified `create-next-app@16.3.6 --skip-install` (official CLI docs and `--help`). When later `install_package` ops share the soft segment, they install scaffold deps; otherwise the planner inserts a project `install`. create-vite@8.3.0 already scaffolds without installing unless `--immediate` is set, so no Vite flag change.
+- [x] Soft segments with two or more npm/pnpm `install_package` ops assemble `package.json` via `modify_json` and run one project install (pnpm forwards `--allow-build`). Single adds and uv/pip segments stay as typed adds. Existing-project add still filters before batching/consolidation.
+- [x] npm/pnpm generated-project installs use documented `--prefer-offline`, which permits registry fallback on cache misses. One 250 ms retry is limited to locked installs after classified transient network errors; generators and package additions are never replayed.
+- [x] Repeatable five-recipe dry-run planner benchmark (`pnpm benchmark:plans`) records input hashes, elapsed-time distribution, and rendered process-operation counts. It is explicitly separate from real-install performance evidence.
+- [x] Controlled real-create smoke: React/Vite completed once with a benchmark-owned cold cache (11.31 s) and warm cache (10.77 s) on macOS arm64 / Node 22.12.0 / pnpm 12.5.1. This is collector validation, not a baseline comparison or speed claim.
+- [x] Controlled fixed-package evidence (run `35968357317`, five cold and five warm trials per profile/strategy) passed on Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64 with Node 24.20.0 and pnpm 12.5.1. The Phase 19 reference model used five separate package-install passes; the Phase 23 model assembled one manifest and used one install pass. Warm-cache median reductions: React toolchain 58.7% Ubuntu, 56.1% macOS, 21.9% Windows; Express toolchain 68.3% Ubuntu, 67.0% macOS, 40.3% Windows. Each profile’s cross-platform median exceeds 25%; no profile regressed. Both profiles reduce install subprocesses from five to one (80%).
+
+Phase 23 implementation and performance gates are complete. The next phase is Phase 24 — daily CLI usability.
 
 ### Phase 20 progress — 2026-09-22
 
@@ -80,7 +93,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 20 — Safe executor and adapter boundaries
 - [x] Phase 21 — Cross-platform execution
 - [x] Phase 22 — Reproducible recipes and compatibility
-- [ ] Phase 23 — Measured installation performance
+- [x] Phase 23 — Measured installation performance
 - [ ] Phase 24 — Daily CLI usability and recovery guidance
 - [ ] Phase 25 — Existing integration qualification
 - [ ] Phase 26 — Important new integrations

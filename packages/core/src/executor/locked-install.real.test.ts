@@ -78,7 +78,8 @@ const testFileSystem: ExecutorFileSystem = {
 function runProcess(cacheDir: string): ProcessRunner {
   return (request) =>
     new Promise((resolve, reject) => {
-      const child = spawn(request.command, [...request.args], {
+      const launch = nodePackageManagerLaunch(request.command, request.args);
+      const child = spawn(launch.command, launch.args, {
         cwd: request.cwd,
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
@@ -112,7 +113,11 @@ function executeInstallation(
 }
 
 afterEach(async () => {
-  await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+  await Promise.all(
+    tempDirs
+      .splice(0)
+      .map((dir) => rm(dir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 })),
+  );
 });
 
 describe("locked npm reproduction", () => {
@@ -175,7 +180,7 @@ describe("locked npm reproduction", () => {
     }
     expect(sha256(await readFile(path.join(appDir, "package-lock.json")))).toBe(sha256(lockBefore));
     expect(await readFile(path.join(appDir, ".npmrc"), "utf8")).toBe(userNpmrc);
-  });
+  }, 30_000);
 });
 
 function lockedNpmInstall() {
@@ -200,6 +205,17 @@ function lockedNpmInstall() {
   return planned.operation;
 }
 
+function nodePackageManagerLaunch(command: string, args: readonly string[]) {
+  if (process.platform === "win32" && command === "npm") {
+    return {
+      command: process.env.ComSpec ?? "cmd.exe",
+      args: ["/d", "/v:off", "/c", "npm.cmd", ...args],
+    };
+  }
+
+  return { command, args: [...args] };
+}
+
 function npmEnv(cacheDir: string): NodeJS.ProcessEnv {
   return {
     ...process.env,
@@ -220,7 +236,8 @@ function runNpm(
   args: string[],
 ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
-    const child = spawn("npm", args, {
+    const launch = nodePackageManagerLaunch("npm", args);
+    const child = spawn(launch.command, launch.args, {
       cwd,
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],

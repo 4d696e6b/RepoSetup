@@ -1,6 +1,7 @@
 import {
   createRepoSetupError,
   getPackageManagerAdapter,
+  type InstallPackageOperation,
   type InstallationOperation,
   type PlanContext,
   type RunCommandOperation,
@@ -12,27 +13,46 @@ export function addPackages(
   packages: readonly string[],
   options: { description: string; dev?: boolean; exact?: boolean; allowBuild?: readonly string[] },
 ): InstallationOperation {
-  const adapter = getPackageManagerAdapter(context.config.packageManager);
+  const packageManager = context.config.packageManager;
+  const adapter = getPackageManagerAdapter(packageManager);
   if (adapter === undefined) {
     throw new Error(
-      `Package manager "${context.config.packageManager}" is not supported for package installation.`,
+      `Package manager "${packageManager}" is not supported for package installation.`,
     );
   }
 
-  const result = adapter.add({
+  const request = {
     packages: [...packages],
     cwd: context.projectRoot,
     description: options.description,
-    ...(options.dev === true ? { dev: true } : {}),
-    ...(options.exact === true ? { exact: true } : {}),
+    ...(options.dev === true ? { dev: true as const } : {}),
+    ...(options.exact === true ? { exact: true as const } : {}),
     ...(options.allowBuild === undefined ? {} : { allowBuild: [...options.allowBuild] }),
-  });
+  };
 
+  const result = adapter.add(request);
   if (!result.ok) {
     throw new Error(result.error.message);
   }
 
-  return result.operation;
+  const operation: InstallPackageOperation = {
+    type: "install_package",
+    packageManager,
+    packages: [...packages],
+    cwd: context.projectRoot,
+    description: options.description,
+    requiresNetwork: true,
+  };
+  if (options.dev === true) {
+    operation.dev = true;
+  }
+  if (options.exact === true) {
+    operation.exact = true;
+  }
+  if (options.allowBuild !== undefined) {
+    operation.allowBuild = [...options.allowBuild];
+  }
+  return operation;
 }
 
 export function removePackages(

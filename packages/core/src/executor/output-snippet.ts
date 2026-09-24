@@ -31,3 +31,13 @@ export function commandFailureSuggestion(snippet: string | undefined): string {
 
   return "Inspect the command output, fix the project, and re-run the plan.";
 }
+
+/** Network failures that package managers document as transient. This is classification only; generators are never replayed. */
+export function isTransientDownloadFailure(snippet: string | undefined): boolean {
+  return (
+    snippet !== undefined &&
+    /\b(?:ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|ENETUNREACH|fetch failed|network timeout)\b/i.test(
+      snippet,
+    )
+  );
+}

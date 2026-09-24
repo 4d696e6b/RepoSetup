@@ -89,6 +89,8 @@ export type {
 export type { RegistryLookup } from "./resolution/registry-lookup.js";
 export { resolveConfig } from "./resolution/resolve.js";
 export { planInstallation, planInstallationSubset, toInstallationPlan } from "./planning/plan.js";
+export { batchInstallPackages } from "./planning/batch-install.js";
+export type { BatchInstallResult } from "./planning/batch-install.js";
 export {
   createRecipeRecord,
   lockfileForPackageManager,

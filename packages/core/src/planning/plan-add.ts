@@ -14,6 +14,8 @@ import {
   selectRuntime,
 } from "./config-from-detected.js";
 import { filterSatisfiedOperations } from "./delta.js";
+import { batchInstallPackages } from "./batch-install.js";
+import { consolidateManifestInstalls } from "./consolidate-manifests.js";
 import { planInstallationSubset } from "./plan.js";
 
 export type PlanAddResult =
@@ -108,18 +110,41 @@ export async function planAdd(input: {
     return { ok: true, projectRoot: detected.stack.projectRoot, result: planned };
   }
 
-  const operations = await filterSatisfiedOperations(
-    planned.operations,
-    files,
-    context.packageJson,
-  );
+  const remaining = await filterSatisfiedOperations(planned.operations, files, context.packageJson);
+  const batched = batchInstallPackages(remaining);
+  if (!batched.ok) {
+    return {
+      ok: true,
+      projectRoot: detected.stack.projectRoot,
+      result: {
+        ...planned,
+        valid: false,
+        operations: [],
+        errors: [...planned.errors, batched.error],
+      },
+    };
+  }
+
+  const consolidated = consolidateManifestInstalls(batched.operations);
+  if (!consolidated.ok) {
+    return {
+      ok: true,
+      projectRoot: detected.stack.projectRoot,
+      result: {
+        ...planned,
+        valid: false,
+        operations: [],
+        errors: [...planned.errors, consolidated.error],
+      },
+    };
+  }
 
   return {
     ok: true,
     projectRoot: detected.stack.projectRoot,
     result: {
       ...planned,
-      operations,
+      operations: consolidated.operations,
     },
   };
 }

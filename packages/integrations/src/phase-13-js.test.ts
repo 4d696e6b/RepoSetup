@@ -23,6 +23,7 @@ import { fastifyIntegration } from "./fastify.js";
 import { githubActionsIntegration } from "./github-actions.js";
 import { mongodbIntegration } from "./mongodb.js";
 import { mongooseIntegration } from "./mongoose.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 import { playwrightIntegration } from "./playwright.js";
 import { postgresqlIntegration } from "./postgresql.js";
 import { reactViteIntegration } from "./react-vite.js";
@@ -63,9 +64,7 @@ function planContext<TOptions = unknown>(
 }
 
 function runCommands(operations: ReturnType<typeof expressIntegration.plan>) {
-  return operations
-    .filter((operation) => operation.type === "run_command")
-    .map((operation) => [operation.command, ...operation.args]);
+  return plannedCommandArgv(operations);
 }
 
 async function contextOf(files: Record<string, string>): Promise<DetectionContext> {
@@ -249,7 +248,7 @@ describe("Phase 13 JS ecosystem plans", () => {
 
   it("installs Vitest only for non-Next.js frameworks", () => {
     expect(runCommands(vitestIntegration.plan(planContext({ frameworkId: "express" })))).toEqual([
-      ["pnpm", "add", "--save-dev", "vitest@5.0.1"],
+      ["pnpm", "add", "--save-dev", "--allow-build=esbuild", "vitest@5.0.1"],
     ]);
   });
 });
@@ -346,7 +345,7 @@ describe("Phase 13 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
-        ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/vite@4.3.3"],
+        ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
         ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"],
       ]),
     );
@@ -370,7 +369,7 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "add", "express@5.2.1"],
+        ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
         [
           "pnpm",
           "exec",

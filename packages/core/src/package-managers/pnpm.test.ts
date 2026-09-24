@@ -101,7 +101,7 @@ describe("pnpmAdapter", () => {
       description: "Install pnpm dependencies",
     });
 
-    expectArgs(result, ["install"]);
+    expectArgs(result, ["install", "--no-frozen-lockfile"]);
   });
 
   it("removes packages with pnpm remove", () => {
@@ -122,5 +122,14 @@ describe("pnpmAdapter", () => {
     });
 
     expectArgs(result, ["remove", "prettier"]);
+  });
+});
+
+describe("pnpm cache preference", () => {
+  it("uses prefer-offline without requiring an offline cache hit", () => {
+    expectArgs(
+      pnpmAdapter.install({ cwd: ".", description: "Cached install", preferOffline: true }),
+      ["install", "--no-frozen-lockfile", "--prefer-offline"],
+    );
   });
 });

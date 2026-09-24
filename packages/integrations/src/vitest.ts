@@ -80,6 +80,7 @@ export const vitestIntegration = defineIntegration({
         addPackages(context, [npmPin("vitest", QUALIFIED_VERSIONS.vitest)], {
           description: "Install Vitest",
           dev: true,
+          allowBuild: ["esbuild"],
         }),
         {
           type: "create_file",

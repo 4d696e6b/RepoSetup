@@ -50,6 +50,12 @@ jobs:
       - run: pnpm build
       - run: pnpm test
       - run: pnpm test:e2e
+      - name: Measure planner benchmark
+        if: matrix.node == 24
+        run: pnpm benchmark:plans
+        env:
+          REPOSETUP_BENCHMARK_TRIALS: "5"
+          REPOSETUP_BENCHMARK_OUTPUT: planner-benchmark.json
       - name: Write platform evidence
         run: >-
           node -e "require('node:fs').writeFileSync('platform-evidence.json',
@@ -58,5 +64,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: platform-evidence-${{ matrix.runner }}-node-${{ matrix.node }}
-          path: platform-evidence.json
+          path: |
+            platform-evidence.json
+            planner-benchmark.json
           if-no-files-found: error

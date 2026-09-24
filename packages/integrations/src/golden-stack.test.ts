@@ -6,6 +6,7 @@ import { parseRepoSetupConfig, planInstallation } from "@reposetup/core";
 import { describe, expect, it } from "vitest";
 
 import { createBuiltInRegistry } from "./catalog.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 
 const examplePath = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -36,9 +37,7 @@ describe("golden Next.js/SQLite stack", () => {
       "zod",
     ]);
 
-    const commands = result.operations
-      .filter((operation) => operation.type === "run_command")
-      .map((operation) => [operation.command, ...operation.args]);
+    const commands = plannedCommandArgv(result.operations);
 
     expect(commands).toEqual([
       [
@@ -54,27 +53,10 @@ describe("golden Next.js/SQLite stack", () => {
         "--import-alias",
         "@/*",
         "--use-pnpm",
+        "--skip-install",
         "--yes",
       ],
-      ["pnpm", "add", "--save-dev", "--save-exact", "prettier@3.9.8"],
-      [
-        "pnpm",
-        "add",
-        "--save-dev",
-        "--allow-build=prisma",
-        "--allow-build=@prisma/engines",
-        "prisma@7.10.0",
-        "@types/better-sqlite3@9.6.0",
-      ],
-      [
-        "pnpm",
-        "add",
-        "--allow-build=esbuild",
-        "--allow-build=!better-sqlite3",
-        "@prisma/client@7.10.0",
-        "@prisma/adapter-better-sqlite3@7.10.0",
-        "dotenv@18.0.3",
-      ],
+      ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
       [
         "pnpm",
         "exec",
@@ -86,19 +68,7 @@ describe("golden Next.js/SQLite stack", () => {
         "../generated/prisma",
       ],
       ["pnpm", "exec", "prisma", "generate"],
-      ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/postcss@4.3.3", "postcss@8.5.28"],
-      [
-        "pnpm",
-        "add",
-        "--save-dev",
-        "--allow-build=esbuild",
-        "vitest@5.0.1",
-        "@vitejs/plugin-react@6.1.1",
-        "jsdom@28.1.0",
-        "@testing-library/react@16.3.3",
-        "@testing-library/dom@10.4.2",
-        "vite-tsconfig-paths@6.1.1",
-      ],
+      ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
       ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
       ["pnpm", "add", "zod@4.6.5"],
     ]);
@@ -107,6 +77,11 @@ describe("golden Next.js/SQLite stack", () => {
       expect.arrayContaining([
         expect.objectContaining({ type: "check_prerequisite", id: "node" }),
         expect.objectContaining({ type: "check_prerequisite", id: "pnpm" }),
+        expect.objectContaining({
+          type: "modify_json",
+          path: "package.json",
+          description: "Assemble package.json dependencies before a consolidated install",
+        }),
         expect.objectContaining({
           type: "add_env_example",
           path: ".env.example",

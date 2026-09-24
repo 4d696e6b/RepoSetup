@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { commandFailureSuggestion, summarizeFailedProcessOutput } from "./output-snippet.js";
+import {
+  commandFailureSuggestion,
+  isTransientDownloadFailure,
+  summarizeFailedProcessOutput,
+} from "./output-snippet.js";
 
 describe("summarizeFailedProcessOutput", () => {
   it("prefers stderr and redacts secret assignments", () => {
@@ -11,6 +15,15 @@ describe("summarizeFailedProcessOutput", () => {
 
   it("returns undefined when both streams are empty", () => {
     expect(summarizeFailedProcessOutput("  ", "")).toBeUndefined();
+  });
+});
+
+describe("isTransientDownloadFailure", () => {
+  it("recognizes transient network failures without classifying package errors as retryable", () => {
+    expect(isTransientDownloadFailure("npm ERR! code ETIMEDOUT")).toBe(true);
+    expect(isTransientDownloadFailure("npm ERR! ERESOLVE unable to resolve dependency tree")).toBe(
+      false,
+    );
   });
 });
 

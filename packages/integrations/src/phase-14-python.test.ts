@@ -20,6 +20,7 @@ import { dockerIntegration } from "./docker.js";
 import { fastapiIntegration } from "./fastapi.js";
 import { flaskIntegration } from "./flask.js";
 import { pipIntegration } from "./pip.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 import { postgresqlIntegration } from "./postgresql.js";
 import { pydanticIntegration } from "./pydantic.js";
 import { pytestIntegration } from "./pytest.js";
@@ -55,9 +56,7 @@ function planContext<TOptions = unknown>(
 }
 
 function runCommands(operations: ReturnType<typeof fastapiIntegration.plan>) {
-  return operations
-    .filter((operation) => operation.type === "run_command")
-    .map((operation) => [operation.command, ...operation.args]);
+  return plannedCommandArgv(operations);
 }
 
 async function contextOf(files: Record<string, string>): Promise<DetectionContext> {
@@ -255,11 +254,15 @@ describe("Phase 14 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["uv", "init", ".", "--bare", "--name", "example-fastapi-app"],
-        ["uv", "add", "fastapi[standard]==0.141.1"],
-        ["uv", "add", "pydantic==2.13.5"],
-        ["uv", "add", "SQLAlchemy==2.0.54"],
-        ["uv", "add", "--dev", "pytest==9.1.1"],
-        ["uv", "add", "--dev", "ruff==0.16.8"],
+        [
+          "uv",
+          "add",
+          "fastapi[standard]==0.141.1",
+          "pydantic==2.13.5",
+          "SQLAlchemy==2.0.54",
+          "alembic==1.20.0",
+        ],
+        ["uv", "add", "--dev", "pytest==9.1.1", "ruff==0.16.8"],
         ["uv", "run", "alembic", "init", "alembic"],
       ]),
     );
@@ -291,7 +294,8 @@ describe("Phase 14 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["uv", "init", ".", "--bare", "--name", "example-flask-app"],
-        ["uv", "add", "Flask==3.1.3"],
+        ["uv", "add", "Flask==3.1.3", "SQLAlchemy==2.0.54", "alembic==1.20.0"],
+        ["uv", "add", "--dev", "pytest==9.1.1", "ruff==0.16.8"],
         ["uv", "run", "alembic", "init", "alembic"],
       ]),
     );

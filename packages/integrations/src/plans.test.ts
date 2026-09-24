@@ -5,6 +5,7 @@ import { nextjsIntegration } from "./nextjs.js";
 import { nodeIntegration } from "./node.js";
 import { npmIntegration } from "./npm.js";
 import { addPackages, execLocalBin, hasSelectedIntegration } from "./operations.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 import { pnpmIntegration } from "./pnpm.js";
 import { prettierIntegration } from "./prettier.js";
 import { prismaIntegration } from "./prisma.js";
@@ -45,9 +46,7 @@ function planContext<TOptions = unknown>(
 }
 
 function runCommands(operations: ReturnType<typeof nextjsIntegration.plan>) {
-  return operations
-    .filter((operation) => operation.type === "run_command")
-    .map((operation) => [operation.command, ...operation.args]);
+  return plannedCommandArgv(operations);
 }
 
 describe("integration plans", () => {
@@ -83,6 +82,7 @@ describe("integration plans", () => {
         "--import-alias",
         "@/*",
         "--use-pnpm",
+        "--skip-install",
         "--yes",
       ],
     ]);
@@ -111,6 +111,7 @@ describe("integration plans", () => {
         "--import-alias",
         "@/*",
         "--use-npm",
+        "--skip-install",
         "--yes",
       ],
     ]);
@@ -284,14 +285,34 @@ describe("integration plans", () => {
 });
 
 describe("operation helpers", () => {
-  it("emits adapter argv arrays for package adds", () => {
+  it("emits typed install_package operations for package adds", () => {
     const operation = addPackages(planContext(), ["zod"], { description: "Install Zod" });
     expect(operation).toMatchObject({
-      type: "run_command",
-      command: "pnpm",
-      args: ["add", "zod"],
+      type: "install_package",
+      packageManager: "pnpm",
+      packages: ["zod"],
       cwd: ".",
       requiresNetwork: true,
+    });
+  });
+
+  it("preserves exact and allowBuild on install_package", () => {
+    const operation = addPackages(planContext(), ["prettier"], {
+      description: "Install Prettier",
+      dev: true,
+      exact: true,
+      allowBuild: ["esbuild"],
+    });
+    expect(operation).toEqual({
+      type: "install_package",
+      packageManager: "pnpm",
+      packages: ["prettier"],
+      cwd: ".",
+      description: "Install Prettier",
+      requiresNetwork: true,
+      dev: true,
+      exact: true,
+      allowBuild: ["esbuild"],
     });
   });
 
