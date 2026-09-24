@@ -11,7 +11,10 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 ### Phase 24 progress — 2026-09-24
 
 - [x] Five bundled declarative guaranteed presets are discoverable with `reposetup presets`: Next.js/SQLite, React/Vite, Express/PostgreSQL, FastAPI, and Flask. `reposetup create --preset <id>` sends the selected config through the normal validation, plan review, confirmation, and executor path; it does not download or execute remote preset content. A positional project name overrides only the preset’s safe project-name default.
-- [ ] Machine-readable CLI output, progress/recovery guidance, expanded doctor checks, workspace policy, and observed usability sessions.
+- [x] Bundled presets, multi-integration `add` planning, versioned JSON for plan/stack/doctor/errors, stderr progress in JSON mode, elapsed execution summaries, and partial-run recovery guidance are implemented and covered by automated tests.
+- [x] Doctor remains read-only and now flags conflicting Node lockfiles and a missing `.env.example` when a local `.env` exists. Existing integration verification continues to diagnose missing dependencies and generated/configuration artifacts.
+- [x] Add/remove refuse ambiguous `pnpm-workspace.yaml` roots; the CLI specification directs users to a single workspace package directory.
+- [ ] Runtime-version mismatch diagnostics, generated README/command qualification for every guaranteed recipe, non-TTY usability sessions, and the full published-install → preview → create → run → test → add → doctor → export evidence remain required before Phase 24 can close.
 
 ### Phase 23 progress — 2026-09-23
 

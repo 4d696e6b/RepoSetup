@@ -191,7 +191,7 @@ Include confidence when not certain.
 
 ## Workspace add/remove policy
 
-`reposetup add` and `reposetup remove` operate on one detected project package. Run either command from that package directory. RepoSetup refuses a `pnpm-workspace.yaml` root because selecting a package target there is ambiguous. This release does not compose or mutate an entire workspace; use each package directory explicitly.
+`reposetup add <id...>` plans one or more additions together, and `reposetup remove <id>` removes one integration with an explicit safe removal recipe. Both commands operate on one detected project package. Run either command from that package directory. RepoSetup refuses a `pnpm-workspace.yaml` root because selecting a package target there is ambiguous. This release does not compose or mutate an entire workspace; use each package directory explicitly.
 
 ## 8. `reposetup doctor`
 
@@ -236,6 +236,7 @@ Recommended:
 --verbose
 --quiet
 --no-color
+--json
 ```
 
 Mutating commands:
