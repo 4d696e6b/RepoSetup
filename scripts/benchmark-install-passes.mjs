@@ -51,6 +51,7 @@ try {
             join(project, "package.json"),
             JSON.stringify({ name: "benchmark-owned", private: true, version: "0.0.0" }) + "\n",
           );
+          await writeFile(join(project, "pnpm-workspace.yaml"), "allowBuilds:\n  esbuild: true\n");
           const started = process.hrtime.bigint();
           let result;
           if (strategy === "phase19-separate-adds") {
