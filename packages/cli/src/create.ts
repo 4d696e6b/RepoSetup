@@ -21,6 +21,7 @@ import { formatError } from "./format-error.js";
 import { renderErrorJson, renderPartialRunReport, renderPlanJson } from "./machine-output.js";
 import { writeLine } from "./io.js";
 import { loadRepoSetupConfigFile } from "./load-config.js";
+import { postCreateCommands } from "./post-create.js";
 import { isKnownPackageManager } from "./prompt-create.js";
 import { renderPlan } from "./render-plan.js";
 import type {
@@ -137,10 +138,9 @@ export async function handleCreate(input: {
       input.deps.io.writeOut,
       `Project directory: ${input.deps.cwd}/${planned.config.project.path ?? planned.config.project.name}`,
     );
-    writeLine(
-      input.deps.io.writeOut,
-      "Next: inspect the generated README and run the framework's documented development command.",
-    );
+    for (const command of postCreateCommands(planned.config)) {
+      writeLine(input.deps.io.writeOut, `Next: ${command}`);
+    }
   }
 
   return EXIT_CODES.SUCCESS;
