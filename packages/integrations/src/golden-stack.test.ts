@@ -43,7 +43,7 @@ describe("golden Next.js/SQLite stack", () => {
       [
         "pnpm",
         "create",
-        "next-app@16.3.6",
+        "next-app@16.3.5",
         ".",
         "--ts",
         "--eslint",

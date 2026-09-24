@@ -398,6 +398,7 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Executed 3 operations.");
+    expect(captured.stdout()).toContain(`Project directory: ${path.resolve(root)}`);
     expect(captured.stderr()).toBe("");
     expect(await readdir(root)).toEqual(
       expect.arrayContaining(["db.txt", "reposetup.json", "src"]),
@@ -543,7 +544,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("nextjs");
     expect(captured.stdout()).toContain("prisma");
     expect(captured.stdout()).toContain(
-      "pnpm create next-app@16.3.6 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
+      "pnpm create next-app@16.3.5 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
     );
     expect(captured.stdout()).toContain(
       "modify_json  Assemble package.json dependencies before a consolidated install",

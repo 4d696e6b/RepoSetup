@@ -110,7 +110,7 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
       context.config.packageManager === "pnpm" ? "--use-pnpm" : "--use-npm",
       // Official create-next-app flag: skip the generator's install so later
       // install_package ops (or a deferred project install) own node_modules.
-      // Verified for create-next-app@16.3.6 via --help and
+      // Verified for create-next-app@16.3.5 via --help and
       // https://nextjs.org/docs/app/api-reference/cli/create-next-app
       "--skip-install",
       "--yes",
@@ -144,8 +144,40 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
             longRunning: true,
           };
 
+    const usesPrisma = context.config.integrations.some(({ id }) => id === "prisma");
+    const pnpmBuildPolicy: InstallationOperation | undefined =
+      context.config.packageManager === "pnpm"
+        ? {
+            // create-next-app 16.3.5 writes this placeholder policy when its
+            // install is skipped. Replace it before RepoSetup's consolidated
+            // install so the generator's known native dependencies can build.
+            type: "modify_text",
+            path: "pnpm-workspace.yaml",
+            oldText: `allowBuilds:\n  sharp: false\n  unrs-resolver: false\n`,
+            newText: usesPrisma
+              ? `allowBuilds:\n  '@prisma/engines': true\n  better-sqlite3: true\n  prisma: true\n  sharp: true\n  unrs-resolver: true\n`
+              : `allowBuilds:\n  sharp: true\n  unrs-resolver: true\n`,
+            description: "Enable create-next-app's declared pnpm dependency builds",
+          }
+        : undefined;
+    const standaloneTypecheckFix: InstallationOperation | undefined = typescript
+      ? {
+          // create-next-app 16.3.5's default LayoutProps global is emitted
+          // by Next's type generation. Use an explicit type so `tsc --noEmit`
+          // works before a development server or build has run.
+          type: "modify_text",
+          path: "app/layout.tsx",
+          oldText: 'export default function RootLayout({ children }: LayoutProps<"/">) {',
+          newText:
+            "export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {",
+          description: "Make the generated Next.js layout pass standalone TypeScript checks",
+        }
+      : undefined;
+
     return [
       operation,
+      ...(pnpmBuildPolicy === undefined ? [] : [pnpmBuildPolicy]),
+      ...(standaloneTypecheckFix === undefined ? [] : [standaloneTypecheckFix]),
       {
         type: "modify_json",
         path: "package.json",

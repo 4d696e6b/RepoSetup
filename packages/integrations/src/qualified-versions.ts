@@ -25,7 +25,7 @@
 export const REGISTRY_REVISION = "2026-09-23";
 
 export const QUALIFIED_VERSIONS = {
-  createNextApp: "16.3.6",
+  createNextApp: "16.3.5",
   eslintConfigNext: "16.3.5",
   vite: "8.3.0",
   eslint: "9.39.5",

@@ -72,7 +72,7 @@ describe("integration plans", () => {
       [
         "pnpm",
         "create",
-        "next-app@16.3.6",
+        "next-app@16.3.5",
         ".",
         "--ts",
         "--eslint",
@@ -101,7 +101,7 @@ describe("integration plans", () => {
       [
         "npx",
         "--yes",
-        "create-next-app@16.3.6",
+        "create-next-app@16.3.5",
         "app",
         "--js",
         "--eslint",
@@ -124,6 +124,30 @@ describe("integration plans", () => {
           type: "modify_json",
           path: "package.json",
           merge: { devDependencies: { "eslint-config-next": "16.3.5" } },
+        }),
+      ]),
+    );
+  });
+
+  it("replaces the create-next-app pnpm build-policy placeholders", () => {
+    expect(nextjsIntegration.plan(planContext({ integrations: [{ id: "prisma" }] }))).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_text",
+          path: "pnpm-workspace.yaml",
+          newText: expect.stringContaining("better-sqlite3: true"),
+        }),
+      ]),
+    );
+  });
+
+  it("makes a generated TypeScript Next.js layout typecheck before Next type generation", () => {
+    expect(nextjsIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_text",
+          path: "app/layout.tsx",
+          newText: expect.stringContaining("React.ReactNode"),
         }),
       ]),
     );
@@ -173,7 +197,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--allow-build=esbuild",
-        "--allow-build=!better-sqlite3",
+        "--allow-build=better-sqlite3",
         "@prisma/client@7.10.0",
         "@prisma/adapter-better-sqlite3@7.10.0",
         "dotenv@18.0.3",

@@ -74,13 +74,13 @@ describe("pnpmAdapter", () => {
       packages: ["@prisma/adapter-better-sqlite3"],
       cwd: ".",
       description: "Install Prisma SQLite adapter",
-      allowBuild: ["esbuild", "!better-sqlite3"],
+      allowBuild: ["esbuild", "better-sqlite3"],
     });
 
     expectArgs(result, [
       "add",
       "--allow-build=esbuild",
-      "--allow-build=!better-sqlite3",
+      "--allow-build=better-sqlite3",
       "@prisma/adapter-better-sqlite3",
     ]);
   });

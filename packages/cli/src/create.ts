@@ -7,6 +7,7 @@ import {
   type RepoSetupError,
   type RuntimeId,
 } from "@reposetup/core";
+import path from "node:path";
 
 import { findBundledPreset } from "./presets.js";
 
@@ -136,7 +137,7 @@ export async function handleCreate(input: {
     writeLine(input.deps.io.writeOut, `Elapsed: ${elapsedSeconds}s.`);
     writeLine(
       input.deps.io.writeOut,
-      `Project directory: ${input.deps.cwd}/${planned.config.project.path ?? planned.config.project.name}`,
+      `Project directory: ${path.resolve(input.deps.cwd, planned.config.project.path ?? ".")}`,
     );
     for (const command of postCreateCommands(planned.config)) {
       writeLine(input.deps.io.writeOut, `Next: ${command}`);

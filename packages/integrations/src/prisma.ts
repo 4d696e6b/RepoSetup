@@ -163,7 +163,7 @@ function sqlitePlan(context: PlanContext) {
       ],
       {
         description: "Install Prisma Client, the SQLite adapter, and dotenv",
-        allowBuild: ["esbuild", "!better-sqlite3"],
+        allowBuild: ["esbuild", "better-sqlite3"],
       },
     ),
     execLocalBin(
