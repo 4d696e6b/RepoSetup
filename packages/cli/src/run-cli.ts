@@ -43,6 +43,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .version(cliVersion())
     .option("--verbose", "include extra detail in output", false)
     .option("--quiet", "reduce output", false)
+    .option("--json", "write versioned machine-readable output", false)
     .option("--no-color", "disable ANSI color (output is already plain)")
     .enablePositionalOptions()
     .showHelpAfterError()
@@ -273,9 +274,10 @@ function resolveDeps(deps: CliDeps): ResolvedCliDeps {
 }
 
 function readGlobals(command: Command): GlobalCliOptions {
-  const opts = command.optsWithGlobals() as { verbose?: boolean; quiet?: boolean };
+  const opts = command.optsWithGlobals() as { verbose?: boolean; quiet?: boolean; json?: boolean };
   return {
     verbose: opts.verbose === true,
     quiet: opts.quiet === true,
+    json: opts.json === true,
   };
 }

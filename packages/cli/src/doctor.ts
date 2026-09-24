@@ -21,12 +21,16 @@ export async function handleDoctor(input: {
     return exitCodeForError(result.error);
   }
 
-  const rendered = renderDoctor(result.result, input.globals);
-  if (rendered.length > 0) {
-    writeLine(input.deps.io.writeOut, rendered);
-  }
-
   const failed = failedDoctorChecks(result.result);
+  if (input.globals.json) {
+    writeLine(
+      input.deps.io.writeOut,
+      JSON.stringify({ version: 1, kind: "doctor", result: result.result, failed: failed.length }),
+    );
+  } else {
+    const rendered = renderDoctor(result.result, input.globals);
+    if (rendered.length > 0) writeLine(input.deps.io.writeOut, rendered);
+  }
   if (failed.length === 0) {
     return EXIT_CODES.SUCCESS;
   }

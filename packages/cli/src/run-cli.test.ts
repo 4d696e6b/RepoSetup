@@ -960,16 +960,14 @@ describe("runCli", () => {
     await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
     const before = await snapshotTree(root);
     const captured = captureIo();
-    const result = await runCli(["doctor"], {
+    const result = await runCli(["--json", "doctor"], {
       cwd: root,
       io: captured.io,
       commandExists: async () => true,
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toContain("Doctor passed.");
-    expect(captured.stdout()).toContain("Node.js");
-    expect(captured.stdout()).toContain("Next.js");
+    expect(JSON.parse(captured.stdout())).toMatchObject({ version: 1, kind: "doctor", failed: 0 });
     expect(await snapshotTree(root)).toEqual(before);
   });
 

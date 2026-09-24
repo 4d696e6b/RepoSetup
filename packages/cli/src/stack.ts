@@ -20,6 +20,13 @@ export async function handleStack(input: {
     return exitCodeForError(result.error);
   }
 
-  writeLine(input.deps.io.writeOut, renderStack(result.stack, input.globals.verbose));
+  if (input.globals.json) {
+    writeLine(
+      input.deps.io.writeOut,
+      JSON.stringify({ version: 1, kind: "stack", stack: result.stack }),
+    );
+  } else {
+    writeLine(input.deps.io.writeOut, renderStack(result.stack, input.globals.verbose));
+  }
   return EXIT_CODES.SUCCESS;
 }

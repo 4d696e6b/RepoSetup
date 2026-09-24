@@ -77,6 +77,7 @@ export interface CliResult {
 export interface GlobalCliOptions {
   verbose: boolean;
   quiet: boolean;
+  json?: boolean;
 }
 
 export interface CreateCommandOptions {
