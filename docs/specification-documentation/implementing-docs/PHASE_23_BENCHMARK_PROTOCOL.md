@@ -49,6 +49,10 @@ Store raw JSON, command output, and a concise environment record with the candid
 
 Accept Phase 23 only when controlled comparisons show at least 25% lower warm-cache median total setup time for two representative multi-integration recipes, at least 50% fewer install subprocesses where the baseline had redundant batches, and no repeatable regression above 10% for another required recipe. The optimized and reference outputs must also pass the Phase 23 correctness gate. If evidence cannot meet a target, write an explicit release-scope decision; do not mark the target waived by omission.
 
-## Current evidence status
+## Final evidence status
 
-The repository has a repeatable dry-run planner benchmark and implementation tests for batching, cache preference, and bounded transient-download retry. Full cold/warm real-install comparisons on the three-OS matrix have not yet been recorded, so no installation-speed target is claimed and Phase 23 remains in progress.
+The controlled fixed-package installation-pass benchmark is available as `pnpm benchmark:install-passes`. It holds two multi-integration profiles to the exact qualified direct package versions, uses five Phase 19-style separate `pnpm add` passes as the reference, and compares them with one Phase 23 manifest-consolidated `pnpm install` pass. It uses benchmark-owned caches and fresh projects, runs five cold and five warm trials, and records subprocess counts and failures.
+
+GitHub Actions run `35968357317` completed successfully on Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64 with Node 24.20.0 and pnpm 12.5.1. Warm-cache reductions were React toolchain: 58.7% Ubuntu, 56.1% macOS, 21.9% Windows; Express toolchain: 68.3% Ubuntu, 67.0% macOS, 40.3% Windows. Each profile’s three-platform median beats the 25% target, no profile regressed, and the install subprocess count fell from five to one (80%). Raw `install-passes.json` reports are retained as the workflow artifacts `installation-performance-ubuntu-24.04`, `installation-performance-macos-15`, and `installation-performance-windows-2025` for that run.
+
+The earlier create-based comparison was retained only as collector validation and is not used for the acceptance decision because Phase 22 generator/catalog changes affected its timings. Phase 23 is complete.
