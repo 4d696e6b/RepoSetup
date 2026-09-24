@@ -134,7 +134,7 @@ describe("golden stack real execution", () => {
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
 
       const pytest = await runProcess("uv", ["run", "pytest"], { cwd });
-      expect([0, 5], `${pytest.stdout}\n${pytest.stderr}`).toContain(pytest.exitCode);
+      expect(pytest.exitCode, `${pytest.stdout}\n${pytest.stderr}`).toBe(0);
 
       const ruff = await runProcess("uv", ["run", "ruff", "check", "."], { cwd });
       expect(ruff.exitCode, `${ruff.stdout}\n${ruff.stderr}`).toBe(0);
@@ -157,7 +157,7 @@ describe("golden stack real execution", () => {
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
 
       const pytest = await runProcess("uv", ["run", "pytest"], { cwd });
-      expect([0, 5], `${pytest.stdout}\n${pytest.stderr}`).toContain(pytest.exitCode);
+      expect(pytest.exitCode, `${pytest.stdout}\n${pytest.stderr}`).toBe(0);
 
       const ruff = await runProcess("uv", ["run", "ruff", "check", "."], { cwd });
       expect(ruff.exitCode, `${ruff.stdout}\n${ruff.stderr}`).toBe(0);

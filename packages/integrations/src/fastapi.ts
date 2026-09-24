@@ -10,7 +10,12 @@ import {
 
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
-import { addPackages, afterPythonPackageInstall, initPythonProject } from "./operations.js";
+import {
+  addPackages,
+  afterPythonPackageInstall,
+  hasSelectedIntegration,
+  initPythonProject,
+} from "./operations.js";
 import { QUALIFIED_VERSIONS } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
@@ -22,7 +27,7 @@ From this directory, start the development server with:
 
 \`uv run fastapi dev\`
 
-Run tests with \`uv run pytest\` after adding pytest to the project.
+Run the generated endpoint test with \`uv run pytest\`.
 `;
 
 const FASTAPI_MAIN = `from fastapi import FastAPI
@@ -33,6 +38,18 @@ app = FastAPI()
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+`;
+
+const FASTAPI_TEST = `from fastapi.testclient import TestClient
+
+from main import app
+
+
+def test_root_returns_hello_world() -> None:
+    response = TestClient(app).get("/")
+
+    assert response.status_code == 200
+    assert response.json() == {"message": "Hello World"}
 `;
 
 export const fastapiIntegration = defineIntegration({
@@ -77,6 +94,17 @@ export const fastapiIntegration = defineIntegration({
         behavior: "fail_if_exists",
         description: "Add the official FastAPI first-steps app",
       },
+      ...(hasSelectedIntegration(context, "pytest")
+        ? [
+            {
+              type: "create_file" as const,
+              path: "test_main.py",
+              content: FASTAPI_TEST,
+              behavior: "fail_if_exists" as const,
+              description: "Add a FastAPI endpoint response test",
+            },
+          ]
+        : []),
       {
         type: "create_file",
         path: "README.md",

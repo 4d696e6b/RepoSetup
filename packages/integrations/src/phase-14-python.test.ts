@@ -88,7 +88,9 @@ describe("Phase 14 Python ecosystem plans", () => {
   });
 
   it("initializes FastAPI with official uv --bare then fastapi[standard]", () => {
-    const plan = fastapiIntegration.plan(planContext({ projectName: "awesome-project" }));
+    const plan = fastapiIntegration.plan(
+      planContext({ projectName: "awesome-project", integrations: [{ id: "pytest" }] }),
+    );
     expect(runCommands(plan)).toEqual([
       ["uv", "init", ".", "--bare", "--name", "awesome-project"],
       ["uv", "add", "fastapi[standard]==0.141.1"],
@@ -96,6 +98,7 @@ describe("Phase 14 Python ecosystem plans", () => {
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "main.py" }),
+        expect.objectContaining({ type: "create_file", path: "test_main.py" }),
         expect.objectContaining({ type: "create_file", path: "README.md" }),
         expect.objectContaining({ type: "show_message" }),
       ]),
@@ -103,7 +106,9 @@ describe("Phase 14 Python ecosystem plans", () => {
   });
 
   it("installs Flask with the official package name and writes app.py", () => {
-    const plan = flaskIntegration.plan(planContext({ frameworkId: "flask" }));
+    const plan = flaskIntegration.plan(
+      planContext({ frameworkId: "flask", integrations: [{ id: "pytest" }] }),
+    );
     expect(runCommands(plan)).toEqual([
       ["uv", "init", ".", "--bare", "--name", "demo"],
       ["uv", "add", "Flask==3.1.3"],
@@ -111,6 +116,7 @@ describe("Phase 14 Python ecosystem plans", () => {
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "app.py" }),
+        expect.objectContaining({ type: "create_file", path: "test_app.py" }),
         expect.objectContaining({ type: "create_file", path: "README.md" }),
       ]),
     );
