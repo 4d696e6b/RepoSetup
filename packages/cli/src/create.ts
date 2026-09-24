@@ -18,7 +18,7 @@ import {
 } from "./execution-adapters.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import { formatError } from "./format-error.js";
-import { renderErrorJson, renderPlanJson } from "./machine-output.js";
+import { renderErrorJson, renderPartialRunReport, renderPlanJson } from "./machine-output.js";
 import { writeLine } from "./io.js";
 import { loadRepoSetupConfigFile } from "./load-config.js";
 import { isKnownPackageManager } from "./prompt-create.js";
@@ -112,8 +112,19 @@ export async function handleCreate(input: {
   if (!executed.ok) {
     writeLine(
       input.deps.io.writeErr,
-      input.globals.json ? renderErrorJson(executed.error) : formatError(executed.error),
+      input.globals.json
+        ? renderErrorJson(executed.error, {
+            completed: executed.executed,
+            total: planned.operations.length,
+          })
+        : formatError(executed.error),
     );
+    if (!input.globals.json) {
+      writeLine(
+        input.deps.io.writeErr,
+        renderPartialRunReport(executed.executed, planned.operations.length),
+      );
+    }
     return exitCodeForError(executed.error);
   }
 

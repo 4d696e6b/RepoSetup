@@ -7,7 +7,7 @@ import {
   DEFAULT_MINIMUM_FREE_DISK_BYTES,
 } from "./execution-adapters.js";
 import { formatError } from "./format-error.js";
-import { renderErrorJson, renderPlanJson } from "./machine-output.js";
+import { renderErrorJson, renderPartialRunReport, renderPlanJson } from "./machine-output.js";
 import { writeLine } from "./io.js";
 import { isKnownPackageManager } from "./prompt-create.js";
 import { renderPlan } from "./render-plan.js";
@@ -139,8 +139,19 @@ export async function handleAdd(input: {
   if (!executed.ok) {
     writeLine(
       input.deps.io.writeErr,
-      input.globals.json ? renderErrorJson(executed.error) : formatError(executed.error),
+      input.globals.json
+        ? renderErrorJson(executed.error, {
+            completed: executed.executed,
+            total: planned.result.operations.length,
+          })
+        : formatError(executed.error),
     );
+    if (!input.globals.json) {
+      writeLine(
+        input.deps.io.writeErr,
+        renderPartialRunReport(executed.executed, planned.result.operations.length),
+      );
+    }
     return exitCodeForError(executed.error);
   }
 

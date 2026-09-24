@@ -776,6 +776,27 @@ describe("runCli", () => {
     });
   });
 
+  it("reports partial execution with a safe checked retry path", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["add", "zod", "--yes"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+      runProcess: async () => ({ exitCode: 1, stdout: "", stderr: "failed" }),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.GENERAL_FAILURE);
+    expect(captured.stderr()).toContain("Execution stopped after 0 of 1 operations completed.");
+    expect(captured.stderr()).toContain("run reposetup doctor");
+  });
+
   it("dry-runs add for an addable integration without mutating files", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
     tempDirs.push(root);
