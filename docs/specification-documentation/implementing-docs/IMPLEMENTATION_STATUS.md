@@ -13,7 +13,9 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Guaranteed FastAPI and Flask recipes now create pytest endpoint-response tests whenever pytest is selected. The golden suite requires pytest to pass instead of accepting exit code 5 from an empty suite.
 - [x] The TypeScript Express recipe now has working development, build, and start scripts, plus a Vitest HTTP-response test when Vitest is selected. The golden suite requires the generated TypeScript project to typecheck, build, and pass that test.
 - [x] [Golden stacks run 36019495472](https://github.com/4d696e6b/RepoSetup/actions/runs/36019495472) passed these five real generated recipes on Ubuntu, macOS, and Windows with Python 3.12 and 3.13. [Platform run 36018768420](https://github.com/4d696e6b/RepoSetup/actions/runs/36018768420) also passed for the preceding Phase 25 commit.
-- [ ] Qualification of the remaining high-value catalog, including React/Next sample assertions, ESLint, Playwright, GitHub Actions, Fastify, and one Drizzle path, remains before Phase 25 can close.
+- [x] React/Vite and Next.js Vitest plans now create a sample assertion. React checks a generated module. Next.js checks a generated health route response. The plan runs `vitest run` and no longer accepts an empty suite.
+- [x] ESLint plans add a `lint` script, ignore build output, and run `eslint .` after writing the flat config when one does not already exist.
+- [ ] Qualification of the remaining high-value catalog, including Playwright, GitHub Actions, Fastify, and one Drizzle path, remains before Phase 25 can close.
 
 ### Phase 24 progress — 2026-09-24
 
@@ -23,7 +25,10 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Add/remove refuse ambiguous `pnpm-workspace.yaml` roots; the CLI specification directs users to a single workspace package directory.
 - [x] Doctor detects supported runtime-version mismatches. Successful creates print the exact working directory and framework-specific development, build, and available test commands. Express, FastAPI, and Flask plans create a short run guide without overwriting user files.
 - [x] Automated cross-platform qualification passed for commit `1d51e40`: [Platform run 36016190941](https://github.com/4d696e6b/RepoSetup/actions/runs/36016190941) and [Golden stacks run 36016186247](https://github.com/4d696e6b/RepoSetup/actions/runs/36016186247). The golden suite created and verified all five recipes on Ubuntu, macOS, and Windows; the Windows CRLF generated-file path is covered by an executor regression test.
-- [ ] Five observed non-TTY usability sessions, including the full published-install → preview → create → run → test → add → doctor → export flow on each OS family, remain required before Phase 24 can close.
+- [x] Express post-create commands match the generated `dev`, `build`, `start`, and Vitest scripts.
+- [x] The React/Vite pnpm preset allows the esbuild dependency build without treating that approval file as an ambiguous workspace root, so `add` still runs in the generated app.
+- [x] `pnpm test:usability` runs the documented non-TTY flow from a packed install: preview, create, the printed Next commands, add, doctor, and export. One local macOS session passed for `react-vite` plus `zod` on 2026-09-25.
+- [ ] Five observed sessions across Ubuntu, macOS, and Windows remain required. `.github/workflows/usability.yml` runs that flow twice on Ubuntu, twice on macOS, and once on Windows. Phase 24 stays open until those runs are recorded.
 
 ### Phase 23 progress — 2026-09-23
 

@@ -9,7 +9,7 @@ import {
 
 import { defineIntegration } from "./define.js";
 import { requireNodeRange } from "./node-range.js";
-import { addPackages } from "./operations.js";
+import { addPackages, execLocalBin } from "./operations.js";
 import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
@@ -26,7 +26,10 @@ import js from "@eslint/js";
 
 export default defineConfig([
   {
-    files: ["**/*.js"],
+    ignores: ["dist/**", ".next/**", "generated/**", "coverage/**"],
+  },
+  {
+    files: ["**/*.{js,mjs,cjs}"],
     plugins: {
       js,
     },
@@ -78,6 +81,16 @@ export const eslintIntegration = defineIntegration({
         behavior: "create_if_missing",
         description: "Add the official ESLint recommended flat config if none exists",
       },
+      {
+        type: "modify_json",
+        path: "package.json",
+        merge: { scripts: { lint: "eslint ." } },
+        behavior: "merge",
+        description: "Add the ESLint script",
+      },
+      execLocalBin(context, "eslint", ["."], {
+        description: "Lint the generated project",
+      }),
     ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {

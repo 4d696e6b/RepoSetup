@@ -1,0 +1,46 @@
+name: Usability sessions
+
+on:
+  push:
+    branches: [main, dev, "release/**"]
+  workflow_dispatch:
+
+jobs:
+  session:
+    name: ${{ matrix.runner }} session ${{ matrix.session }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            session: 1
+          - runner: ubuntu-24.04
+            session: 2
+          - runner: macos-15
+            session: 1
+          - runner: macos-15
+            session: 2
+          - runner: windows-2025
+            session: 1
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:usability
+        env:
+          CI: true
+          REPOSETUP_USABILITY: "1"
+          REPOSETUP_USABILITY_PRESET: react-vite
+          REPOSETUP_USABILITY_ADD: zod
+          REPOSETUP_USABILITY_EVIDENCE: usability-evidence.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: usability-${{ matrix.runner }}-session-${{ matrix.session }}
+          path: usability-evidence.json
+          if-no-files-found: error

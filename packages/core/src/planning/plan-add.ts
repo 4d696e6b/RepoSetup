@@ -17,6 +17,7 @@ import { filterSatisfiedOperations } from "./delta.js";
 import { batchInstallPackages } from "./batch-install.js";
 import { consolidateManifestInstalls } from "./consolidate-manifests.js";
 import { planInstallationSubset } from "./plan.js";
+import { declaresPnpmWorkspacePackages } from "./pnpm-workspace.js";
 
 export type PlanAddResult =
   | { ok: true; projectRoot: string; result: ResolutionResult }
@@ -86,7 +87,7 @@ export async function planAddMany(input: {
   }
 
   const files = createNodeDetectionFs(detected.stack.projectRoot);
-  if (await files.exists("pnpm-workspace.yaml")) {
+  if (await isAmbiguousWorkspaceRoot(files)) {
     return { ok: false, error: workspaceRootError() };
   }
 
@@ -174,6 +175,13 @@ export async function planAddMany(input: {
       operations: consolidated.operations,
     },
   };
+}
+
+async function isAmbiguousWorkspaceRoot(
+  files: ReturnType<typeof createNodeDetectionFs>,
+): Promise<boolean> {
+  const content = await files.readText("pnpm-workspace.yaml");
+  return content !== undefined && declaresPnpmWorkspacePackages(content);
 }
 
 function workspaceRootError(): RepoSetupError {

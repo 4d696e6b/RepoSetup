@@ -10,9 +10,7 @@ export function postCreateCommands(config: RepoSetupConfig): readonly string[] {
       return [
         `${packageRun} dev`,
         `${packageRun} build`,
-        ...(integrationIds.has("vitest")
-          ? [`${config.packageManager} exec vitest run --passWithNoTests`]
-          : []),
+        ...(integrationIds.has("vitest") ? [`${config.packageManager} exec vitest run`] : []),
       ];
     case "fastapi":
       return config.packageManager === "uv"
@@ -24,7 +22,12 @@ export function postCreateCommands(config: RepoSetupConfig): readonly string[] {
         : ["flask run", ...(integrationIds.has("pytest") ? ["pytest"] : [])];
     case "express":
       return config.framework.options?.typescript === true
-        ? ["npx tsc --outDir dist", "node dist/app.js"]
+        ? [
+            `${packageRun} dev`,
+            `${packageRun} build`,
+            `${packageRun} start`,
+            ...(integrationIds.has("vitest") ? [`${config.packageManager} exec vitest run`] : []),
+          ]
         : ["node app.js"];
     default:
       return [];

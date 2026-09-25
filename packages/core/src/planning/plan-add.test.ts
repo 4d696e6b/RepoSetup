@@ -197,6 +197,14 @@ describe("planAdd", () => {
     expect(result.error.message).toContain("workspace root");
   });
 
+  it("plans an add when pnpm-workspace.yaml only approves builds", async () => {
+    const root = await nextFixture({
+      "pnpm-workspace.yaml": 'allowBuilds:\n  "esbuild": true\n',
+    });
+    const result = await planAdd({ startDir: root, integrationId: "zod", registry });
+    expect(result.ok, JSON.stringify(result)).toBe(true);
+  });
+
   it("plans only the requested addable integration", async () => {
     const root = await nextFixture();
     const result = await planAdd({ startDir: root, integrationId: "zod", registry });

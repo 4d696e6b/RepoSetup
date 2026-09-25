@@ -13,6 +13,19 @@ describe("postCreateCommands", () => {
         framework: { id: "react-vite" },
         integrations: [{ id: "vitest" }],
       }),
-    ).toEqual(["pnpm dev", "pnpm build", "pnpm exec vitest run --passWithNoTests"]);
+    ).toEqual(["pnpm dev", "pnpm build", "pnpm exec vitest run"]);
+  });
+
+  it("prints the Express package scripts and Vitest command", () => {
+    expect(
+      postCreateCommands({
+        schemaVersion: 1,
+        project: { name: "demo" },
+        runtime: { id: "node" },
+        packageManager: "pnpm",
+        framework: { id: "express", options: { typescript: true } },
+        integrations: [{ id: "vitest" }],
+      }),
+    ).toEqual(["pnpm dev", "pnpm build", "pnpm start", "pnpm exec vitest run"]);
   });
 });

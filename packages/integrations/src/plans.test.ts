@@ -236,7 +236,7 @@ describe("integration plans", () => {
         "@testing-library/dom@10.4.2",
         "vite-tsconfig-paths@6.1.1",
       ],
-      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
+      ["pnpm", "exec", "vitest", "run"],
     ]);
 
     const javascriptPlan = vitestIntegration.plan(
@@ -254,11 +254,29 @@ describe("integration plans", () => {
         "@testing-library/react@16.3.3",
         "@testing-library/dom@10.4.2",
       ],
-      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
+      ["pnpm", "exec", "vitest", "run"],
     ]);
     expect(javascriptPlan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "vitest.config.js" }),
+        expect.objectContaining({ type: "create_file", path: "health.test.js" }),
+      ]),
+    );
+  });
+
+  it("adds a React sample assertion when Vitest is planned for Vite", () => {
+    expect(
+      vitestIntegration.plan(
+        planContext({ frameworkId: "react-vite", frameworkOptions: { typescript: true } }),
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: "create_file", path: "src/sample.ts" }),
+        expect.objectContaining({
+          type: "create_file",
+          path: "src/sample.test.ts",
+          content: expect.stringContaining("Hello from RepoSetup"),
+        }),
       ]),
     );
   });

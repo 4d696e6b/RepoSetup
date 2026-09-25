@@ -12,6 +12,8 @@ import type { ProjectRelativePath } from "../paths/project-path.js";
 import type { RegistryLookup } from "../resolution/registry-lookup.js";
 import type { ResolutionResult } from "../resolution/types.js";
 
+import { declaresPnpmWorkspacePackages } from "./pnpm-workspace.js";
+
 import {
   exportConfigFromDetectedStack,
   presentItems,
@@ -70,7 +72,8 @@ export async function planRemove(input: {
   }
 
   const files = createNodeDetectionFs(detected.stack.projectRoot);
-  if (await files.exists("pnpm-workspace.yaml")) {
+  const workspace = await files.readText("pnpm-workspace.yaml");
+  if (workspace !== undefined && declaresPnpmWorkspacePackages(workspace)) {
     return { ok: false, error: workspaceRootError() };
   }
 

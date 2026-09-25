@@ -551,7 +551,7 @@ describe("runCli", () => {
     );
     expect(captured.stdout()).toContain("pnpm install --no-frozen-lockfile --prefer-offline");
     expect(captured.stdout()).toContain("pnpm exec prisma generate");
-    expect(captured.stdout()).toContain("pnpm exec vitest run --passWithNoTests");
+    expect(captured.stdout()).toContain("pnpm exec vitest run");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });

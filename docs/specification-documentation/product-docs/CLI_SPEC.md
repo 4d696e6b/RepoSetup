@@ -191,7 +191,7 @@ Include confidence when not certain.
 
 ## Workspace add/remove policy
 
-`reposetup add <id...>` plans one or more additions together, and `reposetup remove <id>` removes one integration with an explicit safe removal recipe. Both commands operate on one detected project package. Run either command from that package directory. RepoSetup refuses a `pnpm-workspace.yaml` root because selecting a package target there is ambiguous. This release does not compose or mutate an entire workspace; use each package directory explicitly.
+`reposetup add <id...>` plans one or more additions together, and `reposetup remove <id>` removes one integration with an explicit safe removal recipe. Both commands operate on one detected project package. Run either command from that package directory. RepoSetup refuses a `pnpm-workspace.yaml` that declares `packages:` because selecting a package target there is ambiguous. A file that only approves dependency builds is not a workspace root. This release does not compose or mutate an entire workspace; use each package directory explicitly.
 
 ## 8. `reposetup doctor`
 
@@ -261,7 +261,23 @@ Suggested initial contract:
 
 Document before v1 stable and avoid changing casually.
 
-## 13. Terminal UX
+## 13. Non-TTY daily workflow
+
+A non-interactive session sets `CI=true` and `--no-color`, installs the packed `rsetup` tarball, and does not allocate a terminal. The supported order is:
+
+```text
+reposetup presets
+reposetup --no-color --json create --preset <id> --dry-run
+reposetup --no-color create --preset <id> --yes
+# run each printed "Next:" command from the printed project directory
+reposetup --no-color add <id> --yes
+reposetup --no-color --json doctor
+reposetup --no-color export --yes
+```
+
+Preview is the dry-run. Progress stays on stderr when `--json` is set. Long-running `Next:` servers are started, checked once, then stopped. `add` runs only after create, from that project directory.
+
+## 14. Terminal UX
 
 Default output should be concise.
 

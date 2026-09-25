@@ -93,6 +93,19 @@ describe("Phase 13 JS ecosystem plans", () => {
     ).toEqual([
       ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
     ]);
+    expect(
+      reactViteIntegration.plan(
+        planContext({ frameworkId: "react-vite", options: { typescript: true } }),
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: "pnpm-workspace.yaml",
+          content: 'allowBuilds:\n  "esbuild": true\n',
+        }),
+      ]),
+    );
 
     expect(
       runCommands(
@@ -224,7 +237,16 @@ describe("Phase 13 JS ecosystem plans", () => {
   it("installs ESLint with the official recommended packages", () => {
     expect(runCommands(eslintIntegration.plan(planContext()))).toEqual([
       ["pnpm", "add", "--save-dev", "eslint@9.39.5", "@eslint/js@9.39.5"],
+      ["pnpm", "exec", "eslint", "."],
     ]);
+    expect(eslintIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_json",
+          merge: { scripts: { lint: "eslint ." } },
+        }),
+      ]),
+    );
   });
 
   it("initializes shadcn/ui with the documented --yes template flags", () => {

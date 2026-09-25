@@ -77,7 +77,7 @@ describe("golden stack real execution", () => {
       const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
       expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);
 
-      const vitest = await runProcess("pnpm", ["exec", "vitest", "run", "--passWithNoTests"], {
+      const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], {
         cwd,
       });
       expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
@@ -99,7 +99,7 @@ describe("golden stack real execution", () => {
     const build = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
 
-    const test = await runProcess("pnpm", ["exec", "vitest", "run", "--passWithNoTests"], { cwd });
+    const test = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
     expect(test.exitCode, `${test.stdout}\n${test.stderr}`).toBe(0);
 
     await expectHealthyCli(cwd, ["vite", "react", "pnpm"]);
