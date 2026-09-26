@@ -199,6 +199,9 @@ describe("golden stack real execution", () => {
     expect(pkg.devDependencies?.["@playwright/test"]).toBe("1.63.0");
     expect(`${created.stdout}\n${created.stderr}`).toContain("browsers were not downloaded");
 
+    const listed = await runProcess("pnpm", ["exec", "playwright", "test", "--list"], { cwd });
+    expect(listed.exitCode, `${listed.stdout}\n${listed.stderr}`).toBe(0);
+
     const build = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
 
