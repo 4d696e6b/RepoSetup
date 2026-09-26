@@ -1,4 +1,4 @@
-import { access, mkdir } from "node:fs/promises";
+import { access, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
@@ -147,6 +147,24 @@ describe("golden stack real execution", () => {
     expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
 
     await expectHealthyCli(cwd, ["fastify", "drizzle", "pnpm"]);
+  });
+
+  it("Golden G — React + Playwright initialization does not download browsers", async () => {
+    const { cwd, created } = await createProject(fixturePath("golden-react-playwright.json"));
+    expect(created.exitCode, created.stderr).toBe(0);
+
+    await access(path.join(cwd, "playwright.config.ts"));
+    await access(path.join(cwd, "tests", "example.spec.ts"));
+    const pkg = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8")) as {
+      devDependencies?: Record<string, string>;
+    };
+    expect(pkg.devDependencies?.["@playwright/test"]).toBe("1.63.0");
+    expect(`${created.stdout}\n${created.stderr}`).toContain("browsers were not downloaded");
+
+    const build = await runProcess("pnpm", ["run", "build"], { cwd });
+    expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
+
+    await expectHealthyCli(cwd, ["react-vite", "playwright", "pnpm"]);
   });
 
   it.skipIf(!hasUv)(
