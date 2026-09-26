@@ -126,6 +126,29 @@ describe("golden stack real execution", () => {
     await expectHealthyCli(cwd, ["express", "prisma", "pnpm"]);
   });
 
+  it("Golden F — Fastify response test and Drizzle schema (no live database)", async () => {
+    const { cwd, created } = await createProject(fixturePath("golden-fastify-drizzle.json"));
+    expect(created.exitCode, created.stderr).toBe(0);
+
+    await access(path.join(cwd, "src/server.ts"));
+    await access(path.join(cwd, "src/server.test.ts"));
+    await access(path.join(cwd, "src/db/schema.ts"));
+    await access(path.join(cwd, "src/db/schema.test.ts"));
+    await access(path.join(cwd, "drizzle.config.ts"));
+    await access(path.join(cwd, ".env.example"));
+
+    const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
+    expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);
+
+    const built = await runProcess("pnpm", ["run", "build"], { cwd });
+    expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+
+    const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
+    expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
+
+    await expectHealthyCli(cwd, ["fastify", "drizzle", "pnpm"]);
+  });
+
   it.skipIf(!hasUv)(
     "Golden D — FastAPI create, import check, pytest, ruff, stack, doctor",
     async () => {

@@ -20,6 +20,7 @@ export function postCreateCommands(config: RepoSetupConfig): readonly string[] {
       return config.packageManager === "uv"
         ? ["uv run flask run", ...(integrationIds.has("pytest") ? ["uv run pytest"] : [])]
         : ["flask run", ...(integrationIds.has("pytest") ? ["pytest"] : [])];
+    case "fastify":
     case "express":
       return config.framework.options?.typescript === true
         ? [

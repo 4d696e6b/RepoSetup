@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "golden-fastify-app"
+  },
+  "runtime": {
+    "id": "node"
+  },
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "fastify",
+    "options": {
+      "typescript": true
+    }
+  },
+  "integrations": [{ "id": "postgresql" }, { "id": "drizzle" }, { "id": "vitest" }]
+}

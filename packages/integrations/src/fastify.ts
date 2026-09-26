@@ -13,7 +13,7 @@ import {
 
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
-import { addPackages } from "./operations.js";
+import { addPackages, hasSelectedIntegration } from "./operations.js";
 import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { createNodePackageJson, usesTypescript } from "./scaffold.js";
@@ -25,7 +25,53 @@ const fastifyOptionsSchema = z.strictObject({
 
 type FastifyOptions = z.infer<typeof fastifyOptionsSchema>;
 
-const FASTIFY_SERVER = `import Fastify from 'fastify'
+const FASTIFY_TSCONFIG = `{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "skipLibCheck": true
+  }
+}
+`;
+
+const FASTIFY_SERVER_TS = `import Fastify from "fastify";
+
+export const app = Fastify({ logger: false });
+
+app.get("/", function () {
+  return { hello: "world" };
+});
+
+if (process.env.REPOSETUP_NO_LISTEN !== "1") {
+  app.listen({ port: Number(process.env.PORT ?? "3000"), host: "127.0.0.1" }, (error) => {
+    if (error) {
+      app.log.error(error);
+      process.exit(1);
+    }
+  });
+}
+`;
+
+const FASTIFY_ENDPOINT_TEST = `import { beforeAll, expect, it } from "vitest";
+
+beforeAll(() => {
+  process.env.REPOSETUP_NO_LISTEN = "1";
+});
+
+it("returns the hello world response", async () => {
+  const { app } = await import("./server.js");
+  const response = await app.inject({ method: "GET", url: "/" });
+
+  expect(response.statusCode).toBe(200);
+  expect(response.json()).toEqual({ hello: "world" });
+});
+`;
+
+const FASTIFY_SERVER_JS = `import Fastify from 'fastify'
 
 const fastify = Fastify({
   logger: true
@@ -83,18 +129,69 @@ export const fastifyIntegration = defineIntegration<FastifyOptions>({
     ];
 
     if (typescript) {
-      operations.push({
-        type: "create_directory",
-        path: "src",
-        behavior: "create_if_missing",
-        description: "Create src for the Fastify TypeScript entry",
-      });
+      operations.push(
+        addPackages(
+          context,
+          [
+            npmPin("typescript", QUALIFIED_VERSIONS.typescript),
+            npmPin("@types/node", QUALIFIED_VERSIONS.typesNode),
+            npmPin("tsx", QUALIFIED_VERSIONS.tsx),
+          ],
+          {
+            description: "Install TypeScript and tsx for the Fastify server",
+            dev: true,
+          },
+        ),
+        {
+          type: "create_file",
+          path: "tsconfig.json",
+          content: FASTIFY_TSCONFIG,
+          behavior: "fail_if_exists",
+          description: "Add TypeScript compiler options for the Fastify server",
+        },
+        {
+          type: "create_directory",
+          path: "src",
+          behavior: "create_if_missing",
+          description: "Create src for the Fastify TypeScript entry",
+        },
+        {
+          type: "create_file",
+          path: entry,
+          content: FASTIFY_SERVER_TS,
+          behavior: "fail_if_exists",
+          description: "Add a typed Fastify server",
+        },
+        {
+          type: "modify_json",
+          path: "package.json",
+          merge: {
+            scripts: {
+              dev: "tsx watch src/server.ts",
+              build: "tsc --outDir dist",
+              start: "node dist/server.js",
+            },
+          },
+          behavior: "merge",
+          description: "Add Fastify development, build, and start scripts",
+        },
+      );
+      if (hasSelectedIntegration(context, "vitest")) {
+        operations.push({
+          type: "create_file",
+          path: "src/server.test.ts",
+          content: FASTIFY_ENDPOINT_TEST,
+          behavior: "fail_if_exists",
+          description: "Add a Fastify response test",
+        });
+      }
+      return operations;
     }
 
     operations.push({
       type: "create_file",
       path: entry,
-      content: FASTIFY_SERVER,
+      content: FASTIFY_SERVER_JS,
       behavior: "fail_if_exists",
       description: "Add the official Fastify ESM first server",
     });
