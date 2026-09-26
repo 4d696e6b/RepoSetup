@@ -176,7 +176,15 @@ describe("Phase 13 JS ecosystem plans", () => {
     );
     expect(runCommands(plan)).toEqual([
       ["pnpm", "add", "fastify@5.12.5"],
-      ["pnpm", "add", "--save-dev", "typescript@5.9.3", "@types/node@22.20.4", "tsx@4.23.15"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "--allow-build=esbuild",
+        "typescript@5.9.3",
+        "@types/node@22.20.4",
+        "tsx@4.23.15",
+      ],
     ]);
     expect(plan).toEqual(
       expect.arrayContaining([
@@ -218,7 +226,15 @@ describe("Phase 13 JS ecosystem plans", () => {
       runCommands(drizzleIntegration.plan(planContext({ integrations: [{ id: "postgresql" }] }))),
     ).toEqual([
       ["pnpm", "add", "drizzle-orm@0.45.3", "pg@8.23.0", "dotenv@18.0.3"],
-      ["pnpm", "add", "--save-dev", "drizzle-kit@0.31.11", "tsx@4.23.15", "@types/pg@8.23.1"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "--allow-build=esbuild",
+        "drizzle-kit@0.31.11",
+        "tsx@4.23.15",
+        "@types/pg@8.23.1",
+      ],
     ]);
     expect(
       drizzleIntegration.plan(

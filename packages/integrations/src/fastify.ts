@@ -140,6 +140,7 @@ export const fastifyIntegration = defineIntegration<FastifyOptions>({
           {
             description: "Install TypeScript and tsx for the Fastify server",
             dev: true,
+            allowBuild: ["esbuild"],
           },
         ),
         {

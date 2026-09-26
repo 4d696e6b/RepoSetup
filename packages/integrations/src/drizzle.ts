@@ -129,6 +129,7 @@ export const drizzleIntegration = defineIntegration({
         {
           description: "Install Drizzle Kit and PostgreSQL types",
           dev: true,
+          allowBuild: ["esbuild"],
         },
       ),
       {
