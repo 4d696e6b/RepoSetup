@@ -20,7 +20,9 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] The TypeScript Fastify plan adds development, build, and start scripts. When Vitest is selected it adds an inject-based hello-world response test and does not require a listening port.
 - [x] The PostgreSQL Drizzle plan refuses a missing `DATABASE_URL` before constructing the client. When Vitest is selected it asserts the generated table name without opening a database connection.
 - [x] Local golden create on macOS passed for Fastify + PostgreSQL config + Drizzle + Vitest: typecheck, build, and `vitest run` succeeded with no live database.
-- [ ] OS evidence for that Fastify/Drizzle create remains before Phase 25 can close.
+- [x] Local golden checks now exercise Prettier against generated Next.js, React/Vite, and Express source files. The React/Vite Prettier config preserves the upstream template style; the other qualified recipes use the default config.
+- [x] The Playwright golden runs `playwright test --list` without downloading a browser, so generated configuration and test discovery are validated separately from browser execution.
+- [ ] The current cross-platform Golden rerun is in progress at [run 36273558659](https://github.com/4d696e6b/RepoSetup/actions/runs/36273558659). Phase 25 remains open until it passes and generated GitHub Actions execution has its own evidence.
 
 ### Phase 24 progress — 2026-09-24
 
