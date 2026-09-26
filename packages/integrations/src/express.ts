@@ -38,12 +38,12 @@ const EXPRESS_TSCONFIG = `{
 }
 `;
 
-const EXPRESS_APP_TS = `import express, { type Express, type Request, type Response } from 'express';
+const EXPRESS_APP_TS = `import express, { type Express, type Request, type Response } from "express";
 
 export const app: Express = express();
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello World!");
 });
 
 if (process.env.REPOSETUP_NO_LISTEN !== "1") {
@@ -68,7 +68,8 @@ beforeAll(async () => {
     });
   });
   const address = server.address();
-  if (address === null || typeof address === "string") throw new Error("Server did not bind TCP");
+  if (address === null || typeof address === "string")
+    throw new Error("Server did not bind TCP");
   origin = \`http://127.0.0.1:\${address.port}\`;
 });
 
@@ -91,12 +92,12 @@ Run the JavaScript entry with:
 For the TypeScript entry, use \`npm run dev\` while developing, then run \`npm run build\` and \`npm start\`.
 `;
 
-const EXPRESS_APP_JS = `import express from 'express';
+const EXPRESS_APP_JS = `import express from "express";
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
 
 app.listen(3000);

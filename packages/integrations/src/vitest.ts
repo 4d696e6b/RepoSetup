@@ -30,31 +30,31 @@ export default defineConfig({
 `;
 
 const REACT_SAMPLE_TS = `export function sampleMessage(): string {
-  return "Hello from RepoSetup";
+  return 'Hello from RepoSetup'
 }
 `;
 
-const REACT_SAMPLE_TEST_TS = `import { expect, it } from "vitest";
+const REACT_SAMPLE_TEST_TS = `import { expect, it } from 'vitest'
 
-import { sampleMessage } from "./sample";
+import { sampleMessage } from './sample'
 
-it("returns the generated React sample message", () => {
-  expect(sampleMessage()).toBe("Hello from RepoSetup");
-});
+it('returns the generated React sample message', () => {
+  expect(sampleMessage()).toBe('Hello from RepoSetup')
+})
 `;
 
 const REACT_SAMPLE_JS = `export function sampleMessage() {
-  return "Hello from RepoSetup";
+  return 'Hello from RepoSetup'
 }
 `;
 
-const REACT_SAMPLE_TEST_JS = `import { expect, it } from "vitest";
+const REACT_SAMPLE_TEST_JS = `import { expect, it } from 'vitest'
 
-import { sampleMessage } from "./sample.js";
+import { sampleMessage } from './sample.js'
 
-it("returns the generated React sample message", () => {
-  expect(sampleMessage()).toBe("Hello from RepoSetup");
-});
+it('returns the generated React sample message', () => {
+  expect(sampleMessage()).toBe('Hello from RepoSetup')
+})
 `;
 
 const NEXT_HEALTH_ROUTE_TS = `export function GET(): Response {

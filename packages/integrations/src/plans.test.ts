@@ -285,6 +285,15 @@ describe("integration plans", () => {
     expect(runCommands(prettierIntegration.plan(planContext()))).toEqual([
       ["pnpm", "add", "--save-dev", "--save-exact", "prettier@3.9.8"],
     ]);
+    expect(prettierIntegration.plan(planContext({ frameworkId: "react-vite" }))).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: ".prettierrc",
+          content: expect.stringContaining('"singleQuote": true'),
+        }),
+      ]),
+    );
   });
 
   it("initializes Prisma PostgreSQL with the official adapter packages", () => {

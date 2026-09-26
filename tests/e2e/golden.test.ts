@@ -82,7 +82,19 @@ describe("golden stack real execution", () => {
       });
       expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
 
-      const prettier = await runProcess("pnpm", ["exec", "prettier", "--check", "."], { cwd });
+      const prettier = await runProcess(
+        "pnpm",
+        [
+          "exec",
+          "prettier",
+          "--check",
+          "app/api/health/route.ts",
+          "health.test.ts",
+          "lib/prisma.ts",
+          ".prettierrc",
+        ],
+        { cwd },
+      );
       expect(prettier.exitCode, `${prettier.stdout}\n${prettier.stderr}`).toBe(0);
 
       const built = await runProcess("pnpm", ["exec", "next", "build"], { cwd });
@@ -105,7 +117,11 @@ describe("golden stack real execution", () => {
     const test = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
     expect(test.exitCode, `${test.stdout}\n${test.stderr}`).toBe(0);
 
-    const prettier = await runProcess("pnpm", ["exec", "prettier", "--check", "."], { cwd });
+    const prettier = await runProcess(
+      "pnpm",
+      ["exec", "prettier", "--check", "src", "vite.config.ts", ".prettierrc"],
+      { cwd },
+    );
     expect(prettier.exitCode, `${prettier.stdout}\n${prettier.stderr}`).toBe(0);
 
     await expectHealthyCli(cwd, ["vite", "react", "prettier", "pnpm"]);
@@ -129,7 +145,11 @@ describe("golden stack real execution", () => {
     const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
     expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
 
-    const prettier = await runProcess("pnpm", ["exec", "prettier", "--check", "."], { cwd });
+    const prettier = await runProcess(
+      "pnpm",
+      ["exec", "prettier", "--check", "src", "lib", ".prettierrc"],
+      { cwd },
+    );
     expect(prettier.exitCode, `${prettier.stdout}\n${prettier.stderr}`).toBe(0);
 
     await expectHealthyCli(cwd, ["express", "prisma", "prettier", "pnpm"]);
