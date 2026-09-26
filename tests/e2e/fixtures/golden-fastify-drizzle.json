@@ -17,6 +17,7 @@
     { "id": "postgresql" },
     { "id": "drizzle" },
     { "id": "vitest" },
+    { "id": "eslint" },
     { "id": "github-actions" }
   ]
 }

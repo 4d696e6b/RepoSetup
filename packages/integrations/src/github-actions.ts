@@ -13,7 +13,7 @@ import { defineIntegration } from "./define.js";
 import { hasSelectedIntegration } from "./operations.js";
 import { missingAnyFile } from "./verify.js";
 
-function nodeWorkflow(packageManager: "npm" | "pnpm", runTest: boolean): string {
+function nodeWorkflow(packageManager: "npm" | "pnpm", runTest: boolean, runLint: boolean): string {
   const setup =
     packageManager === "pnpm"
       ? `      - uses: pnpm/action-setup@v4
@@ -30,8 +30,13 @@ function nodeWorkflow(packageManager: "npm" | "pnpm", runTest: boolean): string 
       - run: npm ci
 `;
   const test = packageManager === "pnpm" ? "pnpm test" : "npm test";
+  const lint = packageManager === "pnpm" ? "pnpm run lint" : "npm run lint";
   const build = packageManager === "pnpm" ? "pnpm run build" : "npm run build";
-  const checks = [...(runTest ? [`      - run: ${test}\n`] : []), `      - run: ${build}\n`];
+  const checks = [
+    ...(runLint ? [`      - run: ${lint}\n`] : []),
+    ...(runTest ? [`      - run: ${test}\n`] : []),
+    `      - run: ${build}\n`,
+  ];
 
   return `name: Node.js CI
 
@@ -88,7 +93,11 @@ export const githubActionsIntegration = defineIntegration({
   },
   plan(context: PlanContext) {
     const packageManager = context.config.packageManager === "pnpm" ? "pnpm" : "npm";
-    const content = nodeWorkflow(packageManager, hasSelectedIntegration(context, "vitest"));
+    const content = nodeWorkflow(
+      packageManager,
+      hasSelectedIntegration(context, "vitest"),
+      hasSelectedIntegration(context, "eslint"),
+    );
     return [
       {
         type: "create_directory",

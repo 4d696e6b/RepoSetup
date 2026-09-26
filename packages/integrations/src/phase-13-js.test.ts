@@ -280,9 +280,16 @@ describe("Phase 13 JS ecosystem plans", () => {
     );
   });
 
-  it("installs ESLint with the official recommended packages", () => {
+  it("installs ESLint with the official recommended packages for TypeScript", () => {
     expect(runCommands(eslintIntegration.plan(planContext()))).toEqual([
-      ["pnpm", "add", "--save-dev", "eslint@9.39.5", "@eslint/js@9.39.5"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "eslint@9.39.5",
+        "@eslint/js@9.39.5",
+        "typescript-eslint@8.70.1",
+      ],
       ["pnpm", "exec", "eslint", "."],
     ]);
     expect(eslintIntegration.plan(planContext())).toEqual(
@@ -293,6 +300,15 @@ describe("Phase 13 JS ecosystem plans", () => {
         }),
       ]),
     );
+  });
+
+  it("does not install TypeScript ESLint for JavaScript projects", () => {
+    expect(
+      runCommands(eslintIntegration.plan(planContext({ frameworkOptions: { typescript: false } }))),
+    ).toEqual([
+      ["pnpm", "add", "--save-dev", "eslint@9.39.5", "@eslint/js@9.39.5"],
+      ["pnpm", "exec", "eslint", "."],
+    ]);
   });
 
   it("initializes shadcn/ui with the documented --yes template flags", () => {

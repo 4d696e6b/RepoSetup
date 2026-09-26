@@ -13,6 +13,7 @@ import { addPackages, execLocalBin } from "./operations.js";
 import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
+import { usesTypescript } from "./scaffold.js";
 
 const ESLINT_CONFIG_PATHS = [
   "eslint.config.js",
@@ -21,7 +22,8 @@ const ESLINT_CONFIG_PATHS = [
   "eslint.config.cjs",
 ] as const;
 
-const ESLINT_CONFIG = `import { defineConfig } from "eslint/config";
+const ESLINT_CONFIG_JS = `// @ts-check
+import { defineConfig } from "eslint/config";
 import js from "@eslint/js";
 
 export default defineConfig([
@@ -29,11 +31,24 @@ export default defineConfig([
     ignores: ["dist/**", ".next/**", "generated/**", "coverage/**"],
   },
   {
-    files: ["**/*.{js,mjs,cjs}"],
-    plugins: {
-      js,
-    },
-    extends: ["js/recommended"],
+    files: ["**/*.{js,mjs,cjs,jsx}"],
+    extends: [js.configs.recommended],
+  },
+]);
+`;
+
+const ESLINT_CONFIG_TS = `// @ts-check
+import { defineConfig } from "eslint/config";
+import js from "@eslint/js";
+import tseslint from "typescript-eslint";
+
+export default defineConfig([
+  {
+    ignores: ["dist/**", ".next/**", "generated/**", "coverage/**"],
+  },
+  {
+    files: ["**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+    extends: [js.configs.recommended, tseslint.configs.recommended],
   },
 ]);
 `;
@@ -61,23 +76,24 @@ export const eslintIntegration = defineIntegration({
     return detectNpmPackage(context, "eslint", ESLINT_CONFIG_PATHS);
   },
   plan(context: PlanContext) {
+    const typescript = usesTypescript(context);
+    const packages = [
+      npmPin("eslint", QUALIFIED_VERSIONS.eslint),
+      npmPin("@eslint/js", QUALIFIED_VERSIONS.eslintJs),
+      ...(typescript ? [npmPin("typescript-eslint", QUALIFIED_VERSIONS.typescriptEslint)] : []),
+    ];
     return [
       requireNodeRange(NODE_ENGINE_RANGES.eslint, `ESLint ${QUALIFIED_VERSIONS.eslint}`),
-      addPackages(
-        context,
-        [
-          npmPin("eslint", QUALIFIED_VERSIONS.eslint),
-          npmPin("@eslint/js", QUALIFIED_VERSIONS.eslintJs),
-        ],
-        {
-          description: "Install ESLint and @eslint/js",
-          dev: true,
-        },
-      ),
+      addPackages(context, packages, {
+        description: typescript
+          ? "Install ESLint, @eslint/js, and TypeScript ESLint"
+          : "Install ESLint and @eslint/js",
+        dev: true,
+      }),
       {
         type: "create_file",
-        path: "eslint.config.js",
-        content: ESLINT_CONFIG,
+        path: "eslint.config.mjs",
+        content: typescript ? ESLINT_CONFIG_TS : ESLINT_CONFIG_JS,
         behavior: "create_if_missing",
         description: "Add the official ESLint recommended flat config if none exists",
       },

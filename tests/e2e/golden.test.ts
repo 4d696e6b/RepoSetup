@@ -148,6 +148,7 @@ describe("golden stack real execution", () => {
     const workflow = await readFile(path.join(cwd, ".github", "workflows", "node.js.yml"), "utf8");
     expect(workflow).toContain('node-version: "24"');
     expect(workflow).toContain("pnpm install --frozen-lockfile");
+    expect(workflow).toContain("pnpm run lint");
     expect(workflow).toContain("pnpm test");
     expect(workflow).toContain("pnpm run build");
 
@@ -156,6 +157,9 @@ describe("golden stack real execution", () => {
 
     const built = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+
+    const lint = await runProcess("pnpm", ["run", "lint"], { cwd });
+    expect(lint.exitCode, `${lint.stdout}\n${lint.stderr}`).toBe(0);
 
     const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
     expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
