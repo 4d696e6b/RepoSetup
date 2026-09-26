@@ -136,6 +136,11 @@ describe("golden stack real execution", () => {
     await access(path.join(cwd, "src/db/schema.test.ts"));
     await access(path.join(cwd, "drizzle.config.ts"));
     await access(path.join(cwd, ".env.example"));
+    const workflow = await readFile(path.join(cwd, ".github", "workflows", "node.js.yml"), "utf8");
+    expect(workflow).toContain('node-version: "24"');
+    expect(workflow).toContain("pnpm install --frozen-lockfile");
+    expect(workflow).toContain("pnpm test");
+    expect(workflow).toContain("pnpm run build");
 
     const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
     expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);

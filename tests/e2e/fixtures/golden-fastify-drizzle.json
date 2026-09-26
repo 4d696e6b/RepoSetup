@@ -13,5 +13,10 @@
       "typescript": true
     }
   },
-  "integrations": [{ "id": "postgresql" }, { "id": "drizzle" }, { "id": "vitest" }]
+  "integrations": [
+    { "id": "postgresql" },
+    { "id": "drizzle" },
+    { "id": "vitest" },
+    { "id": "github-actions" }
+  ]
 }
