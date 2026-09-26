@@ -182,7 +182,7 @@ describe("golden stack real execution", () => {
     const build = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
 
-    await expectHealthyCli(cwd, ["react-vite", "playwright", "pnpm"]);
+    await expectHealthyCli(cwd, ["react", "vite", "playwright", "pnpm"]);
   });
 
   it.skipIf(!hasUv)(

@@ -56,7 +56,17 @@ export const playwrightIntegration = defineIntegration({
       addPackages(context, [npmPin("@playwright/test", QUALIFIED_VERSIONS.playwrightTest)], {
         description: "Pin Playwright Test to the qualified version",
         dev: true,
+        exact: true,
       }),
+      {
+        type: "modify_json",
+        path: "package.json",
+        merge: {
+          devDependencies: { "@playwright/test": QUALIFIED_VERSIONS.playwrightTest },
+        },
+        behavior: "merge",
+        description: "Record the exact qualified Playwright Test version",
+      },
       {
         type: "show_message",
         message:

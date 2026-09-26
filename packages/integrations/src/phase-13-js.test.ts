@@ -276,10 +276,15 @@ describe("Phase 13 JS ecosystem plans", () => {
         "--lang=TypeScript",
         "--no-browsers",
       ],
-      ["pnpm", "add", "--save-dev", "@playwright/test@1.63.0"],
+      ["pnpm", "add", "--save-dev", "--save-exact", "@playwright/test@1.63.0"],
     ]);
     expect(playwrightIntegration.plan(planContext())).toEqual(
       expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_json",
+          path: "package.json",
+          merge: { devDependencies: { "@playwright/test": "1.63.0" } },
+        }),
         expect.objectContaining({
           type: "show_message",
           message: expect.stringContaining("pnpm exec playwright install"),
