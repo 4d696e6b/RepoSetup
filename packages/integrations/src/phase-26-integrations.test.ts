@@ -97,7 +97,7 @@ describe("Phase 26 curated integration plans", () => {
     ]);
     expect(pydanticSettingsIntegration.plan(python)).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ type: "create_file", path: ".env.example" }),
+        expect.objectContaining({ type: "add_env_example", path: ".env.example" }),
         expect.objectContaining({ type: "create_file", path: "settings.py" }),
         expect.objectContaining({ type: "create_file", path: "test_settings.py" }),
       ]),

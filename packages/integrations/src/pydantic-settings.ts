@@ -89,10 +89,9 @@ export const pydanticSettingsIntegration = defineIntegration({
       }),
       ...afterPythonPackageInstall(context, "pydantic-settings"),
       {
-        type: "create_file",
+        type: "add_env_example",
         path: ".env.example",
-        content: "APP_NAME=RepoSetup app\n",
-        behavior: "fail_if_exists",
+        entries: [{ key: "APP_NAME", placeholder: "RepoSetup app" }],
         description: "Add a safe Pydantic Settings environment example",
       },
       {
