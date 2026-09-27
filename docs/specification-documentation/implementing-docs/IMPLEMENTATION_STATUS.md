@@ -23,7 +23,8 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Local golden checks now exercise Prettier against generated Next.js, React/Vite, and Express source files. The React/Vite Prettier config preserves the upstream template style; the other qualified recipes use the default config.
 - [x] The Playwright golden runs `playwright test --list` without downloading a browser, so generated configuration and test discovery are validated separately from browser execution.
 - [x] [Golden stacks run 36273558659](https://github.com/4d696e6b/RepoSetup/actions/runs/36273558659) passed all six Ubuntu, macOS, and Windows / Python matrix jobs for the Playwright list check and the qualified generated recipes. [Platform run 36273525741](https://github.com/4d696e6b/RepoSetup/actions/runs/36273525741) passed for the preceding source commit.
-- [ ] Phase 25 remains open until generated GitHub Actions execution has its own evidence.
+- [x] The generated Fastify / Drizzle / ESLint / Vitest pnpm workflow executed successfully in its own fresh private GitHub repository: [Node.js CI run 36288959163](https://github.com/4d696e6b/reposetup-phase25-ci-validation-1790476392/actions/runs/36288959163). It installed from the generated lockfile and ran `lint`, `test`, and `build` on Node 24.
+- [x] Phase 25 implementation qualification is complete. Phase 24's observed usability-session gate remains the release-order blocker before Phase 26.
 
 ### Phase 24 progress — 2026-09-24
 
@@ -125,7 +126,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 22 — Reproducible recipes and compatibility
 - [x] Phase 23 — Measured installation performance
 - [ ] Phase 24 — Daily CLI usability and recovery guidance
-- [ ] Phase 25 — Existing integration qualification
+- [x] Phase 25 — Existing integration qualification
 - [ ] Phase 26 — Important new integrations
 - [ ] Phase 27 — Release-candidate qualification
 - [ ] Phase 28 — 0.2.0 publication and delivery verification
