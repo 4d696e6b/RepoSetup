@@ -224,6 +224,23 @@ describe("golden stack real execution", () => {
     expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
 
     await expectHealthyCli(cwd, ["react", "vite", "testing library", "tanstack query", "pnpm"]);
+
+    const { cwd: addedCwd } = await createProject(fixturePath("golden-react-vite.json"));
+    const added = await runNodeCli(
+      monorepoBin,
+      ["add", "testing-library", "tanstack-query", "--yes"],
+      { cwd: addedCwd },
+    );
+    expect(added.exitCode, `${added.stdout}\n${added.stderr}`).toBe(0);
+    const addedTest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd: addedCwd });
+    expect(addedTest.exitCode, `${addedTest.stdout}\n${addedTest.stderr}`).toBe(0);
+    const repeated = await runNodeCli(
+      monorepoBin,
+      ["add", "testing-library", "tanstack-query", "--yes"],
+      { cwd: addedCwd },
+    );
+    expect(repeated.exitCode, `${repeated.stdout}\n${repeated.stderr}`).toBe(0);
+    expect(repeated.stdout).toContain("No changes.");
   });
 
   it.skipIf(!hasUv)(
@@ -290,6 +307,21 @@ describe("golden stack real execution", () => {
       expect(ruff.exitCode, `${ruff.stdout}\n${ruff.stderr}`).toBe(0);
 
       await expectHealthyCli(cwd, ["fastapi", "httpx", "pydantic settings", "uv"]);
+
+      const { cwd: addedCwd } = await createProject(fixturePath("golden-fastapi.json"));
+      const added = await runNodeCli(monorepoBin, ["add", "httpx", "pydantic-settings", "--yes"], {
+        cwd: addedCwd,
+      });
+      expect(added.exitCode, `${added.stdout}\n${added.stderr}`).toBe(0);
+      const addedPytest = await runProcess("uv", ["run", "pytest"], { cwd: addedCwd });
+      expect(addedPytest.exitCode, `${addedPytest.stdout}\n${addedPytest.stderr}`).toBe(0);
+      const repeated = await runNodeCli(
+        monorepoBin,
+        ["add", "httpx", "pydantic-settings", "--yes"],
+        { cwd: addedCwd },
+      );
+      expect(repeated.exitCode, `${repeated.stdout}\n${repeated.stderr}`).toBe(0);
+      expect(repeated.stdout).toContain("No changes.");
     },
   );
 });
