@@ -76,6 +76,7 @@ export const testingLibraryIntegration = defineIntegration({
           npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
           npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
           npmPin("@testing-library/user-event", QUALIFIED_VERSIONS.testingLibraryUserEvent),
+          npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
         ],
         { description: "Install Testing Library interaction-test packages", dev: true },
       ),

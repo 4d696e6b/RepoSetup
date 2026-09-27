@@ -4,9 +4,5 @@
   "runtime": { "id": "node" },
   "packageManager": "pnpm",
   "framework": { "id": "react-vite", "options": { "typescript": true } },
-  "integrations": [
-    { "id": "vitest" },
-    { "id": "testing-library" },
-    { "id": "tanstack-query" }
-  ]
+  "integrations": [{ "id": "vitest" }, { "id": "testing-library" }, { "id": "tanstack-query" }]
 }

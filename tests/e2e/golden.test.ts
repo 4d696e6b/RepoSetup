@@ -223,7 +223,7 @@ describe("golden stack real execution", () => {
     const build = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
 
-    await expectHealthyCli(cwd, ["react", "vite", "testing-library", "tanstack-query", "pnpm"]);
+    await expectHealthyCli(cwd, ["react", "vite", "testing library", "tanstack query", "pnpm"]);
   });
 
   it.skipIf(!hasUv)(
@@ -289,7 +289,7 @@ describe("golden stack real execution", () => {
       const ruff = await runProcess("uv", ["run", "ruff", "check", "."], { cwd });
       expect(ruff.exitCode, `${ruff.stdout}\n${ruff.stderr}`).toBe(0);
 
-      await expectHealthyCli(cwd, ["fastapi", "httpx", "pydantic-settings", "uv"]);
+      await expectHealthyCli(cwd, ["fastapi", "httpx", "pydantic settings", "uv"]);
     },
   );
 });

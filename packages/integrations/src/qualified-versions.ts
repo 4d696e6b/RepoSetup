@@ -167,6 +167,7 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
     npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
     npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
     npmPin("@testing-library/user-event", QUALIFIED_VERSIONS.testingLibraryUserEvent),
+    npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
   ],
   "tanstack-query": [npmPin("@tanstack/react-query", QUALIFIED_VERSIONS.tanstackReactQuery)],
   prettier: [npmPin("prettier", QUALIFIED_VERSIONS.prettier)],

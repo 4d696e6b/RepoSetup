@@ -51,6 +51,7 @@ describe("Phase 26 curated integration plans", () => {
         "@testing-library/react@16.3.3",
         "@testing-library/dom@10.4.2",
         "@testing-library/user-event@14.6.7",
+        "jsdom@28.1.0",
       ],
     ]);
     expect(plan).toEqual(
