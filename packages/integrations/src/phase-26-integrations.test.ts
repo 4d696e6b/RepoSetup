@@ -1,4 +1,10 @@
-import type { PlanContext, RepoSetupConfig, SupportContext } from "@reposetup/core";
+import {
+  createDetectionContext,
+  createMemoryDetectionFs,
+  type PlanContext,
+  type RepoSetupConfig,
+  type SupportContext,
+} from "@reposetup/core";
 import { describe, expect, it } from "vitest";
 
 import { httpxIntegration } from "./httpx.js";
@@ -111,6 +117,65 @@ describe("Phase 26 curated integration plans", () => {
     );
     expect(pydanticSettingsIntegration.supports(support(flask))).toEqual(
       expect.objectContaining({ supported: false }),
+    );
+  });
+
+  it("detects only RepoSetup-owned Phase 26 artifacts, avoiding unsupported incidental packages", async () => {
+    const reactPackage = JSON.stringify({
+      dependencies: { "@tanstack/react-query": "5.104.0" },
+      devDependencies: { "@testing-library/react": "16.3.3" },
+    });
+    const incidentalReact = await createDetectionContext(
+      "/virtual/react",
+      createMemoryDetectionFs({ "package.json": reactPackage }),
+    );
+    expect(await testingLibraryIntegration.detect?.(incidentalReact)).toEqual(
+      expect.objectContaining({ detected: false }),
+    );
+    expect(await tanstackQueryIntegration.detect?.(incidentalReact)).toEqual(
+      expect.objectContaining({ detected: false }),
+    );
+
+    const generatedReact = await createDetectionContext(
+      "/virtual/react",
+      createMemoryDetectionFs({
+        "package.json": reactPackage,
+        "src/testing-library-sample.test.tsx": "export {};\n",
+        "src/reposetup-query-provider.tsx": "export {};\n",
+      }),
+    );
+    expect(await testingLibraryIntegration.detect?.(generatedReact)).toEqual(
+      expect.objectContaining({ detected: true }),
+    );
+    expect(await tanstackQueryIntegration.detect?.(generatedReact)).toEqual(
+      expect.objectContaining({ detected: true }),
+    );
+
+    const pythonPackage = '[project]\ndependencies = ["httpx", "pydantic-settings"]\n';
+    const incidentalPython = await createDetectionContext(
+      "/virtual/python",
+      createMemoryDetectionFs({ "pyproject.toml": pythonPackage }),
+    );
+    expect(await httpxIntegration.detect?.(incidentalPython)).toEqual(
+      expect.objectContaining({ detected: false }),
+    );
+    expect(await pydanticSettingsIntegration.detect?.(incidentalPython)).toEqual(
+      expect.objectContaining({ detected: false }),
+    );
+
+    const generatedPython = await createDetectionContext(
+      "/virtual/python",
+      createMemoryDetectionFs({
+        "pyproject.toml": pythonPackage,
+        "test_httpx.py": "",
+        "settings.py": "",
+      }),
+    );
+    expect(await httpxIntegration.detect?.(generatedPython)).toEqual(
+      expect.objectContaining({ detected: true }),
+    );
+    expect(await pydanticSettingsIntegration.detect?.(generatedPython)).toEqual(
+      expect.objectContaining({ detected: true }),
     );
   });
 });
