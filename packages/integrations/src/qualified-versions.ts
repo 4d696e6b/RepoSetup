@@ -44,6 +44,8 @@ export const QUALIFIED_VERSIONS = {
   jsdom: "28.1.0",
   testingLibraryReact: "16.3.3",
   testingLibraryDom: "10.4.2",
+  testingLibraryUserEvent: "14.6.7",
+  tanstackReactQuery: "5.104.0",
   viteTsconfigPaths: "6.1.1",
   prettier: "3.9.8",
   express: "5.2.1",
@@ -70,6 +72,8 @@ export const QUALIFIED_VERSIONS = {
   alembic: "1.20.0",
   pytest: "9.1.1",
   ruff: "0.16.8",
+  httpx: "0.28.1",
+  pydanticSettings: "2.15.0",
 } as const;
 
 /** Engine ranges copied from the pinned release metadata. */
@@ -105,6 +109,16 @@ export const QUALIFIED_PEERS = [
     satisfiedBy: "@testing-library/dom@10.4.2",
   },
   {
+    package: "@testing-library/user-event@14.6.7",
+    peers: "@testing-library/dom >=7.21.4",
+    satisfiedBy: "@testing-library/dom@10.4.2",
+  },
+  {
+    package: "@tanstack/react-query@5.104.0",
+    peers: "react ^18 || ^19",
+    satisfiedBy: "react@19.2.0",
+  },
+  {
     package: "@prisma/client@7.10.0",
     peers: "typescript >=5.4.0",
     satisfiedBy: "typescript@5.9.3",
@@ -123,7 +137,7 @@ export function pypiPin(name: string, version: string): string {
 
 const DIRECT_VERSIONS: Record<string, readonly string[]> = {
   nextjs: [npmPin("create-next-app", QUALIFIED_VERSIONS.createNextApp)],
-  "react-vite": [npmPin("vite", QUALIFIED_VERSIONS.vite)],
+  "react-vite": [npmPin("vite", QUALIFIED_VERSIONS.vite), "react@19.2.0"],
   eslint: [
     npmPin("eslint", QUALIFIED_VERSIONS.eslint),
     npmPin("@eslint/js", QUALIFIED_VERSIONS.eslintJs),
@@ -149,6 +163,13 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
     npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
     npmPin("vite-tsconfig-paths", QUALIFIED_VERSIONS.viteTsconfigPaths),
   ],
+  "testing-library": [
+    npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
+    npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
+    npmPin("@testing-library/user-event", QUALIFIED_VERSIONS.testingLibraryUserEvent),
+    npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
+  ],
+  "tanstack-query": [npmPin("@tanstack/react-query", QUALIFIED_VERSIONS.tanstackReactQuery)],
   prettier: [npmPin("prettier", QUALIFIED_VERSIONS.prettier)],
   express: [
     npmPin("express", QUALIFIED_VERSIONS.express),
@@ -179,6 +200,8 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
   alembic: [pypiPin("alembic", QUALIFIED_VERSIONS.alembic)],
   pytest: [pypiPin("pytest", QUALIFIED_VERSIONS.pytest)],
   ruff: [pypiPin("ruff", QUALIFIED_VERSIONS.ruff)],
+  httpx: [pypiPin("httpx", QUALIFIED_VERSIONS.httpx)],
+  "pydantic-settings": [pypiPin("pydantic-settings", QUALIFIED_VERSIONS.pydanticSettings)],
 };
 
 export function qualifiedDirectVersions(ids: readonly string[]): Record<string, string[]> {

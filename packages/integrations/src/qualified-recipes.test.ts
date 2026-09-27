@@ -79,7 +79,14 @@ describe("qualified recipe records", () => {
 
   it("records peer constraints that the qualified direct versions satisfy", () => {
     const pins = JSON.stringify(
-      qualifiedDirectVersions(["react-vite", "vitest", "prisma", "express"]),
+      qualifiedDirectVersions([
+        "react-vite",
+        "vitest",
+        "testing-library",
+        "tanstack-query",
+        "prisma",
+        "express",
+      ]),
     );
     for (const peer of QUALIFIED_PEERS) {
       expect(pins).toContain(peer.satisfiedBy);

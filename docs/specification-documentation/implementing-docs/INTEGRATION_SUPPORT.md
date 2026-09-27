@@ -30,9 +30,13 @@ Statuses below are **not fabricated as stable**. `candidate` means plan/detect/v
 | alembic | candidate | FastAPI/Flask goldens |
 | zod | candidate | create/add |
 | pydantic | candidate | create/add |
+| pydantic-settings | candidate | FastAPI create/add with safe `.env.example`; no secret values are requested or stored |
 | vitest | candidate | create/add |
+| testing-library | candidate | React + Vite create/add with a real accessible interaction test |
+| tanstack-query | candidate | React + Vite create/add with a provider and mocked-response query test |
 | playwright | experimental | plan/detect only |
 | pytest | candidate | create/add; `pytest` may exit 5 when no tests exist |
+| httpx | candidate | FastAPI create/add with an in-process API response test |
 | eslint | candidate | plan/detect (React example) |
 | prettier | candidate | create/add |
 | ruff | candidate | FastAPI/Flask goldens |

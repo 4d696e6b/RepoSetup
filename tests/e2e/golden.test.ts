@@ -209,6 +209,40 @@ describe("golden stack real execution", () => {
     await expectHealthyCli(cwd, ["react", "vite", "playwright", "pnpm"]);
   });
 
+  it("Golden H — React Testing Library and TanStack Query interaction samples run", async () => {
+    const { cwd, created } = await createProject(fixturePath("golden-react-phase26.json"));
+    expect(created.exitCode, created.stderr).toBe(0);
+
+    await access(path.join(cwd, "src", "testing-library-sample.test.tsx"));
+    await access(path.join(cwd, "src", "reposetup-query-provider.tsx"));
+    await access(path.join(cwd, "src", "tanstack-query-sample.test.tsx"));
+
+    const test = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
+    expect(test.exitCode, `${test.stdout}\n${test.stderr}`).toBe(0);
+
+    const build = await runProcess("pnpm", ["run", "build"], { cwd });
+    expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
+
+    await expectHealthyCli(cwd, ["react", "vite", "testing library", "tanstack query", "pnpm"]);
+
+    const { cwd: addedCwd } = await createProject(fixturePath("golden-react-vite.json"));
+    const added = await runNodeCli(
+      monorepoBin,
+      ["add", "testing-library", "tanstack-query", "--yes"],
+      { cwd: addedCwd },
+    );
+    expect(added.exitCode, `${added.stdout}\n${added.stderr}`).toBe(0);
+    const addedTest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd: addedCwd });
+    expect(addedTest.exitCode, `${addedTest.stdout}\n${addedTest.stderr}`).toBe(0);
+    const repeated = await runNodeCli(
+      monorepoBin,
+      ["add", "testing-library", "tanstack-query", "--yes"],
+      { cwd: addedCwd },
+    );
+    expect(repeated.exitCode, `${repeated.stdout}\n${repeated.stderr}`).toBe(0);
+    expect(repeated.stdout).toContain("No changes.");
+  });
+
   it.skipIf(!hasUv)(
     "Golden D — FastAPI create, import check, pytest, ruff, stack, doctor",
     async () => {
@@ -252,6 +286,42 @@ describe("golden stack real execution", () => {
       expect(ruff.exitCode, `${ruff.stdout}\n${ruff.stderr}`).toBe(0);
 
       await expectHealthyCli(cwd, ["flask", "uv"]);
+    },
+  );
+
+  it.skipIf(!hasUv)(
+    "Golden I — FastAPI HTTPX and Pydantic Settings tests run without real secrets",
+    async () => {
+      const { cwd, created } = await createProject(fixturePath("golden-fastapi-phase26.json"));
+      expect(created.exitCode, created.stderr).toBe(0);
+
+      await access(path.join(cwd, "test_httpx.py"));
+      await access(path.join(cwd, "settings.py"));
+      const envExample = await readFile(path.join(cwd, ".env.example"), "utf8");
+      expect(envExample).toBe("APP_NAME=RepoSetup app\n");
+
+      const pytest = await runProcess("uv", ["run", "pytest"], { cwd });
+      expect(pytest.exitCode, `${pytest.stdout}\n${pytest.stderr}`).toBe(0);
+
+      const ruff = await runProcess("uv", ["run", "ruff", "check", "."], { cwd });
+      expect(ruff.exitCode, `${ruff.stdout}\n${ruff.stderr}`).toBe(0);
+
+      await expectHealthyCli(cwd, ["fastapi", "httpx", "pydantic settings", "uv"]);
+
+      const { cwd: addedCwd } = await createProject(fixturePath("golden-fastapi.json"));
+      const added = await runNodeCli(monorepoBin, ["add", "httpx", "pydantic-settings", "--yes"], {
+        cwd: addedCwd,
+      });
+      expect(added.exitCode, `${added.stdout}\n${added.stderr}`).toBe(0);
+      const addedPytest = await runProcess("uv", ["run", "pytest"], { cwd: addedCwd });
+      expect(addedPytest.exitCode, `${addedPytest.stdout}\n${addedPytest.stderr}`).toBe(0);
+      const repeated = await runNodeCli(
+        monorepoBin,
+        ["add", "httpx", "pydantic-settings", "--yes"],
+        { cwd: addedCwd },
+      );
+      expect(repeated.exitCode, `${repeated.stdout}\n${repeated.stderr}`).toBe(0);
+      expect(repeated.stdout).toContain("No changes.");
     },
   );
 });

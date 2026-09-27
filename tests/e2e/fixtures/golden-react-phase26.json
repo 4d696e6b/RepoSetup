@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "project": { "name": "phase-26-react" },
+  "runtime": { "id": "node" },
+  "packageManager": "pnpm",
+  "framework": { "id": "react-vite", "options": { "typescript": true } },
+  "integrations": [{ "id": "vitest" }, { "id": "testing-library" }, { "id": "tanstack-query" }]
+}
