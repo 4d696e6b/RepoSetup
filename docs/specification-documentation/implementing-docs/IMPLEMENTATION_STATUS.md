@@ -32,7 +32,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] The React recipe creates an accessible Testing Library/user-event interaction test and a TanStack Query provider plus mocked-response query test. It includes jsdom explicitly so its Vitest browser tests run without relying on a transitive dependency.
 - [x] The FastAPI recipe creates an in-process HTTPX ASGI response test and typed Pydantic Settings code. Pydantic Settings appends only the non-secret `APP_NAME` placeholder to `.env.example`; it reports a missing required value and never requests or stores a secret.
 - [x] Existing-project add coverage creates each combined React and Python selection, runs the generated tests, and verifies that repeating `add` makes no changes. Generated source, test, and environment-example files remain preserved on remove.
-- [x] [Golden stacks run 36289972228](https://github.com/4d696e6b/RepoSetup/actions/runs/36289972228) passed every Ubuntu 24.04, macOS 15, and Windows 2025 job with Python 3.12 and 3.13. It executed the React interaction/query and FastAPI HTTPX/settings fixtures along with the established golden recipes.
+- [x] [Golden stacks run 36290413867](https://github.com/4d696e6b/RepoSetup/actions/runs/36290413867) passed every Ubuntu 24.04, macOS 15, and Windows 2025 job with Python 3.12 and 3.13. It executed the React interaction/query and FastAPI HTTPX/settings fixtures, their existing-project add/idempotency checks, and the established golden recipes.
 - [x] Phase 26 implementation qualification is complete. Phase 24's five observed manual usability sessions remain required before release-candidate closure.
 
 ### Phase 24 progress — 2026-09-24
