@@ -95,6 +95,12 @@ describe("add idempotency (built-in catalog)", () => {
           await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
           await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
           await writeFile(path.join(root, "vitest.config.mts"), "export default {}\n");
+          await mkdir(path.join(root, "app", "api", "health"), { recursive: true });
+          await writeFile(
+            path.join(root, "app", "api", "health", "route.ts"),
+            "export function GET() { return Response.json({ ok: true }); }\n",
+          );
+          await writeFile(path.join(root, "health.test.ts"), "export {};\n");
         },
       },
       {
@@ -170,7 +176,11 @@ describe("add idempotency (built-in catalog)", () => {
         cwd: root,
         registry,
         io: first.io,
-        runProcess: async () => ({ exitCode: 0, stdout: "", stderr: "" }),
+        runProcess: async (request) => ({
+          exitCode: 0,
+          stdout: request.args.includes("--version") ? "v24.0.0\n" : "",
+          stderr: "",
+        }),
       });
       expect(firstResult.exitCode, first.stderr()).toBe(EXIT_CODES.SUCCESS);
       expect(first.stdout()).toContain(`No changes. Integration "${item.id}" is already present.`);

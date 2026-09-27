@@ -14,6 +14,12 @@ const PRETTIER_CONFIG_PATHS = [
   "prettier.config.mjs",
 ] as const;
 
+const PRETTIER_CONFIG = `{
+  "singleQuote": true,
+  "semi": false
+}
+`;
+
 export const prettierIntegration = defineIntegration({
   id: "prettier",
   name: "Prettier",
@@ -43,6 +49,7 @@ export const prettierIntegration = defineIntegration({
     return detectNpmPackage(context, "prettier", PRETTIER_CONFIG_PATHS);
   },
   plan(context) {
+    const config = context.config.framework.id === "react-vite" ? PRETTIER_CONFIG : "{}\n";
     return [
       addPackages(context, [npmPin("prettier", QUALIFIED_VERSIONS.prettier)], {
         description: "Install Prettier as an exact dev dependency",
@@ -52,9 +59,9 @@ export const prettierIntegration = defineIntegration({
       {
         type: "create_file",
         path: ".prettierrc",
-        content: "{}\n",
+        content: config,
         behavior: "fail_if_exists",
-        description: "Add an empty Prettier config so editors detect Prettier",
+        description: "Add the project Prettier config so editors detect Prettier",
       },
       {
         type: "create_file",

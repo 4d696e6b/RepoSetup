@@ -128,6 +128,11 @@ export const prismaIntegration = defineIntegration({
     return mergeVerify([
       missingDeps,
       await missingAnyFile(context, ["prisma/schema.prisma"], "prisma/schema.prisma"),
+      await missingAnyFile(
+        context,
+        ["generated/prisma/client.ts", "generated/prisma/index.ts"],
+        "generated Prisma Client output (run prisma generate)",
+      ),
       await missingEnvKeys(context, ".env.example", ["DATABASE_URL"]),
     ]);
   },
@@ -158,7 +163,7 @@ function sqlitePlan(context: PlanContext) {
       ],
       {
         description: "Install Prisma Client, the SQLite adapter, and dotenv",
-        allowBuild: ["esbuild", "!better-sqlite3"],
+        allowBuild: ["esbuild", "better-sqlite3"],
       },
     ),
     execLocalBin(

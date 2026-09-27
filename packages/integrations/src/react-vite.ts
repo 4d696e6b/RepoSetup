@@ -22,6 +22,16 @@ import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS } from "./qualified-versions.js"
 import { pnpmOrNpmCreate, usesTypescript } from "./scaffold.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
+function pnpmViteBuildApproval() {
+  return {
+    type: "create_file" as const,
+    path: "pnpm-workspace.yaml",
+    content: 'allowBuilds:\n  "esbuild": true\n',
+    behavior: "create_if_missing" as const,
+    description: "Allow the Vite esbuild dependency build script",
+  };
+}
+
 const reactViteOptionsSchema = z.strictObject({
   typescript: z.boolean().optional(),
 });
@@ -93,6 +103,7 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
         ["--template", template, "--no-interactive"],
         { description: "Scaffold React with create-vite", longRunning: true },
       ),
+      ...(context.config.packageManager === "pnpm" ? [pnpmViteBuildApproval()] : []),
     ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {

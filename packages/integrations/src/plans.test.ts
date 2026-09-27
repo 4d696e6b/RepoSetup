@@ -72,7 +72,7 @@ describe("integration plans", () => {
       [
         "pnpm",
         "create",
-        "next-app@16.3.6",
+        "next-app@16.3.5",
         ".",
         "--ts",
         "--eslint",
@@ -101,7 +101,7 @@ describe("integration plans", () => {
       [
         "npx",
         "--yes",
-        "create-next-app@16.3.6",
+        "create-next-app@16.3.5",
         "app",
         "--js",
         "--eslint",
@@ -115,6 +115,42 @@ describe("integration plans", () => {
         "--yes",
       ],
     ]);
+  });
+
+  it("pins the available ESLint config after scaffolding Next.js", () => {
+    expect(nextjsIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_json",
+          path: "package.json",
+          merge: { devDependencies: { "eslint-config-next": "16.3.5" } },
+        }),
+      ]),
+    );
+  });
+
+  it("replaces the create-next-app pnpm build-policy placeholders", () => {
+    expect(nextjsIntegration.plan(planContext({ integrations: [{ id: "prisma" }] }))).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_text",
+          path: "pnpm-workspace.yaml",
+          newText: expect.stringContaining("better-sqlite3: true"),
+        }),
+      ]),
+    );
+  });
+
+  it("makes a generated TypeScript Next.js layout typecheck before Next type generation", () => {
+    expect(nextjsIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_text",
+          path: "app/layout.tsx",
+          newText: expect.stringContaining("React.ReactNode"),
+        }),
+      ]),
+    );
   });
 
   it("installs the official Tailwind Vite plugin for React + Vite", () => {
@@ -161,7 +197,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--allow-build=esbuild",
-        "--allow-build=!better-sqlite3",
+        "--allow-build=better-sqlite3",
         "@prisma/client@7.10.0",
         "@prisma/adapter-better-sqlite3@7.10.0",
         "dotenv@18.0.3",
@@ -200,7 +236,7 @@ describe("integration plans", () => {
         "@testing-library/dom@10.4.2",
         "vite-tsconfig-paths@6.1.1",
       ],
-      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
+      ["pnpm", "exec", "vitest", "run"],
     ]);
 
     const javascriptPlan = vitestIntegration.plan(
@@ -218,11 +254,29 @@ describe("integration plans", () => {
         "@testing-library/react@16.3.3",
         "@testing-library/dom@10.4.2",
       ],
-      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
+      ["pnpm", "exec", "vitest", "run"],
     ]);
     expect(javascriptPlan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "vitest.config.js" }),
+        expect.objectContaining({ type: "create_file", path: "health.test.js" }),
+      ]),
+    );
+  });
+
+  it("adds a React sample assertion when Vitest is planned for Vite", () => {
+    expect(
+      vitestIntegration.plan(
+        planContext({ frameworkId: "react-vite", frameworkOptions: { typescript: true } }),
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: "create_file", path: "src/sample.ts" }),
+        expect.objectContaining({
+          type: "create_file",
+          path: "src/sample.test.ts",
+          content: expect.stringContaining("Hello from RepoSetup"),
+        }),
       ]),
     );
   });
@@ -231,6 +285,15 @@ describe("integration plans", () => {
     expect(runCommands(prettierIntegration.plan(planContext()))).toEqual([
       ["pnpm", "add", "--save-dev", "--save-exact", "prettier@3.9.8"],
     ]);
+    expect(prettierIntegration.plan(planContext({ frameworkId: "react-vite" }))).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: ".prettierrc",
+          content: expect.stringContaining('"singleQuote": true'),
+        }),
+      ]),
+    );
   });
 
   it("initializes Prisma PostgreSQL with the official adapter packages", () => {

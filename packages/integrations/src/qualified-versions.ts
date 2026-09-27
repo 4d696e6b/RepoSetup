@@ -25,10 +25,12 @@
 export const REGISTRY_REVISION = "2026-09-23";
 
 export const QUALIFIED_VERSIONS = {
-  createNextApp: "16.3.6",
+  createNextApp: "16.3.5",
+  eslintConfigNext: "16.3.5",
   vite: "8.3.0",
   eslint: "9.39.5",
   eslintJs: "9.39.5",
+  typescriptEslint: "8.70.1",
   shadcn: "4.21.0",
   createPlaywright: "1.17.139",
   playwrightTest: "1.63.0",
@@ -125,6 +127,7 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
   eslint: [
     npmPin("eslint", QUALIFIED_VERSIONS.eslint),
     npmPin("@eslint/js", QUALIFIED_VERSIONS.eslintJs),
+    npmPin("typescript-eslint", QUALIFIED_VERSIONS.typescriptEslint),
   ],
   shadcn: [npmPin("shadcn", QUALIFIED_VERSIONS.shadcn)],
   playwright: [

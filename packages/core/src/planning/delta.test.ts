@@ -59,9 +59,9 @@ describe("filterSatisfiedOperations", () => {
       {
         type: "run_command",
         command: "pnpm",
-        args: ["exec", "vitest", "run", "--passWithNoTests"],
+        args: ["exec", "vitest", "run"],
         cwd: ".",
-        description: "Load Vitest config",
+        description: "Run the generated Next.js sample assertion",
       },
       {
         type: "modify_json",

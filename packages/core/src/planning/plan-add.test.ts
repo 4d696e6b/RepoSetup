@@ -8,7 +8,7 @@ import type { IntegrationDefinition } from "../integrations/definition.js";
 import { fakeIntegration } from "../resolution/fake-integration.js";
 import type { RegistryLookup } from "../resolution/registry-lookup.js";
 
-import { planAdd } from "./plan-add.js";
+import { planAdd, planAddMany } from "./plan-add.js";
 
 const tempDirs: string[] = [];
 
@@ -186,6 +186,25 @@ describe("planAdd", () => {
     expect(framework.error.code).toBe("UNSUPPORTED_CONTEXT");
   });
 
+  it("refuses an ambiguous pnpm workspace root before planning", async () => {
+    const root = await nextFixture({ "pnpm-workspace.yaml": "packages:\n  - apps/*\n" });
+    const result = await planAdd({ startDir: root, integrationId: "zod", registry });
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error).toMatchObject({ code: "UNSUPPORTED_CONTEXT" });
+    expect(result.error.message).toContain("workspace root");
+  });
+
+  it("plans an add when pnpm-workspace.yaml only approves builds", async () => {
+    const root = await nextFixture({
+      "pnpm-workspace.yaml": 'allowBuilds:\n  "esbuild": true\n',
+    });
+    const result = await planAdd({ startDir: root, integrationId: "zod", registry });
+    expect(result.ok, JSON.stringify(result)).toBe(true);
+  });
+
   it("plans only the requested addable integration", async () => {
     const root = await nextFixture();
     const result = await planAdd({ startDir: root, integrationId: "zod", registry });
@@ -207,6 +226,29 @@ describe("planAdd", () => {
         (operation) => operation.type === "run_command" && operation.args.includes("create"),
       ),
     ).toBe(false);
+  });
+
+  it("plans multiple integrations in one resolved delta", async () => {
+    const root = await nextFixture({
+      "prisma/schema.prisma": 'datasource db {\n  provider = "sqlite"\n}\n',
+    });
+    const result = await planAddMany({
+      startDir: root,
+      integrationIds: ["zod", "prisma", "zod"],
+      registry,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(result.result.valid).toBe(true);
+    expect(result.result.orderedIntegrations.map((item) => item.id)).toEqual(["prisma", "zod"]);
+    expect(result.result.operations.map((operation) => operation.description)).toEqual([
+      "Install Prisma CLI",
+      "Add Prisma helper",
+      "Install Zod",
+    ]);
   });
 
   it("reports a no-op when the integration is already installed", async () => {

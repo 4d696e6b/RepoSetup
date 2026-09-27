@@ -9,6 +9,7 @@ import { EXIT_CODES } from "./exit-codes.js";
 import { handleExport } from "./export.js";
 import {
   createDefaultCommandExists,
+  createDefaultCommandVersion,
   createDefaultExecutionLock,
   createDefaultExecutionJournal,
   createDefaultExecutableResolver,
@@ -17,6 +18,7 @@ import {
 } from "./execution-adapters.js";
 import { handleInfo } from "./info.js";
 import { createDefaultFs, createDefaultIo, writeLine } from "./io.js";
+import { renderBundledPresets } from "./presets.js";
 import { promptCreate } from "./prompt-create.js";
 import { handleRegistryValidate } from "./registry-validate.js";
 import { handleRemove } from "./remove.js";
@@ -42,6 +44,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .version(cliVersion())
     .option("--verbose", "include extra detail in output", false)
     .option("--quiet", "reduce output", false)
+    .option("--json", "write versioned machine-readable output", false)
     .option("--no-color", "disable ANSI color (output is already plain)")
     .enablePositionalOptions()
     .showHelpAfterError()
@@ -66,6 +69,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .description("Create a project from prompts or a declarative config")
     .argument("[name]", "project name")
     .option("-c, --config <path>", "path to a RepoSetup JSON config")
+    .option("--preset <id>", "use a bundled guaranteed recipe preset")
     .option("--dry-run", "print the installation plan without changing files", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--framework <id>", "framework integration id")
@@ -81,6 +85,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
           yes: options.yes,
           typescript: options.typescript,
           ...(options.config === undefined ? {} : { config: options.config }),
+          ...(options.preset === undefined ? {} : { preset: options.preset }),
           ...(options.framework === undefined ? {} : { framework: options.framework }),
           ...(options.packageManager === undefined
             ? {}
@@ -93,8 +98,8 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
 
   program
     .command("add")
-    .description("Add an integration to the current project")
-    .argument("<id>", "integration id")
+    .description("Add one or more integrations to the current project")
+    .argument("<ids...>", "one or more integration ids")
     .option("--dry-run", "print the add plan without changing files", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--package-manager <id>", "package manager")
@@ -102,12 +107,12 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .option("--quiet", "reduce output", false)
     .action(
       async (
-        integrationId: string,
+        integrationIds: string[],
         options: { dryRun: boolean; yes: boolean; packageManager?: string },
         command: Command,
       ) => {
         exitCode = await handleAdd({
-          integrationId,
+          integrationIds,
           dryRun: options.dryRun,
           yes: options.yes,
           packageManager: options.packageManager,
@@ -142,6 +147,13 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
         });
       },
     );
+
+  program
+    .command("presets")
+    .description("List bundled guaranteed recipe presets")
+    .action(() => {
+      writeLine(resolved.io.writeOut, renderBundledPresets());
+    });
 
   program
     .command("search")
@@ -181,6 +193,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
       exitCode = await handleDoctor({
         globals: readGlobals(command),
         deps: resolved,
+        commandVersion: createDefaultCommandVersion(resolved.runProcess),
       });
     });
 
@@ -263,9 +276,15 @@ function resolveDeps(deps: CliDeps): ResolvedCliDeps {
 }
 
 function readGlobals(command: Command): GlobalCliOptions {
-  const opts = command.optsWithGlobals() as { verbose?: boolean; quiet?: boolean };
+  const combined = command.optsWithGlobals() as {
+    verbose?: boolean;
+    quiet?: boolean;
+    json?: boolean;
+  };
+  const local = command.opts() as { verbose?: boolean; quiet?: boolean };
   return {
-    verbose: opts.verbose === true,
-    quiet: opts.quiet === true,
+    verbose: local.verbose === true || combined.verbose === true,
+    quiet: local.quiet === true || combined.quiet === true,
+    json: combined.json === true,
   };
 }

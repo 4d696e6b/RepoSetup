@@ -1,4 +1,4 @@
-import { access, mkdir } from "node:fs/promises";
+import { access, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
@@ -77,15 +77,30 @@ describe("golden stack real execution", () => {
       const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
       expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);
 
-      const vitest = await runProcess("pnpm", ["exec", "vitest", "run", "--passWithNoTests"], {
+      const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], {
         cwd,
       });
       expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
 
+      const prettier = await runProcess(
+        "pnpm",
+        [
+          "exec",
+          "prettier",
+          "--check",
+          "app/api/health/route.ts",
+          "health.test.ts",
+          "lib/prisma.ts",
+          ".prettierrc",
+        ],
+        { cwd },
+      );
+      expect(prettier.exitCode, `${prettier.stdout}\n${prettier.stderr}`).toBe(0);
+
       const built = await runProcess("pnpm", ["exec", "next", "build"], { cwd });
       expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
 
-      await expectHealthyCli(cwd, ["next", "prisma", "pnpm"]);
+      await expectHealthyCli(cwd, ["next", "prisma", "prettier", "pnpm"]);
     },
   );
 
@@ -99,13 +114,20 @@ describe("golden stack real execution", () => {
     const build = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
 
-    const test = await runProcess("pnpm", ["exec", "vitest", "run", "--passWithNoTests"], { cwd });
+    const test = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
     expect(test.exitCode, `${test.stdout}\n${test.stderr}`).toBe(0);
 
-    await expectHealthyCli(cwd, ["vite", "react", "pnpm"]);
+    const prettier = await runProcess(
+      "pnpm",
+      ["exec", "prettier", "--check", "src", "vite.config.ts", ".prettierrc"],
+      { cwd },
+    );
+    expect(prettier.exitCode, `${prettier.stdout}\n${prettier.stderr}`).toBe(0);
+
+    await expectHealthyCli(cwd, ["vite", "react", "prettier", "pnpm"]);
   });
 
-  it("Golden C — Express generation with PostgreSQL config (no live database)", async () => {
+  it("Golden C — Express endpoint test and PostgreSQL configuration (no live database)", async () => {
     const { cwd, created } = await createProject(fixturePath("golden-express.json"));
     expect(created.exitCode, created.stderr).toBe(0);
 
@@ -117,7 +139,74 @@ describe("golden stack real execution", () => {
     const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
     expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);
 
-    await expectHealthyCli(cwd, ["express", "prisma", "pnpm"]);
+    const built = await runProcess("pnpm", ["run", "build"], { cwd });
+    expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+
+    const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
+    expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
+
+    const prettier = await runProcess(
+      "pnpm",
+      ["exec", "prettier", "--check", "src", "lib", ".prettierrc"],
+      { cwd },
+    );
+    expect(prettier.exitCode, `${prettier.stdout}\n${prettier.stderr}`).toBe(0);
+
+    await expectHealthyCli(cwd, ["express", "prisma", "prettier", "pnpm"]);
+  });
+
+  it("Golden F — Fastify response test and Drizzle schema (no live database)", async () => {
+    const { cwd, created } = await createProject(fixturePath("golden-fastify-drizzle.json"));
+    expect(created.exitCode, created.stderr).toBe(0);
+
+    await access(path.join(cwd, "src/server.ts"));
+    await access(path.join(cwd, "src/server.test.ts"));
+    await access(path.join(cwd, "src/db/schema.ts"));
+    await access(path.join(cwd, "src/db/schema.test.ts"));
+    await access(path.join(cwd, "drizzle.config.ts"));
+    await access(path.join(cwd, ".env.example"));
+    const workflow = await readFile(path.join(cwd, ".github", "workflows", "node.js.yml"), "utf8");
+    expect(workflow).toContain('version: "12.5.1"');
+    expect(workflow).toContain('node-version: "24"');
+    expect(workflow).toContain("pnpm install --frozen-lockfile");
+    expect(workflow).toContain("pnpm run lint");
+    expect(workflow).toContain("pnpm test");
+    expect(workflow).toContain("pnpm run build");
+
+    const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
+    expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);
+
+    const built = await runProcess("pnpm", ["run", "build"], { cwd });
+    expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+
+    const lint = await runProcess("pnpm", ["run", "lint"], { cwd });
+    expect(lint.exitCode, `${lint.stdout}\n${lint.stderr}`).toBe(0);
+
+    const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
+    expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
+
+    await expectHealthyCli(cwd, ["fastify", "drizzle", "pnpm"]);
+  });
+
+  it("Golden G — React + Playwright initialization does not download browsers", async () => {
+    const { cwd, created } = await createProject(fixturePath("golden-react-playwright.json"));
+    expect(created.exitCode, created.stderr).toBe(0);
+
+    await access(path.join(cwd, "playwright.config.ts"));
+    await access(path.join(cwd, "tests", "example.spec.ts"));
+    const pkg = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8")) as {
+      devDependencies?: Record<string, string>;
+    };
+    expect(pkg.devDependencies?.["@playwright/test"]).toBe("1.63.0");
+    expect(`${created.stdout}\n${created.stderr}`).toContain("browsers were not downloaded");
+
+    const listed = await runProcess("pnpm", ["exec", "playwright", "test", "--list"], { cwd });
+    expect(listed.exitCode, `${listed.stdout}\n${listed.stderr}`).toBe(0);
+
+    const build = await runProcess("pnpm", ["run", "build"], { cwd });
+    expect(build.exitCode, `${build.stdout}\n${build.stderr}`).toBe(0);
+
+    await expectHealthyCli(cwd, ["react", "vite", "playwright", "pnpm"]);
   });
 
   it.skipIf(!hasUv)(
@@ -134,7 +223,7 @@ describe("golden stack real execution", () => {
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
 
       const pytest = await runProcess("uv", ["run", "pytest"], { cwd });
-      expect([0, 5], `${pytest.stdout}\n${pytest.stderr}`).toContain(pytest.exitCode);
+      expect(pytest.exitCode, `${pytest.stdout}\n${pytest.stderr}`).toBe(0);
 
       const ruff = await runProcess("uv", ["run", "ruff", "check", "."], { cwd });
       expect(ruff.exitCode, `${ruff.stdout}\n${ruff.stderr}`).toBe(0);
@@ -157,7 +246,7 @@ describe("golden stack real execution", () => {
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
 
       const pytest = await runProcess("uv", ["run", "pytest"], { cwd });
-      expect([0, 5], `${pytest.stdout}\n${pytest.stderr}`).toContain(pytest.exitCode);
+      expect(pytest.exitCode, `${pytest.stdout}\n${pytest.stderr}`).toBe(0);
 
       const ruff = await runProcess("uv", ["run", "ruff", "check", "."], { cwd });
       expect(ruff.exitCode, `${ruff.stdout}\n${ruff.stderr}`).toBe(0);

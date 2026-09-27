@@ -203,7 +203,18 @@ export async function executeModifyText(
     });
   }
 
-  const matches = content.split(operation.oldText).length - 1;
+  // Plans are stored with LF line endings, while framework generators can
+  // write CRLF files on Windows. Preserve exact-match safety while accepting
+  // that platform-level representation difference.
+  const crlfOldText = operation.oldText.replaceAll("\n", "\r\n");
+  const matchedText = content.includes(operation.oldText)
+    ? operation.oldText
+    : content.includes(crlfOldText)
+      ? crlfOldText
+      : operation.oldText;
+  const replacementText =
+    matchedText === crlfOldText ? operation.newText.replaceAll("\n", "\r\n") : operation.newText;
+  const matches = content.split(matchedText).length - 1;
   if (matches === 0) {
     return mutationFailed(`Text to replace was not found in "${operation.path}".`, {
       path: operation.path,
@@ -219,7 +230,7 @@ export async function executeModifyText(
   try {
     await context.fs.writeFileAtomic(
       resolved.absolutePath,
-      content.replace(operation.oldText, operation.newText),
+      content.replace(matchedText, replacementText),
     );
   } catch (error) {
     return mutationFailed(`Could not write text file "${operation.path}".`, {

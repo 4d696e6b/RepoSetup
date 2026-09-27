@@ -413,6 +413,27 @@ describe("executeInstallation", () => {
     );
   });
 
+  it("replaces LF plan text in a CRLF generator file without changing its line endings", async () => {
+    const root = await tempRoot();
+    await writeFile(path.join(root, "generator.txt"), "first\r\nsecond\r\n");
+
+    const result = await executeInstallation(
+      [
+        {
+          type: "modify_text",
+          path: "generator.txt",
+          oldText: "first\nsecond\n",
+          newText: "updated\ncontent\n",
+          description: "Update generated content",
+        },
+      ],
+      { rootDir: root, runProcess: recordingRunner([]) },
+    );
+
+    expect(result.ok).toBe(true);
+    expect(await readFile(path.join(root, "generator.txt"), "utf8")).toBe("updated\r\ncontent\r\n");
+  });
+
   it("preserves CRLF when appending to an existing environment example", async () => {
     const root = await tempRoot();
     await writeFile(path.join(root, ".env.example"), "EXISTING=value\r\n", "utf8");
