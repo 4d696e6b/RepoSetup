@@ -1,9 +1,10 @@
-import type {
-  DetectionContext,
-  DetectionResult,
-  SupportContext,
-  VerificationContext,
-  VerificationResult,
+import {
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+  type SupportContext,
+  type VerificationContext,
+  type VerificationResult,
 } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
@@ -61,8 +62,11 @@ export const httpxIntegration = defineIntegration({
     }
     return { supported: true };
   },
-  detect(context: DetectionContext): Promise<DetectionResult> {
-    return detectPythonPackage(context, "httpx", ["test_httpx.py"]);
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const result = await detectPythonPackage(context, "httpx");
+    return result.detected && (await context.files.exists("test_httpx.py"))
+      ? result
+      : notDetected();
   },
   plan(context) {
     return [

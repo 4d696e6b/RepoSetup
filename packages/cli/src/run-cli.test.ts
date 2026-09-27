@@ -679,7 +679,7 @@ describe("runCli", () => {
     const result = await runCli(["registry", "validate"], { io: captured.io });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toContain("Registry is valid (33 integrations).");
+    expect(captured.stdout()).toContain("Registry is valid (37 integrations).");
   });
 
   it("reports PROJECT_NOT_FOUND for stack outside a project", async () => {

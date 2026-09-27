@@ -1,4 +1,9 @@
-import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@reposetup/core";
+import {
+  detectNpmPackage,
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+} from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, removePackages } from "./operations.js";
@@ -63,10 +68,11 @@ export const testingLibraryIntegration = defineIntegration({
     }
     return { supported: true };
   },
-  detect(context: DetectionContext): Promise<DetectionResult> {
-    return detectNpmPackage(context, "@testing-library/react", [
-      "src/testing-library-sample.test.tsx",
-    ]);
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const result = await detectNpmPackage(context, "@testing-library/react");
+    return result.detected && (await context.files.exists("src/testing-library-sample.test.tsx"))
+      ? result
+      : notDetected();
   },
   plan(context) {
     return [

@@ -1,9 +1,10 @@
-import type {
-  DetectionContext,
-  DetectionResult,
-  SupportContext,
-  VerificationContext,
-  VerificationResult,
+import {
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+  type SupportContext,
+  type VerificationContext,
+  type VerificationResult,
 } from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
@@ -77,8 +78,9 @@ export const pydanticSettingsIntegration = defineIntegration({
     }
     return { supported: true };
   },
-  detect(context: DetectionContext): Promise<DetectionResult> {
-    return detectPythonPackage(context, "pydantic-settings", ["settings.py"]);
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const result = await detectPythonPackage(context, "pydantic-settings");
+    return result.detected && (await context.files.exists("settings.py")) ? result : notDetected();
   },
   plan(context) {
     return [

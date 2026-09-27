@@ -1,4 +1,9 @@
-import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@reposetup/core";
+import {
+  detectNpmPackage,
+  notDetected,
+  type DetectionContext,
+  type DetectionResult,
+} from "@reposetup/core";
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, removePackages } from "./operations.js";
@@ -81,8 +86,11 @@ export const tanstackQueryIntegration = defineIntegration({
     }
     return { supported: true };
   },
-  detect(context: DetectionContext): Promise<DetectionResult> {
-    return detectNpmPackage(context, "@tanstack/react-query", ["src/reposetup-query-provider.tsx"]);
+  async detect(context: DetectionContext): Promise<DetectionResult> {
+    const result = await detectNpmPackage(context, "@tanstack/react-query");
+    return result.detected && (await context.files.exists("src/reposetup-query-provider.tsx"))
+      ? result
+      : notDetected();
   },
   plan(context) {
     return [
