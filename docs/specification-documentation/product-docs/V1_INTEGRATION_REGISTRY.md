@@ -39,6 +39,19 @@ This document defines the planned v1 integration set. "Planned" does not mean "s
 | docker-compose | Docker Compose | infrastructure | P1 |
 | github-actions | GitHub Actions | ci | P1 |
 
+## Curated 0.2 additions
+
+The following IDs are added only on their documented qualified contexts. They remain candidates until release-candidate qualification; `stable` is not implied by their presence in the catalog.
+
+| ID | Qualified context | Generated evidence |
+|---|---|---|
+| testing-library | React + Vite + Vitest | Accessible button interaction test using React Testing Library and user-event |
+| tanstack-query | React + Vite + Testing Library | QueryClient provider plus a mocked-response query test |
+| httpx | FastAPI + pytest under uv | In-process ASGI HTTP response test |
+| pydantic-settings | FastAPI + Pydantic + pytest under uv | Typed `APP_NAME` settings, safe `.env.example`, and missing-value diagnostics |
+
+`react-hook-form` remains deferred: the Zod resolver API and supported compatibility combination have not yet been qualified.
+
 ## P0 implementation order
 
 Do not implement all P0 integrations simultaneously.

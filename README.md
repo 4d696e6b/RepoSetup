@@ -201,12 +201,14 @@ Status is per ID, not “the catalog is production-ready.”
 | ORM / data | `prisma`, `sqlalchemy`, `alembic` | candidate |
 | ORM / data | `drizzle`, `mongoose` | experimental |
 | Validation | `zod`, `pydantic` | candidate |
-| Testing | `vitest`, `pytest` | candidate |
+| Application settings | `pydantic-settings` | candidate (FastAPI only) |
+| Testing | `vitest`, `testing-library`, `pytest`, `httpx` | candidate (`testing-library` and `httpx` have generated interaction/API tests) |
 | Testing | `playwright` | experimental |
+| Client state | `tanstack-query` | candidate (React + Vite only) |
 | Quality | `eslint`, `prettier`, `ruff` | candidate |
 | Infrastructure / CI | `docker`, `docker-compose`, `github-actions` | experimental |
 
-`remove` currently has package-only recipes for `zod`, `prettier`, `pydantic`, `pytest`, and `ruff`. `pip uninstall` is refused.
+`remove` currently has package-only recipes for `zod`, `prettier`, `pydantic`, `pydantic-settings`, `pytest`, `ruff`, `testing-library`, `tanstack-query`, and `httpx`. Generated source, tests, and `.env.example` files are preserved. `pip uninstall` is refused.
 
 ## Tested stack recipes
 
@@ -217,6 +219,8 @@ Status is per ID, not “the catalog is production-ready.”
 | Express + TypeScript + Prisma (PostgreSQL **config** only) | yes | generation + `tsc`; no live database |
 | FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` in this workspace |
 | Flask + uv + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` |
+| React + Vite + Vitest + Testing Library + TanStack Query | yes | generated interaction/query tests |
+| FastAPI + Pydantic + pytest + HTTPX + Pydantic Settings | yes | generated HTTPX/settings tests; no real secrets |
 
 Example configs live in `examples/`.
 
