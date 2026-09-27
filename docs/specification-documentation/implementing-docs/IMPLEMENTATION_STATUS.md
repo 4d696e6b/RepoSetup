@@ -22,7 +22,8 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Local golden create on macOS passed for Fastify + PostgreSQL config + Drizzle + Vitest: typecheck, build, and `vitest run` succeeded with no live database.
 - [x] Local golden checks now exercise Prettier against generated Next.js, React/Vite, and Express source files. The React/Vite Prettier config preserves the upstream template style; the other qualified recipes use the default config.
 - [x] The Playwright golden runs `playwright test --list` without downloading a browser, so generated configuration and test discovery are validated separately from browser execution.
-- [ ] The current cross-platform Golden rerun is in progress at [run 36273558659](https://github.com/4d696e6b/RepoSetup/actions/runs/36273558659). Phase 25 remains open until it passes and generated GitHub Actions execution has its own evidence.
+- [x] [Golden stacks run 36273558659](https://github.com/4d696e6b/RepoSetup/actions/runs/36273558659) passed all six Ubuntu, macOS, and Windows / Python matrix jobs for the Playwright list check and the qualified generated recipes. [Platform run 36273525741](https://github.com/4d696e6b/RepoSetup/actions/runs/36273525741) passed for the preceding source commit.
+- [ ] Phase 25 remains open until generated GitHub Actions execution has its own evidence.
 
 ### Phase 24 progress — 2026-09-24
 

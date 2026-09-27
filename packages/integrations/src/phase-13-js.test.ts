@@ -373,6 +373,7 @@ describe("Phase 13 JS ecosystem plans", () => {
     const file = plan.find((operation) => operation.type === "create_file");
     const content = file?.type === "create_file" ? file.content : "";
     expect(content).toContain("pnpm/action-setup@v4");
+    expect(content).toContain('version: "12.5.1"');
     expect(content).toContain('node-version: "24"');
     expect(content).toContain("pnpm run build");
     expect(content).not.toContain("pnpm test");

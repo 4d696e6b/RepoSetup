@@ -166,6 +166,7 @@ describe("golden stack real execution", () => {
     await access(path.join(cwd, "drizzle.config.ts"));
     await access(path.join(cwd, ".env.example"));
     const workflow = await readFile(path.join(cwd, ".github", "workflows", "node.js.yml"), "utf8");
+    expect(workflow).toContain('version: "12.5.1"');
     expect(workflow).toContain('node-version: "24"');
     expect(workflow).toContain("pnpm install --frozen-lockfile");
     expect(workflow).toContain("pnpm run lint");

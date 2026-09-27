@@ -17,6 +17,8 @@ function nodeWorkflow(packageManager: "npm" | "pnpm", runTest: boolean, runLint:
   const setup =
     packageManager === "pnpm"
       ? `      - uses: pnpm/action-setup@v4
+        with:
+          version: "12.5.1"
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
