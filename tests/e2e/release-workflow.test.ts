@@ -23,4 +23,16 @@ describe("release publishing workflow", () => {
     expect(workflow).toContain('npm publish "$TARBALL" --access public');
     expect(workflow).not.toContain("continue-on-error");
   });
+
+  it("can qualify a candidate artifact without a release tag or publication", async () => {
+    const workflow = await readFile(
+      path.join(repoRoot, ".github", "workflows", "release.yml"),
+      "utf8",
+    );
+    expect(workflow).toContain("workflow_dispatch:");
+    expect(workflow).toContain("pack-candidate:");
+    expect(workflow).toContain("artifact-acceptance:");
+    expect(workflow).toContain("verify-packed-artifact.mjs --directory candidate");
+    expect(workflow).not.toContain("npm publish");
+  });
 });

@@ -23,7 +23,7 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 - [x] Public manifest, CLI prerequisite preflight, quick start, and packed-artifact tests use the 0.2.0-alpha.1 / Node 24 contract.
 - [x] Package tarball naming and version assertions derive from the public manifest rather than a hard-coded release number.
 - [x] Candidate artifact evidence records SHA-256 and exact source SHA, and the installed artifact checks both CLI aliases.
-- [x] The `v0.2.0` publishing workflow waits for Node 24 platform, Python 3.12/3.13 golden, single-artifact, and cross-platform artifact-acceptance jobs. Required jobs do not allow `continue-on-error`.
+- [x] The manually dispatched candidate-qualification workflow and the `v0.2.0` publishing workflow wait for Node 24 platform, Python 3.12/3.13 golden, single-artifact, and cross-platform artifact-acceptance jobs. Required jobs do not allow `continue-on-error`.
 - [x] Dependency-license review uses `pnpm licenses list --json`; the current review allows Apache-2.0, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0, ISC, MIT, and MPL-2.0. The result is stored with candidate artifacts.
 - [ ] Run one full candidate qualification from the exact candidate SHA and retain all CI evidence artifacts.
 - [ ] Run three consecutive passing full candidate qualifications from the same candidate SHA.
@@ -43,5 +43,6 @@ No tag is created, moved, or published by Phase 27 work. Publication requires th
 
 - Cross-platform baseline through Phase 26: [Implementation status](../implementing-docs/IMPLEMENTATION_STATUS.md)
 - Candidate scope and gates: [0.2.0 roadmap](../implementing-docs/ROADMAP_0.2.0.md)
-- Current candidate workflow: [publish-npm.yml](../../../.github/workflows/publish-npm.yml)
+- Current candidate workflow: [release.yml](../../../.github/workflows/release.yml)
+- Final publication gate: [publish-npm.yml](../../../.github/workflows/publish-npm.yml)
 - Historical release records: [release documentation directory](.)
