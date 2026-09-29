@@ -38,8 +38,19 @@ async function resolveArtifactPaths(args) {
 }
 
 function run(command, args, cwd) {
+  const launch =
+    process.platform === "win32" && command === "npm.cmd"
+      ? {
+          command: process.env.ComSpec ?? "cmd.exe",
+          args: ["/d", "/v:off", "/c", command, ...args],
+        }
+      : { command, args };
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { cwd, shell: false, stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(launch.command, launch.args, {
+      cwd,
+      shell: false,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (chunk) => {

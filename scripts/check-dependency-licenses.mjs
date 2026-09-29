@@ -26,8 +26,16 @@ function outputPath(args) {
 
 function runPnpmLicenses() {
   const command = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+  const args = ["licenses", "list", "--json"];
+  const launch =
+    process.platform === "win32"
+      ? {
+          command: process.env.ComSpec ?? "cmd.exe",
+          args: ["/d", "/v:off", "/c", command, ...args],
+        }
+      : { command, args };
   return new Promise((resolve, reject) => {
-    const child = spawn(command, ["licenses", "list", "--json"], {
+    const child = spawn(launch.command, launch.args, {
       cwd: process.cwd(),
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
