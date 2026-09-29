@@ -29,7 +29,7 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 - [ ] Run three consecutive passing full candidate qualifications from the same candidate SHA.
 - [ ] Complete a seven-calendar-day soak from the candidate SHA without open P0/P1, data-loss, or security defects.
 - [ ] Record five observed manual usability sessions across Ubuntu, macOS, and Windows. This also closes the outstanding Phase 24 gate.
-- [ ] Complete a targeted current-source security review covering process/path boundaries, lifecycle scripts, redaction, config injection, and existing-file preservation.
+- [x] Complete a [targeted current-source security review](../security-docs/SECURITY_REVIEW_0.2.0.md) covering process/path boundaries, lifecycle scripts, redaction, config injection, and existing-file preservation.
 - [ ] Record cold/warm benchmark and failure-path evidence for the candidate SHA: offline/cache miss, registry timeout, permission error, interruption, occupied port, changed user file, and cleanup.
 - [ ] Recheck Node lifecycle status and current npm publication requirements before any stable tag or publication request.
 

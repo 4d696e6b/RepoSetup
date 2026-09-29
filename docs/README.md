@@ -34,6 +34,7 @@ Specifications live in [`specification-documentation/`](./specification-document
 
 - [Security and safety](./specification-documentation/security-docs/SECURITY_AND_SAFETY.md)
 - [Security review](./specification-documentation/security-docs/SECURITY_REVIEW.md)
+- [0.2.0 candidate security review](./specification-documentation/security-docs/SECURITY_REVIEW_0.2.0.md)
 
 ## Release docs
 

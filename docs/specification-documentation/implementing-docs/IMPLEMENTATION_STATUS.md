@@ -16,7 +16,8 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] The manually dispatched candidate workflow and the `v0.2.0` publish workflow make Node 24 platform qualification, Python 3.12/3.13 golden qualification, a one-time candidate pack, and cross-platform artifact acceptance blocking dependencies. The publishing path uses the downloaded qualifying tarball only after its source SHA and tag/version agree.
 - [x] `pnpm review:licenses` produces a path-free dependency license record and rejects unreviewed license categories. The current lockfile review contains Apache-2.0, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0, ISC, MIT, and MPL-2.0 only.
 - [x] Local targeted candidate artifact, launcher, workflow, and dependency-license tests pass; workspace unit tests, typecheck, and lint pass. The local host is Node 22.12.0, below the candidate floor, so full create/add e2e qualification correctly stops at preflight and must be run by the required Node 24 CI matrix.
-- [ ] Exact-SHA CI evidence, three consecutive full candidate passes, seven-day soak, failure/benchmark evidence, a current targeted security review, and five observed cross-platform usability sessions remain release blockers. See [the candidate record](../release-docs/RELEASE_CANDIDATE_0.2.0.md).
+- [x] A targeted current-source review covers process/path boundaries, lifecycle scripts, redaction, config injection, and existing-file preservation; it found no P0/P1 security or data-loss defect. See [the 0.2.0 security review](../security-docs/SECURITY_REVIEW_0.2.0.md).
+- [ ] Exact-SHA CI evidence, three consecutive full candidate passes, seven-day soak, failure/benchmark evidence, and five observed cross-platform usability sessions remain release blockers. See [the candidate record](../release-docs/RELEASE_CANDIDATE_0.2.0.md).
 
 ### Phase 25 progress — 2026-09-24
 
