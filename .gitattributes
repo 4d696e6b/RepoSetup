@@ -1,0 +1,2 @@
+# Keep formatter and generated-artifact checks reproducible on every runner.
+* text=auto eol=lf
