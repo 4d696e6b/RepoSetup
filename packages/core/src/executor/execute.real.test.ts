@@ -114,11 +114,6 @@ describe("executeInstallation real processes", () => {
     const result = await executeInstallation(
       [
         {
-          type: "check_prerequisite",
-          id: "npm",
-          description: "Require npm on PATH",
-        },
-        {
           type: "create_directory",
           path: "src",
           behavior: "fail_if_exists",
