@@ -773,7 +773,7 @@ describe("executeInstallation", () => {
       {
         rootDir: root,
         commandExists: async () => true,
-        runProcess: recordingRunner([], { stdout: "v20.8.0\n" }),
+        runProcess: recordingRunner([], { stdout: "v23.99.0\n" }),
       },
     );
 
@@ -782,7 +782,7 @@ describe("executeInstallation", () => {
       return;
     }
     expect(result.error.code).toBe("PREREQUISITE_MISSING");
-    expect(result.error.details).toMatchObject({ detectedVersion: "20.8.0" });
+    expect(result.error.details).toMatchObject({ detectedVersion: "23.99.0" });
     await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
   });
 
@@ -793,7 +793,7 @@ describe("executeInstallation", () => {
       {
         rootDir: root,
         commandExists: async () => true,
-        runProcess: recordingRunner([], { stdout: "v20.9.0\n" }),
+        runProcess: recordingRunner([], { stdout: "v24.0.0\n" }),
       },
     );
 
@@ -808,8 +808,8 @@ describe("executeInstallation", () => {
         {
           type: "check_prerequisite",
           id: "node",
-          versionRange: "^20.19.0 || >=22.12.0",
-          description: "Require a Vite-compatible Node.js",
+          versionRange: "^24.1.0",
+          description: "Require a Node.js patch in the qualified range",
         },
         {
           type: "create_file",
@@ -822,7 +822,7 @@ describe("executeInstallation", () => {
       {
         rootDir: root,
         commandExists: async () => true,
-        runProcess: recordingRunner(runs, { stdout: "v22.11.0\n" }),
+        runProcess: recordingRunner(runs, { stdout: "v24.0.0\n" }),
       },
     );
 
@@ -831,7 +831,7 @@ describe("executeInstallation", () => {
       return;
     }
     expect(result.error.code).toBe("PREREQUISITE_MISSING");
-    expect(result.error.details).toMatchObject({ versionRange: "^20.19.0 || >=22.12.0" });
+    expect(result.error.details).toMatchObject({ versionRange: "^24.1.0" });
     expect(runs).toEqual([expect.objectContaining({ args: ["--version"] })]);
     await expect(readFile(path.join(root, "should-not-exist.txt"), "utf8")).rejects.toThrow();
   });

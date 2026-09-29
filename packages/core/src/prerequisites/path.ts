@@ -7,8 +7,8 @@ export interface PathPrerequisite {
 const PATH_PREREQUISITES = {
   node: {
     command: "node",
-    hint: "Install Node.js 20.9 or later from https://nodejs.org and ensure it is on PATH.",
-    minimumVersion: [20, 9, 0],
+    hint: "Install Node.js 24 or later from https://nodejs.org and ensure it is on PATH.",
+    minimumVersion: [24, 0, 0],
   },
   npm: {
     command: "npm",
@@ -20,8 +20,8 @@ const PATH_PREREQUISITES = {
   },
   python: {
     command: "python",
-    hint: "Install Python 3.9 or later from https://www.python.org and ensure python is on PATH. RepoSetup will not install Python.",
-    minimumVersion: [3, 9, 0],
+    hint: "Install Python 3.12 or later from https://www.python.org and ensure python is on PATH. RepoSetup will not install Python.",
+    minimumVersion: [3, 12, 0],
   },
   uv: {
     command: "uv",
@@ -30,7 +30,7 @@ const PATH_PREREQUISITES = {
   pip: {
     command: "python",
     hint: "Install Python, which provides python -m pip, and ensure python is on PATH. RepoSetup will not install pip.",
-    minimumVersion: [3, 9, 0],
+    minimumVersion: [3, 12, 0],
   },
 } as const satisfies Record<string, PathPrerequisite>;
 

@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is currently an **early-stage** open-source project (`v0.1.1`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is currently an **early-stage** open-source project (`v0.2.0-alpha.1`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -44,7 +44,7 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 ## Quick start
 
-Requires **Node.js 20+** and **pnpm 12.5.1**.
+Requires **Node.js 24+** and **pnpm 12.5.1**. Python recipes require **Python 3.12+** and **uv**; 3.12 and 3.13 are qualified for this candidate.
 
 ```bash
 git clone https://github.com/4d696e6b/RepoSetup.git
@@ -85,7 +85,7 @@ rsetup --help
 reposetup --help
 ```
 
-`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project. Python stacks also need **Python 3.9+** and **uv**.
+`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project.
 
 ## Example
 
@@ -172,13 +172,13 @@ reposetup registry validate
 
 There is no separate `import` command. Apply an exported file with `create --config`.
 
-`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in v0.1.1.**
+`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in v0.2.0-alpha.1.**
 
 ## Integration status
 
 Status is per ID, not “the catalog is production-ready.”
 
-| Status | Meaning in v0.1.1 |
+| Status | Meaning in v0.2.0-alpha.1 |
 | --- | --- |
 | **stable** | Real execute + advertised-platform evidence. **None yet.** |
 | **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |

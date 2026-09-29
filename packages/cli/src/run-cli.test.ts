@@ -1050,6 +1050,7 @@ describe("runCli", () => {
       cwd: root,
       io: captured.io,
       commandExists: async () => true,
+      runProcess: async () => ({ exitCode: 0, stdout: "v24.0.0\n", stderr: "" }),
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);

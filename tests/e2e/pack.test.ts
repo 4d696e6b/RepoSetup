@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, readdir } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -40,9 +41,13 @@ describe("npm pack artifact", () => {
     expect(packed.exitCode, packed.stderr).toBe(0);
 
     const tarballs = (await readdir(packDir)).filter((name) => name.endsWith(".tgz")).sort();
-    expect(tarballs).toEqual(["rsetup-0.1.1.tgz"]);
+    expect(tarballs).toEqual(["rsetup-".concat(cliPackageVersion(), ".tgz")]);
 
     const tarballPath = path.join(packDir, tarballs[0] as string);
+    const sha256 = createHash("sha256")
+      .update(await readFile(tarballPath))
+      .digest("hex");
+    expect(sha256).toMatch(/^[a-f0-9]{64}$/);
     const listing = await runProcess("tar", ["-tzf", tarballPath], { cwd: packDir });
     expect(listing.exitCode, listing.stderr).toBe(0);
     expect(listing.stdout).toContain("package/package.json");
@@ -70,7 +75,7 @@ describe("npm pack artifact", () => {
       dependencies?: Record<string, string>;
     };
     expect(packedManifest.name).toBe("rsetup");
-    expect(packedManifest.version).toBe("0.1.1");
+    expect(packedManifest.version).toBe(cliPackageVersion());
     expect(packedManifest.bin?.rsetup).toBe("./dist/bin.js");
     expect(packedManifest.bin?.reposetup).toBe("./dist/bin.js");
     expect(packedManifest.dependencies?.["@reposetup/core"]).toBeUndefined();

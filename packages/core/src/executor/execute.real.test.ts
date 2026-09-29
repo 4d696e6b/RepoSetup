@@ -115,8 +115,8 @@ describe("executeInstallation real processes", () => {
       [
         {
           type: "check_prerequisite",
-          id: "node",
-          description: "Require Node.js",
+          id: "npm",
+          description: "Require npm on PATH",
         },
         {
           type: "create_directory",

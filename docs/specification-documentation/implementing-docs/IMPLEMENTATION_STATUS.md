@@ -4,9 +4,19 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 24 — Daily CLI usability: in progress.** Phase 22 recipe gates are complete (Node 24 engines floor deferred). Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 27 — Release-candidate qualification: in progress.** Phase 24's five observed manual usability sessions, the candidate soak, repeated exact-SHA qualification, and release evidence remain blocking gates. Phase 20 through Phase 26 implementation gates are complete.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
+
+### Phase 27 progress — 2026-09-29
+
+- [x] The public CLI is now `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17.
+- [x] Packed-artifact tests derive the tarball and manifest version from `packages/cli/package.json`, record the SHA-256, and install the tarball in a temporary directory outside the monorepo. Both `rsetup` and `reposetup` launch through npm's actual platform launcher.
+- [x] `write-artifact-evidence.mjs` writes a source-SHA and SHA-256 identity record once for each packed candidate. `verify-packed-artifact.mjs` verifies that record before installing and launching the same artifact.
+- [x] The `v0.2.0` publish workflow makes Node 24 platform qualification, Python 3.12/3.13 golden qualification, a one-time candidate pack, and cross-platform artifact acceptance blocking dependencies. It publishes the downloaded qualifying tarball only after its source SHA and tag/version agree.
+- [x] `pnpm review:licenses` produces a path-free dependency license record and rejects unreviewed license categories. The current lockfile review contains Apache-2.0, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0, ISC, MIT, and MPL-2.0 only.
+- [x] Local targeted candidate artifact, launcher, workflow, and dependency-license tests pass; workspace unit tests, typecheck, and lint pass. The local host is Node 22.12.0, below the candidate floor, so full create/add e2e qualification correctly stops at preflight and must be run by the required Node 24 CI matrix.
+- [ ] Exact-SHA CI evidence, three consecutive full candidate passes, seven-day soak, failure/benchmark evidence, a current targeted security review, and five observed cross-platform usability sessions remain release blockers. See [the candidate record](../release-docs/RELEASE_CANDIDATE_0.2.0.md).
 
 ### Phase 25 progress — 2026-09-24
 
@@ -74,7 +84,7 @@ Phase 23 implementation and performance gates are complete. The next phase is Ph
 - [x] Disk-space preflight requires 512 MiB free before CLI execution; recovery policy forbids automatic rollback and limits any future restore to verified RepoSetup-owned files.
 - [x] Full workspace tests (355), packed-CLI e2e tests (12), and available golden recipes (2) pass after the executor changes; 3 golden recipes remain environment-gated skips.
 - [x] POSIX cancellation terminates spawned descendant processes; the regression fixture proves the descendant cannot continue and mutate the project after cancellation.
-- [x] Prerequisite preflight verifies the current documented Node 20.9 and Python 3.9 minimums before mutation. The Node 24/Python 3.12–3.13 matrix and Windows-native process handling are Phase 21 qualification requirements.
+- [x] Phase 20 introduced prerequisite preflight before mutation. Phase 27 updates the product contract from its historical Node 20.9/Python 3.9 floors to Node 24/Python 3.12 and uses the Phase 21 matrix for qualification.
 
 ### Phase 21 progress — 2026-09-23
 
@@ -82,7 +92,7 @@ Phase 23 implementation and performance gates are complete. The next phase is Ph
 - [x] Windows process execution resolves trusted `PATH` entries. Native `.exe`/`.com` files execute directly; `.cmd`/`.bat` shims use an explicit `cmd.exe` invocation with `shell: false`, and shim paths or arguments containing command metacharacters are rejected before execution.
 - [x] Packed-artifact e2e coverage uses a parent path containing spaces and Unicode, executes both aliases on POSIX native shims, and executes both Windows `.cmd` aliases through npm's native launcher.
 - [x] Executor tests cover Unicode project-file paths below a parent directory containing spaces and Unicode; `.env.example` additions preserve an existing CRLF line-ending convention.
-- [x] Platform CI uses explicit Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64 runners. It runs packed-artifact e2e on Node 22 and 24 across all targets, with Node 20 retained on Ubuntu for the supported floor.
+- [x] Platform CI uses explicit Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64 runners. Phase 27 narrows its active matrix to the Node 24 product floor on every target; its prior Node 20/22 matrix is historical evidence only.
 - [x] The platform matrix runs for pull requests as well as the protected development and release branches.
 - [x] Platform and golden workflow runs retain uniquely named JSON evidence artifacts with their runtime and architecture details for later qualification review.
 - [x] Golden CI now provisions uv and runs the complete recipe suite on every supported runner with Python 3.12 and 3.13.
@@ -101,9 +111,9 @@ Researched versions are the registry releases observed on this date. Direct spec
 - [x] A locked repeat install is `npm ci`, `pnpm install --frozen-lockfile`, or `uv sync --locked`. It does not re-run generators. A missing lockfile or a lockfile for a different package manager fails before `npm ci` can delete `node_modules`. pip has no lockfile and is refused.
 - [x] Hermetic evidence: a local `file:` package is installed twice with `npm ci` through the executor. The lockfile SHA-256 stays identical, the user `.npmrc` is unchanged, and a drifted `package.json` fails before the lockfile can change. This does not claim a public-registry cold install.
 - [x] Experimental catalog IDs that still installed unversioned packages (`fastify`, `mongoose`, `drizzle`) now pin researched direct versions so they cannot quietly float while remaining experimental.
-- [ ] Published CLI `engines` stay `>=20`. Raising the floor to Node 24 is deferred to a later release phase after the Phase 19 qualification target is the product claim.
+- [x] Phase 27 moves the public CLI and all workspace package engine metadata to Node 24 or later, matching the 0.2.0 candidate support contract.
 
-Phase 22 implementation gates for reproducible recipes are complete. The Node 24 engines floor remains an explicit deferred product-metadata change.
+Phase 22 implementation gates for reproducible recipes are complete. Phase 27 closes the deferred Node 24 product-metadata change; its release qualification gates remain open.
 
 ## Current release
 
