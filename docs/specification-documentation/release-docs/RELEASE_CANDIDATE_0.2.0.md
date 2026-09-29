@@ -25,7 +25,7 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 - [x] Candidate artifact evidence records SHA-256 and exact source SHA, and the installed artifact checks both CLI aliases.
 - [x] The manually dispatched candidate-qualification workflow and the `v0.2.0` publishing workflow wait for Node 24 platform, Python 3.12/3.13 golden, single-artifact, and cross-platform artifact-acceptance jobs. Required jobs do not allow `continue-on-error`.
 - [x] Dependency-license review uses `pnpm licenses list --json`; the current review allows Apache-2.0, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0, ISC, MIT, and MPL-2.0. The result is stored with candidate artifacts.
-- [ ] Run one full candidate qualification from the exact candidate SHA and retain all CI evidence artifacts.
+- [x] [Run 36563444045](https://github.com/4d696e6b/RepoSetup/actions/runs/36563444045) completed one full qualification for `7aa910e24dfd57be59e41c9b831c7f0d5656ecb4` and retained its candidate artifact record (SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`).
 - [ ] Run three consecutive passing full candidate qualifications from the same candidate SHA.
 - [ ] Complete a seven-calendar-day soak from the candidate SHA without open P0/P1, data-loss, or security defects.
 - [ ] Record five observed manual usability sessions across Ubuntu, macOS, and Windows. This also closes the outstanding Phase 24 gate.
