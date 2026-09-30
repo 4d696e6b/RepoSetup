@@ -174,7 +174,11 @@ async function probeServerWithOptionalOccupiedPort(
 }
 
 async function occupyLoopbackPort(port: number): Promise<Server> {
-  const server = createServer();
+  const server = createServer((socket) => {
+    socket.end(
+      "HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\nContent-Length: 0\r\n\r\n",
+    );
+  });
   await new Promise<void>((resolve, reject) => {
     const onError = (error: Error) => {
       server.off("listening", onListening);
@@ -192,6 +196,7 @@ async function occupyLoopbackPort(port: number): Promise<Server> {
 }
 
 function closeServer(server: Server): Promise<void> {
+  server.closeAllConnections();
   return new Promise((resolve, reject) => {
     server.close((error) => (error === undefined ? resolve() : reject(error)));
   });
