@@ -1,6 +1,6 @@
 # Security review — 0.2.0 candidate
 
-Reviewed on 2026-09-30 against code source commit `6472296cfee0430d93e192d6ef11aa5603792f21` and the [security and safety requirements](./SECURITY_AND_SAFETY.md). This is a targeted in-repository code and test review. It is not a penetration test or a claim about third-party package vulnerabilities.
+Reviewed on 2026-09-30 against code source commit `669f1bbcdd6a04a447e6d96935df5733b0ca71a7` and the [security and safety requirements](./SECURITY_AND_SAFETY.md). This is a targeted in-repository code and test review. It is not a penetration test or a claim about third-party package vulnerabilities.
 
 ## Scope
 
