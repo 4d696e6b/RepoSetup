@@ -227,7 +227,7 @@ function runBoundedProcess(
       resolve({
         exitCode,
         stdout: output,
-        stderr: timeout ? `${output}\nPort-collision command timed out.` : output,
+        stderr: timeout ? `${output}\nOccupied-port command timed out.` : output,
       });
     };
     const timer = setTimeout(() => finish(1, true), timeoutMs);
