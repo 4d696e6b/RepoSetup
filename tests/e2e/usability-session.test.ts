@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { createServer, type Server } from "node:net";
 import { mkdir, mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -18,6 +19,7 @@ import {
 const preset = process.env.REPOSETUP_USABILITY_PRESET ?? "react-vite";
 const addId = process.env.REPOSETUP_USABILITY_ADD ?? "zod";
 const enabled = process.env.REPOSETUP_USABILITY === "1";
+const occupyDevPort = process.env.REPOSETUP_USABILITY_OCCUPY_DEV_PORT === "1";
 const tempDirs: string[] = [];
 
 afterEach(async () => {
@@ -97,9 +99,13 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
 
   for (const command of nextCommands) {
     const result = isServerCommand(command)
-      ? await probeServer(projectDir, command)
+      ? await probeServerWithOptionalOccupiedPort(projectDir, command)
       : await cliArgs(projectDir, command);
-    steps.push({ name: command, exitCode: result.exitCode });
+    steps.push({
+      name:
+        isServerCommand(command) && occupyDevPort ? `${command} (default port occupied)` : command,
+      exitCode: result.exitCode,
+    });
     expect(result.exitCode, `${command}\n${result.stdout}\n${result.stderr}`).toBe(0);
   }
 
@@ -149,6 +155,46 @@ function cliArgs(cwd: string, command: string): Promise<CliRunResult> {
 
 function isServerCommand(command: string): boolean {
   return /(\sdev|\sstart|flask run|node (dist\/)?app\.js)$/.test(command);
+}
+
+async function probeServerWithOptionalOccupiedPort(
+  cwd: string,
+  command: string,
+): Promise<CliRunResult> {
+  if (!occupyDevPort || !command.startsWith("pnpm dev")) {
+    return probeServer(cwd, command);
+  }
+
+  const server = await occupyLoopbackPort(5173);
+  try {
+    return await probeServer(cwd, command);
+  } finally {
+    await closeServer(server);
+  }
+}
+
+async function occupyLoopbackPort(port: number): Promise<Server> {
+  const server = createServer();
+  await new Promise<void>((resolve, reject) => {
+    const onError = (error: Error) => {
+      server.off("listening", onListening);
+      reject(error);
+    };
+    const onListening = () => {
+      server.off("error", onError);
+      resolve();
+    };
+    server.once("error", onError);
+    server.once("listening", onListening);
+    server.listen({ host: "::", ipv6Only: false, port });
+  });
+  return server;
+}
+
+function closeServer(server: Server): Promise<void> {
+  return new Promise((resolve, reject) => {
+    server.close((error) => (error === undefined ? resolve() : reject(error)));
+  });
 }
 
 function probeServer(cwd: string, command: string): Promise<CliRunResult> {

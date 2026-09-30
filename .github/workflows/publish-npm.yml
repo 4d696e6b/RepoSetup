@@ -63,9 +63,45 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test:golden
 
+  faults:
+    name: Failure-path qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Exercise timeout, interruption, permission, and user-file safeguards
+        run: pnpm test
+      - name: Exercise invalid input and mutation failure paths
+        run: pnpm test:e2e
+      - name: Exercise a generated development server with its default port occupied
+        run: pnpm test:usability
+        env:
+          CI: true
+          REPOSETUP_USABILITY: "1"
+          REPOSETUP_USABILITY_PRESET: react-vite
+          REPOSETUP_USABILITY_ADD: zod
+          REPOSETUP_USABILITY_OCCUPY_DEV_PORT: "1"
+          REPOSETUP_USABILITY_EVIDENCE: usability-fault-evidence.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: usability-fault-${{ matrix.os }}
+          path: usability-fault-evidence.json
+          if-no-files-found: error
+
   pack-candidate:
     name: Pack identified candidate
-    needs: [platform, golden]
+    needs: [platform, golden, faults]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -109,7 +145,7 @@ jobs:
       - run: node scripts/verify-packed-artifact.mjs --directory candidate
 
   publish:
-    needs: [platform, golden, pack-candidate, artifact-acceptance]
+    needs: [platform, golden, faults, pack-candidate, artifact-acceptance]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:

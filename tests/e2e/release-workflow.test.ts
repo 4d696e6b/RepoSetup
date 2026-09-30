@@ -12,9 +12,13 @@ describe("release publishing workflow", () => {
       "utf8",
     );
     expect(workflow).toContain("node-version: 24");
-    expect(workflow).toContain("needs: [platform, golden]");
+    expect(workflow).toContain("needs: [platform, golden, faults]");
+    expect(workflow).toContain("faults:");
     expect(workflow).toContain("needs: pack-candidate");
-    expect(workflow).toContain("needs: [platform, golden, pack-candidate, artifact-acceptance]");
+    expect(workflow).toContain(
+      "needs: [platform, golden, faults, pack-candidate, artifact-acceptance]",
+    );
+    expect(workflow).toContain('REPOSETUP_USABILITY_OCCUPY_DEV_PORT: "1"');
     expect(workflow).toContain("pnpm test:e2e");
     expect(workflow).toContain("pnpm test:golden");
     expect(workflow).toContain("write-artifact-evidence.mjs");
@@ -30,8 +34,11 @@ describe("release publishing workflow", () => {
       "utf8",
     );
     expect(workflow).toContain("workflow_dispatch:");
+    expect(workflow).toContain("faults:");
     expect(workflow).toContain("pack-candidate:");
+    expect(workflow).toContain("needs: [platform, golden, faults]");
     expect(workflow).toContain("artifact-acceptance:");
+    expect(workflow).toContain('REPOSETUP_USABILITY_OCCUPY_DEV_PORT: "1"');
     expect(workflow).toContain("verify-packed-artifact.mjs --directory candidate");
     expect(workflow).not.toContain("npm publish");
   });
