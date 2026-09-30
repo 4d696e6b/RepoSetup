@@ -1,6 +1,6 @@
 # Security review — 0.2.0 candidate
 
-Reviewed on 2026-09-29 against source commit `bd9a9b137770e37470a8ae7c208c5964d69c293b` and the [security and safety requirements](./SECURITY_AND_SAFETY.md). This is a targeted in-repository code and test review. It is not a penetration test or a claim about third-party package vulnerabilities.
+Reviewed on 2026-09-30 against code source commit `9f96b155e4f4361841fc5e91d682066c22f096d8` and the [security and safety requirements](./SECURITY_AND_SAFETY.md). This is a targeted in-repository code and test review. It is not a penetration test or a claim about third-party package vulnerabilities.
 
 ## Scope
 
@@ -29,8 +29,9 @@ Reviewed on 2026-09-29 against source commit `bd9a9b137770e37470a8ae7c208c5964d6
 - Executor and adapter tests cover shell-string rejection, path traversal, symlink escape, final-symlink writes, secret-redacted failures, and split-output redaction.
 - Config/recipe tests cover command-shaped input rejection, export without secrets, and recipe hash validation.
 - Packed-artifact tests install one SHA-256-identified tarball outside the workspace and execute both aliases.
-- Candidate workflow tests assert that publication has platform, recipe, pack, and artifact-acceptance dependencies without `continue-on-error`.
+- Candidate workflow tests assert that publication has platform, recipe, failure-path, pack, and artifact-acceptance dependencies without `continue-on-error`.
+- The failure-path workflow uses the ordinary test and packed usability surfaces on each supported OS. Its port-collision check owns and closes a temporary loopback listener; it does not execute an arbitrary server command or alter a user project.
 
 ## Findings
 
-No P0/P1 security or data-loss defect was identified in the reviewed source. This result does not close the Phase 27 release gate: exact-SHA CI evidence, soak, repeated qualification, manual sessions, and the candidate failure-path exercises remain required. Any source change to executor, adapters, config parsing, recipe validation, artifact packaging, or release workflow requires this review to be repeated.
+No P0/P1 security or data-loss defect was identified in the reviewed source. This result does not close the Phase 27 release gate: exact-SHA CI evidence, soak, repeated qualification, manual sessions, and the executed candidate failure-path exercises remain required. Any source change to executor, adapters, config parsing, recipe validation, artifact packaging, or release workflow requires this review to be repeated.

@@ -23,7 +23,7 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 - [x] Public manifest, CLI prerequisite preflight, quick start, and packed-artifact tests use the 0.2.0-alpha.1 / Node 24 contract.
 - [x] Package tarball naming and version assertions derive from the public manifest rather than a hard-coded release number.
 - [x] Candidate artifact evidence records SHA-256 and exact source SHA, and the installed artifact checks both CLI aliases.
-- [x] The manually dispatched candidate-qualification workflow and the `v0.2.0` publishing workflow wait for Node 24 platform, Python 3.12/3.13 golden, single-artifact, and cross-platform artifact-acceptance jobs. Required jobs do not allow `continue-on-error`.
+- [x] The manually dispatched candidate-qualification workflow and the `v0.2.0` publishing workflow wait for Node 24 platform, Python 3.12/3.13 golden, cross-platform failure-path, single-artifact, and cross-platform artifact-acceptance jobs. Required jobs do not allow `continue-on-error`.
 - [x] Dependency-license review uses `pnpm licenses list --json`; the current review allows Apache-2.0, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0, ISC, MIT, and MPL-2.0. The result is stored with candidate artifacts.
 - [x] [Run 36563444045](https://github.com/4d696e6b/RepoSetup/actions/runs/36563444045) completed one full qualification for `7aa910e24dfd57be59e41c9b831c7f0d5656ecb4` and retained its candidate artifact record (SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`).
 - [ ] Run three consecutive passing full candidate qualifications from the same candidate SHA.
@@ -31,7 +31,7 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 - [x] [Usability run 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) recorded five successful observed sessions across Ubuntu, macOS, and Windows, closing Phase 24.
 - [x] Complete a [targeted current-source security review](../security-docs/SECURITY_REVIEW_0.2.0.md) covering process/path boundaries, lifecycle scripts, redaction, config injection, and existing-file preservation.
 - [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) recorded five cold and five warm trials for React and Express fixed-package profiles on Ubuntu, macOS, and Windows, with no failed measurements and one consolidated install subprocess versus five baseline passes.
-- [ ] Record the remaining candidate fault evidence: offline/cache miss, registry timeout, permission error, interruption, occupied port, changed user file, and cleanup.
+- [ ] Complete the exact-SHA cross-platform failure-path job. It exercises timeout/interruption, permission and existing-user-file safeguards, invalid input and cleanup, plus a React/Vite development command while its default port is occupied. Its per-OS usability evidence is retained as an artifact. The separate exact-SHA candidate benchmark uses fresh benchmark-owned caches to exercise cache misses.
 - [ ] Recheck Node lifecycle status and current npm publication requirements before any stable tag or publication request.
 
 The unchecked items are release blockers. A green unit suite or a passing historical workflow does not replace them.
