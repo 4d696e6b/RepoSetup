@@ -28,9 +28,10 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 - [x] [Run 36563444045](https://github.com/4d696e6b/RepoSetup/actions/runs/36563444045) completed one full qualification for `7aa910e24dfd57be59e41c9b831c7f0d5656ecb4` and retained its candidate artifact record (SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`).
 - [ ] Run three consecutive passing full candidate qualifications from the same candidate SHA.
 - [ ] Complete a seven-calendar-day soak from the candidate SHA without open P0/P1, data-loss, or security defects.
-- [ ] Record five observed manual usability sessions across Ubuntu, macOS, and Windows. This also closes the outstanding Phase 24 gate.
+- [x] [Usability run 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) recorded five successful observed sessions across Ubuntu, macOS, and Windows, closing Phase 24.
 - [x] Complete a [targeted current-source security review](../security-docs/SECURITY_REVIEW_0.2.0.md) covering process/path boundaries, lifecycle scripts, redaction, config injection, and existing-file preservation.
-- [ ] Record cold/warm benchmark and failure-path evidence for the candidate SHA: offline/cache miss, registry timeout, permission error, interruption, occupied port, changed user file, and cleanup.
+- [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) recorded five cold and five warm trials for React and Express fixed-package profiles on Ubuntu, macOS, and Windows, with no failed measurements and one consolidated install subprocess versus five baseline passes.
+- [ ] Record the remaining candidate fault evidence: offline/cache miss, registry timeout, permission error, interruption, occupied port, changed user file, and cleanup.
 - [ ] Recheck Node lifecycle status and current npm publication requirements before any stable tag or publication request.
 
 The unchecked items are release blockers. A green unit suite or a passing historical workflow does not replace them.
