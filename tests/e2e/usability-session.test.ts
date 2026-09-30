@@ -196,7 +196,6 @@ async function occupyLoopbackPort(port: number): Promise<Server> {
 }
 
 function closeServer(server: Server): Promise<void> {
-  server.closeAllConnections();
   return new Promise((resolve, reject) => {
     server.close((error) => (error === undefined ? resolve() : reject(error)));
   });
