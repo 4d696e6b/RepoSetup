@@ -97,15 +97,21 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
     .map((line) => line.slice("Next: ".length).trim());
   expect(nextCommands.length).toBeGreaterThan(0);
 
+  if (occupyDevPort && presetId === "react-vite") {
+    const occupied = await exerciseOccupiedDevPort(projectDir);
+    steps.push({
+      name: "pnpm dev -- --host 127.0.0.1 --port 5173 --strictPort",
+      exitCode: occupied.exitCode,
+    });
+    expect(occupied.exitCode).not.toBe(0);
+    expect(`${occupied.stdout}\n${occupied.stderr}`).toMatch(/port|address/i);
+  }
+
   for (const command of nextCommands) {
     const result = isServerCommand(command)
-      ? await probeServerWithOptionalOccupiedPort(projectDir, command)
+      ? await probeServer(projectDir, command)
       : await cliArgs(projectDir, command);
-    steps.push({
-      name:
-        isServerCommand(command) && occupyDevPort ? `${command} (default port occupied)` : command,
-      exitCode: result.exitCode,
-    });
+    steps.push({ name: command, exitCode: result.exitCode });
     expect(result.exitCode, `${command}\n${result.stdout}\n${result.stderr}`).toBe(0);
   }
 
@@ -157,28 +163,21 @@ function isServerCommand(command: string): boolean {
   return /(\sdev|\sstart|flask run|node (dist\/)?app\.js)$/.test(command);
 }
 
-async function probeServerWithOptionalOccupiedPort(
-  cwd: string,
-  command: string,
-): Promise<CliRunResult> {
-  if (!occupyDevPort || !command.startsWith("pnpm dev")) {
-    return probeServer(cwd, command);
-  }
-
+async function exerciseOccupiedDevPort(cwd: string): Promise<CliRunResult> {
   const server = await occupyLoopbackPort(5173);
   try {
-    return await probeServer(cwd, command);
+    return await runProcess(
+      "pnpm",
+      ["dev", "--", "--host", "127.0.0.1", "--port", "5173", "--strictPort"],
+      { cwd, env: sessionEnv() },
+    );
   } finally {
     await closeServer(server);
   }
 }
 
 async function occupyLoopbackPort(port: number): Promise<Server> {
-  const server = createServer((socket) => {
-    socket.end(
-      "HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\nContent-Length: 0\r\n\r\n",
-    );
-  });
+  const server = createServer();
   await new Promise<void>((resolve, reject) => {
     const onError = (error: Error) => {
       server.off("listening", onListening);
@@ -190,7 +189,7 @@ async function occupyLoopbackPort(port: number): Promise<Server> {
     };
     server.once("error", onError);
     server.once("listening", onListening);
-    server.listen({ host: "::", ipv6Only: false, port });
+    server.listen({ host: "127.0.0.1", port });
   });
   return server;
 }
