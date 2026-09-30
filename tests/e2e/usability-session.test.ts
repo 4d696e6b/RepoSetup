@@ -166,10 +166,11 @@ function isServerCommand(command: string): boolean {
 async function exerciseOccupiedDevPort(cwd: string): Promise<CliRunResult> {
   const server = await occupyLoopbackPort(5173);
   try {
-    return await runProcess(
+    return await runBoundedProcess(
       "pnpm",
       ["dev", "--", "--host", "127.0.0.1", "--port", "5173", "--strictPort"],
-      { cwd, env: sessionEnv() },
+      cwd,
+      20_000,
     );
   } finally {
     await closeServer(server);
@@ -197,6 +198,47 @@ async function occupyLoopbackPort(port: number): Promise<Server> {
 function closeServer(server: Server): Promise<void> {
   return new Promise((resolve, reject) => {
     server.close((error) => (error === undefined ? resolve() : reject(error)));
+  });
+}
+
+function runBoundedProcess(
+  command: string,
+  args: readonly string[],
+  cwd: string,
+  timeoutMs: number,
+): Promise<CliRunResult> {
+  const launch = windowsCommand(command, args);
+  return new Promise((resolve) => {
+    const child = spawn(launch.command, launch.args, {
+      cwd,
+      env: sessionEnv(),
+      shell: false,
+      detached: process.platform !== "win32",
+      stdio: ["ignore", "pipe", "pipe"],
+      windowsHide: true,
+    });
+    let output = "";
+    let settled = false;
+    const finish = (exitCode: number, timeout = false) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      if (timeout) stopChild(child.pid);
+      resolve({
+        exitCode,
+        stdout: output,
+        stderr: timeout ? `${output}\nPort-collision command timed out.` : output,
+      });
+    };
+    const timer = setTimeout(() => finish(1, true), timeoutMs);
+    child.stdout?.on("data", (chunk: Buffer) => {
+      output += chunk.toString("utf8");
+    });
+    child.stderr?.on("data", (chunk: Buffer) => {
+      output += chunk.toString("utf8");
+    });
+    child.on("error", () => finish(1));
+    child.on("close", (code) => finish(code ?? 1));
   });
 }
 
