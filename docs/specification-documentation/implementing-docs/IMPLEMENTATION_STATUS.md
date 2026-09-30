@@ -58,7 +58,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Express post-create commands match the generated `dev`, `build`, `start`, and Vitest scripts.
 - [x] The React/Vite pnpm preset allows the esbuild dependency build without treating that approval file as an ambiguous workspace root, so `add` still runs in the generated app.
 - [x] `pnpm test:usability` runs the documented non-TTY flow from a packed install: preview, create, the printed Next commands, add, doctor, and export. One local macOS session passed for `react-vite` plus `zod` on 2026-09-25.
-- [ ] Five observed sessions across Ubuntu, macOS, and Windows remain required. `.github/workflows/usability.yml` runs that flow twice on Ubuntu, twice on macOS, and once on Windows. Phase 24 stays open until those runs are recorded.
+- [x] [Usability sessions run 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) recorded two Ubuntu 24.04/x64 sessions, two macOS 15/arm64 sessions, and one Windows 2025/x64 session. Each Node 24 session completed preview, create, dev server, build, test, add, doctor, and export without manual repair. Phase 24 is complete.
 
 ### Phase 23 progress — 2026-09-23
 
@@ -146,7 +146,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 21 — Cross-platform execution
 - [x] Phase 22 — Reproducible recipes and compatibility
 - [x] Phase 23 — Measured installation performance
-- [ ] Phase 24 — Daily CLI usability and recovery guidance
+- [x] Phase 24 — Daily CLI usability and recovery guidance
 - [x] Phase 25 — Existing integration qualification
 - [x] Phase 26 — Important new integrations
 - [ ] Phase 27 — Release-candidate qualification
