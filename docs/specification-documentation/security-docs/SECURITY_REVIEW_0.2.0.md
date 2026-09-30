@@ -1,6 +1,6 @@
 # Security review — 0.2.0 candidate
 
-Reviewed on 2026-09-30 against code source commit `f8328671c0c65eb08d01eaf997377e3ada6d26c8` and the [security and safety requirements](./SECURITY_AND_SAFETY.md). This is a targeted in-repository code and test review. It is not a penetration test or a claim about third-party package vulnerabilities.
+Reviewed on 2026-09-30 against code source commit `8c1f29cd825a948a6cc50b97d6389589675e59a9` and the [security and safety requirements](./SECURITY_AND_SAFETY.md). This is a targeted in-repository code and test review. It is not a penetration test or a claim about third-party package vulnerabilities.
 
 ## Scope
 
@@ -30,7 +30,7 @@ Reviewed on 2026-09-30 against code source commit `f8328671c0c65eb08d01eaf997377
 - Config/recipe tests cover command-shaped input rejection, export without secrets, and recipe hash validation.
 - Packed-artifact tests install one SHA-256-identified tarball outside the workspace and execute both aliases.
 - Candidate workflow tests assert that publication has platform, recipe, failure-path, pack, and artifact-acceptance dependencies without `continue-on-error`.
-- The failure-path workflow uses the ordinary test and packed usability surfaces on each supported OS. Its port-collision check owns and closes a temporary loopback listener, verifies that the generated Vite command rejects a forced occupied port, then runs the normal printed command. It does not execute an arbitrary server command or alter a user project.
+- The failure-path workflow uses the ordinary test and packed usability surfaces on each supported OS. Its port-collision check owns and closes a temporary loopback listener, verifies that the generated Vite command rejects a forced occupied port with a bounded process timeout, then runs the normal printed command. It does not execute an arbitrary server command or alter a user project.
 
 ## Findings
 
