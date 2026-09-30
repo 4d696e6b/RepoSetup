@@ -121,6 +121,7 @@ try {
 }
 const report = {
   generatedAt: new Date().toISOString(),
+  sourceSha: process.env.GITHUB_SHA ?? "local",
   mode: "controlled-fixed-package-install-passes",
   environment: {
     platform: platform(),
