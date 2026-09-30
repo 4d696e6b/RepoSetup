@@ -36,7 +36,11 @@ describe("non-TTY usability session", () => {
       if (evidencePath !== undefined) {
         await writeFile(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
       }
-      expect(evidence.steps.every((step) => step.exitCode === 0)).toBe(true);
+      expect(
+        evidence.steps
+          .filter((step) => step.expectedFailure !== true)
+          .every((step) => step.exitCode === 0),
+      ).toBe(true);
     },
   );
 });
@@ -66,7 +70,7 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
   const projectDir = path.join(parent, "app");
   await mkdir(projectDir);
 
-  const steps: Array<{ name: string; exitCode: number }> = [];
+  const steps: Array<{ name: string; exitCode: number; expectedFailure?: boolean }> = [];
   const preview = await cli(
     bin,
     ["--no-color", "--json", "create", "--preset", presetId, "--dry-run"],
@@ -102,6 +106,7 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
     steps.push({
       name: "pnpm dev -- --host 127.0.0.1 --port 5173 --strictPort",
       exitCode: occupied.exitCode,
+      expectedFailure: true,
     });
     expect(occupied.exitCode).not.toBe(0);
     expect(`${occupied.stdout}\n${occupied.stderr}`).toMatch(/port|address/i);
