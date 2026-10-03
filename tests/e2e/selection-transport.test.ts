@@ -176,7 +176,10 @@ it("uses the native terminal prompt to decline and accept create", async () => {
         prompted: boolean;
         transcript: string;
       };
-      expect(transcript.reviewed).toBe(true);
+      expect(
+        transcript.reviewed,
+        transcript.transcript.replaceAll(token, "[token]").slice(-1000),
+      ).toBe(true);
       expect(transcript.prompted).toBe(true);
       expect(transcript.transcript).not.toContain(token);
       if (answer === "n") {
@@ -247,7 +250,10 @@ it("uses the native terminal prompt to decline and accept add", async () => {
         prompted: boolean;
         transcript: string;
       };
-      expect(transcript.reviewed).toBe(true);
+      expect(
+        transcript.reviewed,
+        transcript.transcript.replaceAll(token, "[token]").slice(-1000),
+      ).toBe(true);
       expect(transcript.prompted).toBe(true);
       expect(transcript.transcript).not.toContain(token);
       if (answer === "n") {
@@ -296,7 +302,8 @@ async function runShell(
     route === "token" ? "--selection" : mode === "create" ? "--selection-file" : "--config";
   const suffix = dryRun ? " --dry-run" : "";
   if (process.platform === "win32") {
-    const command = alias + " --json " + mode + " " + flag + ' "%REPOSETUP_TEST_INPUT%"' + suffix;
+    const input = route === "token" ? "%REPOSETUP_TEST_INPUT%" : '"%REPOSETUP_TEST_INPUT%"';
+    const command = alias + " --json " + mode + " " + flag + " " + input + suffix;
     return runProcess(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", command], {
       cwd,
       env: launcherEnvironment(input),

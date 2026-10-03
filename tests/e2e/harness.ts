@@ -69,6 +69,12 @@ function windowsLaunch(
     return { command, args };
   }
 
+  // uv is a native executable. Passing a multiline Python -c argument through
+  // cmd.exe truncates it at line breaks while still returning success.
+  if (command === "uv") {
+    return { command: "uv.exe", args };
+  }
+
   if ([".exe", ".com"].includes(path.win32.extname(command).toLowerCase())) {
     return { command, args };
   }
@@ -116,7 +122,7 @@ export async function cleanupWorkspace(dir: string, keep: boolean): Promise<void
   if (keep) {
     return;
   }
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
 }
 
 export function keepOnFailure(): boolean {

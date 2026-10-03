@@ -17,7 +17,7 @@ def main() -> None:
     if not token:
         raise ValueError("Missing bounded selection token")
 
-    command = alias + ' ' + mode + ' --selection "%REPOSETUP_TEST_INPUT%"'
+    command = alias + " " + mode + " --selection %REPOSETUP_TEST_INPUT%"
     child = PtyProcess.spawn(
         [os.environ.get("ComSpec", "cmd.exe"), "/d", "/c", command],
         cwd=os.getcwd(),
