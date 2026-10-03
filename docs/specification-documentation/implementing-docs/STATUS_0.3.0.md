@@ -1,15 +1,16 @@
 # RepoSetup 0.3.0 implementation status
 
-Last updated: 2026-10-03.
+Last updated: 2026-10-04.
 
 ## Current position
 
-**Phase 1 and all of Phase 2 are complete; Phases 3–5 are implemented locally.** At source `e41cf82102c4c4f909544aad8a70e1585e9a57c4`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717406), [three-runner contract/transport run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717420), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717415) passed. All 24 create, 21 add, nine packed legacy and six native-transport cases passed in their required cells. Phases 3–5 still need later packed/platform qualification; website, usability and release phases remain pending. The complete 0.3.0 release is not finished or authorized for publication.
+**Phase 1 and all of Phase 2 are complete; Phases 3–7 are implemented locally across the CLI and website branches.** At source `e41cf82102c4c4f909544aad8a70e1585e9a57c4`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717406), [three-runner contract/transport run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717420), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717415) passed. All 24 create, 21 add, nine packed legacy and six native-transport cases passed in their required cells. Phases 3–5 still need later packed/platform qualification; Phase 8 is partial, and release phases remain pending. The complete 0.3.0 release is not finished or authorized for publication.
 
 This document turns the [0.3.0 roadmap](./ROADMAP_0.3.0_DRAFT.md) into the ten reviewable phases discussed with the owner. Numbers here are local to 0.3.0; historical 0.2.0 Phase 19–28 identifiers stay unchanged. The roadmap and website plan retain their original planning snapshots, so some proposed flags there now have implementation. Use this document and [selection v1](../product-docs/SELECTION_V1.md) for current behavior.
 
 - Development branch: `codex/0.3.0-cli`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-cli`.
+- Companion website: separate `codex/0.3.0-website` worktree at `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`; current website status commit `15c7217279caf4befe9d3e2b9e6668e4fab2af2d`. The branches have not been merged.
 - First CLI slice commit: `626fce93214af8554c3a0700ead52c5e3db8ae7a`; later section commits and exact artifact identities are recorded in Git history and qualification reports.
 - Exact starting candidate SHA: `145e167e6b60897da96942545ba6dbd40359ad4a`, on `codex/phase-27-release-candidate`.
 - Development CLI version: `0.3.0-alpha.1`, unpublished.
@@ -93,23 +94,25 @@ Local exit condition met: the full workspace suite passed 533 tests (266 core, 1
 
 ## Phase 6 — Companion information website
 
-**Status: not started.** Can proceed alongside CLI Phases 2–5 against the shared Phase 1 contracts.
+**Status: implemented locally on `codex/0.3.0-website`.** The information site is independently reviewable; publication and broader release qualification remain open.
 
-- [ ] **6.1 Website foundation:** research/select framework and static-output behavior; establish browser boundaries and supported browser coverage.
-- [ ] **6.2 Public catalog consumption:** build-time validated snapshot, catalog/CLI versions, official links and evidence-based support labels.
-- [ ] **6.3 Education pages:** library explanations, goals, minimal presets, prerequisites and troubleshooting in English.
-- [ ] **6.4 Presentation quality:** responsive layout, keyboard navigation, accessible labels and content consistency with the CLI.
+- [x] **6.1 Website foundation:** separate static Vite/TypeScript app in `apps/website`, browser bundle boundary guard and explicit Chrome/Firefox/WebKit test profiles. Node/workspace runtime modules are refused by the browser build.
+- [x] **6.2 Public catalog consumption:** registry-generated and planner-validated public snapshot from nine curated integrations and 24 finite variants, synchronized with committed CLI `8950efb` and catalog `0.3.0-cli.3`; official links, evidence and candidate labels are shown.
+- [x] **6.3 Education pages:** goal discovery, nine integration explanations, three minimal starter explanations, prerequisites and troubleshooting guidance in English.
+- [x] **6.4 Presentation quality:** responsive navigation and keyboard/label behavior pass 24 Chrome desktop/mobile and Firefox browser cases with automated accessibility scans across 22 routes. WebKit, manual screen-reader and physical-device checks remain Phase 8/9 gates.
 
 Exit condition: the information center passes content/accessibility/browser checks without importing executor/process/filesystem capabilities into the browser. See [website plan](./WEBSITE_PLAN_0.3.0.md).
 
+Local exit condition met: website commit `be8b2bc7a7b5778ffb36dce445453c346a5badac` has a clean-source `qualify:local` report with all six automated steps passing: build, 498 unit tests, typecheck, lint, six packed handoff tests and 24 Chrome/Firefox browser tests. The report explicitly has `wholeReleaseQualified: false`; WebKit on this macOS 14 host failed before site navigation and is not counted as passing. The website remains separate from the CLI branch and has not been deployed.
+
 ## Phase 7 — Website selection builder
 
-**Status: not started.** Depends on Phase 6; advertised handoff support must match Phase 2 qualification.
+**Status: implemented locally on `codex/0.3.0-website`.** Its export contract targets the exact committed local CLI and remains unpublished.
 
-- [ ] **7.1 Bounded customization:** create/add modes, qualified contexts and optional capabilities derived from shared validated data.
-- [ ] **7.2 Review/export:** readable choices, safe bounded copy-command output, equivalent file download and stale catalog/version guidance.
-- [ ] **7.3 Joint contract tests:** website exports through the packed CLI; matching plans/refusals, supported options, size limits and hostile inputs.
-- [ ] **7.4 Browser usability:** command copying, download fallback, conflict explanation and keyboard/screen-reader flows.
+- [x] **7.1 Bounded customization:** create/add modes expose the three qualified contexts and three optional capabilities per context from the validated public catalog.
+- [x] **7.2 Review/export:** readable choices, bounded copy-command output, equivalent validated JSON download and stale catalog/version guidance.
+- [x] **7.3 Joint contract tests:** six exact-artifact packed tests cover all 45 website create/add variants, token/file plan equivalence, context and hostile-input refusals, size bounds and confirmation safety.
+- [x] **7.4 Browser usability:** local Chrome/Firefox tests cover copying, download fallback, invalid/disabled choices and keyboard flows; manual screen-reader confirmation remains Phase 8.
 
 Exit condition: every advertised website export succeeds or fails consistently with authoritative local CLI validation. Unqualified combinations remain unavailable; loading the site never installs into a local project.
 
