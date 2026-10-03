@@ -129,4 +129,6 @@ The report records source/artifact identity, dirty state, frozen matrix identity
 
 ## Remaining Phase 2 gates
 
+The two selection workflows and the historical golden workflow now run on pushes to `codex/0.3.0-cli` in addition to their existing triggers. The Windows transport cell installs pinned test-only pywinpty and drives the installed command through a real pseudo-console for both accept and decline; this does not establish qualification until its report passes. The workflows have no publish or deployment job.
+
 Finish sections 2.2, 2.3 and 2.5 by retaining clean-source evidence on the entire platform/Python matrix, including the separate legacy golden workflows. Finish section 2.4 with clean-source native shell evidence on all three runners and a Windows terminal confirmation test. Connect the complete evidence to the later candidate gates only after these pass.

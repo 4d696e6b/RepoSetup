@@ -4,6 +4,10 @@ Cursor/maintainers should update this file as phases are completed.
 
 For the current phase-by-phase 0.3.0 tracker, see [0.3.0 implementation status](./STATUS_0.3.0.md). It separates locally implemented sections from pending qualification, website, maintenance and release work.
 
+## 0.3.0 section 2 qualification dispatch preparation — 2026-10-03
+
+The isolated CLI branch now has branch-scoped push triggers for the packed contract/transport and six-cell real create/add workflows, plus the historical golden workflow. This allows qualification to run without changing the protected 0.2.0 checkout or default branch. The transport suite now requires native terminal confirmation on Windows as well as POSIX, using a Windows pseudo-console test driver; the Windows runner installs the pinned test-only pywinpty wheel. Local macOS transport still passes all six cases. Cross-platform results must be inspected before checking sections 2.2–2.5. No release or publication job was added.
+
 ## 0.3.0 section 2.5 implementation — 2026-10-03
 
 The packed legacy suite checks all five established preset IDs as JSON dry-run plans, executes schemaVersion 1 config creation and positional Vitest/pytest add in the three beginner contexts, and executes the existing React/Vite preset with build, test and doctor. It records source/artifact identity, lock hashes, platform/runtime and case results. A real run exposed that an already-satisfied positional `add --json` printed a text message; the CLI now emits the existing version 1 empty plan envelope, with a unit regression. The manual six-cell workflow reuses one identified tarball for this suite alongside create/add. Local macOS/arm64, Node 24 and Python 3.13 pass; cross-platform evidence and the other legacy preset execution paths remain pending. See [phase tracker](./STATUS_0.3.0.md).

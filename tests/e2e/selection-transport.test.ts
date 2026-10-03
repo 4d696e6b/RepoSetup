@@ -44,9 +44,10 @@ afterAll(async () => {
         kind: "selection-native-transport",
         releaseQualification: false,
         allCasesPassed:
-          cases.length === aliases.length * modes.length + (process.platform === "win32" ? 0 : 2) &&
-          cases.every((item) => item.passed),
-        nativeTtyCovered: process.platform !== "win32",
+          cases.length === aliases.length * modes.length + 2 && cases.every((item) => item.passed),
+        nativeTtyCovered:
+          cases.some((item) => item.id === "native-tty-create" && item.passed) &&
+          cases.some((item) => item.id === "native-tty-add" && item.passed),
         platform: process.platform,
         architecture: process.arch,
         operatingSystem: { release: release(), version: version() },
@@ -143,132 +144,134 @@ it.each(aliases.flatMap((alias) => modes.map((mode) => ({ alias, mode }))))(
   },
 );
 
-it.skipIf(process.platform === "win32")(
-  "uses the real POSIX terminal prompt to decline and accept create",
-  async () => {
-    const item: (typeof cases)[number] = { id: "posix-tty-create", passed: false };
-    cases.push(item);
-    if (artifact === undefined) throw new Error("Packed artifact setup did not complete");
-    const python = process.env.UV_PYTHON ?? "python3";
-    for (const answer of ["n", "y"] as const) {
-      const cwd = path.join(root, "terminal-" + answer + " space ไทย");
-      await mkdir(cwd);
-      try {
-        const selection = selectionFor(matrix.contexts[1]!, [], "create");
-        const token = Buffer.from(JSON.stringify(selection), "utf8").toString("base64url");
-        const before = await snapshotTree(cwd);
-        const result = await runProcess(
-          python,
-          [fixturePath("pty-selection.py"), "reposetup", "create", answer],
-          {
-            cwd,
-            env: launcherEnvironment(token),
-          },
-        );
-        expect(result.exitCode, result.stderr).toBe(0);
-        const transcript = JSON.parse(result.stdout) as {
-          childExitCode: number;
-          reviewed: boolean;
-          prompted: boolean;
-          transcript: string;
-        };
-        expect(transcript.reviewed).toBe(true);
-        expect(transcript.prompted).toBe(true);
-        expect(transcript.transcript).not.toContain(token);
-        if (answer === "n") {
-          expect(transcript.childExitCode).toBe(2);
-          expect(await snapshotTree(cwd)).toEqual(before);
-        } else {
-          expect(transcript.childExitCode).toBe(0);
-          const project = path.join(cwd, "projects/qualified-app");
-          expect((await readFile(path.join(project, "pnpm-lock.yaml"))).length).toBeGreaterThan(
-            100,
-          );
-          const built = await runProcess("pnpm", ["run", "build"], { cwd: project });
-          expect(built.exitCode, built.stderr).toBe(0);
-        }
-      } catch (error) {
-        item.failure = error instanceof Error ? error.message : String(error);
-        throw error;
-      } finally {
-        await cleanupWorkspace(cwd, keepOnFailure());
-      }
-    }
-    item.passed = true;
-  },
-);
-
-it.skipIf(process.platform === "win32")(
-  "uses the real POSIX terminal prompt to decline and accept add",
-  async () => {
-    const item: (typeof cases)[number] = { id: "posix-tty-add", passed: false };
-    cases.push(item);
-    if (artifact === undefined) throw new Error("Packed artifact setup did not complete");
-    const python = process.env.UV_PYTHON ?? "python3";
-    const parent = path.join(root, "terminal-add space ไทย");
-    await mkdir(parent);
+it("uses the native terminal prompt to decline and accept create", async () => {
+  const item: (typeof cases)[number] = { id: "native-tty-create", passed: false };
+  cases.push(item);
+  if (artifact === undefined) throw new Error("Packed artifact setup did not complete");
+  const python = process.env.UV_PYTHON ?? "python3";
+  for (const answer of ["n", "y"] as const) {
+    const cwd = path.join(root, "terminal-" + answer + " space ไทย");
+    await mkdir(cwd);
     try {
-      const context = matrix.contexts[1]!;
-      const createFile = path.join(parent, "create.json");
-      await writeJson(createFile, selectionFor(context, [], "create"));
-      const base = await runProcess(
-        process.execPath,
-        [
-          fixturePath("confirmed-selection-create.mjs"),
-          path.join(artifact.installDir, "node_modules/rsetup/dist/index.js"),
-          createFile,
-          "file",
-        ],
-        { cwd: parent, env: launcherEnvironment("") },
-      );
-      expect(base.exitCode, base.stderr).toBe(0);
-      const cwd = path.join(parent, "projects/qualified-app");
-      const selection = selectionFor(context, ["zod"], "add");
+      const selection = selectionFor(matrix.contexts[1]!, [], "create");
       const token = Buffer.from(JSON.stringify(selection), "utf8").toString("base64url");
-      const manifestBefore = await readFile(path.join(cwd, "package.json"));
-      const lockBefore = await readFile(path.join(cwd, "pnpm-lock.yaml"));
-      for (const answer of ["n", "y"] as const) {
-        const result = await runProcess(
-          python,
-          [fixturePath("pty-selection.py"), "rsetup", "add", answer],
-          {
-            cwd,
-            env: launcherEnvironment(token),
-          },
-        );
-        expect(result.exitCode, result.stderr).toBe(0);
-        const transcript = JSON.parse(result.stdout) as {
-          childExitCode: number;
-          reviewed: boolean;
-          prompted: boolean;
-          transcript: string;
-        };
-        expect(transcript.reviewed).toBe(true);
-        expect(transcript.prompted).toBe(true);
-        expect(transcript.transcript).not.toContain(token);
-        if (answer === "n") {
-          expect(transcript.childExitCode).toBe(2);
-          expect(await readFile(path.join(cwd, "package.json"))).toEqual(manifestBefore);
-          expect(await readFile(path.join(cwd, "pnpm-lock.yaml"))).toEqual(lockBefore);
-        } else {
-          expect(transcript.childExitCode).toBe(0);
-          const manifest = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8"));
-          expect(manifest.dependencies.zod).toBe("4.6.5");
-          expect(await readFile(path.join(cwd, "pnpm-lock.yaml"))).not.toEqual(lockBefore);
-          const repeated = await runShell("rsetup", "add", "token", token, cwd, false);
-          expect(repeated.exitCode, repeated.stderr).toBe(0);
-          expect(JSON.parse(repeated.stdout).plan.operations).toEqual([]);
-        }
+      const before = await snapshotTree(cwd);
+      const result = await runProcess(
+        python,
+        [
+          fixturePath(process.platform === "win32" ? "winpty-selection.py" : "pty-selection.py"),
+          "reposetup",
+          "create",
+          answer,
+        ],
+        {
+          cwd,
+          env: launcherEnvironment(token),
+        },
+      );
+      expect(result.exitCode, result.stderr).toBe(0);
+      const transcript = JSON.parse(result.stdout) as {
+        childExitCode: number;
+        reviewed: boolean;
+        prompted: boolean;
+        transcript: string;
+      };
+      expect(transcript.reviewed).toBe(true);
+      expect(transcript.prompted).toBe(true);
+      expect(transcript.transcript).not.toContain(token);
+      if (answer === "n") {
+        expect(transcript.childExitCode).toBe(2);
+        expect(await snapshotTree(cwd)).toEqual(before);
+      } else {
+        expect(transcript.childExitCode).toBe(0);
+        const project = path.join(cwd, "projects/qualified-app");
+        expect((await readFile(path.join(project, "pnpm-lock.yaml"))).length).toBeGreaterThan(100);
+        const built = await runProcess("pnpm", ["run", "build"], { cwd: project });
+        expect(built.exitCode, built.stderr).toBe(0);
       }
-      item.passed = true;
     } catch (error) {
       item.failure = error instanceof Error ? error.message : String(error);
       throw error;
     } finally {
-      await cleanupWorkspace(parent, keepOnFailure());
+      await cleanupWorkspace(cwd, keepOnFailure());
     }
-  },
-);
+  }
+  item.passed = true;
+});
+
+it("uses the native terminal prompt to decline and accept add", async () => {
+  const item: (typeof cases)[number] = { id: "native-tty-add", passed: false };
+  cases.push(item);
+  if (artifact === undefined) throw new Error("Packed artifact setup did not complete");
+  const python = process.env.UV_PYTHON ?? "python3";
+  const parent = path.join(root, "terminal-add space ไทย");
+  await mkdir(parent);
+  try {
+    const context = matrix.contexts[1]!;
+    const createFile = path.join(parent, "create.json");
+    await writeJson(createFile, selectionFor(context, [], "create"));
+    const base = await runProcess(
+      process.execPath,
+      [
+        fixturePath("confirmed-selection-create.mjs"),
+        path.join(artifact.installDir, "node_modules/rsetup/dist/index.js"),
+        createFile,
+        "file",
+      ],
+      { cwd: parent, env: launcherEnvironment("") },
+    );
+    expect(base.exitCode, base.stderr).toBe(0);
+    const cwd = path.join(parent, "projects/qualified-app");
+    const selection = selectionFor(context, ["zod"], "add");
+    const token = Buffer.from(JSON.stringify(selection), "utf8").toString("base64url");
+    const manifestBefore = await readFile(path.join(cwd, "package.json"));
+    const lockBefore = await readFile(path.join(cwd, "pnpm-lock.yaml"));
+    for (const answer of ["n", "y"] as const) {
+      const result = await runProcess(
+        python,
+        [
+          fixturePath(process.platform === "win32" ? "winpty-selection.py" : "pty-selection.py"),
+          "rsetup",
+          "add",
+          answer,
+        ],
+        {
+          cwd,
+          env: launcherEnvironment(token),
+        },
+      );
+      expect(result.exitCode, result.stderr).toBe(0);
+      const transcript = JSON.parse(result.stdout) as {
+        childExitCode: number;
+        reviewed: boolean;
+        prompted: boolean;
+        transcript: string;
+      };
+      expect(transcript.reviewed).toBe(true);
+      expect(transcript.prompted).toBe(true);
+      expect(transcript.transcript).not.toContain(token);
+      if (answer === "n") {
+        expect(transcript.childExitCode).toBe(2);
+        expect(await readFile(path.join(cwd, "package.json"))).toEqual(manifestBefore);
+        expect(await readFile(path.join(cwd, "pnpm-lock.yaml"))).toEqual(lockBefore);
+      } else {
+        expect(transcript.childExitCode).toBe(0);
+        const manifest = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8"));
+        expect(manifest.dependencies.zod).toBe("4.6.5");
+        expect(await readFile(path.join(cwd, "pnpm-lock.yaml"))).not.toEqual(lockBefore);
+        const repeated = await runShell("rsetup", "add", "token", token, cwd, false);
+        expect(repeated.exitCode, repeated.stderr).toBe(0);
+        expect(JSON.parse(repeated.stdout).plan.operations).toEqual([]);
+      }
+    }
+    item.passed = true;
+  } catch (error) {
+    item.failure = error instanceof Error ? error.message : String(error);
+    throw error;
+  } finally {
+    await cleanupWorkspace(parent, keepOnFailure());
+  }
+});
 
 function launcherEnvironment(input: string): NodeJS.ProcessEnv {
   if (artifact === undefined) throw new Error("Packed artifact setup did not complete");

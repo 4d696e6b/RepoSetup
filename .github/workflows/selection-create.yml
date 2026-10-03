@@ -1,6 +1,8 @@
 name: Selection real create and add (0.3.0)
 
 on:
+  push:
+    branches: [codex/0.3.0-cli]
   workflow_dispatch:
 
 permissions:

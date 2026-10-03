@@ -2,7 +2,7 @@ name: Golden stacks
 
 on:
   push:
-    branches: [main, dev, "release/**"]
+    branches: [main, dev, "release/**", codex/0.3.0-cli]
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
@@ -34,6 +34,9 @@ jobs:
             python: "3.13"
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
+    env:
+      UV_PYTHON: python
+      UV_PYTHON_DOWNLOADS: never
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -42,12 +45,14 @@ jobs:
           node-version: 24
           architecture: ${{ matrix.architecture }}
           cache: pnpm
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
-      - uses: astral-sh/setup-uv@v6
+          architecture: ${{ matrix.architecture }}
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
-          enable-cache: true
+          version: "0.12.17"
+          enable-cache: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm test:golden
