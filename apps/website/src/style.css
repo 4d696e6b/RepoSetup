@@ -330,19 +330,24 @@ fieldset {
 .error {
   color: #8e3019;
   font-weight: 650;
-  grid-column: 2;
-  margin-bottom: -25px;
+  margin-bottom: 18px;
 }
 .error:empty {
-  display: none;
+  margin: 0;
+}
+.field-error {
+  color: #8e3019;
+  font-size: 14px;
+  margin: 8px 0 0;
+}
+[aria-invalid="true"] {
+  border-color: #8e3019 !important;
 }
 .review {
   grid-column: 2;
   grid-row: 1;
 }
-.error:not(:empty) + .review {
-  grid-row: 2;
-}
+
 textarea,
 pre {
   font:
@@ -411,12 +416,8 @@ footer p {
     grid-template-columns: 1fr;
     gap: 22px;
   }
-  .review,
-  .error {
+  .review {
     grid-column: 1;
-    grid-row: auto;
-  }
-  .error:not(:empty) + .review {
     grid-row: auto;
   }
 }

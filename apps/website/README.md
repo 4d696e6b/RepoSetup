@@ -64,16 +64,30 @@ pnpm typecheck
 pnpm lint
 pnpm build
 pnpm --filter @reposetup/website test:browser
+pnpm --filter @reposetup/website test:browser:local
+pnpm --filter @reposetup/website test:browser:webkit
 pnpm --filter @reposetup/website pack:contract
 pnpm --filter @reposetup/website test:handoff
 ```
 
-Handoff tests are a separate explicit gate and fail if the pinned artifact or Node 24 is missing; there are no hidden skips. They validate every exported create/add variant, token/file plan equivalence, no project mutation during previews, actual detected-context refusal, stale/hostile inputs, real size boundaries, and Bash/zsh launch with confirmation required. Browser tests use an already installed Chrome with Playwright, desktop 1440×1000 and mobile 390×844, axe WCAG A/AA scans, keyboard controls, copying/downloading, invalid input, context resets and horizontal overflow checks at 320, 768 and 1440 pixels. Screenshots are saved under ignored `test-results/`. No automatic browser/system install is run.
+Handoff tests are a separate explicit gate and fail if the pinned artifact or Node 24 is missing; there are no hidden skips. They validate every exported create/add variant, token/file plan equivalence, no project mutation during previews, actual detected-context refusal, stale/hostile inputs, real size boundaries, and Bash/zsh launch with confirmation required.
+
+`test:browser` is the full five-profile gate: Chrome desktop/mobile, Firefox desktop and WebKit desktop/mobile. `test:browser:local` explicitly selects the three locally verified Chrome/Firefox profiles; `test:browser:webkit` retains the separate open WebKit gate. Tests cover all 22 routes with axe WCAG A/AA scans, keyboard controls, copying/downloading, invalid linked-field errors, context/draft preservation, clipboard denial, no data transmission/storage and reflow at 320, 768 and 1440 pixels. Browser versions and screenshots are saved under ignored `test-results/`. Mobile profiles emulate viewports/touch, not physical devices.
+
+Chrome must already be installed. Obtain the matching test-only Firefox/WebKit binaries explicitly if needed:
+
+```sh
+pnpm --filter @reposetup/website exec playwright install firefox webkit
+```
+
+Builds, tests and the website do not automatically install browsers or system prerequisites. This local qualification downloaded those test binaries to Playwright's user cache; no OS packages were installed. On macOS 14.7.2 arm64, Playwright 1.63.0's frozen WebKit r2251 fails page setup with `Unknown setting: PushAPIEnabled`; the full browser gate therefore fails on this host. Keep the gate open and rerun on a compatible platform without removing assertions or counting unavailable tests as passing. See [current validation evidence](../../docs/specification-documentation/implementing-docs/STATUS_WEBSITE_0.3.0.md).
 
 ## Remaining release gates
 
-Publication/version-pinned bootstrap and native Windows/Linux transport are unqualified. Firefox/WebKit, screen-reader/manual accessibility, five beginner sessions, and independent minimal recipe/optional subset execution qualification remain release gates. This slice verifies handoff planning and confirmation safety; it does not claim a complete 0.3.0 release or promote any integration to stable. CLI previews/doctor/repair work outside selection-v1 remains on its own track.
+Publication/version-pinned bootstrap and native Windows/Linux transport are unqualified. WebKit, physical-device checks, screen-reader/manual accessibility, five beginner sessions, and independent minimal recipe/optional subset execution qualification remain release gates. Chrome/Firefox local automated checks pass. Use the [beginner-session protocol](../../docs/specification-documentation/implementing-docs/BEGINNER_SESSIONS_0.3.0.md) for actual observations; none have been recorded. This slice verifies handoff planning and confirmation safety; it does not claim a complete 0.3.0 release or promote any integration to stable. CLI previews/doctor/repair work outside selection-v1 remains on its own track.
 
 ## Research checked 2026-10-03
 
 The build/dev/preview behavior was checked against [Vite’s official guide](https://vite.dev/guide/) and [static build guidance](https://vite.dev/guide/build.html). Form labeling follows [WAI’s labeling guidance](https://www.w3.org/WAI/tutorials/forms/labels/); browser checks use [Playwright assertions](https://playwright.dev/docs/test-assertions). The nine integration guidance links were opened against current official project documentation; recipe setup/pins still come from the committed curated definitions and recorded parent evidence, not latest upstream versions. Hosting choice and published bootstrap remain research-required.
+
+Phase 8 linked-field feedback follows [WAI form notifications](https://www.w3.org/WAI/tutorials/forms/notifications/). Clipboard recovery was checked against [MDN writeText](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText). Binary/engine and mobile-emulation limits follow [Playwright browser guidance](https://playwright.dev/docs/browsers); the macOS-14 WebKit failure above is direct local test evidence.

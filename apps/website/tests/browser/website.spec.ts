@@ -1,5 +1,15 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { readFileSync } from "node:fs";
+import type { WebsiteCatalog } from "@reposetup/registry";
+
+const catalog: WebsiteCatalog = JSON.parse(
+  readFileSync(new URL("../../src/generated/catalog.json", import.meta.url), "utf8"),
+);
+
+test.beforeEach(async ({ browser }, testInfo) => {
+  testInfo.annotations.push({ type: "browser-version", description: browser.version() });
+});
 
 test("goal discovery, library explanations, minimal presets and bounded selection", async ({
   page,
@@ -39,6 +49,12 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
   await expect(page.locator("input:checked")).toHaveCount(0);
   await expect(page.locator("#selection-error")).toContainText("at least one");
   await page.getByLabel("pytest", { exact: true }).check();
+  await expect(page.getByRole("link", { name: "Build a selection" })).toHaveAttribute(
+    "href",
+    "#/builder/fastapi-uv",
+  );
+  await page.getByRole("link", { name: "Build a selection" }).click();
+  await expect(page.getByLabel("pytest", { exact: true })).toBeChecked();
   await expect(page.getByLabel("RepoSetup command", { exact: true })).toHaveValue(
     /^reposetup add --selection /,
   );
@@ -48,13 +64,20 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
   await expect(page.getByLabel("Project journey")).toHaveValue("create");
 });
 
-test("copy command and downloadable file carry equivalent choices", async ({ page, context }) => {
-  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+test("copy command and downloadable file carry equivalent choices", async ({
+  page,
+  context,
+  browserName,
+}) => {
+  if (browserName === "chromium")
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/#/builder/react-vite-ts-pnpm");
   await page.getByLabel("Vitest", { exact: true }).check();
   const command = await page.getByLabel("RepoSetup command", { exact: true }).inputValue();
   await page.getByRole("button", { name: "Copy RepoSetup command" }).click();
-  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe(command);
+  await expect(page.locator("#export-status")).toContainText("Command copied");
+  if (browserName === "chromium")
+    await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe(command);
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Download selection.json" }).click();
   const file = await download;
@@ -71,12 +94,11 @@ test("keyboard navigation, accessible pages and responsive layout", async ({ pag
   for (const route of [
     "/",
     "/integrations",
-    "/integrations/vitest",
     "/presets",
-    "/presets/beginner-fastapi",
-    "/builder/react-vite-ts-pnpm",
-    "/builder/fastapi-uv?mode=add",
     "/how-to",
+    ...catalog.integrations.map((item) => `/integrations/${item.id}`),
+    ...catalog.presets.map((item) => `/presets/${item.id}`),
+    ...catalog.contexts.flatMap((item) => [`/builder/${item.id}`, `/builder/${item.id}?mode=add`]),
   ]) {
     await page.goto(`/#${route}`);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

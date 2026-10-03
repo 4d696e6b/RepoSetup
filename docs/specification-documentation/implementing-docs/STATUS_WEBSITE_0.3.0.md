@@ -4,7 +4,7 @@ Date: 2026-10-03. Status: reviewable local website slice implemented and checked
 
 ## Phase position
 
-This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. The next website phase is **Phase 8 (beginner usability and broader safety/accessibility validation)**. The ten-phase release has **3 phases implemented locally and 7 remaining**, including partial qualification/validation phases. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
+This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. Work is now in **Phase 8 (beginner usability and broader safety/accessibility validation)**. The ten-phase release has **3 phases implemented locally and 7 remaining**, including partial qualification/validation phases. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
 
 ## Source isolation
 
@@ -27,7 +27,7 @@ This slice implements release **Phase 6 (information website)** and **Phase 7 (s
 - True 3,072-byte / 4,096-character token and 4,200-character command bounds. File fallback uses the same envelope with `create --selection-file` / `add --config` and a fixed safe filename, bounded to 16 KiB. Current form choices fit tokens; semantic-equivalent whitespace overhead fixtures prove the larger file route without expanding supported choices.
 - No publication, project upload, secrets, analytics, browser installation, local file inspection, persistent browser drafts or selection data in URLs.
 
-## Local checks and artifact evidence
+## Initial slice checks and artifact evidence
 
 Environment: macOS arm64; development runtime Node `v24.21.0`; pnpm `12.5.1`. A temporary pnpm-provided Node runtime was used for qualification; system Node was not replaced.
 
@@ -42,7 +42,24 @@ Environment: macOS arm64; development runtime Node `v24.21.0`; pnpm `12.5.1`. A 
 - Manual packed CLI PTY check: a website-generated Express starter command printed decoded selection and 11 local operations, then `Proceed with installation?`; answering `n` returned exit 2 and left the target directory empty. No installation was executed.
 - `git diff --check`: pass. Original candidate HEAD/status and exact planning copies verified separately.
 
-Initial checks exposed missing shared delta/error adapter prerequisites, a skip-link routing issue and a test that treated same-document hash navigation as a fresh page. Those were corrected and checks rerun. No failing tests/typechecks remain in this slice.
+Initial checks exposed missing shared delta/error adapter prerequisites, a skip-link routing issue and a test that treated same-document hash navigation as a fresh page. Those were corrected and checks rerun. The initial Chrome-only suite passed; see the Phase 8 section for subsequent expanded coverage and the open WebKit failure.
+
+## Phase 8 local validation slice
+
+Date: 2026-10-03. **Partial: automated local validation improved; observed sessions 0/5.**
+
+- Invalid project names/folders have individual messages linked by `aria-describedby`, `aria-invalid` and a persistent atomic status region. Focus stays in the edited field; hidden create controls do not block add mode. The invalid review panel stays aligned with the form on desktop. Optional-library group guidance explains empty minimal create versus nonempty add.
+- Fixed the main builder navigation link after direct entry/context changes: it now points to the current context rather than resetting the draft to a previous one. Learning pages preserve the in-memory choices without placing project names/tokens in requests, URLs or browser storage.
+- Clipboard-denial tests verify the complete command is focused and selected for keyboard copying, with accessible feedback. Successful native command-copy status and JSON download equivalence pass in both tested engines; actual clipboard readback is checked in Chrome.
+- Added [five-session protocol and record template](./BEGINNER_SESSIONS_0.3.0.md), including complete apply/preservation evidence, help/misstep reporting and retests. No sessions were fabricated or participants contacted. Real apply tasks depend on Phase 2 recipe qualification; later maintenance tasks depend on Phases 3–5.
+- Fresh `pnpm test`: **483 passing unit tests** (core 248, registry 15, integrations 121, CLI 91, website 8), no skips. Workspace typecheck, lint and build pass. Public catalog regenerates unchanged; browser bundle remains app/public JSON only.
+- Fresh `test:browser:local`: **21 passing tests**, zero skips/flaky cases, using Playwright 1.63.0, Chrome **154.0.8037.95** desktop 1440×1000 and mobile/touch emulation 390×844, and Playwright Firefox **155.0** desktop. Axe WCAG 2 A/AA and 2.1 AA scans cover **22 routes per profile**: goals, catalog, presets, usage, nine integrations, three preset details and all three create/add contexts. Reflow checks cover 320, 768 and 1440 widths. Browser/version annotations and results are in ignored `test-results/browser-report.json`; screenshots include `invalid-builder-desktop.png` and the existing home/builder views.
+- Manual local in-app-browser accessibility-tree/visual review confirmed visible field feedback, preserved edit focus and disabled export in the invalid state, then recovery. This is an agent walkthrough, not VoiceOver testing or a beginner session.
+- Fresh `test:handoff`: **6 passing packed-artifact tests**, including all 45 variants, true token/file limits, refusals, no-mutation previews and shell confirmation. The pinned CLI source/artifact identity above is unchanged. No actual installation was performed in this slice.
+
+**WebKit failure remains explicit.** `test:browser` attempted the five-profile/35-test matrix on macOS **14.7.2 arm64**. Chrome/Firefox's 21 tests passed; WebKit failed while setting up a page, before any website navigation, with `Protocol error (Page.overrideSetting): Unknown setting: PushAPIEnabled`. After six setup failures the run was interrupted rather than waiting through every identical failure. Playwright supplied frozen macOS-14 WebKit **r2251** and warned that this platform no longer receives WebKit updates. Do not count its 14 planned desktop/mobile tests as passed or skipped. No tool downgrade, binary patch or OS update was used to manufacture a pass.
+
+`test:browser:local` selects the three verified profiles explicitly; it does not complete the full gate. `test:browser:webkit` retains both pending WebKit profiles, and `test:browser` retains the complete matrix for a compatible host. Run those gates before advertising WebKit support. Mobile emulation does not qualify physical iOS/Android or Safari. Manual screen-reader, real beginner sessions and wider release/platform qualification remain open.
 
 ## Working routes / review
 

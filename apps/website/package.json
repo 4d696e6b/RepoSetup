@@ -11,6 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --config vitest.config.ts",
     "test:browser": "playwright test",
+    "test:browser:local": "playwright test --project=chromium-desktop --project=chromium-mobile --project=firefox-desktop",
+    "test:browser:webkit": "playwright test --project=webkit-desktop --project=webkit-mobile",
     "pack:contract": "node scripts/pack-contract.mjs",
     "test:handoff": "vitest run --config vitest.handoff.config.ts"
   },

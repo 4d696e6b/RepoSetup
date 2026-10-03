@@ -13,6 +13,10 @@ function render(focus = false) {
   const page = segments[0] ?? "home";
   const id = segments[1];
   const params = new URLSearchParams(query);
+  const builderContext =
+    page === "builder" && catalog.contexts.some((context) => context.id === id)
+      ? id
+      : draft.contextId;
   app.replaceChildren();
   const header = el("header", undefined, "site-header");
   header.append(link("RepoSetup", "#/", "brand"));
@@ -27,7 +31,7 @@ function render(focus = false) {
   ]) {
     const a = link(
       text!,
-      target === "home" ? "#/" : `#/${target}${target === "builder" ? `/${draft.contextId}` : ""}`,
+      target === "home" ? "#/" : `#/${target}${target === "builder" ? `/${builderContext}` : ""}`,
       target === "builder" ? "nav-action" : "",
     );
     if (page === target) a.setAttribute("aria-current", "page");

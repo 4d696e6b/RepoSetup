@@ -144,3 +144,26 @@ describe("bounded website choices and command transport", () => {
       expect(validateSelection(value, registry, BEGINNER_CATALOG).ok).toBe(false);
   });
 });
+
+it("project errors identify the invalid field and ignore hidden create controls in add mode", async () => {
+  const { projectChoiceErrors } = await import("../src/selection.js");
+  const valid = {
+    contextId: "express-ts-pnpm",
+    mode: "create" as const,
+    ids: ["zod"],
+    name: "my-app",
+    path: "projects/my-app",
+  };
+  expect(projectChoiceErrors(valid)).toEqual({});
+  expect(projectChoiceErrors({ ...valid, name: "con" })).toEqual({
+    name: expect.stringContaining("project name"),
+  });
+  expect(projectChoiceErrors({ ...valid, path: "../outside" })).toEqual({
+    path: expect.stringContaining("relative folder"),
+  });
+  expect(projectChoiceErrors({ ...valid, name: "", path: "" })).toHaveProperty("name");
+  expect(projectChoiceErrors({ ...valid, name: "", path: "" })).toHaveProperty("path");
+  expect(projectChoiceErrors({ ...valid, mode: "add", name: "con", path: "../outside" })).toEqual(
+    {},
+  );
+});

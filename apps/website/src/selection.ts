@@ -11,6 +11,19 @@ export type Choice = {
 const safeSegment = (value: string) =>
   /^[a-z][a-z0-9-]{0,63}$/.test(value) && !/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/.test(value);
 
+/** Errors for the public project controls; add never consumes hidden create fields. */
+export function projectChoiceErrors(choice: Choice): { name?: string; path?: string } {
+  if (choice.mode === "add") return {};
+  const errors: { name?: string; path?: string } = {};
+  if (!safeSegment(choice.name))
+    errors.name =
+      "Use a lowercase project name starting with a letter, followed by letters, digits or hyphens (up to 64 characters). Reserved device names are unavailable.";
+  if (choice.path.length > 256 || !choice.path.split("/").every(safeSegment))
+    errors.path =
+      "Use relative folder segments like projects/my-app. Each segment must be a lowercase name; use at most 256 characters. Reserved device names are unavailable.";
+  return errors;
+}
+
 /** Select an already planner-validated variant; no browser compatibility resolver. */
 export function chooseSelection(catalog: WebsiteCatalog, choice: Choice): DeclarativeSelection {
   if (new Set(choice.ids).size !== choice.ids.length) throw new Error("Choose each library once.");
@@ -27,14 +40,9 @@ export function chooseSelection(catalog: WebsiteCatalog, choice: Choice): Declar
       throw new Error("Choose at least one optional library to add to your existing project.");
     return structuredClone(variant.add);
   }
-  if (
-    !safeSegment(choice.name) ||
-    choice.path.length > 256 ||
-    !choice.path.split("/").every(safeSegment)
-  )
-    throw new Error(
-      "Use lowercase names starting with a letter, with letters, digits or hyphens. Use relative folder segments; reserved device names are unavailable.",
-    );
+  const errors = projectChoiceErrors(choice);
+  if (errors.name) throw new Error(errors.name);
+  if (errors.path) throw new Error(errors.path);
   const selection = structuredClone(variant.create);
   if (selection.mode !== "create") throw new Error("Invalid generated variant.");
   selection.config.project = { name: choice.name, path: choice.path };

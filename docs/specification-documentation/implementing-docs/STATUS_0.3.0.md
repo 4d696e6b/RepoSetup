@@ -4,7 +4,7 @@ Last updated: 2026-10-03. This is the combined release snapshot maintained on `c
 
 ## Current phase and remaining count
 
-**The website has reached Phase 7: its first selection builder and local CLI handoff are implemented. The next website phase is Phase 8: beginner usability and broader safety/accessibility validation. The CLI track is at Phase 2: qualify the beginner journeys; its next recorded section is 2.2, real packed-CLI create journeys.**
+**The website is implementing Phase 8: beginner usability and broader safety/accessibility validation. Phases 6 and 7 have a working local information center, selection builder and packed CLI handoff. The CLI track is at Phase 2: qualify the beginner journeys; its next recorded section is 2.2, real packed-CLI create journeys.**
 
 - Total release phases: **10**.
 - Implemented locally: **3 phases — 1, 6 and 7**.
@@ -32,13 +32,13 @@ Last updated: 2026-10-03. This is the combined release snapshot maintained on `c
    Depends on Phases 3 and 4. Qualify an explicit missing-file allowlist, conservative eligibility, preview/confirmation, existing-executor execution, preservation and repeat no-op behavior. Proposed repair commands are not available in this slice.
 
 6. **Companion information website — implemented locally for the first slice.**
-   A separate static workspace app offers goal discovery, nine integration explanations, three minimal preset explanations and usage guidance. The public catalog is generated and planner-validated from curated definitions. Chrome desktop/mobile checks, keyboard navigation and automated accessibility scans pass. Additional browsers, manual accessibility and observed sessions remain Phase 8.
+   A separate static workspace app offers goal discovery, nine integration explanations, three minimal preset explanations and usage guidance. The public catalog is generated and planner-validated from curated definitions. Chrome desktop/mobile and Firefox checks, keyboard navigation and automated accessibility scans pass. WebKit, manual screen-reader checks and observed sessions remain Phase 8.
 
-7. **Website selection builder — implemented locally for the first slice; current website checkpoint.**
+7. **Website selection builder — implemented locally for the first slice.**
    Bounded create/add modes, reviewed optional choices, safe project controls, human-readable review, one copyable command and equivalent validated file fallback exist. All 45 variants produce matching token/file plans through the exact packed local CLI. Confirmation and size boundaries are checked. No public released-CLI bootstrap or production deployment is claimed.
 
-8. **Beginner usability and safety validation — partial; next website phase.**
-   Automated selection safety and eight browser tests are recorded. Remaining: at least five observed beginner sessions; manual screen-reader/accessibility checks and broader browser coverage; maintenance journeys after Phases 3–5; whole-release safety validation and fixes for discovered usability blockers. Passing automated tests does not substitute for those sessions.
+8. **Beginner usability and safety validation — partial; current website phase.**
+   The local validation slice fixes linked field errors, review-panel layout and context navigation. Twenty-one browser tests pass across Chrome desktop/mobile and Firefox, scanning all 22 routes. A five-session protocol is ready; **0/5 sessions are observed**. WebKit page setup fails on this macOS 14 host, so that gate remains open alongside manual screen-reader checks, physical-device checks, maintenance journeys after Phases 3–5 and whole-release safety validation. Passing automated tests does not substitute for participant sessions.
 
 9. **Freeze and qualify the release candidate — not started.**
    Reconcile final scope/support claims, freeze source/catalog/artifact identities, qualify retained and new workflows on advertised platforms, complete repeated passes/soak under the retained policy, and resolve release-blocking defects. Neither development branch is a frozen qualified 0.3.0 release candidate.
@@ -48,7 +48,7 @@ Last updated: 2026-10-03. This is the combined release snapshot maintained on `c
 
 ## Next steps
 
-For the website, begin Phase 8 with an observed beginner-session protocol and manual accessibility/browser review of the existing learn → choose → copy → review journey. Actual apply sessions require the appropriately qualified local CLI and prerequisites; do not infer installation success from dry-run checks.
+For the website, use the prepared [beginner-session protocol](./BEGINNER_SESSIONS_0.3.0.md), run a manual screen-reader check and run the explicit WebKit gate on a compatible host. Continue the existing learn → choose → copy → review journey with real participants. Actual apply sessions require the appropriately qualified local CLI and prerequisites; do not infer installation success from dry-run checks.
 
 For the CLI, the recorded next step is section 2.2: execute and verify real packed-CLI starter journeys. Continue 2.3–2.5 before promoting the handoff to released support, then implement Phases 3–5. These are recommended next tasks, not authorization to publish or deploy.
 
@@ -57,7 +57,7 @@ For the CLI, the recorded next step is section 2.2: execute and verify real pack
 - Website implementation: `8e8b3582ce4467d5bca6acf185e26beadd49cebd`, branch `codex/0.3.0-website`.
 - Website handoff target: CLI contract implementation `626fce93214af8554c3a0700ead52c5e3db8ae7a`, local development CLI `0.3.0-alpha.1`, `selection-v1`, catalog `0.3.0-cli.1`.
 - CLI status/matrix snapshot inspected: committed `101ed81` (`test(cli): freeze packed selection acceptance matrix`) on `codex/0.3.0-cli`. Its recorded Phase 2.1 fixtures do not establish real runtime/platform qualification. The website still targets its explicitly tested `626fce9` artifact; this status update does not change that target.
-- Recorded website checks: **482 unit tests, 8 browser tests, 6 packed handoff tests**; typecheck, lint and build pass. These are the implementation's recorded results, not fresh runs performed for this documentation edit.
+- Latest Phase 8 local checks: **483 unit tests, 21 local browser tests, 6 packed handoff tests**; workspace typecheck, lint and build pass. The full browser matrix is **not passing** here: WebKit fails before navigation with `Unknown setting: PushAPIEnabled`. Exact versions and the separate open gate are recorded in the detailed website status.
 - Detailed website evidence and remaining gates: [website slice status](./STATUS_WEBSITE_0.3.0.md).
 - Feature sequence and acceptance requirements: [release roadmap](./ROADMAP_0.3.0_DRAFT.md), [website plan](./WEBSITE_PLAN_0.3.0.md), and [selection contract](../product-docs/SELECTION_V1.md). The plans retain their original draft wording; use current status/contract documents to distinguish implemented behavior from proposals.
 

@@ -1,7 +1,7 @@
 import { catalog, handoff } from "./catalog.js";
 import { el, link, list, field, select } from "./dom.js";
 import { intro, contextLabel, contextOf, nameOf, presetOf, draft } from "./ui.js";
-import { chooseSelection, exportSelection } from "./selection.js";
+import { chooseSelection, exportSelection, projectChoiceErrors } from "./selection.js";
 export function builder(main: HTMLElement, contextId: string, params: URLSearchParams) {
   if (draft.contextId !== contextId) {
     draft.contextId = contextId;
@@ -59,19 +59,34 @@ export function builder(main: HTMLElement, contextId: string, params: URLSearchP
   path.value = draft.path;
   path.maxLength = 256;
   path.autocomplete = "off";
-  names.append(
-    field("Project name", name, "Lowercase letters, digits and hyphens; start with a letter."),
-    field(
-      "New project folder",
-      path,
-      "Relative to the terminal directory, for example projects/my-app. Existing targets are refused.",
-    ),
+  name.required = true;
+  path.required = true;
+  const nameField = field(
+    "Project name",
+    name,
+    "Lowercase letters, digits and hyphens; start with a letter.",
   );
+  const pathField = field(
+    "New project folder",
+    path,
+    "Relative to the terminal directory, for example projects/my-app. Existing targets are refused.",
+  );
+  const nameError = el("p", "", "field-error");
+  nameError.id = "project-name-error";
+  const pathError = el("p", "", "field-error");
+  pathError.id = "project-path-error";
+  nameField.append(nameError);
+  pathField.append(pathError);
+  names.append(nameField, pathField);
   names.hidden = draft.mode === "add";
   form.append(names);
   form.append(el("h2", "2. Choose only what helps"));
   const options = el("fieldset");
   options.append(el("legend", "Optional libraries"));
+  const choiceHelp = el("p", "", "hint");
+  choiceHelp.id = "choices-help";
+  options.setAttribute("aria-describedby", choiceHelp.id);
+  options.append(choiceHelp);
   const context = contextOf(contextId);
   for (const item of catalog.integrations.filter((g) => g.addable)) {
     const available = context.optionalIds.includes(item.id);
@@ -113,18 +128,36 @@ export function builder(main: HTMLElement, contextId: string, params: URLSearchP
       "hint",
     ),
   );
-  const review = el("section", undefined, "panel review");
-  review.setAttribute("aria-label", "Review selection");
-  layout.append(form, review);
-  main.append(layout);
+  const reviewPanel = el("section", undefined, "panel review");
+  reviewPanel.setAttribute("aria-label", "Review selection");
   const error = el("p", "", "error");
   error.setAttribute("role", "status");
+  error.setAttribute("aria-atomic", "true");
   error.id = "selection-error";
-  review.before(error);
+  const review = el("div");
+  reviewPanel.append(el("h2", "3. Review and take it locally"), error, review);
+  layout.append(form, reviewPanel);
+  main.append(layout);
   const update = () => {
     names.hidden = draft.mode === "add";
-    review.replaceChildren(el("h2", "3. Review and take it locally"));
+    name.disabled = draft.mode === "add";
+    path.disabled = draft.mode === "add";
+    review.replaceChildren();
     error.textContent = "";
+    const errors = projectChoiceErrors(draft);
+    for (const [input, message, node] of [
+      [name, errors.name, nameError],
+      [path, errors.path, pathError],
+    ] as const) {
+      node.textContent = message ?? "";
+      node.hidden = !message;
+      input.setAttribute("aria-invalid", message ? "true" : "false");
+      input.setAttribute("aria-describedby", `${input.id}-help${message ? ` ${node.id}` : ""}`);
+    }
+    choiceHelp.textContent =
+      draft.mode === "add"
+        ? "Choose at least one capability to add. Your framework stays as it is."
+        : "All capabilities here are optional. An empty selection creates the minimal starter.";
     review.append(
       el("p", contextLabel(contextId), "eyebrow"),
       el(
@@ -198,7 +231,9 @@ export function builder(main: HTMLElement, contextId: string, params: URLSearchP
           ),
         );
       const status = el("p", "", "hint");
+      status.id = "export-status";
       status.setAttribute("role", "status");
+      status.setAttribute("aria-atomic", "true");
       const copy = el(
         "button",
         output.command ? "Copy RepoSetup command" : "Copy file command",

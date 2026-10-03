@@ -257,4 +257,10 @@ See [website status and evidence](./STATUS_WEBSITE_0.3.0.md) for source/artifact
 
 ## 0.3.0 phase progress summary — 2026-10-03
 
-See [combined phase progress](./STATUS_0.3.0.md): Phases 1, 6 and 7 are implemented locally; 7 of the 10 release phases remain, counting partial phases. Website checkpoint: Phase 7; next website phase: 8. CLI checkpoint: Phase 2 qualification, with real create journeys in section 2.2 next. Local implementation is not a completed or published release.
+See [combined phase progress](./STATUS_0.3.0.md): Phases 1, 6 and 7 are implemented locally; 7 of the 10 release phases remain, counting partial phases. Website work is now in Phase 8; CLI checkpoint: Phase 2 qualification, with real create journeys in section 2.2 next. Local implementation is not a completed or published release.
+
+## 0.3.0 website Phase 8 validation slice — 2026-10-03
+
+Linked project-field errors, persistent status feedback and a stable invalid review-panel layout are implemented. Main builder navigation now preserves the current context/draft. The expanded suite covers all 22 routes and clipboard denial, hidden-field recovery, privacy and keyboard/reflow behavior. Fresh checks pass: 483 workspace unit tests, 21 Chrome desktop/mobile and Firefox browser tests, 6 exact packed CLI handoff tests, workspace typecheck/lint/build. The full five-profile browser gate does not pass on this host: Playwright WebKit r2251 cannot create a page on macOS 14.7.2 (`Unknown setting: PushAPIEnabled`). Its tests remain present as an explicit gate for a compatible host.
+
+The [beginner-session protocol](./BEGINNER_SESSIONS_0.3.0.md) is ready; actual observed sessions remain 0/5. Manual screen-reader, physical-device, later maintenance and release qualification gates remain open. No installation, publication or sibling-checkout edits occurred during this validation slice. See [website evidence](./STATUS_WEBSITE_0.3.0.md) for exact versions and limitations.
