@@ -44,6 +44,8 @@ export type {
 export { detectProject } from "./detection/detect-project.js";
 export type { DetectProjectResult } from "./detection/detect-project.js";
 export { errorsFromDoctor, failedDoctorChecks, runDoctor } from "./doctor/run-doctor.js";
+export { planDoctorRepair } from "./doctor/plan-repair.js";
+export type { DoctorRepairPlan } from "./doctor/plan-repair.js";
 export type { DoctorCheck, DoctorResult, RunDoctorResult } from "./doctor/run-doctor.js";
 export { existingEnvKeys } from "./executor/env-example.js";
 export { redactProcessOutput, summarizeFailedProcessOutput } from "./executor/output-snippet.js";

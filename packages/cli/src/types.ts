@@ -44,7 +44,7 @@ export interface CliDeps {
   io?: CliIo;
   fs?: CliFs;
   promptCreate?: (context: PromptCreateContext) => Promise<CreateAnswers>;
-  confirmCreate?: () => Promise<boolean>;
+  confirmCreate?: (message?: string) => Promise<boolean>;
   executorFs?: ExecutorFileSystem;
   runProcess?: ProcessRunner;
   executionLock?: ExecutionLock;
@@ -60,7 +60,7 @@ export interface ResolvedCliDeps {
   io: CliIo;
   fs: CliFs;
   promptCreate: (context: PromptCreateContext) => Promise<CreateAnswers>;
-  confirmCreate: () => Promise<boolean>;
+  confirmCreate: (message?: string) => Promise<boolean>;
   executorFs: ExecutorFileSystem;
   runProcess: ProcessRunner;
   executionLock: ExecutionLock;

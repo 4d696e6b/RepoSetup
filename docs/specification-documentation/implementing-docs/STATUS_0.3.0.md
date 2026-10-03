@@ -4,7 +4,7 @@ Last updated: 2026-10-03.
 
 ## Current position
 
-**Phase 1 and all of Phase 2 are complete; Phases 3 and 4 are implemented locally.** At source `e41cf82102c4c4f909544aad8a70e1585e9a57c4`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717406), [three-runner contract/transport run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717420), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717415) passed. All 24 create, 21 add, nine packed legacy and six native-transport cases passed in their required cells. Phase 3 previews and Phase 4 intended doctor still need later packed/platform qualification; repair, website, usability and release phases remain pending. The complete 0.3.0 release is not finished or authorized for publication.
+**Phase 1 and all of Phase 2 are complete; Phases 3–5 are implemented locally.** At source `e41cf82102c4c4f909544aad8a70e1585e9a57c4`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717406), [three-runner contract/transport run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717420), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717415) passed. All 24 create, 21 add, nine packed legacy and six native-transport cases passed in their required cells. Phases 3–5 still need later packed/platform qualification; website, usability and release phases remain pending. The complete 0.3.0 release is not finished or authorized for publication.
 
 This document turns the [0.3.0 roadmap](./ROADMAP_0.3.0_DRAFT.md) into the ten reviewable phases discussed with the owner. Numbers here are local to 0.3.0; historical 0.2.0 Phase 19–28 identifiers stay unchanged. The roadmap and website plan retain their original planning snapshots, so some proposed flags there now have implementation. Use this document and [selection v1](../product-docs/SELECTION_V1.md) for current behavior.
 
@@ -80,14 +80,16 @@ Local exit condition met: missing intended components remain diagnosable even wh
 
 ## Phase 5 — Narrowly scoped repairs
 
-**Status: not started.** Depends on Phase 3 previews and Phase 4 findings.
+**Status: implemented locally.** Depends on Phase 3 previews and Phase 4 findings; packed/platform qualification remains a later gate.
 
-- [ ] **5.1 Repair allowlist:** missing dedicated Prettier configuration and recipe-defined `.env.example` placeholders, subject to fixture qualification.
-- [ ] **5.2 Conservative eligibility:** recognize valid alternative configuration, require known compatible recipe/template evidence, preserve user edits and never read real `.env` values.
-- [ ] **5.3 Execution:** define the proposed `doctor --fix` interface, preview/confirmation and consistent noninteractive behavior; use typed operations and the existing executor.
-- [ ] **5.4 Verification:** rerun health checks; repeat repair is a no-op; changed/conflicting files stop safely; unsupported cases receive manual guidance.
+- [x] **5.1 Repair allowlist:** missing dedicated `.prettierrc` for React/Vite and Express, and missing `.env.example` from qualified Prisma SQLite/PostgreSQL or FastAPI/Pydantic Settings recipes. Local fixtures execute every advertised case; no other files are repaired.
+- [x] **5.2 Conservative eligibility:** recognized alternative Prettier locations suppress repair; mismatched pins, missing dependencies, other failing checks or altered recipe source templates stop automatic repair. Existing `.env.example` and all source files remain untouched; `.env` contents are never read.
+- [x] **5.3 Execution:** `doctor --config <path> --fix [--dry-run] [--yes]` gives a content-free preview, interactive confirmation or explicit noninteractive confirmation, version 1 JSON with optional repair information, and typed create-only operations through the normal executor. See the [doctor contract](../product-docs/INTENDED_DOCTOR_0.3.0.md).
+- [x] **5.4 Verification:** confirmation revalidates config, health, recipe and file fingerprints; execution reruns doctor. Tests cover dry-run preservation, refusal, altered files during review, user edits, real file creation, repeat no-op and manual guidance for unsupported cases.
 
 Exit condition: every advertised repair has preservation, dry-run, confirmation and real execution evidence. Dependency reinstall, source replacement, lockfile regeneration and system-software installation are outside the initial allowlist.
+
+Local exit condition met: the full workspace suite passed 533 tests (266 core, 15 registry, 126 integrations, 126 CLI); typecheck, lint and build passed. These are local fixtures, not packed-artifact or cross-platform repair qualification.
 
 ## Phase 6 — Companion information website
 

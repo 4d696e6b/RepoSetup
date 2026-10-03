@@ -149,7 +149,9 @@ export function renderPreview(preview: ChangePreview): string {
     );
   if (preview.changes.length === 0) lines.push("  (no file or dependency changes)");
   lines.push(
-    "File contents and secret values are suppressed. External tool effects are unknown until execution.",
+    preview.changes.every((change) => change.operation === "create_file")
+      ? "File contents and secret values are suppressed."
+      : "File contents and secret values are suppressed. External tool effects are unknown until execution.",
   );
   return lines.join("\n");
 }

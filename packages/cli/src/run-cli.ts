@@ -209,16 +209,27 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
 
   program
     .command("doctor")
-    .description("Run read-only health checks for the current project")
+    .description("Check project health and optionally repair known missing recipe files")
     .option("--config <path>", "compare the project with a schemaVersion 1 intended-stack config")
-    .action(async (options: { config?: string }, command: Command) => {
-      exitCode = await handleDoctor({
-        ...(options.config === undefined ? {} : { configPath: options.config }),
-        globals: readGlobals(command),
-        deps: resolved,
-        commandVersion: createDefaultCommandVersion(resolved.runProcess),
-      });
-    });
+    .option("--fix", "review a narrow file-only repair plan", false)
+    .option("--dry-run", "preview repairs without writing files", false)
+    .option("--yes", "confirm repair without an interactive prompt", false)
+    .action(
+      async (
+        options: { config?: string; fix: boolean; dryRun: boolean; yes: boolean },
+        command: Command,
+      ) => {
+        exitCode = await handleDoctor({
+          ...(options.config === undefined ? {} : { configPath: options.config }),
+          fix: options.fix,
+          dryRun: options.dryRun,
+          yes: options.yes,
+          globals: readGlobals(command),
+          deps: resolved,
+          commandVersion: createDefaultCommandVersion(resolved.runProcess),
+        });
+      },
+    );
 
   program
     .command("export")
