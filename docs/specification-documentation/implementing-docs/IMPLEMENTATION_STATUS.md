@@ -4,6 +4,10 @@ Cursor/maintainers should update this file as phases are completed.
 
 For the current phase-by-phase 0.3.0 tracker, see [0.3.0 implementation status](./STATUS_0.3.0.md). It separates locally implemented sections from pending qualification, website, maintenance and release work.
 
+## 0.3.0 Section 2 cross-platform evidence — 2026-10-03
+
+At source `7d82700423bacbefed4399b19bc011e715ff342e`, [selection create/add/legacy run 37126096324](https://github.com/4d696e6b/RepoSetup/actions/runs/37126096324) passed all six Linux/macOS/Windows × Python 3.12/3.13 cells. Every uploaded report records a clean source, external identified artifact and all 24 create, 21 add and nine packed legacy cases passing. [Historical golden run 37126096321](https://github.com/4d696e6b/RepoSetup/actions/runs/37126096321) passed all six cells. [Contract/transport run 37126096327](https://github.com/4d696e6b/RepoSetup/actions/runs/37126096327) passed all three packed contract cells and Ubuntu/macOS native transport. Windows transport's exact-token native shell test failed; a corrected test fixture remains to be rerun. Sections 2.1–2.3 and 2.5 are checked; 2.4 and later release gates remain open.
+
 ## 0.3.0 section 2 qualification dispatch preparation — 2026-10-03
 
 The isolated CLI branch now has branch-scoped push triggers for the packed contract/transport and six-cell real create/add workflows, plus the historical golden workflow. This allows qualification to run without changing the protected 0.2.0 checkout or default branch. The transport suite now requires native terminal confirmation on Windows as well as POSIX, using a Windows pseudo-console test driver; the Windows runner installs the pinned test-only pywinpty wheel. Local macOS transport still passes all six cases. Cross-platform results must be inspected before checking sections 2.2–2.5. No release or publication job was added.
