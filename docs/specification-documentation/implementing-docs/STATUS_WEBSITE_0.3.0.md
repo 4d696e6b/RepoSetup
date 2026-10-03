@@ -2,6 +2,10 @@
 
 Date: 2026-10-03. Status: reviewable local website slice implemented and checked; not a website deployment or a completed 0.3.0 release.
 
+## Phase position
+
+This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. The next website phase is **Phase 8 (beginner usability and broader safety/accessibility validation)**. The ten-phase release has **3 phases implemented locally and 7 remaining**, including partial qualification/validation phases. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
+
 ## Source isolation
 
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`.
