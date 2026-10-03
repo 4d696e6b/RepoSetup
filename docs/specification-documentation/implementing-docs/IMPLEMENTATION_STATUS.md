@@ -2,6 +2,19 @@
 
 Cursor/maintainers should update this file as phases are completed.
 
+For the current phase-by-phase 0.3.0 tracker, see [0.3.0 implementation status](./STATUS_0.3.0.md). It separates locally implemented sections from pending qualification, website, maintenance and release work.
+
+## 0.3.0 section 2.1 — 2026-10-03
+
+Implemented locally on `codex/0.3.0-cli` in the separate 0.3.0 worktree. The [phase tracker](./STATUS_0.3.0.md) now marks section 2.1 complete and section 2.2 as the next task. Original 0.2.0 candidate source and planning documents remain preserved.
+
+- Frozen [selection matrix](../../../tests/e2e/fixtures/selection-v1.matrix.json): three bounded contexts, every allowed optional subset (24 create/21 nonempty add journeys), full typed-plan fingerprints, version/limit metadata and runtime/platform targets.
+- Installed-tarball token/file equivalence, new-directory scoping, existing-file/version preservation, satisfied-add repeats, compatibility/input/confirmation refusals and both alias version checks. Project dry-runs work with project tools removed from PATH.
+- Verified artifact source/version/byte/hash identity and content-free reports recording matrix/catalog/source/artifact/lock/runtime evidence, passed cases and dirty source status. External artifact acceptance requires a clean matching source checkout. Reports use `qualification: false`.
+- A manually dispatched [contract workflow](../../../.github/workflows/selection-contract.yml) passes one identified tarball unchanged to the three frozen runner targets and retains success/failure reports. It has not been dispatched and does not publish. See the [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md).
+
+Validation: 105 new matrix/packed-contract tests and 491 workspace tests passed; workspace plus selection-test typechecks, lint and build passed; workflow YAML and documentation links checked. Local host remains macOS arm64 / Node 22.12.0 (below Node 24), npm 10.9.0 / pnpm 12.5.1. Initial error-output assertions and random Python fixture-name fingerprints were corrected. Real packed create/add and native/platform qualification remain open; no stable support claim or complete-release claim is made.
+
 ## 0.3.0 first CLI slice — 2026-10-03
 
 Implemented on `codex/0.3.0-cli`, forked from the exact recorded candidate HEAD `145e167e6b60897da96942545ba6dbd40359ad4a` on `codex/phase-27-release-candidate`. All work uses a separate worktree. The candidate checkout/branch and its three original untracked planning documents remain untouched; planning copies are byte-identical. The 0.2.0 qualification history below is retained, not marked complete or promoted by this slice.

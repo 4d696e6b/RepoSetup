@@ -1,0 +1,75 @@
+name: Selection packed contract (0.3.0)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      platforms: ${{ steps.matrix.outputs.platforms }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - id: matrix
+        name: Read frozen runner matrix
+        run: >-
+          node -e "const fs = require('node:fs');
+          const matrix = JSON.parse(fs.readFileSync('tests/e2e/fixtures/selection-v1.matrix.json', 'utf8'));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'platforms=' + JSON.stringify(matrix.platforms) + '\n');"
+      - name: Pack one artifact and record source/hash
+        run: |
+          mkdir "$RUNNER_TEMP/selection-candidate"
+          pnpm --filter rsetup pack --pack-destination "$RUNNER_TEMP/selection-candidate"
+          node scripts/write-artifact-evidence.mjs --tarball "$RUNNER_TEMP"/selection-candidate/rsetup-*.tgz --source-sha "$GITHUB_SHA" --output "$RUNNER_TEMP/selection-candidate/candidate-artifact.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: selection-contract-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-candidate
+          if-no-files-found: error
+
+  contract:
+    needs: pack
+    name: ${{ matrix.runner }} / packed selection contract
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.pack.outputs.platforms) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck:selection-tests
+      - uses: actions/download-artifact@v4
+        with:
+          name: selection-contract-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-candidate
+      - name: Accept the same identified artifact on each runner
+        run: pnpm exec vitest run --config tests/e2e/vitest.selection.config.ts
+        env:
+          REPOSETUP_SELECTION_ARTIFACT_DIR: ${{ runner.temp }}/selection-candidate
+          REPOSETUP_SELECTION_REPORT: ${{ runner.temp }}/selection-contract-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selection-contract-${{ matrix.runner }}-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-contract-report.json
+          if-no-files-found: error

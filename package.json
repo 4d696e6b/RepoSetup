@@ -31,7 +31,9 @@
     "benchmark:plans": "pnpm build && node scripts/benchmark-plans.mjs",
     "benchmark:real-installs": "pnpm build && node scripts/benchmark-real-installs.mjs",
     "benchmark:install-passes": "pnpm build && node scripts/benchmark-install-passes.mjs",
-    "review:licenses": "node scripts/check-dependency-licenses.mjs"
+    "review:licenses": "node scripts/check-dependency-licenses.mjs",
+    "test:selection:packed": "pnpm build && vitest run --config tests/e2e/vitest.selection.config.ts",
+    "typecheck:selection-tests": "tsc --project tests/e2e/tsconfig.selection.json"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "revision": "0.3.0-selection.1",
+  "catalogRevision": "0.3.0-cli.1",
+  "recipeRevision": "2026-09-23",
+  "cliContract": "selection-v1",
+  "limits": {
+    "tokenCharacters": 4096,
+    "tokenBytes": 3072,
+    "fileBytes": 16384,
+    "depth": 8,
+    "integrations": 16,
+    "commandCharacters": 4200
+  },
+  "runtimes": {
+    "nodeMajor": 24,
+    "pnpm": "12.5.1",
+    "python": ["3.12", "3.13"],
+    "uv": "0.12.17"
+  },
+  "platforms": [
+    {
+      "runner": "ubuntu-24.04",
+      "platform": "linux",
+      "architecture": "x64"
+    },
+    {
+      "runner": "macos-15",
+      "platform": "darwin",
+      "architecture": "arm64"
+    },
+    {
+      "runner": "windows-2025",
+      "platform": "win32",
+      "architecture": "x64"
+    }
+  ],
+  "directVersions": {
+    "react-vite": ["vite@8.3.0", "react@19.2.0"],
+    "express": ["express@5.2.1", "typescript@5.9.3", "@types/express@5.0.6", "@types/node@22.20.4"],
+    "fastapi": ["fastapi[standard]==0.141.1"],
+    "zod": ["zod@4.6.5"],
+    "vitest": [
+      "vitest@5.0.1",
+      "@vitejs/plugin-react@6.1.1",
+      "jsdom@28.1.0",
+      "@testing-library/react@16.3.3",
+      "@testing-library/dom@10.4.2",
+      "vite-tsconfig-paths@6.1.1"
+    ],
+    "prettier": ["prettier@3.9.8"],
+    "pydantic": ["pydantic==2.13.5"],
+    "pytest": ["pytest==9.1.1"],
+    "ruff": ["ruff==0.16.8"]
+  },
+  "contexts": [
+    {
+      "id": "react-vite-ts-pnpm",
+      "presetId": "beginner-react-vite",
+      "context": {
+        "runtimeId": "node",
+        "frameworkId": "react-vite",
+        "packageManager": "pnpm",
+        "typescript": true
+      },
+      "optionalIds": ["zod", "vitest", "prettier"],
+      "variants": [
+        [],
+        ["zod"],
+        ["vitest"],
+        ["zod", "vitest"],
+        ["prettier"],
+        ["zod", "prettier"],
+        ["vitest", "prettier"],
+        ["zod", "vitest", "prettier"]
+      ]
+    },
+    {
+      "id": "express-ts-pnpm",
+      "presetId": "beginner-express",
+      "context": {
+        "runtimeId": "node",
+        "frameworkId": "express",
+        "packageManager": "pnpm",
+        "typescript": true
+      },
+      "optionalIds": ["zod", "vitest", "prettier"],
+      "variants": [
+        [],
+        ["zod"],
+        ["vitest"],
+        ["zod", "vitest"],
+        ["prettier"],
+        ["zod", "prettier"],
+        ["vitest", "prettier"],
+        ["zod", "vitest", "prettier"]
+      ]
+    },
+    {
+      "id": "fastapi-uv",
+      "presetId": "beginner-fastapi",
+      "context": {
+        "runtimeId": "python",
+        "frameworkId": "fastapi",
+        "packageManager": "uv"
+      },
+      "optionalIds": ["pydantic", "pytest", "ruff"],
+      "variants": [
+        [],
+        ["pydantic"],
+        ["pytest"],
+        ["pydantic", "pytest"],
+        ["ruff"],
+        ["pydantic", "ruff"],
+        ["pytest", "ruff"],
+        ["pydantic", "pytest", "ruff"]
+      ]
+    }
+  ],
+  "planSha256": {
+    "express-ts-pnpm/add/1": "7accc319d929b5fd0f2d7fe80a133de580466674ae99a3091cbf6dcfb3e22a87",
+    "express-ts-pnpm/add/2": "f2a2cbe31a2c5605db5ef7f255b26a46abae43f6687a8392f06ecc7ba148ba90",
+    "express-ts-pnpm/add/3": "8b7299264a68eadc48f4c0dce8221a81f219a36c2af3bb646ad281f97f0cb1a2",
+    "express-ts-pnpm/add/4": "e222e447022909ae6ed8c6b5b9d253baa517ef6d18d9a576eb2b8f05c1842673",
+    "express-ts-pnpm/add/5": "9451bb5dbc791638d6e95d83f4be54d30a2a6dc52e5c6bd467d8540267b311a8",
+    "express-ts-pnpm/add/6": "7680ec92885983580984b7abe357a691ea6b072cc5b5dbe31105b432baa1c113",
+    "express-ts-pnpm/add/7": "59f500ff246625a8d522c60e1a73466d918ad2e93865f6c86f31b9de78c1b148",
+    "express-ts-pnpm/create/0": "0459e8b0c87678ccd8890823269d2d84662641ed62c9532ae3439072440d70f9",
+    "express-ts-pnpm/create/1": "bc0e2b40d4405b2ee0220c79fd499cfdb3db0fee675916e1796047a67fcc108a",
+    "express-ts-pnpm/create/2": "7a80b31beb344b7cee821b4cf0ae88e3c82cb96879ff43cfdd837f3103133eea",
+    "express-ts-pnpm/create/3": "3aebe70f6385af1150c44c3d5eb9e28b3668203710e7a607d173921d44f8e63b",
+    "express-ts-pnpm/create/4": "8f1e73e0848111ef53f3f999275b1738c260644d002d45e03a94afa1f81c50d3",
+    "express-ts-pnpm/create/5": "c4e5894e0519ede5faba9e485ed27dfc55fe9c289c76c84edf1bb319834eb901",
+    "express-ts-pnpm/create/6": "39eeba2c5d2c294439d243839f4d96a2656022206153b5eeffee9edc0afead3b",
+    "express-ts-pnpm/create/7": "0b938de2003ab66bdaf6b98e8eefba38d60d5a7a774c2a3bb9be3021e9c86062",
+    "fastapi-uv/add/1": "2a34f0656187b01c7c44936e211593ad168d68852fa6a8895e7136d1ff810f13",
+    "fastapi-uv/add/2": "e4a6f5a931b523813d6e16efacbe8e273512d076a98282e5c3bb8e3709a2d67b",
+    "fastapi-uv/add/3": "dbec90db865e974bdf5c112c3b8429228998dd4afc5312e52a92abfff43e8571",
+    "fastapi-uv/add/4": "764f9a734a2ec21d10be9845f4a789c840cde94a2cfef104951a02cc7b6a6ad6",
+    "fastapi-uv/add/5": "ad916682fd6406a8c143cff2e584b0fd53c4b03ebb2a054b48d92339df9e0281",
+    "fastapi-uv/add/6": "3638e600b57f1f49330cfb484f92a6d183c40bdfeff7e3806564785e275a0818",
+    "fastapi-uv/add/7": "f250e1b4c91cf6bce2361b81efd43049d70e63e10d6d5c9ed8b367de32b84e0a",
+    "fastapi-uv/create/0": "4b279ae1203b6fd83220875c66ee8fab56b7f6aa18f46edd3189fb061a802ef2",
+    "fastapi-uv/create/1": "f222e570d39c3e8d02cb21aaee02c42886355b6d992e669c5d4c290efab2bcf4",
+    "fastapi-uv/create/2": "378bd32e33a0c3a260e55725512133decf4710b6da878c2eabc7e3b6966a8bce",
+    "fastapi-uv/create/3": "4874b597ec244ccca9fdbf6a41036a7be1a730b2be2f4e4ae1c1e523ca17abff",
+    "fastapi-uv/create/4": "62a7041648a8b27e126c202daf145ad22f69b510060454734c410b88318b61be",
+    "fastapi-uv/create/5": "830b5a9cd6e41675d4306f62e912f1a48a5fb7a494cdd3cf7503759585c36dc9",
+    "fastapi-uv/create/6": "83e529f5c216ca0847540f9c59b9604154ed35bfd4cf1b7a752b6089de85a6cd",
+    "fastapi-uv/create/7": "56d5dd6e9a8f934181abaaffe451c65cdaa6a5eefd1e68011945d83d3deb5ab4",
+    "react-vite-ts-pnpm/add/1": "103e352ef99614daaec154ce37e9ecc115b3cdc286c321951b3ac497f1d925bf",
+    "react-vite-ts-pnpm/add/2": "67a1c3102e7a276d20055d072cf256c942a6e3cc12015d8c82afed4af7073274",
+    "react-vite-ts-pnpm/add/3": "0519e09901a5d20a605b6e9cf71909baeca96cb6234151dc98cba0c1b265be53",
+    "react-vite-ts-pnpm/add/4": "68c9366a57e8d31e054c3272f86b3c646d3a670ccbfff03a1e4fb9bccb387826",
+    "react-vite-ts-pnpm/add/5": "3b76bc694c1deaf885c188c0dc273b051f122d4b002ab9d4744f16d676caba90",
+    "react-vite-ts-pnpm/add/6": "7f58f187365e87069cc4dcc2ccc3df571feaf185f77e9779337e13f169671cfd",
+    "react-vite-ts-pnpm/add/7": "cb4a0417a30e48c12dcb04606d79341b7ac8d4bc021c0b4fbe2603302455cb7d",
+    "react-vite-ts-pnpm/create/0": "22e3175e4a1d35c3059ee13f9d96f0cac2c7212191983658cb67561575dc041e",
+    "react-vite-ts-pnpm/create/1": "fc657bc7aa3b55397df6b5d20580be42fb1204d6967587dd79b72dfbe2fee7f1",
+    "react-vite-ts-pnpm/create/2": "27791e11fb48243a9aa139d2d0c80760cb854fdb56398338104657a0a0708e45",
+    "react-vite-ts-pnpm/create/3": "d5106540cc2b5e38872ed950d5395ab707557f46ef633bb1608edd3d4c5cf654",
+    "react-vite-ts-pnpm/create/4": "67558ba5550b019791c3e5e1885e547ef54ff66515cb6fbdd428d27510a7b1df",
+    "react-vite-ts-pnpm/create/5": "cd2e94b8ef3c7ea31b62ba297c2238b0ab4e1895ab8b5f1cdbf0331a9ad3f548",
+    "react-vite-ts-pnpm/create/6": "e69ef3aeb82acb9ab77d1c95f57cbee9d88d4b24c7e804a4be2ebb07938ffe7d",
+    "react-vite-ts-pnpm/create/7": "36fb9bd7312240f70ba75d80d9d6e411a7e6dcea16fa04f25602f8d0bc85610d"
+  }
+}

@@ -80,6 +80,10 @@ Create config/preset/token/file input modes are mutually exclusive. A selection 
 
 Invalid format/transport/version/catalog/options/flags use `SELECTION_INVALID`, exit 2, with a machine-readable `details.reason` and no echoed raw token, option value or file content. An incompatible detected project uses `UNSUPPORTED_CONTEXT`, exit 3. Existing planner/executor error codes remain in use. No payload field can carry executable commands, arbitrary scripts or real secrets. Tokens are public choices, not encrypted secret storage.
 
+## Packed contract fixtures
+
+Section 2.1 freezes all 24 create and 21 nonempty add variants in [matrix revision `0.3.0-selection.1`](../../../tests/e2e/fixtures/selection-v1.matrix.json). Local installed-tarball acceptance checks token/file plans, operation fingerprints, preservation, no-op repeats and refusals. The [qualification protocol](../implementing-docs/SELECTION_QUALIFICATION_0.3.0.md) defines source/artifact/report identity and the manual single-artifact workflow. These reports are contract evidence (`qualification: false`), not real installation or native platform qualification. Local Node 22 checks do not satisfy the Node 24 execution target.
+
 ## Remaining qualification
 
 Required later gates include real minimal recipe and every advertised variant execution with the packed CLI on supported Node/Python/platforms, native shell/launcher transport tests at bounds, website/CLI export fixtures and accessibility/usability sessions. General diff previews, intended-stack doctor, repair allowlist and optional roadmap work are not implemented by this slice. The whole release remains incomplete.
