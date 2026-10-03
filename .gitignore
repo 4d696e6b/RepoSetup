@@ -24,3 +24,4 @@ logs/
 .local-cli/
 test-results/
 playwright-report/
+apps/website/qualification/

@@ -5,6 +5,36 @@ test.beforeEach(async ({ browser }, testInfo) => {
   testInfo.annotations.push({ type: "browser-version", description: browser.version() });
 });
 
+test("built preview blocks network connections and untrusted route text", async ({ page }) => {
+  const reached: string[] = [];
+  await page.route("**/policy-fixture", (route) => {
+    reached.push(route.request().url());
+    return route.fulfill({ body: "unexpected connection" });
+  });
+  await page.goto("/");
+  const policy = page.locator('meta[http-equiv="Content-Security-Policy"]');
+  await expect(policy).toHaveAttribute("content", /connect-src 'none'/);
+  expect(
+    await page.evaluate(async () => {
+      try {
+        await fetch("/policy-fixture");
+        return "connection allowed";
+      } catch {
+        return "connection blocked";
+      }
+    }),
+  ).toBe("connection blocked");
+  expect(reached).toEqual([]);
+  const text = '<img src="/policy-fixture" onerror="alert(1)">';
+  await page.goto(`/#/integrations?goal=${encodeURIComponent(text)}`);
+  await expect(page.getByLabel("Search by library or goal")).toHaveValue(text);
+  await expect(page.getByRole("status")).toHaveText("0 libraries found");
+  await expect(page.locator("img")).toHaveCount(0);
+  await page.goto("/#/builder/unknown-context");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Page not found");
+  await expect(page.getByRole("button", { name: "Copy RepoSetup command" })).toHaveCount(0);
+});
+
 test("invalid project controls have linked errors and recover without losing focus", async ({
   page,
 }) => {

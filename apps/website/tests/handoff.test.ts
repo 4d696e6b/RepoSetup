@@ -5,6 +5,7 @@ import { join, resolve } from "node:path";
 import { afterEach, beforeAll, expect, it } from "vitest";
 import { catalog, handoff } from "../src/catalog.js";
 import { chooseSelection, exportSelection } from "../src/selection.js";
+import { verifyArtifact } from "../scripts/verify-artifact.ts";
 
 const local = resolve(".local-cli");
 const bin = join(local, "installed/node_modules/rsetup/dist/bin.js");
@@ -14,6 +15,7 @@ beforeAll(async () => {
   const evidence = JSON.parse(await readFile(join(local, "evidence.json"), "utf8"));
   expect(evidence.commit).toBe(handoff.commit);
   expect(evidence.version).toBe(handoff.version);
+  verifyArtifact(local);
   expect(
     Number(process.versions.node.split(".")[0]),
     "Run packed handoff tests with Node 24",

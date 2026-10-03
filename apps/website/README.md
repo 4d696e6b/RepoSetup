@@ -54,6 +54,8 @@ File limit: 16 KiB. Current bounded form selections all fit the token route. Tes
 
 The website only chooses a generated variant and validates name/folder controls; it does not reimplement integration compatibility. Browser serialization is checked against the committed core decoder and packed CLI. Type imports erase at build time; the Vite bundle guard refuses Node/workspace runtime modules. UI dependencies exist only in the app. A catalog update must rerun generation, selection tests and packed joint qualification before changing the displayed CLI identity.
 
+Built HTML also applies a Content Security Policy: scripts/styles and resources are restricted to this static site, network connections and form submissions are blocked, and object/base injection is refused. Browser tests check blocked fetch and literal hostile route text alongside working copy/download flows. This is a built-preview policy; Vite development HMR is unaffected. It does not replace validation or qualify a future hosting provider's headers.
+
 The branch starts at candidate `145e167e6b60897da96942545ba6dbd40359ad4a`. Shared core selection files/tests, registry validation/export/search, integrations guidance/presets/catalog exports, dependency delta safety and the CLI’s error-code mapping are synchronized from `626fce9`; CLI parsing/execution changes stay on the CLI track. The CLI mapping is the one-line compatibility adapter for the new shared error type. Resolve identical shared changes normally when integrating the independently reviewed tracks; do not copy the website parser into core.
 
 ## Checks
@@ -68,9 +70,18 @@ pnpm --filter @reposetup/website test:browser:local
 pnpm --filter @reposetup/website test:browser:webkit
 pnpm --filter @reposetup/website pack:contract
 pnpm --filter @reposetup/website test:handoff
+pnpm --filter @reposetup/website qualify:local
+# On a compatible host, require the entire browser matrix:
+pnpm --filter @reposetup/website qualify
 ```
 
 Handoff tests are a separate explicit gate and fail if the pinned artifact or Node 24 is missing; there are no hidden skips. They validate every exported create/add variant, token/file plan equivalence, no project mutation during previews, actual detected-context refusal, stale/hostile inputs, real size boundaries, and Bash/zsh launch with confirmation required.
+
+Before any CLI execution, qualification verifies the committed target/version, the recorded tarball SHA-256 and byte equality of the installed package metadata and all executable chunks with that tarball. Altered or missing local artifacts fail; `pack:contract` is an explicit preparation step. Browser labels and the packer use one target in `src/handoff.ts`.
+
+`qualify` runs artifact verification, workspace build/unit/typecheck/lint, packed handoff and the full browser suite, stopping on failure. `qualify:local` explicitly selects Chrome/Firefox instead. It writes timestamped, ignored `qualification/<run>/report.json`, step logs and the browser report; records commit/dirty flag/working-tree digest, Node/platform, lockfile/catalog/artifact/build-asset hashes; and refuses source changes during a run. Its `automatedScopePassed` result applies only to the named scope. `wholeReleaseQualified` stays false because human, platform, maintenance and freeze/soak gates require separate evidence. No installation into a project, publication, upload or automatic test-browser setup occurs.
+
+The manual-only [website qualification workflow](../../.github/workflows/website-qualification.yml) prepares the full test matrix on macOS 15 with Node 24. It is authored, not dispatched or proven by the local run. It requires the exact pinned CLI commit in repository history and Chrome on the runner. It performs no deployment or project upload; changing source/catalog/CLI identities requires a fresh joint run. Native Windows qualification remains separate because this tool currently checks POSIX launchers.
 
 `test:browser` is the full five-profile gate: Chrome desktop/mobile, Firefox desktop and WebKit desktop/mobile. `test:browser:local` explicitly selects the three locally verified Chrome/Firefox profiles; `test:browser:webkit` retains the separate open WebKit gate. Tests cover all 22 routes with axe WCAG A/AA scans, keyboard controls, copying/downloading, invalid linked-field errors, context/draft preservation, clipboard denial, no data transmission/storage and reflow at 320, 768 and 1440 pixels. Browser versions and screenshots are saved under ignored `test-results/`. Mobile profiles emulate viewports/touch, not physical devices.
 
@@ -91,3 +102,5 @@ Publication/version-pinned bootstrap and native Windows/Linux transport are unqu
 The build/dev/preview behavior was checked against [Vite’s official guide](https://vite.dev/guide/) and [static build guidance](https://vite.dev/guide/build.html). Form labeling follows [WAI’s labeling guidance](https://www.w3.org/WAI/tutorials/forms/labels/); browser checks use [Playwright assertions](https://playwright.dev/docs/test-assertions). The nine integration guidance links were opened against current official project documentation; recipe setup/pins still come from the committed curated definitions and recorded parent evidence, not latest upstream versions. Hosting choice and published bootstrap remain research-required.
 
 Phase 8 linked-field feedback follows [WAI form notifications](https://www.w3.org/WAI/tutorials/forms/notifications/). Clipboard recovery was checked against [MDN writeText](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText). Binary/engine and mobile-emulation limits follow [Playwright browser guidance](https://playwright.dev/docs/browsers); the macOS-14 WebKit failure above is direct local test evidence.
+
+The build-only HTML policy uses [Vite's plugin API](https://vite.dev/guide/api-plugin) and [MDN CSP guidance](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy), including its [form-action directive](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/form-action). The manually authored runner follows [Playwright CI guidance](https://playwright.dev/docs/ci) and [JSON reporter guidance](https://playwright.dev/docs/test-reporters). Local logs demonstrate only the local scope; the new workflow has no remote execution evidence.

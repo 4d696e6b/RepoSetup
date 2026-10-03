@@ -6,8 +6,9 @@ import process from "node:process";
 import console from "node:console";
 import { URL, fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
+import { handoff } from "../src/handoff.ts";
 
-const commit = "626fce93214af8554c3a0700ead52c5e3db8ae7a";
+const { commit, version } = handoff;
 const root = fileURLToPath(new URL("../../../", import.meta.url));
 const local = resolve(root, "apps/website/.local-cli");
 const temp = mkdtempSync(join(tmpdir(), "reposetup-website-contract-"));
@@ -23,7 +24,7 @@ try {
   run("pnpm", ["build"], join(temp, "source"));
   mkdirSync(local, { recursive: true });
   run("pnpm", ["--filter", "rsetup", "pack", "--pack-destination", local], join(temp, "source"));
-  const tarball = join(local, "rsetup-0.3.0-alpha.1.tgz");
+  const tarball = join(local, `rsetup-${version}.tgz`);
   mkdirSync(join(local, "installed"), { recursive: true });
   run("npm", [
     "install",
@@ -40,7 +41,7 @@ try {
   symlinkSync(bin, join(local, "bin/reposetup"));
   const record = {
     commit,
-    version: "0.3.0-alpha.1",
+    version,
     node: process.version,
     platform: `${process.platform}/${process.arch}`,
     tarballSha256: createHash("sha256").update(readFileSync(tarball)).digest("hex"),

@@ -61,6 +61,19 @@ Date: 2026-10-03. **Partial: automated local validation improved; observed sessi
 
 `test:browser:local` selects the three verified profiles explicitly; it does not complete the full gate. `test:browser:webkit` retains both pending WebKit profiles, and `test:browser` retains the complete matrix for a compatible host. Run those gates before advertising WebKit support. Mobile emulation does not qualify physical iOS/Android or Safari. Manual screen-reader, real beginner sessions and wider release/platform qualification remain open.
 
+## Additional Phase 8 safety and repeatability work
+
+2026-10-03: continued after the initial validation commit `d7020347a2a3b210bac5fb39f97f99b0ebf992df`.
+
+- Built static HTML enforces a Content Security Policy that blocks fetch/WebSocket connections and form submissions and restricts executable/resource loading to the site. New browser checks demonstrate blocked network fetch, inert hostile route text and unknown-context refusal. Existing command copying and JSON download still pass. Development HMR is unaffected; this does not qualify production response headers.
+- Packed handoff verifies recorded source/version, actual tarball SHA-256 and installed metadata/executable bytes before running the CLI. Four regression cases cover successful identity, stale/substituted artifacts, changed main/chunk bytes and missing chunks. Browser labels and packing share `src/handoff.ts`.
+- `qualify:local` runs all six checks and records source commit/dirty flag/working-tree digest, runtime/platform and lockfile/catalog/CLI/asset hashes with per-step results/logs and browser evidence. Source changes during a run refuse a pass. `qualify` retains the full browser matrix. Reports explicitly preserve `wholeReleaseQualified: false` and remaining human/platform/maintenance/freeze gates; they cannot promote local success to release completion.
+- Latest local run: **487 workspace unit tests** (website 12), **24 Chrome/Firefox browser tests**, **6 packed handoff tests** and workspace build/typecheck/lint passed. Report/logs under ignored `apps/website/qualification/`; screenshots remain under ignored `test-results/`. The first runner attempt exposed a missing Node URL import in lint; it was fixed and the complete local run passed.
+- A manual-only macOS-15/Node-24 full qualification workflow is authored and YAML-validated, **not dispatched**. No remote project upload, publication or deployment occurred. The local Docker daemon did not respond, so it provided no alternative WebKit evidence. The existing WebKit page-setup failure and manual screen-reader/physical-device/session gates remain open.
+- CLI real create qualification is active in the separate “0.3.0 CLI” chat. Its uncommitted recipe/catalog changes are not imported here. After a new committed contract/catalog is available, synchronize the reviewed shared changes, regenerate the public snapshot, repack the exact new artifact and repeat joint qualification before changing the website's advertised target. Phases 3–5 remain CLI-owned dependencies; no unsupported maintenance flags are displayed.
+
+The phase count is unchanged: Phase 8 partial, 0/5 observed sessions, seven release phases remaining. There is no claim that every release task has been completed.
+
 ## Working routes / review
 
 Run from this worktree: `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm website:dev`. Local default: `http://127.0.0.1:5173/`; built preview can use port 4173.

@@ -1,0 +1,29 @@
+name: Website qualification (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  website:
+    name: Website full browser and pinned handoff gate
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # This test-only runner has an installed Chrome. No product/system installation occurs.
+      - run: pnpm --filter @reposetup/website exec playwright install firefox webkit
+      # The exact CLI commit must exist in repository history; never consume a floating branch.
+      - run: pnpm --filter @reposetup/website pack:contract
+      - run: pnpm --filter @reposetup/website qualify
+      # No publishing, project upload, deployment or participant-session claim.
