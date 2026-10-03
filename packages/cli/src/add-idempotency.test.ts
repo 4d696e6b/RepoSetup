@@ -210,6 +210,8 @@ describe("add idempotency (built-in catalog)", () => {
       const root = await mkdtemp(path.join(os.tmpdir(), `reposetup-idem-${item.id}-`));
       tempDirs.push(root);
       await pythonApp(root, item.packages);
+      if (item.id === "pytest")
+        await writeFile(path.join(root, "test_main.py"), "# Keep the existing endpoint test.\n");
       const captured = captureIo();
       const result = await runCli(["add", item.id, "--yes"], {
         cwd: root,
