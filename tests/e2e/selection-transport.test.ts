@@ -305,8 +305,7 @@ async function runShell(
     if (route === "file") {
       // PowerShell passes the environment value as one native-command argument,
       // including spaces and Unicode, without embedding the path in shell code.
-      const command =
-        "& " + alias + ".cmd --json " + mode + " " + flag + " $env:REPOSETUP_TEST_INPUT" + suffix;
+      const command = `& ${alias}.cmd --json ${mode} ${flag} $env:REPOSETUP_TEST_INPUT${suffix}; exit $LASTEXITCODE`;
       return runProcess("pwsh.exe", ["-NoProfile", "-NonInteractive", "-Command", command], {
         cwd,
         env: launcherEnvironment(input),
