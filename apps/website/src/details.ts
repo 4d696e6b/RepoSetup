@@ -50,7 +50,7 @@ export function detail(main: HTMLElement, item: WebsiteGuidance) {
     el("h3", "Local operations"),
     el(
       "p",
-      `Create${item.addable ? ", add to a detected project" : " (framework starter only)"}${item.removable ? ", remove dependency" : ""}. Diagnosis is read-only; no repair flow is offered here.`,
+      `Create${item.addable ? ", add to a detected project" : " (framework starter only)"}${item.removable ? ", remove dependency" : ""}. Diagnosis is read-only.${item.id === "prettier" ? " The matching local CLI can review repair of a missing recipe Prettier config with doctor --config reposetup.json --fix --dry-run." : " Other repairs are not offered for this library in the beginner flow."}`,
     ),
     el("h3", "Recipe version evidence"),
     list(catalog.directVersions[item.id] ?? ["See the framework recipe"]),

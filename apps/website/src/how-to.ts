@@ -26,7 +26,7 @@ export function howTo(main: HTMLElement) {
     ),
     section(
       "Preview before confirming",
-      "The secondary --dry-run command is read-only and works without an interactive terminal. A normal selection command cannot bypass confirmation with --yes. A cancelled plan makes no project changes.",
+      "The secondary --dry-run command is read-only and works without an interactive terminal. Add --diff --dry-run to the copied create or add command for a structural file-change preview; generated and external-tool effects remain uncertain until execution. A normal selection command cannot bypass confirmation with --yes. A cancelled plan makes no project changes.",
     ),
     section(
       "Missing prerequisites",
@@ -42,7 +42,11 @@ export function howTo(main: HTMLElement) {
     ),
     section(
       "After applying",
-      "Inspect generated files and write your application logic/tests. Use the CLI’s read-only doctor to inspect detected setup evidence. Automated repair and an exact before/after diff are outside this slice.",
+      "Inspect generated files and write your application logic/tests. Run reposetup doctor for read-only discovery checks. With a schemaVersion 1 reposetup.json for this project, reposetup doctor --config reposetup.json compares the intended stack with local evidence. A dependency declaration does not prove that the app runs.",
+    ),
+    section(
+      "Review a small missing-file repair",
+      "If intended doctor reports an eligible missing Prettier config or recipe-defined .env.example, run reposetup doctor --config reposetup.json --fix --dry-run first. The CLI shows a content-free preview and manual guidance. Then run the same command without --dry-run and confirm locally; --yes is only for an explicit noninteractive repair. Existing files, dependencies, source and real .env values are not replaced or copied. Other findings require manual action.",
     ),
   );
 }

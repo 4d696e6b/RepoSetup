@@ -6,7 +6,7 @@ Prepared 2026-10-03 for release Phase 8. **Observed sessions: 0 of at least 5.**
 
 The website plan requires beginners to explain a library's purpose, choose a minimal preset, customize deliberately, export, preview locally and apply without undocumented repair. Observe the complete learn → choose → copy → local plan → confirmation journey. Record whether people understand optional choices, the provisional existing-project context, the required CLI version and the distinction between preview and installation.
 
-Use the local website and its exact pinned packed CLI. Actual apply tasks require the corresponding real create/add recipe to have passed Phase 2 qualification with its prerequisites. If that evidence is unavailable, run the learning/export/preview portion and mark the session **incomplete for the apply acceptance gate**. A successful dry-run or cancellation does not establish a working installation. Maintenance tasks are added after CLI Phases 3–5 ship; do not suggest proposed preview/doctor/repair flags exist today.
+Use the local website and its exact pinned packed CLI. Actual apply tasks require the corresponding real create/add recipe to have passed Phase 2 qualification with its prerequisites. If that evidence is unavailable, run the learning/export/preview portion and mark the session **incomplete for the apply acceptance gate**. A successful dry-run or cancellation does not establish a working installation. The pinned CLI now supports `--diff --dry-run`, `doctor --config` and the narrow `doctor --config --fix` flow; qualify those commands independently before counting maintenance acceptance.
 
 ## Prepare each session
 
@@ -27,6 +27,10 @@ These are coverage assignments, not completed results. Use five distinct beginne
 - **B05 — existing project.** “This prepared project already exists. Add input validation without replacing its framework or your files.” Provide a qualified existing Express or React fixture. Observe explicit add mode, at-least-one guidance and provisional context. Verify preserved existing files, expected added capability and repeat behavior against Phase 2 evidence. Then ask how to recover from an invalid new-project folder and how to use Download selection.json if copying fails.
 
 Across the sessions include keyboard use, at least one narrow viewport, and a participant using a screen reader when available. Do not assign assistive technology to someone who does not normally use it. An independent manual screen-reader check remains necessary if sessions do not cover it. Current bounded choices fit the command limit; explain the validated file alternative without claiming a participant reached automatic size fallback. Boundary fixture tests provide separate transport evidence.
+
+## Planned maintenance follow-ups
+
+These are additional observed tasks, not completed sessions. Give a beginner a disposable, qualified project with its intended-stack config and a missing Prettier recipe config. Ask what `doctor --config reposetup.json` found, what `--fix --dry-run` would change, and whether they want to confirm `--fix`. Record the decision and verify the file and repeat result. In a separate qualified Python/Pydantic Settings or Prisma fixture, remove only the generated `.env.example`, keep a fictional `.env`, and observe whether the person distinguishes placeholders from secrets and understands any manual finding. Preserve custom alternative configs and user files. Record exact CLI artifact, OS and outcome; automated fixtures do not replace these observations.
 
 ## Moderator prompts and observations
 

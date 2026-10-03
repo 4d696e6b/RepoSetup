@@ -46,6 +46,8 @@ Initial checks exposed missing shared delta/error adapter prerequisites, a skip-
 
 ## Phase 8 local validation slice
 
+The website how-to now explains the shipped structural `--diff --dry-run` preview and narrow `doctor --config --fix` repair path, including the explicit confirmation step. A browser regression checks those instructions and the Prettier detail page; the local browser suite passes 27 cases across Chrome desktop/mobile and Firefox. The beginner-session protocol now includes planned maintenance follow-ups. Observed participants remain **0/5**, and manual accessibility/device and broader safety/platform gates remain open.
+
 Date: 2026-10-03. **Partial: automated local validation improved; observed sessions 0/5.**
 
 - Invalid project names/folders have individual messages linked by `aria-describedby`, `aria-invalid` and a persistent atomic status region. Focus stays in the edited field; hidden create controls do not block add mode. The invalid review panel stays aligned with the form on desktop. Optional-library group guidance explains empty minimal create versus nonempty add.

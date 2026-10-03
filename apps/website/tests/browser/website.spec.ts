@@ -90,6 +90,24 @@ test("copy command and downloadable file carry equivalent choices", async ({
   );
 });
 
+test("maintenance guidance matches the pinned CLI's preview and narrow repair workflow", async ({
+  page,
+}) => {
+  await page.goto("/#/how-to");
+  await expect(page.getByRole("heading", { name: "Preview before confirming" })).toBeVisible();
+  await expect(page.getByText("--diff --dry-run", { exact: false })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Review a small missing-file repair" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("doctor --config reposetup.json --fix --dry-run", { exact: false }),
+  ).toBeVisible();
+  await page.goto("/#/integrations/prettier");
+  await expect(
+    page.getByText("The matching local CLI can review repair", { exact: false }),
+  ).toBeVisible();
+});
+
 test("keyboard navigation, accessible pages and responsive layout", async ({ page }) => {
   for (const route of [
     "/",
