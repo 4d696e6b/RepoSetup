@@ -25,7 +25,7 @@ Nothing is published. Vite preview serves the built output locally; it is not a 
 
 ## Matching CLI artifact: required before pasting commands
 
-The displayed `reposetup create|add --selection TOKEN` command is available in the **local development CLI** `rsetup@0.3.0-alpha.1`, exact committed source `f99f63a198986c30bba92dc1cd6af2ec68ec87e9` on `codex/0.3.0-cli`. It is not advertised as a published CLI. The retained 0.2.0 parser in this website branch does not implement selection flags. Do not use a floating npx/npm bootstrap or the published 0.2.0 binary with these commands.
+The displayed `reposetup create|add --selection TOKEN` command is available in the **local development CLI** `rsetup@0.3.0-alpha.1`, exact committed source `8950efb3c09d4705576b9ec0802f0c89d841c91d` on `codex/0.3.0-cli`. It is not advertised as a published CLI. The retained 0.2.0 parser in this website branch does not implement selection flags. Do not use a floating npx/npm bootstrap or the published 0.2.0 binary with these commands.
 
 Prepare that exact artifact without changing the CLI or candidate checkout:
 
@@ -56,7 +56,7 @@ The website only chooses a generated variant and validates name/folder controls;
 
 Built HTML also applies a Content Security Policy: scripts/styles and resources are restricted to this static site, network connections and form submissions are blocked, and object/base injection is refused. Browser tests check blocked fetch and literal hostile route text alongside working copy/download flows. This is a built-preview policy; Vite development HMR is unaffected. It does not replace validation or qualify a future hosting provider's headers.
 
-The branch starts at candidate `145e167e6b60897da96942545ba6dbd40359ad4a`. Initial shared selection files/tests, registry validation/export/search, guidance/presets, dependency delta safety and the CLI error-code mapping came from committed CLI `626fce9`. Curated catalog revision `0.3.0-cli.2` and its shared recipe/plan fixes were synchronized from committed CLI `f99f63a`; CLI parsing/execution changes stay on the CLI track. Resolve identical shared changes normally when integrating the independently reviewed tracks; do not copy the website parser into core.
+The branch starts at candidate `145e167e6b60897da96942545ba6dbd40359ad4a`. Initial shared selection files/tests, registry validation/export/search, guidance/presets, dependency delta safety and the CLI error-code mapping came from committed CLI `626fce9`. Curated catalog revision `0.3.0-cli.3` and relevant recipe files now match committed CLI `8950efb`; CLI parsing/execution changes stay on the CLI track. Resolve identical shared changes normally when integrating the independently reviewed tracks; do not copy the website parser into core.
 
 ## Checks
 

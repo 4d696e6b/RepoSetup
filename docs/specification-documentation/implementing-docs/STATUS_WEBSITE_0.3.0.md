@@ -1,17 +1,17 @@
 # 0.3.0 companion website — first local slice
 
-Date: 2026-10-03. Status: reviewable local website slice implemented and checked; not a website deployment or a completed 0.3.0 release.
+Date: 2026-10-04. Status: reviewable local website slice implemented and checked; not a website deployment or a completed 0.3.0 release.
 
 ## Phase position
 
-This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. Work is now in **Phase 8 (beginner usability and broader safety/accessibility validation)**. The ten-phase release has **3 phases implemented locally and 7 remaining**, including partial qualification/validation phases. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
+This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. Work is now in **Phase 8 (beginner usability and broader safety/accessibility validation)**. Across both branches, Phases 1–7 are implemented locally or qualified for their bounded scope; **3 phases remain**. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
 
 ## Source isolation
 
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`.
 - Branch: `codex/0.3.0-website`, created from recorded 0.2.0 candidate `145e167e6b60897da96942545ba6dbd40359ad4a`.
 - The original candidate checkout remains at that commit; its three untracked planning files remain present and unchanged. Their copies here were checked byte-for-byte against the originals.
-- CLI track: the current exact committed target is `f99f63a198986c30bba92dc1cd6af2ec68ec87e9` on `codex/0.3.0-cli`. Neither sibling branch was merged or edited; only reviewed committed shared files were copied.
+- CLI track: the current exact committed target is `8950efb3c09d4705576b9ec0802f0c89d841c91d` on `codex/0.3.0-cli`. Neither sibling branch was merged or edited; only reviewed committed shared files were copied.
 - Shared selection schemas/tests/planner, registry semantic validation/export/search and delta safety originally came from committed `626fce9`. Curated beginner definitions and shared recipe/plan fixes now match committed `f99f63a`. The retained website-branch CLI parser is still 0.2.0 and is not the handoff target.
 - AGENTS.md, product requirements and architecture document the owner’s explicit 0.3.0 website exception on this branch.
 
@@ -81,7 +81,13 @@ Date: 2026-10-03. **Partial: automated local validation improved; observed sessi
 - Workspace build, **498 unit tests** (core 254, registry 15, integrations 126, retained CLI 91, website 12), typecheck and lint pass. The six packed handoff tests pass across all 45 selections, checking token/file plan equivalence, refusal and confirmation safety. All 24 Chrome desktop/mobile and Firefox browser tests pass with the regenerated catalog and displayed identity. The clean-source qualification report records the final implementation commit separately.
 - This sync does not make the website a released support claim. WebKit on this host, manual screen-reader/device checks, five observed beginner sessions and later maintenance/release gates remain open. The phase count stays at seven remaining.
 
-The phase count is unchanged: Phase 8 partial, 0/5 observed sessions, seven release phases remaining. There is no claim that every release task has been completed.
+The earlier seven-remaining count was correct for the 2026-10-03 CLI snapshot. With the later committed CLI work, Phase 8 is partial, 0/5 observed sessions, and three release phases remain. There is no claim that every release task has been completed.
+
+## 2026-10-04 catalog and CLI alignment
+
+The website's curated catalog and relevant recipe files now match committed CLI `8950efb3c09d4705576b9ec0802f0c89d841c91d`; the generated public revision is `0.3.0-cli.3`. The displayed local development CLI identity and packer target match that commit. This synchronizes information and handoff claims without bringing the CLI parser/executor into the browser or changing either sibling checkout.
+
+Using Node 24.21.0 and pnpm 12.5.1, the updated tree passed **498 workspace unit tests**, typecheck, lint and build. The local Chrome desktop/mobile and Firefox browser gate passed **24/24** cases; the packed exact-commit handoff gate passed **6/6** cases, covering all 45 create/add variants. The packed tarball SHA-256 is `13484072d64b72ef9e99eae9f1449c836da60e3e96fb2b6e5ac8bb9e49c22080`; its ignored evidence file records the source, runtime and platform. This is a working-tree run, not a clean-source qualification report. The prior WebKit failure and manual accessibility/participant/platform gates remain open.
 
 ## Working routes / review
 

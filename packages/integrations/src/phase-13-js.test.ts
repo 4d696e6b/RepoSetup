@@ -152,7 +152,7 @@ describe("Phase 13 JS ecosystem plans", () => {
   });
 
   it("adds an HTTP response test when Express is configured with Vitest", () => {
-    const plan = expressIntegration.plan(
+    const plan = vitestIntegration.plan(
       planContext({
         frameworkId: "express",
         options: { typescript: true },
@@ -169,6 +169,13 @@ describe("Phase 13 JS ecosystem plans", () => {
         }),
       ]),
     );
+    expect(
+      expressIntegration
+        .plan(planContext({ frameworkId: "express", options: { typescript: true } }))
+        .some(
+          (operation) => operation.type === "create_file" && operation.path === "src/app.test.ts",
+        ),
+    ).toBe(false);
   });
 
   it("installs Fastify and writes the official first server", () => {
