@@ -1,0 +1,25 @@
+{
+  "selectionVersion": 1,
+  "catalogRevision": "0.3.0-cli.1",
+  "cliContract": "selection-v1",
+  "mode": "create",
+  "config": {
+    "schemaVersion": 1,
+    "project": {
+      "name": "my-fastapi-app",
+      "path": "my-fastapi-app"
+    },
+    "runtime": {
+      "id": "python"
+    },
+    "packageManager": "uv",
+    "framework": {
+      "id": "fastapi"
+    },
+    "integrations": [
+      {
+        "id": "pytest"
+      }
+    ]
+  }
+}

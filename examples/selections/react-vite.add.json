@@ -1,0 +1,18 @@
+{
+  "selectionVersion": 1,
+  "catalogRevision": "0.3.0-cli.1",
+  "cliContract": "selection-v1",
+  "mode": "add",
+  "context": {
+    "runtimeId": "node",
+    "frameworkId": "react-vite",
+    "packageManager": "pnpm",
+    "typescript": true
+  },
+  "integrations": [
+    {
+      "id": "zod",
+      "options": {}
+    }
+  ]
+}

@@ -46,6 +46,20 @@ function formatInfo(definition: IntegrationDefinition): string {
     `  docs              ${definition.documentationUrl}`,
   ];
 
+  if (definition.guidance !== undefined) {
+    const guidance = definition.guidance;
+    lines.push(
+      `  purpose           ${guidance.purpose}`,
+      `  consider when     ${guidance.when}`,
+      `  skip when         ${guidance.unnecessary}`,
+      `  example           ${guidance.example}`,
+      `  prerequisites     ${guidance.prerequisites}`,
+      `  alternatives      ${guidance.alternatives}`,
+      `  setup impact      ${guidance.impact}`,
+      `  guidance reviewed ${guidance.reviewedAt}`,
+      `  guidance docs     ${guidance.documentationUrl}`,
+    );
+  }
   return lines.join("\n");
 }
 

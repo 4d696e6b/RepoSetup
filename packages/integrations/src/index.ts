@@ -38,3 +38,7 @@ export { testingLibraryIntegration } from "./testing-library.js";
 export { uvIntegration } from "./uv.js";
 export { vitestIntegration } from "./vitest.js";
 export { zodIntegration } from "./zod.js";
+
+export { BUNDLED_PRESETS, BEGINNER_PRESETS, findBundledPreset } from "./presets.js";
+export type { BundledPreset } from "./presets.js";
+export { BEGINNER_CATALOG } from "./beginner-catalog.js";

@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is currently an **early-stage** open-source project (`v0.2.0-alpha.1`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is currently an **early-stage** open-source project. This branch develops `0.3.0-alpha.1` (unreleased); the isolated 0.2.0 candidate remains unchanged. The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -52,7 +52,7 @@ cd RepoSetup
 pnpm install
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.1.1
+node packages/cli/dist/bin.js --version   # 0.3.0-alpha.1 (development source)
 ```
 
 Preview a Next.js example without changing files:
@@ -283,8 +283,10 @@ See the [phased roadmap to 0.2.0](docs/specification-documentation/implementing-
 - Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
 - Promote integrations to `stable` only with that evidence
 - Configure npm trusted publishing so tag workflows can release without a local token
-- A website is explicitly out of scope for this architecture
+- A companion educational website is requested for 0.3.0; its implementation and deployment remain later milestones.
 
 ## License
 
 [MIT](LICENSE)
+
+The first 0.3.0 CLI slice adds curated beginner `info`/goal search, separate minimal starter presets, and bounded declarative create/add selection handoffs. See [selection v1](docs/specification-documentation/product-docs/SELECTION_V1.md) for limits, conflicts and confirmation. Existing schemaVersion 1 configs, legacy presets, positional add and JSON plans remain supported. This slice does not qualify or complete the 0.3.0 release.

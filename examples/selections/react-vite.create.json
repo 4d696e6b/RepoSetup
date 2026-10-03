@@ -1,0 +1,28 @@
+{
+  "selectionVersion": 1,
+  "catalogRevision": "0.3.0-cli.1",
+  "cliContract": "selection-v1",
+  "mode": "create",
+  "config": {
+    "schemaVersion": 1,
+    "project": {
+      "name": "my-react-vite-app",
+      "path": "my-react-vite-app"
+    },
+    "runtime": {
+      "id": "node"
+    },
+    "packageManager": "pnpm",
+    "framework": {
+      "id": "react-vite",
+      "options": {
+        "typescript": true
+      }
+    },
+    "integrations": [
+      {
+        "id": "zod"
+      }
+    ]
+  }
+}

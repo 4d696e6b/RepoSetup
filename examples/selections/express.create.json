@@ -1,0 +1,28 @@
+{
+  "selectionVersion": 1,
+  "catalogRevision": "0.3.0-cli.1",
+  "cliContract": "selection-v1",
+  "mode": "create",
+  "config": {
+    "schemaVersion": 1,
+    "project": {
+      "name": "my-express-app",
+      "path": "my-express-app"
+    },
+    "runtime": {
+      "id": "node"
+    },
+    "packageManager": "pnpm",
+    "framework": {
+      "id": "express",
+      "options": {
+        "typescript": true
+      }
+    },
+    "integrations": [
+      {
+        "id": "prettier"
+      }
+    ]
+  }
+}

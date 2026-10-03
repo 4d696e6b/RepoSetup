@@ -19,7 +19,18 @@ export async function filterSatisfiedOperations(
   const remaining: InstallationOperation[] = [];
   let removedWork = false;
 
-  for (const operation of operations) {
+  for (const original of operations) {
+    let operation = original;
+    if (original.type === "install_package") {
+      const missing: string[] = [];
+      for (const spec of original.packages) {
+        if (!(await isOperationSatisfied({ ...original, packages: [spec] }, files, packageJson)))
+          missing.push(spec);
+      }
+      if (missing.length !== original.packages.length) removedWork = true;
+      if (missing.length === 0) continue;
+      operation = { ...original, packages: missing };
+    }
     if (await isOperationSatisfied(operation, files, packageJson)) {
       if (operation.type !== "show_message") {
         removedWork = true;

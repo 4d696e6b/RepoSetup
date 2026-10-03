@@ -69,7 +69,9 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .description("Create a project from prompts or a declarative config")
     .argument("[name]", "project name")
     .option("-c, --config <path>", "path to a RepoSetup JSON config")
-    .option("--preset <id>", "use a bundled guaranteed recipe preset")
+    .option("--preset <id>", "use a bundled recipe preset")
+    .option("--selection <token>", "review a bounded selection-v1 token")
+    .option("--selection-file <path>", "review a selection-v1 JSON file")
     .option("--dry-run", "print the installation plan without changing files", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--framework <id>", "framework integration id")
@@ -81,6 +83,8 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
       exitCode = await handleCreate({
         name,
         options: {
+          ...(options.selection === undefined ? {} : { selection: options.selection }),
+          ...(options.selectionFile === undefined ? {} : { selectionFile: options.selectionFile }),
           dryRun: options.dryRun,
           yes: options.yes,
           typescript: options.typescript,
@@ -99,7 +103,9 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
   program
     .command("add")
     .description("Add one or more integrations to the current project")
-    .argument("<ids...>", "one or more integration ids")
+    .argument("[ids...]", "one or more integration ids")
+    .option("--selection <token>", "review an additive selection-v1 token")
+    .option("--config <path>", "review an additive selection-v1 JSON file")
     .option("--dry-run", "print the add plan without changing files", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--package-manager <id>", "package manager")
@@ -108,11 +114,19 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .action(
       async (
         integrationIds: string[],
-        options: { dryRun: boolean; yes: boolean; packageManager?: string },
+        options: {
+          dryRun: boolean;
+          yes: boolean;
+          packageManager?: string;
+          selection?: string;
+          config?: string;
+        },
         command: Command,
       ) => {
         exitCode = await handleAdd({
           integrationIds,
+          ...(options.selection === undefined ? {} : { selection: options.selection }),
+          ...(options.config === undefined ? {} : { config: options.config }),
           dryRun: options.dryRun,
           yes: options.yes,
           packageManager: options.packageManager,

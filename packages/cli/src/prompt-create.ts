@@ -156,7 +156,10 @@ async function promptFramework(
     choices: frameworks.map((definition) => ({
       value: definition.id,
       name: definition.name,
-      description: definition.description,
+      description:
+        definition.guidance === undefined
+          ? definition.description
+          : `${definition.guidance.purpose} ${definition.guidance.when} ${definition.guidance.unnecessary}`,
     })),
     ...(context.frameworkId === undefined ? {} : { default: context.frameworkId }),
   });
@@ -218,7 +221,10 @@ async function promptOptionalGroup(
     choices: choices.map((definition) => ({
       value: definition.id,
       name: `${definition.name} (${definition.id})`,
-      description: definition.description,
+      description:
+        definition.guidance === undefined
+          ? definition.description
+          : `${definition.guidance.purpose} ${definition.guidance.when} ${definition.guidance.unnecessary}`,
     })),
   });
 }

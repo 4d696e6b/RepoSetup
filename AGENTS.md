@@ -20,7 +20,7 @@ Correctness, safety, reproducibility, and maintainability are more important tha
 - Integrations must generate typed operations.
 - Only the executor may execute processes or mutate project files.
 - `@reposetup/core` must not depend on Commander, Inquirer, Ink, React, Firebase, or terminal rendering.
-- Do not implement a website in v1.
+- The owner requested a companion educational website for 0.3.0, superseding the earlier website exclusion. Keep it a separate presentation/export surface; only the local executor mutates projects. This CLI slice does not implement or deploy it.
 
 ## Safety rules
 
@@ -70,7 +70,6 @@ Do not claim a task is complete if tests/typecheck are failing.
 ## Version 1 non-goals
 
 Do not implement:
-- website;
 - Firebase;
 - user accounts;
 - payments;

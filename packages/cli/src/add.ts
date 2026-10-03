@@ -1,5 +1,12 @@
-import { executeInstallation, planAddMany, type PackageManager } from "@reposetup/core";
+import {
+  executeInstallation,
+  planAddMany,
+  selectionFailure,
+  type DeclarativeSelection,
+  type PackageManager,
+} from "@reposetup/core";
 
+import { loadSelection, renderSelectionChoices } from "./selection.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import {
   DEFAULT_COMMAND_TIMEOUT_MS,
@@ -15,12 +22,45 @@ import type { GlobalCliOptions, ResolvedCliDeps } from "./types.js";
 
 export async function handleAdd(input: {
   integrationIds: readonly string[];
+  selection?: string;
+  config?: string;
   dryRun: boolean;
   yes: boolean;
   packageManager: string | undefined;
   globals: GlobalCliOptions;
   deps: ResolvedCliDeps;
 }): Promise<number> {
+  let selection: Extract<DeclarativeSelection, { mode: "add" }> | undefined;
+  const usingSelection = input.selection !== undefined || input.config !== undefined;
+  if (usingSelection) {
+    const conflict =
+      (input.selection !== undefined && input.config !== undefined) ||
+      input.integrationIds.length > 0 ||
+      input.packageManager !== undefined ||
+      input.yes;
+    const loaded = conflict
+      ? selectionFailure(
+          "Add IDs, config and selection are mutually exclusive; selections also conflict with --package-manager and --yes.",
+          "flags",
+        )
+      : await loadSelection({
+          mode: "add",
+          deps: input.deps,
+          ...(input.selection === undefined ? {} : { token: input.selection }),
+          ...(input.config === undefined ? {} : { file: input.config }),
+        });
+    if (!loaded.ok) {
+      writeLine(
+        input.deps.io.writeErr,
+        input.globals.json ? renderErrorJson(loaded.error) : formatError(loaded.error),
+      );
+      return exitCodeForError(loaded.error);
+    }
+    if (loaded.selection.mode !== "add") return EXIT_CODES.INVALID_INPUT;
+    selection = loaded.selection;
+    renderSelectionChoices(selection, input.deps, input.globals);
+  }
+  const integrationIds = selection?.integrations.map((item) => item.id) ?? input.integrationIds;
   if (input.packageManager !== undefined && !isKnownPackageManager(input.packageManager)) {
     writeLine(
       input.deps.io.writeErr,
@@ -41,14 +81,18 @@ export async function handleAdd(input: {
     return EXIT_CODES.INVALID_INPUT;
   }
 
-  const planned = await planAddMany({
+  const planningInput = {
     startDir: input.deps.cwd,
-    integrationIds: input.integrationIds,
+    integrationIds,
+    ...(selection === undefined
+      ? {}
+      : { selections: selection.integrations, expectedContext: selection.context }),
     registry: input.deps.registry,
     ...(input.packageManager !== undefined && isKnownPackageManager(input.packageManager)
       ? { packageManager: input.packageManager as PackageManager }
       : {}),
-  });
+  };
+  const planned = await planAddMany(planningInput);
 
   if (!planned.ok) {
     writeLine(
@@ -63,7 +107,7 @@ export async function handleAdd(input: {
     : renderPlan(planned.result, {
         dryRun: input.dryRun,
         verbose: input.globals.verbose,
-        quiet: input.globals.quiet,
+        quiet: usingSelection ? false : input.globals.quiet,
       });
 
   if (!planned.result.valid) {
@@ -72,12 +116,16 @@ export async function handleAdd(input: {
   }
 
   if (planned.result.operations.length === 0) {
-    if (!input.globals.quiet) {
+    if (usingSelection && input.globals.json) {
+      writeLine(input.deps.io.writeOut, rendered);
+      return EXIT_CODES.SUCCESS;
+    }
+    if (!input.globals.quiet || usingSelection) {
       writeLine(
         input.deps.io.writeOut,
-        input.integrationIds.length === 1
-          ? `No changes. Integration "${input.integrationIds[0]}" is already present.`
-          : `No changes. Requested integrations (${input.integrationIds.join(", ")}) are already present.`,
+        integrationIds.length === 1
+          ? `No changes. Integration "${integrationIds[0]}" is already present.`
+          : `No changes. Requested integrations (${integrationIds.join(", ")}) are already present.`,
       );
       if (input.dryRun) {
         writeLine(input.deps.io.writeOut, "No files or commands were executed.");
@@ -97,12 +145,33 @@ export async function handleAdd(input: {
     if (!proceed) {
       writeLine(
         input.deps.io.writeErr,
-        "Aborted. Pass --yes to execute without a confirmation prompt.",
+        usingSelection
+          ? "Aborted. Selection execution requires interactive confirmation. Use --dry-run to preview without a TTY."
+          : "Aborted. Pass --yes to execute without a confirmation prompt.",
       );
       return EXIT_CODES.INVALID_INPUT;
     }
   }
 
+  if (usingSelection) {
+    const checked = await planAddMany(planningInput);
+    if (
+      !checked.ok ||
+      !checked.result.valid ||
+      checked.projectRoot !== planned.projectRoot ||
+      JSON.stringify(checked.result.operations) !== JSON.stringify(planned.result.operations)
+    ) {
+      const error = selectionFailure(
+        "The local selection plan changed during confirmation. Run it again to review the new plan.",
+        "changed",
+      ).error;
+      writeLine(
+        input.deps.io.writeErr,
+        input.globals.json ? renderErrorJson(error) : formatError(error),
+      );
+      return exitCodeForError(error);
+    }
+  }
   const executionStartedAt = Date.now();
   const executed = await executeInstallation(planned.result.operations, {
     rootDir: planned.projectRoot,
@@ -158,8 +227,14 @@ export async function handleAdd(input: {
 
   if (!input.globals.quiet) {
     const elapsedSeconds = ((Date.now() - executionStartedAt) / 1000).toFixed(1);
-    writeLine(input.deps.io.writeOut, `Executed ${executed.executed} operations.`);
-    writeLine(input.deps.io.writeOut, `Elapsed: ${elapsedSeconds}s.`);
+    writeLine(
+      input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut,
+      `Executed ${executed.executed} operations.`,
+    );
+    writeLine(
+      input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut,
+      `Elapsed: ${elapsedSeconds}s.`,
+    );
   }
 
   return EXIT_CODES.SUCCESS;

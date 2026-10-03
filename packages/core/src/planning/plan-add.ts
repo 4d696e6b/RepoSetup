@@ -2,6 +2,8 @@ import { createDetectionContext } from "../detection/context.js";
 import { detectProject } from "../detection/detect-project.js";
 import { createNodeDetectionFs } from "../detection/filesystem.js";
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
+import type { SelectionContext } from "../selection/format.js";
+import type { IntegrationSelection } from "../config/types.js";
 import type { PackageManager } from "../config/types.js";
 import type { RegistryLookup } from "../resolution/registry-lookup.js";
 import type { ResolutionResult } from "../resolution/types.js";
@@ -35,6 +37,8 @@ export async function planAdd(input: {
 export async function planAddMany(input: {
   startDir: string;
   integrationIds: readonly string[];
+  selections?: readonly IntegrationSelection[];
+  expectedContext?: SelectionContext;
   registry: RegistryLookup;
   packageManager?: PackageManager;
 }): Promise<PlanAddResult> {
@@ -121,6 +125,29 @@ export async function planAddMany(input: {
     };
   }
 
+  if (input.expectedContext !== undefined) {
+    const expected = input.expectedContext;
+    const typescript = detected.stack.language?.id === "typescript";
+    if (
+      expected.runtimeId !== runtimeId ||
+      expected.frameworkId !== frameworkId ||
+      expected.packageManager !== packageManager.packageManager ||
+      (expected.typescript !== undefined && expected.typescript !== typescript) ||
+      detected.stack.frameworks.filter((item) => item.confidence !== "possible").length !== 1 ||
+      detected.stack.runtimes.filter((item) => item.confidence !== "possible").length !== 1
+    ) {
+      return {
+        ok: false,
+        error: createRepoSetupError({
+          code: "UNSUPPORTED_CONTEXT",
+          message: "Detected project does not match the selection context. No changes were made.",
+          suggestion:
+            "Export an add selection for the actual project framework, runtime, language and manager.",
+        }),
+      };
+    }
+  }
+
   const context = await createDetectionContext(detected.stack.projectRoot, files);
   const config = configFromDetectedStack({
     stack: detected.stack,
@@ -133,6 +160,23 @@ export async function planAddMany(input: {
     typescript: detected.stack.language?.id === "typescript",
   });
 
+  if (input.selections !== undefined) {
+    if (
+      input.selections.length !== integrationIds.length ||
+      new Set(input.selections.map((item) => item.id)).size !== integrationIds.length ||
+      input.selections.some((item) => !integrationIds.includes(item.id))
+    ) {
+      return {
+        ok: false,
+        error: createRepoSetupError({
+          code: "CONFIG_INVALID",
+          message: "Add options must match the requested integration IDs.",
+        }),
+      };
+    }
+    const byId = new Map(input.selections.map((item) => [item.id, item]));
+    config.integrations = config.integrations.map((item) => byId.get(item.id) ?? item);
+  }
   const planned = planInstallationSubset(config, input.registry, integrationIds);
   if (!planned.valid) {
     return { ok: true, projectRoot: detected.stack.projectRoot, result: planned };

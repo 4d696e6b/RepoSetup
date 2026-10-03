@@ -151,3 +151,24 @@ export type {
   ResolutionWarning,
   ResolvedIntegration,
 } from "./resolution/types.js";
+
+export {
+  selectionSchema,
+  selectionContextSchema,
+  SELECTION_LIMITS,
+  SELECTION_CLI_CONTRACT,
+  parseSelection,
+  parseSelectionJson,
+  decodeSelection,
+  encodeSelection,
+  selectionCommand,
+  selectionFailure,
+} from "./selection/format.js";
+export type {
+  DeclarativeSelection,
+  SelectionContext,
+  SelectionResult,
+} from "./selection/format.js";
+export { beginnerCatalogSchema } from "./selection/catalog.js";
+export type { BeginnerCatalog } from "./selection/catalog.js";
+export { planSelectionCreate } from "./selection/plan-create.js";

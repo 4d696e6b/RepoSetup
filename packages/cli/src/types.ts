@@ -17,6 +17,7 @@ export interface CliIo {
 
 export interface CliFs {
   readFile(path: string): Promise<string>;
+  readBoundedFile?(path: string, maxBytes: number): Promise<string>;
 }
 
 export interface CreateAnswers {
@@ -81,6 +82,8 @@ export interface GlobalCliOptions {
 }
 
 export interface CreateCommandOptions {
+  selection?: string;
+  selectionFile?: string;
   config?: string;
   preset?: string;
   dryRun: boolean;

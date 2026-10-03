@@ -1,0 +1,17 @@
+{
+  "selectionVersion": 1,
+  "catalogRevision": "0.3.0-cli.1",
+  "cliContract": "selection-v1",
+  "mode": "add",
+  "context": {
+    "runtimeId": "python",
+    "frameworkId": "fastapi",
+    "packageManager": "uv"
+  },
+  "integrations": [
+    {
+      "id": "pytest",
+      "options": {}
+    }
+  ]
+}

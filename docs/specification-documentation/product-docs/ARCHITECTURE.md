@@ -247,3 +247,7 @@ Use platform-aware diagnostics to tell the user what is missing.
 A future website must consume the same core registry/config concepts.
 
 Do not make any v1 architectural decision that requires a server.
+
+## 0.3.0 shared presentation contract
+
+The companion website is an owner-approved 0.3.0 scope exception. Core owns strict selection/catalog models and pure planning; integrations own curated guidance/context evidence/presets; registry validates lookup, bounded combinations and public snapshots; CLI owns local input, detection adapters, confirmation/rendering and executor invocation. A later website consumes validated public data rather than the Node-oriented core barrel or any executable remote registry. No browser UI or hosting dependency enters core. See [selection v1](./SELECTION_V1.md).

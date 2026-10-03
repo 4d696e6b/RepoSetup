@@ -1,7 +1,10 @@
 import {
   executeInstallation,
+  selectionFailure,
+  parseSelection,
   parseRepoSetupConfig,
   planInstallation,
+  planSelectionCreate,
   type PackageManager,
   type RepoSetupConfig,
   type RepoSetupError,
@@ -9,6 +12,8 @@ import {
 } from "@reposetup/core";
 import path from "node:path";
 
+import { loadSelection, renderSelectionChoices } from "./selection.js";
+import { BEGINNER_CATALOG } from "@reposetup/integrations";
 import { findBundledPreset } from "./presets.js";
 
 import { configFromAnswers } from "./config-from-answers.js";
@@ -38,7 +43,40 @@ export async function handleCreate(input: {
   globals: GlobalCliOptions;
   deps: ResolvedCliDeps;
 }): Promise<number> {
-  const loaded = await resolveCreateConfig(input);
+  const usingSelection =
+    input.options.selection !== undefined || input.options.selectionFile !== undefined;
+  const modes = [
+    input.options.config,
+    input.options.preset,
+    input.options.selection,
+    input.options.selectionFile,
+  ].filter((value) => value !== undefined);
+  const conflict =
+    modes.length > 1 ||
+    (usingSelection &&
+      (input.name !== undefined ||
+        input.options.framework !== undefined ||
+        input.options.packageManager !== undefined ||
+        input.options.typescript ||
+        input.options.yes));
+  let loaded: { ok: true; config: RepoSetupConfig } | { ok: false; error: RepoSetupError };
+  if (conflict)
+    loaded = selectionFailure(
+      "Create config, preset, token and file modes are mutually exclusive; selections also conflict with names, framework/manager/TypeScript overrides and --yes.",
+      "flags",
+    );
+  else if (usingSelection) {
+    const selection = await loadSelection({
+      mode: "create",
+      deps: input.deps,
+      ...(input.options.selection === undefined ? {} : { token: input.options.selection }),
+      ...(input.options.selectionFile === undefined ? {} : { file: input.options.selectionFile }),
+    });
+    if (selection.ok && selection.selection.mode === "create") {
+      renderSelectionChoices(selection.selection, input.deps, input.globals);
+      loaded = { ok: true, config: selection.selection.config };
+    } else loaded = selection.ok ? selectionFailure("Wrong selection mode.", "mode") : selection;
+  } else loaded = await resolveCreateConfig(input);
   if (!loaded.ok) {
     writeLine(
       input.deps.io.writeErr,
@@ -47,13 +85,17 @@ export async function handleCreate(input: {
     return exitCodeForError(loaded.error);
   }
 
-  const planned = planInstallation(loaded.config, input.deps.registry);
+  const planned = (
+    usingSelection || input.options.preset?.startsWith("beginner-")
+      ? planSelectionCreate
+      : planInstallation
+  )(loaded.config, input.deps.registry);
   const rendered = input.globals.json
     ? renderPlanJson(planned, input.options.dryRun)
     : renderPlan(planned, {
         dryRun: input.options.dryRun,
         verbose: input.globals.verbose,
-        quiet: input.globals.quiet,
+        quiet: usingSelection ? false : input.globals.quiet,
       });
 
   if (!planned.valid) {
@@ -72,7 +114,9 @@ export async function handleCreate(input: {
     if (!proceed) {
       writeLine(
         input.deps.io.writeErr,
-        "Aborted. Pass --yes to execute without a confirmation prompt.",
+        usingSelection
+          ? "Aborted. Selection execution requires interactive confirmation. Use --dry-run to preview without a TTY."
+          : "Aborted. Pass --yes to execute without a confirmation prompt.",
       );
       return EXIT_CODES.INVALID_INPUT;
     }
@@ -133,14 +177,23 @@ export async function handleCreate(input: {
 
   if (!input.globals.quiet) {
     const elapsedSeconds = ((Date.now() - executionStartedAt) / 1000).toFixed(1);
-    writeLine(input.deps.io.writeOut, `Executed ${executed.executed} operations.`);
-    writeLine(input.deps.io.writeOut, `Elapsed: ${elapsedSeconds}s.`);
     writeLine(
-      input.deps.io.writeOut,
+      input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut,
+      `Executed ${executed.executed} operations.`,
+    );
+    writeLine(
+      input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut,
+      `Elapsed: ${elapsedSeconds}s.`,
+    );
+    writeLine(
+      input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut,
       `Project directory: ${path.resolve(input.deps.cwd, planned.config.project.path ?? ".")}`,
     );
     for (const command of postCreateCommands(planned.config)) {
-      writeLine(input.deps.io.writeOut, `Next: ${command}`);
+      writeLine(
+        input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut,
+        `Next: ${command}`,
+      );
     }
   }
 
@@ -166,7 +219,20 @@ async function resolveCreateConfig(input: {
         },
       };
     const config = structuredClone(preset.config);
-    if (input.name !== undefined) config.project.name = input.name;
+    if (input.name !== undefined) {
+      config.project.name = input.name;
+      if (preset.id.startsWith("beginner-")) config.project.path = input.name;
+    }
+    if (preset.id.startsWith("beginner-")) {
+      const parsed = parseSelection({
+        selectionVersion: 1,
+        catalogRevision: BEGINNER_CATALOG.revision,
+        cliContract: BEGINNER_CATALOG.cliContract,
+        mode: "create",
+        config,
+      });
+      if (!parsed.ok) return parsed;
+    }
     return { ok: true, config };
   }
 

@@ -1,6 +1,7 @@
 import type { IntegrationDefinition } from "@reposetup/core";
 import { createRegistry, type IntegrationRegistry } from "@reposetup/registry";
 
+import { BEGINNER_CATALOG } from "./beginner-catalog.js";
 import { alembicIntegration } from "./alembic.js";
 import { dockerComposeIntegration } from "./docker-compose.js";
 import { dockerIntegration } from "./docker.js";
@@ -80,5 +81,10 @@ export const builtInIntegrations: IntegrationDefinition[] = [
 ];
 
 export function createBuiltInRegistry(): IntegrationRegistry {
-  return createRegistry(builtInIntegrations);
+  return createRegistry(
+    builtInIntegrations.map((definition) => {
+      const guidance = BEGINNER_CATALOG.guidance.find((item) => item.id === definition.id);
+      return guidance === undefined ? definition : { ...definition, guidance };
+    }),
+  );
 }

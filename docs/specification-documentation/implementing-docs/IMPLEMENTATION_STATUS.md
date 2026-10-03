@@ -2,7 +2,21 @@
 
 Cursor/maintainers should update this file as phases are completed.
 
-## Current phase
+## 0.3.0 first CLI slice — 2026-10-03
+
+Implemented on `codex/0.3.0-cli`, forked from the exact recorded candidate HEAD `145e167e6b60897da96942545ba6dbd40359ad4a` on `codex/phase-27-release-candidate`. All work uses a separate worktree. The candidate checkout/branch and its three original untracked planning documents remain untouched; planning copies are byte-identical. The 0.2.0 qualification history below is retained, not marked complete or promoted by this slice.
+
+- Shared strict Zod selection/catalog contracts in core; curated guidance and reusable legacy/minimal starter presets in integrations; registry lookup/option/context validation and safe public snapshot export; local review/confirmation/execution in CLI.
+- React/Vite and Express with TypeScript/pnpm, FastAPI with uv. Optional Zod/Vitest/Prettier or Pydantic/pytest/Ruff subsets are validated with the actual planner. Parent golden evidence is linked in the catalog; no new platform/stable-support claim. New minimal preset IDs do not replace legacy contents.
+- Versioned canonical base64url `--selection` for create/add, `create --selection-file` and additive `add --config` file fallback. Limits, conflicts, errors, safe command rendering and public-only input are frozen in [selection v1](../product-docs/SELECTION_V1.md). Selection execution requires confirmation, with dry-run available and JSON version 1 plan/error output preserved.
+- New selection starters reserve a new directory and scope all files/processes there. Existing-target creation is refused. Add checks actual context and revalidates its delta after confirmation. Existing files/scripts and declared dependency pins survive; grouped package deltas only install missing packages. Repeated satisfied add is a no-op.
+- Owner-approved companion website exception reconciled in AGENTS.md, product requirements and architecture. Website implementation/deployment is not part of this slice. CLI development version is `0.3.0-alpha.1`, unpublished.
+
+Validation on macOS arm64 / Node 22.12.0 / pnpm 12.5.1: workspace tests, targeted selection/delta/preservation tests, built-CLI selection plus legacy dry-run tests, typecheck, lint and build pass. The final full workspace suite passed 491 tests; the targeted core selection/delta suite passed 41 tests, including Windows device-name cases. Built-CLI targeted e2e passed 11 tests. An initial declaration-build optional-type mismatch, a readonly test-fixture type error, and test expectations for README version/consolidated installation were corrected. No failing required local check remains. This host is below the supported Node 24 execution floor; these results do not qualify real external installations.
+
+Remaining 0.3.0 work: packed Node 24 cross-platform create/add execution for minimal/optional variants; native launchers/shell transport and size-bound qualification; companion website public snapshot consumption/builder/accessibility and joint handoff tests; deterministic file diff previews; intended-stack doctor; allowlisted repair; beginner sessions; release gates and any separately chosen optional roadmap item. No tag, merge, push or publication is authorized by this slice. The 0.3.0 release is **not complete**.
+
+## Historical 0.2.0 phase record
 
 **Phase 27 — Release-candidate qualification: in progress.** Phase 24's five observed manual usability sessions, the candidate soak, repeated exact-SHA qualification, and release evidence remain blocking gates. Phase 20 through Phase 26 implementation gates are complete.
 

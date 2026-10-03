@@ -1,3 +1,4 @@
+import type { BeginnerCatalog } from "../selection/catalog.js";
 import type { ZodType } from "zod";
 
 import type { IntegrationCategory } from "../categories/integration-category.js";
@@ -93,6 +94,7 @@ export interface IntegrationDefinition<TOptions = unknown> {
   status: IntegrationStatus;
   documentationUrl: string;
   keywords?: string[];
+  guidance?: BeginnerCatalog["guidance"][number];
   optionSchema?: ZodType<TOptions>;
   requirements?: IntegrationRequirement[];
   recommendations?: IntegrationRecommendation[];

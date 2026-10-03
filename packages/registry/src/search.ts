@@ -12,6 +12,8 @@ export function definitionMatchesQuery(definition: IntegrationDefinition, query:
     definition.category,
     definition.description,
     ...(definition.keywords ?? []),
+    ...(definition.guidance?.goals ?? []),
+    ...(definition.guidance === undefined ? [] : [definition.guidance.purpose]),
   ];
 
   return haystacks.some((value) => value.toLowerCase().includes(normalizedQuery));
