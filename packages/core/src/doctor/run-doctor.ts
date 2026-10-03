@@ -2,6 +2,7 @@ import { createDetectionContext } from "../detection/context.js";
 import { detectProject } from "../detection/detect-project.js";
 import { createNodeDetectionFs } from "../detection/filesystem.js";
 import type { DetectedItem } from "../detection/types.js";
+import type { DetectedStack } from "../detection/types.js";
 import type { ErrorCode } from "../errors/codes.js";
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import type { VerificationContext } from "../integrations/definition.js";
@@ -9,6 +10,11 @@ import { presentItems } from "../planning/config-from-detected.js";
 import { pathPrerequisite } from "../prerequisites/path.js";
 import type { ExecutableResolver } from "../executor/types.js";
 import type { RegistryLookup } from "../resolution/registry-lookup.js";
+import type { RepoSetupConfig } from "../config/types.js";
+import { parseRepoSetupConfig } from "../config/parse.js";
+import { planInstallation } from "../planning/plan.js";
+import { collectIntendedChecks } from "./intended-checks.js";
+import type { DetectionConfidence, DetectionEvidence } from "../integrations/definition.js";
 
 export interface DoctorCheck {
   id: string;
@@ -17,11 +23,16 @@ export interface DoctorCheck {
   message: string;
   code?: ErrorCode;
   suggestion?: string;
+  /** Informational differences do not fail doctor. */
+  level?: "info";
+  confidence?: DetectionConfidence;
+  evidence?: DetectionEvidence[];
 }
 
 export interface DoctorResult {
   projectRoot: string;
   checks: DoctorCheck[];
+  mode?: "intended";
 }
 
 export type RunDoctorResult =
@@ -33,7 +44,26 @@ export async function runDoctor(input: {
   commandExists: (command: string) => Promise<boolean>;
   commandVersion?: (command: string) => Promise<string | undefined>;
   resolveExecutable?: ExecutableResolver;
+  expectedConfig?: RepoSetupConfig;
 }): Promise<RunDoctorResult> {
+  const parsedExpected =
+    input.expectedConfig === undefined ? undefined : parseRepoSetupConfig(input.expectedConfig);
+  if (parsedExpected !== undefined && !parsedExpected.success)
+    return { ok: false, error: parsedExpected.error };
+  const expectedConfig = parsedExpected?.success === true ? parsedExpected.config : undefined;
+  if (expectedConfig !== undefined) {
+    const planned = planInstallation(expectedConfig, input.registry);
+    if (!planned.valid)
+      return {
+        ok: false,
+        error:
+          planned.errors[0] ??
+          createRepoSetupError({
+            code: "CONFIG_INVALID",
+            message: "Intended stack cannot be resolved.",
+          }),
+      };
+  }
   const detected = await detectProject({
     startDir: input.startDir,
     registry: input.registry,
@@ -54,20 +84,111 @@ export async function runDoctor(input: {
   );
   await collectLockfileConflicts(files, checks);
   await collectEnvironmentGuidance(files, checks);
-  await collectVerifyChecks(
-    [...presentItems(detected.stack.frameworks), ...presentItems(detected.stack.integrations)],
-    input.registry,
-    detection,
-    checks,
-  );
+  if (expectedConfig === undefined) {
+    await collectVerifyChecks(
+      [...presentItems(detected.stack.frameworks), ...presentItems(detected.stack.integrations)],
+      input.registry,
+      detection,
+      checks,
+    );
+  }
+
+  if (expectedConfig !== undefined) {
+    await collectPathChecks(
+      expectedOnlyPrerequisites(expectedConfig, detected.stack),
+      input.commandExists,
+      input.commandVersion,
+      input.resolveExecutable,
+      checks,
+    );
+    await collectIntendedRuntimeVersion(
+      expectedConfig,
+      input.commandVersion,
+      input.resolveExecutable,
+      checks,
+    );
+    checks.push(
+      ...(await collectIntendedChecks({
+        config: expectedConfig,
+        stack: detected.stack,
+        context: detection,
+        registry: input.registry,
+      })),
+    );
+  }
 
   return {
     ok: true,
     result: {
       projectRoot: detected.stack.projectRoot,
       checks,
+      ...(expectedConfig === undefined ? {} : { mode: "intended" as const }),
     },
   };
+}
+
+async function collectIntendedRuntimeVersion(
+  config: RepoSetupConfig,
+  commandVersion: ((command: string) => Promise<string | undefined>) | undefined,
+  resolveExecutable: ExecutableResolver | undefined,
+  checks: DoctorCheck[],
+): Promise<void> {
+  if (config.runtime.version === undefined) return;
+  const spec = pathPrerequisite(config.runtime.id);
+  const command =
+    spec === undefined
+      ? undefined
+      : resolveExecutable === undefined
+        ? spec.command
+        : await resolveExecutable(spec.command);
+  const actual = command === undefined ? undefined : await commandVersion?.(command);
+  const expectedParts = /^\d+(?:\.\d+){0,2}$/.test(config.runtime.version)
+    ? config.runtime.version.split(".")
+    : undefined;
+  const actualParts =
+    actual === undefined
+      ? undefined
+      : /(?:v|Python\s+)?(\d+)(?:\.(\d+))?(?:\.(\d+))?/.exec(actual)?.slice(1);
+  const matches =
+    expectedParts !== undefined &&
+    actualParts !== undefined &&
+    expectedParts.every((part, index) => part === actualParts[index]);
+  checks.push({
+    id: "intended-runtime-version",
+    name: "Intended runtime version",
+    ok: true,
+    ...(matches ? {} : { level: "info" as const }),
+    confidence: matches ? "likely" : "possible",
+    evidence: [
+      {
+        kind: "config",
+        detail: "Compared the intended runtime version with the local executable version.",
+      },
+    ],
+    message: matches
+      ? "The local runtime version matches the intended version prefix."
+      : "The local runtime version differs from, or cannot be compared with, the intended version. Compatibility is not established by this check.",
+  });
+}
+
+function expectedOnlyPrerequisites(config: RepoSetupConfig, stack: DetectedStack): DetectedItem[] {
+  const detectedIds = new Set([...stack.runtimes, ...stack.packageManagers].map((item) => item.id));
+  return [
+    {
+      id: config.runtime.id,
+      name: config.runtime.id === "node" ? "Node.js" : "Python",
+      category: "runtime" as const,
+      confidence: "certain" as const,
+      evidence: [],
+    },
+    {
+      id: config.packageManager,
+      name: config.packageManager,
+      category: "package-manager" as const,
+      confidence: "certain" as const,
+      evidence: [],
+    },
+  ].filter((item) => !detectedIds.has(item.id));
 }
 
 export function failedDoctorChecks(result: DoctorResult): DoctorCheck[] {

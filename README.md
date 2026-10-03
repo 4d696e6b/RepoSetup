@@ -71,6 +71,8 @@ Always try `--dry-run` first on a project you care about.
 
 On the 0.3.0 development branch, add `--diff` to `create`, `add`, or `remove` for a read-only change summary, including existing-file conflicts and external effects that cannot be known before execution. For example, `reposetup add prettier --diff --dry-run` prints the plan and preview without installing anything. `--json` retains the version 1 plan envelope and adds a `preview` field only when `--diff` is requested. File contents and secret values are never printed by the preview. A project file changed after review causes execution to stop and asks you to preview again.
 
+Use `reposetup doctor --config reposetup.json` to compare an existing project's actual evidence with the stack you intend to maintain. It checks expected integrations even when ordinary detection no longer finds them, reports version differences and extra integrations as information, and makes no project changes. See the [intended-stack doctor contract](docs/specification-documentation/product-docs/INTENDED_DOCTOR_0.3.0.md).
+
 Run the published CLI without cloning:
 
 ```text

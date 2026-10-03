@@ -4,7 +4,7 @@ Last updated: 2026-10-03.
 
 ## Current position
 
-**Phase 1 and all of Phase 2 are complete; Phase 3 is implemented locally.** At source `e41cf82102c4c4f909544aad8a70e1585e9a57c4`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717406), [three-runner contract/transport run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717420), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717415) passed. All 24 create, 21 add, nine packed legacy and six native-transport cases passed in their required cells. Phase 3 previews still need later packed/platform qualification; doctor, repair, website, usability and release phases remain pending. The complete 0.3.0 release is not finished or authorized for publication.
+**Phase 1 and all of Phase 2 are complete; Phases 3 and 4 are implemented locally.** At source `e41cf82102c4c4f909544aad8a70e1585e9a57c4`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717406), [three-runner contract/transport run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717420), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717415) passed. All 24 create, 21 add, nine packed legacy and six native-transport cases passed in their required cells. Phase 3 previews and Phase 4 intended doctor still need later packed/platform qualification; repair, website, usability and release phases remain pending. The complete 0.3.0 release is not finished or authorized for publication.
 
 This document turns the [0.3.0 roadmap](./ROADMAP_0.3.0_DRAFT.md) into the ten reviewable phases discussed with the owner. Numbers here are local to 0.3.0; historical 0.2.0 Phase 19–28 identifiers stay unchanged. The roadmap and website plan retain their original planning snapshots, so some proposed flags there now have implementation. Use this document and [selection v1](../product-docs/SELECTION_V1.md) for current behavior.
 
@@ -69,14 +69,14 @@ Local exit condition met: meaningful mutating workflows show conservative previe
 
 ## Phase 4 — Doctor checks the intended stack
 
-**Status: not started.** Existing discovery-based doctor remains available.
+**Status: implemented locally.** Discovery-only doctor remains unchanged when `--config` is absent. The intended mode validates schemaVersion 1 input and registry options before comparison; it never installs or mutates the project.
 
-- [ ] **4.1 Intended input:** define and validate the proposed `doctor --config` interface using supported schemaVersion 1 configs.
-- [ ] **4.2 Comparison:** diagnose missing expected dependencies/files, version differences and conflicting manager evidence.
-- [ ] **4.3 Explanation/output:** evidence and confidence, informational extra integrations, clear error codes and compatible JSON.
-- [ ] **4.4 Regression tests:** dependency removed from detection, malformed inputs, custom versions/files and read-only guarantees.
+- [x] **4.1 Intended input:** `doctor --config <path>` accepts schemaVersion 1 configs, validates registry-supported selections/options and checks the current project or an explicitly named child project. Invalid and symlinked targets are refused.
+- [x] **4.2 Comparison:** expected integrations are verified even when detection misses them. Checks cover intended runtime/framework/TypeScript, direct dependency declarations, missing registry-verified files, conflicting manager evidence and differences from recipe/runtime versions. Version differences are informational when compatibility cannot be established from declarations alone.
+- [x] **4.3 Explanation/output:** intended checks carry evidence and confidence; extra detected integrations and unverified or different versions are informational. New error codes distinguish intended context, dependency and verification failures. The version 1 doctor JSON envelope remains compatible with optional `mode`, evidence and level fields. See [intended doctor contract](../product-docs/INTENDED_DOCTOR_0.3.0.md).
+- [x] **4.4 Regression tests:** Node and Python fixtures cover a dependency removed from detection, missing framework files, malformed configs, custom versions, alternative Prettier config, manager conflicts, symlink refusal and file preservation. The existing discovery-doctor tests still pass.
 
-Exit condition: missing intended components remain diagnosable even when ordinary detection no longer finds them.
+Local exit condition met: missing intended components remain diagnosable even when ordinary detection no longer finds them. The workspace suite passed 525 tests (266 core, 15 registry, 126 integrations, 118 CLI); typecheck, lint and build passed. A built-CLI JSON smoke check returned the missing-dependency failure and preserved the manifest. No packed-artifact or cross-platform qualification is claimed for Phase 4 yet.
 
 ## Phase 5 — Narrowly scoped repairs
 

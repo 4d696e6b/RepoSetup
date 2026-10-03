@@ -210,8 +210,10 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
   program
     .command("doctor")
     .description("Run read-only health checks for the current project")
-    .action(async (_options: unknown, command: Command) => {
+    .option("--config <path>", "compare the project with a schemaVersion 1 intended-stack config")
+    .action(async (options: { config?: string }, command: Command) => {
       exitCode = await handleDoctor({
+        ...(options.config === undefined ? {} : { configPath: options.config }),
         globals: readGlobals(command),
         deps: resolved,
         commandVersion: createDefaultCommandVersion(resolved.runProcess),

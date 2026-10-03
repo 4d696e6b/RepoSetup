@@ -7,7 +7,7 @@ export function renderDoctor(result: DoctorResult, options: GlobalCliOptions): s
   const lines: string[] = [];
 
   if (!options.quiet) {
-    lines.push("Doctor");
+    lines.push(result.mode === "intended" ? "Doctor — intended stack" : "Doctor");
     if (options.verbose) {
       lines.push(`Project root  ${result.projectRoot}`);
     }
@@ -21,12 +21,18 @@ export function renderDoctor(result: DoctorResult, options: GlobalCliOptions): s
       continue;
     }
 
-    const status = check.ok ? "ok  " : "fail";
+    const status = check.level === "info" ? "info" : check.ok ? "ok  " : "fail";
     const name = width === 0 ? check.name : check.name.padEnd(width);
     const identity = options.verbose ? ` [${check.id}]` : "";
     lines.push(`  ${status}  ${name}${identity}  ${check.message}`);
     if (!check.ok && check.suggestion !== undefined) {
       lines.push(`        Suggestion: ${check.suggestion}`);
+    }
+    if (options.verbose && check.evidence !== undefined) {
+      for (const item of check.evidence)
+        lines.push(
+          `        Evidence (${check.confidence ?? "possible"}): ${item.detail}${item.path === undefined ? "" : ` [${item.path}]`}`,
+        );
     }
   }
 
