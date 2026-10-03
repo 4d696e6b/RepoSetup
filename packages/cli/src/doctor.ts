@@ -16,6 +16,7 @@ export async function handleDoctor(input: {
     startDir: input.deps.cwd,
     registry: input.deps.registry,
     commandExists: input.deps.commandExists,
+    resolveExecutable: input.deps.resolveExecutable,
     ...(input.commandVersion === undefined ? {} : { commandVersion: input.commandVersion }),
   });
 

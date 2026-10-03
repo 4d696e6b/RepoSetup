@@ -45,6 +45,56 @@ const nodeProject = {
 };
 
 describe("runDoctor", () => {
+  it.each(["Python 3.13.1", "Python 3.11.9", undefined])(
+    "checks the resolved Python launcher and its actual version %s",
+    async (version) => {
+      const files = { "pyproject.toml": "[project]\nname = 'demo'\n", "uv.lock": "version = 1\n" };
+      const root = await fixture(files);
+      const commands: string[] = [];
+      const result = await runDoctor({
+        startDir: root,
+        registry: lookup([]),
+        resolveExecutable: async (command) => (command === "python" ? "python3" : command),
+        commandExists: async (command) => {
+          commands.push(command);
+          return true;
+        },
+        commandVersion: async (command) => {
+          expect(command).toBe("python3");
+          return version;
+        },
+      });
+      expect(result.ok).toBe(true);
+      if (!result.ok) return;
+      expect(commands).toEqual(["python3", "uv"]);
+      expect(failedDoctorChecks(result.result)).toHaveLength(version === "Python 3.13.1" ? 0 : 1);
+      expect(await readFile(path.join(root, "pyproject.toml"), "utf8")).toBe(
+        files["pyproject.toml"],
+      );
+    },
+  );
+
+  it("refuses an unresolved Python launcher without treating the logical name as available", async () => {
+    const root = await fixture({
+      "pyproject.toml": "[project]\nname = 'demo'\n",
+      "uv.lock": "version = 1\n",
+    });
+    const result = await runDoctor({
+      startDir: root,
+      registry: lookup([]),
+      resolveExecutable: async (command) => (command === "python" ? undefined : command),
+      commandExists: async (command) => {
+        expect(command).toBe("uv");
+        return true;
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(failedDoctorChecks(result.result)).toEqual([
+      expect.objectContaining({ id: "prerequisite:python", code: "PREREQUISITE_MISSING" }),
+    ]);
+  });
+
   it("returns PROJECT_NOT_FOUND outside a project", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-doctor-"));
     tempDirs.push(root);

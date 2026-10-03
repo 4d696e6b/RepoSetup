@@ -1,10 +1,10 @@
 # Selection qualification for RepoSetup 0.3.0
 
-Status: section 2.1 implemented locally. This defines acceptance fixtures and the evidence matrix; it does not qualify real installations, native shell transports or the complete release. The [phase tracker](./STATUS_0.3.0.md) remains authoritative for completion.
+Status: section 2.1 and the section 2.2 execution harness are implemented locally. Real create results cover one macOS/arm64, Node 24, Python 3.13 cell; the other platform/Python cells, native shell transports and complete release remain pending. The [phase tracker](./STATUS_0.3.0.md) remains authoritative for completion.
 
 ## Frozen input and operation matrix
 
-The machine-readable [matrix fixture](../../../tests/e2e/fixtures/selection-v1.matrix.json) is revision `0.3.0-selection.1`, against catalog `0.3.0-cli.1`, recipe revision `2026-09-23` and CLI contract `selection-v1`. It freezes the three contexts, prerequisite targets, catalog direct-version metadata, selection limits, all optional subsets and fingerprints of their local typed plans.
+The machine-readable [matrix fixture](../../../tests/e2e/fixtures/selection-v1.matrix.json) is revision `0.3.0-selection.2`, against catalog `0.3.0-cli.2`, recipe revision `2026-09-23` and CLI contract `selection-v1`. It freezes the three contexts, prerequisite targets, catalog direct-version metadata, selection limits, all optional subsets and fingerprints of their local typed plans.
 
 - React/Vite + TypeScript + pnpm: all eight subsets of Zod, Vitest and Prettier.
 - Express + TypeScript + pnpm: all eight subsets of Zod, Vitest and Prettier.
@@ -27,6 +27,10 @@ The synthetic existing-project files are detection fixtures, not runnable applic
 A plan fingerprint is SHA-256 of the UTF-8 JSON `plan` object after recursively sorting object keys using ordinal string order. Array order and all values remain intact. It includes operations, package pins, generated content, warnings and selected configuration. Temporary working-directory names do not enter these fixtures. A changed fingerprint fails acceptance; review the new plan and compatibility impact before changing the baseline. Revise the matrix revision when its scope, context, limits or frozen plans change. Do not automatically refresh hashes to hide a regression.
 
 Catalog direct-version metadata is a per-integration reference and can include packages used in other contexts. It is not proof that every listed package occurs in every plan, and it does not freeze transitive dependencies. The actual plan fingerprints provide the operation baseline. Real journey qualification must retain each generated project lockfile and command output separately.
+
+Revision 2 records fixes discovered by real create checks. Minimal React/Vite now receives an adapter-driven dependency install after its explicit esbuild policy. Express TypeScript always emits `dist/src/app.js`, retains compilation of other generated source such as `lib`, and approves only the known esbuild dependency required by tsx. FastAPI advertises pytest only when selected. Twenty create fingerprints changed (eight React, eight Express, four FastAPI without pytest); all 21 add fingerprints and four FastAPI-with-pytest fingerprints remain unchanged. Recipe revision `2026-09-23` identifies the inherited pin set; the changed operation bodies are identified by the matrix fingerprints and source SHA.
+
+Catalog `0.3.0-cli.2` also corrects React template metadata: the pinned executable is **create-vite 8.3.0**, whose official [React TypeScript template](https://github.com/vitejs/vite/blob/create-vite%408.3.0/packages/create-vite/template-react-ts/package.json) declares React `^19.2.0` and Vite `^7.3.1`. The starter does not pin application Vite to 8.3.0. Tests check template declarations and record the actual resolved versions with the generated lock. Exporters must regenerate older `0.3.0-cli.1` selections; those are refused as stale. The selection envelope version and existing schemaVersion 1 configs do not change.
 
 ## Runtime and platform targets
 
@@ -65,6 +69,26 @@ The manually dispatched [selection contract workflow](../../../.github/workflows
 
 The test harness installs only the CLI with `npm install --ignore-scripts --no-audit --no-fund`; project install commands are not executed by these contract fixtures. Local tarball installation and these flags were checked against official [npm 10 install documentation](https://docs.npmjs.com/cli/v10/commands/npm-install/) for the local npm 10.9.0 host and [npm 11 install documentation](https://docs.npmjs.com/cli/v11/commands/npm-install/) on 2026-10-03. Alias version checks reuse `npm exec -- <alias> --version`, with argument separation described in [official npm exec documentation](https://docs.npmjs.com/cli/v11/commands/npm-exec/). These test harness choices do not change RepoSetup's executor/package-manager adapters or qualify project dependency lifecycle behavior.
 
+## Real create execution (section 2.2)
+
+Run the separate network/install suite with existing Node 24, pnpm 12.5.1, CPython 3.12 or 3.13 and uv 0.12.17 on PATH:
+
+```sh
+REPOSETUP_SELECTION_CREATE_EVIDENCE_DIR=/tmp/selection-create-run-1 pnpm test:selection:create
+```
+
+The evidence directory must be fresh; the harness refuses to overwrite previous reports. `UV_PYTHON` may select an existing interpreter. Its absolute path is resolved and reused, and the harness sets `UV_PYTHON_DOWNLOADS=never` and a test-owned `UV_CACHE_DIR`. No missing Python runtime is downloaded. This behavior follows uv's official [environment variable reference](https://docs.astral.sh/uv/reference/environment/) and [Python download settings](https://docs.astral.sh/uv/reference/settings/#python-downloads). Missing or wrong prerequisites fail setup, rather than skipping cases. `REPOSETUP_SELECTION_PYTHON_TARGET` optionally asserts the requested minor version, as the workflow does.
+
+The [real create suite](../../../tests/e2e/selection-create.test.ts) executes all 24 subsets in separate directories with spaces and Unicode, alternating token/file input. It first checks each dry-run plan and filesystem preservation, then invokes the installed artifact's exported `runCli`. A small [confirmation adapter](../../../tests/e2e/fixtures/confirmed-selection-create.mjs) supplies only I/O and an affirmative answer after asserting that decoded choices and the JSON installation plan were emitted. All parsing, registry lookup, planning, preflight, filesystem/process adapters and installation execution come from the packed artifact. This adapter does not prove native TTY prompting; section 2.4 must test that independently. There is no product bypass flag.
+
+Each generated project must have a real lockfile, build/import successfully and pass the generated sample test when its runner is selected. React checks its production output; Express calls the compiled entry's HTTP endpoint; FastAPI checks its in-process endpoint and interpreter using the official [TestClient pattern](https://fastapi.tiangolo.com/tutorial/testing/). Selected Zod must accept/reject representative values; Prettier checks generated source; Ruff checks Python source. Doctor must pass and report every selected component. Repeating creation with confirmation must refuse the existing target and preserve source/manifests/locks and surrounding user files. The suite never installs extra project dependencies to make a check pass.
+
+Dependency checks compare declared pins/ranges with the reviewed catalog and retain observed installed versions. [Vitest's one-shot command](https://vitest.dev/guide/) runs the generated tests; [uv run --frozen](https://docs.astral.sh/uv/reference/cli/#uv-run) keeps the generated lock unchanged. Test command logs and every actual lock are retained alongside `report.json` when an evidence directory is supplied. These are public generated fixtures, not user-project contents. Do not point this suite at a real project.
+
+The report has `kind: "selection-packed-create"`, `releaseQualification: false`, expected/passed case results, observed runtimes/platform/architecture, source/artifact identity and dirty state, matrix/catalog identifiers, installed CLI lock hash, per-project lock hashes, plan hashes, installed versions and command exit codes. Failed cases/setup are reported without promoting the run. External artifact acceptance follows the same clean exact-source checks as section 2.1; the create suite never repacks an externally supplied candidate.
+
+The manual [real create workflow](../../../.github/workflows/selection-create.yml) packs once and supplies that artifact to all six platform/Python cells derived from the frozen matrix. Every cell executes all 24 cases, with no environmental skips. The Python/uv setup uses official [setup-python](https://github.com/actions/setup-python) and [setup-uv](https://github.com/astral-sh/setup-uv) actions; RepoSetup itself does not install those prerequisites. The workflow is authored and locally parsed, but has not been dispatched. Its reports/locks/logs upload even on failure. No release/deployment job is included.
+
 ## Remaining Phase 2 gates
 
-Section 2.2 next: real packed-CLI creation for all frozen variants, application build/import/test/doctor assertions and retained locks. Section 2.3: real additive execution, existing-file/version preservation and repeated application. Section 2.4: native POSIX/Windows shells, launcher payload bounds/file fallback and interactive confirmation. Section 2.5: retained schemaVersion 1 config, legacy preset/positional add and JSON regressions on the advertised matrix. Connect the complete evidence to the later candidate gates only after these pass.
+Finish section 2.2 by retaining clean-source evidence on the entire platform/Python matrix. Section 2.3: real additive execution, existing-file/version preservation and repeated application. Section 2.4: native POSIX/Windows shells, launcher payload bounds/file fallback and interactive confirmation. Section 2.5: retained schemaVersion 1 config, legacy preset/positional add and JSON regressions on the advertised matrix. Connect the complete evidence to the later candidate gates only after these pass.

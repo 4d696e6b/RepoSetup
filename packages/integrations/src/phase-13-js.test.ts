@@ -134,6 +134,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--allow-build=esbuild",
         "typescript@5.9.3",
         "@types/express@5.0.6",
         "@types/node@22.20.4",

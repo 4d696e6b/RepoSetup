@@ -297,6 +297,7 @@ it("rejects malformed, oversized, stale and hostile inputs without leaking value
     Buffer.from([0xc0, 0xaf]).toString("base64url"),
     tokenFor({ ...selection, selectionVersion: 2 }),
     tokenFor({ ...selection, catalogRevision: "stale-catalog" }),
+    tokenFor({ ...selection, catalogRevision: "0.3.0-cli.1" }),
     tokenFor({ ...selection, cliContract: "unknown-contract" }),
     tokenFor({ ...selection, commands: ["touch untrusted-output"] }),
     tokenFor({ ...selection, config: { ...selection.config, project: { name: "con" } } }),

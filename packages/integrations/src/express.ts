@@ -27,6 +27,7 @@ type ExpressOptions = z.infer<typeof expressOptionsSchema>;
 
 const EXPRESS_TSCONFIG = `{
   "compilerOptions": {
+    "rootDir": ".",
     "target": "esnext",
     "module": "nodenext",
     "rewriteRelativeImportExtensions": true,
@@ -34,7 +35,8 @@ const EXPRESS_TSCONFIG = `{
     "verbatimModuleSyntax": true,
     "strict": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
 `;
 
@@ -154,6 +156,7 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
           {
             description: "Install TypeScript, tsx, and Express type packages",
             dev: true,
+            allowBuild: ["esbuild"],
           },
         ),
         {
@@ -183,7 +186,7 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
             scripts: {
               dev: "tsx watch src/app.ts",
               build: "tsc --outDir dist",
-              start: "node dist/app.js",
+              start: "node dist/src/app.js",
             },
           },
           behavior: "merge",

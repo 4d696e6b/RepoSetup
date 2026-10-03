@@ -1,0 +1,85 @@
+name: Selection real create (0.3.0)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      cells: ${{ steps.matrix.outputs.cells }}
+      uv: ${{ steps.matrix.outputs.uv }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - id: matrix
+        name: Read frozen runner and Python matrix
+        run: |
+          node -e "const fs = require('node:fs'); const matrix = JSON.parse(fs.readFileSync('tests/e2e/fixtures/selection-v1.matrix.json', 'utf8')); const cells = matrix.platforms.flatMap(platform => matrix.runtimes.python.map(python => ({ ...platform, python }))); fs.appendFileSync(process.env.GITHUB_OUTPUT, 'cells=' + JSON.stringify(cells) + '\nuv=' + matrix.runtimes.uv + '\n');"
+      - name: Pack one identified artifact
+        run: |
+          mkdir "$RUNNER_TEMP/selection-candidate"
+          pnpm --filter rsetup pack --pack-destination "$RUNNER_TEMP/selection-candidate"
+          node scripts/write-artifact-evidence.mjs --tarball "$RUNNER_TEMP"/selection-candidate/rsetup-*.tgz --source-sha "$GITHUB_SHA" --output "$RUNNER_TEMP/selection-candidate/candidate-artifact.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: selection-create-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-candidate
+          if-no-files-found: error
+
+  create:
+    needs: pack
+    name: ${{ matrix.runner }} / Python ${{ matrix.python }} / packed create
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.pack.outputs.cells) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
+          cache: pnpm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: ${{ matrix.architecture }}
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: ${{ needs.pack.outputs.uv }}
+          enable-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck:selection-tests
+      - uses: actions/download-artifact@v4
+        with:
+          name: selection-create-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-candidate
+      - name: Execute every create subset using the same artifact
+        run: pnpm exec vitest run --config tests/e2e/vitest.selection-create.config.ts
+        env:
+          UV_PYTHON: python
+          UV_PYTHON_DOWNLOADS: never
+          REPOSETUP_SELECTION_PYTHON_TARGET: ${{ matrix.python }}
+          REPOSETUP_SELECTION_ARTIFACT_DIR: ${{ runner.temp }}/selection-candidate
+          REPOSETUP_SELECTION_CREATE_EVIDENCE_DIR: ${{ runner.temp }}/selection-create-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selection-create-${{ matrix.runner }}-python-${{ matrix.python }}-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-create-evidence
+          if-no-files-found: error

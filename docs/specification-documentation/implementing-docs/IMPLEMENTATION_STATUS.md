@@ -4,6 +4,18 @@ Cursor/maintainers should update this file as phases are completed.
 
 For the current phase-by-phase 0.3.0 tracker, see [0.3.0 implementation status](./STATUS_0.3.0.md). It separates locally implemented sections from pending qualification, website, maintenance and release work.
 
+## 0.3.0 section 2.2 implementation — 2026-10-03
+
+Implemented in the separate `codex/0.3.0-cli` worktree. Section 2.2 remains partial: local macOS/arm64 with Node 24.21.0, pnpm 12.5.1, Python 3.13.1 and uv 0.12.17 covers all 24 create variants; the full platform/Python matrix is still pending. The next implementation section is 2.3, real add journeys. See the [phase tracker](./STATUS_0.3.0.md) and [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md).
+
+- Packed-artifact real installation, generated locks and version declarations, React builds, compiled Express/FastAPI endpoint responses, selected test/validation/format/lint tools, doctor, and confirmed repeated-create refusal with file preservation. Token/file transports alternate; native terminal prompting is an independent pending gate.
+- Fixed missing dependency installation for minimal React, known esbuild approval for Express/tsx, and Express's unstable compiled start path when additional TypeScript files are present. Doctor now shares installation's Python launcher lookup. FastAPI's README includes pytest only when selected.
+- Catalog `0.3.0-cli.2` distinguishes the pinned create-vite generator from generated React/Vite dependency ranges. Matrix `0.3.0-selection.2` records 20 reviewed create-plan changes and preserves all 21 add-plan fingerprints. Existing schemaVersion 1/legacy input modes remain supported; prior catalog exports receive the stale-selection error.
+- A manual workflow packs one artifact for six platform/Python cells and retains reports/logs/locks on failure. It is authored and YAML-parsed, not dispatched. No support-status promotion, publication or deployment.
+- Local checks pass: 24 real create cases, 105 packed matrix/contract cases, 502 workspace tests, 11 legacy/selection dry-run fixtures, workspace/selection-test typechecks, lint and build. Test-owned dependency trees and uv caches are cleaned per case unless explicitly retained. Reports distinguish dirty development runs from clean exact-source external-artifact acceptance.
+
+The protected candidate remains at `145e167e6b60897da96942545ba6dbd40359ad4a`; its originals were not edited. The whole release, native transports, add qualification, previews, intended-stack doctor/repair, companion website/handoff, observed usability and release gates remain unfinished.
+
 ## 0.3.0 section 2.1 — 2026-10-03
 
 Implemented locally on `codex/0.3.0-cli` in the separate 0.3.0 worktree. The [phase tracker](./STATUS_0.3.0.md) now marks section 2.1 complete and section 2.2 as the next task. Original 0.2.0 candidate source and planning documents remain preserved.

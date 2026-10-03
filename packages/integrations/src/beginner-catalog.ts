@@ -7,19 +7,24 @@ const limitations =
   "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included.";
 export const BEGINNER_CATALOG: BeginnerCatalog = {
   schemaVersion: 1,
-  revision: "0.3.0-cli.1",
+  revision: "0.3.0-cli.2",
   recipeRevision: REGISTRY_REVISION,
-  directVersions: qualifiedDirectVersions([
-    "react-vite",
-    "express",
-    "fastapi",
-    "zod",
-    "vitest",
-    "prettier",
-    "pydantic",
-    "pytest",
-    "ruff",
-  ]),
+  directVersions: {
+    ...qualifiedDirectVersions([
+      "react-vite",
+      "express",
+      "fastapi",
+      "zod",
+      "vitest",
+      "prettier",
+      "pydantic",
+      "pytest",
+      "ruff",
+    ]),
+    // pnpm create vite@8.3.0 invokes create-vite, whose frozen template uses
+    // ranges for application packages. These are declarations, not exact installs.
+    "react-vite": ["create-vite@8.3.0", "react@^19.2.0", "react-dom@^19.2.0", "vite@^7.3.1"],
+  },
   cliContract: "selection-v1",
   contexts: [
     {

@@ -10,7 +10,8 @@ export type EnsureScaffoldInstallResult =
   { ok: true; operations: InstallationOperation[] } | { ok: false; error: RepoSetupError };
 
 /**
- * Generators that use `--skip-install` write a package.json without installing.
+ * Generators marked by their definition (or using `--skip-install`) write a
+ * package.json without installing. Finish their soft file/policy segment first.
  * If a later install_package in the same soft segment will run, that command
  * installs scaffold deps too. A following project install barrier also covers
  * the scaffold. Otherwise insert a project install so solo scaffolds still get
@@ -22,11 +23,16 @@ export function ensureScaffoldDependencyInstall(
   projectRoot: ProjectRelativePath,
 ): EnsureScaffoldInstallResult {
   const output: InstallationOperation[] = [];
+  const pending = new Map<number, InstallationOperation[]>();
 
   for (const [index, operation] of operations.entries()) {
+    output.push(...(pending.get(index) ?? []));
     output.push(operation);
 
-    if (operation.type !== "run_command" || !operation.args.includes("--skip-install")) {
+    if (
+      operation.type !== "run_command" ||
+      !(operation.skipsDependencyInstall === true || operation.args.includes("--skip-install"))
+    ) {
       continue;
     }
 
@@ -42,7 +48,8 @@ export function ensureScaffoldDependencyInstall(
           code: "UNSUPPORTED_CONTEXT",
           message: `Package manager "${packageManager}" cannot install scaffold dependencies.`,
           details: { packageManager },
-          suggestion: "Use npm or pnpm for Next.js scaffolds that skip the generator install.",
+          suggestion:
+            "Use a supported package manager for scaffolds that skip dependency installation.",
         }),
       };
     }
@@ -56,8 +63,15 @@ export function ensureScaffoldDependencyInstall(
       return { ok: false, error: installed.error };
     }
 
-    output.push(installed.operation);
+    let barrier = index + 1;
+    while (barrier < operations.length) {
+      const next = operations[barrier];
+      if (next?.type === "run_command" || next?.type === "verify") break;
+      barrier += 1;
+    }
+    pending.set(barrier, [...(pending.get(barrier) ?? []), installed.operation]);
   }
+  output.push(...(pending.get(operations.length) ?? []));
 
   return { ok: true, operations: output };
 }

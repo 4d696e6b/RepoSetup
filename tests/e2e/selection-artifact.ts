@@ -119,7 +119,7 @@ export async function prepareSelectionArtifact(root: string) {
     version: "0.0.0",
     private: true,
   });
-  // This installs only the CLI under test. The 45 project journeys below are dry-runs.
+  // Install the CLI without lifecycle scripts. Each suite controls whether project journeys execute.
   await successful(
     "npm",
     ["install", "--ignore-scripts", "--no-audit", "--no-fund", tarball],
