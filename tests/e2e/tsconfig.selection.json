@@ -1,5 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": { "noEmit": true },
-  "include": ["selection-*.ts", "harness.ts", "vitest.selection*.config.ts"]
+  "include": [
+    "selection-*.ts",
+    "maintenance-packed.test.ts",
+    "harness.ts",
+    "vitest.selection*.config.ts",
+    "vitest.maintenance.config.ts"
+  ]
 }

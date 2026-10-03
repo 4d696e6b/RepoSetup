@@ -121,6 +121,7 @@ Exit condition: every advertised website export succeeds or fails consistently w
 **Status: partial.** The first slice has automated safety fixtures; new observed beginner sessions and whole-release validation remain pending.
 
 - [x] First-slice fixtures for invalid selections, context refusal, confirmation, dry-run, preservation and repeated application.
+- [x] A packed CLI maintenance fixture exercises intended-stack Prettier diagnosis and repair preview, non-interactive refusal, explicit confirmation, exact user-file preservation, repeat no-op, alternative config, malformed config, symlink preservation and suppression of `.env` values. This is automated local evidence, not an observed beginner session or cross-platform qualification.
 - [ ] **8.1 Observed sessions:** at least five beginner sessions covering frontend, TypeScript API and Python API; explain a library, customize a preset, preview and apply it.
 - [ ] **8.2 Maintenance sessions:** intended-stack diagnosis and the selected repair cases, with retained platform coverage.
 - [ ] **8.3 Whole-release safety:** secret suppression, malformed records, traversal/symlinks, conflicts, concurrent changes, interruption and repeated repairs.
