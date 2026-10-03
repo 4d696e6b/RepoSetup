@@ -92,6 +92,7 @@ export async function writeExistingContext(
       path.join(cwd, "main.py"),
       "from fastapi import FastAPI\napp = FastAPI()\n# keep user source\n",
     );
+    if (satisfied) await writeFile(path.join(cwd, "test_main.py"), "# keep user test\n");
   } else {
     await writeJson(path.join(cwd, "package.json"), {
       name: "user-app",
@@ -117,6 +118,8 @@ export async function writeExistingContext(
     await mkdir(path.join(cwd, "src"));
     await writeFile(path.join(cwd, "src/sample.ts"), "// keep user sample\n");
     await writeFile(path.join(cwd, "src/sample.test.ts"), "// keep user test\n");
+    if (satisfied && context.context.frameworkId === "express")
+      await writeFile(path.join(cwd, "src/app.test.ts"), "// keep user endpoint test\n");
   }
   await writeFile(path.join(cwd, ".env"), `PRIVATE_TOKEN=${PRIVATE_MARKER}\n`);
   await writeFile(path.join(cwd, "README.md"), "Keep the user's project notes.\n");

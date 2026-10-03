@@ -1,10 +1,10 @@
 # Selection qualification for RepoSetup 0.3.0
 
-Status: section 2.1 and the section 2.2 execution harness are implemented locally. Real create results cover one macOS/arm64, Node 24, Python 3.13 cell; the other platform/Python cells, native shell transports and complete release remain pending. The [phase tracker](./STATUS_0.3.0.md) remains authoritative for completion.
+Status: section 2.1 and the section 2.2/2.3 execution harnesses are implemented locally. Real create and add results cover one macOS/arm64, Node 24, Python 3.13 cell; the other platform/Python cells, native shell transports and complete release remain pending. The [phase tracker](./STATUS_0.3.0.md) remains authoritative for completion.
 
 ## Frozen input and operation matrix
 
-The machine-readable [matrix fixture](../../../tests/e2e/fixtures/selection-v1.matrix.json) is revision `0.3.0-selection.2`, against catalog `0.3.0-cli.2`, recipe revision `2026-09-23` and CLI contract `selection-v1`. It freezes the three contexts, prerequisite targets, catalog direct-version metadata, selection limits, all optional subsets and fingerprints of their local typed plans.
+The machine-readable [matrix fixture](../../../tests/e2e/fixtures/selection-v1.matrix.json) is revision `0.3.0-selection.3`, against catalog `0.3.0-cli.3`, recipe revision `2026-09-23` and CLI contract `selection-v1`. It freezes the three contexts, prerequisite targets, catalog direct-version metadata, selection limits, all optional subsets and fingerprints of their local typed plans.
 
 - React/Vite + TypeScript + pnpm: all eight subsets of Zod, Vitest and Prettier.
 - Express + TypeScript + pnpm: all eight subsets of Zod, Vitest and Prettier.
@@ -30,7 +30,7 @@ Catalog direct-version metadata is a per-integration reference and can include p
 
 Revision 2 records fixes discovered by real create checks. Minimal React/Vite now receives an adapter-driven dependency install after its explicit esbuild policy. Express TypeScript always emits `dist/src/app.js`, retains compilation of other generated source such as `lib`, and approves only the known esbuild dependency required by tsx. FastAPI advertises pytest only when selected. Twenty create fingerprints changed (eight React, eight Express, four FastAPI without pytest); all 21 add fingerprints and four FastAPI-with-pytest fingerprints remain unchanged. Recipe revision `2026-09-23` identifies the inherited pin set; the changed operation bodies are identified by the matrix fingerprints and source SHA.
 
-Catalog `0.3.0-cli.2` also corrects React template metadata: the pinned executable is **create-vite 8.3.0**, whose official [React TypeScript template](https://github.com/vitejs/vite/blob/create-vite%408.3.0/packages/create-vite/template-react-ts/package.json) declares React `^19.2.0` and Vite `^7.3.1`. The starter does not pin application Vite to 8.3.0. Tests check template declarations and record the actual resolved versions with the generated lock. Exporters must regenerate older `0.3.0-cli.1` selections; those are refused as stale. The selection envelope version and existing schemaVersion 1 configs do not change.
+Catalog `0.3.0-cli.2` corrected React template metadata, retained in `0.3.0-cli.3`: the pinned executable is **create-vite 8.3.0**, whose official [React TypeScript template](https://github.com/vitejs/vite/blob/create-vite%408.3.0/packages/create-vite/template-react-ts/package.json) declares React `^19.2.0` and Vite `^7.3.1`. The starter does not pin application Vite to 8.3.0. Tests check template declarations and record the actual resolved versions with the generated lock. Revision 3 moves generated Express and FastAPI endpoint tests into the Vitest and pytest integration plans so the same test appears when that capability is added later. Exactly 16 create/add plan fingerprints changed; 29 stayed unchanged. Exporters must regenerate older catalog selections; those are refused as stale. The selection envelope version and existing schemaVersion 1 configs do not change.
 
 ## Runtime and platform targets
 
@@ -87,8 +87,20 @@ Dependency checks compare declared pins/ranges with the reviewed catalog and ret
 
 The report has `kind: "selection-packed-create"`, `releaseQualification: false`, expected/passed case results, observed runtimes/platform/architecture, source/artifact identity and dirty state, matrix/catalog identifiers, installed CLI lock hash, per-project lock hashes, plan hashes, installed versions and command exit codes. Failed cases/setup are reported without promoting the run. External artifact acceptance follows the same clean exact-source checks as section 2.1; the create suite never repacks an externally supplied candidate.
 
-The manual [real create workflow](../../../.github/workflows/selection-create.yml) packs once and supplies that artifact to all six platform/Python cells derived from the frozen matrix. Every cell executes all 24 cases, with no environmental skips. The Python/uv setup uses official [setup-python](https://github.com/actions/setup-python) and [setup-uv](https://github.com/astral-sh/setup-uv) actions; RepoSetup itself does not install those prerequisites. The workflow is authored and locally parsed, but has not been dispatched. Its reports/locks/logs upload even on failure. No release/deployment job is included.
+The manual [real create/add workflow](../../../.github/workflows/selection-create.yml) packs once and supplies that artifact to all six platform/Python cells derived from the frozen matrix. Every cell executes all 24 create and 21 add cases, with no environmental skips. The Python/uv setup uses official [setup-python](https://github.com/actions/setup-python) and [setup-uv](https://github.com/astral-sh/setup-uv) actions; RepoSetup itself does not install those prerequisites. The workflow is authored but has not been dispatched. Its reports/locks/logs upload even on failure. No release/deployment job is included.
+
+## Real add execution (section 2.3)
+
+Run the separate network/install suite with the same prerequisite targets and an unused evidence directory:
+
+```sh
+REPOSETUP_SELECTION_ADD_EVIDENCE_DIR=/tmp/selection-add-run-1 pnpm test:selection:add
+```
+
+The [real add suite](../../../tests/e2e/selection-add.test.ts) first creates a minimal runnable project from the installed tarball for each of the 21 nonempty variants. It alternates add token and JSON-file transports, previews the decoded local plan, refuses a mismatched actual context without mutation, and uses the same reviewed-plan confirmation adapter for execution. It retains the pre-existing README, .env value, custom notes, optional existing Prettier config and original dependency/script declarations. The selected packages/tools, generated endpoint tests, actual lock and doctor must work; two subsequent add attempts must have empty plans and leave source and lock unchanged. It records per-case command output, lock hashes and installed versions without copying private fixture values into CLI output. Native TTY behavior remains section 2.4.
+
+The report has `kind: "selection-packed-add"`, `releaseQualification: false`, source/artifact identity, dirty state, matrix/catalog identifiers, observed runtimes/platform, per-case plan/lock hashes, installed versions and command exit codes. The external-artifact route requires a clean checkout at the exact source SHA and never repacks the candidate. Local passing evidence covers only macOS/arm64 with Python 3.13; the six-cell workflow is pending.
 
 ## Remaining Phase 2 gates
 
-Finish section 2.2 by retaining clean-source evidence on the entire platform/Python matrix. Section 2.3: real additive execution, existing-file/version preservation and repeated application. Section 2.4: native POSIX/Windows shells, launcher payload bounds/file fallback and interactive confirmation. Section 2.5: retained schemaVersion 1 config, legacy preset/positional add and JSON regressions on the advertised matrix. Connect the complete evidence to the later candidate gates only after these pass.
+Finish sections 2.2 and 2.3 by retaining clean-source evidence on the entire platform/Python matrix. Section 2.4: native POSIX/Windows shells, launcher payload bounds/file fallback and interactive confirmation. Section 2.5: retained schemaVersion 1 config, legacy preset/positional add and JSON regressions on the advertised matrix. Connect the complete evidence to the later candidate gates only after these pass.

@@ -4,16 +4,16 @@ Last updated: 2026-10-03.
 
 ## Current position
 
-**Phase 1, section 2.1 and the section 2.2 real-create harness are implemented locally. All 24 create variants pass locally with Node 24 and Python 3.13 on macOS/arm64. Section 2.2 remains partial until the full platform/Python matrix passes. The next implementation task is section 2.3 (real add journeys).** The complete 0.3.0 release is not finished or authorized for publication.
+**Phase 1, section 2.1 and the section 2.2/2.3 real-execution harnesses are implemented locally. All 24 create and 21 add variants pass on the local macOS/arm64, Node 24 and Python 3.13 cell. Sections 2.2 and 2.3 remain partial until the full platform/Python matrix passes. The next CLI implementation task is section 2.4 (native transport and confirmation).** The complete 0.3.0 release is not finished or authorized for publication.
 
 This document turns the [0.3.0 roadmap](./ROADMAP_0.3.0_DRAFT.md) into the ten reviewable phases discussed with the owner. Numbers here are local to 0.3.0; historical 0.2.0 Phase 19–28 identifiers stay unchanged. The roadmap and website plan retain their original planning snapshots, so some proposed flags there now have implementation. Use this document and [selection v1](../product-docs/SELECTION_V1.md) for current behavior.
 
 - Development branch: `codex/0.3.0-cli`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-cli`.
-- Implemented CLI slice: `626fce93214af8554c3a0700ead52c5e3db8ae7a`.
+- First CLI slice commit: `626fce93214af8554c3a0700ead52c5e3db8ae7a`; later section commits and exact artifact identities are recorded in Git history and qualification reports.
 - Exact starting candidate SHA: `145e167e6b60897da96942545ba6dbd40359ad4a`, on `codex/phase-27-release-candidate`.
 - Development CLI version: `0.3.0-alpha.1`, unpublished.
-- Current catalog: `0.3.0-cli.2`; matrix: `0.3.0-selection.2`. Older catalog selections must be regenerated; schemaVersion 1 configs and the selection v1 envelope remain supported.
+- Current catalog: `0.3.0-cli.3`; matrix: `0.3.0-selection.3`. Older catalog selections must be regenerated; schemaVersion 1 configs and the selection v1 envelope remain supported.
 - The original candidate checkout and its three untracked planning documents were preserved. Work on this release stays in the separate 0.3.0 worktree.
 
 Status meanings: **implemented locally** means source and required local checks exist; **partial** means some work/evidence exists with open acceptance gates; **not started** means that phase's new deliverable has not been implemented; **pending delivery** requires qualification and later explicit authorization. A checked implementation item is not a stable-support or release claim.
@@ -42,9 +42,9 @@ Exit condition met: the first slice is implemented and locally tested. Real inst
 
 - [x] Local selection/delta tests cover valid and malformed inputs, size bounds, hostile names, incompatible contexts, preservation and repeated application.
 - [x] Built-CLI dry-run fixtures exercise create/add token/file equivalence and retain legacy dry-run behavior.
-- [x] **2.1 Freeze the evidence matrix and packed acceptance fixtures:** [matrix revision `0.3.0-selection.2`](../../../tests/e2e/fixtures/selection-v1.matrix.json) freezes 24 create/21 add journeys, typed-plan fingerprints, limits, catalog pins and targets. Identified-tarball tests, reports and a manual single-artifact workflow are implemented; [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md) distinguishes dry-run contract evidence from pending real/native execution. No parent-recipe or new platform-support promotion.
+- [x] **2.1 Freeze the evidence matrix and packed acceptance fixtures:** [matrix revision `0.3.0-selection.3`](../../../tests/e2e/fixtures/selection-v1.matrix.json) freezes 24 create/21 add journeys, typed-plan fingerprints, limits, catalog pins and targets. Identified-tarball tests, reports and a manual single-artifact workflow are implemented; [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md) distinguishes dry-run contract evidence from pending real/native execution. No parent-recipe or new platform-support promotion.
 - [ ] **2.2 Real create journeys (partial):** the [execution suite](../../../tests/e2e/selection-create.test.ts) and [manual six-cell workflow](../../../.github/workflows/selection-create.yml) are implemented. Local 24/24 minimal/customized starters pass real installation, locks/version checks, builds/API responses, selected library/tool checks, doctor and confirmed repeat refusal with preservation. Confirmation uses the packed command handler's reviewed-plan adapter; native TTY remains section 2.4. Full Linux/macOS/Windows × Python 3.12/3.13 evidence is pending; the workflow has not been dispatched.
-- [ ] **2.3 Real add journeys:** apply supported selections to existing projects; verify compatibility refusal, file/version preservation and no-op repeats.
+- [ ] **2.3 Real add journeys (partial):** the [execution suite](../../../tests/e2e/selection-add.test.ts) and the shared [manual six-cell workflow](../../../.github/workflows/selection-create.yml) are implemented. Local 21/21 additive variants pass real installation into freshly created apps with context refusal, user-file and existing-version preservation, selected tool checks, doctor and repeated no-op plans. Full runner/Python evidence and native TTY confirmation are pending.
 - [ ] **2.4 Transport/launcher qualification:** both aliases, native POSIX/Windows launchers, shell argument transport, maximum-size inputs, file fallback and confirmation behavior.
 - [ ] **2.5 Legacy regression evidence:** schemaVersion 1 configs, legacy presets, positional add and supported JSON output on the advertised matrix.
 
@@ -52,7 +52,7 @@ Target qualification: Node 24; Python 3.12/3.13 with uv 0.12.17; supported Linux
 
 Section 2.2 fixes discovered during real execution: minimal React installs its scaffold dependencies after the esbuild policy; Express explicitly approves esbuild for tsx and uses a stable compiled start entry even with Vitest/root-level/generated library source; doctor resolves the same Python launcher as installation; FastAPI only advertises a generated pytest test when selected. The React catalog distinguishes create-vite 8.3.0 from its generated React/Vite ranges. These changes advance the catalog/matrix and preserve the historical 0.2.0 branch.
 
-Local validation: 24 real create cases, 105 packed matrix/contract cases, 502 workspace tests and 11 legacy/selection dry-run fixtures pass. Workspace typecheck, selection-test typecheck, lint and build pass. Observed tools: Node 24.21.0, pnpm 12.5.1, Python 3.13.1 and uv 0.12.17. Generated locks/logs and reports are retained outside Git; dirty development runs are not frozen-source qualification. The protocol supports a subsequent clean exact-source single-artifact acceptance run. During development, low disk space correctly stopped execution; temporary dependency trees/cache are now cleaned after each case by default.
+Local validation: 24 real create cases, 21 real add cases and 105 packed matrix/contract cases pass. The prior workspace run had 502 tests and 11 legacy/selection dry-run fixtures; final checks for this section are recorded below. Observed tools: Node 24.21.0, pnpm 12.5.1, Python 3.13.1 and uv 0.12.17. Generated locks/logs and reports are retained outside Git; dirty development runs are not frozen-source qualification. Temporary dependency trees/cache are cleaned after each case by default.
 
 Exit condition: every advertised selection journey has passing packed-artifact execution evidence for its stated context/platform. Wider option or integration support needs its own qualification.
 
@@ -169,6 +169,13 @@ The local host is below the supported Node 24 execution floor. This is local imp
 - Local runtime: macOS arm64, Node 22.12.0, npm 10.9.0, pnpm 12.5.1. Evidence reports explicitly set `qualification: false`; the Node 24 gate is not met by this host.
 - Initial stderr-envelope assumptions and nondeterministic Python fixture names were corrected. All 45 final plan fingerprints are enforced; no failing or skipped contract case remains.
 - The new workflow is authored but not dispatched. Real create/add, native shell limits/confirmation and retained cross-platform regression execution remain sections 2.2–2.5. The release and website remain unfinished and unpublished.
+
+## Section 2.3 local validation — 2026-10-03
+
+- Real add suite: 21/21 installed-tarball journeys pass locally, alternating token/file transport. React/Vite, Express and FastAPI receive all seven nonempty optional subsets each. Cases check context refusal, dry-run, reviewed-plan confirmation, generated locks and selected packages/tools, user-file and existing-declaration preservation, doctor and two no-op repeats.
+- Frozen contract: 105/105 cases pass with revision 3, including all 45 create/add plan fingerprints. The 16 changed fingerprints are confined to Express/Vitest and FastAPI/pytest variants; 29 did not change.
+- Workspace tests: 502/502. Broad end-to-end suite: 133/133, including legacy create/add/JSON paths. Workspace and selection-test typechecks, lint and build pass. The broad e2e run used a test-owned uv cache because the host's default uv cache was not writable.
+- This is one local macOS/arm64 cell with Node 24.21.0, pnpm 12.5.1, Python 3.13.1 and uv 0.12.17. The manual six-cell workflow is authored but not dispatched. Native shell and TTY qualification and the later phases remain open.
 
 ## Execution order and update rules
 

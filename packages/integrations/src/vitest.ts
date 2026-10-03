@@ -57,6 +57,38 @@ it('returns the generated React sample message', () => {
 })
 `;
 
+const EXPRESS_ENDPOINT_TEST = `import type { Server } from "node:http";
+
+import { afterAll, beforeAll, expect, it } from "vitest";
+
+let server: Server;
+let origin: string;
+
+beforeAll(async () => {
+  process.env.REPOSETUP_NO_LISTEN = "1";
+  const { app } = await import("../src/app.js");
+  await new Promise<void>((resolve, reject) => {
+    server = app.listen(0, "127.0.0.1", (error?: Error) => {
+      if (error !== undefined) reject(error);
+      else resolve();
+    });
+  });
+  const address = server.address();
+  if (address === null || typeof address === "string")
+    throw new Error("Server did not bind TCP");
+  origin = \`http://127.0.0.1:\${address.port}\`;
+});
+
+afterAll(() => server.close());
+
+it("returns the Hello World response", async () => {
+  const response = await fetch(origin);
+
+  expect(response.status).toBe(200);
+  expect(await response.text()).toBe("Hello World!");
+});
+`;
+
 const NEXT_HEALTH_ROUTE_TS = `export function GET(): Response {
   return Response.json({ ok: true });
 }
@@ -103,7 +135,7 @@ export const vitestIntegration = defineIntegration({
   name: "Vitest",
   category: "testing",
   description:
-    "Adds Vitest. Next.js uses the official RTL guide; other Node apps install Vitest only.",
+    "Adds Vitest. Next.js uses the official RTL guide; React and Express include sample tests.",
   status: "candidate",
   documentationUrl: "https://vitest.dev/guide/",
   keywords: ["test", "vite", "rtl"],
@@ -156,6 +188,18 @@ export const vitestIntegration = defineIntegration({
               },
             ]
           : [];
+      const expressSample =
+        context.config.framework.id === "express" && typescript
+          ? [
+              {
+                type: "create_file" as const,
+                path: "src/app.test.ts",
+                content: EXPRESS_ENDPOINT_TEST,
+                behavior: "fail_if_exists" as const,
+                description: "Add an Express endpoint response test",
+              },
+            ]
+          : [];
       return [
         requireNodeRange(NODE_ENGINE_RANGES.vitest, `Vitest ${QUALIFIED_VERSIONS.vitest}`),
         addPackages(context, [npmPin("vitest", QUALIFIED_VERSIONS.vitest)], {
@@ -171,6 +215,7 @@ export const vitestIntegration = defineIntegration({
           description: "Add a Vitest config so doctor can find it",
         },
         ...reactSample,
+        ...expressSample,
         {
           type: "modify_json",
           path: "package.json",

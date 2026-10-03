@@ -6,18 +6,20 @@ import { pathToFileURL } from "node:url";
 
 // Only terminal I/O and the human answer are adapted. The installed artifact supplies
 // parsing, registry, preflight, planning, filesystem adapters and process execution.
-const [entry, selectionFile, transport] = process.argv.slice(2);
+const [entry, selectionFile, transport, requestedMode] = process.argv.slice(2);
 assert.ok(entry && selectionFile);
 assert.ok(transport === "token" || transport === "file");
+const mode = requestedMode ?? "create";
+assert.ok(mode === "create" || mode === "add");
 const { runCli } = await import(pathToFileURL(entry).href);
 const selection = await readFile(selectionFile, "utf8");
 const input =
   transport === "token"
     ? ["--selection", Buffer.from(selection).toString("base64url")]
-    : ["--selection-file", selectionFile];
+    : [mode === "create" ? "--selection-file" : "--config", selectionFile];
 let stdout = "";
 let stderr = "";
-const result = await runCli(["--no-color", "--json", "create", ...input], {
+const result = await runCli(["--no-color", "--json", mode, ...input], {
   cwd: process.cwd(),
   io: {
     writeOut(text) {
@@ -30,7 +32,7 @@ const result = await runCli(["--no-color", "--json", "create", ...input], {
     },
   },
   confirmCreate: async () => {
-    assert.ok(stderr.includes("Decoded selection (create,"));
+    assert.ok(stderr.includes(`Decoded selection (${mode},`));
     const review = JSON.parse(stdout.trim());
     assert.equal(review.version, 1);
     assert.equal(review.kind, "plan");

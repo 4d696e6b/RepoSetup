@@ -98,9 +98,13 @@ describe("Phase 14 Python ecosystem plans", () => {
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "main.py" }),
-        expect.objectContaining({ type: "create_file", path: "test_main.py" }),
         expect.objectContaining({ type: "create_file", path: "README.md" }),
         expect.objectContaining({ type: "show_message" }),
+      ]),
+    );
+    expect(pytestIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: "create_file", path: "test_main.py" }),
       ]),
     );
   });

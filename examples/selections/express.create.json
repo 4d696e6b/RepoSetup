@@ -1,6 +1,6 @@
 {
   "selectionVersion": 1,
-  "catalogRevision": "0.3.0-cli.2",
+  "catalogRevision": "0.3.0-cli.3",
   "cliContract": "selection-v1",
   "mode": "create",
   "config": {

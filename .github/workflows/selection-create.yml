@@ -1,4 +1,4 @@
-name: Selection real create (0.3.0)
+name: Selection real create and add (0.3.0)
 
 on:
   workflow_dispatch:
@@ -77,9 +77,19 @@ jobs:
           REPOSETUP_SELECTION_PYTHON_TARGET: ${{ matrix.python }}
           REPOSETUP_SELECTION_ARTIFACT_DIR: ${{ runner.temp }}/selection-candidate
           REPOSETUP_SELECTION_CREATE_EVIDENCE_DIR: ${{ runner.temp }}/selection-create-evidence
+      - name: Execute every add subset using the same artifact
+        run: pnpm exec vitest run --config tests/e2e/vitest.selection-add.config.ts
+        env:
+          UV_PYTHON: python
+          UV_PYTHON_DOWNLOADS: never
+          REPOSETUP_SELECTION_PYTHON_TARGET: ${{ matrix.python }}
+          REPOSETUP_SELECTION_ARTIFACT_DIR: ${{ runner.temp }}/selection-candidate
+          REPOSETUP_SELECTION_ADD_EVIDENCE_DIR: ${{ runner.temp }}/selection-add-evidence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: selection-create-${{ matrix.runner }}-python-${{ matrix.python }}-${{ github.sha }}
-          path: ${{ runner.temp }}/selection-create-evidence
+          name: selection-create-add-${{ matrix.runner }}-python-${{ matrix.python }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/selection-create-evidence
+            ${{ runner.temp }}/selection-add-evidence
           if-no-files-found: error

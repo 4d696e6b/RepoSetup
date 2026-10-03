@@ -38,18 +38,6 @@ async def root():
     return {"message": "Hello World"}
 `;
 
-const FASTAPI_TEST = `from fastapi.testclient import TestClient
-
-from main import app
-
-
-def test_root_returns_hello_world() -> None:
-    response = TestClient(app).get("/")
-
-    assert response.status_code == 200
-    assert response.json() == {"message": "Hello World"}
-`;
-
 export const fastapiIntegration = defineIntegration({
   id: "fastapi",
   name: "FastAPI",
@@ -92,17 +80,6 @@ export const fastapiIntegration = defineIntegration({
         behavior: "fail_if_exists",
         description: "Add the official FastAPI first-steps app",
       },
-      ...(hasSelectedIntegration(context, "pytest")
-        ? [
-            {
-              type: "create_file" as const,
-              path: "test_main.py",
-              content: FASTAPI_TEST,
-              behavior: "fail_if_exists" as const,
-              description: "Add a FastAPI endpoint response test",
-            },
-          ]
-        : []),
       {
         type: "create_file",
         path: "README.md",

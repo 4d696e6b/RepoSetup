@@ -13,11 +13,23 @@ import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingPythonPackage } from "./verify.js";
 
+const FASTAPI_TEST = `from fastapi.testclient import TestClient
+
+from main import app
+
+
+def test_root_returns_hello_world() -> None:
+    response = TestClient(app).get("/")
+
+    assert response.status_code == 200
+    assert response.json() == {"message": "Hello World"}
+`;
+
 export const pytestIntegration = defineIntegration({
   id: "pytest",
   name: "pytest",
   category: "testing",
-  description: "Adds pytest as a development dependency. Does not write sample tests.",
+  description: "Adds pytest as a development dependency and a FastAPI endpoint test.",
   status: "candidate",
   documentationUrl: "https://docs.pytest.org/en/stable/getting-started.html",
   keywords: ["python", "test"],
@@ -44,6 +56,17 @@ export const pytestIntegration = defineIntegration({
         dev: true,
       }),
       ...afterPythonPackageInstall(context, "pytest"),
+      ...(context.config.framework.id === "fastapi"
+        ? [
+            {
+              type: "create_file" as const,
+              path: "test_main.py",
+              content: FASTAPI_TEST,
+              behavior: "fail_if_exists" as const,
+              description: "Add a FastAPI endpoint response test",
+            },
+          ]
+        : []),
     ];
   },
   remove(context) {

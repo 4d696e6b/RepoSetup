@@ -4,13 +4,19 @@ Cursor/maintainers should update this file as phases are completed.
 
 For the current phase-by-phase 0.3.0 tracker, see [0.3.0 implementation status](./STATUS_0.3.0.md). It separates locally implemented sections from pending qualification, website, maintenance and release work.
 
+## 0.3.0 section 2.3 implementation — 2026-10-03
+
+In the isolated `codex/0.3.0-cli` worktree, all 21 nonempty add selections now have a real packed-artifact execution harness. It creates a minimal React/Vite, Express or FastAPI application, applies each supported option subset, checks incompatible-context refusal and dry-run preservation, executes only after reviewed-plan confirmation, verifies generated locks and selected tools, runs doctor, then confirms two no-op repeats. Existing README, .env, custom files/configuration and dependency declarations are checked for preservation. Generated Express and FastAPI endpoint tests now belong to the Vitest and pytest integrations so they work for both create and add. Catalog `0.3.0-cli.3` and matrix `0.3.0-selection.3` record 16 reviewed changed plans.
+
+Local macOS/arm64, Node 24.21.0, Python 3.13.1, pnpm 12.5.1 and uv 0.12.17 cover 21/21 add variants. The shared manual workflow is prepared for all six platform/Python cells, but it has not been dispatched. Native terminal confirmation and cross-platform evidence remain open; 0.3.0 is not release-qualified. See [phase tracker](./STATUS_0.3.0.md) and [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md).
+
 ## 0.3.0 section 2.2 implementation — 2026-10-03
 
-Implemented in the separate `codex/0.3.0-cli` worktree. Section 2.2 remains partial: local macOS/arm64 with Node 24.21.0, pnpm 12.5.1, Python 3.13.1 and uv 0.12.17 covers all 24 create variants; the full platform/Python matrix is still pending. The next implementation section is 2.3, real add journeys. See the [phase tracker](./STATUS_0.3.0.md) and [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md).
+Implemented in the separate `codex/0.3.0-cli` worktree. Section 2.2 remains partial: local macOS/arm64 with Node 24.21.0, pnpm 12.5.1, Python 3.13.1 and uv 0.12.17 covers all 24 create variants; the full platform/Python matrix is still pending. See the [phase tracker](./STATUS_0.3.0.md) and [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md).
 
 - Packed-artifact real installation, generated locks and version declarations, React builds, compiled Express/FastAPI endpoint responses, selected test/validation/format/lint tools, doctor, and confirmed repeated-create refusal with file preservation. Token/file transports alternate; native terminal prompting is an independent pending gate.
 - Fixed missing dependency installation for minimal React, known esbuild approval for Express/tsx, and Express's unstable compiled start path when additional TypeScript files are present. Doctor now shares installation's Python launcher lookup. FastAPI's README includes pytest only when selected.
-- Catalog `0.3.0-cli.2` distinguishes the pinned create-vite generator from generated React/Vite dependency ranges. Matrix `0.3.0-selection.2` records 20 reviewed create-plan changes and preserves all 21 add-plan fingerprints. Existing schemaVersion 1/legacy input modes remain supported; prior catalog exports receive the stale-selection error.
+- Catalog `0.3.0-cli.2` distinguished the pinned create-vite generator from generated React/Vite dependency ranges. Matrix `0.3.0-selection.2` recorded 20 reviewed create-plan changes and preserved all 21 add-plan fingerprints at that checkpoint. Revision 3 changes 16 plans as recorded above. Existing schemaVersion 1/legacy input modes remain supported; prior catalog exports receive the stale-selection error.
 - A manual workflow packs one artifact for six platform/Python cells and retains reports/logs/locks on failure. It is authored and YAML-parsed, not dispatched. No support-status promotion, publication or deployment.
 - Local checks pass: 24 real create cases, 105 packed matrix/contract cases, 502 workspace tests, 11 legacy/selection dry-run fixtures, workspace/selection-test typechecks, lint and build. Test-owned dependency trees and uv caches are cleaned per case unless explicitly retained. Reports distinguish dirty development runs from clean exact-source external-artifact acceptance.
 

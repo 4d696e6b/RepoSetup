@@ -34,7 +34,8 @@
     "review:licenses": "node scripts/check-dependency-licenses.mjs",
     "test:selection:packed": "pnpm build && vitest run --config tests/e2e/vitest.selection.config.ts",
     "typecheck:selection-tests": "tsc --project tests/e2e/tsconfig.selection.json",
-    "test:selection:create": "pnpm build && vitest run --config tests/e2e/vitest.selection-create.config.ts"
+    "test:selection:create": "pnpm build && vitest run --config tests/e2e/vitest.selection-create.config.ts",
+    "test:selection:add": "pnpm build && vitest run --config tests/e2e/vitest.selection-add.config.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

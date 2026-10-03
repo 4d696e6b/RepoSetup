@@ -7,7 +7,7 @@ const limitations =
   "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included.";
 export const BEGINNER_CATALOG: BeginnerCatalog = {
   schemaVersion: 1,
-  revision: "0.3.0-cli.2",
+  revision: "0.3.0-cli.3",
   recipeRevision: REGISTRY_REVISION,
   directVersions: {
     ...qualifiedDirectVersions([

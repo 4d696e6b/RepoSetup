@@ -1,6 +1,6 @@
 # Selection v1 — first 0.3.0 CLI slice
 
-Status: implemented development contract, not a published or platform-qualified 0.3.0 release. Catalog revision `0.3.0-cli.2`; CLI contract `selection-v1`; envelope `selectionVersion: 1`. Recipe pins remain those of the built-in registry; React/Vite's pinned create-vite generator produces the reviewed template's dependency ranges, captured by actual locks. A stale catalog, envelope version or CLI contract is refused; no remote registry is fetched.
+Status: implemented development contract, not a published or platform-qualified 0.3.0 release. Catalog revision `0.3.0-cli.3`; CLI contract `selection-v1`; envelope `selectionVersion: 1`. Recipe pins remain those of the built-in registry; React/Vite's pinned create-vite generator produces the reviewed template's dependency ranges, captured by actual locks. A stale catalog, envelope version or CLI contract is refused; no remote registry is fetched.
 
 ## Shared foundation
 
@@ -19,7 +19,7 @@ Create wraps an existing schemaVersion 1 config:
 ```json
 {
   "selectionVersion": 1,
-  "catalogRevision": "0.3.0-cli.2",
+  "catalogRevision": "0.3.0-cli.3",
   "cliContract": "selection-v1",
   "mode": "create",
   "config": {
@@ -38,7 +38,7 @@ Add describes capabilities and an expected context; it has no project path, runt
 ```json
 {
   "selectionVersion": 1,
-  "catalogRevision": "0.3.0-cli.2",
+  "catalogRevision": "0.3.0-cli.3",
   "cliContract": "selection-v1",
   "mode": "add",
   "context": {
@@ -82,9 +82,9 @@ Invalid format/transport/version/catalog/options/flags use `SELECTION_INVALID`, 
 
 ## Packed contract fixtures
 
-Section 2.1 freezes all 24 create and 21 nonempty add variants in [matrix revision `0.3.0-selection.2`](../../../tests/e2e/fixtures/selection-v1.matrix.json). Local installed-tarball acceptance checks token/file plans, operation fingerprints, preservation, no-op repeats and refusals. The [qualification protocol](../implementing-docs/SELECTION_QUALIFICATION_0.3.0.md) defines source/artifact/report identity and the manual single-artifact workflow. These reports are contract evidence (`qualification: false`), not real installation or native platform qualification. Local Node 22 checks do not satisfy the Node 24 execution target.
+Section 2.1 freezes all 24 create and 21 nonempty add variants in [matrix revision `0.3.0-selection.3`](../../../tests/e2e/fixtures/selection-v1.matrix.json). Local installed-tarball acceptance checks token/file plans, operation fingerprints, preservation, no-op repeats and refusals. The [qualification protocol](../implementing-docs/SELECTION_QUALIFICATION_0.3.0.md) defines source/artifact/report identity and the manual single-artifact workflow. These reports are contract evidence (`qualification: false`), not real installation or native platform qualification. Local Node 22 checks do not satisfy the Node 24 execution target.
 
-Section 2.2 adds real packed-command creation for every variant, with retained locks/logs and app/tool/doctor/preservation assertions. Local macOS/arm64, Node 24 and Python 3.13 results do not qualify the other platform/Python cells or native prompting. Catalog revision 2 incorporates the starter fixes and corrected React template metadata; regenerate exports using `0.3.0-cli.1` before applying them. The envelope remains version 1.
+Sections 2.2 and 2.3 add real packed-command create and add execution for every variant, with retained locks/logs and app/tool/doctor/preservation assertions. Local macOS/arm64, Node 24 and Python 3.13 results do not qualify the other platform/Python cells or native prompting. Catalog revision 2 incorporated starter fixes and corrected React template metadata; revision 3 makes generated Express/FastAPI tests available when Vitest/pytest are added later. Regenerate exports from older catalog revisions before applying them. The envelope remains version 1.
 
 ## Remaining qualification
 
