@@ -82,6 +82,7 @@ export interface GlobalCliOptions {
 }
 
 export interface CreateCommandOptions {
+  diff?: boolean;
   selection?: string;
   selectionFile?: string;
   config?: string;

@@ -11,11 +11,13 @@ import { renderErrorJson, renderPartialRunReport, renderPlanJson } from "./machi
 import { writeLine } from "./io.js";
 import { isKnownPackageManager } from "./prompt-create.js";
 import { renderPlan } from "./render-plan.js";
+import { capturePreview, previewError, recheckPreview, renderPreview } from "./preview.js";
 import type { GlobalCliOptions, ResolvedCliDeps } from "./types.js";
 
 export async function handleRemove(input: {
   integrationId: string;
   dryRun: boolean;
+  diff?: boolean;
   yes: boolean;
   packageManager: string | undefined;
   globals: GlobalCliOptions;
@@ -58,17 +60,41 @@ export async function handleRemove(input: {
     return exitCodeForError(planned.error);
   }
 
+  let captured;
+  if (planned.result.valid && input.diff === true) {
+    try {
+      captured = await capturePreview(planned.projectRoot, planned.result.operations);
+    } catch (error) {
+      const failure = previewError("read", error instanceof Error ? error.message : undefined);
+      writeLine(
+        input.deps.io.writeErr,
+        input.globals.json ? renderErrorJson(failure) : formatError(failure),
+      );
+      return exitCodeForError(failure);
+    }
+  }
   const rendered = input.globals.json
-    ? renderPlanJson(planned.result, input.dryRun)
+    ? renderPlanJson(planned.result, input.dryRun, captured?.preview)
     : renderPlan(planned.result, {
         dryRun: input.dryRun,
         verbose: input.globals.verbose,
         quiet: input.globals.quiet,
-      });
+      }) + (captured === undefined ? "" : `\n\n${renderPreview(captured.preview)}`);
 
   if (!planned.result.valid) {
     writeLine(input.deps.io.writeErr, rendered);
     return exitCodeForErrors(planned.result.errors);
+  }
+  if (captured?.preview.blocked === true) {
+    const failure = previewError("blocked");
+    if (!input.globals.json) writeLine(input.deps.io.writeOut, rendered);
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json
+        ? renderErrorJson(failure, undefined, captured.preview)
+        : formatError(failure),
+    );
+    return exitCodeForError(failure);
   }
 
   if (planned.result.operations.length === 0) {
@@ -98,6 +124,17 @@ export async function handleRemove(input: {
         "Aborted. Pass --yes to execute without a confirmation prompt.",
       );
       return EXIT_CODES.INVALID_INPUT;
+    }
+  }
+
+  if (captured !== undefined) {
+    const failure = await recheckPreview(planned.projectRoot, planned.result.operations, captured);
+    if (failure !== undefined) {
+      writeLine(
+        input.deps.io.writeErr,
+        input.globals.json ? renderErrorJson(failure) : formatError(failure),
+      );
+      return exitCodeForError(failure);
     }
   }
 

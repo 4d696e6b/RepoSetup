@@ -18,6 +18,7 @@ import { renderErrorJson, renderPartialRunReport, renderPlanJson } from "./machi
 import { writeLine } from "./io.js";
 import { isKnownPackageManager } from "./prompt-create.js";
 import { renderPlan } from "./render-plan.js";
+import { capturePreview, previewError, recheckPreview, renderPreview } from "./preview.js";
 import type { GlobalCliOptions, ResolvedCliDeps } from "./types.js";
 
 export async function handleAdd(input: {
@@ -25,6 +26,7 @@ export async function handleAdd(input: {
   selection?: string;
   config?: string;
   dryRun: boolean;
+  diff?: boolean;
   yes: boolean;
   packageManager: string | undefined;
   globals: GlobalCliOptions;
@@ -102,17 +104,42 @@ export async function handleAdd(input: {
     return exitCodeForError(planned.error);
   }
 
+  let captured;
+  if (planned.result.valid && input.diff === true) {
+    try {
+      captured = await capturePreview(planned.projectRoot, planned.result.operations);
+    } catch (error) {
+      const failure = previewError("read", error instanceof Error ? error.message : undefined);
+      writeLine(
+        input.deps.io.writeErr,
+        input.globals.json ? renderErrorJson(failure) : formatError(failure),
+      );
+      return exitCodeForError(failure);
+    }
+  }
   const rendered = input.globals.json
-    ? renderPlanJson(planned.result, input.dryRun)
+    ? renderPlanJson(planned.result, input.dryRun, captured?.preview)
     : renderPlan(planned.result, {
         dryRun: input.dryRun,
         verbose: input.globals.verbose,
         quiet: usingSelection ? false : input.globals.quiet,
-      });
+      }) + (captured === undefined ? "" : `\n\n${renderPreview(captured.preview)}`);
 
   if (!planned.result.valid) {
     writeLine(input.deps.io.writeErr, rendered);
     return exitCodeForErrors(planned.result.errors);
+  }
+
+  if (captured?.preview.blocked === true) {
+    const failure = previewError("blocked");
+    if (!input.globals.json) writeLine(input.deps.io.writeOut, rendered);
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json
+        ? renderErrorJson(failure, undefined, captured.preview)
+        : formatError(failure),
+    );
+    return exitCodeForError(failure);
   }
 
   if (planned.result.operations.length === 0) {
@@ -170,6 +197,16 @@ export async function handleAdd(input: {
         input.globals.json ? renderErrorJson(error) : formatError(error),
       );
       return exitCodeForError(error);
+    }
+  }
+  if (captured !== undefined) {
+    const failure = await recheckPreview(planned.projectRoot, planned.result.operations, captured);
+    if (failure !== undefined) {
+      writeLine(
+        input.deps.io.writeErr,
+        input.globals.json ? renderErrorJson(failure) : formatError(failure),
+      );
+      return exitCodeForError(failure);
     }
   }
   const executionStartedAt = Date.now();

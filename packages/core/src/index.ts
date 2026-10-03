@@ -59,6 +59,8 @@ export { findProjectRoot, PROJECT_ROOT_MARKERS } from "./detection/project-root.
 export { detectedResult, evidence, notDetected } from "./detection/result.js";
 export type { DetectedItem, DetectedLanguage, DetectedStack } from "./detection/types.js";
 export { installationOperationSchema } from "./operations/schema.js";
+export { previewOperations } from "./preview/preview.js";
+export type { ChangePreview, PreviewChange, PreviewSnapshot } from "./preview/preview.js";
 export type {
   AddEnvExampleOperation,
   CheckPrerequisiteOperation,

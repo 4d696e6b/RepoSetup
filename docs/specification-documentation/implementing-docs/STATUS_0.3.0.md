@@ -4,7 +4,7 @@ Last updated: 2026-10-03.
 
 ## Current position
 
-**Phase 1 and all of Phase 2 are complete.** At source `e41cf82102c4c4f909544aad8a70e1585e9a57c4`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717406), [three-runner contract/transport run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717420), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717415) passed. All 24 create, 21 add, nine packed legacy and six native-transport cases passed in their required cells. Later preview, doctor, repair, website, usability and release phases remain pending. The complete 0.3.0 release is not finished or authorized for publication.
+**Phase 1 and all of Phase 2 are complete; Phase 3 is implemented locally.** At source `e41cf82102c4c4f909544aad8a70e1585e9a57c4`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717406), [three-runner contract/transport run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717420), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37127717415) passed. All 24 create, 21 add, nine packed legacy and six native-transport cases passed in their required cells. Phase 3 previews still need later packed/platform qualification; doctor, repair, website, usability and release phases remain pending. The complete 0.3.0 release is not finished or authorized for publication.
 
 This document turns the [0.3.0 roadmap](./ROADMAP_0.3.0_DRAFT.md) into the ten reviewable phases discussed with the owner. Numbers here are local to 0.3.0; historical 0.2.0 Phase 19–28 identifiers stay unchanged. The roadmap and website plan retain their original planning snapshots, so some proposed flags there now have implementation. Use this document and [selection v1](../product-docs/SELECTION_V1.md) for current behavior.
 
@@ -58,14 +58,14 @@ Exit condition met for the bounded CLI selection matrix: every advertised journe
 
 ## Phase 3 — File-change previews
 
-**Status: not started.** Existing typed plans and add deltas provide groundwork; a general before/after preview is not implemented.
+**Status: implemented locally.** New previews are conservative structural before/after summaries. Exact generator, package-manager and unknown user-file contents remain intentionally unavailable until execution. Packed/platform qualification is a Phase 9 gate.
 
-- [ ] **3.1 Preview model:** deterministic file/dependency change categories and reasons, computed in core from supplied snapshots.
-- [ ] **3.2 CLI presentation:** implement and document the proposed `--diff` interface with text/JSON output and dry-run.
-- [ ] **3.3 Safety:** secret suppression, existing-file conflicts, unknown generator/package-manager effects, line endings, Unicode and symlink boundaries.
-- [ ] **3.4 Revalidation:** detect relevant changes after preview and refuse stale execution.
+- [x] **3.1 Preview model:** pure core projection classifies create/modify/preserve/blocked/unknown outcomes and reasons from bounded snapshots; consecutive deterministic edits are simulated in order. Dependency installation and generator effects are explicit unknowns.
+- [x] **3.2 CLI presentation:** `create`, `add` and `remove` accept `--diff`, with text summaries, an optional `preview` field in version 1 JSON plans, and `--diff --dry-run`. See [preview contract](../product-docs/PREVIEW_0.3.0.md).
+- [x] **3.3 Safety:** file contents and environment values are suppressed, existing-file conflicts and malformed edits block execution, external effects are labelled unknown, and tests cover LF/CRLF, Unicode, symlink boundaries and preservation. The read-only adapter refuses to inspect over 64 KiB for edits requiring contents.
+- [x] **3.4 Revalidation:** fingerprints of previewed paths and common manifests/locks are checked again after confirmation; changed targets refuse execution before the executor starts. The executor remains responsible for final mutation safeguards.
 
-Exit condition: meaningful mutating workflows show safe, accurate previews without writes or installation subprocesses during dry-run.
+Local exit condition met: meaningful mutating workflows show conservative previews without writes or installation subprocesses during dry-run. The local suite passed 513 workspace tests (259 core, 15 registry, 126 integrations and 113 CLI); targeted preview/CLI tests passed 53; typecheck, lint and build passed after a strict optional-field fix. A transient typecheck run overlapped a clean build and saw temporarily missing generated declarations; the sequential rerun passed. No new cross-platform or packed-artifact qualification is claimed for Phase 3 yet.
 
 ## Phase 4 — Doctor checks the intended stack
 

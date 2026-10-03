@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -358,6 +358,90 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
     expect(await readdir(projectDir)).toEqual(["marker.txt"]);
+  });
+
+  it("shows a redacted JSON change preview without executing a dry-run", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-diff-"));
+    tempDirs.push(root);
+    await writeFile(path.join(root, "reposetup.json"), JSON.stringify(sampleConfig()));
+    const captured = captureIo();
+    const result = await runCli(
+      ["--json", "create", "--config", "reposetup.json", "--diff", "--dry-run"],
+      {
+        cwd: root,
+        registry: testRegistry(),
+        io: captured.io,
+        runProcess: async () => {
+          throw new Error("preview spawned a process");
+        },
+      },
+    );
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    const output = JSON.parse(captured.stdout()) as {
+      kind: string;
+      preview: { version: number; changes: Array<{ category: string; target: string }> };
+    };
+    expect(output.kind).toBe("plan");
+    expect(output.preview.version).toBe(1);
+    expect(output.preview.changes).toEqual(
+      expect.arrayContaining([expect.objectContaining({ category: "create", target: "db.txt" })]),
+    );
+    expect(await readdir(root)).toEqual(["reposetup.json"]);
+  });
+
+  it("refuses execution when a previewed target changes during confirmation", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-diff-"));
+    tempDirs.push(root);
+    await writeFile(path.join(root, "reposetup.json"), JSON.stringify(sampleConfig()));
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--diff"], {
+      cwd: root,
+      registry: testRegistry(),
+      io: captured.io,
+      confirmCreate: async () => {
+        await writeFile(path.join(root, "db.txt"), "my file");
+        return true;
+      },
+      runProcess: async () => {
+        throw new Error("stale preview executed a process");
+      },
+    });
+    expect(result.exitCode).not.toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stderr()).toContain("changed after preview");
+    expect(await readFile(path.join(root, "db.txt"), "utf8")).toBe("my file");
+  });
+
+  it("refuses a symlinked preview target without following it", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-diff-"));
+    tempDirs.push(root);
+    await writeFile(path.join(root, "reposetup.json"), JSON.stringify(sampleConfig()));
+    await writeFile(path.join(root, "outside.txt"), "private value");
+    await symlink(path.join(root, "outside.txt"), path.join(root, "db.txt"));
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--diff", "--dry-run"], {
+      cwd: root,
+      registry: testRegistry(),
+      io: captured.io,
+      runProcess: async () => {
+        throw new Error("preview spawned a process");
+      },
+    });
+    expect(result.exitCode).not.toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("blocked");
+    expect(captured.stdout()).not.toContain("private value");
+    expect(await readFile(path.join(root, "outside.txt"), "utf8")).toBe("private value");
+    const json = captureIo();
+    const jsonResult = await runCli(
+      ["--json", "create", "--config", "reposetup.json", "--diff", "--dry-run"],
+      {
+        cwd: root,
+        registry: testRegistry(),
+        io: json.io,
+      },
+    );
+    expect(jsonResult.exitCode).not.toBe(EXIT_CODES.SUCCESS);
+    expect(json.stdout()).toBe("");
+    expect(JSON.parse(json.stderr())).toMatchObject({ kind: "error", preview: { blocked: true } });
   });
 
   it("refuses to execute without confirmation or --yes", async () => {
@@ -782,7 +866,7 @@ describe("runCli", () => {
     );
     await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
     const captured = captureIo();
-    const result = await runCli(["--json", "add", "zod", "--dry-run"], {
+    const result = await runCli(["--json", "add", "zod", "--diff", "--dry-run"], {
       cwd: root,
       io: captured.io,
       registry: addRegistry(),
@@ -794,6 +878,7 @@ describe("runCli", () => {
       kind: "plan",
       dryRun: true,
       plan: { valid: true },
+      preview: { version: 1, blocked: false, changes: [{ category: "unknown" }] },
     });
   });
 
@@ -932,7 +1017,7 @@ describe("runCli", () => {
     await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
     const before = await snapshotTree(root);
     const captured = captureIo();
-    const result = await runCli(["remove", "zod", "--dry-run"], {
+    const result = await runCli(["remove", "zod", "--diff", "--dry-run"], {
       cwd: root,
       io: captured.io,
       registry: addRegistry(),
@@ -940,6 +1025,7 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Remove Zod");
+    expect(captured.stdout()).toContain("Change preview:");
     expect(captured.stdout()).toContain("pnpm remove zod");
     expect(captured.stdout()).not.toContain("create-next-app");
     expect(captured.stdout()).toContain("No files or commands were executed.");

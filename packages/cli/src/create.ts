@@ -30,6 +30,7 @@ import { loadRepoSetupConfigFile } from "./load-config.js";
 import { postCreateCommands } from "./post-create.js";
 import { isKnownPackageManager } from "./prompt-create.js";
 import { renderPlan } from "./render-plan.js";
+import { capturePreview, previewError, recheckPreview, renderPreview } from "./preview.js";
 import type {
   CreateAnswers,
   CreateCommandOptions,
@@ -90,17 +91,42 @@ export async function handleCreate(input: {
       ? planSelectionCreate
       : planInstallation
   )(loaded.config, input.deps.registry);
+  let captured;
+  if (planned.valid && input.options.diff === true) {
+    try {
+      captured = await capturePreview(input.deps.cwd, planned.operations);
+    } catch (error) {
+      const failure = previewError("read", error instanceof Error ? error.message : undefined);
+      writeLine(
+        input.deps.io.writeErr,
+        input.globals.json ? renderErrorJson(failure) : formatError(failure),
+      );
+      return exitCodeForError(failure);
+    }
+  }
   const rendered = input.globals.json
-    ? renderPlanJson(planned, input.options.dryRun)
+    ? renderPlanJson(planned, input.options.dryRun, captured?.preview)
     : renderPlan(planned, {
         dryRun: input.options.dryRun,
         verbose: input.globals.verbose,
         quiet: usingSelection ? false : input.globals.quiet,
-      });
+      }) + (captured === undefined ? "" : `\n\n${renderPreview(captured.preview)}`);
 
   if (!planned.valid) {
     writeLine(input.deps.io.writeErr, rendered);
     return exitCodeForErrors(planned.errors);
+  }
+
+  if (captured?.preview.blocked === true) {
+    const failure = previewError("blocked");
+    if (!input.globals.json) writeLine(input.deps.io.writeOut, rendered);
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json
+        ? renderErrorJson(failure, undefined, captured.preview)
+        : formatError(failure),
+    );
+    return exitCodeForError(failure);
   }
 
   writeLine(input.deps.io.writeOut, rendered);
@@ -119,6 +145,17 @@ export async function handleCreate(input: {
           : "Aborted. Pass --yes to execute without a confirmation prompt.",
       );
       return EXIT_CODES.INVALID_INPUT;
+    }
+  }
+
+  if (captured !== undefined) {
+    const failure = await recheckPreview(input.deps.cwd, planned.operations, captured);
+    if (failure !== undefined) {
+      writeLine(
+        input.deps.io.writeErr,
+        input.globals.json ? renderErrorJson(failure) : formatError(failure),
+      );
+      return exitCodeForError(failure);
     }
   }
 

@@ -73,6 +73,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .option("--selection <token>", "review a bounded selection-v1 token")
     .option("--selection-file <path>", "review a selection-v1 JSON file")
     .option("--dry-run", "print the installation plan without changing files", false)
+    .option("--diff", "preview file and dependency changes before execution", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--framework <id>", "framework integration id")
     .option("--package-manager <id>", "package manager")
@@ -86,6 +87,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
           ...(options.selection === undefined ? {} : { selection: options.selection }),
           ...(options.selectionFile === undefined ? {} : { selectionFile: options.selectionFile }),
           dryRun: options.dryRun,
+          diff: options.diff === true,
           yes: options.yes,
           typescript: options.typescript,
           ...(options.config === undefined ? {} : { config: options.config }),
@@ -107,6 +109,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .option("--selection <token>", "review an additive selection-v1 token")
     .option("--config <path>", "review an additive selection-v1 JSON file")
     .option("--dry-run", "print the add plan without changing files", false)
+    .option("--diff", "preview file and dependency changes before execution", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--package-manager <id>", "package manager")
     .option("--verbose", "include extra detail in output", false)
@@ -116,6 +119,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
         integrationIds: string[],
         options: {
           dryRun: boolean;
+          diff: boolean;
           yes: boolean;
           packageManager?: string;
           selection?: string;
@@ -128,6 +132,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
           ...(options.selection === undefined ? {} : { selection: options.selection }),
           ...(options.config === undefined ? {} : { config: options.config }),
           dryRun: options.dryRun,
+          diff: options.diff === true,
           yes: options.yes,
           packageManager: options.packageManager,
           globals: readGlobals(command),
@@ -141,6 +146,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .description("Remove an integration that has an explicit safe removal recipe")
     .argument("<id>", "integration id")
     .option("--dry-run", "print the remove plan without changing files", false)
+    .option("--diff", "preview file and dependency changes before execution", false)
     .option("--yes", "skip confirmation and execute the plan", false)
     .option("--package-manager <id>", "package manager")
     .option("--verbose", "include extra detail in output", false)
@@ -148,12 +154,13 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
     .action(
       async (
         integrationId: string,
-        options: { dryRun: boolean; yes: boolean; packageManager?: string },
+        options: { dryRun: boolean; diff: boolean; yes: boolean; packageManager?: string },
         command: Command,
       ) => {
         exitCode = await handleRemove({
           integrationId,
           dryRun: options.dryRun,
+          diff: options.diff === true,
           yes: options.yes,
           packageManager: options.packageManager,
           globals: readGlobals(command),
