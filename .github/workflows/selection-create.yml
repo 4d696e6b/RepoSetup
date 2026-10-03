@@ -85,6 +85,14 @@ jobs:
           REPOSETUP_SELECTION_PYTHON_TARGET: ${{ matrix.python }}
           REPOSETUP_SELECTION_ARTIFACT_DIR: ${{ runner.temp }}/selection-candidate
           REPOSETUP_SELECTION_ADD_EVIDENCE_DIR: ${{ runner.temp }}/selection-add-evidence
+      - name: Check retained config, preset, positional add and JSON paths
+        run: pnpm exec vitest run --config tests/e2e/vitest.selection-legacy.config.ts
+        env:
+          UV_PYTHON: python
+          UV_PYTHON_DOWNLOADS: never
+          REPOSETUP_SELECTION_PYTHON_TARGET: ${{ matrix.python }}
+          REPOSETUP_SELECTION_ARTIFACT_DIR: ${{ runner.temp }}/selection-candidate
+          REPOSETUP_SELECTION_LEGACY_EVIDENCE_DIR: ${{ runner.temp }}/selection-legacy-evidence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -92,4 +100,5 @@ jobs:
           path: |
             ${{ runner.temp }}/selection-create-evidence
             ${{ runner.temp }}/selection-add-evidence
+            ${{ runner.temp }}/selection-legacy-evidence
           if-no-files-found: error

@@ -116,7 +116,7 @@ export async function handleAdd(input: {
   }
 
   if (planned.result.operations.length === 0) {
-    if (usingSelection && input.globals.json) {
+    if (input.globals.json) {
       writeLine(input.deps.io.writeOut, rendered);
       return EXIT_CODES.SUCCESS;
     }

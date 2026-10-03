@@ -9,6 +9,7 @@ export default defineConfig({
       "tests/e2e/selection-create.test.ts",
       "tests/e2e/selection-add.test.ts",
       "tests/e2e/selection-transport.test.ts",
+      "tests/e2e/selection-legacy.test.ts",
     ],
     testTimeout: 180_000,
     hookTimeout: 60_000,

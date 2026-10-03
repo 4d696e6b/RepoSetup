@@ -115,6 +115,18 @@ On POSIX, a small [pseudo-terminal driver](../../../tests/e2e/fixtures/pty-selec
 
 The [manual contract workflow](../../../.github/workflows/selection-contract.yml) has a separate transport job on the frozen Ubuntu, macOS and Windows runners. It downloads the same identified tarball as the contract job and retains a transport report. The job has not been dispatched; local macOS success is not cross-platform qualification.
 
+## Legacy compatibility regression (section 2.5)
+
+Run the [packed legacy suite](../../../tests/e2e/selection-legacy.test.ts) with Node 24, pnpm 12.5.1, Python 3.12/3.13 and uv 0.12.17:
+
+```sh
+REPOSETUP_SELECTION_LEGACY_EVIDENCE_DIR=/tmp/selection-legacy-run-1 pnpm test:selection:legacy
+```
+
+The suite confirms all five existing preset IDs remain valid schemaVersion 1 JSON dry-run plans. It creates real minimal React/Vite, Express and FastAPI projects through the retained `create --config` path, adds Vitest or pytest with positional `add --yes`, verifies dry-run preservation, locks, generated tests, builds and doctor, and checks that a repeated no-op add returns a version 1 JSON empty plan. It also executes the existing React/Vite preset through its original `create --preset` path. The other four old presets receive dry-run contract coverage here; their real execution belongs to separate legacy golden qualification and is not implied by this suite.
+
+The report records source/artifact identity, dirty state, frozen matrix identity, runtimes/platform, per-case outcome and generated lock hashes. It does not upload project secrets. The [manual six-cell create/add workflow](../../../.github/workflows/selection-create.yml) now runs this suite using the same tarball and retains its report; it has not been dispatched.
+
 ## Remaining Phase 2 gates
 
-Finish sections 2.2 and 2.3 by retaining clean-source evidence on the entire platform/Python matrix. Finish section 2.4 with clean-source native shell evidence on all three runners and a Windows terminal confirmation test. Section 2.5: retained schemaVersion 1 config, legacy preset/positional add and JSON regressions on the advertised matrix. Connect the complete evidence to the later candidate gates only after these pass.
+Finish sections 2.2, 2.3 and 2.5 by retaining clean-source evidence on the entire platform/Python matrix, including the separate legacy golden workflows. Finish section 2.4 with clean-source native shell evidence on all three runners and a Windows terminal confirmation test. Connect the complete evidence to the later candidate gates only after these pass.

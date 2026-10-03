@@ -269,4 +269,26 @@ describe("add idempotency (built-in catalog)", () => {
     expect(second.stdout()).toContain('No changes. Integration "zod" is already present.');
     expect(secondRuns).toEqual([]);
   });
+
+  it("renders a versioned empty plan for an already-satisfied positional JSON add", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-idem-json-"));
+    tempDirs.push(root);
+    await nodeApp(root, { zod: "4.0.0" });
+    const captured = captureIo();
+    const result = await runCli(["--json", "add", "zod", "--yes"], {
+      cwd: root,
+      registry,
+      io: captured.io,
+      runProcess: async () => {
+        throw new Error("Satisfied add must not spawn");
+      },
+    });
+    expect(result.exitCode, captured.stderr()).toBe(EXIT_CODES.SUCCESS);
+    expect(JSON.parse(captured.stdout())).toMatchObject({
+      version: 1,
+      kind: "plan",
+      dryRun: false,
+      plan: { valid: true, operations: [] },
+    });
+  });
 });

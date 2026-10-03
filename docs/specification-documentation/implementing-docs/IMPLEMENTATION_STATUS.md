@@ -4,6 +4,10 @@ Cursor/maintainers should update this file as phases are completed.
 
 For the current phase-by-phase 0.3.0 tracker, see [0.3.0 implementation status](./STATUS_0.3.0.md). It separates locally implemented sections from pending qualification, website, maintenance and release work.
 
+## 0.3.0 section 2.5 implementation — 2026-10-03
+
+The packed legacy suite checks all five established preset IDs as JSON dry-run plans, executes schemaVersion 1 config creation and positional Vitest/pytest add in the three beginner contexts, and executes the existing React/Vite preset with build, test and doctor. It records source/artifact identity, lock hashes, platform/runtime and case results. A real run exposed that an already-satisfied positional `add --json` printed a text message; the CLI now emits the existing version 1 empty plan envelope, with a unit regression. The manual six-cell workflow reuses one identified tarball for this suite alongside create/add. Local macOS/arm64, Node 24 and Python 3.13 pass; cross-platform evidence and the other legacy preset execution paths remain pending. See [phase tracker](./STATUS_0.3.0.md).
+
 ## 0.3.0 section 2.4 implementation — 2026-10-03
 
 The packed transport suite now invokes both installed aliases through the platform's native shell for create and add. It sends an exactly 4,096-character token and an exact 16 KiB JSON file path with spaces/Unicode, compares dry-run plans, checks oversized token/file errors and confirms that a non-TTY invocation displays the review then refuses execution without mutation. On local macOS, a real POSIX pseudo-terminal drives the actual CLI prompt to decline and accept create and add; accepted commands execute and declined commands preserve files. The manual contract workflow now has a separate transport job for the three frozen runners, using the same identified tarball. It has not been dispatched; Windows TTY confirmation remains open. See the [phase tracker](./STATUS_0.3.0.md) and [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md).
