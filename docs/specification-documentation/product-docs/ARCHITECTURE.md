@@ -242,8 +242,8 @@ System-level prerequisites are detected, not silently installed.
 
 Use platform-aware diagnostics to tell the user what is missing.
 
-## 9. Future website
+## 9. Owner-approved 0.3.0 companion website
 
-A future website must consume the same core registry/config concepts.
+The 0.3.0 companion website consumes a generated public snapshot from the same curated definitions and core planner. Build-time catalog export/validation belongs in registry; editorial definitions belong in integrations; browser presentation belongs in `apps/website`. The browser imports only JSON and app modules at runtime. Core gains no UI dependencies, and the complete Node core barrel never enters the browser bundle. The local CLI remains the only execution surface.
 
 Do not make any v1 architectural decision that requires a server.

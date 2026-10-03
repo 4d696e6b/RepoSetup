@@ -1,0 +1,29 @@
+{
+  "name": "@reposetup/website",
+  "version": "0.3.0-alpha.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "catalog": "node --experimental-strip-types scripts/generate-catalog.ts",
+    "dev": "pnpm catalog && vite --host 127.0.0.1",
+    "build": "pnpm catalog && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --config vitest.config.ts",
+    "test:browser": "playwright test",
+    "pack:contract": "node scripts/pack-contract.mjs",
+    "test:handoff": "vitest run --config vitest.handoff.config.ts"
+  },
+  "devDependencies": {
+    "@reposetup/core": "workspace:*",
+    "@reposetup/integrations": "workspace:*",
+    "@reposetup/registry": "workspace:*",
+    "@playwright/test": "^1.55.1",
+    "@axe-core/playwright": "^4.10.2",
+    "vite": "^8.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1",
+    "@types/node": "^22.20.4",
+    "prettier": "^3.9.8"
+  }
+}

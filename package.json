@@ -31,7 +31,9 @@
     "benchmark:plans": "pnpm build && node scripts/benchmark-plans.mjs",
     "benchmark:real-installs": "pnpm build && node scripts/benchmark-real-installs.mjs",
     "benchmark:install-passes": "pnpm build && node scripts/benchmark-install-passes.mjs",
-    "review:licenses": "node scripts/check-dependency-licenses.mjs"
+    "review:licenses": "node scripts/check-dependency-licenses.mjs",
+    "website:dev": "pnpm --filter @reposetup/core --filter @reposetup/registry --filter @reposetup/integrations build && pnpm --filter @reposetup/website dev",
+    "website:test": "pnpm --filter @reposetup/website test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

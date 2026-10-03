@@ -256,7 +256,7 @@ Alpha `0.1.0` qualifies a **subset** of these stacks (see README). Catalog entri
 ## 5. Explicit non-goals
 
 Not part of v1:
-- website;
+- websites outside the owner-approved 0.3.0 companion information/selection scope;
 - hosted API;
 - Firebase backend;
 - cloud account;
@@ -281,3 +281,7 @@ A supported integration must be:
 - discoverable through `search` and `info`.
 
 "Supported" must mean more than "the dependency appears in package.json".
+
+## 0.3.0 companion information center
+
+The owner explicitly authorizes a local English-first companion website in `apps/website`. It teaches curated integration choices and exports bounded declarative selections. The local CLI remains authoritative for detection, validation, planning, confirmation and execution. Accounts, secrets, project uploads, browser installation, hosted executable registries and deployment remain excluded from this task. See the 0.3.0 website and beginner-guidance plans.

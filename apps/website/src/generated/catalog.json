@@ -1,0 +1,1655 @@
+{
+  "schemaVersion": 1,
+  "revision": "0.3.0-cli.1",
+  "recipeRevision": "2026-09-23",
+  "directVersions": {
+    "react-vite": ["vite@8.3.0", "react@19.2.0"],
+    "express": ["express@5.2.1", "typescript@5.9.3", "@types/express@5.0.6", "@types/node@22.20.4"],
+    "fastapi": ["fastapi[standard]==0.141.1"],
+    "zod": ["zod@4.6.5"],
+    "vitest": [
+      "vitest@5.0.1",
+      "@vitejs/plugin-react@6.1.1",
+      "jsdom@28.1.0",
+      "@testing-library/react@16.3.3",
+      "@testing-library/dom@10.4.2",
+      "vite-tsconfig-paths@6.1.1"
+    ],
+    "prettier": ["prettier@3.9.8"],
+    "pydantic": ["pydantic==2.13.5"],
+    "pytest": ["pytest==9.1.1"],
+    "ruff": ["ruff==0.16.8"]
+  },
+  "cliContract": "selection-v1",
+  "contexts": [
+    {
+      "id": "react-vite-ts-pnpm",
+      "context": {
+        "runtimeId": "node",
+        "frameworkId": "react-vite",
+        "packageManager": "pnpm",
+        "typescript": true
+      },
+      "optionalIds": ["zod", "vitest", "prettier"],
+      "evidence": "docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md#phase-25-progress--2026-09-24",
+      "limitations": "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included."
+    },
+    {
+      "id": "express-ts-pnpm",
+      "context": {
+        "runtimeId": "node",
+        "frameworkId": "express",
+        "packageManager": "pnpm",
+        "typescript": true
+      },
+      "optionalIds": ["zod", "vitest", "prettier"],
+      "evidence": "docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md#phase-25-progress--2026-09-24",
+      "limitations": "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included."
+    },
+    {
+      "id": "fastapi-uv",
+      "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
+      "optionalIds": ["pydantic", "pytest", "ruff"],
+      "evidence": "docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md#phase-25-progress--2026-09-24",
+      "limitations": "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included."
+    }
+  ],
+  "guidance": [
+    {
+      "id": "react-vite",
+      "purpose": "Build a browser interface with React and Vite's development/build tools.",
+      "when": "Choose this when your project needs an interactive browser UI.",
+      "unnecessary": "A server-only API does not need React.",
+      "example": "An interactive task list.",
+      "prerequisites": "Node 24 and pnpm; TypeScript starter in this catalog.",
+      "alternatives": "Express or FastAPI serve APIs rather than browser components.",
+      "impact": "Scaffolds a new application and installs its dependencies; create only.",
+      "goals": ["browser interface", "frontend"],
+      "documentationUrl": "https://vite.dev/guide/",
+      "reviewedAt": "2026-10-03"
+    },
+    {
+      "id": "express",
+      "purpose": "Handle HTTP requests in a Node.js API.",
+      "when": "Choose this when a JavaScript/TypeScript backend needs routes.",
+      "unnecessary": "A browser-only application does not need a separate API server.",
+      "example": "A route returning a task list as JSON.",
+      "prerequisites": "Node 24 and pnpm; TypeScript starter in this catalog.",
+      "alternatives": "FastAPI is the Python API journey.",
+      "impact": "Creates API source, package scripts, and TypeScript configuration; create only.",
+      "goals": ["api", "http routes", "backend"],
+      "documentationUrl": "https://expressjs.com/",
+      "reviewedAt": "2026-10-03"
+    },
+    {
+      "id": "fastapi",
+      "purpose": "Build a Python HTTP API using type-based request models.",
+      "when": "Choose this when your backend uses Python.",
+      "unnecessary": "A browser-only interface does not need an API framework.",
+      "example": "An endpoint returning a health response.",
+      "prerequisites": "Python 3.12/3.13 and uv 0.12.17; install prerequisites yourself.",
+      "alternatives": "Express is the TypeScript API journey.",
+      "impact": "Initializes a Python project and creates API source; create only.",
+      "goals": ["python api", "backend"],
+      "documentationUrl": "https://fastapi.tiangolo.com/",
+      "reviewedAt": "2026-10-03"
+    },
+    {
+      "id": "zod",
+      "purpose": "Validate untrusted values against an explicit schema.",
+      "when": "Add it when form or API input needs runtime checks.",
+      "unnecessary": "Skip it when you have no input boundary to validate yet.",
+      "example": "Reject a task title that is not a string.",
+      "prerequisites": "A supported Node application.",
+      "alternatives": "Existing explicit validation; Pydantic for Python.",
+      "impact": "Adds the Zod dependency; write your own schemas.",
+      "goals": ["validate input", "form validation"],
+      "documentationUrl": "https://zod.dev/",
+      "reviewedAt": "2026-10-03"
+    },
+    {
+      "id": "vitest",
+      "purpose": "Run repeatable assertions to catch regressions.",
+      "when": "Add it when application behavior needs automated tests.",
+      "unnecessary": "Skip a second test runner if your current one already meets your needs.",
+      "example": "Assert an API health response or a small React helper.",
+      "prerequisites": "A supported Node application and Node 24.",
+      "alternatives": "Keep an existing test runner.",
+      "impact": "Adds dev dependencies, a config, a test script, and context-specific samples. Existing files/scripts are preserved on add.",
+      "goals": ["test an app", "testing", "regressions"],
+      "documentationUrl": "https://vitest.dev/guide/",
+      "reviewedAt": "2026-10-03"
+    },
+    {
+      "id": "prettier",
+      "purpose": "Apply consistent code formatting automatically.",
+      "when": "Add it when manual style decisions slow you down.",
+      "unnecessary": "Skip it if your project already has a formatter you want to keep.",
+      "example": "Format source consistently before review.",
+      "prerequisites": "A supported Node application.",
+      "alternatives": "Keep an existing formatter; Ruff for Python.",
+      "impact": "Adds a dev dependency, .prettierrc, and .prettierignore. Existing target files are preserved on add.",
+      "goals": ["format code", "formatting"],
+      "documentationUrl": "https://prettier.io/docs/",
+      "reviewedAt": "2026-10-03"
+    },
+    {
+      "id": "pydantic",
+      "purpose": "Define Python data models with validation.",
+      "when": "Use it when Python input needs explicit data shapes.",
+      "unnecessary": "FastAPI already brings Pydantic; a separate selection is often unnecessary.",
+      "example": "Validate the fields of an API request model.",
+      "prerequisites": "FastAPI/uv in this catalog.",
+      "alternatives": "Existing manual validation; Zod for TypeScript.",
+      "impact": "Declares the Pydantic dependency; creates no custom models.",
+      "goals": ["validate input", "python models"],
+      "documentationUrl": "https://docs.pydantic.dev/latest/",
+      "reviewedAt": "2026-10-03"
+    },
+    {
+      "id": "pytest",
+      "purpose": "Run Python assertions as an automated test suite.",
+      "when": "Add it when API behavior needs regression checks.",
+      "unnecessary": "Skip a second runner when your existing test suite is sufficient.",
+      "example": "Assert the generated FastAPI endpoint response.",
+      "prerequisites": "FastAPI/uv in this catalog.",
+      "alternatives": "Keep an existing Python test runner.",
+      "impact": "Adds pytest and the recipe's FastAPI test dependencies/sample; preserves existing sample files on add.",
+      "goals": ["test an app", "python testing"],
+      "documentationUrl": "https://docs.pytest.org/en/stable/",
+      "reviewedAt": "2026-10-03"
+    },
+    {
+      "id": "ruff",
+      "purpose": "Check Python source for lint issues and format it.",
+      "when": "Add it when you need consistent Python checks.",
+      "unnecessary": "Skip it when an existing linter/formatter covers your needs.",
+      "example": "Find an unused import before review.",
+      "prerequisites": "FastAPI/uv in this catalog.",
+      "alternatives": "Keep your current Python lint/format tools.",
+      "impact": "Adds the Ruff dependency; run checks deliberately.",
+      "goals": ["format code", "python linting"],
+      "documentationUrl": "https://docs.astral.sh/ruff/",
+      "reviewedAt": "2026-10-03"
+    }
+  ],
+  "presets": [
+    {
+      "id": "beginner-react-vite",
+      "name": "Minimal React/Vite",
+      "outcome": "A small browser application without optional libraries.",
+      "audience": "Beginners building a browser interface.",
+      "contextId": "react-vite-ts-pnpm",
+      "kind": "starter",
+      "support": "candidate",
+      "config": {
+        "schemaVersion": 1,
+        "project": { "name": "my-frontend", "path": "my-frontend" },
+        "runtime": { "id": "node" },
+        "packageManager": "pnpm",
+        "framework": { "id": "react-vite", "options": { "typescript": true } },
+        "integrations": []
+      },
+      "reasons": { "react-vite": "Provides the browser application scaffold." }
+    },
+    {
+      "id": "beginner-express",
+      "name": "Minimal Express API",
+      "outcome": "A TypeScript API without a database or optional tools.",
+      "audience": "Beginners building a Node API.",
+      "contextId": "express-ts-pnpm",
+      "kind": "starter",
+      "support": "candidate",
+      "config": {
+        "schemaVersion": 1,
+        "project": { "name": "my-api", "path": "my-api" },
+        "runtime": { "id": "node" },
+        "packageManager": "pnpm",
+        "framework": { "id": "express", "options": { "typescript": true } },
+        "integrations": []
+      },
+      "reasons": { "express": "Provides HTTP routes and a runnable API scaffold." }
+    },
+    {
+      "id": "beginner-fastapi",
+      "name": "Minimal FastAPI",
+      "outcome": "A Python API without persistence or optional tools.",
+      "audience": "Beginners building a Python API.",
+      "contextId": "fastapi-uv",
+      "kind": "starter",
+      "support": "candidate",
+      "config": {
+        "schemaVersion": 1,
+        "project": { "name": "my-python-api", "path": "my-python-api" },
+        "runtime": { "id": "python" },
+        "packageManager": "uv",
+        "framework": { "id": "fastapi" },
+        "integrations": []
+      },
+      "reasons": { "fastapi": "Provides the Python API scaffold and its required dependencies." }
+    }
+  ],
+  "limits": {
+    "tokenCharacters": 4096,
+    "tokenBytes": 3072,
+    "fileBytes": 16384,
+    "depth": 8,
+    "integrations": 16,
+    "commandCharacters": 4200
+  },
+  "integrations": [
+    {
+      "id": "react-vite",
+      "purpose": "Build a browser interface with React and Vite's development/build tools.",
+      "when": "Choose this when your project needs an interactive browser UI.",
+      "unnecessary": "A server-only API does not need React.",
+      "example": "An interactive task list.",
+      "prerequisites": "Node 24 and pnpm; TypeScript starter in this catalog.",
+      "alternatives": "Express or FastAPI serve APIs rather than browser components.",
+      "impact": "Scaffolds a new application and installs its dependencies; create only.",
+      "goals": ["browser interface", "frontend"],
+      "documentationUrl": "https://vite.dev/guide/",
+      "reviewedAt": "2026-10-03",
+      "name": "React + Vite",
+      "category": "framework",
+      "status": "candidate",
+      "addable": false,
+      "removable": false,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "create-vite requires Node.js."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "create-vite is bootstrapped with npm or pnpm."
+        }
+      ],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-22", "runtimeRange": ">=20.19" }
+    },
+    {
+      "id": "express",
+      "purpose": "Handle HTTP requests in a Node.js API.",
+      "when": "Choose this when a JavaScript/TypeScript backend needs routes.",
+      "unnecessary": "A browser-only application does not need a separate API server.",
+      "example": "A route returning a task list as JSON.",
+      "prerequisites": "Node 24 and pnpm; TypeScript starter in this catalog.",
+      "alternatives": "FastAPI is the Python API journey.",
+      "impact": "Creates API source, package scripts, and TypeScript configuration; create only.",
+      "goals": ["api", "http routes", "backend"],
+      "documentationUrl": "https://expressjs.com/",
+      "reviewedAt": "2026-10-03",
+      "name": "Express",
+      "category": "backend-framework",
+      "status": "candidate",
+      "addable": false,
+      "removable": false,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "Express requires Node.js 18 or later."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "Express is installed with npm or pnpm."
+        }
+      ],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-22" }
+    },
+    {
+      "id": "fastapi",
+      "purpose": "Build a Python HTTP API using type-based request models.",
+      "when": "Choose this when your backend uses Python.",
+      "unnecessary": "A browser-only interface does not need an API framework.",
+      "example": "An endpoint returning a health response.",
+      "prerequisites": "Python 3.12/3.13 and uv 0.12.17; install prerequisites yourself.",
+      "alternatives": "Express is the TypeScript API journey.",
+      "impact": "Initializes a Python project and creates API source; create only.",
+      "goals": ["python api", "backend"],
+      "documentationUrl": "https://fastapi.tiangolo.com/",
+      "reviewedAt": "2026-10-03",
+      "name": "FastAPI",
+      "category": "backend-framework",
+      "status": "candidate",
+      "addable": false,
+      "removable": false,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "FastAPI requires Python."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "FastAPI is installed with uv or pip."
+        }
+      ],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-22" }
+    },
+    {
+      "id": "zod",
+      "purpose": "Validate untrusted values against an explicit schema.",
+      "when": "Add it when form or API input needs runtime checks.",
+      "unnecessary": "Skip it when you have no input boundary to validate yet.",
+      "example": "Reject a task title that is not a string.",
+      "prerequisites": "A supported Node application.",
+      "alternatives": "Existing explicit validation; Pydantic for Python.",
+      "impact": "Adds the Zod dependency; write your own schemas.",
+      "goals": ["validate input", "form validation"],
+      "documentationUrl": "https://zod.dev/",
+      "reviewedAt": "2026-10-03",
+      "name": "Zod",
+      "category": "validation",
+      "status": "candidate",
+      "addable": true,
+      "removable": true,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Zod is installed into the scaffolded application."
+        }
+      ],
+      "conflicts": [],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-21" }
+    },
+    {
+      "id": "vitest",
+      "purpose": "Run repeatable assertions to catch regressions.",
+      "when": "Add it when application behavior needs automated tests.",
+      "unnecessary": "Skip a second test runner if your current one already meets your needs.",
+      "example": "Assert an API health response or a small React helper.",
+      "prerequisites": "A supported Node application and Node 24.",
+      "alternatives": "Keep an existing test runner.",
+      "impact": "Adds dev dependencies, a config, a test script, and context-specific samples. Existing files/scripts are preserved on add.",
+      "goals": ["test an app", "testing", "regressions"],
+      "documentationUrl": "https://vitest.dev/guide/",
+      "reviewedAt": "2026-10-03",
+      "name": "Vitest",
+      "category": "testing",
+      "status": "candidate",
+      "addable": true,
+      "removable": false,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Vitest is added to the scaffolded application."
+        }
+      ],
+      "conflicts": [],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-21" }
+    },
+    {
+      "id": "prettier",
+      "purpose": "Apply consistent code formatting automatically.",
+      "when": "Add it when manual style decisions slow you down.",
+      "unnecessary": "Skip it if your project already has a formatter you want to keep.",
+      "example": "Format source consistently before review.",
+      "prerequisites": "A supported Node application.",
+      "alternatives": "Keep an existing formatter; Ruff for Python.",
+      "impact": "Adds a dev dependency, .prettierrc, and .prettierignore. Existing target files are preserved on add.",
+      "goals": ["format code", "formatting"],
+      "documentationUrl": "https://prettier.io/docs/",
+      "reviewedAt": "2026-10-03",
+      "name": "Prettier",
+      "category": "formatting",
+      "status": "candidate",
+      "addable": true,
+      "removable": true,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Prettier is installed into the scaffolded application."
+        }
+      ],
+      "conflicts": [],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-21" }
+    },
+    {
+      "id": "pydantic",
+      "purpose": "Define Python data models with validation.",
+      "when": "Use it when Python input needs explicit data shapes.",
+      "unnecessary": "FastAPI already brings Pydantic; a separate selection is often unnecessary.",
+      "example": "Validate the fields of an API request model.",
+      "prerequisites": "FastAPI/uv in this catalog.",
+      "alternatives": "Existing manual validation; Zod for TypeScript.",
+      "impact": "Declares the Pydantic dependency; creates no custom models.",
+      "goals": ["validate input", "python models"],
+      "documentationUrl": "https://docs.pydantic.dev/latest/",
+      "reviewedAt": "2026-10-03",
+      "name": "Pydantic",
+      "category": "validation",
+      "status": "candidate",
+      "addable": true,
+      "removable": true,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Pydantic is installed into the scaffolded application."
+        }
+      ],
+      "conflicts": [],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-22" }
+    },
+    {
+      "id": "pytest",
+      "purpose": "Run Python assertions as an automated test suite.",
+      "when": "Add it when API behavior needs regression checks.",
+      "unnecessary": "Skip a second runner when your existing test suite is sufficient.",
+      "example": "Assert the generated FastAPI endpoint response.",
+      "prerequisites": "FastAPI/uv in this catalog.",
+      "alternatives": "Keep an existing Python test runner.",
+      "impact": "Adds pytest and the recipe's FastAPI test dependencies/sample; preserves existing sample files on add.",
+      "goals": ["test an app", "python testing"],
+      "documentationUrl": "https://docs.pytest.org/en/stable/",
+      "reviewedAt": "2026-10-03",
+      "name": "pytest",
+      "category": "testing",
+      "status": "candidate",
+      "addable": true,
+      "removable": true,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "pytest is added to the scaffolded application."
+        }
+      ],
+      "conflicts": [],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-22" }
+    },
+    {
+      "id": "ruff",
+      "purpose": "Check Python source for lint issues and format it.",
+      "when": "Add it when you need consistent Python checks.",
+      "unnecessary": "Skip it when an existing linter/formatter covers your needs.",
+      "example": "Find an unused import before review.",
+      "prerequisites": "FastAPI/uv in this catalog.",
+      "alternatives": "Keep your current Python lint/format tools.",
+      "impact": "Adds the Ruff dependency; run checks deliberately.",
+      "goals": ["format code", "python linting"],
+      "documentationUrl": "https://docs.astral.sh/ruff/",
+      "reviewedAt": "2026-10-03",
+      "name": "Ruff",
+      "category": "linting",
+      "status": "candidate",
+      "addable": true,
+      "removable": true,
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Ruff is added to the scaffolded application."
+        }
+      ],
+      "conflicts": [],
+      "includes": [],
+      "verification": { "verifiedAt": "2026-09-22" }
+    }
+  ],
+  "variants": [
+    {
+      "contextId": "react-vite-ts-pnpm",
+      "ids": [],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-frontend", "path": "my-frontend" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "react-vite", "options": { "typescript": true } },
+          "integrations": []
+        }
+      },
+      "add": null,
+      "createImpact": [
+        "Reserve new project directory my-frontend; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
+        "Scaffold React with create-vite",
+        "Allow the Vite esbuild dependency build script"
+      ],
+      "addImpact": []
+    },
+    {
+      "contextId": "react-vite-ts-pnpm",
+      "ids": ["zod"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-frontend", "path": "my-frontend" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "react-vite", "options": { "typescript": true } },
+          "integrations": [{ "id": "zod" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "react-vite",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "zod" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-frontend; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
+        "Scaffold React with create-vite",
+        "Allow the Vite esbuild dependency build script",
+        "Install Zod"
+      ],
+      "addImpact": ["Install Zod"]
+    },
+    {
+      "contextId": "react-vite-ts-pnpm",
+      "ids": ["vitest"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-frontend", "path": "my-frontend" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "react-vite", "options": { "typescript": true } },
+          "integrations": [{ "id": "vitest" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "react-vite",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "vitest" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-frontend; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
+        "Scaffold React with create-vite",
+        "Allow the Vite esbuild dependency build script",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add a React sample module",
+        "Add a React sample assertion",
+        "Add the official Vitest test script"
+      ],
+      "addImpact": [
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add a React sample module",
+        "Add a React sample assertion",
+        "Add the official Vitest test script"
+      ]
+    },
+    {
+      "contextId": "react-vite-ts-pnpm",
+      "ids": ["zod", "vitest"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-frontend", "path": "my-frontend" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "react-vite", "options": { "typescript": true } },
+          "integrations": [{ "id": "zod" }, { "id": "vitest" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "react-vite",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "zod" }, { "id": "vitest" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-frontend; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
+        "Scaffold React with create-vite",
+        "Allow the Vite esbuild dependency build script",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Assemble package.json dependencies before a consolidated install",
+        "Allow approved pnpm dependency build scripts",
+        "Add a Vitest config so doctor can find it",
+        "Add a React sample module",
+        "Add a React sample assertion",
+        "Add the official Vitest test script",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add a React sample module",
+        "Add a React sample assertion",
+        "Add the official Vitest test script",
+        "Install Zod"
+      ]
+    },
+    {
+      "contextId": "react-vite-ts-pnpm",
+      "ids": ["prettier"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-frontend", "path": "my-frontend" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "react-vite", "options": { "typescript": true } },
+          "integrations": [{ "id": "prettier" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "react-vite",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "prettier" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-frontend; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
+        "Scaffold React with create-vite",
+        "Allow the Vite esbuild dependency build script",
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier"
+      ],
+      "addImpact": [
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier"
+      ]
+    },
+    {
+      "contextId": "react-vite-ts-pnpm",
+      "ids": ["zod", "prettier"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-frontend", "path": "my-frontend" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "react-vite", "options": { "typescript": true } },
+          "integrations": [{ "id": "zod" }, { "id": "prettier" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "react-vite",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "zod" }, { "id": "prettier" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-frontend; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
+        "Scaffold React with create-vite",
+        "Allow the Vite esbuild dependency build script",
+        "Assemble package.json dependencies before a consolidated install",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Install Zod"
+      ]
+    },
+    {
+      "contextId": "react-vite-ts-pnpm",
+      "ids": ["vitest", "prettier"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-frontend", "path": "my-frontend" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "react-vite", "options": { "typescript": true } },
+          "integrations": [{ "id": "vitest" }, { "id": "prettier" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "react-vite",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "vitest" }, { "id": "prettier" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-frontend; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
+        "Scaffold React with create-vite",
+        "Allow the Vite esbuild dependency build script",
+        "Assemble package.json dependencies before a consolidated install",
+        "Allow approved pnpm dependency build scripts",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Add a Vitest config so doctor can find it",
+        "Add a React sample module",
+        "Add a React sample assertion",
+        "Add the official Vitest test script",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add a React sample module",
+        "Add a React sample assertion",
+        "Add the official Vitest test script"
+      ]
+    },
+    {
+      "contextId": "react-vite-ts-pnpm",
+      "ids": ["zod", "vitest", "prettier"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-frontend", "path": "my-frontend" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "react-vite", "options": { "typescript": true } },
+          "integrations": [{ "id": "zod" }, { "id": "vitest" }, { "id": "prettier" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "react-vite",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "zod" }, { "id": "vitest" }, { "id": "prettier" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-frontend; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
+        "Scaffold React with create-vite",
+        "Allow the Vite esbuild dependency build script",
+        "Assemble package.json dependencies before a consolidated install",
+        "Allow approved pnpm dependency build scripts",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Add a Vitest config so doctor can find it",
+        "Add a React sample module",
+        "Add a React sample assertion",
+        "Add the official Vitest test script",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add a React sample module",
+        "Add a React sample assertion",
+        "Add the official Vitest test script",
+        "Install Zod"
+      ]
+    },
+    {
+      "contextId": "express-ts-pnpm",
+      "ids": [],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-api", "path": "my-api" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "express", "options": { "typescript": true } },
+          "integrations": []
+        }
+      },
+      "add": null,
+      "createImpact": [
+        "Reserve new project directory my-api; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Create package.json (package manager init is interactive, so RepoSetup writes it)",
+        "Assemble package.json dependencies before a consolidated install",
+        "Add the official Express TypeScript compiler options",
+        "Create src for the Express TypeScript entry",
+        "Add the official Express TypeScript Hello World server",
+        "Add Express development, build, and start scripts",
+        "Add Express run instructions",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": []
+    },
+    {
+      "contextId": "express-ts-pnpm",
+      "ids": ["zod"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-api", "path": "my-api" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "express", "options": { "typescript": true } },
+          "integrations": [{ "id": "zod" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "express",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "zod" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-api; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Create package.json (package manager init is interactive, so RepoSetup writes it)",
+        "Assemble package.json dependencies before a consolidated install",
+        "Add the official Express TypeScript compiler options",
+        "Create src for the Express TypeScript entry",
+        "Add the official Express TypeScript Hello World server",
+        "Add Express development, build, and start scripts",
+        "Add Express run instructions",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": ["Install Zod"]
+    },
+    {
+      "contextId": "express-ts-pnpm",
+      "ids": ["vitest"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-api", "path": "my-api" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "express", "options": { "typescript": true } },
+          "integrations": [{ "id": "vitest" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "express",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "vitest" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-api; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Create package.json (package manager init is interactive, so RepoSetup writes it)",
+        "Assemble package.json dependencies before a consolidated install",
+        "Allow approved pnpm dependency build scripts",
+        "Add the official Express TypeScript compiler options",
+        "Create src for the Express TypeScript entry",
+        "Add the official Express TypeScript Hello World server",
+        "Add Express development, build, and start scripts",
+        "Add an Express endpoint response test",
+        "Add Express run instructions",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Add a Vitest config so doctor can find it",
+        "Add the official Vitest test script",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add the official Vitest test script"
+      ]
+    },
+    {
+      "contextId": "express-ts-pnpm",
+      "ids": ["zod", "vitest"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-api", "path": "my-api" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "express", "options": { "typescript": true } },
+          "integrations": [{ "id": "zod" }, { "id": "vitest" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "express",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "zod" }, { "id": "vitest" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-api; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Create package.json (package manager init is interactive, so RepoSetup writes it)",
+        "Assemble package.json dependencies before a consolidated install",
+        "Allow approved pnpm dependency build scripts",
+        "Add the official Express TypeScript compiler options",
+        "Create src for the Express TypeScript entry",
+        "Add the official Express TypeScript Hello World server",
+        "Add Express development, build, and start scripts",
+        "Add an Express endpoint response test",
+        "Add Express run instructions",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Add a Vitest config so doctor can find it",
+        "Add the official Vitest test script",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add the official Vitest test script",
+        "Install Zod"
+      ]
+    },
+    {
+      "contextId": "express-ts-pnpm",
+      "ids": ["prettier"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-api", "path": "my-api" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "express", "options": { "typescript": true } },
+          "integrations": [{ "id": "prettier" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "express",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "prettier" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-api; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Create package.json (package manager init is interactive, so RepoSetup writes it)",
+        "Assemble package.json dependencies before a consolidated install",
+        "Add the official Express TypeScript compiler options",
+        "Create src for the Express TypeScript entry",
+        "Add the official Express TypeScript Hello World server",
+        "Add Express development, build, and start scripts",
+        "Add Express run instructions",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier"
+      ]
+    },
+    {
+      "contextId": "express-ts-pnpm",
+      "ids": ["zod", "prettier"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-api", "path": "my-api" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "express", "options": { "typescript": true } },
+          "integrations": [{ "id": "zod" }, { "id": "prettier" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "express",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "zod" }, { "id": "prettier" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-api; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Create package.json (package manager init is interactive, so RepoSetup writes it)",
+        "Assemble package.json dependencies before a consolidated install",
+        "Add the official Express TypeScript compiler options",
+        "Create src for the Express TypeScript entry",
+        "Add the official Express TypeScript Hello World server",
+        "Add Express development, build, and start scripts",
+        "Add Express run instructions",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Install Zod"
+      ]
+    },
+    {
+      "contextId": "express-ts-pnpm",
+      "ids": ["vitest", "prettier"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-api", "path": "my-api" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "express", "options": { "typescript": true } },
+          "integrations": [{ "id": "vitest" }, { "id": "prettier" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "express",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "vitest" }, { "id": "prettier" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-api; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Create package.json (package manager init is interactive, so RepoSetup writes it)",
+        "Assemble package.json dependencies before a consolidated install",
+        "Allow approved pnpm dependency build scripts",
+        "Add the official Express TypeScript compiler options",
+        "Create src for the Express TypeScript entry",
+        "Add the official Express TypeScript Hello World server",
+        "Add Express development, build, and start scripts",
+        "Add an Express endpoint response test",
+        "Add Express run instructions",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Add a Vitest config so doctor can find it",
+        "Add the official Vitest test script",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add the official Vitest test script"
+      ]
+    },
+    {
+      "contextId": "express-ts-pnpm",
+      "ids": ["zod", "vitest", "prettier"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-api", "path": "my-api" },
+          "runtime": { "id": "node" },
+          "packageManager": "pnpm",
+          "framework": { "id": "express", "options": { "typescript": true } },
+          "integrations": [{ "id": "zod" }, { "id": "vitest" }, { "id": "prettier" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": {
+          "runtimeId": "node",
+          "frameworkId": "express",
+          "packageManager": "pnpm",
+          "typescript": true
+        },
+        "integrations": [{ "id": "zod" }, { "id": "vitest" }, { "id": "prettier" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-api; refuse an existing target",
+        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require pnpm on PATH.",
+        "Create package.json (package manager init is interactive, so RepoSetup writes it)",
+        "Assemble package.json dependencies before a consolidated install",
+        "Allow approved pnpm dependency build scripts",
+        "Add the official Express TypeScript compiler options",
+        "Create src for the Express TypeScript entry",
+        "Add the official Express TypeScript Hello World server",
+        "Add Express development, build, and start scripts",
+        "Add an Express endpoint response test",
+        "Add Express run instructions",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Add a Vitest config so doctor can find it",
+        "Add the official Vitest test script",
+        "Install assembled package.json dependencies"
+      ],
+      "addImpact": [
+        "Install Prettier as an exact dev dependency",
+        "Add the project Prettier config so editors detect Prettier",
+        "Ignore build artifacts from Prettier",
+        "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
+        "Install Vitest",
+        "Add a Vitest config so doctor can find it",
+        "Add the official Vitest test script",
+        "Install Zod"
+      ]
+    },
+    {
+      "contextId": "fastapi-uv",
+      "ids": [],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-python-api", "path": "my-python-api" },
+          "runtime": { "id": "python" },
+          "packageManager": "uv",
+          "framework": { "id": "fastapi" },
+          "integrations": []
+        }
+      },
+      "add": null,
+      "createImpact": [
+        "Reserve new project directory my-python-api; refuse an existing target",
+        "Require Python on PATH (Flask documents a minimum of 3.9).",
+        "Require uv on PATH.",
+        "Create a minimal uv pyproject.toml",
+        "Install FastAPI with the official standard extras",
+        "Add the official FastAPI first-steps app",
+        "Add FastAPI run instructions",
+        "Explain how to start the FastAPI development server"
+      ],
+      "addImpact": []
+    },
+    {
+      "contextId": "fastapi-uv",
+      "ids": ["pydantic"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-python-api", "path": "my-python-api" },
+          "runtime": { "id": "python" },
+          "packageManager": "uv",
+          "framework": { "id": "fastapi" },
+          "integrations": [{ "id": "pydantic" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
+        "integrations": [{ "id": "pydantic" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-python-api; refuse an existing target",
+        "Require Python on PATH (Flask documents a minimum of 3.9).",
+        "Require uv on PATH.",
+        "Create a minimal uv pyproject.toml",
+        "Install fastapi[standard]==0.141.1, pydantic==2.13.5",
+        "Add the official FastAPI first-steps app",
+        "Add FastAPI run instructions",
+        "Explain how to start the FastAPI development server"
+      ],
+      "addImpact": ["Install Pydantic"]
+    },
+    {
+      "contextId": "fastapi-uv",
+      "ids": ["pytest"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-python-api", "path": "my-python-api" },
+          "runtime": { "id": "python" },
+          "packageManager": "uv",
+          "framework": { "id": "fastapi" },
+          "integrations": [{ "id": "pytest" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
+        "integrations": [{ "id": "pytest" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-python-api; refuse an existing target",
+        "Require Python on PATH (Flask documents a minimum of 3.9).",
+        "Require uv on PATH.",
+        "Create a minimal uv pyproject.toml",
+        "Install FastAPI with the official standard extras",
+        "Add the official FastAPI first-steps app",
+        "Add a FastAPI endpoint response test",
+        "Add FastAPI run instructions",
+        "Explain how to start the FastAPI development server",
+        "Install pytest"
+      ],
+      "addImpact": ["Install pytest"]
+    },
+    {
+      "contextId": "fastapi-uv",
+      "ids": ["pydantic", "pytest"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-python-api", "path": "my-python-api" },
+          "runtime": { "id": "python" },
+          "packageManager": "uv",
+          "framework": { "id": "fastapi" },
+          "integrations": [{ "id": "pydantic" }, { "id": "pytest" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
+        "integrations": [{ "id": "pydantic" }, { "id": "pytest" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-python-api; refuse an existing target",
+        "Require Python on PATH (Flask documents a minimum of 3.9).",
+        "Require uv on PATH.",
+        "Create a minimal uv pyproject.toml",
+        "Install fastapi[standard]==0.141.1, pydantic==2.13.5",
+        "Add the official FastAPI first-steps app",
+        "Add a FastAPI endpoint response test",
+        "Add FastAPI run instructions",
+        "Explain how to start the FastAPI development server",
+        "Install pytest"
+      ],
+      "addImpact": ["Install Pydantic", "Install pytest"]
+    },
+    {
+      "contextId": "fastapi-uv",
+      "ids": ["ruff"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-python-api", "path": "my-python-api" },
+          "runtime": { "id": "python" },
+          "packageManager": "uv",
+          "framework": { "id": "fastapi" },
+          "integrations": [{ "id": "ruff" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
+        "integrations": [{ "id": "ruff" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-python-api; refuse an existing target",
+        "Require Python on PATH (Flask documents a minimum of 3.9).",
+        "Require uv on PATH.",
+        "Create a minimal uv pyproject.toml",
+        "Install FastAPI with the official standard extras",
+        "Add the official FastAPI first-steps app",
+        "Add FastAPI run instructions",
+        "Explain how to start the FastAPI development server",
+        "Install Ruff as a development dependency"
+      ],
+      "addImpact": ["Install Ruff as a development dependency"]
+    },
+    {
+      "contextId": "fastapi-uv",
+      "ids": ["pydantic", "ruff"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-python-api", "path": "my-python-api" },
+          "runtime": { "id": "python" },
+          "packageManager": "uv",
+          "framework": { "id": "fastapi" },
+          "integrations": [{ "id": "pydantic" }, { "id": "ruff" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
+        "integrations": [{ "id": "pydantic" }, { "id": "ruff" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-python-api; refuse an existing target",
+        "Require Python on PATH (Flask documents a minimum of 3.9).",
+        "Require uv on PATH.",
+        "Create a minimal uv pyproject.toml",
+        "Install fastapi[standard]==0.141.1, pydantic==2.13.5",
+        "Add the official FastAPI first-steps app",
+        "Add FastAPI run instructions",
+        "Explain how to start the FastAPI development server",
+        "Install Ruff as a development dependency"
+      ],
+      "addImpact": ["Install Pydantic", "Install Ruff as a development dependency"]
+    },
+    {
+      "contextId": "fastapi-uv",
+      "ids": ["pytest", "ruff"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-python-api", "path": "my-python-api" },
+          "runtime": { "id": "python" },
+          "packageManager": "uv",
+          "framework": { "id": "fastapi" },
+          "integrations": [{ "id": "pytest" }, { "id": "ruff" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
+        "integrations": [{ "id": "pytest" }, { "id": "ruff" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-python-api; refuse an existing target",
+        "Require Python on PATH (Flask documents a minimum of 3.9).",
+        "Require uv on PATH.",
+        "Create a minimal uv pyproject.toml",
+        "Install FastAPI with the official standard extras",
+        "Add the official FastAPI first-steps app",
+        "Add a FastAPI endpoint response test",
+        "Add FastAPI run instructions",
+        "Explain how to start the FastAPI development server",
+        "Install pytest==9.1.1, ruff==0.16.8"
+      ],
+      "addImpact": ["Install pytest", "Install Ruff as a development dependency"]
+    },
+    {
+      "contextId": "fastapi-uv",
+      "ids": ["pydantic", "pytest", "ruff"],
+      "create": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "create",
+        "config": {
+          "schemaVersion": 1,
+          "project": { "name": "my-python-api", "path": "my-python-api" },
+          "runtime": { "id": "python" },
+          "packageManager": "uv",
+          "framework": { "id": "fastapi" },
+          "integrations": [{ "id": "pydantic" }, { "id": "pytest" }, { "id": "ruff" }]
+        }
+      },
+      "add": {
+        "selectionVersion": 1,
+        "catalogRevision": "0.3.0-cli.1",
+        "cliContract": "selection-v1",
+        "mode": "add",
+        "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
+        "integrations": [{ "id": "pydantic" }, { "id": "pytest" }, { "id": "ruff" }]
+      },
+      "createImpact": [
+        "Reserve new project directory my-python-api; refuse an existing target",
+        "Require Python on PATH (Flask documents a minimum of 3.9).",
+        "Require uv on PATH.",
+        "Create a minimal uv pyproject.toml",
+        "Install fastapi[standard]==0.141.1, pydantic==2.13.5",
+        "Add the official FastAPI first-steps app",
+        "Add a FastAPI endpoint response test",
+        "Add FastAPI run instructions",
+        "Explain how to start the FastAPI development server",
+        "Install pytest==9.1.1, ruff==0.16.8"
+      ],
+      "addImpact": [
+        "Install Pydantic",
+        "Install pytest",
+        "Install Ruff as a development dependency"
+      ]
+    }
+  ]
+}

@@ -20,3 +20,7 @@ service-account*.json
 tmp/
 temp/
 logs/
+
+.local-cli/
+test-results/
+playwright-report/

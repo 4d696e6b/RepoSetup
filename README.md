@@ -283,8 +283,14 @@ See the [phased roadmap to 0.2.0](docs/specification-documentation/implementing-
 - Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
 - Promote integrations to `stable` only with that evidence
 - Configure npm trusted publishing so tag workflows can release without a local token
-- A website is explicitly out of scope for this architecture
+- The owner-approved 0.3.0 companion website lives in `apps/website`; browser dependencies remain outside core.
 
 ## License
 
 [MIT](LICENSE)
+
+## Local 0.3.0 companion website
+
+The first reviewable slice lives in `apps/website`: goal discovery, nine reviewed integration pages, three minimal starter explanations, and a bounded create/add selection builder. Run `pnpm install`, `pnpm build`, then `pnpm website:dev`. See [website development and exact CLI handoff](apps/website/README.md) for qualification and local artifact setup.
+
+Website commands target the committed 0.3.0 CLI development contract, not this branch’s retained 0.2.0 CLI parser. No website publication or CLI release is implied.

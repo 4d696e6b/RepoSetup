@@ -248,3 +248,9 @@ See `docs/NPM_TRUSTED_PUBLISHING_SETUP.md`.
 ## Notes
 
 Do not mark Phase 18 complete unless remaining Release Qualification gates in `ACCEPTANCE_TESTS.md` pass. GitHub `v0.1.0` is a source launch, not `1.0.0`.
+
+## 0.3.0 companion website slice — 2026-10-03
+
+Owner-approved local website work is isolated on `codex/0.3.0-website` from recorded candidate `145e167`. The separate workspace app implements goal discovery, nine reviewed integration pages, three minimal preset explanations, bounded create/add selection and exact local packed CLI handoff against committed `626fce9` (`selection-v1`). All 45 offered variants have equivalent packed token/file plans; command confirmation and validated size fallback are checked. Workspace unit tests/typecheck/lint/build and desktop/mobile accessibility/browser checks pass. The 0.2.0 candidate checkout and original planning documents remain unchanged.
+
+See [website status and evidence](./STATUS_WEBSITE_0.3.0.md) for source/artifact identities, working routes, qualification results and open release/platform/usability gates. This is a reviewable local slice, not a published site or complete 0.3.0 release.
