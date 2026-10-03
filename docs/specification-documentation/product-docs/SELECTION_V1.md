@@ -61,7 +61,7 @@ Add preserves existing generated-target files, scripts and declared dependency v
 
 Encode UTF-8 JSON as canonical unpadded base64url; no compression. Before decoding, enforce the ASCII alphabet and at most 4,096 token characters. Enforce at most 3,072 decoded bytes, valid UTF-8, JSON nesting of at most 8, at most 16 integrations, no duplicates, and strict schemas/options/context semantics. The command renderer emits only `reposetup create|add --selection TOKEN` with optional `--dry-run`, at most 4,200 characters. It cannot append `--yes`, pipelines, callbacks, scripts or user-controlled launcher text.
 
-These conservative application limits are not a claim that arbitrary bootstrap launchers fit every shell. The alphabet needs no quotes in ordinary shells, but npm/npx bootstrap version pinning and Windows/POSIX launcher transport still require release qualification. Use the locally built CLI for development; do not advertise an unpublished package or a floating bootstrap as a shipped 0.3.0 command.
+These conservative application limits are not a claim that arbitrary bootstrap launchers fit every shell. The alphabet needs no quotes in ordinary shells. Local macOS native-launcher checks cover the exact token and file bounds plus real POSIX confirmation; the Linux/Windows runner results, Windows TTY behavior and npm/npx bootstrap version pinning remain release qualification work. Use the locally built CLI for development; do not advertise an unpublished package or a floating bootstrap as a shipped 0.3.0 command.
 
 File fallback uses the same envelope and semantics:
 
@@ -88,4 +88,4 @@ Sections 2.2 and 2.3 add real packed-command create and add execution for every 
 
 ## Remaining qualification
 
-Required later gates include real minimal recipe and every advertised variant execution with the packed CLI on supported Node/Python/platforms, native shell/launcher transport tests at bounds, website/CLI export fixtures and accessibility/usability sessions. General diff previews, intended-stack doctor, repair allowlist and optional roadmap work are not implemented by this slice. The whole release remains incomplete.
+Required later gates include real minimal recipe and every advertised variant execution with the packed CLI on supported Node/Python/platforms, native shell/launcher evidence beyond local macOS and Windows TTY confirmation, website/CLI export fixtures and accessibility/usability sessions. General diff previews, intended-stack doctor, repair allowlist and optional roadmap work are not implemented by this slice. The whole release remains incomplete.

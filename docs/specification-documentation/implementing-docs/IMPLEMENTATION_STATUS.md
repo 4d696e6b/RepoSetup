@@ -4,6 +4,10 @@ Cursor/maintainers should update this file as phases are completed.
 
 For the current phase-by-phase 0.3.0 tracker, see [0.3.0 implementation status](./STATUS_0.3.0.md). It separates locally implemented sections from pending qualification, website, maintenance and release work.
 
+## 0.3.0 section 2.4 implementation — 2026-10-03
+
+The packed transport suite now invokes both installed aliases through the platform's native shell for create and add. It sends an exactly 4,096-character token and an exact 16 KiB JSON file path with spaces/Unicode, compares dry-run plans, checks oversized token/file errors and confirms that a non-TTY invocation displays the review then refuses execution without mutation. On local macOS, a real POSIX pseudo-terminal drives the actual CLI prompt to decline and accept create and add; accepted commands execute and declined commands preserve files. The manual contract workflow now has a separate transport job for the three frozen runners, using the same identified tarball. It has not been dispatched; Windows TTY confirmation remains open. See the [phase tracker](./STATUS_0.3.0.md) and [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md).
+
 ## 0.3.0 section 2.3 implementation — 2026-10-03
 
 In the isolated `codex/0.3.0-cli` worktree, all 21 nonempty add selections now have a real packed-artifact execution harness. It creates a minimal React/Vite, Express or FastAPI application, applies each supported option subset, checks incompatible-context refusal and dry-run preservation, executes only after reviewed-plan confirmation, verifies generated locks and selected tools, runs doctor, then confirms two no-op repeats. Existing README, .env, custom files/configuration and dependency declarations are checked for preservation. Generated Express and FastAPI endpoint tests now belong to the Vitest and pytest integrations so they work for both create and add. Catalog `0.3.0-cli.3` and matrix `0.3.0-selection.3` record 16 reviewed changed plans.

@@ -4,7 +4,7 @@ Last updated: 2026-10-03.
 
 ## Current position
 
-**Phase 1, section 2.1 and the section 2.2/2.3 real-execution harnesses are implemented locally. All 24 create and 21 add variants pass on the local macOS/arm64, Node 24 and Python 3.13 cell. Sections 2.2 and 2.3 remain partial until the full platform/Python matrix passes. The next CLI implementation task is section 2.4 (native transport and confirmation).** The complete 0.3.0 release is not finished or authorized for publication.
+**Phase 1, section 2.1 and the section 2.2/2.3 real-execution harnesses are implemented locally. All 24 create and 21 add variants pass on the local macOS/arm64, Node 24 and Python 3.13 cell. Section 2.4 native-shell and POSIX confirmation coverage passes locally; Windows and the full platform/Python matrix remain pending. The next CLI implementation task is section 2.5 (legacy regression evidence).** The complete 0.3.0 release is not finished or authorized for publication.
 
 This document turns the [0.3.0 roadmap](./ROADMAP_0.3.0_DRAFT.md) into the ten reviewable phases discussed with the owner. Numbers here are local to 0.3.0; historical 0.2.0 Phase 19–28 identifiers stay unchanged. The roadmap and website plan retain their original planning snapshots, so some proposed flags there now have implementation. Use this document and [selection v1](../product-docs/SELECTION_V1.md) for current behavior.
 
@@ -45,7 +45,7 @@ Exit condition met: the first slice is implemented and locally tested. Real inst
 - [x] **2.1 Freeze the evidence matrix and packed acceptance fixtures:** [matrix revision `0.3.0-selection.3`](../../../tests/e2e/fixtures/selection-v1.matrix.json) freezes 24 create/21 add journeys, typed-plan fingerprints, limits, catalog pins and targets. Identified-tarball tests, reports and a manual single-artifact workflow are implemented; [qualification protocol](./SELECTION_QUALIFICATION_0.3.0.md) distinguishes dry-run contract evidence from pending real/native execution. No parent-recipe or new platform-support promotion.
 - [ ] **2.2 Real create journeys (partial):** the [execution suite](../../../tests/e2e/selection-create.test.ts) and [manual six-cell workflow](../../../.github/workflows/selection-create.yml) are implemented. Local 24/24 minimal/customized starters pass real installation, locks/version checks, builds/API responses, selected library/tool checks, doctor and confirmed repeat refusal with preservation. Confirmation uses the packed command handler's reviewed-plan adapter; native TTY remains section 2.4. Full Linux/macOS/Windows × Python 3.12/3.13 evidence is pending; the workflow has not been dispatched.
 - [ ] **2.3 Real add journeys (partial):** the [execution suite](../../../tests/e2e/selection-add.test.ts) and the shared [manual six-cell workflow](../../../.github/workflows/selection-create.yml) are implemented. Local 21/21 additive variants pass real installation into freshly created apps with context refusal, user-file and existing-version preservation, selected tool checks, doctor and repeated no-op plans. Full runner/Python evidence and native TTY confirmation are pending.
-- [ ] **2.4 Transport/launcher qualification:** both aliases, native POSIX/Windows launchers, shell argument transport, maximum-size inputs, file fallback and confirmation behavior.
+- [ ] **2.4 Transport/launcher qualification (partial):** the [packed transport suite](../../../tests/e2e/selection-transport.test.ts) checks both npm-installed aliases, create/add through the native shell, an exact 4,096-character token, exact 16 KiB file fallback, oversized refusals and non-TTY review/refusal. On local macOS, a real POSIX pseudo-terminal checks “no” and “yes” for both create and add. A [manual three-runner job](../../../.github/workflows/selection-contract.yml) is authored but not dispatched; Windows native shell results and Windows TTY behavior remain open.
 - [ ] **2.5 Legacy regression evidence:** schemaVersion 1 configs, legacy presets, positional add and supported JSON output on the advertised matrix.
 
 Target qualification: Node 24; Python 3.12/3.13 with uv 0.12.17; supported Linux/macOS/Windows runners. Exact versions and runner identities must be recorded with each run.
@@ -176,6 +176,11 @@ The local host is below the supported Node 24 execution floor. This is local imp
 - Frozen contract: 105/105 cases pass with revision 3, including all 45 create/add plan fingerprints. The 16 changed fingerprints are confined to Express/Vitest and FastAPI/pytest variants; 29 did not change.
 - Workspace tests: 502/502. Broad end-to-end suite: 133/133, including legacy create/add/JSON paths. Workspace and selection-test typechecks, lint and build pass. The broad e2e run used a test-owned uv cache because the host's default uv cache was not writable.
 - This is one local macOS/arm64 cell with Node 24.21.0, pnpm 12.5.1, Python 3.13.1 and uv 0.12.17. The manual six-cell workflow is authored but not dispatched. Native shell and TTY qualification and the later phases remain open.
+
+## Section 2.4 local validation — 2026-10-03
+
+- The packed transport suite passes six local cases: four alias/mode native-shell combinations plus POSIX terminal acceptance/refusal for create and add. Maximum valid token and file sizes, oversized errors, matching token/file dry-run plans, non-TTY refusal and no mutation on refusal are checked.
+- The transport job reuses the contract workflow's one identified tarball on Ubuntu 24.04, macOS 15 and Windows 2025. It has not been dispatched. Windows terminal confirmation is outside this POSIX-only driver and remains pending; local macOS evidence does not establish Windows or Linux support.
 
 ## Execution order and update rules
 

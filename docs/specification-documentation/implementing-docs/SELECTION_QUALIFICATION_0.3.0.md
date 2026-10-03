@@ -1,6 +1,6 @@
 # Selection qualification for RepoSetup 0.3.0
 
-Status: section 2.1 and the section 2.2/2.3 execution harnesses are implemented locally. Real create and add results cover one macOS/arm64, Node 24, Python 3.13 cell; the other platform/Python cells, native shell transports and complete release remain pending. The [phase tracker](./STATUS_0.3.0.md) remains authoritative for completion.
+Status: sections 2.1–2.3 and the local section 2.4 native transport harness are implemented. Real create/add and native shell/POSIX confirmation results cover one macOS/arm64, Node 24, Python 3.13 cell; the other platform/Python cells, Windows TTY behavior and complete release remain pending. The [phase tracker](./STATUS_0.3.0.md) remains authoritative for completion.
 
 ## Frozen input and operation matrix
 
@@ -22,7 +22,7 @@ The [matrix tests](../../../tests/e2e/selection-matrix.test.ts) compare the fixt
 - Visible review before noninteractive confirmation refusal, plus launch/version checks for both npm-installed aliases.
 - Source/version/byte-count/hash checks before installing the CLI tarball; corrupted or mismatched identities fail.
 
-The synthetic existing-project files are detection fixtures, not runnable applications or valid dependency locks. Their success is not real add evidence. Native alias/launcher execution of maximum-size payloads remains section 2.4; the alias checks here only verify the installed version through npm's launcher.
+The synthetic existing-project files are detection fixtures, not runnable applications or valid dependency locks. Their success is not real add evidence. The contract-suite alias checks here only verify the installed version through npm's launcher; section 2.4's separate transport suite exercises native shell launchers and bounded payloads.
 
 A plan fingerprint is SHA-256 of the UTF-8 JSON `plan` object after recursively sorting object keys using ordinal string order. Array order and all values remain intact. It includes operations, package pins, generated content, warnings and selected configuration. Temporary working-directory names do not enter these fixtures. A changed fingerprint fails acceptance; review the new plan and compatibility impact before changing the baseline. Revise the matrix revision when its scope, context, limits or frozen plans change. Do not automatically refresh hashes to hide a regression.
 
@@ -101,6 +101,20 @@ The [real add suite](../../../tests/e2e/selection-add.test.ts) first creates a m
 
 The report has `kind: "selection-packed-add"`, `releaseQualification: false`, source/artifact identity, dirty state, matrix/catalog identifiers, observed runtimes/platform, per-case plan/lock hashes, installed versions and command exit codes. The external-artifact route requires a clean checkout at the exact source SHA and never repacks the candidate. Local passing evidence covers only macOS/arm64 with Python 3.13; the six-cell workflow is pending.
 
+## Native transport and terminal confirmation (section 2.4)
+
+Run the [packed transport suite](../../../tests/e2e/selection-transport.test.ts) with Node 24, pnpm 12.5.1 and, for POSIX terminal checks, an existing Python interpreter:
+
+```sh
+REPOSETUP_SELECTION_TRANSPORT_EVIDENCE_DIR=/tmp/selection-transport-run-1 pnpm test:selection:transport
+```
+
+The suite uses each npm-installed alias, `rsetup` and `reposetup`, via `/bin/sh` on POSIX or `cmd.exe` on Windows, for both create and add. It sends the selection as an environment value to a fixed shell command, avoiding shell interpolation of payload data. Each case checks an exactly 4,096-character canonical token (3,072 decoded JSON bytes), an exactly 16 KiB file with spaces and Unicode in its path, equivalent JSON dry-run plans, oversized token/file refusal, and a non-TTY execution attempt that displays choices and plan before refusing without mutation. The test's padded JSON is intentionally valid but larger than the compact normal export; the catalog and application size limits do not change.
+
+On POSIX, a small [pseudo-terminal driver](../../../tests/e2e/fixtures/pty-selection.py) waits until the installed CLI has displayed decoded choices, operations and its real confirmation prompt before sending “n” or “y”. A declined create or add preserves the project; an accepted create builds and an accepted add installs Zod, then repeats with an empty plan. This is a test-only driver, not a CLI confirmation bypass. The report records source/artifact identity and dirty state, runner/shell details, case results and whether native TTY was covered. Windows runs skip the POSIX-only driver and explicitly report `nativeTtyCovered: false`; a Windows terminal confirmation harness remains to be implemented and run.
+
+The [manual contract workflow](../../../.github/workflows/selection-contract.yml) has a separate transport job on the frozen Ubuntu, macOS and Windows runners. It downloads the same identified tarball as the contract job and retains a transport report. The job has not been dispatched; local macOS success is not cross-platform qualification.
+
 ## Remaining Phase 2 gates
 
-Finish sections 2.2 and 2.3 by retaining clean-source evidence on the entire platform/Python matrix. Section 2.4: native POSIX/Windows shells, launcher payload bounds/file fallback and interactive confirmation. Section 2.5: retained schemaVersion 1 config, legacy preset/positional add and JSON regressions on the advertised matrix. Connect the complete evidence to the later candidate gates only after these pass.
+Finish sections 2.2 and 2.3 by retaining clean-source evidence on the entire platform/Python matrix. Finish section 2.4 with clean-source native shell evidence on all three runners and a Windows terminal confirmation test. Section 2.5: retained schemaVersion 1 config, legacy preset/positional add and JSON regressions on the advertised matrix. Connect the complete evidence to the later candidate gates only after these pass.

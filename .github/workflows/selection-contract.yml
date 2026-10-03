@@ -73,3 +73,44 @@ jobs:
           name: selection-contract-${{ matrix.runner }}-${{ github.sha }}
           path: ${{ runner.temp }}/selection-contract-report.json
           if-no-files-found: error
+
+  transport:
+    needs: pack
+    name: ${{ matrix.runner }} / native selection transport
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.pack.outputs.platforms) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
+          cache: pnpm
+      - uses: actions/setup-python@v6
+        if: runner.os != 'Windows'
+        with:
+          python-version: "3.13"
+          architecture: ${{ matrix.architecture }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck:selection-tests
+      - uses: actions/download-artifact@v4
+        with:
+          name: selection-contract-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-candidate
+      - name: Check native aliases, shell bounds and terminal confirmation
+        run: pnpm exec vitest run --config tests/e2e/vitest.selection-transport.config.ts
+        env:
+          REPOSETUP_SELECTION_ARTIFACT_DIR: ${{ runner.temp }}/selection-candidate
+          REPOSETUP_SELECTION_TRANSPORT_EVIDENCE_DIR: ${{ runner.temp }}/selection-transport-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selection-transport-${{ matrix.runner }}-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-transport-evidence
+          if-no-files-found: error
