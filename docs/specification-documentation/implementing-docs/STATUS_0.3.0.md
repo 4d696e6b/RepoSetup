@@ -4,7 +4,7 @@ Last updated: 2026-10-03. This is the combined release snapshot maintained on `c
 
 ## Current phase and remaining count
 
-**The website is implementing Phase 8: beginner usability and broader safety/accessibility validation. Phases 6 and 7 have a working local information center, selection builder and packed CLI handoff. The CLI track is at Phase 2: qualify the beginner journeys; its next recorded section is 2.2, real packed-CLI create journeys.**
+**The website is implementing Phase 8: beginner usability and broader safety/accessibility validation. Phases 6 and 7 have a working local information center, selection builder and packed CLI handoff. The CLI track is at Phase 2: local real-create qualification in section 2.2 is committed; section 2.3 real-add and repeat/preservation qualification is next.**
 
 - Total release phases: **10**.
 - Implemented locally: **3 phases — 1, 6 and 7**.
@@ -20,7 +20,7 @@ Last updated: 2026-10-03. This is the combined release snapshot maintained on `c
    Strict selection/catalog contracts, reviewed guidance, reusable minimal presets, bounded create/add inputs, local plan/confirmation and preservation safeguards exist. Website and CLI share curated definitions. Real journey qualification remains Phase 2.
 
 2. **Qualify the beginner CLI journeys — partial; current CLI phase.**
-   Section 2.1 is implemented: a committed evidence matrix and packed acceptance fixtures cover 24 create and 21 add variants. Remaining sections: 2.2 real create, 2.3 real add and repeat/preservation checks, 2.4 native launchers/transport/confirmation, and 2.5 retained legacy regressions on the advertised runtime/platform matrix. Website macOS Node 24 dry-run/confirmation checks are supplementary evidence, not completion of this phase.
+   Section 2.1 is implemented: a committed evidence matrix and packed acceptance fixtures cover 24 create and 21 add variants. Section 2.2 now has 24/24 real creates passing locally on macOS/Node 24/Python 3.13, including curated recipe corrections; its full advertised runtime/platform matrix remains open. Remaining sections include 2.3 real add and repeat/preservation checks, 2.4 native launchers/transport/confirmation, and 2.5 retained legacy regressions. Website macOS Node 24 dry-run/confirmation checks are supplementary evidence, not completion of this phase.
 
 3. **File-change previews — not started.**
    Add a safe deterministic change model, text/JSON presentation, researched final CLI syntax, secret suppression, conflict handling and stale-preview revalidation. Existing typed plans are not a general before/after file diff.
@@ -50,15 +50,14 @@ Last updated: 2026-10-03. This is the combined release snapshot maintained on `c
 
 For the website, use the prepared [beginner-session protocol](./BEGINNER_SESSIONS_0.3.0.md), run a manual screen-reader check and run the explicit WebKit gate on a compatible host. Continue the existing learn → choose → copy → review journey with real participants. Actual apply sessions require the appropriately qualified local CLI and prerequisites; do not infer installation success from dry-run checks.
 
-For the CLI, the recorded next step is section 2.2: execute and verify real packed-CLI starter journeys. Continue 2.3–2.5 before promoting the handoff to released support, then implement Phases 3–5. These are recommended next tasks, not authorization to publish or deploy.
+For the CLI, continue section 2.3 real add and repeat/preservation journeys, then sections 2.4–2.5 and the remaining platform coverage for 2.2 before promoting the handoff to released support. Phases 3–5 follow. These are recommended next tasks, not authorization to publish or deploy.
 
 ## Evidence and scope of this snapshot
 
-- Website implementation: `8e8b3582ce4467d5bca6acf185e26beadd49cebd`, branch `codex/0.3.0-website`.
-- Website handoff target: CLI contract implementation `626fce93214af8554c3a0700ead52c5e3db8ae7a`, local development CLI `0.3.0-alpha.1`, `selection-v1`, catalog `0.3.0-cli.1`.
-- CLI status/matrix snapshot inspected: committed `101ed81` (`test(cli): freeze packed selection acceptance matrix`) on `codex/0.3.0-cli`. Its recorded Phase 2.1 fixtures do not establish real runtime/platform qualification. The website still targets its explicitly tested `626fce9` artifact; this status update does not change that target.
-- Latest Phase 8 local checks: **487 unit tests, 24 local browser tests, 6 packed handoff tests**; workspace typecheck, lint and build pass. Artifact byte/hash checks, built browser policy and a repeatable source-identified qualification command are available. The full browser matrix is **not passing** here: WebKit fails before navigation with `Unknown setting: PushAPIEnabled`. Exact versions and the separate open gate are recorded in the detailed website status.
-- The separate “0.3.0 CLI” chat is actively qualifying real create journeys and fixing recipes. Its uncommitted changes are not website evidence. Refresh the shared catalog and packed handoff only after the new CLI contract/catalog is committed and reviewed; the website still targets `626fce9`.
+- Website branch: `codex/0.3.0-website`; exact website commit and clean-source report are recorded in the detailed website status.
+- Website handoff target: committed CLI `f99f63a198986c30bba92dc1cd6af2ec68ec87e9`, local development CLI `0.3.0-alpha.1`, `selection-v1`, catalog `0.3.0-cli.2`.
+- CLI Phase 2 snapshot: committed `f99f63a` (`test(cli): qualify real beginner create variants locally`) on `codex/0.3.0-cli`. Its 24/24 real-create result is local evidence, not full runtime/platform qualification. Only its committed shared recipe/catalog changes were copied here; neither sibling checkout was edited.
+- Current website checks: **498 workspace unit tests**, build, typecheck, lint, **24 local browser tests and 6 packed handoff tests** pass against the new target. The artifact SHA/byte checks, browser policy and source-identified qualification are in place. The full browser matrix remains open: WebKit fails before navigation with `Unknown setting: PushAPIEnabled` on this macOS 14 host. Exact versions and the separate gate are recorded in the detailed website status.
 - Detailed website evidence and remaining gates: [website slice status](./STATUS_WEBSITE_0.3.0.md).
 - Feature sequence and acceptance requirements: [release roadmap](./ROADMAP_0.3.0_DRAFT.md), [website plan](./WEBSITE_PLAN_0.3.0.md), and [selection contract](../product-docs/SELECTION_V1.md). The plans retain their original draft wording; use current status/contract documents to distinguish implemented behavior from proposals.
 

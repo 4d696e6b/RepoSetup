@@ -11,8 +11,8 @@ This slice implements release **Phase 6 (information website)** and **Phase 7 (s
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`.
 - Branch: `codex/0.3.0-website`, created from recorded 0.2.0 candidate `145e167e6b60897da96942545ba6dbd40359ad4a`.
 - The original candidate checkout remains at that commit; its three untracked planning files remain present and unchanged. Their copies here were checked byte-for-byte against the originals.
-- CLI track: exact committed contract `626fce93214af8554c3a0700ead52c5e3db8ae7a` on `codex/0.3.0-cli`. Uncommitted sibling qualification/status changes were not consumed or modified. Neither sibling branch was merged or edited.
-- Shared selection schemas/tests/planner, curated beginner definitions/presets, registry semantic validation/export/search and delta safety were synchronized from that commit. The retained website-branch CLI only gains the shared error-code mapping; its 0.2.0 parser is not the handoff target.
+- CLI track: the current exact committed target is `f99f63a198986c30bba92dc1cd6af2ec68ec87e9` on `codex/0.3.0-cli`. Neither sibling branch was merged or edited; only reviewed committed shared files were copied.
+- Shared selection schemas/tests/planner, registry semantic validation/export/search and delta safety originally came from committed `626fce9`. Curated beginner definitions and shared recipe/plan fixes now match committed `f99f63a`. The retained website-branch CLI parser is still 0.2.0 and is not the handoff target.
 - AGENTS.md, product requirements and architecture document the owner’s explicit 0.3.0 website exception on this branch.
 
 ## Implemented scope
@@ -27,7 +27,7 @@ This slice implements release **Phase 6 (information website)** and **Phase 7 (s
 - True 3,072-byte / 4,096-character token and 4,200-character command bounds. File fallback uses the same envelope with `create --selection-file` / `add --config` and a fixed safe filename, bounded to 16 KiB. Current form choices fit tokens; semantic-equivalent whitespace overhead fixtures prove the larger file route without expanding supported choices.
 - No publication, project upload, secrets, analytics, browser installation, local file inspection, persistent browser drafts or selection data in URLs.
 
-## Initial slice checks and artifact evidence
+## Initial slice checks and artifact evidence (historical `626fce9` target)
 
 Environment: macOS arm64; development runtime Node `v24.21.0`; pnpm `12.5.1`. A temporary pnpm-provided Node runtime was used for qualification; system Node was not replaced.
 
@@ -71,7 +71,15 @@ Date: 2026-10-03. **Partial: automated local validation improved; observed sessi
 - Latest local run: **487 workspace unit tests** (website 12), **24 Chrome/Firefox browser tests**, **6 packed handoff tests** and workspace build/typecheck/lint passed. Report/logs under ignored `apps/website/qualification/`; screenshots remain under ignored `test-results/`. The first runner attempt exposed a missing Node URL import in lint; it was fixed and the complete local run passed.
 - Committed implementation: `a891faff4a00117a4fdce6be8ea444ea4bfd05b7`. Clean-source verification report: `apps/website/qualification/2026-10-03T11-13-29.930Z-local/report.json`, `source.dirty: false`, all six checks passed, `wholeReleaseQualified: false`. An earlier clean-source rerun failed nine retained CLI unit tests when shared free space fell below the 512 MiB guard; its report/logs were preserved. Removing only this task's unusable downloaded WebKit cache recovered space, then the complete run passed without bypassing the guard. No user files or the CLI chat's fixtures were removed. WebKit binaries need explicit setup again on a compatible test host; the previous protocol failure remains recorded evidence.
 - A manual-only macOS-15/Node-24 full qualification workflow is authored and YAML-validated, **not dispatched**. No remote project upload, publication or deployment occurred. The local Docker daemon did not respond, so it provided no alternative WebKit evidence. The existing WebKit page-setup failure and manual screen-reader/physical-device/session gates remain open.
-- CLI real create qualification is active in the separate “0.3.0 CLI” chat. Its uncommitted recipe/catalog changes are not imported here. After a new committed contract/catalog is available, synchronize the reviewed shared changes, regenerate the public snapshot, repack the exact new artifact and repeat joint qualification before changing the website's advertised target. Phases 3–5 remain CLI-owned dependencies; no unsupported maintenance flags are displayed.
+- The CLI track subsequently committed its recipe/catalog changes as `f99f63a`. The new sync and fresh joint qualification are recorded below. Phases 3–5 remain CLI-owned dependencies; no unsupported maintenance flags are displayed.
+
+## Committed catalog and recipe sync
+
+2026-10-03: synchronized the exact shared core/integration files from CLI commit `f99f63a198986c30bba92dc1cd6af2ec68ec87e9`, regenerated public catalog `0.3.0-cli.2`, and changed the website's displayed development CLI identity to that commit. The updated definitions include the CLI track's locally qualified React/Vite, Express and FastAPI create recipes. Its 24/24 real-create result is macOS/Node 24/Python 3.13 evidence; full advertised platform coverage and real add/repeat checks remain Phase 2 work.
+
+- `pack:contract` archived and packed exactly `f99f63a` without using the CLI sibling working tree. The local `rsetup@0.3.0-alpha.1` tarball SHA-256 is `c31f66de784ba49a83637bb4a23b5b81842857405c21df18b8e07203525302ad`; the generated `.local-cli/evidence.json` records this identity.
+- Workspace build, **498 unit tests** (core 254, registry 15, integrations 126, retained CLI 91, website 12), typecheck and lint pass. The six packed handoff tests pass across all 45 selections, checking token/file plan equivalence, refusal and confirmation safety. All 24 Chrome desktop/mobile and Firefox browser tests pass with the regenerated catalog and displayed identity. The clean-source qualification report records the final implementation commit separately.
+- This sync does not make the website a released support claim. WebKit on this host, manual screen-reader/device checks, five observed beginner sessions and later maintenance/release gates remain open. The phase count stays at seven remaining.
 
 The phase count is unchanged: Phase 8 partial, 0/5 observed sessions, seven release phases remaining. There is no claim that every release task has been completed.
 
@@ -89,6 +97,6 @@ See [app development and exact artifact setup](../../../apps/website/README.md).
 
 ## Dependencies and gates still open
 
-The committed CLI selection contract is available and the local website handoff is integrated; there is no remaining schema blocker for this slice. Public advertising still depends on a qualified released CLI/version-pinned launcher. Native Windows/Linux shell transport, Firefox/WebKit, manual screen-reader/accessibility checks, five beginner sessions, and independent real minimal/optional recipe execution remain gates. Packed dry-run/confirmation evidence does not establish installation success on every context/platform or freeze transitive dependencies. None of these gates is silently marked complete.
+The committed CLI selection contract is available and the local website handoff is integrated; there is no remaining schema blocker for this slice. Public advertising still depends on a qualified released CLI/version-pinned launcher. Native Windows/Linux shell transport, WebKit, manual screen-reader/accessibility checks, five beginner sessions, and independent real add/repeat and wider-platform recipe execution remain gates. Packed dry-run/confirmation evidence does not establish installation success on every context/platform or freeze transitive dependencies. None of these gates is silently marked complete.
 
 This task does not implement CLI diff previews, intended-stack doctor, repair, additional integrations/options, system prerequisite installation, production hosting or release publication. Later catalog/contract changes require regeneration and joint packed qualification against a newly committed identity before updating the displayed CLI target.

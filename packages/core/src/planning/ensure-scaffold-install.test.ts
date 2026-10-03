@@ -5,6 +5,72 @@ import type { InstallationOperation } from "../operations/types.js";
 import { ensureScaffoldDependencyInstall } from "./ensure-scaffold-install.js";
 
 describe("ensureScaffoldDependencyInstall", () => {
+  it("installs a marked minimal scaffold after its build policy and before a build", () => {
+    const scaffold: InstallationOperation = {
+      type: "run_command",
+      command: "pnpm",
+      args: ["create", "vite@8.3.0", ".", "--no-interactive"],
+      cwd: ".",
+      description: "Scaffold React",
+      skipsDependencyInstall: true,
+    };
+    const policy: InstallationOperation = {
+      type: "create_file",
+      path: "pnpm-workspace.yaml",
+      content: 'allowBuilds:\n  "esbuild": true\n',
+      behavior: "create_if_missing",
+      description: "Allow the known scaffold build",
+    };
+    const build: InstallationOperation = {
+      type: "run_command",
+      command: "pnpm",
+      args: ["run", "build"],
+      cwd: ".",
+      description: "Build",
+    };
+    const result = ensureScaffoldDependencyInstall([scaffold, policy, build], "pnpm", ".");
+    expect(result).toEqual({
+      ok: true,
+      operations: [
+        scaffold,
+        policy,
+        {
+          type: "run_command",
+          command: "pnpm",
+          args: ["install", "--no-frozen-lockfile", "--prefer-offline"],
+          cwd: ".",
+          description: "Install scaffold dependencies skipped by the generator",
+          requiresNetwork: true,
+        },
+        build,
+      ],
+    });
+  });
+
+  it("lets a marked scaffold's package add install dependencies without a duplicate install", () => {
+    const operations: InstallationOperation[] = [
+      {
+        type: "run_command",
+        command: "pnpm",
+        args: ["create", "vite@8.3.0", "."],
+        cwd: ".",
+        description: "Scaffold",
+        skipsDependencyInstall: true,
+      },
+      {
+        type: "install_package",
+        packageManager: "pnpm",
+        packages: ["zod@4.6.5"],
+        cwd: ".",
+        description: "Install Zod",
+      },
+    ];
+    expect(ensureScaffoldDependencyInstall(operations, "pnpm", ".")).toEqual({
+      ok: true,
+      operations,
+    });
+  });
+
   it("does not insert an install when a later install_package covers the scaffold", () => {
     const operations: InstallationOperation[] = [
       {

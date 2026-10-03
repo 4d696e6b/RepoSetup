@@ -7,6 +7,7 @@ import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import type { VerificationContext } from "../integrations/definition.js";
 import { presentItems } from "../planning/config-from-detected.js";
 import { pathPrerequisite } from "../prerequisites/path.js";
+import type { ExecutableResolver } from "../executor/types.js";
 import type { RegistryLookup } from "../resolution/registry-lookup.js";
 
 export interface DoctorCheck {
@@ -31,6 +32,7 @@ export async function runDoctor(input: {
   registry: RegistryLookup;
   commandExists: (command: string) => Promise<boolean>;
   commandVersion?: (command: string) => Promise<string | undefined>;
+  resolveExecutable?: ExecutableResolver;
 }): Promise<RunDoctorResult> {
   const detected = await detectProject({
     startDir: input.startDir,
@@ -47,6 +49,7 @@ export async function runDoctor(input: {
     [...presentItems(detected.stack.runtimes), ...presentItems(detected.stack.packageManagers)],
     input.commandExists,
     input.commandVersion,
+    input.resolveExecutable,
     checks,
   );
   await collectLockfileConflicts(files, checks);
@@ -86,6 +89,7 @@ async function collectPathChecks(
   items: readonly DetectedItem[],
   commandExists: (command: string) => Promise<boolean>,
   commandVersion: ((command: string) => Promise<string | undefined>) | undefined,
+  resolveExecutable: ExecutableResolver | undefined,
   checks: DoctorCheck[],
 ): Promise<void> {
   for (const item of items) {
@@ -94,9 +98,11 @@ async function collectPathChecks(
       continue;
     }
 
-    if (await commandExists(spec.command)) {
+    const command =
+      resolveExecutable === undefined ? spec.command : await resolveExecutable(spec.command);
+    if (command !== undefined && (await commandExists(command))) {
       const version =
-        spec.minimumVersion === undefined ? undefined : await commandVersion?.(spec.command);
+        spec.minimumVersion === undefined ? undefined : await commandVersion?.(command);
       if (
         spec.minimumVersion !== undefined &&
         commandVersion !== undefined &&
@@ -106,7 +112,7 @@ async function collectPathChecks(
           id: `prerequisite:${item.id}`,
           name: item.name,
           ok: false,
-          message: `${spec.command} does not meet the required version ${formatVersion(spec.minimumVersion)} or later.`,
+          message: `${command} does not meet the required version ${formatVersion(spec.minimumVersion)} or later.`,
           code: "PREREQUISITE_MISSING",
           suggestion: spec.hint,
         });
@@ -117,9 +123,7 @@ async function collectPathChecks(
         name: item.name,
         ok: true,
         message:
-          version === undefined
-            ? `${spec.command} is on PATH.`
-            : `${spec.command} ${version} is on PATH.`,
+          version === undefined ? `${command} is on PATH.` : `${command} ${version} is on PATH.`,
       });
       continue;
     }

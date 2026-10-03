@@ -26,8 +26,6 @@ const FASTAPI_README = `# FastAPI app
 From this directory, start the development server with:
 
 \`uv run fastapi dev\`
-
-Run the generated endpoint test with \`uv run pytest\`.
 `;
 
 const FASTAPI_MAIN = `from fastapi import FastAPI
@@ -108,7 +106,11 @@ export const fastapiIntegration = defineIntegration({
       {
         type: "create_file",
         path: "README.md",
-        content: FASTAPI_README,
+        content:
+          FASTAPI_README +
+          (hasSelectedIntegration(context, "pytest")
+            ? "\nRun the generated endpoint test with `uv run pytest`.\n"
+            : ""),
         behavior: "fail_if_exists",
         description: "Add FastAPI run instructions",
       },
