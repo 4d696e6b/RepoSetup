@@ -113,7 +113,7 @@ The owner replaced the originally required five observed beginner sessions with 
 
 These simulations verify scripted paths and machine-checkable outcomes, not a beginner's understanding or an actual screen reader or physical device. Observed participants remain **0/5**. Manual accessibility/device checks, broader whole-release safety review, candidate freeze and release qualification remain open.
 
-A subsequent macOS 15 rerun passed all 25 B01–B05 browser/profile combinations, but the existing Firefox all-routes accessibility sweep reached its 60-second test timeout under the expanded parallel load: **69/70 browser cases passed**. No accessibility assertion failed. That sweep now has a 120-second budget; local Chrome/Firefox rerun passes **42/42** and the full five-profile rerun is required before counting this source as qualified.
+A subsequent macOS 15 rerun passed all 25 B01–B05 browser/profile combinations, but the existing Firefox all-routes accessibility sweep reached its 60-second test timeout under the expanded parallel load: **69/70 browser cases passed**. No accessibility assertion failed. That sweep now has a 120-second budget; local Chrome/Firefox rerun passed **42/42**. The [clean-source full rerun](https://github.com/4d696e6b/RepoSetup/actions/runs/37176769775) at `4615fcc` passed all six qualification steps and **70/70** browser cases, including **25/25** simulated journeys across five profiles. Its retained report records `automatedScopePassed: true`, `wholeReleaseQualified: false`, the owner-approved substitution and the remaining manual/accessibility, safety and release gates.
 
 ## Working routes / review
 
