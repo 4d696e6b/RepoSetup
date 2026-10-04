@@ -263,6 +263,35 @@ describe("executeInstallation", () => {
     await expect(readFile(path.join(root, "other.txt"), "utf8")).rejects.toThrow();
   });
 
+  it("preserves a file created concurrently after the create_if_missing check", async () => {
+    const root = await tempRoot();
+    let exclusiveAttempts = 0;
+    const fs: ExecutorFileSystem = {
+      ...testFileSystem,
+      async writeFileExclusive(filePath, content) {
+        exclusiveAttempts += 1;
+        await writeFile(filePath, "user content\n", { encoding: "utf8", flag: "wx" });
+        await testFileSystem.writeFileExclusive(filePath, content);
+      },
+    };
+    const result = await executeCoreInstallation(
+      [
+        {
+          type: "create_file",
+          path: "keep.txt",
+          content: "generated content\n",
+          behavior: "create_if_missing",
+          description: "Create only if missing",
+        },
+      ],
+      { rootDir: root, fs, runProcess: recordingRunner([]) },
+    );
+
+    expect(result).toMatchObject({ ok: true, executed: 1 });
+    expect(exclusiveAttempts).toBe(1);
+    expect(await readFile(path.join(root, "keep.txt"), "utf8")).toBe("user content\n");
+  });
+
   it("refuses a file path that escapes through a symlink", async () => {
     const root = await tempRoot();
     const outside = await tempRoot();

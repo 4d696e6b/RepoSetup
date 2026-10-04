@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -60,6 +60,29 @@ describe("createDefaultExecutionLock", () => {
       }
     } finally {
       await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("uses the same lock for real and symlinked paths to one project", async () => {
+    const parent = await mkdtemp(path.join(os.tmpdir(), "reposetup-lock-alias-"));
+    const root = path.join(parent, "project");
+    const alias = path.join(parent, "alias");
+    await mkdir(root);
+    await symlink(root, alias, process.platform === "win32" ? "junction" : "dir");
+    const lock = createDefaultExecutionLock();
+
+    try {
+      const first = await lock.acquire(root);
+      expect(first.ok).toBe(true);
+      const second = await lock.acquire(alias);
+      expect(second).toEqual({ ok: false, reason: "already_locked" });
+      if (!first.ok) return;
+      await first.handle.release();
+      const third = await lock.acquire(alias);
+      expect(third.ok).toBe(true);
+      if (third.ok) await third.handle.release();
+    } finally {
+      await rm(parent, { recursive: true, force: true });
     }
   });
 });

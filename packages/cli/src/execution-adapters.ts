@@ -35,7 +35,13 @@ export function createDefaultExecutionLock(): ExecutionLock {
   return {
     async acquire(rootDir) {
       const lockRoot = path.join(os.tmpdir(), "reposetup-locks");
-      const lockId = createHash("sha256").update(rootDir).digest("hex");
+      let canonicalRoot: string;
+      try {
+        canonicalRoot = await realpath(rootDir);
+      } catch {
+        return { ok: false, reason: "unavailable" };
+      }
+      const lockId = createHash("sha256").update(canonicalRoot).digest("hex");
       const lockPath = path.join(lockRoot, lockId);
 
       try {

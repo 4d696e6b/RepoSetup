@@ -90,14 +90,15 @@ export async function executeCreateFile(
   }
 
   try {
-    if (operation.behavior === "fail_if_exists") {
+    if (operation.behavior === "fail_if_exists" || operation.behavior === "create_if_missing") {
       await context.fs.writeFileExclusive(resolved.absolutePath, operation.content);
     } else {
       await context.fs.writeFile(resolved.absolutePath, operation.content);
     }
   } catch (error) {
-    if (operation.behavior === "fail_if_exists" && isAlreadyExistsError(error)) {
-      return alreadyExists(operation.path);
+    if (isAlreadyExistsError(error)) {
+      if (operation.behavior === "fail_if_exists") return alreadyExists(operation.path);
+      if (operation.behavior === "create_if_missing") return undefined;
     }
     return mutationFailed(`Could not write file "${operation.path}".`, {
       path: operation.path,
