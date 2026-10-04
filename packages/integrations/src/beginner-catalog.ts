@@ -4,10 +4,10 @@ import { REGISTRY_REVISION, qualifiedDirectVersions } from "./qualified-versions
 const evidence =
   "docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md#phase-25-progress--2026-09-24";
 const limitations =
-  "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included.";
+  "Qualified packed create/add and selection handoff only for these React/Vite, Express and FastAPI contexts on Node 24 (Python 3.12/3.13 for FastAPI). No database or deployment is included; 0.3.0 is not released.";
 export const BEGINNER_CATALOG: BeginnerCatalog = {
   schemaVersion: 1,
-  revision: "0.3.0-cli.3",
+  revision: "0.3.0-cli.4",
   recipeRevision: REGISTRY_REVISION,
   directVersions: {
     ...qualifiedDirectVersions([

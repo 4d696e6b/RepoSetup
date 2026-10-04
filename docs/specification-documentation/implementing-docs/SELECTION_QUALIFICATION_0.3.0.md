@@ -4,7 +4,7 @@ Status: all Phase 2 sections have passing cross-platform evidence at source `e41
 
 ## Frozen input and operation matrix
 
-The machine-readable [matrix fixture](../../../tests/e2e/fixtures/selection-v1.matrix.json) is revision `0.3.0-selection.3`, against catalog `0.3.0-cli.3`, recipe revision `2026-09-23` and CLI contract `selection-v1`. It freezes the three contexts, prerequisite targets, catalog direct-version metadata, selection limits, all optional subsets and fingerprints of their local typed plans.
+The machine-readable [matrix fixture](../../../tests/e2e/fixtures/selection-v1.matrix.json) is revision `0.3.0-selection.4`, against catalog `0.3.0-cli.4`, recipe revision `2026-09-23` and CLI contract `selection-v1`. It freezes the three contexts, prerequisite targets, catalog direct-version metadata, selection limits, all optional subsets and fingerprints of their local typed plans. Revision 4 corrects support wording after retained cross-platform qualification; the typed operations and their fingerprints are unchanged.
 
 - React/Vite + TypeScript + pnpm: all eight subsets of Zod, Vitest and Prettier.
 - Express + TypeScript + pnpm: all eight subsets of Zod, Vitest and Prettier.

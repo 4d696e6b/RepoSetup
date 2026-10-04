@@ -13,7 +13,7 @@ const registry = createRegistry(builtInIntegrations);
 describe("frozen selection qualification matrix", () => {
   it("keeps catalog, pins, limits and contexts aligned with the reviewed matrix", () => {
     expect(matrix.schemaVersion).toBe(1);
-    expect(matrix.revision).toBe("0.3.0-selection.3");
+    expect(matrix.revision).toBe("0.3.0-selection.4");
     expect(matrix.catalogRevision).toBe(BEGINNER_CATALOG.revision);
     expect(matrix.recipeRevision).toBe(BEGINNER_CATALOG.recipeRevision);
     expect(matrix.cliContract).toBe(BEGINNER_CATALOG.cliContract);
