@@ -163,7 +163,9 @@ export function builder(main: HTMLElement, contextId: string, params: URLSearchP
       el(
         "p",
         draft.mode === "create"
-          ? `New starter in ${draft.path}. Essential framework: ${nameOf(context.context.frameworkId)}.`
+          ? errors.name || errors.path
+            ? "Correct the project name or folder before exporting this starter."
+            : `New starter in ${draft.path}. Essential framework: ${nameOf(context.context.frameworkId)}.`
           : "Additive selection only. Run from the existing project package directory.",
       ),
     );

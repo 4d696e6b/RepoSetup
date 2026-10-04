@@ -53,6 +53,12 @@ test("invalid project controls have linked errors and recover without losing foc
   await expect(path).toHaveAttribute("aria-invalid", "true");
   await expect(path).toHaveAccessibleDescription(/relative folder segments/);
   await expect(page.locator("#selection-error")).toHaveAttribute("aria-atomic", "true");
+  await expect(page.getByRole("region", { name: "Review selection" })).toContainText(
+    "Correct the project name or folder before exporting this starter.",
+  );
+  await expect(page.getByRole("region", { name: "Review selection" })).not.toContainText(
+    "New starter in ../outside",
+  );
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
     .analyze();
@@ -84,6 +90,9 @@ test("invalid project controls have linked errors and recover without losing foc
   await path.fill("projects/session-app");
   await expect(path).toHaveAttribute("aria-invalid", "false");
   await expect(page.locator("#project-path-error")).toBeHidden();
+  await expect(page.getByRole("region", { name: "Review selection" })).toContainText(
+    "New starter in projects/session-app.",
+  );
   await expect(page.getByRole("button", { name: "Copy RepoSetup command" })).toBeVisible();
 });
 
