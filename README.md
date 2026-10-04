@@ -49,7 +49,8 @@ Requires **Node.js 24+** and **pnpm 12.5.1**. Python recipes require **Python 3.
 ```bash
 git clone https://github.com/4d696e6b/RepoSetup.git
 cd RepoSetup
-pnpm install
+git switch --track origin/codex/0.3.0-candidate-integration
+pnpm install --frozen-lockfile
 pnpm build
 node packages/cli/dist/bin.js --help
 node packages/cli/dist/bin.js --version   # 0.3.0-alpha.1 (development source)
@@ -73,7 +74,7 @@ On the 0.3.0 development branch, add `--diff` to `create`, `add`, or `remove` fo
 
 Use `reposetup doctor --config reposetup.json` to compare an existing project's actual evidence with the stack you intend to maintain. It checks expected integrations even when ordinary detection no longer finds them, reports version differences and extra integrations as information, and makes no project changes. See the [intended-stack doctor contract](docs/specification-documentation/product-docs/INTENDED_DOCTOR_0.3.0.md).
 
-Run the published CLI without cloning:
+The package currently available through npm may be an older release. These commands do not select or qualify the unpublished 0.3.0 CLI:
 
 ```text
 npx rsetup
@@ -89,7 +90,7 @@ rsetup --help
 reposetup --help
 ```
 
-`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project.
+`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project. Use the [exact local candidate artifact](apps/website/README.md#matching-cli-artifact-required-before-pasting-commands) for 0.3.0 website handoffs; do not paste a selection into a floating `npx` invocation.
 
 ## Example
 
@@ -136,7 +137,7 @@ No files or commands were executed.
 
 Without `--dry-run`, the CLI asks `Proceed with installation?` unless you pass `--yes`.
 
-Flag form (only flags that exist today):
+Flag form:
 
 ```bash
 node packages/cli/dist/bin.js create my-app \
@@ -152,8 +153,9 @@ Styling, database, ORM, and other options go in the interactive flow or in `repo
 
 ```text
 reposetup create [name]
-reposetup add <id>
+reposetup add [ids...]
 reposetup remove <id>
+reposetup presets
 reposetup search [query]
 reposetup info <id>
 reposetup stack
@@ -164,17 +166,22 @@ reposetup registry validate
 
 | Command | What it does |
 | --- | --- |
-| `create` | Plan (and optionally execute) a new stack from prompts or `--config` |
-| `add` | Plan a delta for one integration on an existing project |
+| `create` | Plan (and optionally execute) a new stack from prompts, `--config`, `--preset` or a bounded selection |
+| `add` | Plan an additive delta for one or more integrations, or a bounded selection in an existing project |
 | `remove` | Remove an integration that has an explicit safe recipe |
+| `presets` | List the bundled recipe presets |
 | `search` | Search the local registry (offline) |
 | `info` | Show category, status, requirements, and docs URL for one ID |
 | `stack` | Detect the current project |
-| `doctor` | Read-only health checks |
+| `doctor` | Read-only health checks, intended-stack comparison and narrow confirmed missing-file repairs |
 | `export` | Write `reposetup.json` (IDs and options only; no `.env` secrets) |
 | `registry validate` | Validate the built-in catalog |
 
 There is no separate `import` command. Apply an exported file with `create --config`.
+
+The 0.3.0 candidate accepts `create --selection TOKEN` or `create --selection-file selection.json` for a new project, and `add --selection TOKEN` or `add --config selection.json` for an existing project. A selection is versioned declarative data restricted to three reviewed contexts; it cannot carry commands or secrets. The CLI decodes choices, checks the actual project context, shows the local plan and requires an interactive confirmation. `--yes` is refused with selection inputs. `--dry-run` previews without execution. Token/file limits, incompatible-flag errors and the catalog revision are in the [selection contract](docs/specification-documentation/product-docs/SELECTION_V1.md). Existing schemaVersion 1 `create --config`, existing preset IDs, positional `add` and JSON envelopes remain supported.
+
+`create`, `add` and `remove` also support `--diff` for a conservative file/dependency preview. External tool effects stay unknown until execution. `doctor --config reposetup.json` checks an intended stack; `doctor --config reposetup.json --fix --dry-run` previews only the reviewed missing-file repairs. A real repair requires confirmation or explicit `--yes`, followed by a fresh health check. See the [preview](docs/specification-documentation/product-docs/PREVIEW_0.3.0.md) and [doctor/repair](docs/specification-documentation/product-docs/INTENDED_DOCTOR_0.3.0.md) contracts.
 
 `reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. No 0.3.0 maturity promotion is claimed before candidate qualification.
 
@@ -218,11 +225,11 @@ Status is per ID, not “the catalog is production-ready.”
 
 | Recipe | Dry-run plan | Real execute |
 | --- | --- | --- |
-| Next.js + TypeScript + Tailwind + SQLite + Prisma + Zod + Vitest + Prettier | yes | pending CI / a machine with enough disk |
-| React + Vite + TypeScript + Tailwind + Zod + Vitest + Prettier | yes | yes (local `pnpm test:golden`) |
-| Express + TypeScript + Prisma (PostgreSQL **config** only) | yes | generation + `tsc`; no live database |
-| FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` in this workspace |
-| Flask + uv + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` |
+| Next.js + TypeScript + Tailwind + SQLite + Prisma + Zod + Vitest + Prettier | yes | retained golden workflow; see candidate record |
+| React + Vite + TypeScript + Tailwind + Zod + Vitest + Prettier | yes | retained golden workflow; see candidate record |
+| Express + TypeScript + Prisma (PostgreSQL **config** only) | yes | retained golden workflow; no live database |
+| FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff | yes | retained golden workflow; see candidate record |
+| Flask + uv + SQLAlchemy + Alembic + pytest + Ruff | yes | retained golden workflow; see candidate record |
 | React + Vite + Vitest + Testing Library + TanStack Query | yes | generated interaction/query tests |
 | FastAPI + Pydantic + pytest + HTTPX + Pydantic Settings | yes | generated HTTPX/settings tests; no real secrets |
 
@@ -278,7 +285,7 @@ pnpm test:e2e
 pnpm test:golden
 ```
 
-There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
+There is no `test:pack` script. The 0.3.0 candidate's identified tarball is exercised by the selection, maintenance and website handoff workflows; `pnpm test:e2e` retains the older end-to-end checks.
 
 ## Roadmap
 
@@ -292,10 +299,10 @@ See the [0.3.0 implementation status](docs/specification-documentation/implement
 
 [MIT](LICENSE)
 
-The 0.3.0 candidate integrates curated beginner `info`/goal search, separate minimal starter presets, and bounded declarative create/add selection handoffs. See [selection v1](docs/specification-documentation/product-docs/SELECTION_V1.md) for limits, conflicts and confirmation. Existing schemaVersion 1 configs, legacy presets, positional add and JSON plans remain supported.
+The 0.3.0 candidate integrates curated beginner `info`/goal search, separate minimal starter presets, and bounded declarative create/add selection handoffs. Existing schemaVersion 1 configs, legacy presets, positional add and JSON plans remain supported.
 
 ## Local 0.3.0 companion website
 
 The first reviewable slice lives in `apps/website`: goal discovery, nine reviewed integration pages, three minimal starter explanations, and a bounded create/add selection builder. Run `pnpm install`, `pnpm build`, then `pnpm website:dev`. See [website development and exact CLI handoff](apps/website/README.md) for qualification and local artifact setup.
 
-Website commands target the committed 0.3.0 CLI development contract. The combined candidate has not passed release qualification; no website publication or CLI release is implied.
+Website commands target the [exact packed 0.3.0 CLI candidate](apps/website/README.md#matching-cli-artifact-required-before-pasting-commands). The combined candidate has not passed release qualification; no website publication or CLI release is implied.

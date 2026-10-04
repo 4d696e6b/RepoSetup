@@ -10,7 +10,8 @@ This document turns the [0.3.0 roadmap](./ROADMAP_0.3.0_DRAFT.md) into the ten r
 
 - Development branch: `codex/0.3.0-cli`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-cli`.
-- Companion website: separate `codex/0.3.0-website` worktree at `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`. Its [five-profile browser qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37178840138) passed at `f96f28e`; the branches have not been merged.
+- Companion website: separate `codex/0.3.0-website` development worktree at `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`. Its [five-profile browser qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37178840138) passed at `f96f28e`.
+- Integrated candidate: `codex/0.3.0-candidate-integration` at `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-candidate`; merge commit `a410c1d39179d41ed14aae2740470a7267a25282`. Qualification and freeze status live in the [candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md).
 - First CLI slice commit: `626fce93214af8554c3a0700ead52c5e3db8ae7a`; later section commits and exact artifact identities are recorded in Git history and qualification reports.
 - Exact starting candidate SHA: `145e167e6b60897da96942545ba6dbd40359ad4a`, on `codex/phase-27-release-candidate`.
 - Development CLI version: `0.3.0-alpha.1`, unpublished.
@@ -138,14 +139,14 @@ Phase 8 exit condition for the agreed scope: all five scripted journeys and main
 
 **Status: in progress.** The CLI and website branches have been integrated on `codex/0.3.0-candidate-integration`; the [0.3.0 candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) identifies a provisional CLI tarball and the remaining freeze, platform, manual and soak gates. Existing predecessor runs and local integration checks are not a fully qualified frozen candidate.
 
-- [ ] **9.1 Reconcile/freeze scope and docs:** implemented commands, support matrix, examples, limitations and optional-feature decision agree.
+- [x] **9.1 Reconcile scope and docs:** the integrated README, CLI/selection/preview/doctor contracts, website setup and status now agree on implemented commands, three bounded contexts, local artifact use and limits. No optional feature was selected; release freeze is still separate gate 9.2.
 - [ ] **9.2 Candidate identity:** exact source SHA, catalog revision, one packed artifact and cryptographic hash.
 - [ ] **9.3 Complete qualification:** retained golden workflows and new create/add/preview/doctor/repair workflows pass on advertised platforms without hidden qualification skips; website and joint handoff checks pass independently.
 - [ ] **9.4 Repeated passes/soak:** carry forward three consecutive passing full qualifications from the same candidate SHA and seven-calendar-day soak unless explicitly revised by the maintainer.
 - [ ] **9.5 Release blockers:** no open P0/P1, security or data-loss defects; required evidence and quality checks recorded.
 - [ ] **9.6 Manual and combined safety gates:** perform screen-reader and physical-device checks, then review the frozen CLI/website candidate together for secret suppression, malformed records, traversal/symlinks, conflicting files, concurrent changes, interruption and repeated repair. Record limits and resolve blocking findings before release.
 
-Phase 9 integration checkpoint: merge commit `a410c1d39179d41ed14aae2740470a7267a25282` preserves the CLI executor and adds the website app/public catalog. Frozen-lockfile installation, workspace build, 550 unit tests, typecheck and lint passed; the provisional tarball SHA-256 is `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec`. The website's new exact-source/hash pin passed 13 unit and six packed handoff tests locally; clean-source candidate qualification is pending.
+Phase 9 integration checkpoint: merge commit `a410c1d39179d41ed14aae2740470a7267a25282` preserves the CLI executor and adds the website app/public catalog. Frozen-lockfile installation, workspace build, unit tests, typecheck and lint passed; the provisional tarball SHA-256 is `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec`. At integrated source `3659d584003da6812243b14b0b43e41159a21aa8`, the [packed contract/transport/maintenance run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314747), [six-cell real create/add run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314748), [six-cell golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314764), [broader release workflow](https://github.com/4d696e6b/RepoSetup/actions/runs/37184319967) and [clean-source browser/handoff qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314746) all passed; the website run covered 70/70 browser cases. These are one provisional source wave, not a frozen same-SHA release qualification. The [candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) tracks remaining manual and soak gates.
 
 Exit condition: the frozen candidate satisfies every selected release gate. Source changes after freezing require renewed evidence appropriate to the change; local unit success alone is insufficient.
 

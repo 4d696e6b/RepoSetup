@@ -10,7 +10,7 @@ The new starter IDs are `beginner-react-vite`, `beginner-express`, and `beginner
 
 Selections are bounded to React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm, and FastAPI + uv. Node choices: Zod, Vitest, Prettier. Python choices: Pydantic, pytest, Ruff. Node prerequisite remains Node 24; Python qualification targets 3.12/3.13 and uv 0.12.17. Framework option `typescript: true` is required in the Node contexts. Optional library options are absent or `{}` in this slice: these integrations currently expose no configurable option schema. Unknown options are rejected, never ignored. No database/service/browser installation is advertised.
 
-Existing full golden fixtures provide parent recipe evidence. Every minimal/optional subset is checked against the real planner, but this new handoff still needs packed Node 24 cross-platform execution evidence. Candidate labels are not stable guarantees. Catalog exports include official links, review dates, parent evidence, limitations, recipe revision and direct-version information; they contain no functions or executable operations.
+Existing full golden fixtures provide parent recipe evidence. Every minimal/optional subset is checked against the real planner; the CLI development branch's packed Node 24 create/add and native-transport matrix passed on Linux, macOS and Windows. The integrated CLI/website candidate still needs its Phase 9 same-source qualification. Candidate labels are not stable guarantees. Catalog exports include official links, review dates, parent evidence, limitations, recipe revision and direct-version information; they contain no functions or executable operations.
 
 ## Declarative envelope
 

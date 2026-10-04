@@ -119,6 +119,9 @@ jobs:
       - run: pnpm --filter rsetup pack --pack-destination candidate
       - name: Record artifact identity
         run: node scripts/write-artifact-evidence.mjs --tarball candidate/rsetup-*.tgz --source-sha "$GITHUB_SHA" --output candidate/candidate-artifact.json
+      - name: Match the website's pinned CLI artifact
+        if: github.ref_name == 'codex/0.3.0-candidate-integration'
+        run: node scripts/check-candidate-artifact.mjs candidate/candidate-artifact.json
       - uses: actions/upload-artifact@v4
         with:
           name: candidate-artifact

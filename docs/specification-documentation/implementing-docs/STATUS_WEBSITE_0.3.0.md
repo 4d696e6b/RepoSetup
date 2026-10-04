@@ -11,7 +11,7 @@ This slice implements release **Phase 6 (information website)** and **Phase 7 (s
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`.
 - Branch: `codex/0.3.0-website`, created from recorded 0.2.0 candidate `145e167e6b60897da96942545ba6dbd40359ad4a`.
 - The original candidate checkout remains at that commit; its three untracked planning files remain present and unchanged. Their copies here were checked byte-for-byte against the originals.
-- CLI track: the current exact committed target is `b212d35727300325486c70a9a7b0cc54c912d581` on `codex/0.3.0-cli`. Neither sibling branch was merged; only reviewed committed shared files were copied.
+- CLI development track: the exact committed target was `b212d35727300325486c70a9a7b0cc54c912d581` on `codex/0.3.0-cli`. This section records the independent website branch's evidence. Both development branches are now integrated on `codex/0.3.0-candidate-integration`; its [candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) identifies the newer pinned CLI source and open whole-release gates.
 - Shared selection schemas/tests/planner, registry semantic validation/export/search and delta safety originally came from committed `626fce9`. Curated beginner definitions and shared recipe/plan fixes now match committed `f99f63a`. The retained website-branch CLI parser is still 0.2.0 and is not the handoff target.
 - AGENTS.md, product requirements and architecture document the owner’s explicit 0.3.0 website exception on this branch.
 
