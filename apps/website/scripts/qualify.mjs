@@ -69,6 +69,7 @@ const report = {
   remainingGates: [
     scope === "local" ? "WebKit desktop/mobile" : "Full five-profile browser matrix",
     "Manual screen-reader and physical-device checks",
+    "Whole-release safety review",
     "Cross-branch release-candidate qualification and repeated passes/soak",
     "Explicit delivery authorization",
   ],
