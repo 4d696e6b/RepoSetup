@@ -4,7 +4,7 @@ Status: implemented development contract, not a published 0.3.0 release. Catalog
 
 ## Shared foundation
 
-Core owns strict Zod selection/catalog models and pure planning. Integrations own curated guidance, contexts, starter presets and legacy preset definitions. Registry validates references, options, all finite optional subsets and public snapshot export. CLI loads local inputs, detects the actual target, renders choices/plan, confirms, and invokes the existing executor. The website is an approved 0.3.0 scope exception, but its UI, hosting and browser bundle remain later work. The Node core barrel is not a browser entry point.
+Core owns strict Zod selection/catalog models and pure planning. Integrations own curated guidance, contexts, starter presets and legacy preset definitions. Registry validates references, options, all finite optional subsets and public snapshot export. CLI loads local inputs, detects the actual target, renders choices/plan, confirms, and invokes the existing executor. The approved companion website lives in `apps/website` and exports only bounded selections; hosting remains later work. The Node core barrel is not a browser entry point.
 
 The new starter IDs are `beginner-react-vite`, `beginner-express`, and `beginner-fastapi`. Existing `next-sqlite`, `react-vite`, `express-postgres`, `fastapi` and `flask` IDs retain their contents. New starters include no optional libraries. Use `info` to learn purpose, when to consider/skip an integration, prerequisites, alternatives and setup impact; goal search includes “test an app”, “validate input” and “format code”.
 
@@ -61,7 +61,7 @@ Add preserves existing generated-target files, scripts and declared dependency v
 
 Encode UTF-8 JSON as canonical unpadded base64url; no compression. Before decoding, enforce the ASCII alphabet and at most 4,096 token characters. Enforce at most 3,072 decoded bytes, valid UTF-8, JSON nesting of at most 8, at most 16 integrations, no duplicates, and strict schemas/options/context semantics. The command renderer emits only `reposetup create|add --selection TOKEN` with optional `--dry-run`, at most 4,200 characters. It cannot append `--yes`, pipelines, callbacks, scripts or user-controlled launcher text.
 
-These conservative application limits are not a claim that arbitrary bootstrap launchers fit every shell. The alphabet needs no quotes in ordinary shells. Local macOS native-launcher checks cover the exact token and file bounds plus real POSIX confirmation; the Linux/Windows runner results, Windows TTY behavior and npm/npx bootstrap version pinning remain release qualification work. Use the locally built CLI for development; do not advertise an unpublished package or a floating bootstrap as a shipped 0.3.0 command.
+These conservative application limits are not a claim that arbitrary bootstrap launchers fit every shell. The alphabet needs no quotes in ordinary shells. The bounded native transport matrix, including Windows TTY confirmation, passed on the CLI development branch; Phase 9 must repeat relevant checks for the integrated candidate. Npm/npx bootstrap version pinning remains a release qualification decision. Use the pinned local CLI artifact for development; do not advertise an unpublished package or a floating bootstrap as a shipped 0.3.0 command.
 
 File fallback uses the same envelope and semantics:
 
@@ -88,4 +88,4 @@ Sections 2.2 and 2.3 add real packed-command create and add execution for every 
 
 ## Remaining qualification
 
-Required later gates include real minimal recipe and every advertised variant execution with the packed CLI on supported Node/Python/platforms, native shell/launcher evidence beyond local macOS and Windows TTY confirmation, legacy golden execution on advertised runners, website/CLI export fixtures and accessibility/usability sessions. General diff previews, intended-stack doctor, repair allowlist and optional roadmap work are not implemented by this slice. The whole release remains incomplete.
+The bounded CLI create/add variants, native shell/launcher transport, retained legacy paths and website-to-packed-CLI export have now passed their development-branch matrices. `--diff` previews, intended-stack doctor and the narrow repair allowlist are implemented. Phase 9 must qualify the integrated candidate pair on the advertised runners, including preview/doctor/repair, the full browser matrix, manual screen-reader/physical-device checks, combined safety review, repeated passes and soak. The whole release remains incomplete; optional roadmap work is not selected.

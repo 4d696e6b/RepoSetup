@@ -2,7 +2,7 @@ name: Website qualification (0.3.0)
 
 on:
   push:
-    branches: [codex/0.3.0-website]
+    branches: [codex/0.3.0-website, codex/0.3.0-candidate-integration]
   workflow_dispatch:
 
 permissions:

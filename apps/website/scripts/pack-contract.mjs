@@ -39,12 +39,15 @@ try {
   const bin = join(local, "installed/node_modules/rsetup/dist/bin.js");
   rmSync(join(local, "bin/reposetup"), { force: true });
   symlinkSync(bin, join(local, "bin/reposetup"));
+  const tarballSha256 = createHash("sha256").update(readFileSync(tarball)).digest("hex");
+  if (tarballSha256 !== handoff.artifactSha256)
+    throw new Error("Packed CLI bytes differ from the candidate's pinned artifact hash.");
   const record = {
     commit,
     version,
     node: process.version,
     platform: `${process.platform}/${process.arch}`,
-    tarballSha256: createHash("sha256").update(readFileSync(tarball)).digest("hex"),
+    tarballSha256,
   };
   writeFileSync(join(local, "evidence.json"), JSON.stringify(record, null, 2) + "\n");
   console.log(`Exact committed CLI packed and installed locally: ${local}`);

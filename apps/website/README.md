@@ -25,7 +25,7 @@ Nothing is published. Vite preview serves the built output locally; it is not a 
 
 ## Matching CLI artifact: required before pasting commands
 
-The displayed `reposetup create|add --selection TOKEN` command is available in the **local development CLI** `rsetup@0.3.0-alpha.1`, exact committed source `b212d35727300325486c70a9a7b0cc54c912d581` on `codex/0.3.0-cli`. It is not advertised as a published CLI. The retained 0.2.0 parser in this website branch does not implement selection flags. Do not use a floating npx/npm bootstrap or the published 0.2.0 binary with these commands.
+The displayed `reposetup create|add --selection TOKEN` command is available in the **local candidate CLI** `rsetup@0.3.0-alpha.1`, exact committed source `a410c1d39179d41ed14aae2740470a7267a25282` on `codex/0.3.0-candidate-integration`. Its pinned tarball SHA-256 is `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec`. It is not a published CLI. Do not use a floating npx/npm bootstrap or the published 0.2.0 binary with these commands.
 
 Prepare that exact artifact without changing the CLI or candidate checkout:
 
@@ -35,7 +35,7 @@ export PATH="$PWD/apps/website/.local-cli/bin:$PATH"
 reposetup --version
 ```
 
-The tool uses `git archive` of the recorded commit, builds in a disposable directory, packs, installs the tarball into ignored `.local-cli/installed`, and records source/version/Node/platform/SHA-256 in `.local-cli/evidence.json`. It requires Node 24 on PATH and uses argument-array processes. It does not install system prerequisites or touch either sibling checkout. If the commit is missing, fetch/restore the CLI track locally before running; never silently target a different commit.
+The tool uses `git archive` of the recorded commit, builds in a disposable directory, packs, verifies the pinned tarball SHA-256, installs it into ignored `.local-cli/installed`, and records source/version/Node/platform/hash in `.local-cli/evidence.json`. It requires Node 24 on PATH and uses argument-array processes. It does not install system prerequisites or modify the two development worktrees. If the commit is missing, fetch the candidate source; never silently target a different commit.
 
 Now use the browser’s primary Copy RepoSetup command. For create, paste in the parent directory of the new folder. For add, paste in the existing project package directory. The CLI decodes and shows the actual local plan, then asks for interactive confirmation. It refuses noninteractive execution and `--yes` for selections. Preview-only is available as the secondary `--dry-run` command.
 
@@ -56,7 +56,7 @@ The website only chooses a generated variant and validates name/folder controls;
 
 Built HTML also applies a Content Security Policy: scripts/styles and resources are restricted to this static site, network connections and form submissions are blocked, and object/base injection is refused. Browser tests check blocked fetch and literal hostile route text alongside working copy/download flows. This is a built-preview policy; Vite development HMR is unaffected. It does not replace validation or qualify a future hosting provider's headers.
 
-The branch starts at candidate `145e167e6b60897da96942545ba6dbd40359ad4a`. Initial shared selection files/tests, registry validation/export/search, guidance/presets, dependency delta safety and the CLI error-code mapping came from committed CLI `626fce9`. Relevant recipe files came from committed CLI `8950efb`; curated catalog revision `0.3.0-cli.4` matches committed CLI `b212d35`. CLI parsing/execution changes stay on the CLI track. Resolve identical shared changes normally when integrating the independently reviewed tracks; do not copy the website parser into core.
+The candidate integration branch merges the independently reviewed CLI and website development branches, both descended from original 0.2.0 candidate `145e167e6b60897da96942545ba6dbd40359ad4a`. The CLI remains authoritative for parsing and execution; the website consumes catalog revision `0.3.0-cli.4` and exports only validated selections. Any later CLI code change requires a new exact-source artifact pin and joint qualification.
 
 ## Checks
 

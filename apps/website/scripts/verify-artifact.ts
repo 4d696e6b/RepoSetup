@@ -5,13 +5,13 @@ import { join } from "node:path";
 import { handoff } from "../src/handoff.ts";
 
 /** Check identity and installed executable bytes before running any packed CLI tests. */
-export function verifyArtifact(local: string) {
+export function verifyArtifact(local: string, expectedSha256 = handoff.artifactSha256) {
   const evidence = JSON.parse(readFileSync(join(local, "evidence.json"), "utf8"));
   if (evidence.commit !== handoff.commit || evidence.version !== handoff.version)
     throw new Error("Packed CLI identity differs from the website's committed target. Repack it.");
   const tarball = join(local, `rsetup-${handoff.version}.tgz`);
   const hash = createHash("sha256").update(readFileSync(tarball)).digest("hex");
-  if (evidence.tarballSha256 !== hash)
+  if (evidence.tarballSha256 !== hash || hash !== expectedSha256)
     throw new Error("Packed CLI tarball hash differs from its evidence. Repack it.");
   const entries = execFileSync("tar", ["-tzf", tarball], { encoding: "utf8" }).trim().split("\n");
   const files = entries.filter(

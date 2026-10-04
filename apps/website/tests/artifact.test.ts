@@ -36,23 +36,30 @@ afterEach(() => {
 
 it("verifies recorded identity, tarball hash and every installed executable chunk", () => {
   const { root, evidence } = fixture();
-  expect(verifyArtifact(root)).toEqual(evidence);
+  expect(verifyArtifact(root, evidence.tarballSha256)).toEqual(evidence);
+});
+
+it("refuses a matching evidence file for bytes other than the pinned candidate", () => {
+  const { root } = fixture();
+  expect(() => verifyArtifact(root)).toThrow("hash differs");
 });
 
 it.each(["bin.js", "chunk.js"])("refuses an installed %s that differs from the tarball", (file) => {
-  const { root, installed } = fixture();
+  const { root, installed, evidence } = fixture();
   writeFileSync(join(installed, "dist", file), "// stale or changed bytes\n");
-  expect(() => verifyArtifact(root)).toThrow("differs from its packed artifact");
+  expect(() => verifyArtifact(root, evidence.tarballSha256)).toThrow(
+    "differs from its packed artifact",
+  );
 });
 
 it("refuses stale identity, substituted tarballs and missing installed files", () => {
   const { root, evidence, tarball } = fixture();
   writeFileSync(join(root, "evidence.json"), JSON.stringify({ ...evidence, commit: "stale" }));
-  expect(() => verifyArtifact(root)).toThrow("committed target");
+  expect(() => verifyArtifact(root, evidence.tarballSha256)).toThrow("committed target");
   writeFileSync(join(root, "evidence.json"), JSON.stringify(evidence));
   writeFileSync(tarball, "not the recorded artifact");
-  expect(() => verifyArtifact(root)).toThrow("hash differs");
+  expect(() => verifyArtifact(root, evidence.tarballSha256)).toThrow("hash differs");
   const missing = fixture();
   rmSync(join(missing.installed, "dist/chunk.js"));
-  expect(() => verifyArtifact(missing.root)).toThrow();
+  expect(() => verifyArtifact(missing.root, missing.evidence.tarballSha256)).toThrow();
 });

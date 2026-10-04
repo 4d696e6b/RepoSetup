@@ -2,7 +2,7 @@ name: Golden stacks
 
 on:
   push:
-    branches: [main, dev, "release/**", codex/0.3.0-cli]
+    branches: [main, dev, "release/**", codex/0.3.0-cli, codex/0.3.0-candidate-integration]
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:

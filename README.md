@@ -176,13 +176,13 @@ reposetup registry validate
 
 There is no separate `import` command. Apply an exported file with `create --config`.
 
-`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in v0.2.0-alpha.1.**
+`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. No 0.3.0 maturity promotion is claimed before candidate qualification.
 
 ## Integration status
 
 Status is per ID, not “the catalog is production-ready.”
 
-| Status | Meaning in v0.2.0-alpha.1 |
+| Status | Meaning during 0.3.0 candidate work |
 | --- | --- |
 | **stable** | Real execute + advertised-platform evidence. **None yet.** |
 | **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |
@@ -282,18 +282,17 @@ There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
 
 ## Roadmap
 
-See the [phased roadmap to 0.2.0](docs/specification-documentation/implementing-docs/ROADMAP_0.2.0.md) for cross-platform qualification, faster installation, usability improvements, integration priorities, and release gates.
+See the [0.3.0 implementation status](docs/specification-documentation/implementing-docs/STATUS_0.3.0.md) and [candidate qualification record](docs/specification-documentation/release-docs/RELEASE_CANDIDATE_0.3.0.md) for the current bounded scope, exact artifact identity and open release gates. The [0.2.0 roadmap](docs/specification-documentation/implementing-docs/ROADMAP_0.2.0.md) remains historical context.
 
-- Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
-- Promote integrations to `stable` only with that evidence
-- Configure npm trusted publishing so tag workflows can release without a local token
-- The owner-approved 0.3.0 companion website lives in `apps/website`; browser dependencies remain outside core. It is not deployed.
+- Qualify the integrated 0.3.0 CLI/website candidate on the frozen support matrix, including manual accessibility/device and combined safety gates.
+- Retain existing maturity labels until their exact context/platform evidence supports promotion.
+- The owner-approved companion website lives in `apps/website`; browser dependencies remain outside core. It is not deployed.
 
 ## License
 
 [MIT](LICENSE)
 
-The 0.3.0 CLI development branch adds curated beginner `info`/goal search, separate minimal starter presets, and bounded declarative create/add selection handoffs. See [selection v1](docs/specification-documentation/product-docs/SELECTION_V1.md) for limits, conflicts and confirmation. Existing schemaVersion 1 configs, legacy presets, positional add and JSON plans remain supported.
+The 0.3.0 candidate integrates curated beginner `info`/goal search, separate minimal starter presets, and bounded declarative create/add selection handoffs. See [selection v1](docs/specification-documentation/product-docs/SELECTION_V1.md) for limits, conflicts and confirmation. Existing schemaVersion 1 configs, legacy presets, positional add and JSON plans remain supported.
 
 ## Local 0.3.0 companion website
 

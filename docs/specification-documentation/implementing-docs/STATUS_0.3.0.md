@@ -136,7 +136,7 @@ Phase 8 exit condition for the agreed scope: all five scripted journeys and main
 
 ## Phase 9 — Freeze and qualify the release candidate
 
-**Status: not started.** The existing qualification infrastructure is groundwork, not 0.3.0 evidence.
+**Status: in progress.** The CLI and website branches have been integrated on `codex/0.3.0-candidate-integration`; the [0.3.0 candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) identifies a provisional CLI tarball and the remaining freeze, platform, manual and soak gates. Existing predecessor runs and local integration checks are not a fully qualified frozen candidate.
 
 - [ ] **9.1 Reconcile/freeze scope and docs:** implemented commands, support matrix, examples, limitations and optional-feature decision agree.
 - [ ] **9.2 Candidate identity:** exact source SHA, catalog revision, one packed artifact and cryptographic hash.
@@ -144,6 +144,8 @@ Phase 8 exit condition for the agreed scope: all five scripted journeys and main
 - [ ] **9.4 Repeated passes/soak:** carry forward three consecutive passing full qualifications from the same candidate SHA and seven-calendar-day soak unless explicitly revised by the maintainer.
 - [ ] **9.5 Release blockers:** no open P0/P1, security or data-loss defects; required evidence and quality checks recorded.
 - [ ] **9.6 Manual and combined safety gates:** perform screen-reader and physical-device checks, then review the frozen CLI/website candidate together for secret suppression, malformed records, traversal/symlinks, conflicting files, concurrent changes, interruption and repeated repair. Record limits and resolve blocking findings before release.
+
+Phase 9 integration checkpoint: merge commit `a410c1d39179d41ed14aae2740470a7267a25282` preserves the CLI executor and adds the website app/public catalog. Frozen-lockfile installation, workspace build, 550 unit tests, typecheck and lint passed; the provisional tarball SHA-256 is `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec`. The website's new exact-source/hash pin passed 13 unit and six packed handoff tests locally; clean-source candidate qualification is pending.
 
 Exit condition: the frozen candidate satisfies every selected release gate. Source changes after freezing require renewed evidence appropriate to the change; local unit success alone is insufficient.
 
