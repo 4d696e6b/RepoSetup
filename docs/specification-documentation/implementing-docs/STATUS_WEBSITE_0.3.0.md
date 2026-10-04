@@ -4,7 +4,7 @@ Date: 2026-10-04. Status: reviewable local website slice implemented and checked
 
 ## Phase position
 
-This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. Work is now in **Phase 8 (beginner usability and broader safety/accessibility validation)**. Across both branches, Phases 1–7 are implemented locally or qualified for their bounded scope; **3 phases remain**. The owner accepted scripted beginner simulations instead of recruiting participants for Phase 8; no human usability result is claimed. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
+This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. **Phase 8 is complete for its owner-agreed scripted beginner and bounded automated safety/usability scope.** Across both branches, Phases 1–8 are implemented locally or qualified for their bounded scope; **2 phases remain**. The owner accepted scripted beginner simulations instead of recruiting participants and moved manual screen-reader/physical-device checks plus combined candidate safety review to Phase 9. No human usability result is claimed. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
 
 ## Source isolation
 
@@ -42,7 +42,7 @@ Environment: macOS arm64; development runtime Node `v24.21.0`; pnpm `12.5.1`. A 
 - Manual packed CLI PTY check: a website-generated Express starter command printed decoded selection and 11 local operations, then `Proceed with installation?`; answering `n` returned exit 2 and left the target directory empty. No installation was executed.
 - `git diff --check`: pass. Original candidate HEAD/status and exact planning copies verified separately.
 
-Initial checks exposed missing shared delta/error adapter prerequisites, a skip-link routing issue and a test that treated same-document hash navigation as a fresh page. Those were corrected and checks rerun. The initial Chrome-only suite passed; see the Phase 8 section for subsequent expanded coverage and the open WebKit failure.
+Initial checks exposed missing shared delta/error adapter prerequisites, a skip-link routing issue and a test that treated same-document hash navigation as a fresh page. Those were corrected and checks rerun. The initial Chrome-only suite passed; the Phase 8 record below traces the later WebKit failure and passing reruns.
 
 ## Phase 8 local validation slice
 
@@ -54,7 +54,7 @@ The invalid-folder visual review found that the selection summary still called `
 
 The [clean-source five-profile rerun](https://github.com/4d696e6b/RepoSetup/actions/runs/37177775840) at `e2563dc` passed the corrected invalid-input journey and all six qualification steps. A direct Chrome accessibility-tree and visual walkthrough also verified invalid-folder focus, linked error text, blocked export and recovery to a valid command. This remains a browser review, not a VoiceOver or physical-device result.
 
-Date: 2026-10-03. **Partial: automated local validation improved; observed sessions 0/5.**
+Historical checkpoint, 2026-10-03: **automated local validation improved; observed sessions 0/5.** Later Phase 8 evidence and the owner's scope decision supersede this checkpoint's remaining-phase count.
 
 - Invalid project names/folders have individual messages linked by `aria-describedby`, `aria-invalid` and a persistent atomic status region. Focus stays in the edited field; hidden create controls do not block add mode. The invalid review panel stays aligned with the form on desktop. Optional-library group guidance explains empty minimal create versus nonempty add.
 - Fixed the main builder navigation link after direct entry/context changes: it now points to the current context rather than resetting the draft to a previous one. Learning pages preserve the in-memory choices without placing project names/tokens in requests, URLs or browser storage.
@@ -89,7 +89,7 @@ Date: 2026-10-03. **Partial: automated local validation improved; observed sessi
 - Workspace build, **498 unit tests** (core 254, registry 15, integrations 126, retained CLI 91, website 12), typecheck and lint pass. The six packed handoff tests pass across all 45 selections, checking token/file plan equivalence, refusal and confirmation safety. All 24 Chrome desktop/mobile and Firefox browser tests pass with the regenerated catalog and displayed identity. The clean-source qualification report records the final implementation commit separately.
 - This sync does not make the website a released support claim. WebKit on this host, manual screen-reader/device checks, five observed beginner sessions and later maintenance/release gates remain open. The phase count stays at seven remaining.
 
-The earlier seven-remaining count was correct for the 2026-10-03 CLI snapshot. With the later committed CLI work, Phase 8 is partial, 0/5 observed sessions, and three release phases remain. There is no claim that every release task has been completed.
+The earlier seven-remaining count was correct for the 2026-10-03 CLI snapshot. After the later CLI and website qualifications and the owner's Phase 8 scope decision, Phase 8 is complete for the scripted scope, 0/5 people were observed, and Phases 9–10 remain. There is no claim that the release is complete.
 
 ## 2026-10-04 catalog and CLI alignment
 
@@ -119,7 +119,7 @@ The first full website rerun at `80baa74` passed build, unit, typecheck, lint an
 
 The owner replaced the originally required five observed beginner sessions with scripted beginner-style walkthroughs for this phase. Five browser scenarios now trace the same B01–B05 tasks: minimal React/Vite, deliberate Zod choice, Express with Vitest, FastAPI with pytest, and existing Express add with invalid-input recovery and JSON download. Each starts at the website's goals page, follows visible links and controls, and asserts the exported versioned choices. Desktop Chrome, mobile Chrome and desktop Firefox pass **15/15** scenario runs; the complete local browser suite passes **42/42** cases. The exact packed CLI handoff suite passes **6/6**, covering the generated variant set, plan equivalence and confirmation/refusal boundaries; real create/add application is separately qualified by the CLI branch's six-cell matrix. Workspace unit tests, typecheck, lint and build pass. An initial test-authoring run failed because the test expected a nonexistent `contextId` field and incorrect pytest wording; the assertions were corrected to the documented envelope and visible copy before the passing rerun.
 
-These simulations verify scripted paths and machine-checkable outcomes, not a beginner's understanding or an actual screen reader or physical device. Observed participants remain **0/5**. Manual accessibility/device checks, broader whole-release safety review, candidate freeze and release qualification remain open.
+These simulations verify scripted paths and machine-checkable outcomes, not a beginner's understanding or an actual screen reader or physical device. Observed participants remain **0/5**. At the owner's direction, manual accessibility/device checks and combined candidate safety review are Phase 9 gates; candidate freeze and release qualification also remain open.
 
 A subsequent macOS 15 rerun passed all 25 B01–B05 browser/profile combinations, but the existing Firefox all-routes accessibility sweep reached its 60-second test timeout under the expanded parallel load: **69/70 browser cases passed**. No accessibility assertion failed. That sweep now has a 120-second budget; local Chrome/Firefox rerun passed **42/42**. The [clean-source full rerun](https://github.com/4d696e6b/RepoSetup/actions/runs/37176769775) at `4615fcc` passed all six qualification steps and **70/70** browser cases, including **25/25** simulated journeys across five profiles. Its retained report records `automatedScopePassed: true`, `wholeReleaseQualified: false`, the owner-approved substitution and the remaining manual/accessibility, safety and release gates.
 
@@ -137,8 +137,8 @@ See [app development and exact artifact setup](../../../apps/website/README.md).
 
 ## Dependencies and gates still open
 
-The committed CLI selection contract is available and the local website handoff is integrated; there is no remaining schema blocker for this slice. The CLI track has since qualified its bounded create/add and native selection transport matrix on Linux, macOS and Windows. Public advertising still depends on a qualified released CLI/version-pinned launcher. Owner-approved simulated journeys replace the planned participant gate for Phase 8, while manual screen-reader/physical-device checks and later release qualification remain open. The automated WebKit matrix and packed/platform repair safety suite have passed; the website's packed dry-run/confirmation evidence does not itself establish installation success or freeze transitive dependencies. No human-observation result is claimed.
+The committed CLI selection contract is available and the local website handoff is integrated; there is no remaining schema blocker for this slice. The CLI track has qualified its bounded create/add and native selection transport matrix on Linux, macOS and Windows. Public advertising still depends on a qualified released CLI/version-pinned launcher. Owner-approved simulated journeys replace the planned participant gate for Phase 8; manual screen-reader/physical-device checks and combined candidate safety review are Phase 9 gates. The automated WebKit matrix and packed/platform repair safety suite have passed; the website's packed dry-run/confirmation evidence does not itself establish installation success or freeze transitive dependencies. No human-observation result is claimed.
 
-The shared curated catalog still says that minimal variants and selection transport need packed cross-platform qualification. That sentence predates the completed Phase 2 matrix and is now stale. It must be corrected in the committed CLI definitions and resynchronized here before release; the website will not maintain a separate compatibility registry to override it.
+The shared curated catalog limitation was corrected in CLI revision `0.3.0-cli.4` and resynchronized here. Any later catalog or contract change must use reviewed CLI definitions and a new joint qualification; the website does not maintain a separate compatibility registry.
 
 This task does not implement CLI diff previews, intended-stack doctor, repair, additional integrations/options, system prerequisite installation, production hosting or release publication. Later catalog/contract changes require regeneration and joint packed qualification against a newly committed identity before updating the displayed CLI target.

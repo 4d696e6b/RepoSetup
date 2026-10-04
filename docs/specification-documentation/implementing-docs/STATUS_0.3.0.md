@@ -4,15 +4,15 @@ Last updated: 2026-10-04. This is the combined release snapshot maintained on `c
 
 ## Current phase and remaining count
 
-**Phases 1–7 are implemented locally across the CLI and website branches; Phase 2's bounded CLI qualification is complete.** The website has a working information center, selection builder and packed CLI handoff. Phase 8 beginner usability and broader safety/accessibility validation remains partial. The two branches remain separate and the 0.3.0 release is not complete.
+**Phases 1–8 are implemented or qualified for their agreed bounded scopes across the CLI and website branches.** The website has a working information center, selection builder and packed CLI handoff. The owner closed Phase 8 for scripted beginner journeys and bounded automated safety/usability validation, moving manual screen-reader/physical-device checks and combined candidate safety review to Phase 9. The two branches remain separate and the 0.3.0 release is not complete.
 
 - Total release phases: **10**.
-- Implemented locally or qualified for its bounded scope: **7 phases — 1–7**.
-- Remaining before release: **3 phases — 8, 9 and 10**.
-- Of those remaining, **1 is partial** (8), **1 has not started** (9), and **1 awaits qualification and explicit delivery authorization** (10).
-- Website-facing phases remaining: **3 — 8, 9 and 10**. Later packed/platform qualification of Phases 3–5 also remains part of Phase 9.
+- Implemented locally or qualified for its bounded scope: **8 phases — 1–8**.
+- Remaining before release: **2 phases — 9 and 10**.
+- Of those remaining, **1 has not started** (9) and **1 awaits qualification and explicit delivery authorization** (10).
+- Website-facing phases remaining: **2 — 9 and 10**. Candidate-wide packed/platform qualification of Phases 3–5 also remains part of Phase 9.
 
-“Implemented locally” means the bounded source implementation and recorded local checks are available. It does **not** mean stable support, complete cross-platform qualification, publication, or completion of the entire release. Phases 6 and 7 still have broader validation work carried into Phases 2 and 8. Partial phases count as remaining. This is a count of milestones, not a percentage of effort or a schedule estimate.
+“Implemented locally” means the bounded source implementation and recorded checks are available. It does **not** mean stable support, complete candidate qualification, publication, or completion of the entire release. Manual accessibility/device assessment and the combined safety review are now explicit Phase 9 gates. This is a count of milestones, not a percentage of effort or a schedule estimate.
 
 ## Phase-by-phase status
 
@@ -32,25 +32,25 @@ Last updated: 2026-10-04. This is the combined release snapshot maintained on `c
    `doctor --config --fix` previews, confirms, creates only allowlisted missing Prettier or recipe-defined `.env.example` files, rechecks health and preserves existing files. Local tests pass; packed/platform qualification remains open. The website branch retains its older CLI parser and does not execute these commands directly.
 
 6. **Companion information website — implemented locally for the first slice.**
-   A separate static workspace app offers goal discovery, nine integration explanations, three minimal preset explanations and usage guidance. The public catalog is generated and planner-validated from curated definitions. Chrome, Firefox and WebKit browser checks, keyboard navigation and automated accessibility scans pass. Manual screen-reader/device checks remain Phase 8.
+   A separate static workspace app offers goal discovery, nine integration explanations, three minimal preset explanations and usage guidance. The public catalog is generated and planner-validated from curated definitions. Chrome, Firefox and WebKit browser checks, keyboard navigation and automated accessibility scans pass. Manual screen-reader/device checks remain Phase 9 gates.
 
 7. **Website selection builder — implemented locally for the first slice.**
    Bounded create/add modes, reviewed optional choices, safe project controls, human-readable review, one copyable command and equivalent validated file fallback exist. All 45 variants produce matching token/file plans through the exact packed local CLI. Confirmation and size boundaries are checked. No public released-CLI bootstrap or production deployment is claimed.
 
-8. **Beginner usability and safety validation — partial; current website phase.**
-   The local validation slice fixes linked field errors, review-panel layout and context navigation. The how-to page gives the exact local artifact setup steps. Full browser qualification has passed across Chrome, Firefox and WebKit on macOS 15. At the owner's request, five scripted beginner-style journeys replace the planned participant gate for this phase; **0/5 people were observed**. Manual screen-reader/device checks, broader maintenance and whole-release safety validation remain open. Scripted tests do not measure beginner comprehension.
+8. **Beginner usability and bounded safety validation — complete for the agreed scripted scope.**
+   Linked field errors, review-panel layout, context navigation and mobile How-to overflow are corrected. The how-to page gives the exact local artifact setup steps. The [clean-source five-profile run](https://github.com/4d696e6b/RepoSetup/actions/runs/37178840138) passed 70/70 browser cases against the pinned CLI, including 25/25 simulated beginner/profile journeys; packed maintenance and cross-platform create/add suites also passed. At the owner's request, five scripted beginner-style journeys replace the planned participant gate for this phase; **0/5 people were observed**. Scripted tests do not measure beginner comprehension. The owner moved manual screen-reader/device checks and combined candidate safety review to Phase 9.
 
 9. **Freeze and qualify the release candidate — not started.**
-   Reconcile final scope/support claims, freeze source/catalog/artifact identities, qualify retained and new workflows on advertised platforms, complete repeated passes/soak under the retained policy, and resolve release-blocking defects. Neither development branch is a frozen qualified 0.3.0 release candidate.
+   Reconcile final scope/support claims, freeze source/catalog/artifact identities, qualify retained and new workflows on advertised platforms, perform manual screen-reader/physical-device checks and a combined candidate safety review, complete repeated passes/soak under the retained policy, and resolve release-blocking defects. Neither development branch is a frozen qualified 0.3.0 release candidate.
 
 10. **Publish and verify delivery — pending Phase 9 and later explicit authorization.**
     Publish the qualified CLI artifact only under an explicit release request. Website deployment requires a separate request. Verify delivered versions, aliases, catalog and export behavior and record final artifact identities. Nothing was published during the website task.
 
 ## Next steps
 
-For the website, use the [beginner-session protocol](./BEGINNER_SESSIONS_0.3.0.md) to interpret the owner-approved scripted walkthroughs and preserve the optional future human-study template. Run manual screen-reader and physical-device checks. The full automated WebKit gate has passed on macOS 15; local macOS 14 WebKit remains unavailable. Actual apply evidence comes from the qualified packed CLI matrix, not from browser dry-runs alone.
+For the website, use the [beginner-session protocol](./BEGINNER_SESSIONS_0.3.0.md) to interpret the owner-approved scripted walkthroughs and preserve the optional future human-study template. Phase 9 must still include manual screen-reader and physical-device checks. The full automated WebKit gate has passed on macOS 15; local macOS 14 WebKit remains unavailable. Actual apply evidence comes from the qualified packed CLI matrix, not from browser dry-runs alone.
 
-For the combined release, finish Phase 8 manual accessibility/device and whole-release safety review, then freeze and qualify Phase 9. The five simulated beginner journeys and packed maintenance checks are recorded in the detailed status; no human observations are claimed. These are remaining tasks, not authorization to publish or deploy.
+For the combined release, begin Phase 9 by reconciling the branches and candidate scope, then complete manual accessibility/device and candidate-wide safety review alongside frozen-artifact qualification. The five simulated beginner journeys and packed maintenance checks are recorded in the detailed status; no human observations are claimed. Phase 8 completion does not authorize publication or deployment.
 
 ## Evidence and scope of this snapshot
 
