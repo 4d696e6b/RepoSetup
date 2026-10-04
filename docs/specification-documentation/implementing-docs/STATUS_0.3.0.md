@@ -55,7 +55,7 @@ For the combined release, qualify the newer CLI preview/doctor/repair behavior o
 ## Evidence and scope of this snapshot
 
 - Website branch: `codex/0.3.0-website`; exact website commit and clean-source report are recorded in the detailed website status.
-- Website handoff target: committed CLI `84168ce52e7dee19f7ac598e3f111f75a3b0c962`, local development CLI `0.3.0-alpha.1`, `selection-v1`, catalog `0.3.0-cli.3`.
+- Website handoff target: committed CLI `aab82881bd8e4752b99041176cdc6df00a939718`, local development CLI `0.3.0-alpha.1`, `selection-v1`, catalog `0.3.0-cli.4`.
 - CLI status: Phases 1–5 and retained qualification evidence are maintained in `docs/specification-documentation/implementing-docs/STATUS_0.3.0.md` on `codex/0.3.0-cli`. Only the committed curated definition/recipe files needed by the website were synchronized here; neither sibling checkout was edited by this website task.
 - Previous clean-source local qualification at `be8b2bc` passed all six automated steps: **498 workspace unit tests**, build, typecheck, lint, **24 local browser tests and 6 packed handoff tests**. The current Phase 8 setup guidance passes a targeted browser check. The exact newer CLI target `84168ce` packs to SHA-256 `e7bc83beb97e53e3826db0d4fb4d6c9d1a71109f5d146bbfe7d2d02fbcf7b7b5` and passes all six handoff tests; the ignored qualification directory records the clean-source full result for the current HEAD. The full browser matrix remains open: WebKit failed before navigation with `Unknown setting: PushAPIEnabled` on this macOS 14 host. Exact versions and the separate gate are recorded in the detailed website status.
 - Detailed website evidence and remaining gates: [website slice status](./STATUS_WEBSITE_0.3.0.md).

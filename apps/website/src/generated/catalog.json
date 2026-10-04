@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "0.3.0-cli.3",
+  "revision": "0.3.0-cli.4",
   "recipeRevision": "2026-09-23",
   "directVersions": {
     "react-vite": ["create-vite@8.3.0", "react@^19.2.0", "react-dom@^19.2.0", "vite@^7.3.1"],
@@ -32,7 +32,7 @@
       },
       "optionalIds": ["zod", "vitest", "prettier"],
       "evidence": "docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md#phase-25-progress--2026-09-24",
-      "limitations": "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included."
+      "limitations": "Qualified packed create/add and selection handoff only for these React/Vite, Express and FastAPI contexts on Node 24 (Python 3.12/3.13 for FastAPI). No database or deployment is included; 0.3.0 is not released."
     },
     {
       "id": "express-ts-pnpm",
@@ -44,14 +44,14 @@
       },
       "optionalIds": ["zod", "vitest", "prettier"],
       "evidence": "docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md#phase-25-progress--2026-09-24",
-      "limitations": "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included."
+      "limitations": "Qualified packed create/add and selection handoff only for these React/Vite, Express and FastAPI contexts on Node 24 (Python 3.12/3.13 for FastAPI). No database or deployment is included; 0.3.0 is not released."
     },
     {
       "id": "fastapi-uv",
       "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
       "optionalIds": ["pydantic", "pytest", "ruff"],
       "evidence": "docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md#phase-25-progress--2026-09-24",
-      "limitations": "Subset of existing golden recipes; selection transport and minimal variants still need packed Node 24 cross-platform qualification. No database or deployment is included."
+      "limitations": "Qualified packed create/add and selection handoff only for these React/Vite, Express and FastAPI contexts on Node 24 (Python 3.12/3.13 for FastAPI). No database or deployment is included; 0.3.0 is not released."
     }
   ],
   "guidance": [
@@ -545,7 +545,7 @@
       "ids": [],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -574,7 +574,7 @@
       "ids": ["zod"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -588,7 +588,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -615,7 +615,7 @@
       "ids": ["vitest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -629,7 +629,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -668,7 +668,7 @@
       "ids": ["zod", "vitest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -682,7 +682,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -724,7 +724,7 @@
       "ids": ["prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -738,7 +738,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -771,7 +771,7 @@
       "ids": ["zod", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -785,7 +785,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -820,7 +820,7 @@
       "ids": ["vitest", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -834,7 +834,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -880,7 +880,7 @@
       "ids": ["zod", "vitest", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -894,7 +894,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -941,7 +941,7 @@
       "ids": [],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -975,7 +975,7 @@
       "ids": ["zod"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -989,7 +989,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1021,7 +1021,7 @@
       "ids": ["vitest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1035,7 +1035,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1077,7 +1077,7 @@
       "ids": ["zod", "vitest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1091,7 +1091,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1134,7 +1134,7 @@
       "ids": ["prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1148,7 +1148,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1186,7 +1186,7 @@
       "ids": ["zod", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1200,7 +1200,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1239,7 +1239,7 @@
       "ids": ["vitest", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1253,7 +1253,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1300,7 +1300,7 @@
       "ids": ["zod", "vitest", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1314,7 +1314,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1362,7 +1362,7 @@
       "ids": [],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1392,7 +1392,7 @@
       "ids": ["pydantic"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1406,7 +1406,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1429,7 +1429,7 @@
       "ids": ["pytest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1443,7 +1443,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1468,7 +1468,7 @@
       "ids": ["pydantic", "pytest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1482,7 +1482,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1507,7 +1507,7 @@
       "ids": ["ruff"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1521,7 +1521,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1545,7 +1545,7 @@
       "ids": ["pydantic", "ruff"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1559,7 +1559,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1583,7 +1583,7 @@
       "ids": ["pytest", "ruff"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1597,7 +1597,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1626,7 +1626,7 @@
       "ids": ["pydantic", "pytest", "ruff"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1640,7 +1640,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.3",
+        "catalogRevision": "0.3.0-cli.4",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },

@@ -27,6 +27,7 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
   await page.getByRole("link", { name: "Presets", exact: true }).click();
   await page.getByRole("link", { name: "Explore the minimal preset" }).nth(1).click();
   await expect(page.getByRole("heading", { name: "Optional means optional" })).toBeVisible();
+  await expect(page.getByText("Qualified packed create/add", { exact: false })).toBeVisible();
   await page.getByRole("link", { name: "Customize this starting point" }).click();
   await expect(page.locator("input:checked")).toHaveCount(0);
   await expect(page.getByLabel("pytest", { exact: true })).toBeDisabled();
@@ -36,6 +37,7 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
   const decoded = JSON.parse(Buffer.from(command.split(" ").at(-1)!, "base64url").toString());
   expect(decoded.config.integrations).toEqual([{ id: "zod" }]);
   expect(decoded.config.framework.options).toEqual({ typescript: true });
+  expect(decoded.catalogRevision).toBe("0.3.0-cli.4");
   await page.getByLabel("New project folder").fill("../bad");
   await expect(page.getByRole("button", { name: "Copy RepoSetup command" })).toHaveCount(0);
   await expect(page.locator("#selection-error")).toContainText("relative folder");

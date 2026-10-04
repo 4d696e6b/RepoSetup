@@ -1,6 +1,6 @@
 # Selection v1 — first 0.3.0 CLI slice
 
-Status: implemented development contract, not a published or platform-qualified 0.3.0 release. Catalog revision `0.3.0-cli.1`; CLI contract `selection-v1`; envelope `selectionVersion: 1`. Recipe pins remain those of the built-in qualified registry. A stale catalog, envelope version or CLI contract is refused; no remote registry is fetched.
+Status: implemented development contract, not a published 0.3.0 release. Catalog revision `0.3.0-cli.4`; CLI contract `selection-v1`; envelope `selectionVersion: 1`. The bounded create/add and native handoff matrix passed on Node 24 Linux, macOS and Windows with Python 3.12/3.13 for FastAPI; other release gates remain open. Recipe pins remain those of the built-in registry; React/Vite's pinned create-vite generator produces the reviewed template's dependency ranges, captured by actual locks. A stale catalog, envelope version or CLI contract is refused; no remote registry is fetched.
 
 ## Shared foundation
 
@@ -19,7 +19,7 @@ Create wraps an existing schemaVersion 1 config:
 ```json
 {
   "selectionVersion": 1,
-  "catalogRevision": "0.3.0-cli.1",
+  "catalogRevision": "0.3.0-cli.4",
   "cliContract": "selection-v1",
   "mode": "create",
   "config": {
@@ -38,7 +38,7 @@ Add describes capabilities and an expected context; it has no project path, runt
 ```json
 {
   "selectionVersion": 1,
-  "catalogRevision": "0.3.0-cli.1",
+  "catalogRevision": "0.3.0-cli.4",
   "cliContract": "selection-v1",
   "mode": "add",
   "context": {
@@ -61,7 +61,7 @@ Add preserves existing generated-target files, scripts and declared dependency v
 
 Encode UTF-8 JSON as canonical unpadded base64url; no compression. Before decoding, enforce the ASCII alphabet and at most 4,096 token characters. Enforce at most 3,072 decoded bytes, valid UTF-8, JSON nesting of at most 8, at most 16 integrations, no duplicates, and strict schemas/options/context semantics. The command renderer emits only `reposetup create|add --selection TOKEN` with optional `--dry-run`, at most 4,200 characters. It cannot append `--yes`, pipelines, callbacks, scripts or user-controlled launcher text.
 
-These conservative application limits are not a claim that arbitrary bootstrap launchers fit every shell. The alphabet needs no quotes in ordinary shells, but npm/npx bootstrap version pinning and Windows/POSIX launcher transport still require release qualification. Use the locally built CLI for development; do not advertise an unpublished package or a floating bootstrap as a shipped 0.3.0 command.
+These conservative application limits are not a claim that arbitrary bootstrap launchers fit every shell. The alphabet needs no quotes in ordinary shells. Local macOS native-launcher checks cover the exact token and file bounds plus real POSIX confirmation; the Linux/Windows runner results, Windows TTY behavior and npm/npx bootstrap version pinning remain release qualification work. Use the locally built CLI for development; do not advertise an unpublished package or a floating bootstrap as a shipped 0.3.0 command.
 
 File fallback uses the same envelope and semantics:
 
@@ -76,10 +76,16 @@ Files have a 16 KiB byte bound, valid UTF-8 and the same depth/count/schema chec
 
 `create --selection TOKEN` and `add --selection TOKEN` print decoded choices and the actual local typed plan, then ask for confirmation before execution. No TTY means refusal; `--dry-run` works without a TTY and runs no processes or mutations. `--quiet` cannot hide a selection plan. With `--json`, the existing version 1 plan envelope stays on stdout and human-readable decoded choices/progress go to stderr. Empty selection add plans also emit the JSON plan envelope.
 
-Create config/preset/token/file input modes are mutually exclusive. A selection conflicts with a positional name, `--framework`, `--package-manager`, `--typescript` and `--yes`. Add token/file/positional IDs are mutually exclusive; selection inputs conflict with manager overrides and `--yes`. Selection `mode` must match the command. Existing positional add and legacy `--yes` flows remain supported.
+Create config/preset/token/file input modes are mutually exclusive. A selection conflicts with a positional name, `--framework`, `--package-manager`, `--typescript` and `--yes`. Add token/file/positional IDs are mutually exclusive; selection inputs conflict with manager overrides and `--yes`. Selection `mode` must match the command. Existing positional add and legacy `--yes` flows remain supported; an already-satisfied positional `add --json` returns the same version 1 empty-plan envelope as a selection add.
 
 Invalid format/transport/version/catalog/options/flags use `SELECTION_INVALID`, exit 2, with a machine-readable `details.reason` and no echoed raw token, option value or file content. An incompatible detected project uses `UNSUPPORTED_CONTEXT`, exit 3. Existing planner/executor error codes remain in use. No payload field can carry executable commands, arbitrary scripts or real secrets. Tokens are public choices, not encrypted secret storage.
 
+## Packed contract fixtures
+
+Section 2.1 freezes all 24 create and 21 nonempty add variants in [CLI matrix revision `0.3.0-selection.4`](https://github.com/4d696e6b/RepoSetup/blob/aab82881bd8e4752b99041176cdc6df00a939718/tests/e2e/fixtures/selection-v1.matrix.json). Installed-tarball acceptance checks token/file plans, operation fingerprints, preservation, no-op repeats and refusals. The [CLI qualification protocol](https://github.com/4d696e6b/RepoSetup/blob/aab82881bd8e4752b99041176cdc6df00a939718/docs/specification-documentation/implementing-docs/SELECTION_QUALIFICATION_0.3.0.md) defines source/artifact/report identity and the manual single-artifact workflow. Contract reports alone are not installation evidence; the retained real create/add and native platform runs provide separate execution evidence. Local Node 22 checks do not satisfy the Node 24 execution target.
+
+Sections 2.2 and 2.3 add real packed-command create and add execution for every variant, with retained locks/logs and app/tool/doctor/preservation assertions. Local macOS/arm64, Node 24 and Python 3.13 results do not qualify the other platform/Python cells or native prompting. Catalog revision 2 incorporated starter fixes and corrected React template metadata; revision 3 makes generated Express/FastAPI tests available when Vitest/pytest are added later. Regenerate exports from older catalog revisions before applying them. The envelope remains version 1.
+
 ## Remaining qualification
 
-Required later gates include real minimal recipe and every advertised variant execution with the packed CLI on supported Node/Python/platforms, native shell/launcher transport tests at bounds, website/CLI export fixtures and accessibility/usability sessions. General diff previews, intended-stack doctor, repair allowlist and optional roadmap work are not implemented by this slice. The whole release remains incomplete.
+Required later gates include real minimal recipe and every advertised variant execution with the packed CLI on supported Node/Python/platforms, native shell/launcher evidence beyond local macOS and Windows TTY confirmation, legacy golden execution on advertised runners, website/CLI export fixtures and accessibility/usability sessions. General diff previews, intended-stack doctor, repair allowlist and optional roadmap work are not implemented by this slice. The whole release remains incomplete.
