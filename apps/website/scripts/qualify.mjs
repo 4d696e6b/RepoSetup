@@ -63,9 +63,11 @@ const report = {
   checks: [],
   automatedScopePassed: false,
   wholeReleaseQualified: false,
+  acceptedSubstitutions: [
+    "Owner accepted five scripted beginner journeys for Phase 8; participant comprehension remains unmeasured",
+  ],
   remainingGates: [
     scope === "local" ? "WebKit desktop/mobile" : "Full five-profile browser matrix",
-    "Five observed beginner sessions",
     "Manual screen-reader and physical-device checks",
     "Cross-branch release-candidate qualification and repeated passes/soak",
     "Explicit delivery authorization",

@@ -1,6 +1,6 @@
 # 0.3.0 beginner-session protocol
 
-Prepared 2026-10-03 for release Phase 8. **Observed sessions: 0 of at least 5.** This protocol is ready to use; automated browser journeys and agent walkthroughs are not participant evidence. Keep Phase 8 partial until observations, fixes and retests are recorded.
+Prepared 2026-10-03 for release Phase 8. **Observed sessions: 0 of 5 originally planned.** On 2026-10-04 the owner accepted scripted beginner simulations in place of recruiting participants for this phase. The five planned human sessions below remain an optional future study; no participant behavior or comprehension has been observed. The simulations are reproducible browser tasks in `apps/website/tests/browser/simulated-beginner.spec.ts`, with packed CLI application and safety evidence recorded separately. Phase 8 still has independent safety and manual accessibility/device gates.
 
 ## What the sessions must establish
 
@@ -16,7 +16,7 @@ Use the local website and its exact pinned packed CLI. Actual apply tasks requir
 4. Prepare an empty parent directory for create and a qualified disposable project for add. Keep a baseline snapshot of existing files and a documented expected outcome. Do not use an actual personal repository, real secrets or elevated prerequisite installation. Start the browser at goals with no retained draft.
 5. Ensure the pinned local CLI is on PATH. Keep commands visible and let the participant read the plan and decide whether to confirm. The browser never runs the command. Stop when an unexpected mutation, missing prerequisite or unexplained conflict appears; record the blocker rather than repairing it behind the participant's back.
 
-## Five planned sessions
+## Five planned human sessions (optional future study)
 
 These are coverage assignments, not completed results. Use five distinct beginners; additional sessions are welcome. Keep moderator wording neutral and offer help only after recording the difficulty.
 
@@ -57,4 +57,4 @@ Copy this block for each actual session. Until then keep planned slots B01–B05
 
 ## Close the gate honestly
 
-Summarize actual outcomes, recurring terminology problems and remaining coverage gaps. Fix blockers and rerun affected journeys; record the new source/artifact identities. At least five observed complete sessions must cover the required supported journeys. Keep incomplete sessions and adverse results in the evidence; do not rename automated checks as user testing. Phase 8 also retains whole-release safety, manual accessibility and the later maintenance journeys. Update [combined phase progress](./STATUS_0.3.0.md) and [website status](./STATUS_WEBSITE_0.3.0.md) without closing those gates prematurely.
+For the owner-approved simulated path, report B01–B05 as scripted browser checks and pair them with the packed CLI create/add evidence; record source/artifact identities, failures and fixes. These checks establish that the scripted routes and exported choices work, but cannot establish how a new person would understand them. If a human study happens later, summarize actual outcomes, recurring terminology problems and remaining coverage gaps; keep incomplete sessions and adverse results in the evidence. Phase 8 also retains whole-release safety, manual accessibility and maintenance checks. Update [combined phase progress](./STATUS_0.3.0.md) and [website status](./STATUS_WEBSITE_0.3.0.md) without renaming automated checks as participant observations.

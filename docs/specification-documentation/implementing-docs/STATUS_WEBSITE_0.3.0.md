@@ -4,7 +4,7 @@ Date: 2026-10-04. Status: reviewable local website slice implemented and checked
 
 ## Phase position
 
-This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. Work is now in **Phase 8 (beginner usability and broader safety/accessibility validation)**. Across both branches, Phases 1–7 are implemented locally or qualified for their bounded scope; **3 phases remain**. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
+This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. Work is now in **Phase 8 (beginner usability and broader safety/accessibility validation)**. Across both branches, Phases 1–7 are implemented locally or qualified for their bounded scope; **3 phases remain**. The owner accepted scripted beginner simulations instead of recruiting participants for Phase 8; no human usability result is claimed. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.
 
 ## Source isolation
 
@@ -107,6 +107,12 @@ After the on-page setup change, the CLI track committed a symlink-evidence refus
 
 The curated limitation text now reflects the retained bounded packed create/add and selection-handoff results, while still stating that 0.3.0 has not been released. The shared definition comes exactly from committed CLI `aab82881bd8e4752b99041176cdc6df00a939718`; the generated website catalog is `0.3.0-cli.4`, and the local packed CLI at that commit has SHA-256 `6db8e0553f4b451293fbef831f8e2f95254c6c28e49ace476b847d96c7542f9a`. The selection envelope remains version 1 and the 45 typed-plan fingerprints are unchanged. The [clean-source full qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37173720358) at website commit `fa39a12` passed build, unit, typecheck, lint, six packed handoff cases and **45/45 Chrome/Firefox/WebKit browser cases**. The qualification script now names the remaining cross-branch candidate, soak, human-session and delivery gates; the report still leaves whole-release qualification false.
 
+## 2026-10-04 owner-approved simulated beginner journeys
+
+The owner replaced the originally required five observed beginner sessions with scripted beginner-style walkthroughs for this phase. Five browser scenarios now trace the same B01–B05 tasks: minimal React/Vite, deliberate Zod choice, Express with Vitest, FastAPI with pytest, and existing Express add with invalid-input recovery and JSON download. Each starts at the website's goals page, follows visible links and controls, and asserts the exported versioned choices. Desktop Chrome, mobile Chrome and desktop Firefox pass **15/15** scenario runs; the complete local browser suite passes **42/42** cases. The exact packed CLI handoff suite passes **6/6**, covering the generated variant set, plan equivalence and confirmation/refusal boundaries; real create/add application is separately qualified by the CLI branch's six-cell matrix. Workspace unit tests, typecheck, lint and build pass. An initial test-authoring run failed because the test expected a nonexistent `contextId` field and incorrect pytest wording; the assertions were corrected to the documented envelope and visible copy before the passing rerun.
+
+These simulations verify scripted paths and machine-checkable outcomes, not a beginner's understanding or an actual screen reader or physical device. Observed participants remain **0/5**. Manual accessibility/device checks, broader whole-release safety review, candidate freeze and release qualification remain open.
+
 ## Working routes / review
 
 Run from this worktree: `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm website:dev`. Local default: `http://127.0.0.1:5173/`; built preview can use port 4173.
@@ -121,7 +127,7 @@ See [app development and exact artifact setup](../../../apps/website/README.md).
 
 ## Dependencies and gates still open
 
-The committed CLI selection contract is available and the local website handoff is integrated; there is no remaining schema blocker for this slice. The CLI track has since qualified its bounded create/add and native selection transport matrix on Linux, macOS and Windows. Public advertising still depends on a qualified released CLI/version-pinned launcher. Manual screen-reader/physical-device checks, five observed beginner sessions, and later release qualification remain gates. The automated WebKit matrix and packed/platform repair safety suite have passed; the website's packed dry-run/confirmation evidence does not itself establish installation success or freeze transitive dependencies. None of the human gates is silently marked complete.
+The committed CLI selection contract is available and the local website handoff is integrated; there is no remaining schema blocker for this slice. The CLI track has since qualified its bounded create/add and native selection transport matrix on Linux, macOS and Windows. Public advertising still depends on a qualified released CLI/version-pinned launcher. Owner-approved simulated journeys replace the planned participant gate for Phase 8, while manual screen-reader/physical-device checks and later release qualification remain open. The automated WebKit matrix and packed/platform repair safety suite have passed; the website's packed dry-run/confirmation evidence does not itself establish installation success or freeze transitive dependencies. No human-observation result is claimed.
 
 The shared curated catalog still says that minimal variants and selection transport need packed cross-platform qualification. That sentence predates the completed Phase 2 matrix and is now stale. It must be corrected in the committed CLI definitions and resynchronized here before release; the website will not maintain a separate compatibility registry to override it.
 
