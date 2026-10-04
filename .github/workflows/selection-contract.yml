@@ -138,6 +138,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - name: Run core and CLI safety regressions on this platform
+        run: pnpm test
       - run: pnpm typecheck:selection-tests
       - uses: actions/download-artifact@v4
         with:
