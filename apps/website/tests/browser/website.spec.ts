@@ -117,7 +117,10 @@ test("maintenance guidance matches the pinned CLI's preview and narrow repair wo
   ).toBeVisible();
 });
 
-test("keyboard navigation, accessible pages and responsive layout", async ({ page }) => {
+test("keyboard navigation, accessible pages and responsive layout", async ({
+  page,
+  browserName,
+}) => {
   for (const route of [
     "/",
     "/integrations",
@@ -140,7 +143,10 @@ test("keyboard navigation, accessible pages and responsive layout", async ({ pag
   await page.goto("/#/builder/express-ts-pnpm");
   await page.reload();
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.keyboard.press("Tab");
+  // macOS WebKit requires Option+Tab to focus links without Full Keyboard Access enabled.
+  await page.keyboard.press(
+    browserName === "webkit" && process.platform === "darwin" ? "Alt+Tab" : "Tab",
+  );
   await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("main")).toBeFocused();

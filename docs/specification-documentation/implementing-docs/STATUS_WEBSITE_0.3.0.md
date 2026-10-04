@@ -48,6 +48,8 @@ Initial checks exposed missing shared delta/error adapter prerequisites, a skip-
 
 The website how-to now explains the shipped structural `--diff --dry-run` preview and narrow `doctor --config --fix` repair path, including the explicit confirmation step. A browser regression checks those instructions and the Prettier detail page; the local browser suite passes 27 cases across Chrome desktop/mobile and Firefox. The beginner-session protocol now includes planned maintenance follow-ups. Observed participants remain **0/5**, and manual accessibility/device and broader safety/platform gates remain open.
 
+The first macOS 15 full-browser [run](https://github.com/4d696e6b/RepoSetup/actions/runs/37171450050) retained its report and passed 43/45 browser cases. Both WebKit keyboard cases failed at the first link-focus assertion: [macOS WebKit uses Option+Tab](https://bugs.webkit.org/show_bug.cgi?id=272584) for link focus when full keyboard navigation is off. The test now uses that native shortcut on macOS WebKit while retaining actual keyboard activation and focus assertions. A fresh full run is required; the two failures are not counted as passes.
+
 Date: 2026-10-03. **Partial: automated local validation improved; observed sessions 0/5.**
 
 - Invalid project names/folders have individual messages linked by `aria-describedby`, `aria-invalid` and a persistent atomic status region. Focus stays in the edited field; hidden create controls do not block add mode. The invalid review panel stays aligned with the form on desktop. Optional-library group guidance explains empty minimal create versus nonempty add.
