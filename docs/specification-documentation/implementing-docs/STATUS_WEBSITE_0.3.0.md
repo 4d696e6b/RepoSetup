@@ -11,7 +11,7 @@ This slice implements release **Phase 6 (information website)** and **Phase 7 (s
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`.
 - Branch: `codex/0.3.0-website`, created from recorded 0.2.0 candidate `145e167e6b60897da96942545ba6dbd40359ad4a`.
 - The original candidate checkout remains at that commit; its three untracked planning files remain present and unchanged. Their copies here were checked byte-for-byte against the originals.
-- CLI track: the current exact committed target is `8950efb3c09d4705576b9ec0802f0c89d841c91d` on `codex/0.3.0-cli`. Neither sibling branch was merged or edited; only reviewed committed shared files were copied.
+- CLI track: the current exact committed target is `84168ce52e7dee19f7ac598e3f111f75a3b0c962` on `codex/0.3.0-cli`. Neither sibling branch was merged or edited; only reviewed committed shared files were copied.
 - Shared selection schemas/tests/planner, registry semantic validation/export/search and delta safety originally came from committed `626fce9`. Curated beginner definitions and shared recipe/plan fixes now match committed `f99f63a`. The retained website-branch CLI parser is still 0.2.0 and is not the handoff target.
 - AGENTS.md, product requirements and architecture document the owner’s explicit 0.3.0 website exception on this branch.
 
@@ -98,6 +98,8 @@ The first clean-source `qualify:local` run at `07df584` found a retained CLI ide
 The local how-to page now shows the exact `pack:contract`, POSIX PATH and version-check commands needed before pasting the website's selection command. It names the pinned CLI commit, Node 24 prerequisite, artifact evidence path and the published 0.2.0 incompatibility. This removes the previous dependency on finding `apps/website/README.md` from within the static site. A browser regression checks the setup text against the same `handoff.ts` identity used by the packer. The website still does not install or run anything in the browser.
 
 The project recheck also found one open content correction: shared curated limitations still say Phase 2 minimal and transport qualification is pending, although the CLI status records the completed six-cell and native-transport matrix. The correction belongs in the committed CLI curated definitions, then must be regenerated and retested here. This remains open; no separate website compatibility registry was added. Observed sessions remain 0/5.
+
+After the on-page setup change, the CLI track committed a symlink-evidence refusal for narrow repairs at `84168ce52e7dee19f7ac598e3f111f75a3b0c962`. The website now pins that safer committed artifact. Selection definitions and catalog revision `0.3.0-cli.3` are unchanged from `8950efb`; the exact newer tarball SHA-256 is `e7bc83beb97e53e3826db0d4fb4d6c9d1a71109f5d146bbfe7d2d02fbcf7b7b5`. All six packed handoff tests pass against it. This website branch still does not copy the CLI's parser or repair executor.
 
 ## Working routes / review
 

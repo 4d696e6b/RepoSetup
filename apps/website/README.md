@@ -25,7 +25,7 @@ Nothing is published. Vite preview serves the built output locally; it is not a 
 
 ## Matching CLI artifact: required before pasting commands
 
-The displayed `reposetup create|add --selection TOKEN` command is available in the **local development CLI** `rsetup@0.3.0-alpha.1`, exact committed source `8950efb3c09d4705576b9ec0802f0c89d841c91d` on `codex/0.3.0-cli`. It is not advertised as a published CLI. The retained 0.2.0 parser in this website branch does not implement selection flags. Do not use a floating npx/npm bootstrap or the published 0.2.0 binary with these commands.
+The displayed `reposetup create|add --selection TOKEN` command is available in the **local development CLI** `rsetup@0.3.0-alpha.1`, exact committed source `84168ce52e7dee19f7ac598e3f111f75a3b0c962` on `codex/0.3.0-cli`. It is not advertised as a published CLI. The retained 0.2.0 parser in this website branch does not implement selection flags. Do not use a floating npx/npm bootstrap or the published 0.2.0 binary with these commands.
 
 Prepare that exact artifact without changing the CLI or candidate checkout:
 
