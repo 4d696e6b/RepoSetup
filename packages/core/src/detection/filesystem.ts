@@ -1,4 +1,4 @@
-import { access, readFile, stat } from "node:fs/promises";
+import { access, lstat, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 
 import type { DetectionFileSystem } from "../integrations/definition.js";
@@ -9,7 +9,7 @@ export function createNodeDetectionFs(projectRoot: string): DetectionFileSystem 
 
   return {
     async exists(relativePath) {
-      const absolute = resolveSafe(root, relativePath);
+      const absolute = await resolveSafe(root, relativePath);
       if (absolute === undefined) {
         return false;
       }
@@ -23,7 +23,7 @@ export function createNodeDetectionFs(projectRoot: string): DetectionFileSystem 
     },
 
     async readText(relativePath) {
-      const absolute = resolveSafe(root, relativePath);
+      const absolute = await resolveSafe(root, relativePath);
       if (absolute === undefined) {
         return undefined;
       }
@@ -77,7 +77,7 @@ export function createMemoryDetectionFs(files: Record<string, string>): Detectio
   };
 }
 
-function resolveSafe(root: string, relativePath: string): string | undefined {
+async function resolveSafe(root: string, relativePath: string): Promise<string | undefined> {
   if (!isSafeProjectRelativePath(relativePath)) {
     return undefined;
   }
@@ -86,6 +86,18 @@ function resolveSafe(root: string, relativePath: string): string | undefined {
   const relative = path.relative(root, absolutePath);
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
     return undefined;
+  }
+
+  let current = root;
+  for (const segment of ["", ...relative.split(path.sep)]) {
+    if (segment !== "") current = path.join(current, segment);
+    try {
+      if ((await lstat(current)).isSymbolicLink()) return undefined;
+    } catch (error) {
+      if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT")
+        break;
+      return undefined;
+    }
   }
 
   return absolutePath;

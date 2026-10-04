@@ -107,6 +107,7 @@ it("preserves an alternative config and refuses malformed or linked repair targe
   await writeFile(path.join(root, "elsewhere", "outside.txt"), "keep\n");
   await symlink(path.join(root, "elsewhere", "outside.txt"), path.join(root, ".prettierrc"));
   const linked = await run(root, "--fix", "--yes");
-  expect(JSON.parse(linked.stdout).repair).toMatchObject({ planned: 0, executed: 0 });
+  expect(linked.exitCode).not.toBe(0);
+  expect(JSON.parse(linked.stderr).error.code).toBe("PLAN_INVALID");
   expect(await readFile(path.join(root, "elsewhere", "outside.txt"), "utf8")).toBe("keep\n");
 });

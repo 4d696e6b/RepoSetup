@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -55,7 +55,12 @@ function captured() {
   };
 }
 
-async function invoke(root: string, flags: string[], confirmCreate?: () => Promise<boolean>) {
+async function invoke(
+  root: string,
+  flags: string[],
+  confirmCreate?: () => Promise<boolean>,
+  signal?: AbortSignal,
+) {
   const capture = captured();
   const result = await runCli(
     ["--json", "doctor", "--config", "reposetup.json", "--fix", ...flags],
@@ -66,6 +71,7 @@ async function invoke(root: string, flags: string[], confirmCreate?: () => Promi
       resolveExecutable: async (command) => command,
       runProcess: async () => ({ exitCode: 0, stdout: "v24.21.0", stderr: "" }),
       ...(confirmCreate === undefined ? {} : { confirmCreate }),
+      ...(signal === undefined ? {} : { signal }),
     },
   );
   return { ...capture, result };
@@ -136,6 +142,51 @@ describe("doctor --fix", () => {
     });
     expect(changed.result.exitCode).not.toBe(0);
     expect(await readFile(path.join(root, ".prettierrc"), "utf8")).toBe('{"printWidth": 80}\n');
+  });
+
+  it("refuses a changed intended config or dependency declaration after confirmation", async () => {
+    const root = await fixture();
+    const configPath = path.join(root, "reposetup.json");
+    const config = await readFile(configPath, "utf8");
+    const changedConfig = await invoke(root, [], async () => {
+      await writeFile(configPath, JSON.stringify({ ...JSON.parse(config), integrations: [] }));
+      return true;
+    });
+    expect(changedConfig.result.exitCode).not.toBe(0);
+    expect(JSON.parse(changedConfig.err().trim().split("\n").at(-1)!).error.code).toBe(
+      "PLAN_INVALID",
+    );
+    expect(await readdir(root)).not.toContain(".prettierrc");
+
+    await writeFile(configPath, config);
+    const manifestPath = path.join(root, "package.json");
+    const changedManifest = await invoke(root, [], async () => {
+      const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+      manifest.devDependencies.prettier = "2.0.0";
+      await writeFile(manifestPath, JSON.stringify(manifest));
+      return true;
+    });
+    expect(changedManifest.result.exitCode).not.toBe(0);
+    expect(await readdir(root)).not.toContain(".prettierrc");
+  });
+
+  it("honors cancellation before executing a reviewed repair", async () => {
+    const root = await fixture();
+    const controller = new AbortController();
+    const cancelled = await invoke(
+      root,
+      [],
+      async () => {
+        controller.abort();
+        return true;
+      },
+      controller.signal,
+    );
+    expect(cancelled.result.exitCode).not.toBe(0);
+    expect(JSON.parse(cancelled.err().trim().split("\n").at(-1)!).error.code).toBe(
+      "EXECUTION_ABORTED",
+    );
+    expect(await readdir(root)).not.toContain(".prettierrc");
   });
 
   it("does not repair an absent package or a custom recipe version", async () => {
@@ -215,6 +266,16 @@ describe("doctor --fix", () => {
     });
     expect(staleSource.result.exitCode).not.toBe(0);
     expect(await readdir(root)).not.toContain(".env.example");
+
+    const outside = await mkdtemp(path.join(os.tmpdir(), "reposetup-repair-outside-"));
+    roots.push(outside);
+    await writeFile(path.join(outside, "settings.py"), source.content);
+    await rm(path.join(root, "settings.py"));
+    await symlink(path.join(outside, "settings.py"), path.join(root, "settings.py"));
+    const linkedProof = await invoke(root, ["--yes"]);
+    expect(linkedProof.result.exitCode).not.toBe(0);
+    expect(await readdir(root)).not.toContain(".env.example");
+    expect(await readFile(path.join(outside, "settings.py"), "utf8")).toBe(source.content);
   });
 
   it.each([
