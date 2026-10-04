@@ -118,3 +118,39 @@ jobs:
           name: selection-transport-${{ matrix.runner }}-${{ github.sha }}
           path: ${{ runner.temp }}/selection-transport-evidence
           if-no-files-found: error
+
+  maintenance:
+    needs: pack
+    name: ${{ matrix.runner }} / packed maintenance safety
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.pack.outputs.platforms) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck:selection-tests
+      - uses: actions/download-artifact@v4
+        with:
+          name: selection-contract-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/selection-candidate
+      - name: Check repair, refusal and preservation with the same packed artifact
+        run: pnpm exec vitest run --config tests/e2e/vitest.maintenance.config.ts
+        env:
+          REPOSETUP_SELECTION_ARTIFACT_DIR: ${{ runner.temp }}/selection-candidate
+          REPOSETUP_MAINTENANCE_REPORT: ${{ runner.temp }}/maintenance-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selection-maintenance-${{ matrix.runner }}-${{ github.sha }}
+          path: ${{ runner.temp }}/maintenance-report.json
+          if-no-files-found: error

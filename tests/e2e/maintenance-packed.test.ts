@@ -13,6 +13,8 @@ import { prepareSelectionArtifact } from "./selection-artifact.js";
 let artifactRoot: string;
 let artifact: Awaited<ReturnType<typeof prepareSelectionArtifact>>;
 const roots: string[] = [];
+const passed = new Set<string>();
+const expectedCases = ["repair-lifecycle", "unsafe-inputs-and-links"];
 
 beforeAll(async () => {
   artifactRoot = await createTempWorkspace("reposetup-maintenance-pack-");
@@ -22,7 +24,43 @@ afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => cleanupWorkspace(root, keepOnFailure())));
 });
 afterAll(async () => {
-  if (artifactRoot) await cleanupWorkspace(artifactRoot, keepOnFailure());
+  try {
+    if (artifact !== undefined) {
+      const reportPath = process.env.REPOSETUP_MAINTENANCE_REPORT;
+      if (reportPath !== undefined) {
+        await mkdir(path.dirname(reportPath), { recursive: true });
+        await writeFile(
+          reportPath,
+          `${JSON.stringify(
+            {
+              schemaVersion: 1,
+              kind: "maintenance-packed-safety",
+              qualification: false,
+              scope:
+                "Automated maintenance safety evidence; observed beginner and platform-specific manual checks remain separate.",
+              recordedAt: new Date().toISOString(),
+              artifact: artifact.identity,
+              sourceDirty: artifact.sourceDirty,
+              externalArtifact: artifact.externalArtifact,
+              runtime: {
+                ...artifact.tools,
+                platform: process.platform,
+                architecture: process.arch,
+              },
+              expectedCases,
+              passedCases: [...passed].sort(),
+              allPackedCasesPassed: expectedCases.every((id) => passed.has(id)),
+            },
+            null,
+            2,
+          )}\n`,
+          { flag: "wx" },
+        );
+      }
+    }
+  } finally {
+    if (artifactRoot) await cleanupWorkspace(artifactRoot, keepOnFailure());
+  }
 });
 
 async function fixture() {
@@ -87,6 +125,7 @@ it("previews, refuses without consent, repairs once and preserves user files", a
   for (const result of [preview, refusal, confirmed, repeat]) {
     expect(result.stdout + result.stderr).not.toContain("private-fixture-value");
   }
+  passed.add("repair-lifecycle");
 });
 
 it("preserves an alternative config and refuses malformed or linked repair targets", async () => {
@@ -110,4 +149,5 @@ it("preserves an alternative config and refuses malformed or linked repair targe
   expect(linked.exitCode).not.toBe(0);
   expect(JSON.parse(linked.stderr).error.code).toBe("PLAN_INVALID");
   expect(await readFile(path.join(root, "elsewhere", "outside.txt"), "utf8")).toBe("keep\n");
+  passed.add("unsafe-inputs-and-links");
 });
