@@ -86,6 +86,7 @@ main {
   margin: auto;
   padding: 48px 32px 80px;
   min-height: 70vh;
+  overflow-wrap: anywhere;
 }
 h1,
 h2,

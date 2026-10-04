@@ -141,6 +141,7 @@ test("keyboard navigation, accessible pages and responsive layout", async ({
     expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      `${route} must fit the viewport`,
     ).toBe(true);
   }
   await page.goto("/#/builder/express-ts-pnpm");
@@ -165,6 +166,7 @@ test("reflow at narrow mobile, tablet and desktop widths", async ({ page }) => {
     for (const route of [
       "/",
       "/integrations",
+      "/how-to",
       "/builder/react-vite-ts-pnpm",
       "/integrations/prettier",
     ]) {
