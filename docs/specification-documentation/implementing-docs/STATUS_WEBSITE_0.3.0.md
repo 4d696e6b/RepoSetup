@@ -11,7 +11,7 @@ This slice implements release **Phase 6 (information website)** and **Phase 7 (s
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.3.0-website`.
 - Branch: `codex/0.3.0-website`, created from recorded 0.2.0 candidate `145e167e6b60897da96942545ba6dbd40359ad4a`.
 - The original candidate checkout remains at that commit; its three untracked planning files remain present and unchanged. Their copies here were checked byte-for-byte against the originals.
-- CLI track: the current exact committed target is `aab82881bd8e4752b99041176cdc6df00a939718` on `codex/0.3.0-cli`. Neither sibling branch was merged; only reviewed committed shared files were copied.
+- CLI track: the current exact committed target is `b212d35727300325486c70a9a7b0cc54c912d581` on `codex/0.3.0-cli`. Neither sibling branch was merged; only reviewed committed shared files were copied.
 - Shared selection schemas/tests/planner, registry semantic validation/export/search and delta safety originally came from committed `626fce9`. Curated beginner definitions and shared recipe/plan fixes now match committed `f99f63a`. The retained website-branch CLI parser is still 0.2.0 and is not the handoff target.
 - AGENTS.md, product requirements and architecture document the owner’s explicit 0.3.0 website exception on this branch.
 
@@ -51,6 +51,8 @@ The website how-to now explains the shipped structural `--diff --dry-run` previe
 The first macOS 15 full-browser [run](https://github.com/4d696e6b/RepoSetup/actions/runs/37171450050) retained its report and passed 43/45 browser cases. Both WebKit keyboard cases failed at the first link-focus assertion: [macOS WebKit uses Option+Tab](https://bugs.webkit.org/show_bug.cgi?id=272584) for link focus when full keyboard navigation is off. The test now uses that native shortcut on macOS WebKit while retaining actual keyboard activation and focus assertions. The [clean-source rerun](https://github.com/4d696e6b/RepoSetup/actions/runs/37171882957) at `3443437` passed all six qualification checks and **45/45 browser cases** across Chrome desktop/mobile, Firefox desktop and WebKit desktop/mobile. Its retained full report records `automatedScopePassed: true` and `wholeReleaseQualified: false` against pinned CLI `84168ce` and tarball SHA-256 `e7bc83beb97e53e3826db0d4fb4d6c9d1a71109f5d146bbfe7d2d02fbcf7b7b5`. Manual screen-reader and physical-device checks, and observed beginner sessions, remain open.
 
 The invalid-folder visual review found that the selection summary still called `../outside` a new starter location while export was blocked. The summary now directs the user to correct the project name or folder, and switches back to the actual starter location once valid. Linked field errors, focus retention, blocked export and recovery pass **12/12** targeted Chrome desktop/mobile and Firefox checks; typecheck, lint and build pass. The full five-profile clean-source rerun remains required for this correction. Visual inspection used the retained desktop/mobile screenshots; it is not a screen-reader or physical-device check.
+
+The [clean-source five-profile rerun](https://github.com/4d696e6b/RepoSetup/actions/runs/37177775840) at `e2563dc` passed the corrected invalid-input journey and all six qualification steps. A direct Chrome accessibility-tree and visual walkthrough also verified invalid-folder focus, linked error text, blocked export and recovery to a valid command. This remains a browser review, not a VoiceOver or physical-device result.
 
 Date: 2026-10-03. **Partial: automated local validation improved; observed sessions 0/5.**
 
@@ -108,6 +110,8 @@ After the on-page setup change, the CLI track committed a symlink-evidence refus
 ## 2026-10-04 Phase 8 catalog wording correction
 
 The curated limitation text now reflects the retained bounded packed create/add and selection-handoff results, while still stating that 0.3.0 has not been released. The shared definition comes exactly from committed CLI `aab82881bd8e4752b99041176cdc6df00a939718`; the generated website catalog is `0.3.0-cli.4`, and the local packed CLI at that commit has SHA-256 `6db8e0553f4b451293fbef831f8e2f95254c6c28e49ace476b847d96c7542f9a`. The selection envelope remains version 1 and the 45 typed-plan fingerprints are unchanged. The [clean-source full qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37173720358) at website commit `fa39a12` passed build, unit, typecheck, lint, six packed handoff cases and **45/45 Chrome/Firefox/WebKit browser cases**. The qualification script now names the remaining cross-branch candidate, soak, human-session and delivery gates; the report still leaves whole-release qualification false.
+
+The current handoff target has advanced to CLI `b212d35727300325486c70a9a7b0cc54c912d581`, retaining catalog `0.3.0-cli.4` and selection-v1. Its locally packed `rsetup@0.3.0-alpha.1` tarball has SHA-256 `68ed9022d32c4892a43cab5f7545bfc08987e07fb78e4f1a553059705920c16b`; all six exact-artifact handoff tests, typecheck and lint pass. That CLI commit adds exclusive `create_if_missing` writes and canonical project locks; the CLI's three-runner packed contract/maintenance and six-cell golden jobs passed. A full website clean-source rerun against this target remains pending.
 
 ## 2026-10-04 owner-approved simulated beginner journeys
 
