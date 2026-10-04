@@ -123,6 +123,7 @@ test("keyboard navigation, accessible pages and responsive layout", async ({
   page,
   browserName,
 }) => {
+  test.setTimeout(120_000);
   for (const route of [
     "/",
     "/integrations",

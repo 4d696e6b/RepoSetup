@@ -113,6 +113,8 @@ The owner replaced the originally required five observed beginner sessions with 
 
 These simulations verify scripted paths and machine-checkable outcomes, not a beginner's understanding or an actual screen reader or physical device. Observed participants remain **0/5**. Manual accessibility/device checks, broader whole-release safety review, candidate freeze and release qualification remain open.
 
+A subsequent macOS 15 rerun passed all 25 B01–B05 browser/profile combinations, but the existing Firefox all-routes accessibility sweep reached its 60-second test timeout under the expanded parallel load: **69/70 browser cases passed**. No accessibility assertion failed. That sweep now has a 120-second budget; local Chrome/Firefox rerun passes **42/42** and the full five-profile rerun is required before counting this source as qualified.
+
 ## Working routes / review
 
 Run from this worktree: `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm website:dev`. Local default: `http://127.0.0.1:5173/`; built preview can use port 4173.
