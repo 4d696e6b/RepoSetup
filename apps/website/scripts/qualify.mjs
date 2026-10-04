@@ -67,8 +67,8 @@ const report = {
     scope === "local" ? "WebKit desktop/mobile" : "Full five-profile browser matrix",
     "Five observed beginner sessions",
     "Manual screen-reader and physical-device checks",
-    "Real CLI journey/native-platform and maintenance qualification",
-    "Frozen candidate/repeated passes/soak and explicit delivery authorization",
+    "Cross-branch release-candidate qualification and repeated passes/soak",
+    "Explicit delivery authorization",
   ],
 };
 const save = () =>
