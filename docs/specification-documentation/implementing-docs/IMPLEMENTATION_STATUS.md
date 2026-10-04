@@ -309,3 +309,29 @@ See `docs/NPM_TRUSTED_PUBLISHING_SETUP.md`.
 ## Notes
 
 Do not mark Phase 18 complete unless remaining Release Qualification gates in `ACCEPTANCE_TESTS.md` pass. GitHub `v0.1.0` is a source launch, not `1.0.0`.
+
+## 0.3.0 companion website slice — 2026-10-03
+
+Owner-approved local website work is isolated on `codex/0.3.0-website` from recorded candidate `145e167`. The separate workspace app implements goal discovery, nine reviewed integration pages, three minimal preset explanations, bounded create/add selection and exact local packed CLI handoff against committed `626fce9` (`selection-v1`). All 45 offered variants have equivalent packed token/file plans; command confirmation and validated size fallback are checked. Workspace unit tests/typecheck/lint/build and desktop/mobile accessibility/browser checks pass. The 0.2.0 candidate checkout and original planning documents remain unchanged.
+
+See [website status and evidence](./STATUS_WEBSITE_0.3.0.md) for source/artifact identities, working routes, qualification results and open release/platform/usability gates. This is a reviewable local slice, not a published site or complete 0.3.0 release.
+
+## 0.3.0 phase progress summary — 2026-10-03
+
+See [combined phase progress](./STATUS_0.3.0.md): Phases 1, 6 and 7 are implemented locally; 7 of the 10 release phases remain, counting partial phases. Website work is now in Phase 8; CLI checkpoint: Phase 2 qualification, with real create journeys in section 2.2 next. Local implementation is not a completed or published release.
+
+## 0.3.0 website Phase 8 validation slice — 2026-10-03
+
+Linked project-field errors, persistent status feedback and a stable invalid review-panel layout are implemented. Main builder navigation now preserves the current context/draft. The expanded suite covers all 22 routes and clipboard denial, hidden-field recovery, privacy and keyboard/reflow behavior. Fresh checks pass: 483 workspace unit tests, 21 Chrome desktop/mobile and Firefox browser tests, 6 exact packed CLI handoff tests, workspace typecheck/lint/build. The full five-profile browser gate does not pass on this host: Playwright WebKit r2251 cannot create a page on macOS 14.7.2 (`Unknown setting: PushAPIEnabled`). Its tests remain present as an explicit gate for a compatible host.
+
+The [beginner-session protocol](./BEGINNER_SESSIONS_0.3.0.md) is ready; actual observed sessions remain 0/5. Manual screen-reader, physical-device, later maintenance and release qualification gates remain open. No installation, publication or sibling-checkout edits occurred during this validation slice. See [website evidence](./STATUS_WEBSITE_0.3.0.md) for exact versions and limitations.
+
+Further Phase 8 work added a built browser policy, artifact hash/executable-byte verification and a repeatable qualification report with source/catalog/build identities. That historical local scope passed 487 workspace unit, 24 Chrome/Firefox browser and 6 packed handoff tests, plus typecheck/lint/build. A manual-only full browser workflow is authored but not dispatched. Full WebKit and actual participant/screen-reader/device evidence remain open; the phase count stays seven remaining.
+
+## 0.3.0 website catalog sync — 2026-10-03
+
+The CLI track committed local 24/24 real-create qualification and shared recipe/catalog corrections at `f99f63a`. The website now derives catalog revision `0.3.0-cli.2` from those committed curated definitions and targets the exact packed `rsetup@0.3.0-alpha.1` artifact from that SHA. The generated command and file fallback still produce equivalent plans for all 45 supported variants; 498 workspace unit tests, six packed handoff tests, 24 Chrome/Firefox browser tests, build, typecheck and lint pass. Phase 2 remains partial pending real add/repeat and full platform/launcher checks; Phase 8 remains partial pending WebKit and human usability/accessibility evidence. See [current website evidence](./STATUS_WEBSITE_0.3.0.md).
+
+## 0.3.0 website Phase 8 follow-up — 2026-10-04
+
+The current catalog is `0.3.0-cli.3`, and the website's exact packed handoff targets committed CLI `84168ce`. Its selection definitions are unchanged from the previous target, while the newer CLI includes a repair symlink-safety fix. The how-to page now gives local artifact preparation commands directly, with a browser check tied to that target. The project audit also found stale Phase 2 qualification wording in the shared curated catalog and an older website-status gate list; the gate list is corrected, while the curated wording awaits an upstream CLI definition correction and requalification. Seven release phases are implemented locally, Phase 8 is partial, and three phases remain. See [combined progress](./STATUS_0.3.0.md) and [website evidence](./STATUS_WEBSITE_0.3.0.md).

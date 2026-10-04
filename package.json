@@ -38,7 +38,9 @@
     "test:selection:add": "pnpm build && vitest run --config tests/e2e/vitest.selection-add.config.ts",
     "test:selection:transport": "pnpm build && vitest run --config tests/e2e/vitest.selection-transport.config.ts",
     "test:selection:legacy": "pnpm build && vitest run --config tests/e2e/vitest.selection-legacy.config.ts",
-    "test:maintenance:packed": "pnpm build && vitest run --config tests/e2e/vitest.maintenance.config.ts"
+    "test:maintenance:packed": "pnpm build && vitest run --config tests/e2e/vitest.maintenance.config.ts",
+    "website:dev": "pnpm --filter @reposetup/core --filter @reposetup/registry --filter @reposetup/integrations build && pnpm --filter @reposetup/website dev",
+    "website:test": "pnpm --filter @reposetup/website test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

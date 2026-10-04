@@ -287,10 +287,16 @@ See the [phased roadmap to 0.2.0](docs/specification-documentation/implementing-
 - Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
 - Promote integrations to `stable` only with that evidence
 - Configure npm trusted publishing so tag workflows can release without a local token
-- A companion educational website is requested for 0.3.0; its implementation and deployment remain later milestones.
+- The owner-approved 0.3.0 companion website lives in `apps/website`; browser dependencies remain outside core. It is not deployed.
 
 ## License
 
 [MIT](LICENSE)
 
-The first 0.3.0 CLI slice adds curated beginner `info`/goal search, separate minimal starter presets, and bounded declarative create/add selection handoffs. See [selection v1](docs/specification-documentation/product-docs/SELECTION_V1.md) for limits, conflicts and confirmation. Existing schemaVersion 1 configs, legacy presets, positional add and JSON plans remain supported. This slice does not qualify or complete the 0.3.0 release.
+The 0.3.0 CLI development branch adds curated beginner `info`/goal search, separate minimal starter presets, and bounded declarative create/add selection handoffs. See [selection v1](docs/specification-documentation/product-docs/SELECTION_V1.md) for limits, conflicts and confirmation. Existing schemaVersion 1 configs, legacy presets, positional add and JSON plans remain supported.
+
+## Local 0.3.0 companion website
+
+The first reviewable slice lives in `apps/website`: goal discovery, nine reviewed integration pages, three minimal starter explanations, and a bounded create/add selection builder. Run `pnpm install`, `pnpm build`, then `pnpm website:dev`. See [website development and exact CLI handoff](apps/website/README.md) for qualification and local artifact setup.
+
+Website commands target the committed 0.3.0 CLI development contract. The combined candidate has not passed release qualification; no website publication or CLI release is implied.
