@@ -1,6 +1,8 @@
 name: Website qualification (manual)
 
 on:
+  push:
+    branches: [codex/0.3.0-website]
   workflow_dispatch:
 
 permissions:
