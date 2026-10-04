@@ -13,18 +13,21 @@ export function verifyArtifact(local: string, expectedSha256 = handoff.artifactS
   const hash = createHash("sha256").update(readFileSync(tarball)).digest("hex");
   if (evidence.tarballSha256 !== hash || hash !== expectedSha256)
     throw new Error("Packed CLI tarball hash differs from its evidence. Repack it.");
-  const entries = execFileSync("tar", ["-tzf", tarball], { encoding: "utf8" }).trim().split("\n");
+  const entries = parseTarEntries(execFileSync("tar", ["-tzf", tarball], { encoding: "utf8" }));
   const files = entries.filter(
-    (entry) => entry === "package/package.json" || entry.endsWith(".js"),
+    ({ normalized }) => normalized === "package/package.json" || normalized.endsWith(".js"),
   );
-  if (!files.includes("package/dist/bin.js")) throw new Error("Packed CLI entry point is missing.");
-  for (const entry of files) {
-    if (!/^package\/(?:package\.json|dist\/[a-zA-Z0-9_.-]+\.js)$/.test(entry))
+  if (!files.some(({ normalized }) => normalized === "package/dist/bin.js"))
+    throw new Error("Packed CLI entry point is missing.");
+  for (const { raw, normalized } of files) {
+    if (!/^package\/(?:package\.json|dist\/[a-zA-Z0-9_.-]+\.js)$/.test(normalized))
       throw new Error("Unexpected executable path in the packed CLI.");
-    const packed = execFileSync("tar", ["-xOzf", tarball, entry]);
-    const installed = readFileSync(join(local, "installed/node_modules/rsetup", entry.slice(8)));
+    const packed = execFileSync("tar", ["-xOzf", tarball, raw]);
+    const installed = readFileSync(
+      join(local, "installed/node_modules/rsetup", normalized.slice(8)),
+    );
     if (!packed.equals(installed))
-      throw new Error(`Installed CLI differs from its packed artifact: ${entry}`);
+      throw new Error(`Installed CLI differs from its packed artifact: ${normalized}`);
   }
   const metadata = JSON.parse(
     readFileSync(join(local, "installed/node_modules/rsetup/package.json"), "utf8"),
@@ -32,4 +35,18 @@ export function verifyArtifact(local: string, expectedSha256 = handoff.artifactS
   if (metadata.name !== "rsetup" || metadata.version !== handoff.version)
     throw new Error("Installed CLI package identity is invalid.");
   return { commit: handoff.commit, version: handoff.version, tarballSha256: hash };
+}
+
+export function normalizeTarEntry(entry: string): string {
+  return entry.replaceAll("\\", "/").replace(/^(?:\.\/)+/, "");
+}
+
+export function parseTarEntries(listing: string): Array<{ raw: string; normalized: string }> {
+  return listing
+    .trim()
+    .split("\n")
+    .map((line) => {
+      const raw = line.replace(/\r$/, "");
+      return { raw, normalized: normalizeTarEntry(raw) };
+    });
 }

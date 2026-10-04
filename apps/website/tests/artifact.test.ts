@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, expect, it } from "vitest";
 import { handoff } from "../src/handoff.js";
-import { verifyArtifact } from "../scripts/verify-artifact.ts";
+import { normalizeTarEntry, parseTarEntries, verifyArtifact } from "../scripts/verify-artifact.ts";
 
 const roots: string[] = [];
 function fixture() {
@@ -32,6 +32,16 @@ function fixture() {
 }
 afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
+});
+
+it("normalizes portable tar listings before enforcing the executable allowlist", () => {
+  expect(normalizeTarEntry("package/dist/bin.js")).toBe("package/dist/bin.js");
+  expect(normalizeTarEntry("./package\\dist\\bin.js")).toBe("package/dist/bin.js");
+  expect(normalizeTarEntry("package\\..\\outside.js")).toBe("package/../outside.js");
+  expect(parseTarEntries("./package\\dist\\bin.js\r\npackage\\package.json\r\n")).toEqual([
+    { raw: "./package\\dist\\bin.js", normalized: "package/dist/bin.js" },
+    { raw: "package\\package.json", normalized: "package/package.json" },
+  ]);
 });
 
 it("verifies recorded identity, tarball hash and every installed executable chunk", () => {
