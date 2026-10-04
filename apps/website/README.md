@@ -97,7 +97,7 @@ The unusable WebKit r2251 download was subsequently removed to recover space dur
 
 ## Remaining release gates
 
-Publication/version-pinned bootstrap and native Windows/Linux transport are unqualified. WebKit, physical-device checks, screen-reader/manual accessibility, five beginner sessions, and independent minimal recipe/optional subset execution qualification remain release gates. Chrome/Firefox local automated checks pass. Use the [beginner-session protocol](../../docs/specification-documentation/implementing-docs/BEGINNER_SESSIONS_0.3.0.md) for actual observations; none have been recorded. This slice verifies handoff planning and confirmation safety; it does not claim a complete 0.3.0 release or promote any integration to stable. CLI previews/doctor/repair work outside selection-v1 remains on its own track.
+Publication/version-pinned bootstrap remains unqualified. The CLI track has qualified bounded create/add and native selection transport on Linux, macOS and Windows; the website's own packed tests establish plan/confirmation equivalence only. WebKit, physical-device checks, screen-reader/manual accessibility, five beginner sessions, and packed/platform qualification of the newer preview/doctor/repair behavior remain release gates. Chrome/Firefox local automated checks pass. Use the [beginner-session protocol](../../docs/specification-documentation/implementing-docs/BEGINNER_SESSIONS_0.3.0.md) for actual observations; none have been recorded. This slice does not claim a complete 0.3.0 release or promote any integration to stable.
 
 ## Research checked 2026-10-03
 

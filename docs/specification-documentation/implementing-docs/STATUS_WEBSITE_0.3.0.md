@@ -93,6 +93,12 @@ Using Node 24.21.0 and pnpm 12.5.1, the updated tree passed **498 workspace unit
 
 The first clean-source `qualify:local` run at `07df584` found a retained CLI idempotency fixture that expected pytest to be complete without the new recipe's `test_main.py`. The fixture was corrected to include that user-owned test file; no product code or assertion was bypassed. The rerun at clean commit `be8b2bc7a7b5778ffb36dce445453c346a5badac` passed all six qualification steps with `automatedScopePassed: true` and `wholeReleaseQualified: false`. Its ignored report is `apps/website/qualification/2026-10-03T17-11-30.239Z-local/report.json` (UTC timestamp; 2026-10-04 in Bangkok). This evidence qualifies only the named local Chrome/Firefox/packed-contract scope.
 
+## 2026-10-04 Phase 8 handoff guidance
+
+The local how-to page now shows the exact `pack:contract`, POSIX PATH and version-check commands needed before pasting the website's selection command. It names the pinned CLI commit, Node 24 prerequisite, artifact evidence path and the published 0.2.0 incompatibility. This removes the previous dependency on finding `apps/website/README.md` from within the static site. A browser regression checks the setup text against the same `handoff.ts` identity used by the packer. The website still does not install or run anything in the browser.
+
+The project recheck also found one open content correction: shared curated limitations still say Phase 2 minimal and transport qualification is pending, although the CLI status records the completed six-cell and native-transport matrix. The correction belongs in the committed CLI curated definitions, then must be regenerated and retested here. This remains open; no separate website compatibility registry was added. Observed sessions remain 0/5.
+
 ## Working routes / review
 
 Run from this worktree: `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm website:dev`. Local default: `http://127.0.0.1:5173/`; built preview can use port 4173.
@@ -107,6 +113,8 @@ See [app development and exact artifact setup](../../../apps/website/README.md).
 
 ## Dependencies and gates still open
 
-The committed CLI selection contract is available and the local website handoff is integrated; there is no remaining schema blocker for this slice. Public advertising still depends on a qualified released CLI/version-pinned launcher. Native Windows/Linux shell transport, WebKit, manual screen-reader/accessibility checks, five beginner sessions, and independent real add/repeat and wider-platform recipe execution remain gates. Packed dry-run/confirmation evidence does not establish installation success on every context/platform or freeze transitive dependencies. None of these gates is silently marked complete.
+The committed CLI selection contract is available and the local website handoff is integrated; there is no remaining schema blocker for this slice. The CLI track has since qualified its bounded create/add and native selection transport matrix on Linux, macOS and Windows. Public advertising still depends on a qualified released CLI/version-pinned launcher. WebKit, manual screen-reader/accessibility checks, five observed beginner sessions, and packed/platform qualification of the newer preview/doctor/repair behavior remain gates. The website's packed dry-run/confirmation evidence does not itself establish installation success or freeze transitive dependencies. None of these gates is silently marked complete.
+
+The shared curated catalog still says that minimal variants and selection transport need packed cross-platform qualification. That sentence predates the completed Phase 2 matrix and is now stale. It must be corrected in the committed CLI definitions and resynchronized here before release; the website will not maintain a separate compatibility registry to override it.
 
 This task does not implement CLI diff previews, intended-stack doctor, repair, additional integrations/options, system prerequisite installation, production hosting or release publication. Later catalog/contract changes require regeneration and joint packed qualification against a newly committed identity before updating the displayed CLI target.

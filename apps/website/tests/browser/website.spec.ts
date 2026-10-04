@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
 import type { WebsiteCatalog } from "@reposetup/registry";
+import { handoff } from "../../src/handoff.js";
 
 const catalog: WebsiteCatalog = JSON.parse(
   readFileSync(new URL("../../src/generated/catalog.json", import.meta.url), "utf8"),
@@ -94,6 +95,14 @@ test("maintenance guidance matches the pinned CLI's preview and narrow repair wo
   page,
 }) => {
   await page.goto("/#/how-to");
+  await expect(page.getByRole("heading", { name: "Use the matching local CLI" })).toBeVisible();
+  await expect(page.locator("pre code")).toContainText(
+    "pnpm --filter @reposetup/website pack:contract",
+  );
+  await expect(page.locator("pre code")).toContainText(
+    'export PATH="$PWD/apps/website/.local-cli/bin:$PATH"',
+  );
+  await expect(page.getByText(handoff.commit, { exact: false })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Preview before confirming" })).toBeVisible();
   await expect(page.getByText("--diff --dry-run", { exact: false })).toBeVisible();
   await expect(

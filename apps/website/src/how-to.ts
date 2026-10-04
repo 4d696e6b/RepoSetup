@@ -1,5 +1,5 @@
 import { handoff } from "./catalog.js";
-import { section } from "./dom.js";
+import { el, section } from "./dom.js";
 import { intro } from "./ui.js";
 export function howTo(main: HTMLElement) {
   main.append(
@@ -9,12 +9,26 @@ export function howTo(main: HTMLElement) {
       "HOW IT WORKS",
     ),
   );
-  main.append(
-    section(
-      "Use the matching local CLI",
-      `This preview targets rsetup ${handoff.version}, committed at ${handoff.commit}. Have Node 24 and the required manager available. Build/pack the CLI track and install its local tarball using the instructions in apps/website/README.md. Do not use a published 0.2.0 CLI for selection-v1.`,
+  const localCli = section(
+    "Use the matching local CLI",
+    `This preview targets rsetup ${handoff.version}, committed at ${handoff.commit}. Have Node 24, pnpm and the required project manager available. From this repository’s root, prepare the pinned CLI artifact before using a selection command:`,
+  );
+  const setup = el("pre");
+  setup.append(
+    el(
+      "code",
+      'pnpm --filter @reposetup/website pack:contract\nexport PATH="$PWD/apps/website/.local-cli/bin:$PATH"\nreposetup --version',
     ),
   );
+  localCli.append(
+    setup,
+    el(
+      "p",
+      "These commands are for a POSIX shell in the local development checkout. The packer requires the exact committed CLI source and records its artifact hash in apps/website/.local-cli/evidence.json. Keep this shell open when pasting the selection command. The published 0.2.0 CLI does not support selection-v1.",
+      "hint",
+    ),
+  );
+  main.append(localCli);
   main.append(
     section(
       "New projects",
