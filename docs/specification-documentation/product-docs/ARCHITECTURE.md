@@ -61,6 +61,8 @@ Do not prematurely split packages unless boundaries are already clear.
 
 ## 3. Core pipeline
 
+This is the curated installation pipeline. The experimental coding TaskPlan pipeline below is separate and does not change installation planning.
+
 ```text
 Raw user/config input
         ↓
@@ -190,6 +192,8 @@ interface CreateFileOperation {
 
 Prefer explicit merge operations to blind text replacement.
 
+`run_command`, `install_package` and command-bearing `verify` operations are authority supplied by reviewed, built-in installation definitions and package-manager adapters. Their typed representation does not authorize importing executable operations from a model, TaskPlan or configuration. Coding proposals never deserialize into this union.
+
 ## 6. Error model
 
 Use stable error codes.
@@ -213,6 +217,7 @@ VERIFICATION_FAILED
 ```
 
 Errors must separate:
+
 - machine-readable code;
 - human-readable message;
 - contextual metadata;
@@ -221,6 +226,7 @@ Errors must separate:
 ## 7. Determinism
 
 Given:
+
 - same RepoSetup config;
 - same registry version;
 - same target-platform context;
@@ -229,9 +235,12 @@ the logical InstallationPlan must be stable.
 
 Do not use AI to choose commands.
 
+AI-generated coding decomposition is permitted only in the separate TaskPlan domain. Given the same validated draft and frozen policy/source identities, deterministic compilation must produce the same logical TaskPlan. Draft generation and coding responses are not promised to be deterministic. Neither changes the curated installation determinism contract.
+
 ## 8. Platform strategy
 
 Support:
+
 - macOS;
 - Windows;
 - Linux.
@@ -251,3 +260,15 @@ Do not make any v1 architectural decision that requires a server.
 ## 0.3.0 shared presentation contract
 
 The companion website is an owner-approved 0.3.0 scope exception. Core owns strict selection/catalog models and pure planning; integrations own curated guidance/context evidence/presets; registry validates lookup, bounded combinations and public snapshots; CLI owns local input, detection adapters, confirmation/rendering and executor invocation. A later website consumes validated public data rather than the Node-oriented core barrel or any executable remote registry. No browser UI or hosting dependency enters core. See [selection v1](./SELECTION_V1.md).
+
+## Experimental 0.4.0 coding task domain
+
+Milestone A specifies this domain only; no task schemas, commands, provider calls or managed execution are implemented yet. See the [product contract](./TASK_COMPILER_0.4.0.md), [versioned contracts](./TASK_CONTRACTS_0.4.0.md), [support and verification profile](./TASK_SUPPORT_0.4.0.md) and [current-source reuse audit](../implementing-docs/TASK_COMPILER_REUSE_0.4.0.md).
+
+Core owns strict task draft/plan/preference/run validation, requirement coverage, task DAG ordering, context selection policy, capability/effort routing, verification classification and state transitions. CLI owns concrete repository, durable state, provider, filesystem and process adapters plus parsing, review and rendering. Existing registry and integration packages retain curated stack planning; models are not registry integrations. Core acquires no provider SDK or terminal/browser dependency.
+
+The coding pipeline is selected requirements and repository evidence → caller/provider decomposition draft → deterministic coverage/DAG/scope validation → frozen TaskPlan → bounded fresh context → portable handoff or one managed provider → typed text proposal → executor application → trusted verification → accepted outputs or bounded targeted repair. Capability and reasoning effort are independent choices. Handoff enforcement is advisory unless the host supplies qualified enforcement evidence.
+
+Only the executor may execute processes or mutate project files. Managed provider responses can request approved context and propose expected-absent text creation or hash-guarded unique text replacement. They cannot supply shell commands, installation operations, arbitrary patches, deletes or renames. Trusted verification IDs resolve through fixed CLI adapters; task data never supplies executable argv. An individual write may be atomic; a batch is not a transaction and partial effects must be recorded.
+
+The initial experimental managed profile is TypeScript/Node with preinstalled dependencies and npm or pnpm metadata. It needs a clean Git baseline, bounded scopes and trusted check definitions. Local functionality requires no AI credits; managed calls require provider credentials and usage allowance. This slice introduces no dependency installation, automatic rollback, parallel workers, MCP, worktree orchestration or website changes. Legacy stack schemaVersion 1, selection v1, commands, output meanings and exit codes stay compatible.

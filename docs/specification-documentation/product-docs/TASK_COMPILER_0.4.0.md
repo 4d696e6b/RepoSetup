@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 — task compiler contract
 
-Status: implementation preparation, 2026-10-06. No task functionality is implemented by this document.
+Status: Milestone A specifications written, 2026-10-06; supported-runtime validation is still open. No task functionality is implemented by these documents.
 
 ## Product outcome
 
@@ -22,7 +22,7 @@ Use a hybrid weighted toward portable compilation:
 2. Existing agents can supply structured decomposition drafts and consume task packets. Their model/effort and filesystem behavior are advisory unless a qualified adapter reports enforcement.
 3. One experimental managed provider adapter proves actual routing. Its model-facing actions are bounded context requests and typed text-change proposals. The executor alone applies changes and runs trusted checks.
 
-Initially qualify a narrow TypeScript/Node profile with npm or pnpm and preinstalled dependencies. Python stack functionality stays compatible; file-level Python handoff does not imply qualified managed Python execution.
+Initially qualify `managed-ts-node-v1`, a narrow single-package TypeScript/Node 24.x profile with npm or pnpm metadata and preinstalled dependencies. Python stack functionality stays compatible; file-level Python handoff does not imply qualified managed Python execution.
 
 Business logic belongs in core. Concrete repository/state/provider/process adapters belong in CLI. Integration definitions still generate curated typed installation operations, never execute processes. Keep models out of the integration registry; model profiles are a small task-domain catalog.
 
@@ -37,6 +37,8 @@ The compiler must map each selected requirement to tasks and acceptance evidence
 ## Domain contracts to implement
 
 Use strict Zod boundaries and separate versions for task preferences, compiled plans and run state. Preserve the existing integration `VerificationResult`; name task evidence `TaskVerificationResult`.
+
+The normative [versioned contracts](./TASK_CONTRACTS_0.4.0.md) freeze version 1 draft, plan, preference, run and handoff envelopes, identifiers, fields, validation order, states, error codes and dry-run semantics. The initial [support profile](./TASK_SUPPORT_0.4.0.md) freezes managed scope, hard bounds and trusted verification IDs. These specifications govern later implementation; they are not runtime exports or schemas yet.
 
 - **Task:** stable ID, objective, requirement references, kind, constraints, read/write/deny scopes, acceptance criteria, trusted check IDs, output artifact IDs and evidenced qualitative capability features.
 - **TaskDependency:** predecessor, consumer and required artifact IDs.
@@ -86,6 +88,6 @@ Required release evidence includes compatibility regressions, deterministic safe
 
 Defer MCP, public task SDK, editor extension, multiple providers, local models, embeddings, ML, parallel execution, automatic merges/worktrees, general shell workers, dependency installation and cloud orchestration. No website feature is required for this release.
 
-Exact provider/model IDs, supported effort mappings, prices, SDK/runtime versions, retention behavior and external verification argv are research-required before implementation. Consult current official documentation and qualify the selected versions; this plan does not authorize provider spending or claim support.
+The [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md) selects a tool-free OpenAI Responses boundary and records dated official API model IDs, native efforts, observed prices, usage and privacy limits. Exact SDK/runtime pins, account access, effective-configuration reporting and shipping catalog/verification recipes still require qualification before managed implementation/support. The [reuse audit](../implementing-docs/TASK_COMPILER_REUSE_0.4.0.md) records current-source seams and required extensions; the [benchmark protocol](../implementing-docs/TASK_BENCHMARK_0.4.0.md) freezes fixture designs, independent criteria and resource ceilings. None authorizes provider spending or claims implemented support.
 
 See [implementation roadmap](../implementing-docs/ROADMAP_0.4.0.md) and [status](../implementing-docs/STATUS_0.4.0.md).

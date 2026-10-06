@@ -17,14 +17,16 @@ Read the [task compiler contract](../product-docs/TASK_COMPILER_0.4.0.md) and [s
 
 **Objective:** make the architectural and safety decisions concrete before feature code.
 
-- [ ] Reinspect the actual base's preview, intended-doctor, repair, selection and executor seams for reuse.
-- [ ] Reconcile coding TaskPlans versus curated InstallationPlans in product architecture, CLI and security specifications.
-- [ ] Freeze TaskPlan/run/preference versions, states, error codes, draft input, coverage validation and dry-run semantics.
-- [ ] Select the bounded managed project profile and trusted verification authority.
-- [ ] Research the single provider boundary and native effort/usage/privacy behavior using official documentation.
-- [ ] Freeze benchmark fixtures, holdout criteria and baseline resource allowances.
+- [x] Reinspect the actual base's preview, intended-doctor, repair, selection and executor seams for reuse.
+- [x] Reconcile coding TaskPlans versus curated InstallationPlans in product architecture, CLI and security specifications.
+- [x] Freeze TaskPlan/run/preference versions, states, error codes, draft input, coverage validation and dry-run semantics.
+- [x] Select the bounded managed project profile and trusted verification authority.
+- [x] Research the single provider boundary and native effort/usage/privacy behavior using official documentation.
+- [x] Freeze benchmark fixture designs, holdout criteria and baseline resource allowances; fixture source and trial implementation remain in I.
 
 **Likely modules:** specifications only; existing core/CLI boundaries inspected. **Dependencies:** preparation and current-base inspection. **Tests:** define meaningful positive/negative fixtures and legacy regressions. **Done:** explicit contracts with unresolved research recorded; no executable commands from AI or configs.
+
+Acceptance evidence is in the [task contracts](../product-docs/TASK_CONTRACTS_0.4.0.md), [support profile](../product-docs/TASK_SUPPORT_0.4.0.md), [source reuse audit](./TASK_COMPILER_REUSE_0.4.0.md), [provider research](./TASK_PROVIDER_RESEARCH_0.4.0.md) and [benchmark protocol](./TASK_BENCHMARK_0.4.0.md), with reconciled architecture/CLI/security specifications. Documentation checks must pass, all unresolved external qualification must have an owning later milestone, and no feature code/command/version/website changes may be introduced. Per AGENTS.md, required failing typecheck/lint cannot be treated as a completed milestone: the design checklist is satisfied but A remains open for supported-runtime validation as recorded in [status](./STATUS_0.4.0.md). B is the next feature milestone after this gate; it is not implemented by A.
 
 ## Milestone B — schemas and graph validation
 
