@@ -23,6 +23,8 @@ export interface ProcessRunRequest {
   cwd: string;
   signal?: AbortSignal;
   timeoutMs?: number;
+  /** Optional task-check escalation after SIGTERM; installer behavior stays unchanged. */
+  terminationGraceMs?: number;
   onOutput?: (event: ProcessOutputEvent) => void;
 }
 

@@ -179,3 +179,5 @@ export { planSelectionCreate } from "./selection/plan-create.js";
 
 // Coding tasks remain separate from curated installation operations.
 export * from "./tasks/index.js";
+
+export * from "./executor/task-verification.js";

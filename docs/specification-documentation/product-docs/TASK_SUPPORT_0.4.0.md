@@ -255,3 +255,20 @@ universally detect a hostile write restored between observations or host effects
 outside inventoried roots. F must add current revision/application/acceptance
 binding and durable reconciliation; complete closure/profile/platform qualification
 cannot be inferred from the current macOS filesystem fixtures.
+
+## Executor continuation (2026-10-07)
+
+Core now sequences trusted checks and audits, with executor-only process invocation,
+zero-effect dry-run and live in-memory human review requests. Only a result issued by
+this executor can serve as an ephemeral task prerequisite for final-phase checking;
+serialized results and copied requests cannot authenticate acceptance. Durable state
+and application receipt binding are still F. The concrete adapter is not yet wired.
+
+Fixed task recipes bind a 1000 ms termination grace after timeout/cancellation;
+the process adapter then signals the POSIX process group with SIGKILL if it has not
+closed. This opt-in path leaves installer behavior unchanged. Runtime filesystem
+semantics were checked against [Node 24 filesystem documentation](https://nodejs.org/docs/latest-v24.x/api/fs.html)
+and process-group/signalling behavior against [Node child-process documentation](https://nodejs.org/api/child_process.html).
+Signals do not guarantee termination of processes that detach into another group.
+[Vitest pool documentation](https://vitest.dev/config/pool) confirms its default forks
+use child processes; checks remain single-worker, without parallel RepoSetup workers.

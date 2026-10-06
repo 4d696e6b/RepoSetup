@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 implementation status
 
-Last updated: 2026-10-06.
+Last updated: 2026-10-07.
 
 ## Current position
 
@@ -174,6 +174,16 @@ Started at committed `3bb4595` with a clean worktree on the expected branch. E r
 - Validation: default Node remains **22.12.0**; the existing temporary **Node 24.21.0** was checked and used, with pnpm **12.5.1**. Core suite **407 tests across 49 files** passed; full workspace **738 tests across 96 files** passed (core 407, registry 15, integrations 126, CLI 176, existing website 14). Build, typecheck and lint passed; changed-document formatting and Git whitespace checks passed. Existing tar locale warnings remain non-failing. No dependency/system installation, provider call, version/lockfile change, website source change, merge or publication occurred.
 
 Next E work remains executor-owned scratch lifecycle and sequential orchestration, actual runtime/tool/config binding, complete reviewed closure and immutable dependency inventories, authenticated independent acceptance and Linux/profile qualification. This slice closes evaluator gaps before that wiring; it does not close E acceptance.
+
+## Milestone E, fifth slice — serial executor and live review authority
+
+Started at committed `3c3a36f` with a clean worktree. E is still in progress.
+
+- Added the core verification executor: revalidates the plan/catalog/target, performs zero-port-call dry-run, audits project and definitions before/after serial fixed tool checks, always disposes prepared scratch, preserves actual process failures and requests independent review only after all tool/required-test evidence passes. Review decisions must answer the exact live immutable request. Imported/copied records are not authority; final-phase checks require current same-plan/run executor-issued task receipts and a separate phase review. This is ephemeral verification, not F's durable task acceptance/state.
+- Added opt-in process-tree SIGKILL escalation after task-check cancellation/timeout grace; fixed recipes bind a 1000 ms grace. Existing installer requests retain their previous termination behavior. No new command, automatic project rollback, state store or provider call.
+- Added 18 executor cases and a real cancellation case with a process ignoring SIGTERM. Targeted executor tests passed. Initial typecheck found literal-inference and optional-timeout issues; corrected before final validation. Existing temporary Node **24.21.0** checked before validation; pnpm **12.5.1**. Full workspace **757 tests across 97 files** passed (core 425, registry 15, integrations 126, CLI 177, existing website 14); build, typecheck and lint passed. Existing tar locale warnings are non-failing. No install, tracked website/package/lockfile change or publication.
+
+The concrete adapter and closure/scratch qualification remain the next E slice. Generic trusted ports cannot establish their own filesystem/runtime facts. Platform/release qualification remains I/J; do not mark E complete before its concrete acceptance cases pass.
 
 ## Remaining blockers and next milestone
 

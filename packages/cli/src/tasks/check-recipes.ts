@@ -118,6 +118,7 @@ export function createTaskCheckRecipe(input: {
       TEMP: "@temp",
     },
     timeoutMs: 120000,
+    terminationGraceMs: 1000,
     outputBytes: TASK_CHECK_OUTPUT_BYTES,
   });
   return Object.freeze({
@@ -129,6 +130,7 @@ export function createTaskCheckRecipe(input: {
       cwd: input.projectRoot,
       env,
       timeoutMs: 120000,
+      terminationGraceMs: 1000,
     }),
   });
 }
