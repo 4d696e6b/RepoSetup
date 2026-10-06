@@ -4,7 +4,8 @@ Milestone A specification, frozen 2026-10-06. Profile selection is a design deci
 no managed execution or concrete task check adapter is qualified yet.
 The first E slice implements core evidence evaluation and explicit process environments;
 A second E slice adds fixed recipes and bounded report parsing with pinned-tool
-smoke tests on macOS; complete tool/config closure and filesystem audits remain open.
+smoke tests on macOS. A third slice adds read-only file identity, fresh report
+reads and bounded filesystem audits. Complete closure and executor qualification remain open.
 Milestone D provides portable compile/next/status commands with advisory host enforcement;
 these commands do not qualify the managed profile or establish trusted acceptance.
 Use with the [contracts](./TASK_CONTRACTS_0.4.0.md),
@@ -211,3 +212,46 @@ bundled config temporary output. This is entry-point/argument evidence only.
 A production executor must additionally verify complete reviewed definitions,
 read the fresh private report with bounds and audit all verifier effects before
 this evidence can establish acceptance. No task verification command exists yet.
+
+## Milestone E read-only verifier file boundaries
+
+Core owns strict internal snapshot/definition records and identity/comparison
+logic. These are in-memory adapter contracts, not additional task artifact kinds
+or a config/CLI acceptance input. CLI supplies read-only POSIX adapters. A reviewed
+file definition binds the recipe, named canonical roots, runtime/tool/config
+roles and explicit dependency/rule/oracle hashes. Verification of that list is
+not proof that it covers every dynamic import; complete reviewed closure and
+immutable dependency inventories remain an executor qualification requirement.
+
+Project snapshots recursively inventory all reachable project entries without
+following symlinks. Eligible public files are bounded UTF-8 text with privacy
+screening; default exclusions and independently reviewed metadata-only selectors
+retain only metadata. Private/ignored bodies are not hashed or uploaded. Metadata
+overrides cannot replace required input, config, oracle or owned-output content
+bindings. Directory/root metadata changes prevent an unchanged comparison even
+when no surviving file explains an effect. Symlink targets outside the project
+are not part of this inventory; trusted definition roots need separate audits.
+
+The new audit allowance is 16384 entries and depth 32, separately from C's
+4096-entry context inventory. Project text remains at most 65536 bytes. A
+reviewed runtime/tool definition file can be streamed up to 268435456 bytes, with
+536870912 total listed bytes and fixed-size read buffers. These local binary
+hash allowances do not change task source/context/proposal bounds. Exceeding any
+bound blocks the check. Definition readers refuse symlink components, hardlinks,
+credential paths and inconsistent descriptor/path metadata.
+
+A report reader is prepared before launch against an existing canonical 0700
+same-owner executor scratch directory and an absent `unit-report.json`. The
+first read consumes it, including failure. It requires a fresh regular single-link
+file, bounded fatal UTF-8 and unchanged root ownership/permissions/identity.
+Recipe identity replaces per-check scratch locations with fixed logical slots;
+actual scratch creation, launch and cleanup are still executor work. The pinned
+Vitest smoke fixture uses this reader now. No production verification orchestration
+or task verify command is present.
+
+These audits are point-in-time evidence, not atomic snapshots or an OS sandbox.
+They may conservatively block large Git/dependency inventories, and cannot
+universally detect a hostile write restored between observations or host effects
+outside inventoried roots. F must add current revision/application/acceptance
+binding and durable reconciliation; complete closure/profile/platform qualification
+cannot be inferred from the current macOS filesystem fixtures.

@@ -19,6 +19,7 @@ import {
   type TaskToolCheckId,
 } from "./check-recipes.js";
 import { parseTaskToolReport } from "./check-reports.js";
+import { prepareTaskReportReader } from "./verifier-report.js";
 import { createDefaultProcessRunner } from "../execution-adapters.js";
 
 const require = createRequire(import.meta.url);
@@ -72,6 +73,7 @@ async function fixture() {
     const packageFile = require.resolve(`${packages[checkId]}/package.json`);
     const metadata = JSON.parse(await readFile(packageFile, "utf8")) as { version: string };
     expect(metadata.version).toBe(TASK_TOOL_VERSIONS[checkId]);
+    const privateScratch = await mkdtemp(path.join(scratch, "check-"));
     const recipe = createTaskCheckRecipe({
       checkId,
       nodeExecutable: process.execPath,
@@ -84,14 +86,15 @@ async function fixture() {
             ? "eslint.config.mjs"
             : "vitest.config.mjs",
       targets: checkId === "ts.lint" ? ["src/add.ts"] : [],
-      homeDirectory: scratch,
-      temporaryDirectory: scratch,
+      homeDirectory: privateScratch,
+      temporaryDirectory: privateScratch,
     });
+    const prepared =
+      recipe.reportPath === null ? null : await prepareTaskReportReader(privateScratch);
+    if (prepared !== null && !prepared.success) throw new Error(prepared.error.code);
     const result = await createDefaultProcessRunner()(recipe.request);
-    const reportText =
-      recipe.reportPath === null
-        ? undefined
-        : await readFile(recipe.reportPath, "utf8").catch(() => undefined);
+    const read = prepared !== null && prepared.success ? await prepared.data.read() : null;
+    const reportText = read !== null && read.success ? read.data : undefined;
     return {
       recipe,
       result,

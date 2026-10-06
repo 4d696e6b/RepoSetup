@@ -73,7 +73,7 @@ Implemented with explicit reviewed authority, bounded artifacts/context, reusabl
 - [ ] Add environment allowlisting, check-definition identity and verifier-side-effect auditing.
 - [ ] Require applicable tests, acceptance evidence and final phase checks.
 
-First E slice implements pure core evidence evaluation, reviewed criterion/test-manifest bindings and an explicit executor process environment, with 22 new tests. A second slice adds fixed recipe factories, bounded report parsing and 13 tests including actual pinned-tool executions on macOS. E remains open: complete tool/config/oracle closure, safe report-file provenance, filesystem effect audits and executor orchestration are not yet qualified. No task verify/run command is registered.
+First E slice implements pure core evidence evaluation, reviewed criterion/test-manifest bindings and an explicit executor process environment, with 22 new tests. A second slice adds fixed recipe factories, bounded report parsing and 13 tests including actual pinned-tool executions on macOS. A third slice adds read-only file-definition checks, one-use fresh report reads and bounded public-content/excluded-metadata inventories, with 16 new tests and the pinned fixture using fresh report reads. E remains open: complete closure/dependency inventory qualification, authenticated acceptance and executor orchestration are not yet qualified. No task verify/run command is registered.
 
 **Likely modules:** core task verification, CLI verification adapter and executor process port. **Dependencies:** B–D. **Tests:** pass/fail/blocked, zero tests, tampering, missing tools, timeout, leaked environment and unexpected writes. **Done:** model claims cannot establish completion.
 

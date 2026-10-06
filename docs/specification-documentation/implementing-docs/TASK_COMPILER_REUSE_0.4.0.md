@@ -79,3 +79,17 @@ Existing tests to retain in later compatibility runs: [CLI commands](../../../pa
 Milestone B adds strict task contracts and deterministic validation; C adds context ports and the CLI repository adapter; D adds portable CLI/handoff; E adds executor-owned trusted verification; F adds durable run state and scoped text application; G adds the [researched single-provider adapter](./TASK_PROVIDER_RESEARCH_0.4.0.md); H adds routing/repair policy. The [benchmark contract](./TASK_BENCHMARK_0.4.0.md) defines independent fixtures, allowances and later qualification. This document authorizes none of those feature implementations during Milestone A.
 
 The listed tests were inspected, not executed by this audit. Actual documentation validation and supported-runtime/tool availability belong in [STATUS_0.4.0.md](./STATUS_0.4.0.md); historical or ancestor checks cannot qualify new task support. No provider call, install, package version bump, merge, publish or website change occurred in this audit.
+
+## Milestone E implementation follow-up
+
+The historical process gap above is now partly closed: `ProcessRunRequest.env`
+optionally replaces environment inheritance, while omission preserves installer
+behavior. Current task recipe/report and verifier file adapters live under
+`packages/cli/src/tasks`; core holds pure evidence/snapshot/definition validation.
+They reuse canonical task hashes, strict Zod/path rules and the existing process
+port without widening installation operations. New read-only streamed file guards
+serve binary runtime/tool hashes and fresh private report reads; C's source reader
+keeps its separate exclusion/context bounds. Neither adapter creates scratch
+state or executes a check. Executor orchestration, complete definition/inventory
+qualification and durable F acceptance remain open; see the actual evidence in
+[STATUS_0.4.0.md](./STATUS_0.4.0.md).

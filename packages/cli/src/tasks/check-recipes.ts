@@ -25,7 +25,7 @@ export function createTaskCheckRecipe(input: {
   targets: readonly string[];
   homeDirectory: string;
   temporaryDirectory: string;
-}): { request: Readonly<ProcessRunRequest>; reportPath: string | null } {
+}): { request: Readonly<ProcessRunRequest>; reportPath: string | null; recipeRevision: string } {
   for (const absolute of [input.nodeExecutable, input.entryPoint, input.projectRoot]) {
     if (
       !path.isAbsolute(absolute) ||
@@ -90,17 +90,44 @@ export function createTaskCheckRecipe(input: {
       "--update=false",
       `--outputFile=${reportPath}`,
     );
+  const env = createTaskCheckEnvironment({
+    executableDirectory: path.dirname(input.nodeExecutable),
+    homeDirectory: input.homeDirectory,
+    temporaryDirectory: input.temporaryDirectory,
+  });
+  const recipeRevision = taskContentHash({
+    adapter: "task-check-recipes-v1",
+    checkId: input.checkId,
+    toolVersion: TASK_TOOL_VERSIONS[input.checkId],
+    nodeMajor: 24,
+    args: fixed.map((arg) =>
+      arg === config
+        ? `@project/${input.configPath}`
+        : arg.startsWith(`${input.projectRoot}${path.sep}`)
+          ? `@project/${path.relative(input.projectRoot, arg).split(path.sep).join("/")}`
+          : arg.startsWith("--outputFile=")
+            ? "--outputFile=@temp/unit-report.json"
+            : arg,
+    ),
+    environment: {
+      ...env,
+      PATH: "@node-directory",
+      HOME: "@home",
+      TMPDIR: "@temp",
+      TMP: "@temp",
+      TEMP: "@temp",
+    },
+    timeoutMs: 120000,
+    outputBytes: TASK_CHECK_OUTPUT_BYTES,
+  });
   return Object.freeze({
     reportPath,
+    recipeRevision,
     request: Object.freeze({
       command: input.nodeExecutable,
       args: Object.freeze([input.entryPoint, ...fixed]),
       cwd: input.projectRoot,
-      env: createTaskCheckEnvironment({
-        executableDirectory: path.dirname(input.nodeExecutable),
-        homeDirectory: input.homeDirectory,
-        temporaryDirectory: input.temporaryDirectory,
-      }),
+      env,
       timeoutMs: 120000,
     }),
   });
