@@ -73,6 +73,8 @@ Implemented with explicit reviewed authority, bounded artifacts/context, reusabl
 - [ ] Add environment allowlisting, check-definition identity and verifier-side-effect auditing.
 - [ ] Require applicable tests, acceptance evidence and final phase checks.
 
+First E slice implements pure core evidence evaluation, reviewed criterion/test-manifest bindings and an explicit executor process environment, with 22 new tests. E remains open: fixed pinned-tool adapters, report parsing and filesystem effect audits are not yet qualified. No task verify/run command is registered.
+
 **Likely modules:** core task verification, CLI verification adapter and executor process port. **Dependencies:** B–D. **Tests:** pass/fail/blocked, zero tests, tampering, missing tools, timeout, leaked environment and unexpected writes. **Done:** model claims cannot establish completion.
 
 ## Milestone F — durable state and scoped text changes

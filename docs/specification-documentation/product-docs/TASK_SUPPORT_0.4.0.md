@@ -1,7 +1,9 @@
 # RepoSetup 0.4.0 — experimental task support profile
 
 Milestone A specification, frozen 2026-10-06. Profile selection is a design decision;
-no managed execution or verification adapter is implemented or qualified yet.
+no managed execution or concrete task check adapter is qualified yet.
+The first E slice implements core evidence evaluation and explicit process environments;
+pinned-tool resolution, report parsing and filesystem audits remain open.
 Milestone D provides portable compile/next/status commands with advisory host enforcement;
 these commands do not qualify the managed profile or establish trusted acceptance.
 Use with the [contracts](./TASK_CONTRACTS_0.4.0.md),
@@ -176,3 +178,19 @@ Milestone G needs fake boundary tests plus separately authorized live smoke
 evidence; H needs qualified model/effort/cost catalogs; I needs the frozen fixture
 artifacts and platform evidence. Profile constants, check IDs and portable
 envelopes are frozen here; these later gates remain open.
+
+## Milestone E research refresh — 2026-10-06
+
+Current official [TypeScript CLI options](https://www.typescriptlang.org/docs/handbook/compiler-options.html),
+[ESLint CLI reference](https://eslint.org/docs/latest/use/command-line-interface),
+[Vitest CLI](https://vitest.dev/guide/cli) and [Vitest reporters](https://vitest.dev/guide/reporters)
+were rechecked before the first E implementation slice. They document the planned
+explicit config, non-emitting typecheck, lint JSON and single-worker test/report
+options above. Current web documentation can describe newer tools than the pinned
+baseline. Local pinned entry-point executions and report fixtures are still
+required; this refresh supplies no qualification evidence. Open questions remain
+complete config/plugin import closure, Vitest report/test-identity mapping and
+cache/temp behavior across both target platforms. The explicit environment port
+is tested with real Node 24 on macOS; CoreFoundation may add its own
+`__CF_USER_TEXT_ENCODING` variable after launch. Environment filtering is not an
+OS sandbox and does not prevent trusted project code from accessing host files.

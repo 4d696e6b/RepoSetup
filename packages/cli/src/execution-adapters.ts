@@ -187,7 +187,12 @@ export function createDefaultProcessRunner(): ProcessRunner {
 
     const launch =
       process.platform === "win32"
-        ? resolveWindowsLaunch(request.command, request.args, process.env, existsSync)
+        ? resolveWindowsLaunch(
+            request.command,
+            request.args,
+            request.env ?? process.env,
+            existsSync,
+          )
         : { command: request.command, args: request.args };
     if ("error" in launch) {
       return Promise.resolve({ exitCode: 1, stdout: "", stderr: launch.error });
@@ -196,7 +201,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
     return new Promise((resolve) => {
       const child = spawn(launch.command, [...launch.args], {
         cwd: request.cwd,
-        env: process.env,
+        env: request.env ?? process.env,
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,
