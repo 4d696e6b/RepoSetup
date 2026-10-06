@@ -4,6 +4,7 @@ import { compileTaskPlan } from "./compile.js";
 import { evaluateTaskVerification } from "./verification.js";
 import {
   taskVerificationCatalogHash,
+  taskCheckObservationSchema,
   validateTaskVerificationPolicy,
   type TaskCheckObservation,
   type TaskVerificationPolicy,
@@ -45,6 +46,7 @@ function fixture(phase = false) {
       checkedRevision: HASH,
       provenance: "executor",
       disposition: "completed",
+      reportStatus: "valid",
       exitCode: 0,
       timedOut: false,
       truncated: false,
@@ -133,6 +135,53 @@ describe("trusted task evidence evaluation", () => {
     expect(result(input).outcome).toBe("fail");
     expect(result(input).criterionCoverage.every((c) => !c.satisfied)).toBe(true);
   });
+  it.each(["ts.typecheck", "ts.lint", "ts.unit"] as const)(
+    "fails an invalid %s report without replacing its real exit code",
+    (checkId) => {
+      const input = fixture();
+      input.observations.find((o) => o.checkId === checkId)!.reportStatus = "invalid";
+      const output = result(input);
+      expect(output.outcome).toBe("fail");
+      expect(output.checks.find((c) => c.checkId === checkId)).toMatchObject({
+        exitCode: 0,
+        status: "fail",
+        failureCode: "TASK_CHECK_FAILED",
+      });
+      expect(output.criterionCoverage.every((c) => !c.satisfied)).toBe(true);
+    },
+  );
+  it("blocks incomplete reports and rejects observations without report validation", () => {
+    const input = fixture();
+    input.observations[0]!.reportStatus = "incomplete";
+    expect(result(input).checks.find((c) => c.checkId === "ts.typecheck")).toMatchObject({
+      status: "blocked",
+      failureCode: "TASK_OUTPUT_INCOMPLETE",
+      exitCode: 0,
+    });
+    const { reportStatus: omitted, ...unvalidated } = input.observations[0]!;
+    expect(omitted).toBe("incomplete");
+    expect(taskCheckObservationSchema.safeParse(unvalidated).success).toBe(false);
+  });
+  it.each([false, true])(
+    "requires review when independent reviewer evidence is absent (phase=%s)",
+    (phase) => {
+      const input = fixture(phase);
+      const checkId = phase ? "phase.acceptance" : "task.acceptance";
+      input.policy.definitions.find((d) => d.checkId === checkId)!.authority = "reviewer";
+      input.policy.catalogRevision = taskVerificationCatalogHash(input.policy.definitions);
+      input.plan = { ...input.plan, checkCatalogRevision: input.policy.catalogRevision };
+      input.observations = input.observations.filter((o) => o.checkId !== checkId);
+      const output = result(input);
+      expect(output.outcome).toBe("needs_review");
+      expect(output.checks.find((c) => c.checkId === checkId)).toMatchObject({
+        status: "needs_review",
+        failureCode: "TASK_NEEDS_REVIEW",
+      });
+      expect(output.criterionCoverage.every((c) => !c.satisfied)).toBe(true);
+      input.observations = input.observations.filter((o) => o.checkId !== "ts.unit");
+      expect(result(input).outcome).toBe("blocked");
+    },
+  );
   it("fails zero tests despite exit zero", () => {
     const input = fixture();
     const tests = input.observations.find((o) => o.checkId === "ts.unit")!.testInventory!;

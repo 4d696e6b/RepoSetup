@@ -34,6 +34,7 @@ export const taskCheckObservationSchema = z.strictObject({
   checkedRevision: taskHashSchema,
   provenance: z.enum(["executor", "reviewer", "model_claim"]),
   disposition: z.enum(["completed", "unavailable", "interrupted"]),
+  reportStatus: z.enum(["valid", "invalid", "incomplete"]),
   exitCode: taskCounterSchema.nullable(),
   timedOut: z.boolean(),
   truncated: z.boolean(),

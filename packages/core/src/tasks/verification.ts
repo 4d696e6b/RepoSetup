@@ -78,11 +78,11 @@ export function evaluateTaskVerification(input: {
     const base: Check = {
       checkId,
       definitionRevision: definition.definitionRevision,
-      status: "blocked",
+      status: definition.authority === "reviewer" ? "needs_review" : "blocked",
       provenance: definition.authority,
       evidenceArtifactIds: [],
       durationMs: 0,
-      failureCode: "TASK_CHECK_BLOCKED",
+      failureCode: definition.authority === "reviewer" ? "TASK_NEEDS_REVIEW" : "TASK_CHECK_BLOCKED",
       exitCode: null,
       timedOut: false,
       truncated: false,
@@ -119,6 +119,8 @@ export function evaluateTaskVerification(input: {
       else if (observation.exitCode === null || observation.outputHash === null)
         code = "TASK_OUTPUT_INCOMPLETE";
       else if (observation.exitCode !== 0) code = "TASK_CHECK_FAILED";
+      else if (observation.reportStatus === "incomplete") code = "TASK_OUTPUT_INCOMPLETE";
+      else if (observation.reportStatus === "invalid") code = "TASK_CHECK_FAILED";
       else if (
         observation.evidenceArtifactIds.some((id) => !definition.evidenceArtifactIds.includes(id))
       )
