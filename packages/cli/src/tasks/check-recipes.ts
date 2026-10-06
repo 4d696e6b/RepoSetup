@@ -1,6 +1,7 @@
 import path from "node:path";
 import {
   isSafeTaskPath,
+  TASK_VERIFIER_SCRATCH_POLICY,
   isWellFormedTaskString,
   taskContentHash,
   type ProcessRunRequest,
@@ -11,6 +12,11 @@ export const TASK_TOOL_VERSIONS = Object.freeze({
   "ts.typecheck": "5.9.3",
   "ts.lint": "10.11.0",
   "ts.unit": "5.0.1",
+});
+export const TASK_TOOL_ENTRY_PATHS = Object.freeze({
+  "ts.typecheck": "bin/tsc",
+  "ts.lint": "bin/eslint.js",
+  "ts.unit": "vitest.mjs",
 });
 export type TaskToolCheckId = keyof typeof TASK_TOOL_VERSIONS;
 export const TASK_CHECK_OUTPUT_BYTES = 131072;
@@ -79,6 +85,8 @@ export function createTaskCheckRecipe(input: {
       "--configLoader=runner",
       "--maxWorkers=1",
       "--no-file-parallelism",
+      "--cache=false",
+      "--fsModuleCache=false",
     ];
   }
   const reportPath =
@@ -120,6 +128,7 @@ export function createTaskCheckRecipe(input: {
     timeoutMs: 120000,
     terminationGraceMs: 1000,
     outputBytes: TASK_CHECK_OUTPUT_BYTES,
+    scratchPolicy: TASK_VERIFIER_SCRATCH_POLICY,
   });
   return Object.freeze({
     reportPath,

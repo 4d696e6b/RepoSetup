@@ -1,13 +1,13 @@
 # RepoSetup 0.4.0 — experimental task support profile
 
-Milestone A specification, frozen 2026-10-06. Profile selection is a design decision;
-no managed execution or concrete task check adapter is qualified yet.
-The first E slice implements core evidence evaluation and explicit process environments;
-A second E slice adds fixed recipes and bounded report parsing with pinned-tool
-smoke tests on macOS. A third slice adds read-only file identity, fresh report
-reads and bounded filesystem audits. Complete closure and executor qualification remain open.
-Milestone D provides portable compile/next/status commands with advisory host enforcement;
-these commands do not qualify the managed profile or establish trusted acceptance.
+Milestone A specification frozen 2026-10-06; Milestone E implementation updated
+2026-10-07. The internal verification executor and concrete fixed-check adapter are
+implemented. Qualification evidence covers the reviewed macOS arm64 / Node 24.21.0
+single-package fixture, including the TypeScript ESLint parser/plugin. Linux x64,
+packed artifacts and broader project configurations retain their I/J gates.
+Managed coding/provider execution and durable task acceptance remain G and F.
+Milestone D's portable compile/next/status commands remain advisory; no task
+verify/run command or imported evidence acceptance is added by E.
 Use with the [contracts](./TASK_CONTRACTS_0.4.0.md),
 [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md) and
 [benchmark protocol](../implementing-docs/TASK_BENCHMARK_0.4.0.md).
@@ -262,7 +262,7 @@ Core now sequences trusted checks and audits, with executor-only process invocat
 zero-effect dry-run and live in-memory human review requests. Only a result issued by
 this executor can serve as an ephemeral task prerequisite for final-phase checking;
 serialized results and copied requests cannot authenticate acceptance. Durable state
-and application receipt binding are still F. The concrete adapter is not yet wired.
+and application receipt binding are still F. The concrete adapter is now connected through internal executor ports, with its qualification scope below.
 
 Fixed task recipes bind a 1000 ms termination grace after timeout/cancellation;
 the process adapter then signals the POSIX process group with SIGKILL if it has not
@@ -272,3 +272,75 @@ and process-group/signalling behavior against [Node child-process documentation]
 Signals do not guarantee termination of processes that detach into another group.
 [Vitest pool documentation](https://vitest.dev/config/pool) confirms its default forks
 use child processes; checks remain single-worker, without parallel RepoSetup workers.
+
+## Milestone E qualified execution boundary
+
+[Core executor](../../../packages/core/src/executor/task-verification.ts) owns serial
+process invocation and scratch allocation/disposal through CLI ports. It validates
+the plan against independent compilation authority, checks current root/revision
+and catalog identity before effects, checks definitions and project inventories
+around every tool, and requests live independent acceptance only after all mandatory
+tools and reviewed test identities pass. A pending reviewer produces `needs_review`;
+an explicit rejection fails. Missing/unsafe tools, reports or scratch block. All
+non-pass results clear criterion satisfaction. Final-phase verification requires
+same-plan/run/current-revision task records actually issued by this executor, plus
+separate phase review. A JSON copy cannot serve as a receipt. The in-memory overlap
+guard prevents concurrent verification in one executor; F owns cross-process locks,
+application receipts, durable acceptance and recovery.
+
+[Qualified check authority](../../../packages/core/src/tasks/check-qualification.ts)
+is an internal strict version 1 record, outside plan/config/import document kinds.
+Its composite revision binds the reviewed file definition, fixed recipe, canonical
+root mapping, entire immutable dependency inventory, actual running Node 24 version
+and executable, fixed published package entry, package metadata, config, lint targets and required-test identity/file/name bindings. The concrete qualifier compares every binding to actual files and pinned
+TypeScript 5.9.3, ESLint 10.11.0 and Vitest 5.0.1 metadata. TypeScript configs are
+JSON-only here and reject `extends`, project references, composite and incremental
+builds. The runtime executable is hashed as an exact reviewed file; unused npm and
+Corepack shims are not runtime implementation dependencies and are not invoked.
+
+[Closure inventory](../../../packages/cli/src/tasks/verifier-closure.ts) hashes
+all files and metadata under each independently admitted immutable tool/dependency
+root, including additions and removals. Dependency links must resolve inside a
+bound root; their link text and canonical target are recorded. Private paths,
+unknown/special files, aliases, unsafe links, changing roots and exceeded bounds
+block. Complete project `node_modules` must be one of those roots. Sharing an
+inventory read is allowed only within one audit; no hash cache survives a launch
+or audit. These roots reuse the 16384-entry/depth-32 and 256 MiB individual / 512 MiB
+aggregate closure limits. Every config/plugin import must have been independently
+reviewed into the admitted closure; the product does not infer that fact from a
+label or run arbitrary unreviewed JavaScript to discover it. The qualified fixture
+has frozen configs with a reviewed typescript-eslint 8.70.0 parser/plugin import,
+whose complete installed tree is inventoried. Every required unit identity maps to
+a reviewed oracle source file frozen in the file definition; the adapter compares
+the binding set to the independent catalog. Keeping a name while replacing its
+assertions therefore fails definition freshness before process launch. Additional configs/plugins need their
+own review and qualification; this is not a universal static import analyzer.
+
+[Scratch adapter](../../../packages/cli/src/tasks/verifier-scratch.ts) allocates a
+fresh same-owner 0700 directory outside project/definition roots, with separate
+0700 `home` and `tmp` subdirectories. The frozen scratch policy is shared with, and included in, the fixed recipe identity.
+Temporary files are bounded to 4096 entries, depth 32 and 8 MiB total. `tmp` permits transient check reports/SSR/Vite files;
+HOME permits only the pinned Vitest user-data hierarchy. Vitest 5 creates an
+internal local API token there even for this CLI run. The adapter never reads that
+token or copies it into configuration, reports, context or task metadata. Permitted
+scratch is deleted after the check; unsafe/replaced/linked/oversized scratch is
+retained privately and verification blocks for manual inspection. Cleanup never
+removes project files or restores project effects. Root/descriptor checks remain
+point-in-time observations with the trusted-project race/isolation limitations above.
+
+Recipes now force `--cache=false`, `--fsModuleCache=false` and fixed
+`NODE_DISABLE_COMPILE_CACHE=1`, in addition to prior argv/environment limits.
+[Node module documentation](https://nodejs.org/api/module.html#module-compile-cache)
+documents disabling compile-cache writes; the actual Node 24/tool fixture verifies
+it. [Vitest cache documentation](https://vitest.dev/config/cache),
+[fsModuleCache documentation](https://main.vitest.dev/config/fsmodulecache) and
+[Vite cacheDir documentation](https://vite.dev/config/shared-options#cachedir)
+explain the persistent cache switches and location. The reviewed config directs
+Vite cache to the executor's TMPDIR. Temporary SSR files and the user-data token
+were confirmed by inspecting the installed pinned Vitest 5.0.1 implementation and
+its actual filesystem effects; cache flags alone do not disable every temporary
+file. [typescript-eslint package documentation](https://typescript-eslint.io/packages/typescript-eslint/)
+identifies its parser/plugin exports used by the fixture. Installed 8.70.0 peer
+metadata permits ESLint 10 and TypeScript 5.9; actual executions establish the local
+compatibility evidence. No new dependency installation or paid provider call is
+required for local verification.

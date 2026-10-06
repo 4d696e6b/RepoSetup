@@ -93,3 +93,22 @@ keeps its separate exclusion/context bounds. Neither adapter creates scratch
 state or executes a check. Executor orchestration, complete definition/inventory
 qualification and durable F acceptance remain open; see the actual evidence in
 [STATUS_0.4.0.md](./STATUS_0.4.0.md).
+
+## Milestone E executor and adapter completion
+
+The separate [task verification executor](../../../packages/core/src/executor/task-verification.ts)
+reuses the process port, canonical task schemas/identity, pure evidence evaluator
+and verifier snapshot comparison. It never replays installer `run_command`, repair
+operations or configuration scripts. The default CLI process adapter gains only an
+opt-in task termination grace; existing installer behavior stays compatible.
+
+The [qualified CLI adapter](../../../packages/cli/src/tasks/verification-adapter.ts)
+connects fixed recipes, bounded report parsing, fresh report reads, streamed file
+identity and project snapshots. New [closure inventories](../../../packages/cli/src/tasks/verifier-closure.ts)
+and [private scratch](../../../packages/cli/src/tasks/verifier-scratch.ts) extend
+those boundaries. Domain qualification schemas/hash/config policy stay in core;
+actual path, process version, package metadata and filesystem checks stay in CLI.
+Live reviewer callbacks and in-memory issued receipts replace imported provenance
+as ephemeral acceptance authority. F still needs cross-process locking, original
+input/application/owned-postimage binding, durable acceptance and interrupted-state
+reconciliation. No task verify/run command or state mutation is introduced by E.

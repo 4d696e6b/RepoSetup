@@ -272,6 +272,34 @@ describe("task verification executor", () => {
     });
     expect(f.adapter.prepare).not.toHaveBeenCalled();
   });
+  it("blocks overlapping verification and releases its in-memory guard after failure", async () => {
+    const f = fixture();
+    let release: (() => void) | undefined;
+    const paused = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    f.adapter.verifyDefinitions = async () => {
+      await paused;
+      return taskFailure("TASK_CHECK_BLOCKED", "unavailable");
+    };
+    const first = executeTaskVerification(f.input);
+    expect(await executeTaskVerification(f.input)).toMatchObject({
+      success: false,
+      error: { code: "TASK_EXECUTION_LOCKED" },
+    });
+    release!();
+    expect((await first).success).toBe(false);
+    expect(await executeTaskVerification(f.input)).toMatchObject({
+      success: false,
+      error: { code: "TASK_CHECK_BLOCKED" },
+    });
+    expect(
+      await executeTaskVerification({
+        ...f.input,
+        target: { type: "task", taskId: "producer", command: "bad" },
+      } as never),
+    ).toMatchObject({ success: false, error: { code: "TASK_REFERENCE_INVALID" } });
+  });
   it("blocks incomplete cleanup", async () => {
     const f = fixture();
     const prepare = f.adapter.prepare;

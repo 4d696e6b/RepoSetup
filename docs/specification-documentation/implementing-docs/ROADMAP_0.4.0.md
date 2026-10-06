@@ -69,11 +69,24 @@ Implemented with explicit reviewed authority, bounded artifacts/context, reusabl
 
 **Objective:** make acceptance depend on checked evidence.
 
-- [ ] Resolve named checks through fixed, qualified adapters; never execute plan/config commands.
-- [ ] Add environment allowlisting, check-definition identity and verifier-side-effect auditing.
-- [ ] Require applicable tests, acceptance evidence and final phase checks.
+- [x] Resolve named checks through fixed, qualified adapters; never execute plan/config commands.
+- [x] Add environment allowlisting, check-definition identity and verifier-side-effect auditing.
+- [x] Require applicable tests, acceptance evidence and final phase checks.
 
-First E slice implements pure core evidence evaluation, reviewed criterion/test-manifest bindings and an explicit executor process environment, with 22 new tests. A second slice adds fixed recipe factories, bounded report parsing and 13 tests including actual pinned-tool executions on macOS. A third slice adds read-only file-definition checks, one-use fresh report reads and bounded public-content/excluded-metadata inventories, with 16 new tests and the pinned fixture using fresh report reads. E remains open: complete closure/dependency inventory qualification, authenticated acceptance and executor orchestration are not yet qualified. No task verify/run command is registered.
+Implemented as pure evidence evaluation, a serial core executor and qualified concrete
+CLI ports. Composite definitions bind the actual Node runtime, published pinned tool
+entry, config/targets, complete admitted dependency inventory and fixed recipe.
+Fresh private scratch/report handling and project/definition audits prevent verifier
+writes, drift or incomplete reports from passing. Independent live reviewer requests
+and executor-issued current task receipts gate task and final-phase acceptance;
+serialized/model claims cannot substitute. Dry-run invokes no port. The reviewed
+macOS arm64 / Node 24.21.0 fixture includes the TypeScript ESLint parser/plugin,
+real nonzero tests, actual verifier-write retention and distinct phase review.
+Validation and exact limits are in [status](./STATUS_0.4.0.md) and the
+[support boundary](../product-docs/TASK_SUPPORT_0.4.0.md#milestone-e-qualified-execution-boundary).
+Linux/packed/advertised-platform qualification remains I/J. No task verify/run
+command, durable acceptance, scoped application or provider functionality is added
+by E. F is next and is not implemented by this milestone.
 
 **Likely modules:** core task verification, CLI verification adapter and executor process port. **Dependencies:** B–D. **Tests:** pass/fail/blocked, zero tests, tampering, missing tools, timeout, leaked environment and unexpected writes. **Done:** model claims cannot establish completion.
 

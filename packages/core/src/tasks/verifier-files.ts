@@ -10,6 +10,31 @@ export const TASK_VERIFIER_FILE_LIMITS = Object.freeze({
   maxDefinitionFileBytes: 268435456,
   maxDefinitionTotalBytes: 536870912,
 });
+/** Definition-bound temporary effects; bodies of the private Vitest token are never read. */
+export const TASK_VERIFIER_SCRATCH_POLICY = freezeTaskValue({
+  schemaVersion: 1,
+  mode: 0o700,
+  maxEntries: 4096,
+  maxDepth: 32,
+  maxBytes: 8388608,
+  temporaryPrefix: "tmp",
+  homePaths: {
+    darwin: [
+      "home",
+      "home/Library",
+      "home/Library/Application Support",
+      "home/Library/Application Support/vitest",
+      "home/Library/Application Support/vitest/.vitest-secret-token",
+    ],
+    linux: [
+      "home",
+      "home/.local",
+      "home/.local/share",
+      "home/.local/share/vitest",
+      "home/.local/share/vitest/.vitest-secret-token",
+    ],
+  },
+});
 export const taskVerifierSnapshotSchema = z.strictObject({
   schemaVersion: z.literal(1),
   rootIdentity: taskHashSchema,

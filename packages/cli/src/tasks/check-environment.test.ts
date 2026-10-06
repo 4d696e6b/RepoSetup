@@ -29,6 +29,7 @@ describe("explicit task check environment", () => {
       expect(childEnvironment).toEqual(environment);
       expect(result.stdout).not.toContain(marker);
       expect(environment).not.toHaveProperty("NODE_OPTIONS");
+      expect(environment.NODE_DISABLE_COMPILE_CACHE).toBe("1");
       expect(environment).not.toHaveProperty("HTTP_PROXY");
       expect(environment).not.toHaveProperty("npm_config_registry");
       expect(Object.isFrozen(environment)).toBe(true);

@@ -171,7 +171,7 @@ Acceptance requires all required checks and criteria to pass, current immutable 
 
 `evaluateTaskVerification` consumes a previously validated plan, this reviewed policy, trusted in-memory check observations and a complete executor audit. Required tests come from the catalog, never an execution report. Observations carry revision, provenance, disposition, required report validation status (`valid`, `invalid`, or `incomplete`), actual exit/timeout/overflow, digest, evidence references and complete disjoint test inventories. An invalid exit-zero report fails without synthesizing an exit code; incomplete reports block. Missing reviewer-authority evidence requires review, while missing executor observations block. Report status is supplied only by the trusted adapter and does not authenticate itself. Unit success requires nonzero execution, every required test passing and no failed/skipped/todo/focused tests. Generic check success alone cannot satisfy a criterion without independently bound evidence. Task and final-phase targets each require applicable typecheck, lint, unit and independent acceptance checks. Audit incompleteness blocks; project writes, revision drift or unconfirmed immutable inputs prevent pass. Any non-pass clears satisfied criterion claims in the resulting immutable hashed record.
 
-These functions do not authenticate a serialized provenance label or execute a check. Caller-supplied snapshots, model/config output and parsed verification records cannot become trusted observations. The actual executor must produce audits/observations through qualified adapters. E currently supplies the domain evaluation and explicit environment port; fixed CLI recipe factories and bounded report parsing now have pinned-tool smoke tests on macOS, and read-only definition/report-file/inventory boundaries have tests. Complete closure and executor qualification is still pending. No CLI command imports observations for acceptance, and no task state or artifact is accepted by this evaluator. F must bind original input to application receipts, current owned postimages and durable acceptance before advancing dependents.
+These functions do not authenticate a serialized provenance label or execute a check. Caller-supplied snapshots, model/config output and parsed verification records cannot become trusted observations. The actual executor must produce audits/observations through qualified adapters. E supplies the domain evaluator, serial core executor and concrete qualified CLI ports, including complete admitted dependency inventories, exact runtime/tool/config binding, fresh private scratch/report handling and live reviewer authority. Actual qualification is limited to the reviewed macOS/Node 24 fixture described in the support document; wider platform/config and packed qualification remains I/J. No CLI command imports observations for acceptance, and no task state or artifact is accepted by this evaluator. F must bind original input to application receipts, current owned postimages and durable acceptance before advancing dependents.
 
 ### Internal verifier file contracts
 
@@ -334,3 +334,28 @@ Missing decomposition is unresolved rather than generated. Host facts requiring 
 Frozen v1 task shapes do not authorize automatic rollback, dependency/system software installation, parallel execution, multiple providers, MCP, arbitrary commands, local models, executable plugins, websites, automatic commits/merges/worktrees or cloud orchestration. Those require separate product decisions and contracts.
 
 Provider-specific model/effort mappings, actual supported SDK/runtime pins, price/retention behavior and exact trusted verification tool recipes remain qualified evidence owned by the linked research/support records. Unqualified managed catalog entries cannot be enabled just because this schema permits their logical IDs. Research questions about future portability, retention or provider behavior do not create optional bypasses: they block the affected later implementation/qualification gate while leaving this contract freeze explicit and complete.
+
+### Milestone E executor receipts and independent review
+
+`executeTaskVerification` revalidates the frozen plan against the independent
+compilation policy. Dry-run returns required check IDs without calling any port,
+allocating an attempt/scratch directory, launching a process or collecting review.
+The adapter factory itself only constructs read-only ports. Real verification runs
+`ts.typecheck`, `ts.lint` and `ts.unit` sequentially with current definition/project
+audits, bounded reports and unconditional scratch disposal. Failures stop subsequent
+checks and prevent review; no automatic project rollback occurs. Live review is
+an injected trusted host capability, never a parsed JSON provenance/approval field.
+The decision must reference the exact immutable request containing plan/run/target,
+original input, checked revision, definition and criterion identities. Missing
+review is `needs_review`; rejection fails; stale/copied requests block. Subsequent
+project/definition audits invalidate stale decisions.
+
+Successful verification records are issued into an in-memory executor receipt set.
+Final-phase checks require a current receipt for every task, on the same plan/run,
+and repeat all mandatory tools plus independent phase acceptance. Serialized/copied
+records cannot authenticate that prerequisite. This deliberately does not accept
+artifacts, advance task states, unblock portable dependents or persist approval.
+F must bind receipts to applied/owned postimages and durable state before those
+transitions exist. The current per-process overlap guard is not a filesystem lock.
+See the [qualified support boundary](./TASK_SUPPORT_0.4.0.md#milestone-e-qualified-execution-boundary)
+for exact closure, runtime, temporary effect and qualification limits.

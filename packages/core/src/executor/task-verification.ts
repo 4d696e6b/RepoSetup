@@ -1,5 +1,5 @@
 import { validateTaskPlan, type TaskCompilationPolicy } from "../tasks/compile.js";
-import { freezeTaskValue } from "../tasks/canonical.js";
+import { freezeTaskValue, taskContentHash } from "../tasks/canonical.js";
 import { taskFailure, type TaskParseResult } from "../tasks/parse.js";
 import { taskHashSchema, taskRunIdSchema, TASK_REQUIRED_CHECK_IDS } from "../tasks/primitives.js";
 import { evaluateTaskVerification } from "../tasks/verification.js";
@@ -12,7 +12,7 @@ import {
   compareTaskVerifierSnapshots,
   type TaskVerifierSnapshot,
 } from "../tasks/verifier-files.js";
-import type { TaskVerificationResult } from "../tasks/evidence-schema.js";
+import { taskVerificationSchema, type TaskVerificationResult } from "../tasks/evidence-schema.js";
 import type { ProcessRunRequest, ProcessRunResult, ProcessRunner } from "./types.js";
 
 export type TaskToolEvidence = Pick<
@@ -50,6 +50,7 @@ export interface TaskVerificationAdapter {
 export type TaskVerificationExecution =
   { dryRun: true; checkIds: string[] } | { dryRun: false; verification: TaskVerificationResult };
 const issued = new WeakSet<TaskVerificationResult>();
+const verifyingProjects = new Set<string>();
 
 /** Only this executor invokes tool processes and allocates/disposes adapter scratch. No project rollback. */
 export async function executeTaskVerification(input: {
@@ -82,7 +83,10 @@ export async function executeTaskVerification(input: {
       "TASK_CHECK_DEFINITION_CHANGED",
       "Verification catalog differs from the plan.",
     );
-  const target = structuredClone(input.target);
+  const parsedTarget = taskVerificationSchema.shape.target.safeParse(input.target);
+  if (!parsedTarget.success)
+    return taskFailure("TASK_REFERENCE_INVALID", "Verification target is invalid.");
+  const target = freezeTaskValue(parsedTarget.data);
   const task =
     target.type === "task" ? plan.data.tasks.find((t) => t.taskId === target.taskId) : undefined;
   if (
@@ -123,6 +127,13 @@ export async function executeTaskVerification(input: {
       "TASK_ACCEPTANCE_UNCOVERED",
       "Final phase verification requires current executor-issued task evidence.",
     );
+  const projectIdentity = plan.data.project.rootIdentity;
+  if (verifyingProjects.has(projectIdentity))
+    return taskFailure(
+      "TASK_EXECUTION_LOCKED",
+      "Project verification is already active in this executor.",
+    );
+  verifyingProjects.add(projectIdentity);
   const startedAt = new Date().toISOString();
   const started = performance.now();
   const observations: TaskCheckObservation[] = [];
@@ -307,10 +318,15 @@ export async function executeTaskVerification(input: {
           inputRevision: input.inputRevision,
           criterionIds: [...definition.criterionIds],
         });
+        const reviewStarted = performance.now();
         const decision = await input.adapter.review(request);
         if (!decision) continue;
         // The host must answer this exact request; stale or imported claims cannot be rebound.
-        if (decision.request !== request) {
+        if (
+          decision.request !== request ||
+          typeof decision.approved !== "boolean" ||
+          !Array.isArray(decision.evidenceArtifactIds)
+        ) {
           complete = false;
           break;
         }
@@ -324,8 +340,12 @@ export async function executeTaskVerification(input: {
           exitCode: decision.approved ? 0 : 1,
           timedOut: false,
           truncated: false,
-          durationMs: 0,
-          outputHash: before.revision,
+          durationMs: Math.max(0, Math.ceil(performance.now() - reviewStarted)),
+          outputHash: taskContentHash({
+            request,
+            approved: decision.approved,
+            evidenceArtifactIds: decision.evidenceArtifactIds,
+          }),
           evidenceArtifactIds: decision.evidenceArtifactIds,
           testInventory: null,
         });
@@ -363,5 +383,7 @@ export async function executeTaskVerification(input: {
       "TASK_CHECK_BLOCKED",
       "Trusted verification could not establish complete evidence.",
     );
+  } finally {
+    verifyingProjects.delete(projectIdentity);
   }
 }

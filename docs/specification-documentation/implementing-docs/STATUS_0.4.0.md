@@ -4,7 +4,12 @@ Last updated: 2026-10-07.
 
 ## Current position
 
-**Milestones A–D are complete after supported-runtime validation. Milestone E is in progress.** Core schemas/compiler/context and portable compile/next/status commands are implemented. Trusted task verification, durable task effects and managed execution remain absent. See the [roadmap](./ROADMAP_0.4.0.md).
+**Milestones A–E are complete for the reviewed local qualification scope.** Core
+schemas/compiler/context, portable compile/next/status commands and internal trusted
+verification are implemented. E's actual tool/profile evidence is macOS arm64 on
+Node 24.21.0; Linux/packed qualification retains I/J gates. Durable task acceptance,
+project effects and managed provider execution remain absent. See the
+[roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -31,7 +36,7 @@ Last updated: 2026-10-07.
 - [x] B — Strict schemas, pure compilation, requirement/artifact/scope validation and deterministic graph ordering.
 - [x] C — Bounded safe context selection, concrete read-only repository adapter and freshness checks.
 - [x] D — Portable compile/next/status CLI, reviewed phase selection and advisory handoff identities.
-- [ ] E — Trusted verification.
+- [x] E — Serial executor, qualified fixed checks, complete admitted dependency inventories, private scratch/effect audits and live task/final-phase acceptance; reviewed local fixture validated.
 - [ ] F — Durable state and bounded text changes.
 - [ ] G — Single managed provider adapter.
 - [ ] H — Model/effort routing and targeted escalation.
@@ -185,10 +190,91 @@ Started at committed `3c3a36f` with a clean worktree. E is still in progress.
 
 The concrete adapter and closure/scratch qualification remain the next E slice. Generic trusted ports cannot establish their own filesystem/runtime facts. Platform/release qualification remains I/J; do not mark E complete before its concrete acceptance cases pass.
 
+## Milestone E, sixth slice — concrete qualification and acceptance evidence
+
+Started at committed `cfeb84a` on the expected branch with a clean worktree. This
+slice connects core orchestration to concrete CLI ports, with no task verify/run
+command or durable state/application feature.
+
+- Added strict core qualified-check schemas, canonical composite definition
+  identities and non-build TypeScript config/metadata policy. CLI compares actual
+  Node 24 executable/version, published tool entry, pinned package metadata,
+  config/target paths, reviewed file hashes and recipe identity. Required unit
+  identities bind exact file/name pairs and frozen oracle source hashes; replacing
+  assertions while preserving names fails prelaunch freshness. A validly hashed
+  alternative TypeScript entry is rejected. Domain schemas/policy remain core;
+  filesystem/process/runtime facts remain CLI.
+- Added complete admitted immutable dependency inventories: regular-file content
+  hashes, metadata, additions/removals and canonical in-root dependency links,
+  using existing finite closure limits. Project dependencies must be one complete
+  admitted root. Escaping workspace links and private/unbound roots fail closed.
+  Inventory sharing lasts only one audit. Runtime identity freezes the exact Node
+  executable; unused npm/Corepack files are not invoked or treated as dependencies.
+- Added executor-only private scratch lifecycle with separate HOME/TMP roots,
+  bounded fresh reports, permitted transient effects and safe disposal. Unknown,
+  linked, replaced or oversized scratch blocks and is retained privately;
+  unexpected project writes are reported and retained. Forced Node/Vitest cache
+  disabling and reviewed Vite cache redirection prevent project cache artifacts.
+  The frozen scratch limits/layout policy is shared by the recipe hash and adapter,
+  so changing permitted temporary effects invalidates the reviewed definition.
+  Pinned Vitest's transient SSR files and private local API token stay in fresh
+  scratch; token contents are never read or included in task artifacts.
+- Added a per-process overlap guard, strict target validation and revision-bound
+  review decision digests. Final-phase checks require genuine current executor
+  task receipts and independent phase review. Serialized pass/approval claims
+  remain unauthenticated; no task state is advanced and no portable dependent is
+  unlocked. Cross-process locks and durable/application binding remain F.
+- New coverage: six core config/metadata cases, five concrete real-tool/closure/
+  scratch cases and a core concurrency/target case. The isolated single-package
+  fixture copies existing installed tool bytes and removes test-owned workspace
+  links; no package manager install/download occurs. It runs actual TypeScript
+  5.9.3, ESLint 10.11.0, typescript-eslint 8.70.0 parser/plugin and Vitest 5.0.1,
+  proves one independently required unit test executed, then performs distinct
+  task and final-phase live reviewer decisions with no project effects. A separate
+  actual exit-zero lint verifier writes an unexpected project file; verification
+  fails, review is not invoked and the file remains until test-fixture cleanup.
+- Initial qualification failures exposed escaping links, unnecessary private npm
+  config in a broad runtime tree, Node compile-cache writes and Vitest's temporary
+  effects. The executable/dependency boundary and scratch policy were corrected
+  without permitting unbound imports or reading private credentials. Early
+  typecheck/lint issues were fixed by placing Zod boundaries in core and avoiding
+  a control-character regex. Official Node/Vitest/Vite/typescript-eslint sources
+  and installed pinned-source observations are recorded in the support document.
+- Validation on existing temporary **Node 24.21.0**, pnpm **12.5.1**: full workspace
+  **769 tests across 99 files** passed (core 432, registry 15, integrations 126,
+  CLI 182, existing website 14). Final build, typecheck and lint passed. The final
+  affected adapter/recipe/environment rerun passed **11 tests across 3 files**
+  after the published-entry, scratch-policy identity and frozen-oracle guards.
+  Final affected core suites passed **31 tests across 3 files**. Changed-document formatting,
+  **127 local links across 5 documents** and Git whitespace checks passed. Existing tar locale warnings remain non-failing. No system
+  or dependency installation, paid/provider call, package/version/lockfile change,
+  website source change, merge, publish or later milestone implementation occurred.
+
+E qualification covers the reviewed **macOS arm64 / Node 24.21.0** fixture and
+trusted in-memory host authority. Arbitrary configs/plugins, hostile repositories,
+OS isolation, atomic filesystem snapshots and Linux/packed release qualification
+are not established by this fixture. Linux x64 and advertised-platform/packed
+qualification retain their explicit I/J gates; this is not a release-support claim.
+
 ## Remaining blockers and next milestone
 
-No D acceptance blocker remains for the reviewed portable profile. E is open; the evidence evaluator, recipe/report smoke checks and read-only file audits do not qualify complete executor check execution. Handoff is stateless and advisory: dependent tasks cannot proceed on caller claims, host scope/model/budget enforcement is unconfirmed, and real acceptance/effect/attempt accounting remains E/F. Clean Git/snapshot probes, executor pre-effect checks, native token capacity, managed provider/catalog qualification, Linux/packed evidence and benchmark trials remain later gates. The trusted-project privacy/race limitations from C still apply.
+Milestone E has no remaining implementation acceptance blocker for its reviewed
+local profile: fixed published check adapters, explicit environment and identity,
+complete admitted dependency/effect audits, genuine nonzero required tests and
+independent task/final-phase decisions have passing evidence. F must add original-context/application/owned-postimage binding, cross-process
+locks, durable acceptance, partial-effect records and interruption reconciliation.
+Until then portable dependents remain blocked by absent durable acceptance.
+Provider/catalog allowance/routing qualification remains G/H; Linux/packed/held-out
+benchmark and release qualification remain I/J. Trusted-project privacy/race and
+external-host enforcement limits remain documented; no isolation guarantee exists.
 
 ## Next implementation handoff
 
-Stay in the existing worktree and preserve unrelated changes. The owner requires every change committed before continued implementation. Prior commits: A `65a5c41`, A validation `0c7904c`, B `010b38c`, C `47db339`. D was committed as `484455e`; prior E slices are `005d1a6`, `750955c` and `3bb4595`. Commit each E slice before continuing E implementation. **Milestone E — trusted verification** must qualify fixed check adapters, environment/report/effect boundaries, genuine nonzero test execution, independent criterion evidence and current revision binding. Only the executor may invoke processes. Do not implement durable text application, provider calls, routing/escalation or later milestones while completing E.
+Stay in the existing worktree and preserve unrelated changes. Commit this E slice
+before any continuation. Prior commits: A `65a5c41`, A validation `0c7904c`, B
+`010b38c`, C `47db339`, D `484455e`; E `005d1a6`, `750955c`, `3bb4595`, `3c3a36f`
+and `cfeb84a`. E is complete; the next milestone is
+**F — durable state and bounded text changes**. F and later feature work require
+separate continuation authorization; this request completes E only. Only the
+executor may execute processes or mutate project files. Keep local verification
+free of AI-credit requirements and managed calls gated by provider allowance.

@@ -24,5 +24,6 @@ export function createTaskCheckEnvironment(input: {
     LC_ALL: "C",
     TZ: "UTC",
     CI: "1",
+    NODE_DISABLE_COMPILE_CACHE: "1",
   });
 }
