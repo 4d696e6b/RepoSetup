@@ -43,6 +43,10 @@ describe("task scope policy", () => {
     "src/a.pem",
     "src/image.png",
     "src/holdout/oracle.ts",
+    "src/.npmrc",
+    "src/.netrc",
+    "src/.ssh/config",
+    "src/.aws/credentials",
   ])("excludes prohibited read/write target %s", (path) => {
     expect(isTaskPathExcluded(path, "read")).toBe(true);
     expect(isTaskPathExcluded(path, "write")).toBe(true);

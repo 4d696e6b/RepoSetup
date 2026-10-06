@@ -15,6 +15,10 @@ const excludedSegments = new Set([
   ".cache",
   ".reposetup",
   "holdout",
+  ".ssh",
+  ".aws",
+  ".azure",
+  ".gcloud",
 ]);
 const protectedFiles = new Set([
   "package.json",
@@ -47,7 +51,7 @@ export function isTaskPathExcluded(path: string, mode: "read" | "write"): boolea
     parts.includes(".cursor") ||
     parts.includes(".codex") ||
     parts.includes(".hooks") ||
-    /^(?:credentials.*\.json|service-account.*\.json|id_(?:rsa|ed25519)|.*\.(?:pem|key|p12|pfx))$/.test(
+    /^(?:\.netrc|\.npmrc|\.pypirc|\.git-credentials|credentials.*|service-account.*\.json|id_(?:rsa|ed25519)|.*\.(?:pem|key|p12|pfx))$/.test(
       name,
     ) ||
     (name.startsWith(".env") && name !== ".env.example")

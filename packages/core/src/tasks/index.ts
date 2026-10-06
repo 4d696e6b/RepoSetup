@@ -11,3 +11,7 @@ export * from "./scope.js";
 export * from "./graph.js";
 export * from "./compile.js";
 export { canonicalTaskValue, taskContentHash } from "./canonical.js";
+export * from "./context-text.js";
+export * from "./context-types.js";
+export * from "./context-imports.js";
+export * from "./context.js";

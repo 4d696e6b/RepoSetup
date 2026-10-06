@@ -44,11 +44,13 @@ Implemented in `packages/core/src/tasks`; acceptance and actual supported-runtim
 
 **Objective:** produce bounded context with provenance.
 
-- [ ] Add canonical, bounded repository inventory/read interfaces and a concrete CLI adapter.
-- [ ] Implement exclusions, seeds, conservative import expansion, applicable rules and predecessor outputs.
-- [ ] Track context hashes, inclusion reasons, unresolved references and budget overflow.
+- [x] Add canonical, bounded repository inventory/read interfaces and a concrete CLI adapter.
+- [x] Implement exclusions, seeds, conservative import expansion, applicable rules and predecessor outputs.
+- [x] Track context hashes, inclusion reasons, unresolved references and budget overflow.
 
 **Likely modules:** core task context and CLI repository adapter. **Dependencies:** B. **Tests:** relevance, secret exclusions, symlinks, rule applicability, missing references, size limits and stale source. **Done:** fixture tasks receive sufficient permitted context without prohibited material.
+
+Implemented as core context policy with read-only CLI repository ports, byte-exact selection, conservative imports, full applicable rules and pre-application freshness. The [contracts](../product-docs/TASK_CONTRACTS_0.4.0.md#milestone-c-context-policy-revision-1) record finite inventory/source bounds and trusted-project limitations; [status](./STATUS_0.4.0.md) records actual tests. D is next. C adds no task commands, subprocess probes, provider access, persistence or project mutation.
 
 ## Milestone D — portable compilation and handoff
 

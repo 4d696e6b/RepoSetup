@@ -4,7 +4,7 @@ Last updated: 2026-10-06.
 
 ## Current position
 
-**Milestones A and B are complete after supported-runtime validation. Milestone C is next.** Core schemas and pure task-plan compilation are implemented; task commands and managed execution are not. See the [roadmap](./ROADMAP_0.4.0.md).
+**Milestones A–C are complete after supported-runtime validation. Milestone D is next.** Core schemas, pure task-plan compilation and bounded context preparation through a read-only CLI repository adapter are implemented; task commands and managed execution are not. See the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -29,7 +29,7 @@ Last updated: 2026-10-06.
 
 - [x] A — Contracts, support profile, provider research and fixture designs frozen; supported-runtime build/typecheck/lint passed.
 - [x] B — Strict schemas, pure compilation, requirement/artifact/scope validation and deterministic graph ordering.
-- [ ] C — Safe context selection.
+- [x] C — Bounded safe context selection, concrete read-only repository adapter and freshness checks.
 - [ ] D — Portable compilation/handoff CLI.
 - [ ] E — Trusted verification.
 - [ ] F — Durable state and bounded text changes.
@@ -94,10 +94,26 @@ Milestone B validation on 2026-10-06, using temporary Node 24.21.0 and pnpm 12.5
 - Initial targeted testing found one fixture-injection assertion error, and initial lint found unused bindings/regex issues; corrected before final checks. Initial workspace test run found a new CLI test used the wrong constant name and empty-list expectation; corrected the test without altering runtime behavior, then the workspace suite passed. No failing checks remain.
 - Explicit changed-document formatting, local Markdown-link validation and `git diff --check` passed. Package metadata, versions, lockfile, integrations, stack/selection configuration and website sources remain unchanged.
 
+## Milestone C changes and acceptance evidence
+
+- [x] Add core read-only repository ports, byte hashes/strict UTF-8 decoding, exact line selection, privacy screening, conservative local-import discovery and context preparation. Add the concrete filesystem reader in `packages/cli/src/tasks`, separate from inherited detection/execution adapters. No process/provider/fs mutation adapter is called.
+- [x] Seed only selected phase/requirements, writable preimages, capability/expansion references, available nearby tests and required predecessor artifacts. Validate producer/attempt/path identity and current hashes; authentic verifier/state authority remains E/F. Merge ranges without rewriting line endings/BOM or suppressing invalid explicit ranges. Preserve missing optional imports as bounded unresolved metadata; required sources block.
+- [x] Include complete applicable ancestor `AGENTS.md` files, with exact hashes and per-target applicability; rules outside approved read authority block. Bind all sources, selected byte hashes, rules, write preimages/absence and predecessor revisions into deterministic input/context identities. Recheck source/target bytes and current rule inventory before returning or confirming freshness.
+- [x] Bound file reads to 65536 bytes, inventory work/entries to 4096, depth to 32, sources including rules to 128, import expansion to two edges and complete encoded transient packets to 262144 bytes or a lower caller ceiling. Source bodies stay transient; persistent context envelopes contain metadata. Report conservative byte-based token estimates separately from actual provider usage.
+- [x] Enforce strict copied reader authority, canonical root/identity, lexical exclusions, regular-file/single-link checks, no symlink components, bounded `O_NOFOLLOW` reads and descriptor/path identity checks. Extend credential path exclusions and screen bodies before range selection. Record [policy revision 1 and limitations](../product-docs/TASK_CONTRACTS_0.4.0.md#milestone-c-context-policy-revision-1), including current [official Node 24 flag semantics](https://nodejs.org/docs/latest-v24.x/api/fs.html#file-open-constants), trusted-project races, secret-screening limitations, native-token qualification and platform gates.
+
+Milestone C validation on 2026-10-06:
+
+- Confirmed the temporary Node **24.21.0** executable before validation; system Node remains unchanged. Used pnpm 12.5.1 and existing frozen dependencies; no installation was performed in this slice.
+- Targeted context tests: **18 core context tests**, **10 CLI real-filesystem/integration tests**, and **41 scope tests** passed. Fixtures cover relevance, exact Unicode/line bytes, hash/order stability, complete rules, new/changed rules, expected absence, scope/privacy exclusions, secret/binary/UTF-8 rejection, hardlinks/symlinks, root replacement, finite inventory/depth/packet limits, required/unresolved references, predecessor drift and preservation of project bytes.
+- Final workspace `pnpm test`: **657 tests across 87 files** (core 361, registry 15, integrations 126, CLI 141, inherited website 14). `pnpm build`, `pnpm typecheck`, and `pnpm lint` passed under Node 24.21.0. Inherited website build/tests produced no tracked website changes; tar fixtures retain non-failing default-locale warnings.
+- Initial typecheck found optional-field typing and a fixture's overly narrow selector type; initial lint rejected a control-character regex. Corrected these before final checks. The real-reader integration caught a strict inventory-scope mismatch; fixed core to pass only read/deny fields. A range rejection test then caught full-file merging hiding an invalid explicit range; now every range is validated first. No failing check remains.
+- Changed-document Prettier checks, local Markdown links and `git diff --check` passed. Existing commands, config/selection inputs, curated integrations, package metadata/versions, lockfile and website sources remain unchanged. No task command, process probe, dependency-installation feature, provider call, persistent artifact or later-milestone execution feature was added.
+
 ## Remaining blockers and next milestone
 
-No B acceptance blocker remains. Structural records are not proof of filesystem identity, authentic verification, durable state or managed enforcement. C must validate real paths, ranges, hashes, secret exclusions, applicable rules and bounded context through CLI adapters before any task handoff. E/F/G/H/I retain their recorded verification, effects, provider, routing and independent qualification gates. No Linux/platform/packed task qualification or benchmark trial is claimed.
+No C acceptance blocker remains for the reviewed local context profile. This is not a hostile-filesystem sandbox or a universal secret detector. Clean Git baseline/project snapshot probes, immediate executor pre-effect checks, authentic verification/artifact acceptance, durable state, native token capacity and managed enforcement remain later gates. E/F/G/H/I retain their verification, effects, provider, routing and independent qualification work. Linux/platform/packed task qualification and benchmark trials remain unperformed.
 
 ## Next implementation handoff
 
-Stay in the existing 0.4.0 worktree and preserve unrelated changes. The owner authorized continued implementation after committing A and requires every change to be committed. This slice completes B only. The next slice is **Milestone C — safe repository context**, using the frozen contracts and current pure compiler. Keep filesystem adapters in CLI and context-selection policy in core; do not add task commands, provider calls, verification execution or project mutation while implementing C. A was committed as `65a5c41`, its supported-runtime closure as `0c7904c`; commit the validated B implementation and this actual status record before continuing.
+Stay in the existing 0.4.0 worktree and preserve unrelated changes. The owner requires every change to be committed before continued implementation. A was committed as `65a5c41`, its supported-runtime closure as `0c7904c`, and B as `010b38c`. This slice completes C only; commit its implementation and actual status before the next slice, **Milestone D — portable compilation/handoff CLI**. D must use the compiler/context ports, explicit structured decomposition and advisory portable enforcement, preserve existing commands/aliases and demonstrate zero-effect dry-run. Do not implement provider calls, trusted process checks, durable attempt/effect execution or later milestones in D.
