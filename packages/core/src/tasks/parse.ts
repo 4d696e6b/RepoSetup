@@ -11,11 +11,13 @@ import {
   taskProviderReplySchema,
 } from "./handoff-schema.js";
 import { taskPlanDraftSchema, taskPlanSchema } from "./plan-schema.js";
+import { taskReviewSchema } from "./review-schema.js";
 import { taskPreferencesSchema } from "./preferences-schema.js";
 import { executionAttemptSchema, phaseRunSchema } from "./run-schema.js";
 import { isWellFormedTaskString, TASK_DOCUMENT_LIMITS } from "./primitives.js";
 
 export const taskDocumentSchema = z.union([
+  taskReviewSchema,
   taskPlanDraftSchema,
   taskPlanSchema,
   taskPreferencesSchema,
@@ -40,6 +42,7 @@ const codeByKind: Record<string, TaskErrorCode> = {
   phase_run: "TASK_RUN_STATE_INVALID",
   execution_attempt: "TASK_RUN_STATE_INVALID",
   change_set: "TASK_CHANGESET_INVALID",
+  task_review: "TASK_SELECTION_INVALID",
 };
 const identityByKind: Record<string, string> = {
   task_plan: "planId",
@@ -103,6 +106,10 @@ export function parseTaskDocument(input: unknown): TaskParseResult<TaskDocument>
 
 /** No I/O. Decode and reject duplicate (including escaped) keys before schema validation. */
 export function parseTaskJson(input: string | Uint8Array): TaskParseResult<TaskDocument> {
+  const decoded = decodeTaskJson(input);
+  return decoded.success ? parseTaskDocument(decoded.data) : decoded;
+}
+export function decodeTaskJson(input: string | Uint8Array): TaskParseResult<unknown> {
   try {
     if (
       (typeof input === "string" ? Buffer.byteLength(input, "utf8") : input.byteLength) >
@@ -113,7 +120,7 @@ export function parseTaskJson(input: string | Uint8Array): TaskParseResult<TaskD
       typeof input === "string" ? input : new TextDecoder("utf-8", { fatal: true }).decode(input);
     if (!isWellFormedTaskString(text)) throw new Error("unicode");
     checkJsonStructure(text);
-    return parseTaskDocument(JSON.parse(text) as unknown);
+    return { success: true, data: JSON.parse(text) as unknown };
   } catch {
     return taskFailure(
       "TASK_PLAN_INVALID",

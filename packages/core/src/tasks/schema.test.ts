@@ -177,6 +177,10 @@ function documents(): Record<string, unknown>[] {
       contextId: HASH,
       objective: "Implement the input contract.",
       requirementIds: ["req-one"],
+      requirements: [input.phase.requirements[0]!],
+      outputs: input.draft.tasks[0]!.outputs,
+      capabilityRequirements: input.draft.tasks[0]!.capabilityRequirements,
+      effortPreference: { type: "minimum_supported" },
       constraints: [],
       scope: input.draft.tasks[0]!.scope,
       criteria: input.draft.tasks[0]!.criteria,
@@ -199,6 +203,13 @@ function documents(): Record<string, unknown>[] {
     rationale: "No source changes are needed; acceptance still required.",
   };
   return [
+    {
+      kind: "task_review",
+      schemaVersion: 1,
+      phase: input.phase,
+      project: input.project,
+      policy: input.policy,
+    },
     input.draft,
     compiled.data,
     preferences,

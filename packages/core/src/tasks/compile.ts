@@ -1,4 +1,5 @@
-import * as z from "zod";
+import { taskCompilationPolicySchema, type TaskCompilationPolicy } from "./policy-schema.js";
+export { taskCompilationPolicySchema, type TaskCompilationPolicy } from "./policy-schema.js";
 import { canonicalTaskValue, freezeTaskValue, taskContentHash } from "./canonical.js";
 import { orderTaskGraph } from "./graph.js";
 import { parseTaskDocument, parseTaskRecord, taskFailure, type TaskParseResult } from "./parse.js";
@@ -10,26 +11,9 @@ import {
   type TaskPlan,
   type TaskPlanDraft,
 } from "./plan-schema.js";
-import {
-  TASK_CHECK_IDS,
-  TASK_REQUIRED_CHECK_IDS,
-  taskHashSchema,
-  taskPositiveCounterSchema,
-  taskProjectSchema,
-  taskScopeSchema,
-} from "./primitives.js";
+import { TASK_CHECK_IDS, TASK_REQUIRED_CHECK_IDS, taskProjectSchema } from "./primitives.js";
 import { isTaskPathExcluded, taskCanRead, taskCanWrite, taskSelectorContains } from "./scope.js";
 
-export const taskCompilationPolicySchema = z.strictObject({
-  supportProfileId: z.literal("managed-ts-node-v1"),
-  supportProfileRevision: taskPositiveCounterSchema,
-  checkCatalogRevision: taskHashSchema,
-  checkIds: z.array(z.enum(TASK_CHECK_IDS)).min(1).max(5),
-  requiredCheckIds: z.array(z.enum(TASK_REQUIRED_CHECK_IDS)).min(1).max(4),
-  authority: taskScopeSchema,
-  caseSensitivePaths: z.boolean(),
-});
-export type TaskCompilationPolicy = z.infer<typeof taskCompilationPolicySchema>;
 type CompileInput = { phase: unknown; draft?: unknown; project: unknown; policy: unknown };
 
 /** Pure compilation only. Host path/range/hash facts must be established by later repository adapters. */

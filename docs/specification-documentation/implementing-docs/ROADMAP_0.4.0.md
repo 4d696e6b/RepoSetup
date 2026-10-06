@@ -56,12 +56,14 @@ Implemented as core context policy with read-only CLI repository ports, byte-exa
 
 **Objective:** support existing coding agents without requiring direct API billing.
 
-- [ ] Select Markdown phases and import caller-supplied structured drafts.
-- [ ] Return an actionable compilation request when decomposition is unavailable.
-- [ ] Implement task compile/next/status, text/JSON rendering and attempt identities.
-- [ ] Label host routing/scope enforcement as advisory when unconfirmed.
+- [x] Select Markdown phases and import caller-supplied structured drafts.
+- [x] Return an actionable compilation request when decomposition is unavailable.
+- [x] Implement task compile/next/status, text/JSON rendering and attempt identities.
+- [x] Label host routing/scope enforcement as advisory when unconfirmed.
 
 **Likely modules:** CLI parser/types/task handlers/output and core compilation. **Dependencies:** B–C. **Tests:** selectors, malformed drafts, non-TTY, aliases, JSON and zero-effect dry-run. **Done:** an agent can consume independently executable packets; no command claims absent managed execution.
+
+Implemented with explicit reviewed authority, bounded artifacts/context, reusable compilation receipts, advisory caller dispatch identities and unverified snapshot reporting. Only independent tasks can be dispatched until E/F establish predecessor acceptance. The [CLI contract](../product-docs/CLI_SPEC.md#experimental-040-portable-task-cli--milestone-d) and [portable amendment](../product-docs/TASK_CONTRACTS_0.4.0.md#milestone-d-portable-amendment-revision-1) describe actual flags and limitations. E is next; run/verify, durable effects and model catalogs remain absent.
 
 ## Milestone E — trusted verification
 

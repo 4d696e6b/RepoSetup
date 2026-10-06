@@ -8,7 +8,8 @@ import {
   taskUnresolvedReferenceSchema,
   taskUsageSchema,
 } from "./evidence-schema.js";
-import { taskCriterionSchema } from "./plan-schema.js";
+import { taskCriterionSchema, taskRequirementSchema, taskOutputSchema } from "./plan-schema.js";
+import { taskPreferencesSchema } from "./preferences-schema.js";
 import {
   taskAttemptIdSchema,
   taskEnvelope,
@@ -20,6 +21,7 @@ import {
   taskScopeSchema,
   taskSourceRefSchema,
   taskStatementSchema,
+  taskCapabilitySchema,
 } from "./primitives.js";
 
 const proposalReplies = [
@@ -53,12 +55,16 @@ export const taskHandoffSchema = z.strictObject({
   contextId: taskHashSchema,
   objective: taskStatementSchema,
   requirementIds: z.array(taskIdSchema).min(1),
+  requirements: z.array(taskRequirementSchema).min(1).max(512),
+  outputs: z.array(taskOutputSchema).min(1).max(128),
+  capabilityRequirements: taskCapabilitySchema,
+  effortPreference: taskPreferencesSchema.shape.effortPreference,
   constraints: z.array(taskStatementSchema).max(128),
   scope: taskScopeSchema,
   criteria: z.array(taskCriterionSchema).min(1).max(128),
   requiredCheckIds: z.array(taskIdSchema).min(1),
   acceptedPredecessorArtifacts: z.array(taskArtifactRevisionSchema).max(512),
-  recommendedRouting: taskRoutingSchema,
+  recommendedRouting: taskRoutingSchema.nullable(),
   resourceLimits: taskResourceLimitsSchema,
   enforcement: z.strictObject({
     routing: enforcementSchema,

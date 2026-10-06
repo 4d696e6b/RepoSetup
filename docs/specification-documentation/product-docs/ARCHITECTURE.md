@@ -263,7 +263,7 @@ The companion website is an owner-approved 0.3.0 scope exception. Core owns stri
 
 ## Experimental 0.4.0 coding task domain
 
-Milestone A specifies this domain only; no task schemas, commands, provider calls or managed execution are implemented yet. See the [product contract](./TASK_COMPILER_0.4.0.md), [versioned contracts](./TASK_CONTRACTS_0.4.0.md), [support and verification profile](./TASK_SUPPORT_0.4.0.md) and [current-source reuse audit](../implementing-docs/TASK_COMPILER_REUSE_0.4.0.md).
+Milestones A–D provide task schemas, pure compilation, read-only context and portable compile/next/status commands. Core owns review/selection/coverage/context/packet policy; CLI owns bounded input, filesystem adapters, parsing and rendering. Provider calls, trusted task checks, durable task execution and managed acceptance are not implemented. See the [product contract](./TASK_COMPILER_0.4.0.md), [versioned contracts](./TASK_CONTRACTS_0.4.0.md), [support and verification profile](./TASK_SUPPORT_0.4.0.md) and [current-source reuse audit](../implementing-docs/TASK_COMPILER_REUSE_0.4.0.md).
 
 Core owns strict task draft/plan/preference/run validation, requirement coverage, task DAG ordering, context selection policy, capability/effort routing, verification classification and state transitions. CLI owns concrete repository, durable state, provider, filesystem and process adapters plus parsing, review and rendering. Existing registry and integration packages retain curated stack planning; models are not registry integrations. Core acquires no provider SDK or terminal/browser dependency.
 

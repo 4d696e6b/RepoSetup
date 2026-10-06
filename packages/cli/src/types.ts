@@ -7,6 +7,9 @@ import type {
   ExecutableResolver,
   ProcessRunner,
   RuntimeId,
+  TaskRepositoryReader,
+  TaskSelector,
+  TaskParseResult,
 } from "@reposetup/core";
 import type { IntegrationRegistry } from "@reposetup/registry";
 
@@ -40,6 +43,7 @@ export interface PromptCreateContext {
 }
 
 export interface CliDeps {
+  createTaskRepository?: TaskRepositoryFactory;
   registry?: IntegrationRegistry;
   io?: CliIo;
   fs?: CliFs;
@@ -56,6 +60,7 @@ export interface CliDeps {
 }
 
 export interface ResolvedCliDeps {
+  createTaskRepository: TaskRepositoryFactory;
   registry: IntegrationRegistry;
   io: CliIo;
   fs: CliFs;
@@ -70,6 +75,11 @@ export interface ResolvedCliDeps {
   signal?: AbortSignal;
   cwd: string;
 }
+
+export type TaskRepositoryFactory = (
+  root: string,
+  authority: { read: TaskSelector[]; deny: TaskSelector[] },
+) => Promise<TaskParseResult<TaskRepositoryReader & { rootIdentity: string }>>;
 
 export interface CliResult {
   exitCode: number;

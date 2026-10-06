@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 — task compiler contract
 
-Status: Milestones A–C validated, 2026-10-06. Core exports strict task schemas, pure draft compilation and bounded context preparation through a read-only CLI repository adapter. Task commands and managed execution are not implemented.
+Status: Milestones A–D validated, 2026-10-06. Core exports strict task schemas, pure draft compilation and bounded context preparation. Portable `task compile`, `task next` and `task status` are implemented; trusted verification, durable task effects and managed execution are not.
 
 ## Product outcome
 
@@ -70,7 +70,7 @@ Keep failed changes for targeted repair and manual review. No automatic rollback
 
 ## CLI and configuration proposal
 
-Add `reposetup task compile`, `run`, `next`, `verify` and `status` only as their behavior is implemented. Reuse existing CLI dependency injection, text rendering, JSON/error conventions and mutation review. All spellings remain proposals until CLI specification and help tests are updated.
+Portable `reposetup task compile`, `next` and `status` use independently reviewed inputs and explicit artifact paths with text/JSON output and zero-effect dry-run. See the [CLI contract](./CLI_SPEC.md#experimental-040-portable-task-cli--milestone-d). `run` and `verify` remain absent until their behavior is implemented. Reuse existing dependency injection and error/output conventions; no provider call, acceptance or state advancement is implied by a portable packet.
 
 Dry-run performs no writes, provider calls, process execution or verification; unresolved decomposition and host checks are labelled. New JSON kinds are additive. Keep stack configuration untouched; optional `reposetup.tasks.json` holds execution preference, provider availability, quality preference, budget, verification profile and exclusions. It contains no secrets, command strings, hooks or arbitrary endpoints.
 

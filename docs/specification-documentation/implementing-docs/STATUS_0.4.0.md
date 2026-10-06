@@ -4,13 +4,13 @@ Last updated: 2026-10-06.
 
 ## Current position
 
-**Milestones A–C are complete after supported-runtime validation. Milestone D is next.** Core schemas, pure task-plan compilation and bounded context preparation through a read-only CLI repository adapter are implemented; task commands and managed execution are not. See the [roadmap](./ROADMAP_0.4.0.md).
+**Milestones A–D are complete after supported-runtime validation. Milestone E is next.** Core schemas/compiler/context and portable compile/next/status commands are implemented. Trusted task verification, durable task effects and managed execution remain absent. See the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
 - Base branch: `codex/0.3.0-candidate-integration`.
 - Base source: `bfeab2f66806d42fa7d32ac4c144d1464bd88a48`.
-- Inspected worktree HEAD: `9fa2389176cb822ebae89d7edd301c0a3dbb6cb4`; Git status was clean before this slice. Runtime source matches the integrated base; the intervening preparation changes are documentation only.
+- Preparation inspected HEAD: `9fa2389176cb822ebae89d7edd301c0a3dbb6cb4`, then runtime source matched the integrated base. Milestone D started at `47db339` with a clean Git status; subsequent runtime extensions are recorded below.
 - CLI package version: inherited `0.3.0-alpha.1`; no release bump or tag.
 - Prior release qualification stays in its own records; this branch does not close those gates.
 
@@ -30,7 +30,7 @@ Last updated: 2026-10-06.
 - [x] A — Contracts, support profile, provider research and fixture designs frozen; supported-runtime build/typecheck/lint passed.
 - [x] B — Strict schemas, pure compilation, requirement/artifact/scope validation and deterministic graph ordering.
 - [x] C — Bounded safe context selection, concrete read-only repository adapter and freshness checks.
-- [ ] D — Portable compilation/handoff CLI.
+- [x] D — Portable compile/next/status CLI, reviewed phase selection and advisory handoff identities.
 - [ ] E — Trusted verification.
 - [ ] F — Durable state and bounded text changes.
 - [ ] G — Single managed provider adapter.
@@ -110,10 +110,27 @@ Milestone C validation on 2026-10-06:
 - Initial typecheck found optional-field typing and a fixture's overly narrow selector type; initial lint rejected a control-character regex. Corrected these before final checks. The real-reader integration caught a strict inventory-scope mismatch; fixed core to pass only read/deny fields. A range rejection test then caught full-file merging hiding an invalid explicit range; now every range is validated first. No failing check remains.
 - Changed-document Prettier checks, local Markdown links and `git diff --check` passed. Existing commands, config/selection inputs, curated integrations, package metadata/versions, lockfile and website sources remain unchanged. No task command, process probe, dependency-installation feature, provider call, persistent artifact or later-milestone execution feature was added.
 
+## Milestone D changes and acceptance evidence
+
+- [x] Register only implemented `task compile`, `task next` and `task status` subcommands, with explicit review/root/preferences/artifact flags, exact heading or inclusive-line selectors, text/JSON conventions and no non-TTY prompts. Preserve existing commands/aliases, config/selection inputs and numeric exits. Task JSON works both before the task command and on a leaf subcommand.
+- [x] Add strict `task_review` for caller-reviewed phase/project/check/scope authority; extract unchanged compilation policy into a reusable schema module. Bound and decode every artifact, reject duplicate/unknown fields and screen metadata before output. Compare current Markdown/requirement/root identities with independent review. Baseline Git/tool/check availability remain not checked; no subprocess probe runs.
+- [x] Produce actionable decomposition requests with exit 3 when a draft is absent, rather than invent tasks. Valid drafts yield deterministic `task_compilation` receipts accepted by next/status along with raw plans. Explicit preference exclusions can only narrow authority and require a correspondingly compiled plan.
+- [x] Prepare bounded source/context packets for independent candidates, with exact requirements, outputs, criteria, capability and separate effort. Record the intentional pre-release [portable contract amendment](../product-docs/TASK_CONTRACTS_0.4.0.md#milestone-d-portable-amendment-revision-1): routing nullable instead of fabricated model recommendations; caller-supplied run/attempt identities explicitly advisory and not durable attempts. Complete packet bytes, including rendered envelope/newline, are bounded. No provider/agent is invoked, no typed proposal is applied, and no response claim is accepted.
+- [x] Next dry-run prints only context/scope/check metadata and null run/attempt IDs, never source bodies; compile/status dry-runs also avoid writes, processes, locks, journals and prompts. Status separates unknown live authority from caller-reported unverified snapshots. Dependents remain blocked until E/F supply real acceptance/state; a reported succeeded/accepted snapshot cannot unlock them.
+- [x] Update actual CLI/help, architecture, contracts, support notes and roadmap/status. Managed `run`/`verify` commands remain absent; no feature code from E or later milestones is implemented.
+
+Milestone D validation on 2026-10-06:
+
+- Confirmed temporary Node **24.21.0** before validation, with pnpm 12.5.1 and existing frozen dependencies. No software/dependency installation, package/version/lockfile change, provider call or publication occurred.
+- Targeted suites passed: **10 phase selector tests**, **5 portable policy tests**, **9 schema boundary tests** and **9 real-filesystem CLI tests**. Cover exact CRLF/BOM section/range selection, duplicate/fenced/absent headings, receipt reuse, malformed/secret/stale inputs, preference restrictions, independent task selection, snapshot non-authority, packet hashes/bounds, capability versus effort, non-TTY/plain/JSON/help/alias mapping and effect spies for all dry-run boundaries.
+- Workspace `pnpm test` passed: **681 tests across 90 files** (core 376, registry 15, integrations 126, CLI 150, inherited website 14). `pnpm build`, `pnpm typecheck` and `pnpm lint` passed. Built CLI task/compile/next help smoke checks passed with only implemented commands/flags. Website build/tests were inherited and caused no tracked website changes; known tar default-locale warnings remain non-failing.
+- Initial CLI testing caught the root default `json: false` overriding a leaf `--json`; fixed global reading to preserve a true local flag and reran targeted/full legacy regressions. No failing checks remain. Changed-document formatting, local Markdown links and `git diff --check` passed.
+- Packed/live/platform qualification remains I; alias testing here verifies both manifest aliases share the built entry point, not a newly installed packed artifact. No runtime/acceptance/managed support qualification is implied by these local tests.
+
 ## Remaining blockers and next milestone
 
-No C acceptance blocker remains for the reviewed local context profile. This is not a hostile-filesystem sandbox or a universal secret detector. Clean Git baseline/project snapshot probes, immediate executor pre-effect checks, authentic verification/artifact acceptance, durable state, native token capacity and managed enforcement remain later gates. E/F/G/H/I retain their verification, effects, provider, routing and independent qualification work. Linux/platform/packed task qualification and benchmark trials remain unperformed.
+No D acceptance blocker remains for the reviewed portable profile. Handoff is stateless and advisory: dependent tasks cannot proceed on caller claims, host scope/model/budget enforcement is unconfirmed, and real acceptance/effect/attempt accounting remains E/F. Clean Git/snapshot probes, executor pre-effect checks, native token capacity, managed provider/catalog qualification, Linux/packed evidence and benchmark trials remain later gates. The trusted-project privacy/race limitations from C still apply.
 
 ## Next implementation handoff
 
-Stay in the existing 0.4.0 worktree and preserve unrelated changes. The owner requires every change to be committed before continued implementation. A was committed as `65a5c41`, its supported-runtime closure as `0c7904c`, and B as `010b38c`. This slice completes C only; commit its implementation and actual status before the next slice, **Milestone D — portable compilation/handoff CLI**. D must use the compiler/context ports, explicit structured decomposition and advisory portable enforcement, preserve existing commands/aliases and demonstrate zero-effect dry-run. Do not implement provider calls, trusted process checks, durable attempt/effect execution or later milestones in D.
+Stay in the existing worktree and preserve unrelated changes. The owner requires every change committed before continued implementation. Prior commits: A `65a5c41`, A validation `0c7904c`, B `010b38c`, C `47db339`. This slice completes D only; commit its implementation/status before **Milestone E — trusted verification**. E must qualify fixed check adapters, environment/report/effect boundaries, genuine nonzero test execution, independent criterion evidence and current revision binding. Only the executor may invoke processes. Do not implement durable text application, provider calls, routing/escalation or later milestones while completing E.

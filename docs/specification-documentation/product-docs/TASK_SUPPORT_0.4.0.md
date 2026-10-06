@@ -1,7 +1,9 @@
 # RepoSetup 0.4.0 — experimental task support profile
 
 Milestone A specification, frozen 2026-10-06. Profile selection is a design decision;
-no managed execution, verification adapter or task command is implemented or qualified yet.
+no managed execution or verification adapter is implemented or qualified yet.
+Milestone D provides portable compile/next/status commands with advisory host enforcement;
+these commands do not qualify the managed profile or establish trusted acceptance.
 Use with the [contracts](./TASK_CONTRACTS_0.4.0.md),
 [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md) and
 [benchmark protocol](../implementing-docs/TASK_BENCHMARK_0.4.0.md).
