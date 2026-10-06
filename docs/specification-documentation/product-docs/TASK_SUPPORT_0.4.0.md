@@ -3,7 +3,8 @@
 Milestone A specification, frozen 2026-10-06. Profile selection is a design decision;
 no managed execution or concrete task check adapter is qualified yet.
 The first E slice implements core evidence evaluation and explicit process environments;
-pinned-tool resolution, report parsing and filesystem audits remain open.
+A second E slice adds fixed recipes and bounded report parsing with pinned-tool
+smoke tests on macOS; complete tool/config closure and filesystem audits remain open.
 Milestone D provides portable compile/next/status commands with advisory host enforcement;
 these commands do not qualify the managed profile or establish trusted acceptance.
 Use with the [contracts](./TASK_CONTRACTS_0.4.0.md),
@@ -103,6 +104,9 @@ The adapter catalog contains these initial IDs:
   reviewed dependency closure is part of trust, not just a filename/hash.
 - `ts.unit`: the pinned local Vitest entry point using `run`, explicit frozen
   `--config`, `--reporter=json`, `--maxWorkers=1` and `--no-file-parallelism`.
+  The current E recipe also fixes `--configLoader=runner`, `--allowOnly=false`,
+  `--passWithNoTests=false`, `--update=false` and an executor-owned external
+  `--outputFile`; the default Vitest 5 JSON location would write inside the project.
   The fixed config excludes watch, network/browser tests, updates and
   `passWithNoTests`. Verify discovered required test identities, nonzero executed
   tests, skipped/todo/only cases, failures and complete report data against the
@@ -194,3 +198,16 @@ cache/temp behavior across both target platforms. The explicit environment port
 is tested with real Node 24 on macOS; CoreFoundation may add its own
 `__CF_USER_TEXT_ENCODING` variable after launch. Environment filtering is not an
 OS sandbox and does not prevent trusted project code from accessing host files.
+
+The second E slice exercised these fixed arguments against the installed pinned
+entry points on macOS arm64 with Node 24.21.0. The fixture uses a minimal reviewed
+ESLint config over JavaScript-compatible TypeScript; it does not qualify arbitrary
+TypeScript parser/plugin closures. Vitest's current [JSON reporter documentation](https://vitest.dev/guide/reporters)
+and pinned source confirm the default file output. Its [CLI documentation](https://vitest.dev/guide/cli)
+documents `allowOnly`, `configLoader` and `passWithNoTests`; the actual local
+`.only` fixture confirms a nonzero failure with the fixed recipe. Reporter output
+is explicitly redirected outside the project, and the runner config loader avoids
+bundled config temporary output. This is entry-point/argument evidence only.
+A production executor must additionally verify complete reviewed definitions,
+read the fresh private report with bounds and audit all verifier effects before
+this evidence can establish acceptance. No task verification command exists yet.
