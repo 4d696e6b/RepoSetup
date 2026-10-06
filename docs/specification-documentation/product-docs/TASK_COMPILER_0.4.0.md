@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 — task compiler contract
 
-Status: Milestone A specifications validated, 2026-10-06; Milestone B implementation is next. No task functionality is implemented by these documents.
+Status: Milestones A and B validated, 2026-10-06. Core exports strict task schemas and pure draft compilation; task commands, context adapters and managed execution are not implemented.
 
 ## Product outcome
 
@@ -38,7 +38,7 @@ The compiler must map each selected requirement to tasks and acceptance evidence
 
 Use strict Zod boundaries and separate versions for task preferences, compiled plans and run state. Preserve the existing integration `VerificationResult`; name task evidence `TaskVerificationResult`.
 
-The normative [versioned contracts](./TASK_CONTRACTS_0.4.0.md) freeze version 1 draft, plan, preference, run and handoff envelopes, identifiers, fields, validation order, states, error codes and dry-run semantics. The initial [support profile](./TASK_SUPPORT_0.4.0.md) freezes managed scope, hard bounds and trusted verification IDs. These specifications govern later implementation; they are not runtime exports or schemas yet.
+The normative [versioned contracts](./TASK_CONTRACTS_0.4.0.md) freeze version 1 draft, plan, preference, run and handoff envelopes, identifiers, fields, validation order, states, error codes and dry-run semantics. The initial [support profile](./TASK_SUPPORT_0.4.0.md) freezes managed scope, hard bounds and trusted verification IDs. Milestone B implements strict core schemas, pure compilation and graph/coverage/scope validation; later milestones implement repository facts, state transitions, checks and execution.
 
 - **Task:** stable ID, objective, requirement references, kind, constraints, read/write/deny scopes, acceptance criteria, trusted check IDs, output artifact IDs and evidenced qualitative capability features.
 - **TaskDependency:** predecessor, consumer and required artifact IDs.

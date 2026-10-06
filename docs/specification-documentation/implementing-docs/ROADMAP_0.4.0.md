@@ -32,11 +32,13 @@ Acceptance evidence is in the [task contracts](../product-docs/TASK_CONTRACTS_0.
 
 **Objective:** validate structured drafts without effects.
 
-- [ ] Add strict task, context, dependency, routing, attempt, verification and run schemas.
-- [ ] Validate requirement coverage, identifiers, artifact references, scopes and DAG ordering.
-- [ ] Add task-domain error codes without changing legacy exit meanings.
+- [x] Add strict task, context, dependency, routing, attempt, verification and run schemas.
+- [x] Validate requirement coverage, identifiers, artifact references, scopes and DAG ordering.
+- [x] Add task-domain error codes without changing legacy exit meanings.
 
 **Likely modules:** core task types/schema/compile/graph/errors. **Dependencies:** A. **Tests:** unknown fields/versions, duplicate IDs, uncovered requirements, cycles, unsafe scopes and stable ordering. **Done:** valid drafts compile into frozen TaskPlans; invalid drafts cannot reach execution.
+
+Implemented in `packages/core/src/tasks`; acceptance and actual supported-runtime validation are recorded in [status](./STATUS_0.4.0.md). No execution entry point exists. C is next; structural validation does not establish filesystem facts or trusted verification.
 
 ## Milestone C — safe repository context
 

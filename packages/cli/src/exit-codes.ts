@@ -1,4 +1,4 @@
-import type { RepoSetupError } from "@reposetup/core";
+import { TASK_ERROR_EXIT_CODES, type RepoSetupError } from "@reposetup/core";
 
 export const EXIT_CODES = {
   SUCCESS: 0,
@@ -12,6 +12,7 @@ export const EXIT_CODES = {
 export type ExitCode = (typeof EXIT_CODES)[keyof typeof EXIT_CODES];
 
 const EXIT_CODE_BY_ERROR = {
+  ...TASK_ERROR_EXIT_CODES,
   SELECTION_INVALID: EXIT_CODES.INVALID_INPUT,
   CONFIG_INVALID: EXIT_CODES.INVALID_INPUT,
   RECIPE_INVALID: EXIT_CODES.INVALID_INPUT,

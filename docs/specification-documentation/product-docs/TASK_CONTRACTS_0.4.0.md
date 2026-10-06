@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 — frozen task-domain contracts
 
-Status: Milestone A specification freeze, 2026-10-06. These are implementation requirements for later milestones, not implemented APIs or commands. Contract versions below are independent of package versions, stack configuration `schemaVersion: 1`, and selection format v1.
+Status: Milestone A specification freeze with Milestone B core schema implementation, 2026-10-06. Core validation APIs are implemented; task commands and execution are not. Contract versions below are independent of package versions, stack configuration `schemaVersion: 1`, and selection format v1.
 
 Read the [product contract](./TASK_COMPILER_0.4.0.md), [initial support profile](./TASK_SUPPORT_0.4.0.md), [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md), [reuse decisions](../implementing-docs/TASK_COMPILER_REUSE_0.4.0.md), and [benchmark protocol](../implementing-docs/TASK_BENCHMARK_0.4.0.md) with this document. Any later contract amendment requires an explicit revision and corresponding fixtures; silently changing a frozen plan is prohibited.
 
@@ -19,6 +19,8 @@ Normal installation, local draft validation, local context preparation and trust
 Every independently serialized task document uses a literal `kind` and `schemaVersion: 1`. The frozen kinds are `task_plan_draft`, `task_plan`, `task_preferences`, `task_context`, `routing_decision`, `task_verification_result`, `execution_attempt`, `change_set`, `task_handoff`, `task_handoff_result`, `task_provider_reply`, and `phase_run`. Nested records are strict objects too. Missing required fields, unknown fields, unknown versions, unknown discriminator values, invalid UTF-8, strings containing unpaired Unicode surrogates, non-finite numbers and duplicate JSON object keys fail closed. Do not coerce strings to numbers, strip unknown keys or downgrade future versions. Optional fields are absent rather than `null`, except the explicitly nullable fields listed below.
 
 External data is validated with strict Zod boundaries before domain use. Provider JSON-schema support is a transport constraint, not a replacement for local validation. Because some provider schemas require every property, a provider wire adapter may use explicitly nullable fields and must convert only its documented wire envelope into the strict domain record; it may not silently drop unexpected properties.
+
+Milestone B exports these boundaries from `@reposetup/core` through `src/tasks/index.ts`. `parseTaskJson` bounds external documents to 1,048,576 encoded bytes and depth 32, rejects duplicate keys before parsing, and validates content identities. `parseTaskDocument` validates already-decoded records; it does not certify repository facts or execution evidence. `compileTaskPlan` requires independent reviewed phase, project and compilation-policy inputs plus a draft; omitted decomposition returns `TASK_DECOMPOSITION_REQUIRED`. The policy requires `supportProfileId`, positive `supportProfileRevision`, `checkCatalogRevision`, the initial trusted `checkIds`/`requiredCheckIds`, reviewed `authority` scope and `caseSensitivePaths`. Policy denies are inherited by tasks, authority cannot expand through a draft, and parent/child file targets cannot have conflicting owners. `validateTaskPlan` recomputes coverage, ordering, ownership and policy identity; a matching hash alone is insufficient. Frozen plans are deeply immutable. Repository path/range/hash facts remain adapter work in C/F, acceptance evidence in E, and state transitions in F/H; passing a structural schema grants none of these authorities.
 
 IDs for requirements, tasks, criteria, artifacts, checks and catalog entries are ASCII lower-case names matching `^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$`, at most 64 characters. IDs are unique within their applicable plan/catalog namespace. A task retains its ID through retries of the same frozen plan; a new plan is a new namespace. References always include the relevant plan/revision identity when crossing records. IDs are identifiers, never paths or execution instructions.
 
@@ -147,7 +149,7 @@ Acceptance requires all required checks and criteria to pass, current immutable 
 
 `failure` contains a named error code, one primary class, affected evidence/task IDs, and a reviewed suggested action. Classes are `implementation`, `missing_context`, `stale_context`, `output_incomplete`, `infrastructure`, `policy_violation`, `ambiguity`, `budget`, `cancellation`, and `project_drift`. A test/typecheck failure can justify a focused repair and, after evidence, independent capability/effort escalation. Missing context needs bounded context resolution; stale hashes need fresh reconciliation; infrastructure needs an available adapter/tool; ambiguity needs an authoritative decision. These are not automatic reasons to select a more expensive model. A policy violation or unknown drift stops mutation pending review.
 
-`usage` separately records reported/estimated/unknown input/output/reasoning/cache token values, provider-reported call identity, duration, price catalog revision, reported/estimated/unknown cost and reserved allowance. Missing fields are unknown, not zero. External-agent usage is advisory and kept separate from the managed provider ledger. Refused, incomplete and failed charged calls remain in totals. No usage record contains credentials, raw prompts or source bodies.
+`usage` separately records reported/estimated/unknown input/output/reasoning/cache token values, provider-reported call identity, duration, price catalog revision, reported/estimated/unknown cost and reserved allowance. `providerCallId` is nullable or an opaque 1–256 character ASCII identifier using letters, digits, underscore, period, colon or hyphen; provider identities need not match lower-case logical task IDs. Missing fields are unknown, not zero. External-agent usage is advisory and kept separate from the managed provider ledger. Refused, incomplete and failed charged calls remain in totals. No usage record contains credentials, raw prompts or source bodies.
 
 ## PhaseRun and state transitions
 
@@ -256,7 +258,7 @@ Exit 0 means the requested local validation/compilation/status operation succeed
 
 ## Frozen future validation vectors
 
-Milestone A defines these fixtures; later milestones implement meaningful tests. This document adds no placeholder commands or feature tests.
+Milestone A defines these fixtures. Milestone B implements structural, coverage, graph, scope, identity and legacy error-mapping tests; executor/provider/platform fixtures remain assigned to their later milestones. No placeholder commands are added.
 
 Positive vectors:
 

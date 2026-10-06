@@ -4,7 +4,7 @@ Last updated: 2026-10-06.
 
 ## Current position
 
-**Milestone A is complete after supported-runtime validation. Milestone B is now authorized and next.** No task commands or managed execution are implemented. See the [roadmap](./ROADMAP_0.4.0.md).
+**Milestones A and B are complete after supported-runtime validation. Milestone C is next.** Core schemas and pure task-plan compilation are implemented; task commands and managed execution are not. See the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -28,7 +28,7 @@ Last updated: 2026-10-06.
 ## Implementation milestones
 
 - [x] A — Contracts, support profile, provider research and fixture designs frozen; supported-runtime build/typecheck/lint passed.
-- [ ] B — Strict schemas and graph validation.
+- [x] B — Strict schemas, pure compilation, requirement/artifact/scope validation and deterministic graph ordering.
 - [ ] C — Safe context selection.
 - [ ] D — Portable compilation/handoff CLI.
 - [ ] E — Trusted verification.
@@ -51,7 +51,7 @@ Preparation verification:
 ## Milestone A changes and acceptance evidence
 
 - [x] Reconcile [architecture](../product-docs/ARCHITECTURE.md), [CLI](../product-docs/CLI_SPEC.md), [product requirements](../product-docs/PRODUCT_REQUIREMENTS.md) and [security](../security-docs/SECURITY_AND_SAFETY.md): AI coding drafts/proposals are permitted in a separate TaskPlan domain; curated InstallationPlans stay deterministic. Clarify current doctor repair and command inputs from the actual parser, and label all future task commands unimplemented.
-- [x] Freeze [task contracts](../product-docs/TASK_CONTRACTS_0.4.0.md): independent version 1 envelopes, authoritative phase/draft input, requirement/criterion/artifact coverage, stable DAG order, exact ownership/scopes, task/run/attempt states, error codes retaining exits 0–5, revision-bound evidence, durable effect semantics and zero-effect task dry-run. Positive/negative future test vectors are specified; schemas are not implemented.
+- [x] Freeze [task contracts](../product-docs/TASK_CONTRACTS_0.4.0.md): independent version 1 envelopes, authoritative phase/draft input, requirement/criterion/artifact coverage, stable DAG order, exact ownership/scopes, task/run/attempt states, error codes retaining exits 0–5, revision-bound evidence, durable effect semantics and zero-effect task dry-run. Positive/negative future test vectors were specified; schemas were not implemented in A.
 - [x] Select [managed-ts-node-v1 and handoff](../product-docs/TASK_SUPPORT_0.4.0.md): one trusted TypeScript package, Node 24.x, npm/pnpm metadata, preinstalled dependencies, Linux x64/macOS arm64 qualification targets, fixed trusted check IDs, finite hard limits, public/private oracle separation and advisory external-agent enforcement. Concrete verifier qualification remains in E.
 - [x] Record [single-provider research](./TASK_PROVIDER_RESEARCH_0.4.0.md) from current official documentation: tool-free foreground OpenAI Responses candidate, strict JSON replies, model capability separate from native effort, observed API IDs/prices/capacity, reported/unknown usage, disabled opaque retries, timeout/cancellation limits and retention/cache caveats. No authenticated provider calls were made. Exact SDK/model catalog/account qualification remains in G/H.
 - [x] Freeze [benchmark designs](./TASK_BENCHMARK_0.4.0.md): five named offline types/UI-state/API/cross-module/security fixtures, immutable public requirements and independent holdouts, three equal-authority treatments, 75-trial protocol, inclusive failure/cost accounting and finite ceilings. Fixture sources/oracles/runner/results are deferred to I; no savings result is claimed.
@@ -70,7 +70,7 @@ Milestone A validation on 2026-10-06:
 - No runtime feature tests were added/run for this documentation-only slice. Meaningful future positive/negative and legacy regression vectors are defined in the contracts/benchmark; inventing feature tests before B would misrepresent implementation. Build and packed/platform/install checks are unaffected and were not run.
 - No later task milestone, placeholder command, package bump, branch merge, publish, release tag or paid provider call occurred. Historical base qualification does not close new task support gates.
 
-## Remaining blockers and next milestone
+## Supported-runtime follow-up
 
 The initial environment blocker is resolved following the owner's instruction to commit and continue implementation. Milestone A specifications were committed as `65a5c41`. A Node 24.21.0 darwin-arm64 archive was fetched from [the official release directory](https://nodejs.org/download/release/v24.21.0/) and matched its official SHASUMS256 entry (`bed7eea5325e1108f32ce5228ddd6a5f0f08a499ee42aa7442aea583702f6057`). It was extracted only to `/tmp/reposetup-task-compiler-tools`; no system Node installation or shell configuration was changed.
 
@@ -78,6 +78,26 @@ Follow-up validation used that Node binary on PATH and pnpm 12.5.1, sequentially
 
 External questions are assigned to later gates: bounded context/privacy and filesystem races (C/F), trusted exact verifier recipes/report parsing/environment/effects (E), pinned SDK/account access/cancellation/usage/retention qualification (G), model capability/effort/pricing catalogs (H), and concrete independent fixtures/platform/live benchmark evidence (I). These unresolved questions do not authorize broader execution or spending.
 
+## Milestone B changes and acceptance evidence
+
+- [x] Add strict version 1 schemas and inferred TypeScript types in `packages/core/src/tasks` for all twelve task document envelopes, source/dependency/capability references, reviewed compilation policy, finite preferences, context, routing, typed text proposals, usage, verification, attempts and run snapshots. Keep stack configuration and selection schemas untouched. Model capability and native effort remain independent fields; schemas contain no executable recipes or credential fields.
+- [x] Add bounded JSON decoding with fatal UTF-8, duplicate-key/depth/byte rejection, sanitized errors and canonical content-identity validation. Preserve ordered arrays and canonicalize declared sets; reject unknown fields/versions and unsafe literal paths. Provider call identities are bounded opaque identifiers rather than logical task IDs.
+- [x] Add pure `compileTaskPlan` and `validateTaskPlan`: independently reviewed phase/policy/project inputs, missing-decomposition blocker, requirement-to-task/criterion coverage, unique IDs/artifacts, exact predecessor references, consumer read authority, blocking-question rejection, fixed check requirements, conservative capability floors, deny-first scope constraints and unique exact/case-alias/parent-child write ownership. Stable lexical DAG ordering and canonical hashes produce deeply frozen plans without mutating inputs.
+- [x] Append task error codes and map them to existing CLI exits without changing commands, legacy codes or singular/aggregate semantics. Regression tests preserve the aggregate floor of 2 for nonempty general-error arrays and the empty-list exit of 1.
+- [x] Add meaningful synthetic unit fixtures and rejection tests. They are schema/compiler fixtures, not the independent held-out benchmark implementation assigned to I. No task commands, repository reader, provider adapter, subprocess execution, project mutation, automatic rollback, dependency installation feature or paid call is added.
+
+Milestone B validation on 2026-10-06, using temporary Node 24.21.0 and pnpm 12.5.1:
+
+- Targeted task suite: **71 tests passed across 3 files**. Covers all envelope kinds, nested unknown fields, versions, malformed/duplicate JSON, invalid Unicode/limits, typed proposal restrictions, usage identities, uncovered requirements, references, graph cycles, deterministic hashing/order, immutability, policy revisions, forbidden scopes and ownership conflicts.
+- Final `pnpm test` passed: **625 tests across 85 files** (core 339, registry 15, integrations 126, CLI 131, inherited website 14), including the opaque provider-ID refinement.
+- `pnpm build`, `pnpm typecheck`, and `pnpm lint` passed on the final source. Core/CLI declarations build successfully. The inherited root build/tests also exercise the website with no tracked website changes; website tar fixtures emit non-failing default-locale warnings.
+- Initial targeted testing found one fixture-injection assertion error, and initial lint found unused bindings/regex issues; corrected before final checks. Initial workspace test run found a new CLI test used the wrong constant name and empty-list expectation; corrected the test without altering runtime behavior, then the workspace suite passed. No failing checks remain.
+- Explicit changed-document formatting, local Markdown-link validation and `git diff --check` passed. Package metadata, versions, lockfile, integrations, stack/selection configuration and website sources remain unchanged.
+
+## Remaining blockers and next milestone
+
+No B acceptance blocker remains. Structural records are not proof of filesystem identity, authentic verification, durable state or managed enforcement. C must validate real paths, ranges, hashes, secret exclusions, applicable rules and bounded context through CLI adapters before any task handoff. E/F/G/H/I retain their recorded verification, effects, provider, routing and independent qualification gates. No Linux/platform/packed task qualification or benchmark trial is claimed.
+
 ## Next implementation handoff
 
-Stay in the existing 0.4.0 worktree and preserve unrelated changes. The owner has authorized continued implementation and requires every change to be committed. Implement **Milestone B — strict task schemas and graph validation** next, using the frozen contracts and meaningful future fixture vectors. Keep provider/filesystem/process adapters in CLI and domain policy in core. Do not add task commands, provider calls, context materialization, execution or later milestone functionality in B. Commit the validated implementation and actual status results.
+Stay in the existing 0.4.0 worktree and preserve unrelated changes. The owner authorized continued implementation after committing A and requires every change to be committed. This slice completes B only. The next slice is **Milestone C — safe repository context**, using the frozen contracts and current pure compiler. Keep filesystem adapters in CLI and context-selection policy in core; do not add task commands, provider calls, verification execution or project mutation while implementing C. A was committed as `65a5c41`, its supported-runtime closure as `0c7904c`; commit the validated B implementation and this actual status record before continuing.
