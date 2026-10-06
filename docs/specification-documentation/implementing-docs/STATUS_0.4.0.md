@@ -7,7 +7,7 @@ Last updated: 2026-10-06.
 **Implementation preparation only. Feature implementation has not started.** Next authorized development slice to propose is Milestone A in the [roadmap](./ROADMAP_0.4.0.md). This setup request does not implement the complete release.
 
 - Development branch: `codex/0.4.0-task-compiler`.
-- Worktree: `/Volumes/Developer/zeaek_/.codex/worktrees/reposetup-0-4-task-compiler/RepoSetup`.
+- Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
 - Base branch: `codex/0.3.0-candidate-integration`.
 - Base source: `bfeab2f66806d42fa7d32ac4c144d1464bd88a48`.
 - CLI package version: inherited `0.3.0-alpha.1`; no release bump or tag.
@@ -20,6 +20,7 @@ Last updated: 2026-10-06.
 - [x] Save the [task compiler product/technical contract](../product-docs/TASK_COMPILER_0.4.0.md).
 - [x] Save milestones, dependency order, required tests and acceptance gates.
 - [x] Preserve the original checkout's existing branch and untracked user files.
+- [x] Relocate the checkout into the owner's Project directory on 2026-10-06, retaining the same branch and a compatibility symlink at its original Codex attachment path.
 - [ ] Qualify a Node 24+ development environment for this new worktree.
 - [ ] Install development dependencies from the frozen lockfile under the supported runtime.
 
