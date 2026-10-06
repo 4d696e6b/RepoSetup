@@ -4,7 +4,7 @@ Last updated: 2026-10-06.
 
 ## Current position
 
-**Milestone A specifications are written; required supported-runtime validation remains blocked.** Feature implementation has not started. Milestone A is deliberately not marked complete while typecheck/lint have failed and Node 24+ is unavailable. No later milestone is implemented. See the [roadmap](./ROADMAP_0.4.0.md).
+**Milestone A is complete after supported-runtime validation. Milestone B is now authorized and next.** No task commands or managed execution are implemented. See the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -22,12 +22,12 @@ Last updated: 2026-10-06.
 - [x] Save milestones, dependency order, required tests and acceptance gates.
 - [x] Preserve the original checkout's existing branch and untracked user files.
 - [x] Relocate the checkout into the owner's Project directory on 2026-10-06, retaining the same branch and a compatibility symlink at its original Codex attachment path.
-- [ ] Qualify a Node 24+ development environment for this new worktree.
-- [ ] Provision development dependencies from the frozen lockfile under the supported runtime, with installation explicitly authorized. No dependency tree is retained by this slice.
+- [x] Qualify Node 24.21.0 in temporary local tooling for this worktree; system Node remains unchanged.
+- [x] Provision frozen-lockfile development dependencies offline under Node 24.21.0 for the requested continued implementation; lifecycle scripts were disabled.
 
 ## Implementation milestones
 
-- [ ] A — Specifications frozen below; completion pending supported-runtime validation.
+- [x] A — Contracts, support profile, provider research and fixture designs frozen; supported-runtime build/typecheck/lint passed.
 - [ ] B — Strict schemas and graph validation.
 - [ ] C — Safe context selection.
 - [ ] D — Portable compilation/handoff CLI.
@@ -57,7 +57,7 @@ Preparation verification:
 - [x] Freeze [benchmark designs](./TASK_BENCHMARK_0.4.0.md): five named offline types/UI-state/API/cross-module/security fixtures, immutable public requirements and independent holdouts, three equal-authority treatments, 75-trial protocol, inclusive failure/cost accounting and finite ceilings. Fixture sources/oracles/runner/results are deferred to I; no savings result is claimed.
 - [x] Inspect and document [source reuse/extensions](./TASK_COMPILER_REUSE_0.4.0.md) across core, CLI, executor, config/selection, preview, doctor/repair and verification. Reuse injectable ports, error/output conventions, hashing, lock/path/preflight and exclusive/individual atomic writes. Extend bounded private context, filtered process environment, trusted acceptance, durable state and scoped proposals separately from installer operations.
 - [x] Update specification index, high-level contract and roadmap links. Integrated review resolved fixture ID casing, handoff naming, public/private oracle scope, check trust versus mutable checked inputs, own-write preimage/postimage freshness, phase/task verification identity and per-attempt context-call accounting.
-- [ ] Pass required typecheck/lint on the supported runtime before closing A.
+- [x] Pass required typecheck/lint on the supported runtime before closing A; see follow-up validation below.
 
 Milestone A validation on 2026-10-06:
 
@@ -72,10 +72,12 @@ Milestone A validation on 2026-10-06:
 
 ## Remaining blockers and next milestone
 
-The immediate completion blocker is a usable Node 24+ development environment and intentionally provisioned frozen-lockfile tooling, followed by passing required typecheck/lint (with local workspace declarations built as needed). Documentation acceptance evidence above is present, but the repository workflow forbids claiming completion with failing typecheck. Keep A open until those results are recorded; no system or dependency installation is authorized implicitly by this tracker.
+The initial environment blocker is resolved following the owner's instruction to commit and continue implementation. Milestone A specifications were committed as `65a5c41`. A Node 24.21.0 darwin-arm64 archive was fetched from [the official release directory](https://nodejs.org/download/release/v24.21.0/) and matched its official SHASUMS256 entry (`bed7eea5325e1108f32ce5228ddd6a5f0f08a499ee42aa7442aea583702f6057`). It was extracted only to `/tmp/reposetup-task-compiler-tools`; no system Node installation or shell configuration was changed.
+
+Follow-up validation used that Node binary on PATH and pnpm 12.5.1, sequentially: `pnpm install --offline --frozen-lockfile --ignore-scripts` passed (202 cached packages, zero downloads); `pnpm build`, `pnpm typecheck`, and `pnpm lint` all passed. Building workspace declarations resolved the earlier typecheck failure. The inherited root build also built the existing website and regenerated its catalog, with no tracked website changes. These checks close A's validation gate; they do not qualify any managed task adapter or provider.
 
 External questions are assigned to later gates: bounded context/privacy and filesystem races (C/F), trusted exact verifier recipes/report parsing/environment/effects (E), pinned SDK/account access/cancellation/usage/retention qualification (G), model capability/effort/pricing catalogs (H), and concrete independent fixtures/platform/live benchmark evidence (I). These unresolved questions do not authorize broader execution or spending.
 
 ## Next implementation handoff
 
-Stay in the existing 0.4.0 worktree and preserve unrelated changes. First close A's environment/validation blocker when the owner supplies or authorizes the required tooling. The next feature milestone is **B — strict task schemas and graph validation**, only after A is closed and B is requested. Use the frozen contracts and future fixture vectors; keep provider/filesystem/process adapters in CLI and domain policy in core. Do not start B or later functionality as part of this Milestone A request.
+Stay in the existing 0.4.0 worktree and preserve unrelated changes. The owner has authorized continued implementation and requires every change to be committed. Implement **Milestone B — strict task schemas and graph validation** next, using the frozen contracts and meaningful future fixture vectors. Keep provider/filesystem/process adapters in CLI and domain policy in core. Do not add task commands, provider calls, context materialization, execution or later milestone functionality in B. Commit the validated implementation and actual status results.

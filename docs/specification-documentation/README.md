@@ -11,7 +11,7 @@
 - [Implementation roadmap](./implementing-docs/ROADMAP_0.4.0.md)
 - [Implementation status](./implementing-docs/STATUS_0.4.0.md)
 
-These documents freeze the Milestone A design for the experimental coding-task feature. Supported-runtime validation remains open; they do not claim implemented commands or change existing release qualification.
+These documents freeze the Milestone A design for the experimental coding-task feature. Milestone A supported-runtime validation passed; they do not claim implemented commands or change existing release qualification.
 
 | Folder                                       | Contents                                                          |
 | -------------------------------------------- | ----------------------------------------------------------------- |

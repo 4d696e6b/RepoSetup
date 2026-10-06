@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 — task compiler contract
 
-Status: Milestone A specifications written, 2026-10-06; supported-runtime validation is still open. No task functionality is implemented by these documents.
+Status: Milestone A specifications validated, 2026-10-06; Milestone B implementation is next. No task functionality is implemented by these documents.
 
 ## Product outcome
 
