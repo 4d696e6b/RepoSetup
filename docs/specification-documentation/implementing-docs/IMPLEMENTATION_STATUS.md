@@ -4,6 +4,8 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
+**Phase 27 — Release-candidate qualification: complete for the frozen alpha candidate.** Its closure is explicitly recorded on `codex/phase-27-closeout` at `837b20d438d92fb6bcd557cb4e5145230238ee13`.
+
 **Phase 28 — Stable release preparation: in progress.** The frozen alpha candidate completed its seven-day soak, but its package version is `0.2.0-alpha.1`, so it cannot be published unchanged as `0.2.0`. The stable manifest and publication tooling are being qualified on `codex/phase-28-stable-release`; publication and registry delivery remain incomplete. Phase 20 through Phase 26 implementation gates are complete.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
@@ -17,7 +19,9 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Artifact size, SHA-256, source, version and installed launcher checks block publication. Registry errors other than 404 block publication. A retry accepts an existing version only when its integrity equals the qualified tarball; published bytes are never replaced.
 - [x] Delivery automation checks exact registry integrity and the stable dist-tag, installs outside the monorepo on Ubuntu/macOS/Windows, checks both aliases, and exercises dry-run plus a real TypeScript Express build and HTTP-response test. The same delivery routine is exercised locally using the packed stable artifact.
 - [x] Local verification on temporary Node 24.21.0: all 438 unit tests, typecheck, lint and build pass; 36 e2e tests pass. One local Python add test skips because uv is unavailable on this host; required CI installs uv and must pass it. The release validator also accepts the three actual completed alpha API responses at the recorded deadline.
-- [ ] Freeze and qualify the stable source with three full cross-platform runs and its exact-source soak. The alpha evidence remains preserved; it cannot satisfy the stable tag/version gate.
+- [x] Initial stable [benchmark 37647160928](https://github.com/4d696e6b/RepoSetup/actions/runs/37647160928), full qualification [37647145314](https://github.com/4d696e6b/RepoSetup/actions/runs/37647145314) and [usability checks 37647167901](https://github.com/4d696e6b/RepoSetup/actions/runs/37647167901) passed at preparation source `3821519511acd79b3263f42f1be14a752149cd4f`. [Run 37647155958](https://github.com/4d696e6b/RepoSetup/actions/runs/37647155958) failed a Windows local-file locked-install fixture's 30-second deadline, so no stable soak was started and the failed run remains recorded.
+- [x] Corrected that test fixture to use a second local-file dependency for manifest drift and npm offline mode; it no longer performs an accidental public-registry lookup. Its four real npm subprocesses retain a bounded 90-second test budget for slower Windows runners. Production code and package dependencies are unchanged. The corrected fixture passes locally on Node 24.21.0; typecheck and lint also pass.
+- [ ] Freeze and qualify the corrected stable source with three full cross-platform runs and its exact-source soak. The alpha evidence remains preserved; it cannot satisfy the stable tag/version gate.
 - [ ] Owner reviews stable evidence and authorizes publication; npm trusted publisher must permit `npm publish` from `publish-npm.yml`.
 - [ ] Publish, retain provenance, and pass all three install-from-registry delivery jobs. Phase 28 is not complete until this evidence exists.
 

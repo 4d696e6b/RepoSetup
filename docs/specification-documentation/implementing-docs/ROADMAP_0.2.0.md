@@ -168,6 +168,8 @@ Defer auth services, payments, queues/Redis, additional frameworks, Bun/Yarn, de
 
 ### Phase 27 — Freeze, beta-test, and qualify the release candidate
 
+**Status:** Complete for frozen alpha candidate `145e167e6b60897da96942545ba6dbd40359ad4a`; its seven-day soak closed October 7, 2026. Stable version conversion and delivery remain Phase 28 work.
+
 **Depends on:** 26. **Deliverable:** one evidence-backed candidate artifact.
 
 - Freeze features; finish docs, migration notes, known limitations, dependency/license review, targeted security review, and release checklist. Review process/path boundaries, lifecycle scripts, output redaction, config injection, and existing-file preservation.
