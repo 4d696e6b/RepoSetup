@@ -159,7 +159,18 @@ describe("integration plans", () => {
       ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/vite@4.3.3"],
     ]);
     expect(plan).toEqual(
-      expect.arrayContaining([expect.objectContaining({ type: "show_message" })]),
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_text",
+          path: "vite.config.ts",
+          newText: expect.stringContaining("tailwindcss()"),
+        }),
+        expect.objectContaining({
+          type: "modify_text",
+          path: "src/index.css",
+          newText: expect.stringContaining("@import 'tailwindcss';"),
+        }),
+      ]),
     );
   });
 

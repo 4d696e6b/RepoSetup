@@ -349,18 +349,18 @@ describe("Phase 13 JS ecosystem plans", () => {
     ]);
   });
 
-  it("initializes shadcn/ui with the documented --yes template flags", () => {
+  it("initializes shadcn/ui with noninteractive defaults and explicit template flags", () => {
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "nextjs" })))).toEqual([
-      ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "next"],
+      ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "next"],
     ]);
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "react-vite" })))).toEqual(
-      [["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"]],
+      [["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "vite"]],
     );
     expect(
       runCommands(
         shadcnIntegration.plan(planContext({ packageManager: "npm", frameworkId: "nextjs" })),
       ),
-    ).toEqual([["npx", "--yes", "shadcn@4.21.0", "init", "--yes", "-t", "next"]]);
+    ).toEqual([["npx", "--yes", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "next"]]);
   });
 
   it("does not install Docker and writes Compose without starting it", () => {
@@ -500,7 +500,7 @@ describe("Phase 13 example stacks", () => {
       expect.arrayContaining([
         ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
         ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
-        ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"],
+        ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "vite"],
       ]),
     );
   });

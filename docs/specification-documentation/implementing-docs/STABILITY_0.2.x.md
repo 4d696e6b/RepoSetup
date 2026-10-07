@@ -25,7 +25,7 @@ all possible integration combinations or all operating systems were tested.
 ## 0.2.2 — Expand release qualification
 
 - Plan matrix: all six frameworks, npm/pnpm or uv/pip, current/named/nested directories, curated integrations with their required dependencies, JavaScript options, and incompatible runtime/manager rejection.
-- Real execution: twelve qualified recipes in named directories, generated tests/typechecks/builds/lints and stack/doctor checks; repeat JavaScript recipes with npm and pnpm.
+- Real execution: fourteen qualified recipes in named directories, generated tests/typechecks/builds/lints and stack/doctor checks; repeat JavaScript recipes with npm and pnpm.
 - Real npx delivery: pack the patch candidate, then create the sixteen bare JavaScript framework/manager/language combinations and four isolated Python framework/manager combinations in nested directories. Check dry-run leaves no files and successful creation installs/imports/builds.
 - Presets: packaged CLI preview, create, displayed run/build/test commands, add, doctor and export. Check all five presets; Docker checks require an existing Docker executable, not automatic installation.
 - Failure coverage: invalid config/options, unsupported combinations, missing prerequisites, unwritable paths, symlink escape, existing-file protection, missing/conflicting lockfiles, interrupted/failed installs and safe add/remove repetition.
@@ -107,3 +107,29 @@ with a missing-URI safety check. No live MongoDB connection is claimed.
 The final Express callback formatting fix passes its real generated-app build,
 endpoint tests and Prettier check locally. The Mongoose build/import/doctor check
 also passes locally. These are targeted passes; full final CI remains required.
+
+### Previously silent UI setup failures
+
+The expanded checks found that `shadcn init --yes` may return success without
+writing `components.json`: confirmation skipping is not full noninteractive
+configuration. The exact pinned 4.21.0 help and [official CLI documentation](https://ui.shadcn.com/docs/cli)
+confirm `--defaults`; RepoSetup now supplies it with the explicit template and
+verifies that the configuration file exists before reporting success.
+Earlier preset passes did not assert that file, so they were insufficient UI
+setup evidence. All subsequent React preset sessions must assert it.
+
+Actual initialization then exposed missing Vite prerequisites. Tailwind's
+[official Vite setup](https://tailwindcss.com/docs/installation/using-vite)
+requires the CSS import and plugin configuration; RepoSetup now applies both
+while preserving existing CSS. The [shadcn Vite instructions](https://ui.shadcn.com/docs/installation/vite)
+require source aliases in the app/compiler and Vite configuration. The planner
+now supplies TypeScript or JavaScript aliases, preserving JSONC comments.
+Next.js and Vite shadcn initialization/build checks pass locally for TypeScript;
+JavaScript variants are also required by the expanded fourteen-recipe CI suite.
+
+A generated-app formatting failure exposed the executor incorrectly adding CRLF
+to inserted lines when a replacement anchor contained no newline. The executor
+now uses the source file's line endings for that case; actual LF/CRLF file
+regressions cover it. Later local runs again hit the disk preflight as this
+machine fell below 512 MiB free; these attempts are failures, not qualification
+passes. Final CI must prove the current candidate with adequate space.

@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { createServer, type Server } from "node:net";
-import { mkdir, mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -95,6 +95,7 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
   steps.push({ name: "create", exitCode: created.exitCode });
   expect(created.exitCode, `${created.stdout}\n${created.stderr}`).toBe(0);
   expect(created.stdout).toContain("Project directory:");
+  if (presetId === "react-vite") await access(path.join(projectDir, "components.json"));
   const nextCommands = created.stdout
     .split("\n")
     .filter((line) => line.startsWith("Next: "))

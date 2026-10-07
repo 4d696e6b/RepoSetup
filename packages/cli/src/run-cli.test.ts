@@ -579,7 +579,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain(
       "pnpm create vite@8.3.0 . --template react-ts --no-interactive",
     );
-    expect(captured.stdout()).toContain("pnpm dlx shadcn@4.21.0 init --yes -t vite");
+    expect(captured.stdout()).toContain("pnpm dlx shadcn@4.21.0 init --yes --defaults -t vite");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });

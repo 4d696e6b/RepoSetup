@@ -34,7 +34,10 @@ async function commandAvailable(command: string): Promise<boolean> {
 const runNextGolden = process.env.CI === "true" || process.env.REPOSETUP_GOLDEN_NEXT === "1";
 const hasUv = await commandAvailable("uv");
 
-async function createProject(configPath: string): Promise<{ cwd: string; created: CliRunResult }> {
+async function createProject(
+  configPath: string,
+  typescript?: boolean,
+): Promise<{ cwd: string; created: CliRunResult }> {
   // Framework generators validate the final directory name. mkdtemp's random
   // suffix can contain uppercase letters, which Next.js rejects.
   const parent = await createTempWorkspace("reposetup-golden-");
@@ -43,6 +46,7 @@ async function createProject(configPath: string): Promise<{ cwd: string; created
   await mkdir(startingDir);
   const config = JSON.parse(await readFile(configPath, "utf8"));
   config.project.path = "app";
+  if (typescript !== undefined) config.framework.options = { typescript };
   if (config.runtime.id === "node" && process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm")
     config.packageManager = "npm";
   const namedConfig = path.join(parent, "named-project.json");
@@ -72,12 +76,20 @@ async function expectHealthyCli(cwd: string, expectedIds: readonly string[]): Pr
 }
 
 describe("golden stack real execution", () => {
-  it.each(["nextjs", "react-vite"])(
-    "Golden J — %s / Tailwind / shadcn initializes and builds in a named directory",
-    async (framework) => {
-      const { cwd, created } = await createProject(fixturePath(`golden-${framework}-shadcn.json`));
+  it.each(
+    ["nextjs", "react-vite"].flatMap((framework) =>
+      [true, false].map((typescript) => ({ framework, typescript })),
+    ),
+  )(
+    "Golden J — $framework / TypeScript $typescript / Tailwind / shadcn initializes and builds in a named directory",
+    async ({ framework, typescript }) => {
+      const { cwd, created } = await createProject(
+        fixturePath(`golden-${framework}-shadcn.json`),
+        typescript,
+      );
       expect(created.exitCode, `${created.stdout}\n${created.stderr}`).toBe(0);
       const components = JSON.parse(await readFile(path.join(cwd, "components.json"), "utf8"));
+      expect(components.tsx).toBe(typescript);
       expect(components.tailwind.css.length).toBeGreaterThan(0);
       await access(path.join(cwd, components.tailwind.css));
       const built = await runProcess("pnpm", ["run", "build"], { cwd });
