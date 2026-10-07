@@ -42,9 +42,20 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 - Built-in local registry (JavaScript/TypeScript and Python ecosystems)
 - argv-based process execution (`spawn` with `shell: false`)
 
-## Quick start
+## Install and run
 
-Requires **Node.js 24+** and **pnpm 12.5.1**. Python recipes require **Python 3.12+** and **uv**; 3.12 and 3.13 are qualified for this candidate.
+The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and **uv**; Python 3.12 and 3.13 were qualified for 0.2.0. RepoSetup does not install these system prerequisites for you.
+
+```bash
+npx rsetup@0.2.0 --help
+npx rsetup@0.2.0 --version
+```
+
+For a global install, run `npm install -g rsetup@0.2.0`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
+
+## Develop from source
+
+The repository uses **pnpm 12.5.1**:
 
 ```bash
 git clone https://github.com/4d696e6b/RepoSetup.git
@@ -68,24 +79,6 @@ node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.jso
 ```
 
 Always try `--dry-run` first on a project you care about.
-
-Run the published CLI without cloning:
-
-```text
-npx rsetup
-npx rsetup --help
-npx rsetup --version
-```
-
-Optionally:
-
-```text
-npm install -g rsetup
-rsetup --help
-reposetup --help
-```
-
-`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project.
 
 ## Example
 
