@@ -15,6 +15,7 @@ all possible integration combinations or all operating systems were tested.
 - Create the destination before Python initialization and handwritten Node scaffolds.
 - Install bare Vite dependencies; apply scaffold dependency pins and native build approval before installing.
 - Check conflicting and required lockfiles in each install command's directory.
+- Approve the known esbuild build script for bare TypeScript Express/tsx under pnpm.
 - Align printed Express/Fastify commands with default TypeScript and explicit JavaScript entries.
 - Offer only supported npm/pnpm Node managers in interactive create.
 - Qualify the Next.js 16.3.6 security patch before shipping changed generator pins.
@@ -57,3 +58,12 @@ all possible integration combinations or all operating systems were tested.
 - Official Next.js advisory [GHSA-vcvr-r3jv-pc5j](https://github.com/vercel/next.js/security/advisories/GHSA-vcvr-r3jv-pc5j) identifies 16.3.6 as patched for the affected 16.3 line. Generator and eslint package versions were verified through npm registry metadata and actual generation.
 - The baseline generated Next.js audit also reported [braces GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) through development tooling. Do not claim an audit-clean stack until a reviewed supported fix is available and requalified.
 - This branch is a patch candidate. The npm release is unchanged by these tests.
+
+### Bare solution follow-up
+
+The first real packed-npx run passed 15 non-Next solutions and found one failure:
+bare TypeScript Express with pnpm lacked the esbuild build approval required by
+tsx. Full recipes had supplied that approval via Vitest, hiding the defect.
+A dedicated plan-order regression and real npx rerun cover this fix. The four
+bare Next cases are included in the CI matrix; local disk pressure limits full
+qualification here.

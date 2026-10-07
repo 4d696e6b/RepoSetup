@@ -154,6 +154,7 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
           {
             description: "Install TypeScript, tsx, and Express type packages",
             dev: true,
+            allowBuild: ["esbuild"],
           },
         ),
         {

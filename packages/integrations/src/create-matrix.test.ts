@@ -110,6 +110,25 @@ describe("0.2.x create plan stability matrix", () => {
     },
   );
 
+  it("permits the bare Express tsx build before its consolidated pnpm install", () => {
+    const result = planInstallation(config("express", "pnpm", "apps/demo", []), registry);
+    expect(result.valid).toBe(true);
+    const approval = result.operations.findIndex(
+      (operation) =>
+        operation.type === "create_file" &&
+        operation.path === "apps/demo/pnpm-workspace.yaml" &&
+        operation.content.includes('"esbuild": true'),
+    );
+    const install = result.operations.findIndex(
+      (operation) =>
+        operation.type === "run_command" &&
+        operation.command === "pnpm" &&
+        operation.args[0] === "install",
+    );
+    expect(approval).toBeGreaterThanOrEqual(0);
+    expect(install).toBeGreaterThan(approval);
+  });
+
   it.each(
     ["nextjs", "react-vite", "express", "fastify"].flatMap((framework) =>
       ["npm", "pnpm"].map((manager) => ({ framework, manager: manager as "npm" | "pnpm" })),
