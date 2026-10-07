@@ -925,3 +925,34 @@ production capability/native-effort evidence remain unrun without separately
 authorized API access/allowance. Milestone I stays unchecked; J is not started.
 Also corrected H's stale checklist entry to match its existing final acceptance
 record; this is bookkeeping, not new H qualification.
+
+## Milestone I — inclusive report accounting foundation (2026-10-07)
+
+Added pure core campaign validation/report reduction and a working developer
+report command for retained campaign JSON. Strict records bind fixture/support/
+runner/catalog/policy/pricing identities, ordered paired trial slots, finite equal
+authority/ceilings, strong capability plus independent native effort, requests,
+attempt/final evidence hashes and independent acceptance metadata. Reports retain
+failures/setup blockers/missing trials, all compilation/context/repair/verification
+overhead in inclusive measured wall time, shared analytical versus actual cash
+accounting, unknown usage/cost, separate local estimates and undefined zero-success
+denominators. No source text, raw private logs, credentials or executable recipes
+are admitted. Offline/synthetic campaigns cannot qualify live comparisons.
+
+Validation passed on Node 24.21.0/macOS arm64: workspace build/typecheck/lint,
+separate task-runner typecheck, changed-document formatting and Git whitespace
+checks. Six offline e2e cases across two files pass, including the report command;
+16 core boundary/accounting tests across two files pass. Thirteen accounting tests
+cover including a synthetic 75-slot matrix, shared compile charging, failed
+compilation, failed repairs, paired setup blockers, missing records, unknown usage,
+subset accounting and rejection of mismatched plan/authority/order/request IDs,
+missing holdouts, zero tests, forbidden effects and command fields. These are
+contract tests, not 75 real model trials. The developer tool's separate no-key
+process test checks incomplete output and safe duplicate/executable-input errors.
+
+Still open: a complete trial orchestration adapter joining real retained E–H
+evidence, full fixture managed-recipe qualification, packed/platform/legacy
+checks, live capability/native-effort qualification and authorized provider smoke.
+The report reducer validates metadata but cannot authenticate an evaluator/provider
+artifact; genuine qualification requires independently retained execution evidence.
+No model calls or cost/savings claim occurred. Milestone I remains in progress.

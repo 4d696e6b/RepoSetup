@@ -43,7 +43,8 @@
     "website:test": "pnpm --filter @reposetup/website test",
     "fixtures:tasks:freeze": "pnpm --filter @reposetup/core build && node scripts/freeze-task-fixtures.ts",
     "test:tasks:fixtures": "pnpm --filter @reposetup/core build && vitest run --config tests/e2e/vitest.tasks.config.ts",
-    "typecheck:task-tests": "tsc --project tests/e2e/tsconfig.tasks.json"
+    "typecheck:task-tests": "tsc --project tests/e2e/tsconfig.tasks.json",
+    "benchmark:tasks:report": "pnpm --filter @reposetup/core build && node scripts/summarize-task-benchmark.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

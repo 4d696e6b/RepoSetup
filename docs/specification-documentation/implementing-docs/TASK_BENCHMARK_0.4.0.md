@@ -218,3 +218,36 @@ Current official references reviewed for the fixed tooling (2026-10-07):
 - [Node 24 test runner](https://nodejs.org/docs/latest-v24.x/api/test.html): reporter
   output limitations informed the fixed JSON assertion runner; no TAP-output
   parsing or reporter-format stability is assumed.
+
+## Version 1 campaign metadata and report accounting
+
+`task_benchmark_campaign` is a strict internal qualification envelope, separate
+from product TaskPlan/config inputs. Core validates fixture/tool/revision equality,
+75 unique trial slots, declared deterministic serial order, identical authority
+and ceilings, exact shared compilation/plan records and disjoint request hashes.
+Partial campaigns remain visible with missing slots. Setup-blocked paired trials,
+failed compilation and terminal implementation/check failures are retained.
+Accepted metadata requires independent public/holdout inventories, all six fixed
+check categories with nonzero required test counts, unchanged protected inputs,
+zero forbidden effects and referenced attempt/final evidence. Evidence hashes
+refer to retained evaluator artifacts; schema validation does not authenticate
+those artifacts or establish that a provider/evaluator actually executed.
+
+The pure reducer reports all-trial quality and per-fixture outcomes, attempts,
+setup/wall timing, provider calls, context bytes, separate local token estimates,
+reported input/output/cache/reasoning and calculated/reported charged cost. Unknown
+measurements stay null; cache/reasoning subsets are never added twice. Shared
+compilation is fully included in each compiled treatment's analytical totals but
+its request is counted once in the actual cash ledger. A zero accepted denominator
+is undefined. Missing/failed/offline trials cannot qualify a production comparison;
+unknown effective configuration or required resource measurements also block
+quantitative comparison qualification. No automatic savings conclusion is emitted.
+
+`pnpm benchmark:tasks:report <campaign.json>` builds core and summarizes an
+already recorded campaign to stdout. The developer tool performs a bounded,
+duplicate-key-aware declarative read; it makes no provider/process trial calls,
+installs nothing and writes no project/state/report files. Exit 3 denotes an
+incomplete valid campaign; exit 2 denotes rejected input. Recording the full live
+75-trial campaign, authenticating retained evidence and joining E's qualified
+managed verifier remain unimplemented/unrun I work. Unit-test campaigns are
+synthetic accounting inputs, never benchmark results or model-quality evidence.

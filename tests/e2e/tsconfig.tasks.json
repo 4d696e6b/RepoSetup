@@ -1,11 +1,15 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "noEmit": true, "allowImportingTsExtensions": true },
+  "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
   "include": [
     "task-*.ts",
     "vitest.tasks.config.ts",
     "../tasks/*.ts",
-    "../../scripts/freeze-task-fixtures.ts"
+    "../../scripts/freeze-task-fixtures.ts",
+    "../../scripts/summarize-task-benchmark.ts"
   ],
   "exclude": ["../tasks/fixtures"]
 }
