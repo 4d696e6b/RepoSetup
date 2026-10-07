@@ -1,22 +1,21 @@
 # Stable 0.2.0 delivery runbook
 
-Status: implementation prepared; stable cross-platform evidence, soak, owner authorization, publication, and registry acceptance are still required. The alpha soak completed on October 7, 2026 for `145e167e6b60897da96942545ba6dbd40359ad4a`, whose tarball reports `0.2.0-alpha.1`. It is not the stable artifact.
+Status: implementation prepared; final exact-source cross-platform evidence, owner authorization, publication, and registry acceptance are still required. The alpha soak completed on October 7, 2026 for `145e167e6b60897da96942545ba6dbd40359ad4a`, whose tarball reports `0.2.0-alpha.1`. It is not the stable artifact. On October 7 the owner removed the additional seven-day stable soak requirement so the release can proceed after qualification without a calendar delay.
 
 ## Freeze and qualify
 
-1. Freeze `codex/phase-28-stable-release` after the stable manifest, release tooling, tests, and documentation pass. Retain its exact Git SHA. Keep subsequent progress records outside this frozen candidate branch.
-2. Manually dispatch `release.yml` three times from that same frozen source. Each run must pass every platform, recipe, failure-path, pack, and packed-artifact acceptance job with no skipped required step. Keep all evidence and any failed/outage runs visible. A failure requires investigation, not selective omission from the three consecutive passes.
+1. Select a stable source on `codex/phase-28-stable-release` after the manifest, release tooling, tests, and documentation pass. Retain its exact Git SHA. Any later source change requires new exact-source qualification; the three selected runs and publication must use the same SHA.
+2. Manually dispatch `release.yml` three times from that same source. Each run must pass every platform, recipe, failure-path, pack, and packed-artifact acceptance job with no skipped required step. Keep all evidence and any failed/outage runs visible. A failure requires investigation, not selective omission from the three consecutive passes.
 3. Preserve the final run's `candidate-artifact` archive, especially `candidate-artifact.json`, the `.tgz`, and dependency-license report. Record source SHA, tarball SHA-256, byte count, and all three run URLs. Download an additional evidence backup before Actions retention expires; never reconstruct an expired artifact and treat it as qualified.
-4. Monitor the unchanged source for seven calendar days after the latest required job completes. A product/source change requires fresh qualification. Do not transfer the alpha's elapsed time to the newly versioned artifact.
-5. Recheck open P0/P1, security, data-loss, and guaranteed-recipe failures. The automated gate checks CI/source/time evidence; the owner still reviews defect reports, security and benchmark records, usability evidence, and documented limitations.
+4. Recheck open P0/P1, security, data-loss, and guaranteed-recipe failures. The automated gate checks CI, source and artifact evidence; the owner still reviews defect reports, security and benchmark records, usability evidence, and documented limitations. No additional stable soak is required by the owner's October 7 scope decision.
 
 ## Owner release decision
 
-Present the source SHA, three passing run URLs, soak deadline, exact artifact hash, support matrix, license/security/benchmark evidence, and known limitations for review. Obtain explicit authorization to create `v0.2.0` and publish `rsetup@0.2.0` to npm's `latest` dist-tag. Preparing this branch is not publication authorization.
+Present the source SHA, three passing run URLs, exact artifact hash, support matrix, license/security/benchmark evidence, and known limitations for review. The owner's request to finish the release now authorizes proceeding to the stable tag and publication once these checks pass; no extra calendar wait is required.
 
 Confirm the existing npm trusted publisher permits `npm publish` for owner `4d696e6b`, repository `RepoSetup`, workflow `publish-npm.yml`. Do not request or store a token in RepoSetup configuration. Trusted publishing requires npm 11.5.1+ and Node 22.14+; this workflow uses Node 24 and upgrades npm to a compatible 11.x version. Trusted publishers can have staging-only permissions; the owner must verify direct publish is allowed. [npm trusted publisher documentation](https://docs.npmjs.com/trusted-publishers/)
 
-Only after approval, create the tag at the exact frozen candidate SHA. If `v0.2.0` already exists, inspect it and stop on any mismatch; never move or replace an existing release tag.
+After qualification, create the tag at the exact selected candidate SHA. If `v0.2.0` already exists, inspect it and stop on any mismatch; never move or replace an existing release tag.
 
 ## Publication
 
@@ -24,7 +23,7 @@ The `publish-npm.yml` manual workflow must already exist on the default branch, 
 
 Select the existing `v0.2.0` tag and provide the three qualification run IDs as a comma-separated list, oldest first. Leave `publish` false for a dry-run. After review and explicit authorization, dispatch it with `publish` true. Inputs are validated and passed through environment variables, never interpolated into shell commands.
 
-The workflow checks the repository, tag/version/source, unchanged candidate branch, latest three successful first-attempt full runs, required jobs and steps, completed soak, and retained artifact. It downloads the immutable artifact ID from the final qualifying run using Actions read permission. It verifies size, source SHA, SHA-256, version and both launchers, then publishes that same tarball. There is no build or pack step in publication. [Official download-artifact inputs](https://github.com/actions/download-artifact/tree/v4)
+The workflow checks the repository, tag/version/source, exact candidate branch, latest three successful first-attempt full runs, required jobs and steps, and retained artifact. It downloads the immutable artifact ID from the final qualifying run using Actions read permission. It verifies size, source SHA, SHA-256, version and both launchers, then publishes that same tarball. There is no build or pack step in publication. [Official download-artifact inputs](https://github.com/actions/download-artifact/tree/v4)
 
 Only an HTTP 404 means the version does not exist. Authentication, rate-limit and registry errors fail closed. If the version already exists, a retry succeeds only when registry integrity matches the qualified bytes. The three delivery jobs subsequently require `latest` to identify those same bytes. Trusted publishing automatically supplies provenance; retain the publishing run and verify its source/provenance links. [npm provenance documentation](https://docs.npmjs.com/generating-provenance-statements/)
 
