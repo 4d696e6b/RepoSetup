@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is currently an **early-stage** open-source project (`v0.2.0-alpha.1`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is currently an **early-stage** open-source project (preparing `v0.2.0`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -52,7 +52,7 @@ cd RepoSetup
 pnpm install
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.1.1
+node packages/cli/dist/bin.js --version   # 0.2.0
 ```
 
 Preview a Next.js example without changing files:
@@ -172,13 +172,13 @@ reposetup registry validate
 
 There is no separate `import` command. Apply an exported file with `create --config`.
 
-`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in v0.2.0-alpha.1.**
+`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in the 0.2.0 support contract.**
 
 ## Integration status
 
 Status is per ID, not “the catalog is production-ready.”
 
-| Status | Meaning in v0.2.0-alpha.1 |
+| Status | Meaning in the 0.2.0 support contract |
 | --- | --- |
 | **stable** | Real execute + advertised-platform evidence. **None yet.** |
 | **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |

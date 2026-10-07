@@ -4,9 +4,22 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 27 — Release-candidate qualification: in progress.** Phase 24's five observed manual usability sessions, the candidate soak, repeated exact-SHA qualification, and release evidence remain blocking gates. Phase 20 through Phase 26 implementation gates are complete.
+**Phase 28 — Stable release preparation: in progress.** The frozen alpha candidate completed its seven-day soak, but its package version is `0.2.0-alpha.1`, so it cannot be published unchanged as `0.2.0`. The stable manifest and publication tooling are being qualified on `codex/phase-28-stable-release`; publication and registry delivery remain incomplete. Phase 20 through Phase 26 implementation gates are complete.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
+
+### Stable preparation — 2026-10-07
+
+- [x] Rechecked the frozen alpha source `145e167e6b60897da96942545ba6dbd40359ad4a`: qualification runs [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), and [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011) passed; the branch remains frozen. Its soak ended October 7 at 11:30:20 UTC. This qualifies the alpha source, not a newly versioned stable artifact.
+- [x] Stable preparation is isolated from that frozen branch. The public manifest now identifies `rsetup@0.2.0`; CLI version tests derive from the manifest.
+- [x] Publication is manually dispatched, defaults to a dry-run, requires the existing `v0.2.0` tag, and downloads the immutable artifact ID from a previous qualification run. Publication never builds or packs another artifact.
+- [x] The publication gate checks three consecutive successful first-attempt full runs from the exact source, all 16 required jobs and their steps without skips, an unchanged candidate branch, a completed seven-day soak, and one unexpired artifact. Missing API data fails closed.
+- [x] Artifact size, SHA-256, source, version and installed launcher checks block publication. Registry errors other than 404 block publication. A retry accepts an existing version only when its integrity equals the qualified tarball; published bytes are never replaced.
+- [x] Delivery automation checks exact registry integrity and the stable dist-tag, installs outside the monorepo on Ubuntu/macOS/Windows, checks both aliases, and exercises dry-run plus a real TypeScript Express build and HTTP-response test. The same delivery routine is exercised locally using the packed stable artifact.
+- [x] Local verification on temporary Node 24.21.0: all 438 unit tests, typecheck, lint and build pass; 36 e2e tests pass. One local Python add test skips because uv is unavailable on this host; required CI installs uv and must pass it. The release validator also accepts the three actual completed alpha API responses at the recorded deadline.
+- [ ] Freeze and qualify the stable source with three full cross-platform runs and its exact-source soak. The alpha evidence remains preserved; it cannot satisfy the stable tag/version gate.
+- [ ] Owner reviews stable evidence and authorizes publication; npm trusted publisher must permit `npm publish` from `publish-npm.yml`.
+- [ ] Publish, retain provenance, and pass all three install-from-registry delivery jobs. Phase 28 is not complete until this evidence exists.
 
 ### Phase 27 progress — 2026-09-29
 
@@ -21,7 +34,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] The candidate benchmark report records its exact `GITHUB_SHA` when run in Actions, in addition to the existing platform/runtime and per-trial results. This makes final benchmark evidence auditable against the frozen candidate source.
 - [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) completed five cold and five warm trials for fixed React and Express package profiles on Ubuntu, macOS, and Windows with Node 24. All measurements passed; consolidated installs use one subprocess versus five baseline passes.
 - [x] Candidate failure qualification is implemented at `33354279088970dd3d1dfcf8e5cfbc73a741c20c`: each supported OS runs the real timeout/interruption, permission, existing-user-file, invalid-input, cleanup, and packed usability checks. The React/Vite usability command is additionally exercised while its default Vite port is deliberately occupied; the temporary listener is always closed. The fault job blocks both packing and publication and retains its per-OS usability evidence. Cache-miss behavior is separately measured by the candidate benchmark's fresh, benchmark-owned caches.
-- [ ] Exact-SHA CI evidence, three consecutive full candidate passes, seven-day soak, and observed failure-path evidence remain release blockers. See [the candidate record](../release-docs/RELEASE_CANDIDATE_0.2.0.md).
+- [x] These alpha gates subsequently passed at `145e167e6b60897da96942545ba6dbd40359ad4a`; see the October 7 transition record above. Stable source qualification remains separate.
 
 ### Phase 25 progress — 2026-09-24
 
