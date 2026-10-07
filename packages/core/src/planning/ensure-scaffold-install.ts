@@ -22,11 +22,22 @@ export function ensureScaffoldDependencyInstall(
   projectRoot: ProjectRelativePath,
 ): EnsureScaffoldInstallResult {
   const output: InstallationOperation[] = [];
+  let pendingInstall: InstallationOperation | undefined;
 
   for (const [index, operation] of operations.entries()) {
+    if (
+      pendingInstall !== undefined &&
+      (operation.type === "run_command" || operation.type === "verify")
+    ) {
+      output.push(pendingInstall);
+      pendingInstall = undefined;
+    }
     output.push(operation);
 
-    if (operation.type !== "run_command" || !operation.args.includes("--skip-install")) {
+    if (
+      operation.type !== "run_command" ||
+      (operation.skipsDependencyInstall !== true && !operation.args.includes("--skip-install"))
+    ) {
       continue;
     }
 
@@ -56,9 +67,12 @@ export function ensureScaffoldDependencyInstall(
       return { ok: false, error: installed.error };
     }
 
-    output.push(installed.operation);
+    // Apply the scaffold's soft file operations (including build approvals and
+    // dependency pins) before installing. Stop at the next process barrier.
+    pendingInstall = installed.operation;
   }
 
+  if (pendingInstall !== undefined) output.push(pendingInstall);
   return { ok: true, operations: output };
 }
 

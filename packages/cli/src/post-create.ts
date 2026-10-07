@@ -22,14 +22,14 @@ export function postCreateCommands(config: RepoSetupConfig): readonly string[] {
         : ["flask run", ...(integrationIds.has("pytest") ? ["pytest"] : [])];
     case "fastify":
     case "express":
-      return config.framework.options?.typescript === true
+      return config.framework.options?.typescript !== false
         ? [
             `${packageRun} dev`,
             `${packageRun} build`,
             `${packageRun} start`,
             ...(integrationIds.has("vitest") ? [`${config.packageManager} exec vitest run`] : []),
           ]
-        : ["node app.js"];
+        : [config.framework.id === "fastify" ? "node server.js" : "node app.js"];
     default:
       return [];
   }

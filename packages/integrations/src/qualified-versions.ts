@@ -22,11 +22,11 @@
  *   still installs prisma@prev and @prisma/client@7; on this date those tags
  *   resolve to 7.10.0. https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/sqlite
  */
-export const REGISTRY_REVISION = "2026-09-23";
+export const REGISTRY_REVISION = "2026-10-08";
 
 export const QUALIFIED_VERSIONS = {
-  createNextApp: "16.3.5",
-  eslintConfigNext: "16.3.5",
+  createNextApp: "16.3.6",
+  eslintConfigNext: "16.3.6",
   vite: "8.3.0",
   eslint: "9.39.5",
   eslintJs: "9.39.5",

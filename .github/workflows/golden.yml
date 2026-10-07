@@ -9,29 +9,20 @@ on:
 
 jobs:
   golden:
-    name: ${{ matrix.runner }} / ${{ matrix.architecture }} / Python ${{ matrix.python }}
+    name: ${{ matrix.runner }} / ${{ matrix.architecture }} / Python ${{ matrix.python }} / ${{ matrix.package-manager }}
     strategy:
       fail-fast: false
       matrix:
+        runner: [ubuntu-24.04, macos-15, windows-2025]
+        python: ["3.12", "3.13"]
+        package-manager: [npm, pnpm]
         include:
           - runner: ubuntu-24.04
             architecture: x64
-            python: "3.12"
-          - runner: ubuntu-24.04
-            architecture: x64
-            python: "3.13"
           - runner: macos-15
             architecture: arm64
-            python: "3.12"
-          - runner: macos-15
-            architecture: arm64
-            python: "3.13"
           - runner: windows-2025
             architecture: x64
-            python: "3.12"
-          - runner: windows-2025
-            architecture: x64
-            python: "3.13"
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
     steps:
@@ -53,6 +44,7 @@ jobs:
       - run: pnpm test:golden
         env:
           CI: true
+          REPOSETUP_GOLDEN_PACKAGE_MANAGER: ${{ matrix.package-manager }}
       - name: Write golden qualification evidence
         run: >-
           node -e "require('node:fs').writeFileSync('golden-evidence.json',
@@ -62,6 +54,6 @@ jobs:
           ['--version'], { encoding: 'utf8' }).trim() }, null, 2) + '\\n')"
       - uses: actions/upload-artifact@v4
         with:
-          name: golden-evidence-${{ matrix.runner }}-python-${{ matrix.python }}
+          name: golden-evidence-${{ matrix.runner }}-python-${{ matrix.python }}-${{ matrix.package-manager }}
           path: golden-evidence.json
           if-no-files-found: error

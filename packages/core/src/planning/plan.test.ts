@@ -99,6 +99,78 @@ const orm = fakeIntegration({
 });
 
 describe("planInstallation", () => {
+  it("scopes generated files to a named project without moving scaffold commands", () => {
+    const childFramework = fakeIntegration({
+      id: "fake-framework",
+      category: "framework",
+      plan: (context) => [
+        {
+          type: "run_command",
+          command: "generator",
+          args: [context.projectRoot],
+          cwd: ".",
+          description: "Scaffold the child app",
+        },
+        {
+          type: "modify_text",
+          path: "app/layout.tsx",
+          oldText: "old",
+          newText: "new",
+          description: "Edit the generated layout",
+        },
+        {
+          type: "create_file",
+          path: "README.md",
+          content: "run instructions",
+          behavior: "fail_if_exists",
+          description: "Write run instructions",
+        },
+        {
+          type: "install_package",
+          packageManager: "pnpm",
+          packages: ["example"],
+          cwd: context.projectRoot,
+          description: "Install in the child app",
+        },
+      ],
+    });
+    const input = config();
+    input.project.path = "apps/demo";
+    const result = planInstallation(input, lookup([childFramework]));
+
+    expect(result.valid).toBe(true);
+    expect(result.operations).toEqual([
+      expect.objectContaining({ type: "create_directory", path: "apps/demo" }),
+      expect.objectContaining({ type: "run_command", args: ["apps/demo"], cwd: "." }),
+      expect.objectContaining({ type: "modify_text", path: "apps/demo/app/layout.tsx" }),
+      expect.objectContaining({ type: "create_file", path: "apps/demo/README.md" }),
+      expect.objectContaining({ type: "install_package", cwd: "apps/demo" }),
+    ]);
+  });
+
+  it("rejects unsafe integration paths before scoping them to a child project", () => {
+    const bad = fakeIntegration({
+      id: "fake-framework",
+      category: "framework",
+      plan: () => [
+        {
+          type: "create_file",
+          path: "../parent.txt",
+          content: "unsafe",
+          behavior: "fail_if_exists",
+          description: "Invalid parent write",
+        },
+      ],
+    });
+    const input = config();
+    input.project.path = "apps/demo";
+    const result = planInstallation(input, lookup([bad]));
+
+    expect(result.valid).toBe(false);
+    expect(result.operations).toEqual([]);
+    expect(result.errors[0]?.code).toBe("PLAN_INVALID");
+  });
+
   it("emits a stable operation sequence for the same config and registry", () => {
     const registry = lookup([framework, database, orm]);
     const input = config({

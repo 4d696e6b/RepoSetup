@@ -5,6 +5,75 @@ import type { InstallationOperation } from "../operations/types.js";
 import { ensureScaffoldDependencyInstall } from "./ensure-scaffold-install.js";
 
 describe("ensureScaffoldDependencyInstall", () => {
+  it("installs bare Vite scaffolds that declare no dependency install", () => {
+    const scaffold: InstallationOperation = {
+      type: "run_command",
+      command: "npm",
+      args: ["create", "vite@8.3.0", "app", "--", "--no-interactive"],
+      cwd: ".",
+      skipsDependencyInstall: true,
+      description: "Scaffold Vite",
+    };
+    const result = ensureScaffoldDependencyInstall([scaffold], "npm", "app");
+    expect(result).toEqual({
+      ok: true,
+      operations: [
+        scaffold,
+        expect.objectContaining({
+          type: "run_command",
+          command: "npm",
+          args: ["install", "--prefer-offline"],
+          cwd: "app",
+        }),
+      ],
+    });
+  });
+
+  it("applies generated dependency pins and build approvals before the solo install", () => {
+    const operations: InstallationOperation[] = [
+      {
+        type: "run_command",
+        command: "pnpm",
+        args: ["create", "next-app@16.3.6", "app", "--skip-install", "--yes"],
+        cwd: ".",
+        description: "Scaffold",
+      },
+      {
+        type: "modify_text",
+        path: "app/pnpm-workspace.yaml",
+        oldText: "sharp: false",
+        newText: "sharp: true",
+        description: "Approve the generated build",
+      },
+      {
+        type: "modify_json",
+        path: "app/package.json",
+        merge: { devDependencies: { "eslint-config-next": "16.3.6" } },
+        behavior: "merge",
+        description: "Pin the generated dependency",
+      },
+      {
+        type: "verify",
+        command: "pnpm",
+        args: ["exec", "tsc", "--noEmit"],
+        cwd: "app",
+        description: "Verify the scaffold",
+      },
+    ];
+    const result = ensureScaffoldDependencyInstall(operations, "pnpm", "app");
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.operations).toEqual([
+      ...operations.slice(0, 3),
+      expect.objectContaining({
+        type: "run_command",
+        args: expect.arrayContaining(["install"]),
+        cwd: "app",
+      }),
+      operations[3],
+    ]);
+  });
+
   it("does not insert an install when a later install_package covers the scaffold", () => {
     const operations: InstallationOperation[] = [
       {

@@ -68,6 +68,9 @@ export interface DetectionResult {
 export interface PlanContext<TOptions = unknown> {
   config: RepoSetupConfig;
   options: TOptions;
+  /** Command working directories use this execution-root-relative target.
+   * File operation paths are relative to the project; the planner scopes them.
+   */
   projectRoot: ProjectRelativePath;
 }
 

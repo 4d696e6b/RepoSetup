@@ -33,6 +33,8 @@ export interface RunCommandOperation {
   requiresNetwork?: boolean;
   interactive?: boolean;
   longRunning?: boolean;
+  /** The scaffold writes a manifest but leaves dependency installation to the planner. */
+  skipsDependencyInstall?: boolean;
   requiresLockfile?: "package-lock.json" | "pnpm-lock.yaml" | "bun.lock" | "uv.lock";
 }
 

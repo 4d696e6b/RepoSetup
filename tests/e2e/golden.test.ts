@@ -1,4 +1,4 @@
-import { access, mkdir, readFile } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
@@ -39,11 +39,20 @@ async function createProject(configPath: string): Promise<{ cwd: string; created
   // suffix can contain uppercase letters, which Next.js rejects.
   const parent = await createTempWorkspace("reposetup-golden-");
   tempDirs.push(parent);
-  const cwd = path.join(parent, "project");
-  await mkdir(cwd);
-  const created = await runNodeCli(monorepoBin, ["create", "--config", configPath, "--yes"], {
-    cwd,
+  const startingDir = path.join(parent, "project");
+  await mkdir(startingDir);
+  const config = JSON.parse(await readFile(configPath, "utf8"));
+  config.project.path = "app";
+  if (config.runtime.id === "node" && process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm")
+    config.packageManager = "npm";
+  const namedConfig = path.join(parent, "named-project.json");
+  await writeFile(namedConfig, JSON.stringify(config));
+  const created = await runNodeCli(monorepoBin, ["create", "--config", namedConfig, "--yes"], {
+    cwd: startingDir,
+    env: { ...process.env, npm_config_cache: path.join(parent, "npm-cache") },
   });
+  expect(await readdir(startingDir), created.stderr).toEqual(["app"]);
+  const cwd = path.join(startingDir, "app");
   return { cwd, created };
 }
 
@@ -51,7 +60,11 @@ async function expectHealthyCli(cwd: string, expectedIds: readonly string[]): Pr
   const stack = await runNodeCli(monorepoBin, ["stack"], { cwd });
   expect(stack.exitCode, stack.stderr).toBe(0);
   for (const id of expectedIds) {
-    expect(stack.stdout.toLowerCase()).toContain(id.toLowerCase());
+    expect(stack.stdout.toLowerCase()).toContain(
+      id === "pnpm" && process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm"
+        ? "npm"
+        : id.toLowerCase(),
+    );
   }
 
   const doctor = await runNodeCli(monorepoBin, ["doctor"], { cwd });
@@ -166,12 +179,16 @@ describe("golden stack real execution", () => {
     await access(path.join(cwd, "drizzle.config.ts"));
     await access(path.join(cwd, ".env.example"));
     const workflow = await readFile(path.join(cwd, ".github", "workflows", "node.js.yml"), "utf8");
-    expect(workflow).toContain('version: "12.5.1"');
-    expect(workflow).toContain('node-version: "24"');
-    expect(workflow).toContain("pnpm install --frozen-lockfile");
-    expect(workflow).toContain("pnpm run lint");
-    expect(workflow).toContain("pnpm test");
-    expect(workflow).toContain("pnpm run build");
+    if (process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm")
+      expect(workflow).toContain("npm ci");
+    else {
+      expect(workflow).toContain('version: "12.5.1"');
+      expect(workflow).toContain('node-version: "24"');
+      expect(workflow).toContain("pnpm install --frozen-lockfile");
+      expect(workflow).toContain("pnpm run lint");
+      expect(workflow).toContain("pnpm test");
+      expect(workflow).toContain("pnpm run build");
+    }
 
     const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
     expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);

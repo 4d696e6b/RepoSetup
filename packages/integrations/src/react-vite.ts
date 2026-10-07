@@ -97,12 +97,15 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
     const vite = `vite@${QUALIFIED_VERSIONS.vite}`;
     return [
       requireNodeRange(NODE_ENGINE_RANGES.vite, `Vite ${QUALIFIED_VERSIONS.vite}`),
-      pnpmOrNpmCreate(
-        context,
-        { pnpmName: vite, npmName: vite },
-        ["--template", template, "--no-interactive"],
-        { description: "Scaffold React with create-vite", longRunning: true },
-      ),
+      {
+        ...pnpmOrNpmCreate(
+          context,
+          { pnpmName: vite, npmName: vite },
+          ["--template", template, "--no-interactive"],
+          { description: "Scaffold React with create-vite", longRunning: true },
+        ),
+        skipsDependencyInstall: true,
+      },
       ...(context.config.packageManager === "pnpm" ? [pnpmViteBuildApproval()] : []),
     ];
   },

@@ -72,7 +72,7 @@ describe("integration plans", () => {
       [
         "pnpm",
         "create",
-        "next-app@16.3.5",
+        "next-app@16.3.6",
         ".",
         "--ts",
         "--eslint",
@@ -101,7 +101,7 @@ describe("integration plans", () => {
       [
         "npx",
         "--yes",
-        "create-next-app@16.3.5",
+        "create-next-app@16.3.6",
         "app",
         "--js",
         "--eslint",
@@ -123,7 +123,7 @@ describe("integration plans", () => {
         expect.objectContaining({
           type: "modify_json",
           path: "package.json",
-          merge: { devDependencies: { "eslint-config-next": "16.3.5" } },
+          merge: { devDependencies: { "eslint-config-next": "16.3.6" } },
         }),
       ]),
     );

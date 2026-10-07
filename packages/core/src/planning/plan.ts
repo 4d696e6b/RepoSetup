@@ -1,4 +1,5 @@
 import type { ZodType } from "zod";
+import path from "node:path";
 
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import type { PlanContext } from "../integrations/definition.js";
@@ -82,7 +83,28 @@ function planResolvedIds(
   return {
     ...resolved,
     orderedIntegrations: ordered,
-    operations: validation.operations,
+    operations:
+      projectRoot === "."
+        ? validation.operations
+        : [
+            {
+              type: "create_directory",
+              path: projectRoot,
+              behavior: "create_if_missing",
+              description: "Create the selected project directory",
+            },
+            ...validation.operations.map((operation) =>
+              "path" in operation
+                ? {
+                    ...operation,
+                    path: path.posix.join(
+                      projectRoot.replaceAll("\\", "/"),
+                      operation.path.replaceAll("\\", "/"),
+                    ),
+                  }
+                : operation,
+            ),
+          ],
   };
 }
 
