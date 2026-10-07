@@ -1,0 +1,140 @@
+{
+  "kind": "task_benchmark_fixture",
+  "schemaVersion": 1,
+  "fixtureRevision": "sha256:c70b7f841c449fb6c0e8e23fa0c0025fc3890bca38473e97f74bf711ae3b287d",
+  "fixtureId": "ui-view-model-v1",
+  "fixtureVersion": 1,
+  "phaseId": "list-view-state",
+  "requirements": [
+    {
+      "requirementId": "ui-1",
+      "text": "`buildListView(input)` accepts `{ items, search, filter: \"all\" | \"open\" | \"done\", selectedId: string | null, loading: boolean }` with readonly items `{ id, label, status: \"open\" | \"done\" }`. Return matching `rows` preserving those fields plus the totals/selection/state below. Search trims whitespace and compares labels using `toLowerCase()`; an empty search matches every item."
+    },
+    {
+      "requirementId": "ui-2",
+      "text": "sort matching rows by normalized label, then ID; compute `total`, `openCount` and `doneCount` from the full input rather than the filtered rows. Keep item IDs as row keys."
+    },
+    {
+      "requirementId": "ui-3",
+      "text": "return `loading`, `empty` or `ready` display state in that priority order. Loading remains loading even with zero rows. An absent or filtered-out selection yields `selectedId: null`; a matching selection remains selected."
+    },
+    {
+      "requirementId": "ui-4",
+      "text": "preserve all inputs and baseline behavior, make repeated calls identical and handle labels containing markup-like text as plain strings. Public tests cover filtering, one selection and loading."
+    }
+  ],
+  "seedRevision": "sha256:f09bf05021bfe4e734228141aec1050ad28cbe7f2705d1fccabc624f0a00071b",
+  "seedFiles": [
+    {
+      "path": "AGENTS.md",
+      "fileHash": "sha256:05d848ede6437e5fbaf14d95a71d41536187b21202bc59b45ac01943650e9ad2",
+      "bytes": 172
+    },
+    {
+      "path": "docs/phase.md",
+      "fileHash": "sha256:f9fb999164a5e2518add95751ac71240f08c1049fdc2f436434be371df446943",
+      "bytes": 1014
+    },
+    {
+      "path": "package.json",
+      "fileHash": "sha256:15d914c5e5a2309787bee19b8e974d8f3d7429347247bad243a4a6095a4a7fcd",
+      "bytes": 111
+    },
+    {
+      "path": "src/domain.ts",
+      "fileHash": "sha256:ff421b58e8b67f4a9dda0e22fdc86ec6de6ee77dfc9aa7c584d082e0f6ef75dc",
+      "bytes": 311
+    },
+    {
+      "path": "src/view-model.ts",
+      "fileHash": "sha256:1ce87032e09333b63f300518efec40df8f1248e2b4144426fad4d74476ecb34c",
+      "bytes": 866
+    },
+    {
+      "path": "test/public/acceptance.mjs",
+      "fileHash": "sha256:ffb0b763fb8131625610856bf9e968980aa7efd38534787063dd8621f0acac40",
+      "bytes": 790
+    },
+    {
+      "path": "test/public/compat.mjs",
+      "fileHash": "sha256:159c1ba57615fcb67b06556294075ca1f6f257cfd6eea077fef05b16dfd7131b",
+      "bytes": 479
+    },
+    {
+      "path": "tsconfig.json",
+      "fileHash": "sha256:7ecb67310174039455aae94e4b21d346fd6fe8d4030886e33ff3b9502f90eccc",
+      "bytes": 360
+    }
+  ],
+  "phaseDocumentHash": "sha256:f9fb999164a5e2518add95751ac71240f08c1049fdc2f436434be371df446943",
+  "lockfileHash": "sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4",
+  "dependencyArtifactId": "sha256:49f799df966d5deeef3a5effd6d4593f7d922ed00934567c8bb8ca933aa3c82c",
+  "recipeRevision": "sha256:5d11d15c37afe636522a400d061f790a131fe9c99f5eceff9b3f62e9abaa4af7",
+  "supportProfileId": "managed-ts-node-v1",
+  "write": ["src/view-model.ts", "test/agent/view-model.test.ts"],
+  "entrypoints": ["buildListView"],
+  "referenceFiles": [
+    {
+      "path": "src/view-model.ts",
+      "fileHash": "sha256:7540ce14537cc388c4e9929b03acf5c944a725c7d1e60bd6ffa9d7182bd79df6",
+      "bytes": 873
+    }
+  ],
+  "incorrectVariants": [
+    {
+      "variantId": "filtered_totals",
+      "files": [
+        {
+          "path": "src/view-model.ts",
+          "fileHash": "sha256:679c2e6628cd9395ac5d654d1abe9f65b27d8a09f2ee02c83ac1880807770916",
+          "bytes": 866
+        }
+      ]
+    },
+    {
+      "variantId": "wrong_loading",
+      "files": [
+        {
+          "path": "src/view-model.ts",
+          "fileHash": "sha256:773d9349777d6a13c95caab7c9f2b783339e44e956ee5664586b31915a582044",
+          "bytes": 845
+        }
+      ]
+    },
+    {
+      "variantId": "unstable_ties",
+      "files": [
+        {
+          "path": "src/view-model.ts",
+          "fileHash": "sha256:2d91b54451abd9f97bedf53c46e9f0596f79ae5f72ee5dd0560578dc1e8c431e",
+          "bytes": 836
+        }
+      ]
+    }
+  ],
+  "oracleFiles": [
+    {
+      "path": "holdout.mjs",
+      "fileHash": "sha256:5aa4f9bc2ab2f2550df967b28f3cd0eab4131037646db85e735d975c93d6bf45",
+      "bytes": 1892
+    }
+  ],
+  "oracleRevision": "sha256:f4dc5ebc7579a7438e5a442922dac775cf0d837061799d329cca3c9048fbfbad",
+  "testInventory": [
+    { "testId": "ui-filter", "criterionIds": ["ui-1"], "kind": "runtime" },
+    { "testId": "ui-trim", "criterionIds": ["ui-1"], "kind": "runtime" },
+    { "testId": "ui-ties", "criterionIds": ["ui-2"], "kind": "runtime" },
+    { "testId": "ui-totals", "criterionIds": ["ui-2"], "kind": "runtime" },
+    { "testId": "ui-state", "criterionIds": ["ui-3"], "kind": "runtime" },
+    { "testId": "ui-selection", "criterionIds": ["ui-3"], "kind": "runtime" },
+    { "testId": "ui-frozen", "criterionIds": ["ui-4"], "kind": "runtime" }
+  ],
+  "resourceLimits": {
+    "maxImplementationAttemptsPerTask": 3,
+    "maxProviderCalls": 24,
+    "maxInputTokens": 240000,
+    "maxOutputTokens": 48000,
+    "maxWallTimeMs": 1800000,
+    "maxCostMicrousd": 10000000
+  }
+}

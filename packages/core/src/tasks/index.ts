@@ -31,3 +31,5 @@ export * from "./routing.js";
 export * from "./failure.js";
 export * from "./repair-context.js";
 export * from "./invalidation.js";
+
+export * from "./benchmark-fixture.js";

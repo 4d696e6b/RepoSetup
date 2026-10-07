@@ -1,6 +1,8 @@
 /** Task-only additions. Legacy error codes and exit meanings are unchanged. */
 export const TASK_ERROR_EXIT_CODES = {
   TASK_SCHEMA_VERSION_UNSUPPORTED: 2,
+  TASK_BENCHMARK_INVALID: 2,
+  TASK_BENCHMARK_INCOMPLETE: 3,
   TASK_PREFERENCES_INVALID: 2,
   TASK_DRAFT_INVALID: 2,
   TASK_PLAN_INVALID: 2,

@@ -1,0 +1,78 @@
+{
+  "fixtureVersion": 1,
+  "fixtureId": "types-result-v1",
+  "phaseId": "typed-input-boundary",
+  "requirements": [
+    {
+      "requirementId": "type-1",
+      "text": "export a discriminated `Result<T, E>` with `ok: true, value: T` or `ok: false, error: E`; `mapResult` preserves the failure and maps only the success. Success/failure branches narrow without `any`."
+    },
+    {
+      "requirementId": "type-2",
+      "text": "`decodePage(value: unknown)` returns `Result<Page, readonly InputIssue[]>`; `Page` contains readonly items `{ id: string; label: string }` and `nextCursor: string | null`. Reject unknown object fields, missing keys, non-array items, empty IDs/labels, duplicate IDs and cursors other than null or nonempty strings."
+    },
+    {
+      "requirementId": "type-3",
+      "text": "report all invalid fields as stable `{ path: string; code: \"type\" | \"missing\" | \"unknown\" | \"empty\" | \"duplicate\" }` issues sorted by path, then code. Use `$` for the root and dot paths such as `items.0.id`; report a duplicate on the later item's ID. A wrong parent type reports one `type` issue without inventing child errors. Return errors rather than throwing for invalid data; preserve the input object and arrays."
+    },
+    {
+      "requirementId": "type-4",
+      "text": "preserve the existing exported names and the valid-input behavior exercised by baseline tests. Public examples cover one success, one invalid item and mapping a failure."
+    }
+  ],
+  "write": ["src/result.ts", "src/page.ts", "test/agent/page.test.ts"],
+  "entrypoints": ["mapResult", "decodePage"],
+  "incorrectVariants": ["ignores_duplicates", "success_only_map", "optional_discriminant"],
+  "testInventory": [
+    {
+      "testId": "page-unknown",
+      "criterionIds": ["type-2", "type-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "page-valid",
+      "criterionIds": ["type-2", "type-4"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "page-duplicates",
+      "criterionIds": ["type-2", "type-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "page-root-types",
+      "criterionIds": ["type-2", "type-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "page-parent-type",
+      "criterionIds": ["type-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "page-issues-sorted",
+      "criterionIds": ["type-2", "type-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "page-missing-types",
+      "criterionIds": ["type-2", "type-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "page-frozen",
+      "criterionIds": ["type-2", "type-4"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "map-failure",
+      "criterionIds": ["type-1", "type-4"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "types-contract",
+      "criterionIds": ["type-1", "type-2"],
+      "kind": "type"
+    }
+  ]
+}

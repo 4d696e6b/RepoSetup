@@ -21,7 +21,7 @@ H is complete for the reviewed offline implementation: trusted dated catalogs,
 explainable model/effort selection, retained reservations, bounded failure-specific
 repair, dependency/evidence invalidation and explicit CLI opt-ins are implemented
 and tested. Production capability profiles remain unconfirmed; live routing fails
-closed until I/J qualification. The next milestone is I (qualification/evaluation). Historical records below retain
+closed until I/J qualification. Milestone I is now in progress (qualification/evaluation). Historical records below retain
 the original G gate; the final scope amendment supersedes that gate assignment.
 
 - Development branch: `codex/0.4.0-task-compiler`.
@@ -52,7 +52,7 @@ the original G gate; the final scope amendment supersedes that gate assignment.
 - [x] E — Serial executor, qualified fixed checks, complete admitted dependency inventories, private scratch/effect audits and live task/final-phase acceptance; reviewed local fixture validated.
 - [x] F — Private CAS state, project leases, scoped text/parent effects, original-input/postimage acceptance and honest interruption recovery.
 - [x] G — Single managed provider adapter, complete for offline implementation and no-key integration; live qualification transferred to I/J by the owner.
-- [ ] H — Model/effort routing and targeted escalation.
+- [x] H — Model/effort routing and targeted escalation, complete for the reviewed offline scope.
 - [ ] I — Packed/platform qualification and held-out benchmark.
 - [ ] J — Experimental candidate qualification.
 
@@ -881,3 +881,47 @@ fixtures/holdouts and inclusive treatment comparisons, Linux/packed/legacy gates
 and J candidate/release qualification. These are open and require their own scope
 and provider allowance; H completion does not authorize spending or a supported
 managed release. Commit this completed H slice before continuing.
+
+## Milestone I — frozen fixtures and local oracle discrimination (2026-10-07)
+
+Implemented the five normative fixture seeds, references, 15 deliberate incorrect
+variants and separately stored independent holdouts under `tests/tasks/fixtures`.
+The UI fixture is pure view-model logic; the API fixture uses an injected local
+repository. Public examples and baseline callers are read-only. Model-authored
+test targets are separate. Each source manifest freezes sorted byte inventories,
+requirements, write scopes, entrypoints, source/oracle/phase/lock/tool/recipe hashes,
+criterion inventory and identical finite resource ceilings. The ceiling is an
+accounting limit, not payment or permission to spend.
+
+Core owns strict manifest validation and safe oracle-result contracts; test-only
+infrastructure uses the existing CLI process adapter, the preinstalled TypeScript
+compiler and fixed Node assertion runner. It hydrates a private temporary project,
+keeps holdout sources outside that project, clears inherited credentials from
+child environments, runs serially, bounds process time/output, checks input hashes
+after runtime oracles and removes temporary trees. Reports contain identities and
+pass/fail metadata, never source text or raw exception/holdout diagnostics. No
+provider or network call, dependency installation or product command was added.
+
+Validation passed on macOS arm64 using the existing Node 24.21.0 and pnpm
+12.5.1 tooling (default Node remains 22.12.0): workspace build, workspace
+typecheck, separate task-runner typecheck, workspace lint/format, changed-document
+formatting and Git whitespace checks. The fixture suite passes all five cases (25 candidate evaluations): five
+references pass public/baseline/holdout checks, five seeds retain baseline behavior
+and fail new acceptance, and all 15 wrong variants fail type or holdout acceptance.
+There are 37 runtime holdout cases and one TypeScript public-type oracle. Three
+core tests cover manifest tampering, protected scope, missing coverage, changed
+ceilings and executable-field rejection. Initial root-package resolution and a
+rounding oracle gap were found and fixed; the latter now discriminates fractional
+cent rounding instead of accepting the advertised incorrect implementation.
+
+This establishes local fixture/oracle discrimination only. It does not establish
+the full E managed TypeScript/ESLint/Vitest recipe on each fixture, treatment/model
+quality, savings, production model qualification, operating-system isolation or
+Linux/packed acceptance. The cross-module fixture's pure oracle does not itself
+prove executor predecessor invalidation; existing H boundary tests and further I
+integration evidence remain relevant. Next: inclusive three-treatment accounting
+and offline packed boundary/legacy qualification. Live provider/profile smoke and
+production capability/native-effort evidence remain unrun without separately
+authorized API access/allowance. Milestone I stays unchecked; J is not started.
+Also corrected H's stale checklist entry to match its existing final acceptance
+record; this is bookkeeping, not new H qualification.

@@ -184,3 +184,37 @@ Reuse Vitest assertion/test organization, CLI dependency injection, recording Pr
 ## Evidence still required
 
 Milestone A freezes this protocol only. Milestone I must implement/version manifests and oracles, prove reference/incorrect-solution discrimination, qualify fixed check recipes, provision an already-installed tool artifact, demonstrate holdout isolation, and record all local safety/compatibility results. G/H must first qualify exact provider/model/SDK versions, native effort mappings, usage/pricing/privacy behavior and the routing catalog. Live trials remain blocked until those prerequisites and an explicit provider allowance exist. No accuracy, savings, routing quality or managed support result is claimed by this document.
+
+## Initial local fixture implementation (2026-10-07)
+
+Concrete seeds, normative phase text, public compatibility/acceptance examples,
+references, wrong variants and independent holdouts now live in
+`tests/tasks/fixtures/<fixture-id>`. `manifest.json` is the frozen source identity;
+`descriptor.json` is reviewed input to the developer-only freezer. Run
+`pnpm fixtures:tasks:freeze` only when intentionally accepting a new source/tool
+revision, and commit the changed manifests. Qualification recomputes inventories
+and rejects stale manifests rather than silently freezing observed changes.
+`pnpm test:tasks:fixtures` checks seed/reference/mutation discrimination sequentially
+without API credentials or installation. `pnpm typecheck:task-tests` checks the
+runner's TypeScript separately from the deliberately incomplete fixture sources.
+
+The assertion runner's private evaluation output sits outside the hydrated public
+project. Tests return safe case IDs and pass/fail; private expected values and
+exception text are not repair input. These initial fixtures use the installed
+TypeScript artifact and Node assertions. The dependency artifact hash identifies
+that compiler's complete file inventory, not a qualified full managed-profile
+ESLint/Vitest closure. No trial/treatment qualification or savings result follows
+from reference/mutation checks. Full E recipe, predecessor-drift, packed/platform
+and live-provider evidence remain separate I gates.
+
+Current official references reviewed for the fixed tooling (2026-10-07):
+
+- [TypeScript compiler options](https://www.typescriptlang.org/docs/handbook/compiler-options.html):
+  explicit project/root/output boundaries and `noEmitOnError`; no package scripts
+  are executed.
+- [Node 24 TypeScript support](https://nodejs.org/docs/latest-v24.x/api/typescript.html):
+  native erasable-syntax execution for the developer freezer, explicit `.ts`
+  imports and separate typecheck because type stripping does not check types.
+- [Node 24 test runner](https://nodejs.org/docs/latest-v24.x/api/test.html): reporter
+  output limitations informed the fixed JSON assertion runner; no TAP-output
+  parsing or reporter-format stability is assumed.

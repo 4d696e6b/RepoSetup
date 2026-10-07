@@ -1,0 +1,63 @@
+{
+  "fixtureVersion": 1,
+  "fixtureId": "ui-view-model-v1",
+  "phaseId": "list-view-state",
+  "requirements": [
+    {
+      "requirementId": "ui-1",
+      "text": "`buildListView(input)` accepts `{ items, search, filter: \"all\" | \"open\" | \"done\", selectedId: string | null, loading: boolean }` with readonly items `{ id, label, status: \"open\" | \"done\" }`. Return matching `rows` preserving those fields plus the totals/selection/state below. Search trims whitespace and compares labels using `toLowerCase()`; an empty search matches every item."
+    },
+    {
+      "requirementId": "ui-2",
+      "text": "sort matching rows by normalized label, then ID; compute `total`, `openCount` and `doneCount` from the full input rather than the filtered rows. Keep item IDs as row keys."
+    },
+    {
+      "requirementId": "ui-3",
+      "text": "return `loading`, `empty` or `ready` display state in that priority order. Loading remains loading even with zero rows. An absent or filtered-out selection yields `selectedId: null`; a matching selection remains selected."
+    },
+    {
+      "requirementId": "ui-4",
+      "text": "preserve all inputs and baseline behavior, make repeated calls identical and handle labels containing markup-like text as plain strings. Public tests cover filtering, one selection and loading."
+    }
+  ],
+  "write": ["src/view-model.ts", "test/agent/view-model.test.ts"],
+  "entrypoints": ["buildListView"],
+  "incorrectVariants": ["filtered_totals", "wrong_loading", "unstable_ties"],
+  "testInventory": [
+    {
+      "testId": "ui-filter",
+      "criterionIds": ["ui-1"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "ui-trim",
+      "criterionIds": ["ui-1"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "ui-ties",
+      "criterionIds": ["ui-2"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "ui-totals",
+      "criterionIds": ["ui-2"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "ui-state",
+      "criterionIds": ["ui-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "ui-selection",
+      "criterionIds": ["ui-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "ui-frozen",
+      "criterionIds": ["ui-4"],
+      "kind": "runtime"
+    }
+  ]
+}
