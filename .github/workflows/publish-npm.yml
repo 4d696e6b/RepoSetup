@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       qualification_run_ids:
-        description: Three passing release.yml run IDs from the frozen stable SHA, oldest first
+        description: Three passing release.yml run IDs from the exact stable SHA, oldest first
         required: true
         type: string
       publish:
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Verify exact-source qualification and seven-day soak
+      - name: Verify exact-source qualification
         id: qualification
         run: node scripts/check-release-qualification.mjs
         env:

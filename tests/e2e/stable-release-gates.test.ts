@@ -63,15 +63,13 @@ function evidence() {
     },
     sourceSha: sha,
     branchSha: sha,
-    now: Date.parse("2026-10-08T12:00:00Z"),
   };
 }
 
 describe("stable exact-source qualification gates", () => {
-  it("accepts three consecutive complete runs at the seven-day boundary", () => {
+  it("accepts three consecutive complete runs without a calendar delay", () => {
     expect(qualification.validateQualification(evidence())).toEqual({
       artifactId: 123,
-      soakEnd: "2026-10-08T12:00:00.000Z",
     });
     expect(qualification.parseRunIds("1, 2,3")).toEqual(["1", "2", "3"]);
   });
@@ -83,13 +81,13 @@ describe("stable exact-source qualification gates", () => {
     },
   );
 
-  it("rejects a changed frozen branch, source mismatch, or a fork", () => {
+  it("rejects a changed candidate branch, source mismatch, or a fork", () => {
     const input = evidence();
     input.branchSha = "a".repeat(40);
-    expect(() => qualification.validateQualification(input)).toThrow("Frozen candidate");
+    expect(() => qualification.validateQualification(input)).toThrow("Candidate branch");
     input.branchSha = sha;
     input.runs[0].head_sha = "b".repeat(40);
-    expect(() => qualification.validateQualification(input)).toThrow("frozen source");
+    expect(() => qualification.validateQualification(input)).toThrow("selected source");
     input.runs[0].head_sha = sha;
     input.runs[0].head_repository.full_name = "attacker/RepoSetup";
     expect(() => qualification.validateQualification(input)).toThrow("official workflow");
@@ -107,16 +105,13 @@ describe("stable exact-source qualification gates", () => {
     expect(() => qualification.validateQualification(input)).toThrow("without skips");
   });
 
-  it("rejects stale selected runs, reattempts, and an incomplete soak", () => {
+  it("rejects stale selected runs and reattempts", () => {
     const input = evidence();
     input.latestRuns[0] = { ...input.runs[2], id: 4 };
     expect(() => qualification.validateQualification(input)).toThrow("latest three consecutive");
     input.latestRuns = [...input.runs].reverse();
     input.runs[0].run_attempt = 2;
     expect(() => qualification.validateQualification(input)).toThrow("first-attempt");
-    input.runs[0].run_attempt = 1;
-    input.now -= 1;
-    expect(() => qualification.validateQualification(input)).toThrow("soak is incomplete");
   });
 
   it("rejects an expired artifact or one retained for a different run", () => {

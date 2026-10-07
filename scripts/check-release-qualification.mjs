@@ -24,23 +24,14 @@ export function parseRunIds(value) {
   return ids;
 }
 
-export function validateQualification({
-  runs,
-  jobs,
-  latestRuns,
-  artifact,
-  sourceSha,
-  branchSha,
-  now,
-}) {
+export function validateQualification({ runs, jobs, latestRuns, artifact, sourceSha, branchSha }) {
   if (!SHA.test(sourceSha) || branchSha !== sourceSha) {
-    throw new Error("Frozen candidate branch and release source must agree.");
+    throw new Error("Candidate branch and release source must agree.");
   }
   if (runs.length !== 3 || jobs.length !== 3 || new Set(runs.map((run) => run.id)).size !== 3) {
     throw new Error("Three distinct full qualification runs are required.");
   }
   const branch = runs[0].head_branch;
-  let completed = 0;
   for (const [index, run] of runs.entries()) {
     if (
       run.repository?.full_name !== REPOSITORY ||
@@ -56,12 +47,11 @@ export function validateQualification({
       (index > 0 && run.run_number <= runs[index - 1].run_number)
     ) {
       throw new Error(
-        "Qualification must use ordered successful first-attempt runs from the frozen source and official workflow.",
+        "Qualification must use ordered successful first-attempt runs from the selected source and official workflow.",
       );
     }
     const updated = Date.parse(run.updated_at);
     if (!Number.isFinite(updated)) throw new Error("Qualification completion time is missing.");
-    completed = Math.max(completed, updated);
     const currentJobs = jobs[index];
     if (
       currentJobs.length !== requiredJobs.length ||
@@ -83,18 +73,11 @@ export function validateQualification({
       ) {
         throw new Error("Every required job and step must pass without skips.");
       }
-      completed = Math.max(completed, time);
     }
   }
   if (latestRuns.length !== 3 || latestRuns.some((run, index) => run.id !== runs[2 - index].id)) {
     throw new Error(
       "The selected runs must be the latest three consecutive qualifications on this branch.",
-    );
-  }
-  const soakEnd = completed + 7 * 24 * 60 * 60 * 1000;
-  if (!Number.isFinite(now) || now < soakEnd) {
-    throw new Error(
-      `Seven-day exact-source soak is incomplete; earliest release ${new Date(soakEnd).toISOString()}.`,
     );
   }
   if (
@@ -109,7 +92,7 @@ export function validateQualification({
       "The final successful run must retain one unexpired candidate artifact for this source.",
     );
   }
-  return { artifactId: artifact.id, soakEnd: new Date(soakEnd).toISOString() };
+  return { artifactId: artifact.id };
 }
 
 async function main() {
@@ -170,14 +153,13 @@ async function main() {
     artifact: candidates[0],
     sourceSha: process.env.GITHUB_SHA,
     branchSha: ref.object?.sha,
-    now: Date.now(),
   });
   await appendFile(
     process.env.GITHUB_OUTPUT,
     `artifact_id=${result.artifactId}\nrun_id=${ids[2]}\n`,
   );
   process.stdout.write(
-    `Qualified source ${process.env.GITHUB_SHA}; soak completed ${result.soakEnd}.\n`,
+    `Qualified source ${process.env.GITHUB_SHA}; all three exact-source release runs passed.\n`,
   );
 }
 

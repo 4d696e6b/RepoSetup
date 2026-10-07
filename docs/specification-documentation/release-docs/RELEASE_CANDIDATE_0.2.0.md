@@ -37,7 +37,7 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 
 The alpha runs [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), and [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011) passed at the exact frozen alpha SHA; its unchanged-source soak ended 2026-10-07 11:30:20 UTC. The earlier unchecked qualification entries are historical alpha progress, superseded by that evidence. Candidate benchmark [36704251139](https://github.com/4d696e6b/RepoSetup/actions/runs/36704251139) also passed at that SHA.
 
-The stable version correction changes the source and packed manifest. Stable qualification therefore requires its own exact-source evidence; the alpha tarball must not be renamed or relabeled as stable. See [stable delivery runbook](./STABLE_RELEASE_0.2.0.md). The stable matrix, soak, owner authorization, and actual publication remain release blockers. A green unit suite or a passing historical workflow does not replace them.
+The stable version correction changes the source and packed manifest. Stable qualification therefore requires its own exact-source evidence; the alpha tarball must not be renamed or relabeled as stable. See [stable delivery runbook](./STABLE_RELEASE_0.2.0.md). On October 7 the owner removed the additional stable seven-day wait and requested release after qualification. The final stable matrix, artifact identity, trusted publisher and actual publication remain release gates. A green unit suite or a passing historical workflow does not replace them.
 
 ## Publication boundary
 
