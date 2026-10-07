@@ -434,6 +434,33 @@ describe("executeInstallation", () => {
     expect(await readFile(path.join(root, "generator.txt"), "utf8")).toBe("updated\r\ncontent\r\n");
   });
 
+  it.each(["\n", "\r\n"])(
+    "preserves %j endings when a single-line anchor gains lines",
+    async (ending) => {
+      const root = await tempRoot();
+      await writeFile(
+        path.join(root, "vite.config.ts"),
+        ["before", "import react", "after", ""].join(ending),
+      );
+      const result = await executeInstallation(
+        [
+          {
+            type: "modify_text",
+            path: "vite.config.ts",
+            oldText: "import react",
+            newText: "import react\nimport tailwind",
+            description: "Insert a plugin import",
+          },
+        ],
+        { rootDir: root, runProcess: recordingRunner([]) },
+      );
+      expect(result.ok).toBe(true);
+      expect(await readFile(path.join(root, "vite.config.ts"), "utf8")).toBe(
+        ["before", "import react", "import tailwind", "after", ""].join(ending),
+      );
+    },
+  );
+
   it("preserves CRLF when appending to an existing environment example", async () => {
     const root = await tempRoot();
     await writeFile(path.join(root, ".env.example"), "EXISTING=value\r\n", "utf8");
