@@ -261,7 +261,11 @@ describe("qualified model routing", () => {
         nativeEffortId: "high",
       },
     };
-    expect(selected(f).selected).toMatchObject({ modelProfileId: "cheap", nativeEffortId: "high" });
+    const focused = selected(f);
+    expect(focused.selected).toMatchObject({ modelProfileId: "cheap", nativeEffortId: "high" });
+    expect(focused.rejectedCandidates.find((p) => p.modelProfileId === "strong")!.reasons).toEqual([
+      "repair_configuration_policy",
+    ]);
     f.repair.implementationFailures = 2;
     expect(selected(f).selected).toMatchObject({ modelProfileId: "strong", nativeEffortId: "low" });
   });

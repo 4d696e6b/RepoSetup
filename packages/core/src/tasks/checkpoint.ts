@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { phaseRunSchema } from "./run-schema.js";
-import { taskContextSchema } from "./evidence-schema.js";
+import { taskContextSchema, taskRoutingSchema } from "./evidence-schema.js";
 import {
   taskAttemptIdSchema,
   taskCounterSchema,
@@ -26,6 +26,7 @@ export const taskRunCheckpointSchema = z.strictObject({
   checkpointHash: taskHashSchema,
   policyRevision: taskHashSchema,
   rootInstance: taskHashSchema,
+  routingAuthorityId: taskHashSchema.optional(),
   baselineSnapshot: taskVerifierSnapshotSchema,
   phaseVerificationPending: z.boolean(),
   compilation: z
@@ -75,6 +76,7 @@ export const taskRunCheckpointSchema = z.strictObject({
           .max(20),
         beforeSnapshot: taskVerifierSnapshotSchema,
         repair: taskRepairContextSchema.optional(),
+        routing: taskRoutingSchema.optional(),
       }),
     )
     .max(288),
@@ -188,6 +190,25 @@ export function validateTaskRunCheckpoint(value: unknown): TaskParseResult<TaskR
       const previous = b.repair ? attempts.get(b.repair.previousAttemptId) : undefined;
       return (
         !a ||
+        (c.routingAuthorityId !== undefined && !b.routing) ||
+        (b.routing !== undefined && c.routingAuthorityId === undefined) ||
+        (b.routing !== undefined &&
+          (() => {
+            const { routingId, ...payload } = b.routing;
+            return (
+              routingId !== taskContentHash(payload) ||
+              routingId !== a.routingId ||
+              b.routing.planId !== run.planId ||
+              b.routing.taskId !== a.taskId ||
+              b.routing.contextId !== a.contextId ||
+              taskContentHash({
+                adapterId: b.routing.selected.adapterId,
+                providerId: b.routing.selected.providerId,
+                modelProfileId: b.routing.selected.modelProfileId,
+                nativeEffortId: b.routing.selected.nativeEffortId,
+              }) !== taskContentHash(a.requestedConfiguration)
+            );
+          })()) ||
         b.context.planId !== run.planId ||
         b.context.taskId !== a.taskId ||
         b.context.contextId !== a.contextId ||

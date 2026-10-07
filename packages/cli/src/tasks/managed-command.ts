@@ -1,7 +1,13 @@
+import { TASK_MODEL_CATALOG } from "./model-catalog.js";
 import path from "node:path";
 import { realpath } from "node:fs/promises";
 import {
   prepareTaskContext,
+  routeTask,
+  validateTaskRoutingAuthority,
+  TASK_ROUTING_POLICY_REVISION,
+  type TaskRoutingAuthority,
+  type RoutingDecision,
   taskContentHash,
   taskFailure,
   executeManagedTaskPhase,
@@ -39,6 +45,8 @@ export type TaskManagedOptions = {
   maxOutputTokens: string;
   timeoutMs: string;
   allowProviderUsage?: boolean;
+  repair?: boolean;
+  routing?: boolean;
   approveRun?: string;
   dryRun: boolean;
 };
@@ -47,6 +55,7 @@ export type TaskManagedHostFactory = (input: {
   stateRoot: string;
   scratchRoot: string;
   effort: string;
+  configuration?: TaskProviderAdapter["configuration"];
   authority: ManagedTaskAuthority;
   compilationPolicy: TaskCompilationPolicy;
   review: NonNullable<TaskVerificationAdapter["review"]>;
@@ -54,6 +63,9 @@ export type TaskManagedHostFactory = (input: {
   TaskParseResult<{
     adapter: TaskRunAdapter;
     provider: TaskProviderAdapter;
+    resolveProvider?: (
+      configuration: TaskProviderAdapter["configuration"],
+    ) => TaskParseResult<TaskProviderAdapter>;
     verification: TaskVerificationAdapter;
     gitExecutable: string;
   }>
@@ -82,7 +94,15 @@ export const createDefaultManagedTaskHost: TaskManagedHostFactory = async (input
   const gitExecutable = await resolveTaskGitExecutable();
   if (!gitExecutable)
     return taskFailure("TASK_PREREQUISITE_MISSING", "Git must be preinstalled on the host PATH.");
-  const provider = createOpenAITaskProvider({ model: "gpt-6.1-sol", effort: input.effort });
+  const resolveProvider = (configuration: TaskProviderAdapter["configuration"]) =>
+    createOpenAITaskProvider({
+      model: configuration.modelProfileId,
+      effort: configuration.nativeEffortId,
+    });
+  const provider = createOpenAITaskProvider({
+    model: input.configuration?.modelProfileId ?? "gpt-6.1-sol",
+    effort: input.configuration?.nativeEffortId ?? input.effort,
+  });
   if (!provider.success) return provider;
   return {
     success: true,
@@ -90,6 +110,7 @@ export const createDefaultManagedTaskHost: TaskManagedHostFactory = async (input
       adapter: adapter.data,
       verification: verification.data,
       provider: provider.data,
+      resolveProvider,
       gitExecutable,
     },
   };
@@ -148,9 +169,10 @@ export async function handleManagedTask(
       );
     if (
       preferences.executionMode !== "managed" ||
-      !preferences.providerAvailability.some(
-        (p) => p.enabled && p.modelProfileIds.includes("gpt-6.1-sol"),
-      )
+      (!options.routing &&
+        !preferences.providerAvailability.some(
+          (p) => p.enabled && p.modelProfileIds.includes("gpt-6.1-sol"),
+        ))
     )
       return fail(
         taskFailure(
@@ -159,9 +181,13 @@ export async function handleManagedTask(
         ).error,
       );
     if (
-      !["low", "medium", "high", "xhigh", "max"].includes(options.effort) ||
-      (preferences.effortPreference.type === "explicit" &&
-        preferences.effortPreference.nativeEffortId !== options.effort)
+      options.routing
+        ? preferences.effortPreference.type === "minimum_supported"
+          ? options.effort !== "minimum_supported"
+          : preferences.effortPreference.nativeEffortId !== options.effort
+        : !["low", "medium", "high", "xhigh", "max"].includes(options.effort) ||
+          (preferences.effortPreference.type === "explicit" &&
+            preferences.effortPreference.nativeEffortId !== options.effort)
     )
       return fail(
         taskFailure(
@@ -183,6 +209,20 @@ export async function handleManagedTask(
           "Output tokens/deadline must be positive integers within 16384/120000.",
         ).error,
       );
+    const rawRouting: TaskRoutingAuthority | undefined = options.routing
+      ? {
+          ...(deps.taskRoutingCatalog ?? {
+            catalog: TASK_MODEL_CATALOG,
+            qualificationScope: "live" as const,
+          }),
+          preferences,
+        }
+      : undefined;
+    const checkedRouting = rawRouting ? validateTaskRoutingAuthority(rawRouting) : null;
+    if (checkedRouting && !checkedRouting.success) return fail(checkedRouting.error);
+    const routing = checkedRouting?.success ? checkedRouting.data : undefined;
+    const routingDecisions: RoutingDecision[] = [];
+    const routingBlocks: { taskId: string; code: string; details: unknown }[] = [];
     const contexts = [];
     // Dependent bodies cannot be prepared before their accepted artifacts exist.
     for (const taskId of plan.data.orderedTaskIds) {
@@ -198,6 +238,31 @@ export async function handleManagedTask(
       });
       if (!context.success) return fail(context.error);
       contexts.push({ taskId, status: "prepared_read_only", context: context.data.context });
+      if (routing) {
+        const selected = routeTask({
+          ...routing,
+          task: plan.data.tasks.find((t) => t.taskId === taskId)!,
+          planId: plan.data.planId,
+          context: context.data.context,
+          allowProviderUsage: true,
+          now: new Date().toISOString(),
+          maxOutputTokens: options.repair ? Math.min(4096, maxOutputTokens) : maxOutputTokens,
+          remaining: {
+            calls: preferences.resourceLimits.maxProviderCalls,
+            inputTokens: preferences.resourceLimits.maxInputTokens,
+            outputTokens: preferences.resourceLimits.maxOutputTokens,
+            costMicrousd: preferences.resourceLimits.maxCostMicrousd,
+            wallTimeMs: preferences.resourceLimits.maxWallTimeMs,
+          },
+        });
+        if (selected.success) routingDecisions.push(selected.data);
+        else
+          routingBlocks.push({
+            taskId,
+            code: selected.error.code,
+            details: selected.error.details ?? null,
+          });
+      }
     }
     const root = path.resolve(deps.cwd, options.root ?? ".");
     const summary = {
@@ -210,9 +275,30 @@ export async function handleManagedTask(
         : "external_draft_allowance_not_observed",
       authorityId: authority.data.authorityId,
       contexts,
+      ...(routing
+        ? {
+            routing: {
+              catalog: routing.catalog,
+              qualificationScope: routing.qualificationScope,
+              policyRevision: TASK_ROUTING_POLICY_REVISION,
+              preferenceRevision: taskContentHash(preferences),
+              decisions: routingDecisions,
+              blocked: routingBlocks,
+              allowanceStatus: "advisory_before_private_ledger_import",
+            },
+          }
+        : {}),
+      repairPolicy: {
+        enabled: Boolean(options.repair),
+        maxAttempts: preferences.resourceLimits.maxImplementationAttemptsPerTask,
+        initialOutputTokens: options.repair ? Math.min(4096, maxOutputTokens) : maxOutputTokens,
+        outputCeiling: maxOutputTokens,
+        retainedEffects: true,
+        retainedReservations: true,
+      },
       provider: {
         providerId: "openai-responses-v1",
-        model: "gpt-6.1-sol",
+        model: routing ? "selected_per_task_from_trusted_catalog" : "gpt-6.1-sol",
         nativeEffortId: options.effort,
         maxOutputTokens,
         timeoutMs,
@@ -233,7 +319,7 @@ export async function handleManagedTask(
         criteria: t.criteria,
       })),
       disclosure:
-        "Scoped source bodies are sent to OpenAI. store:false does not imply zero retention; abuse logs may remain up to 30 days and encrypted prompt-cache state up to 24 hours. Costs are conservative estimates including cache-write allowance, not reported bills. Context requests stay in reviewed read scope. No automatic retry, repair, installation or rollback.",
+        "Scoped source bodies are sent to OpenAI. store:false does not imply zero retention; abuse logs may remain up to 30 days and encrypted prompt-cache state up to 24 hours. Costs are conservative estimates including cache-write allowance, not reported bills. Context requests stay in reviewed read scope. Only an explicitly reviewed repair policy can retry eligible failures, at most three attempts; infrastructure and uncertain calls stop. No installation or rollback.",
       baselineGit: "not_checked",
       toolAvailability: "not_checked",
       verification: "not_checked",
@@ -244,7 +330,7 @@ export async function handleManagedTask(
         deps.io.writeOut,
         globals.json
           ? JSON.stringify({ ...summary, summaryId, dryRun: true, runId: null, attemptId: null })
-          : `Managed run review ${summaryId}\nProvider: gpt-6.1-sol; native effort: ${options.effort}; live qualification unconfirmed.\nTasks: ${plan.data.orderedTaskIds.join(", ")}; checks: ${authority.data.authority.policy.definitions.map((d) => d.checkId).join(", ")}\nLimits: ${JSON.stringify(preferences.resourceLimits)}\n${summary.disclosure}\nNo credentials, calls, writes, attempts, locks, prompts or processes. Use --json to inspect the complete review.`,
+          : `Managed run review ${summaryId}\nProvider: ${summary.provider.model}; native effort: ${options.effort}; live qualification unconfirmed.\nTasks: ${plan.data.orderedTaskIds.join(", ")}; checks: ${authority.data.authority.policy.definitions.map((d) => d.checkId).join(", ")}\nLimits: ${JSON.stringify(preferences.resourceLimits)}\n${summary.disclosure}\nNo credentials, calls, writes, attempts, locks, prompts or processes. Use --json to inspect the complete review.`,
       );
       return 0;
     }
@@ -273,11 +359,33 @@ export async function handleManagedTask(
       return fail(
         taskFailure("TASK_SCOPE_INVALID", "Managed project root must be canonical.").error,
       );
+    if (routingBlocks.length)
+      return fail(
+        taskFailure(
+          routingBlocks[0]!.code as "TASK_CAPABILITY_UNAVAILABLE",
+          "Initial routing is blocked; inspect the dry-run candidate rejections. Production capability qualification requires separately reviewed live evidence.",
+        ).error,
+      );
+    const firstSelection = routingDecisions[0]?.selected;
+    const configuration = firstSelection
+      ? {
+          adapterId: firstSelection.adapterId,
+          providerId: firstSelection.providerId,
+          modelProfileId: firstSelection.modelProfileId,
+          nativeEffortId: firstSelection.nativeEffortId,
+        }
+      : {
+          adapterId: "openai-responses-v1" as const,
+          providerId: "openai-responses-v1" as const,
+          modelProfileId: "gpt-6.1-sol",
+          nativeEffortId: options.effort,
+        };
     const host = await deps.createTaskManagedHost({
       projectRoot: root,
       stateRoot: summary.paths.stateRoot,
       scratchRoot: summary.paths.scratchRoot,
-      effort: options.effort,
+      effort: configuration.nativeEffortId,
+      configuration,
       authority: authority.data.authority,
       compilationPolicy: review.policy,
       review: async (request) => {
@@ -299,15 +407,7 @@ export async function handleManagedTask(
       },
     });
     if (!host.success) return fail(host.error);
-    if (
-      taskContentHash(host.data.provider.configuration) !==
-      taskContentHash({
-        adapterId: "openai-responses-v1",
-        providerId: "openai-responses-v1",
-        modelProfileId: "gpt-6.1-sol",
-        nativeEffortId: options.effort,
-      })
-    )
+    if (taskContentHash(host.data.provider.configuration) !== taskContentHash(configuration))
       return fail(
         taskFailure(
           "TASK_PROVIDER_CONFIGURATION_UNSUPPORTED",
@@ -324,6 +424,9 @@ export async function handleManagedTask(
       gitExecutable: host.data.gitExecutable,
       adapter: host.data.adapter,
       provider: host.data.provider,
+      ...(routing ? { routing } : {}),
+      ...(host.data.resolveProvider ? { resolveProvider: host.data.resolveProvider } : {}),
+      ...(options.repair ? { allowRepair: true } : {}),
       verification: {
         policy: authority.data.authority.policy,
         adapter: host.data.verification,

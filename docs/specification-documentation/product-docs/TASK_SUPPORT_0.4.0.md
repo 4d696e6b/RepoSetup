@@ -415,7 +415,7 @@ identity is bound to the reviewed phase; changing effort/budgets or removing a
 receipt cannot reset an existing phase allowance in the selected state authority.
 
 The fixed strong transport and explicit native effort are unqualified for capability
-routing until H. Fake HTTP with the actual SDK verifies local orchestration; actual
+routing until independently reviewed live capability evidence is recorded in I/J. Fake HTTP with the actual SDK verifies local orchestration; actual
 TypeScript/ESLint/Vitest fixtures verify application/acceptance. Neither establishes
 account access or live provider schema/usage/effective-configuration behavior.
 The [smoke protocol](../implementing-docs/TASK_PROVIDER_SMOKE_0.4.0.md) defines the
@@ -424,3 +424,27 @@ completion does not qualify remote provider support or remove production credent
 and usage-allowance requirements. Linux/packed/benchmark
 and release remain I/J. Host-private state and filesystem audits are not an OS
 sandbox or protection against hostile same-UID rewrites/concurrent renames.
+
+## Milestone H implementation support and qualification boundary
+
+The core dated [catalog](../../../packages/core/src/tasks/model-catalog.ts),
+[router](../../../packages/core/src/tasks/routing.ts), failure-specific repair and
+executor-managed routing reuse G's provider port/reservations, F's guarded
+application/private CAS/journal and E's independent checks. CLI owns concrete SDK
+construction and model mappings; the executor alone dispatches or writes project
+files. Explicit `--repair` and `--routing` opt-ins preserve the existing fixed-run,
+portable and installer inputs. No dependency installation, parallel workers, MCP,
+website source change or automatic rollback is supported.
+
+Qualification is deliberately scoped: synthetic trusted offline catalogs test
+selection, model-specific effort mapping and repair orchestration, with the actual
+pinned SDK and simulated HTTP. The macOS/Node 24 joined fixture uses actual Git,
+scoped failed edits, frozen independent TypeScript/ESLint/Vitest acceptance and fresh
+final-phase review. This proves local behavior, not provider account/schema access,
+real capability, live availability, billed cost or routing savings. The production
+[CLI catalog](../../../packages/cli/src/tasks/model-catalog.ts) remains entirely
+unconfirmed for capability routing. Reviewed live evidence, updated dated
+qualification, Linux/packed qualification and benchmark comparisons remain I/J.
+The no-key local route is an offline test capability, never a production credential
+or live qualification bypass. Real managed requests still require the selected
+provider's environment credential and explicit usage allowance.

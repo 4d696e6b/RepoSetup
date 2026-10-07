@@ -332,7 +332,7 @@ behavior, credential requirements or the runtime's unconfirmed live qualificatio
 `task run` now executes a reviewed phase serially. Required inputs are `--review`,
 `--plan`, managed `--preferences`, a separate `--authority` fixed-check manifest,
 `--state-root`, `--scratch-root`, and explicit native `--effort`. The transport is
-fixed to `gpt-6.1-sol`; capability qualification/routing remains H. Optional per-call
+fixed to `gpt-6.1-sol` unless the explicit H routing option is selected. Optional per-call
 `--max-output-tokens` defaults to 4096 (maximum 16384); `--timeout-ms` defaults to
 120000 (maximum 120000). Credentials come only from `OPENAI_API_KEY` at real host
 construction, never from artifacts.
@@ -353,7 +353,7 @@ expansions may follow the initial coding request, within the same attempt and ph
 allowance. Unknown/pending usage prevents replay or allowance reset. A valid typed
 proposal passes the existing scoped executor and fresh trusted checks; live task and
 final-phase acceptance require independent reviewer responses. Failure retains
-private state and project effects for inspection; there is no automatic repair,
+private state and project effects for inspection. G default runs have no automatic repair,
 escalation, retry or rollback. CLI JSON errors include the run ID once created.
 `task status --state` continues to treat caller snapshots as unverified claims.
 Managed compilation is described below. Portable compile/next behavior
@@ -393,3 +393,46 @@ receipt for inclusive accounting; the selected private state authority rejects
 stripping an existing phase ledger identity. Model drafts still
 pass independent requirement coverage, ownership, DAG, scope and check validation.
 No raw provider response/prompt, credential or command is stored in the ledger.
+
+### Milestone H routing and focused repair (offline implementation)
+
+`task run --repair` opts into the reviewed task-local repair policy. This is part of
+the exact dry-run summary and requires a new `--approve-run` identity when changed.
+The original fixed model/native effort remains the default. `--max-output-tokens`
+is an approved ceiling: repair starts at the smaller of 4096 and that ceiling.
+Known model-output truncation can double the allocation within the ceiling;
+remaining calls/tokens/cost/time and all original reservations are retained.
+Implementation failures can repair the current failed task, at most three total
+attempts or the smaller preference limit. Successful tasks are retained. Failed
+edits remain in place and repairs use their current guarded preimages. Infrastructure,
+uncertain usage/configuration, scope violations, drift and review failures stop for
+inspection; none permit automatic rollback, installation or allowance reset.
+
+`--routing` independently selects model capability and native effort from the
+trusted host's dated catalog, including the current context and remaining allowance.
+For a `minimum_supported` effort preference, pass `--effort minimum_supported`;
+explicit effort preferences require the same native ID. Unsupported IDs fail; no
+cross-model effort translation is inferred. With `--repair --routing`, the first
+implementation repair preserves the model/native effort. After two implementation
+failures, a baseline model can move to a qualified strong model at that model's
+reviewed effort, or an already strong model can raise its reviewed native effort.
+An explicit effort preference stays explicit. Truncation raises only output budget.
+
+Dry-run prints metadata, requested selection, rejected candidate reasons, full
+catalog/policy/preference identities and the repair policy. Dependent contexts
+remain deferred until fresh predecessor acceptance; allowance is advisory until
+the private compilation ledger is imported. Dry-run makes no calls, reads no
+credentials, opens no attempt/lock/state, invokes no process or prompt and prints
+no source bodies. Real routing is repeated inside the executor lease and exact
+provider preparation is checked before reserving/dispatching each call.
+
+The production Luna/Sol/Astra catalog records documented transport mappings but
+**all capability qualifications are unconfirmed**. `--routing --dry-run` therefore
+shows `model_unqualified` rejections; an approved real routed run fails with
+`TASK_CAPABILITY_UNAVAILABLE` before provider construction or calls. Preferences,
+plans and CLI inputs cannot supply qualification evidence. Trusted offline test
+catalogs exercise the implementation with simulated SDK responses; they cannot
+authorize live routing. I/J must establish dated live capability evidence before
+managed routed support can be qualified. No new resume or verification command is
+introduced. Local validation/handoff/verification requires no API key or AI credits;
+real managed calls require credentials and explicit provider usage allowance.

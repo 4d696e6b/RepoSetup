@@ -148,14 +148,14 @@ export function routeTask(input: TaskRoutingInput): TaskParseResult<RoutingDecis
       !escalation &&
       profile.profileId !== r.repair.previousConfiguration.modelProfileId
     )
-      reasons.push("missing_capabilities");
+      reasons.push("repair_configuration_policy");
     if (
       escalation &&
       previous?.qualification.status === "qualified" &&
       previous.qualification.capabilityClass === "strong" &&
       profile.profileId !== previous.profileId
     )
-      reasons.push("missing_capabilities");
+      reasons.push("repair_configuration_policy");
     const inputTokens = r.context.size.estimatedInputTokens + 8192;
     if (
       !Number.isSafeInteger(inputTokens) ||
@@ -258,4 +258,31 @@ export function taskRemainingAllowance(run: {
       run.resourceLimits.maxWallTimeMs - run.resourceLedger.consumed.durationMs,
     ),
   };
+}
+
+/** Trusted executor input. Never decoded from plan/preferences as qualification evidence. */
+export type TaskRoutingAuthority = {
+  catalog: TaskModelCatalog;
+  preferences: import("./preferences-schema.js").TaskPreferences;
+  qualificationScope: "offline" | "live";
+};
+export function validateTaskRoutingAuthority(
+  value: TaskRoutingAuthority,
+): TaskParseResult<TaskRoutingAuthority> {
+  const catalog = validateTaskModelCatalog(value.catalog);
+  if (!catalog.success) return catalog;
+  const preferences = taskPreferencesSchema.safeParse(value.preferences);
+  if (!preferences.success || !["offline", "live"].includes(value.qualificationScope))
+    return taskFailure("TASK_PREFERENCES_INVALID", "Trusted routing authority is invalid.");
+  return {
+    success: true,
+    data: freezeTaskValue({
+      catalog: catalog.data,
+      preferences: preferences.data,
+      qualificationScope: value.qualificationScope,
+    }),
+  };
+}
+export function taskRoutingAuthorityId(value: TaskRoutingAuthority): string {
+  return taskContentHash({ ...value, policyRevision: TASK_ROUTING_POLICY_REVISION });
 }

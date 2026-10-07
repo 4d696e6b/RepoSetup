@@ -131,10 +131,17 @@ and release qualification retain later gates.
 
 **Objective:** select model capability and effort independently and retry the right failure.
 
-- [ ] Add dated, qualified model profiles and explainable capability/effort filtering.
-- [ ] Reserve finite budgets and record requested versus effective configuration.
-- [ ] Classify failures and build failure-specific repair context with at most three implementation attempts.
-- [ ] Block dependents and invalidate evidence after accepted output changes.
+H's implementation can be qualified offline without API access. Dated synthetic
+host profiles establish the routing/repair behavior only; the production transport
+catalog remains unconfirmed for task capability and cannot route a live call.
+Actual provider/profile capability qualification is part of I's separately
+approved live gate and is required before J's managed routed support. Offline H
+completion cannot certify model quality, account availability or savings.
+
+- [x] Add dated, qualified model profiles and explainable capability/effort filtering.
+- [x] Reserve finite budgets and record requested versus effective configuration.
+- [x] Classify failures and build failure-specific repair context with at most three implementation attempts.
+- [x] Block dependents and invalidate evidence after accepted output changes.
 
 **Likely modules:** core routing/escalation/state and provider mapping. **Dependencies:** E–G. **Tests:** unsupported effort, unavailable models, capability floors, budgets, missing context and repeated failures. **Done:** bounded repair/escalation changes only eligible failed tasks.
 
@@ -146,6 +153,7 @@ and release qualification retain later gates.
 - [ ] Compare whole-phase strong, compiled fixed-strong and compiled routed treatments.
 - [ ] Include all compilation, context expansion, retries and verification overhead and every failed trial.
 - [ ] Qualify packed aliases, legacy workflows and task boundaries across the advertised platforms.
+- [ ] Qualify dated production capability/feature profiles and native effort behavior on representative tasks before enabling live routing; synthetic offline H catalogs and official transport mappings cannot establish model quality.
 - [ ] Complete the separately authorized live provider/profile smoke transferred from G: record actual account/model/schema acceptance, effective configuration/usage and independent task/final-phase acceptance under the [finite protocol](./TASK_PROVIDER_SMOKE_0.4.0.md).
 
 **Likely modules:** task e2e fixtures, benchmark runner and targeted CI jobs. **Dependencies:** D–H. **Tests:** end-to-end acceptance, failure injection, drift, ownership and compatibility. **Done:** reproducible reports with limited, evidence-backed claims; ordinary CI needs no AI credentials.

@@ -4,7 +4,7 @@ Last updated: 2026-10-07.
 
 ## Current position
 
-**Milestones A–G are complete for the reviewed local/offline implementation scope.** Core
+**Milestones A–H are complete for the reviewed local/offline implementation scope.** Core
 schemas/compiler/context, portable compile/next/status, trusted checks, scoped text
 application, private durable state and interruption reconciliation are implemented.
 Actual tool/state qualification is macOS arm64 on Node 24.21.0; Linux/packed gates
@@ -17,8 +17,11 @@ condition is transferred to I and required before J's managed candidate qualific
 it remains unrun and unconfirmed. The joined no-key test demonstrates compilation,
 an actual bug fix, real qualified checks and durable final-phase acceptance through
 the managed CLI and real Git with simulated HTTP. See the [roadmap](./ROADMAP_0.4.0.md).
-H is in progress: strict dated catalogs and pure routing are implemented; durable
-routing/repair orchestration remains the next slice. Historical records below retain
+H is complete for the reviewed offline implementation: trusted dated catalogs,
+explainable model/effort selection, retained reservations, bounded failure-specific
+repair, dependency/evidence invalidation and explicit CLI opt-ins are implemented
+and tested. Production capability profiles remain unconfirmed; live routing fails
+closed until I/J qualification. The next milestone is I (qualification/evaluation). Historical records below retain
 the original G gate; the final scope amendment supersedes that gate assignment.
 
 - Development branch: `codex/0.4.0-task-compiler`.
@@ -787,3 +790,94 @@ test. No real credentials, live provider calls, dependency installation or later
 milestone implementation. H remains in progress pending CLI/routing wiring and
 joined acceptance coverage; production model capability qualification stays
 unconfirmed and remains an I/J release gate.
+
+### H routed dispatcher and CLI validation — 2026-10-07 (in progress)
+
+Wired trusted routing into leased attempt creation, durable catalog/preferences/
+policy identity and per-attempt decisions. Exact SDK preparation rechecks capacity
+and conservative price revision before reservation/dispatch; reported mismatches
+or unknown routed configuration cannot authorize application. Context expansion
+keeps the chosen configuration and updates the decision's context identity. CLI
+`--routing` and `--repair` are independent opt-ins bound to the exact dry-run review;
+existing fixed-run behavior remains available. Production catalog qualifications
+remain unconfirmed; real routing fails before provider construction. Trusted test
+injection is explicitly offline and cannot authorize live selection.
+
+Selected validation so far: 19 CLI managed run/repair tests across two files and 41
+core routing/checkpoint/context tests across three files passed. An additional owned
+input rebasing guard test passed (19 context tests). The actual SDK/offline transport
+suite exercises third-attempt capability escalation, output-only increase, retained
+allowance, non-repairable failures and live rejection of offline qualifications.
+Extended the joined real Git/tool fixture with a failed scoped edit, reviewed repair
+and fresh frozen task/final-phase acceptance. Its result is pending the serial full
+workspace run. Initial test fixture errors (missing no-change rationale, unintended
+consumer truncation and mismatched plan identity) were corrected. A mechanical
+parenthesis edit caused one initial core build error and was fixed. Workspace build
+and lint passed; running typecheck concurrently with a cleaning build briefly lost
+integration declaration files. Repeating typecheck after the completed build passed.
+
+Source review tightened incomplete-response configuration checks so a mismatched or
+unknown routed response cannot authorize a truncation retry. This last guard and its
+two regressions will be built/tested after the ongoing full suite to avoid replacing
+distribution files under running verification. Full-suite evidence therefore covers
+the preceding built runtime; final guard validation will be recorded separately.
+No real key, live provider call, system/dependency installation, website source or
+version changes, I/J feature code, merge, push or publication. H is not yet marked
+complete. Next milestone after offline H acceptance is I (qualification/evaluation).
+
+Additional review before final validation: routed requests independently recompute
+selection from the trusted host authority and current remaining allowance before
+SDK preparation, rather than trusting a rehashed stored capacity/configuration
+claim. Added a regression that changes a stored capacity and recomputes its hashes;
+integrity validation alone succeeds, but dispatch must reject it with zero calls.
+Final typecheck passed for the source additions while the heavy suite runs. The
+final rebuilt provider/managed/repair tests remain required before committing.
+
+### H offline completion and final validation — 2026-10-07
+
+**Milestone H is complete for offline implementation.** All four H implementation
+conditions are satisfied: dated host catalogs/explainable independent filtering;
+finite retained reservation and requested/effective provenance; failure-specific
+context with at most three attempts; transitive dependency/evidence invalidation.
+The production catalog's capability qualifications remain **unconfirmed**. Actual
+live capability/feature evidence and provider/account/schema qualification are
+mandatory I/J gates, not satisfied by fake SDK responses or this completion.
+
+Validation used existing Node **24.21.0** / pnpm **12.5.1** (default Node 22.12.0
+was checked and remains unsupported). The full workspace suite passed **896 tests
+across 112 files**: core 483/56, registry 15/4, integrations 126/18, CLI 258/32,
+and existing website regressions 14/2. The CLI suite took 907.04 seconds. It includes
+the joined real Git/pinned TypeScript/ESLint/Vitest fixture: an applied incorrect
+edit fails frozen tests, a current-preimage repair fixes it, then fresh task and
+final-phase acceptance pass. Three simulated SDK calls (compilation plus two coding
+attempts), all three reservations and 90 reported synthetic tokens are retained;
+21 executor process observations include 15 tool checks and six actual Git probes.
+Provider replies/configuration/usage are simulated, and no billing/model-quality
+or savings claim is made. Existing tar locale warnings did not fail the regression.
+
+After the full run, rebuilt the workspace and ran **75 selected CLI tests across
+seven files** against the final core, including three new guard cases for incomplete
+configuration and rehashed capacity claims. All passed. Final core routing,
+checkpoint and context checks passed **42 tests across three files**, including
+accurate repair-policy rejection reasons and immutable/model-request hash guards.
+Synthetic runtime qualification dates are generated for the fixture's execution
+window; they are never live provider evidence. The full suite preceded the last
+selection/configuration guards; these last changes received the rebuilt targeted
+coverage rather than repeating the expensive unrelated qualification fixtures.
+Final workspace build, typecheck and lint passed. Explicit changed-document
+formatting, **72 local documentation link targets**, and Git whitespace checks
+passed. No validation failure remains in the reviewed H implementation scope.
+
+No API key or live/paid provider call was used. Local draft/context/handoff/check
+functionality continues to require no AI credits. A real managed request still
+requires a provider credential and explicit usage allowance; there is no RepoSetup
+payment system or new payment feature. No dependency/system installation, package
+version bump, website source change, I/J implementation, branch merge, push or
+publication occurred. Failed edits and unknown calls remain retained for review.
+
+**Next milestone: I — qualification and routing evaluation.** Remaining blockers
+are dated live capability/profile and provider smoke evidence, representative frozen
+fixtures/holdouts and inclusive treatment comparisons, Linux/packed/legacy gates,
+and J candidate/release qualification. These are open and require their own scope
+and provider allowance; H completion does not authorize spending or a supported
+managed release. Commit this completed H slice before continuing.

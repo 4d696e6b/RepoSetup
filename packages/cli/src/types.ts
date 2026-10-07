@@ -43,6 +43,10 @@ export interface PromptCreateContext {
 }
 
 export interface CliDeps {
+  taskRoutingCatalog?: {
+    catalog: import("@reposetup/core").TaskModelCatalog;
+    qualificationScope: "offline" | "live";
+  };
   createTaskManagedHost?: import("./tasks/managed-command.js").TaskManagedHostFactory;
   createTaskCompilationHost?: import("./tasks/managed-compile.js").TaskCompilationHostFactory;
   createTaskRepository?: TaskRepositoryFactory;
@@ -62,6 +66,10 @@ export interface CliDeps {
 }
 
 export interface ResolvedCliDeps {
+  taskRoutingCatalog?: {
+    catalog: import("@reposetup/core").TaskModelCatalog;
+    qualificationScope: "offline" | "live";
+  };
   createTaskManagedHost: import("./tasks/managed-command.js").TaskManagedHostFactory;
   createTaskCompilationHost: import("./tasks/managed-compile.js").TaskCompilationHostFactory;
   createTaskRepository: TaskRepositoryFactory;

@@ -8,11 +8,12 @@ import type { TaskCompilationPolicy } from "../tasks/compile.js";
 import { validateTaskPlan } from "../tasks/compile.js";
 import { taskContentHash } from "../tasks/canonical.js";
 import { taskResourceLimitsSchema } from "../tasks/primitives.js";
-import { taskFailure } from "../tasks/parse.js";
+import { taskFailure, type TaskParseResult } from "../tasks/parse.js";
 import type { TaskRunCheckpoint } from "../tasks/checkpoint.js";
 import type { ProcessRunner } from "./types.js";
 import type { RepoSetupError } from "../errors/model.js";
 import { taskRepairAction } from "../tasks/failure.js";
+import type { TaskRoutingAuthority } from "../tasks/routing.js";
 import { taskRemainingAllowance } from "../tasks/routing.js";
 
 export type TaskManagedPhaseResult =
@@ -30,6 +31,10 @@ export async function executeManagedTaskPhase(input: {
   gitExecutable: string;
   adapter: TaskRunAdapter;
   provider: TaskProviderAdapter;
+  routing?: TaskRoutingAuthority;
+  resolveProvider?: (
+    configuration: TaskProviderAdapter["configuration"],
+  ) => TaskParseResult<TaskProviderAdapter>;
   verification: {
     policy: TaskVerificationPolicy;
     adapter: TaskVerificationAdapter;
@@ -143,13 +148,15 @@ export async function executeManagedTaskPhase(input: {
     );
   const checks = await input.verification.adapter.verifyDefinitions();
   if (!checks.success) return fail(checks.error);
+  let provider = input.provider;
   const execute = (operation: Parameters<typeof executeTaskRun>[0]["operation"]) =>
     executeTaskRun({
       plan: plan.data,
       compilationPolicy: input.compilationPolicy,
       operation,
       adapter: input.adapter,
-      provider: input.provider,
+      provider,
+      ...(input.routing ? { routing: input.routing } : {}),
       verification: input.verification,
       ...(input.signal ? { signal: input.signal } : {}),
     });
@@ -197,18 +204,20 @@ export async function executeManagedTaskPhase(input: {
         );
       }
       for (const operation of [
-        {
-          type: "begin" as const,
-          runId,
-          taskId,
-          requestedConfiguration: input.provider.configuration,
-          routingId: taskContentHash({
-            selection: "explicit",
-            planId: plan.data.planId,
-            taskId,
-            configuration: input.provider.configuration,
-          }),
-        },
+        input.routing
+          ? { type: "begin_routed" as const, runId, taskId, maxOutputTokens: outputTokens }
+          : {
+              type: "begin" as const,
+              runId,
+              taskId,
+              requestedConfiguration: input.provider.configuration,
+              routingId: taskContentHash({
+                selection: "explicit",
+                planId: plan.data.planId,
+                taskId,
+                configuration: input.provider.configuration,
+              }),
+            },
         {
           type: "request" as const,
           runId,
@@ -225,13 +234,52 @@ export async function executeManagedTaskPhase(input: {
         )
           break;
         const result = await execute(operation);
-        if (!result.success) return fail(result.error);
+        if (!result.success) {
+          if (
+            operation.type === "begin_routed" &&
+            [
+              "TASK_BUDGET_EXHAUSTED",
+              "TASK_CAPABILITY_UNAVAILABLE",
+              "TASK_PROVIDER_CONFIGURATION_UNSUPPORTED",
+              "TASK_CONTEXT_UNRESOLVED",
+            ].includes(result.error.code)
+          ) {
+            const stopped = await execute({
+              type: "stop",
+              runId,
+              taskId,
+              code: result.error.code as "TASK_CAPABILITY_UNAVAILABLE",
+            });
+            if (!stopped.success) return fail(stopped.error);
+          }
+          return fail(result.error);
+        }
         if (result.data.dryRun)
           return fail(
             taskFailure("TASK_STATE_CONFLICT", "Managed operations require live executor state.")
               .error,
           );
         checkpoint = result.data.checkpoint;
+        if (operation.type === "begin_routed") {
+          if (!input.resolveProvider)
+            return fail(
+              taskFailure(
+                "TASK_PROVIDER_UNAVAILABLE",
+                "Routed execution requires a trusted provider resolver.",
+              ).error,
+            );
+          const configuration = checkpoint.run.attempts.at(-1)!.requestedConfiguration;
+          const resolved = input.resolveProvider(configuration);
+          if (!resolved.success) return fail(resolved.error);
+          if (taskContentHash(resolved.data.configuration) !== taskContentHash(configuration))
+            return fail(
+              taskFailure(
+                "TASK_PROVIDER_CONFIGURATION_UNSUPPORTED",
+                "Resolved provider differs from the routed configuration.",
+              ).error,
+            );
+          provider = resolved.data;
+        }
         if (
           checkpoint.run.status !== "active" &&
           !(

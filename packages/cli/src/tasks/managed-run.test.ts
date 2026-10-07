@@ -497,6 +497,54 @@ describe("managed run CLI review boundary", () => {
       expect(host).not.toHaveBeenCalled();
       expect(processRunner).not.toHaveBeenCalled();
       expect(prompt).not.toHaveBeenCalled();
+      expect(
+        await runCli([...args, "--repair", "--max-output-tokens", "8192", "--dry-run"], deps),
+      ).toMatchObject({ exitCode: 0 });
+      const repairPreview = JSON.parse(out.pop()!);
+      expect(repairPreview.repairPolicy).toMatchObject({
+        enabled: true,
+        maxAttempts: 3,
+        initialOutputTokens: 4096,
+        outputCeiling: 8192,
+      });
+      expect(repairPreview.summaryId).not.toBe(preview.summaryId);
+      expect(
+        await runCli(
+          [...args, "--repair", "--allow-provider-usage", "--approve-run", preview.summaryId],
+          deps,
+        ),
+      ).toMatchObject({ exitCode: 5 });
+      expect(JSON.parse(out.pop()!).error.code).toBe("TASK_NEEDS_REVIEW");
+      expect(await runCli([...args, "--routing", "--dry-run"], deps)).toMatchObject({
+        exitCode: 0,
+      });
+      const routedPreview = JSON.parse(out.pop()!);
+      expect(routedPreview.routing).toMatchObject({
+        qualificationScope: "live",
+        blocked: [{ taskId: "producer", code: "TASK_CAPABILITY_UNAVAILABLE" }],
+      });
+      expect(
+        routedPreview.routing.blocked[0].details.rejectedCandidates.every(
+          (c: { reasons: string[] }) => c.reasons.includes("model_unqualified"),
+        ),
+      ).toBe(true);
+      expect(routedPreview.routing.decisions).toEqual([]);
+      expect(
+        await runCli(
+          [
+            ...args,
+            "--routing",
+            "--allow-provider-usage",
+            "--approve-run",
+            routedPreview.summaryId,
+          ],
+          deps,
+        ),
+      ).toMatchObject({ exitCode: 4 });
+      expect(JSON.parse(out.pop()!).error.code).toBe("TASK_CAPABILITY_UNAVAILABLE");
+      expect(host).not.toHaveBeenCalled();
+      expect(processRunner).not.toHaveBeenCalled();
+      expect(prompt).not.toHaveBeenCalled();
     } finally {
       await f.cleanup();
     }

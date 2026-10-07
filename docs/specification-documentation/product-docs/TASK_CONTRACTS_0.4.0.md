@@ -462,7 +462,7 @@ The provider-neutral core port prepares bounded requests and returns strict
 observations. Only the executor dispatches; concrete HTTP/SDK/filesystem/process
 ports remain CLI-owned. The SDK is a transport rather than an executable agent:
 no model/config/plan tools or executable recipes exist. Capability qualification
-and routing remain H; G uses one explicit fixed strong transport and separate
+and routing are defined by the additive H amendment below; G default behavior uses one explicit fixed strong transport and separate
 native effort, recording requested versus reported/unknown effective configuration.
 
 Private `task_run_checkpoint` version 1 gains optional `providerCalls` metadata and
@@ -504,5 +504,79 @@ review without credential access, provider factory/dispatch, project/private wri
 locks, attempts, prompts or subprocesses. Real managed compilation/run require
 explicit usage allowance and exact reviewed summary approval. Fresh task/final-phase
 acceptance requires live independent review, not blanket confirmation or stored pass
-flags. This implementation does not add repair, escalation, install, rollback,
+flags. The original G scope does not add repair or escalation; H adds explicit opt-in below. Neither adds install, rollback,
 workers, MCP or later platform/release qualification.
+
+## Milestone H routing and repair amendment — revision 1
+
+The trusted-host `task_model_catalog` version 1 carries its canonical
+`catalogRevision` and up to 16 unique profiles. Profiles bind availability, reviewed
+and expiry timestamps, adapter/provider IDs, an ordered model-specific native
+effort/output-floor policy, context/output capacity and conservative price revision.
+Qualification is explicitly `unconfirmed` or `qualified` with an `offline`/`live`
+scope, evidence hash, capability class and feature list. These fields are host
+authority, never accepted from task plans, model replies or user preferences.
+Offline qualification cannot authorize live routing; documented mappings alone do
+not establish task capability. Production profiles remain unconfirmed pending I/J.
+
+Pure routing validates current resolved context, independently filters capability
+and native effort, rejects expired/unavailable/unqualified/capacity/allowance pairs,
+and orders eligible choices by conservative estimated cost then stable catalog
+order. `repair_configuration_policy` explains a rejected alternative when repair
+pins the previous configuration; it is separate from missing capabilities. Conservative quality raises the capability floor to strong; balanced keeps
+the task's declared floor. It leaves effective configuration unknown until the
+provider reports it. The router estimates context plus 8192 framing tokens; the
+exact SDK preparation must independently fit capacity and conservative price
+reservation before dispatch. Estimates are neither bills nor savings evidence.
+
+`task_run_checkpoint` version 1 adds optional `routingAuthorityId`; attempt bindings
+add optional `routing` decisions and `repair` metadata. Existing F/G checkpoints
+remain valid. Routed runs bind the full catalog, preferences, qualification scope
+and routing-policy revision, require the same trusted authority on subsequent
+operations, and cannot use explicit configuration overrides. Decisions bind
+plan/task/context/configuration and canonical routing IDs. Context expansion
+updates that identity without silently selecting another model or effort; capacity
+and price are checked again before dispatch. Each call retains separate requested
+and effective metadata; reported mismatches or unknown routed configuration stop
+before proposal application or automatic truncation retry. Durable reservations
+precede every call and survive failed, incomplete and uncertain outcomes.
+
+`task_repair_context` version 1 has canonical `repairId`, previous attempt,
+current task/context/input identities, action (`repair_implementation` or
+`increase_output`), classified failure, check metadata, unsatisfied criterion IDs
+and retained effects. It excludes raw check logs, oracle bodies, reasoning,
+credentials and raw responses, and is bounded to 32768 encoded bytes. Checkpoint
+validation requires matching previous failure/effects/checks/criteria and a
+same-owner continuous write journal. Only executor-recorded owned writable hashes
+may rebase requirement/interface inputs; phase source and oracle/config inputs stay
+immutable, and model-requested hashes stay exact.
+
+Automatic repair requires a fresh in-process executor failure receipt matching the
+committed attempt and binding; rehashed/imported failure records are insufficient.
+After restart, a fully recorded failed application needs fresh qualified verification
+before implementation repair. Ambiguous/pending calls, unknown allowance and partial
+applications are never replayed automatically. Complete failed edits remain in place.
+Failures clear acceptance artifacts and final evidence and block transitive consumers.
+Changed accepted inputs/postimages invalidate the corresponding evidence; accepting
+new output never resurrects an old consumer pass. Fresh final-phase acceptance
+remains required.
+
+A real nonzero trusted code check can justify implementation repair. Verifier
+truncation, timeouts or unusable test evidence are infrastructure/policy failures,
+not model-output truncation. Missing/stale context, ambiguity, drift, cancellation,
+policy violations and budget exhaustion stop without cost escalation. Known model
+truncation with no effects can increase output within the approved ceiling and
+remaining allowance, keeping the requested configuration. The first code repair
+preserves the configuration; two code failures can raise capability or independently
+raise the already-strong model's native effort under its own reviewed order. There
+is no universal effort ladder or silent fallback for explicit effort. All attempts,
+including truncation retries, count against a maximum of three per task (or the
+smaller reviewed limit).
+
+Executor host operations add `begin_routed` and named `stop` transitions; neither
+is a model tool, executable config entry or standalone CLI command. Managed dispatch
+is serial and revisits only eligible failed tasks. `--repair` and `--routing` are
+separate reviewed opt-ins; default G fixed-run behavior remains compatible. Dry-run
+keeps zero effects and labels initial routing/allowance as advisory. Production
+routing remains fail-closed until live qualifications are reviewed in I/J; offline
+implementation completion does not assert model quality or authorize spending.

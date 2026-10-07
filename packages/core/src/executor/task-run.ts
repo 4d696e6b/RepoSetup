@@ -34,6 +34,13 @@ import type {
 import { taskRunOperationSchema, type TaskRunOperation } from "./task-run-operation.js";
 import type { TaskProviderAdapter } from "../tasks/provider.js";
 import { requestTaskRunProposal } from "./task-run-provider.js";
+import {
+  routeTask,
+  taskRemainingAllowance,
+  validateTaskRoutingAuthority,
+  taskRoutingAuthorityId,
+  type TaskRoutingAuthority,
+} from "../tasks/routing.js";
 import { buildTaskRepairContext } from "../tasks/repair-context.js";
 import { invalidateTaskConsumers } from "../tasks/invalidation.js";
 import {
@@ -67,6 +74,7 @@ export async function executeTaskRun(input: {
   operation: TaskRunOperation;
   adapter: TaskRunAdapter;
   provider?: TaskProviderAdapter;
+  routing?: TaskRoutingAuthority;
   verification?: {
     policy: TaskVerificationPolicy;
     adapter: TaskVerificationAdapter;
@@ -80,6 +88,22 @@ export async function executeTaskRun(input: {
   const validated = validateTaskPlan(input.plan, input.compilationPolicy);
   if (!validated.success) return validated;
   const plan = validated.data;
+  const routing = input.routing ? validateTaskRoutingAuthority(input.routing) : null;
+  if (routing && !routing.success) return routing;
+  const routingAuthority = routing?.success ? routing.data : undefined;
+  if (
+    routingAuthority &&
+    taskContentHash(routingAuthority.preferences.resourceLimits) !==
+      taskContentHash(
+        input.operation.type === "create"
+          ? input.operation.resourceLimits
+          : routingAuthority.preferences.resourceLimits,
+      )
+  )
+    return taskFailure(
+      "TASK_PREFERENCES_INVALID",
+      "Routed run limits must match the reviewed preferences.",
+    );
   if (input.verification) {
     const policy = validateTaskVerificationPolicy(input.verification.policy);
     if (!policy.success) return policy;
@@ -234,6 +258,9 @@ export async function executeTaskRun(input: {
         policyRevision: taskContentHash(input.compilationPolicy),
         phaseVerificationPending: false,
         rootInstance: input.adapter.rootInstance,
+        ...(routingAuthority
+          ? { routingAuthorityId: taskRoutingAuthorityId(routingAuthority) }
+          : {}),
         ...(compilation ? { compilation } : {}),
         baselineSnapshot: snapshot.data,
         run: {
@@ -311,6 +338,14 @@ export async function executeTaskRun(input: {
     if (!checked.success) return checked;
     c = structuredClone(checked.data);
     durableRevision = c.run.stateRevision;
+    if (
+      c.routingAuthorityId !==
+      (routingAuthority ? taskRoutingAuthorityId(routingAuthority) : undefined)
+    )
+      return taskFailure(
+        "TASK_PROVIDER_CONFIGURATION_UNSUPPORTED",
+        "Routed state requires the identical trusted catalog, preferences and policy.",
+      );
     if (c.rootInstance !== input.adapter.rootInstance)
       return taskFailure("TASK_PROJECT_DRIFT", "Physical project root changed since run creation.");
     if (
@@ -569,7 +604,12 @@ export async function executeTaskRun(input: {
     }
     if (c.run.resourceLedger.consumed.durationMs >= c.run.resourceLimits.maxWallTimeMs)
       return taskFailure("TASK_BUDGET_EXHAUSTED", "Run wall-time allowance is exhausted.");
-    if (op.type === "begin") {
+    if (op.type === "begin" || op.type === "begin_routed") {
+      if ((op.type === "begin_routed") !== Boolean(routingAuthority))
+        return taskFailure(
+          "TASK_PROVIDER_CONFIGURATION_UNSUPPORTED",
+          "Routed attempts require trusted routing authority and cannot use explicit overrides.",
+        );
       const task = plan.tasks.find((t) => t.taskId === op.taskId);
       const state = c.run.tasks.find((t) => t.taskId === op.taskId);
       if (!task || !state) return taskFailure("TASK_REFERENCE_INVALID", "Attempt task is absent.");
@@ -634,6 +674,46 @@ export async function executeTaskRun(input: {
         ownedWriteRevisions: taskOwnedWriteRevisions(c, task.taskId),
       });
       if (!packet.success) return packet;
+      const decision =
+        op.type === "begin_routed" && routingAuthority
+          ? routeTask({
+              ...routingAuthority,
+              task,
+              planId: plan.planId,
+              context: packet.data.context,
+              allowProviderUsage: true,
+              now: new Date().toISOString(),
+              maxOutputTokens: op.maxOutputTokens,
+              remaining: taskRemainingAllowance(c.run),
+              ...(state.status === "needs_repair" && previous
+                ? {
+                    repair: {
+                      implementationFailures: c.run.attempts.filter(
+                        (a) => a.taskId === task.taskId && a.failure?.class === "implementation",
+                      ).length,
+                      previousConfiguration: previous.requestedConfiguration,
+                    },
+                  }
+                : {}),
+            })
+          : null;
+      if (decision && !decision.success) return decision;
+      const selected = decision?.success ? decision.data.selected : null;
+      const configuration = selected
+        ? {
+            adapterId: selected.adapterId,
+            providerId: selected.providerId,
+            modelProfileId: selected.modelProfileId,
+            nativeEffortId: selected.nativeEffortId,
+          }
+        : op.type === "begin"
+          ? op.requestedConfiguration
+          : null;
+      const routingId = decision?.success
+        ? decision.data.routingId
+        : op.type === "begin"
+          ? op.routingId
+          : null;
       const attemptId = `${c.run.runId}/${task.taskId}/${attemptNumber}`;
       const repair =
         state.status === "needs_repair" && previous
@@ -650,8 +730,8 @@ export async function executeTaskRun(input: {
         attemptNumber,
         contextId: packet.data.context.contextId,
         inputRevision: packet.data.context.inputRevision,
-        routingId: op.routingId,
-        requestedConfiguration: op.requestedConfiguration,
+        routingId,
+        requestedConfiguration: configuration,
         effectiveConfiguration: { provenance: "unknown" },
         startedAt: new Date().toISOString(),
         finishedAt: null,
@@ -683,6 +763,7 @@ export async function executeTaskRun(input: {
         postimages: [],
         beforeSnapshot: snapshot.data,
         ...(repair?.success ? { repair: repair.data } : {}),
+        ...(decision?.success ? { routing: decision.data } : {}),
       });
       c.run.project.latestProjectRevision = snapshot.data.revision;
       const stored = await save("transition", task.taskId);
@@ -701,6 +782,7 @@ export async function executeTaskRun(input: {
         compilationPolicy: input.compilationPolicy,
         adapter: input.adapter,
         provider: input.provider,
+        ...(routingAuthority ? { routing: routingAuthority } : {}),
         op,
         operationSignal,
         save,

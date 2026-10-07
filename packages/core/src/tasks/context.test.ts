@@ -80,6 +80,40 @@ const prepare = (
   });
 
 describe("bounded task context", () => {
+  it("rebases only executor-owned writable requirement inputs and keeps model requested hashes exact", async () => {
+    const f = fixture();
+    f.input.phase.requirements[0]!.sourceRefs.push({
+      path: "src/contracts.ts",
+      fileHash: taskByteHash(f.files["src/contracts.ts"]!),
+    });
+    const plan = compileTaskPlan(f.input);
+    if (!plan.success) throw plan.error;
+    f.files["src/contracts.ts"] = "export const result = 3;\n";
+    expect(await prepare(f, { plan: plan.data })).toMatchObject({
+      success: false,
+      error: { code: "TASK_CONTEXT_STALE" },
+    });
+    const revision = {
+      path: "src/contracts.ts",
+      fileHash: taskByteHash(f.files["src/contracts.ts"]),
+    };
+    expect(await prepare(f, { plan: plan.data, ownedWriteRevisions: [revision] })).toMatchObject({
+      success: true,
+    });
+    expect(
+      await prepare(f, {
+        plan: plan.data,
+        ownedWriteRevisions: [revision],
+        requests: [{ path: revision.path, fileHash: HASH }],
+      }),
+    ).toMatchObject({ success: false, error: { code: "TASK_CONTEXT_STALE" } });
+    expect(
+      await prepare(f, { ownedWriteRevisions: [{ path: "docs/phase.md", fileHash: HASH }] }),
+    ).toMatchObject({ success: false, error: { code: "TASK_SCOPE_VIOLATION" } });
+    expect(
+      await prepare(f, { ownedWriteRevisions: [{ path: "src/helper.ts", fileHash: HASH }] }),
+    ).toMatchObject({ success: false, error: { code: "TASK_SCOPE_VIOLATION" } });
+  });
   it("includes complete applicable rules even when an explicit request selects only one line", async () => {
     const f = fixture({ "AGENTS.md": "First rule.\nSecond mandatory rule.\n" });
     const value = packet(

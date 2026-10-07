@@ -25,6 +25,12 @@ export const taskRunOperationSchema = z.discriminatedUnion("type", [
     requestedConfiguration: taskConfigurationSchema,
     routingId: taskHashSchema,
   }),
+  z.strictObject({
+    type: z.literal("begin_routed"),
+    runId: taskRunIdSchema,
+    taskId: taskIdSchema,
+    maxOutputTokens: taskPositiveCounterSchema.max(16384),
+  }),
   z.strictObject({ type: z.literal("apply"), runId: taskRunIdSchema, proposal: z.unknown() }),
   z.strictObject({ type: z.literal("no_change"), runId: taskRunIdSchema }),
   z.strictObject({

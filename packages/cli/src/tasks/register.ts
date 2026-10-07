@@ -92,10 +92,12 @@ export function registerTaskCommands(
       "--scratch-root <path>",
       "reviewed preexisting verifier scratch parent outside the project",
     )
-    .requiredOption("--effort <id>", "native effort for the fixed gpt-6.1-sol transport")
+    .requiredOption("--effort <id>", "native effort; minimum_supported requires --routing")
     .option("--max-output-tokens <count>", "per-call output ceiling including reasoning", "4096")
     .option("--timeout-ms <count>", "per-call deadline within the phase allowance", "120000")
     .option("--allow-provider-usage", "explicitly allow potentially billable provider calls", false)
+    .option("--repair", "allow bounded failure-specific task repair within reviewed limits", false)
+    .option("--routing", "use trusted qualified model/native effort routing", false)
     .option("--approve-run <hash>", "exact summaryId reviewed from task run --dry-run --json")
     .action(async (options: TaskManagedOptions, command: Command) => {
       setExitCode(await handleManagedTask(options, deps, globals(command)));

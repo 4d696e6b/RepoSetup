@@ -17,6 +17,7 @@ import os from "node:os";
 import path from "node:path";
 import {
   compileTaskPlan,
+  sealTaskModelCatalog,
   executeTaskVerification,
   executeTaskRun,
   qualifiedTaskCheckHash,
@@ -44,6 +45,7 @@ import { verifyQualifiedTaskCheck } from "./check-qualification.js";
 import { allocateTaskVerifierScratch } from "./verifier-scratch.js";
 import { createDefaultProcessRunner } from "../execution-adapters.js";
 import { createOpenAITaskProvider } from "./provider-adapter.js";
+import { TASK_MODEL_CATALOG } from "./model-catalog.js";
 import { createTaskGitFixture } from "./git-fixture.test-helper.js";
 import { validateManagedTaskProject } from "./managed-project.js";
 import { runCli } from "../run-cli.js";
@@ -399,7 +401,7 @@ async function fixture(lintEffect = false, additionBug = false) {
   }
 }
 describe("concrete trusted verification qualification", () => {
-  it("completes no-key SDK compilation and a real bug fix with frozen tests and durable final phase acceptance", async () => {
+  it("completes no-key SDK compilation, routed repair of a failed edit and fresh frozen task/phase acceptance", async () => {
     const f = await fixture(false, true);
     const network = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Network forbidden"));
     try {
@@ -453,11 +455,18 @@ describe("concrete trusted verification qualification", () => {
         const request = JSON.parse(options!.body as string);
         const input = JSON.parse(request.input);
         const decomposition = request.text.format.name.includes("decomposition");
+        const repair = !decomposition && input.identity.attemptId.endsWith("/2");
+        const currentSource = repair ? brokenSource.replace("a - b", "a * b") : brokenSource;
         if (!decomposition) {
-          expect(input.context.files).toContainEqual({ path: "src/add.ts", text: brokenSource });
+          expect(input.context.files).toContainEqual({ path: "src/add.ts", text: currentSource });
+          if (repair)
+            expect(input.repair).toMatchObject({
+              action: "repair_implementation",
+              failure: { class: "implementation", code: "TASK_CHECK_FAILED" },
+            });
           expect(input.context.writeTargets).toContainEqual({
             path: "src/add.ts",
-            fileHash: taskByteHash(brokenSource),
+            fileHash: taskByteHash(currentSource),
           });
         }
         const document = decomposition
@@ -484,9 +493,9 @@ describe("concrete trusted verification qualification", () => {
                     {
                       type: "replace_text",
                       path: "src/add.ts",
-                      expectedFileHash: taskByteHash(brokenSource),
-                      oldText: "a - b",
-                      newText: "a + b",
+                      expectedFileHash: taskByteHash(currentSource),
+                      oldText: repair ? "a * b" : "a - b",
+                      newText: repair ? "a + b" : "a * b",
                     },
                   ],
                 },
@@ -530,9 +539,9 @@ describe("concrete trusted verification qualification", () => {
       const provider = () => (selectedProvider ??= providerFactory());
       const resourceLimits = {
         maxImplementationAttemptsPerTask: 3,
-        maxProviderCalls: 2,
-        maxInputTokens: 100000,
-        maxOutputTokens: 8192,
+        maxProviderCalls: 3,
+        maxInputTokens: 150000,
+        maxOutputTokens: 12288,
         maxWallTimeMs: 900000,
         maxCostMicrousd: 1000000,
       };
@@ -599,6 +608,7 @@ describe("concrete trusted verification qualification", () => {
               }),
             ),
             provider: provider(),
+            resolveProvider: () => ({ success: true, data: provider() }),
             verification: data(
               await createQualifiedTaskVerificationAdapter({
                 projectRoot: input.projectRoot,
@@ -650,6 +660,27 @@ describe("concrete trusted verification qualification", () => {
         io: { writeOut: (s) => output.push(s), writeErr: (s) => output.push(s) },
         createTaskCompilationHost: compilationHost,
         createTaskManagedHost: managedHost,
+        taskRoutingCatalog: {
+          qualificationScope: "offline",
+          catalog: sealTaskModelCatalog({
+            kind: "task_model_catalog",
+            schemaVersion: 1,
+            profiles: TASK_MODEL_CATALOG.profiles
+              .filter((p) => p.profileId === "gpt-6.1-sol")
+              .map((p) => ({
+                ...p,
+                reviewedAt: new Date(Date.now() - 86400000).toISOString(),
+                validUntil: new Date(Date.now() + 86400000).toISOString(),
+                qualification: {
+                  status: "qualified",
+                  scope: "offline",
+                  evidenceHash: HASH,
+                  capabilityClass: "strong",
+                  features: ["local_logic"],
+                },
+              })),
+          }),
+        },
         confirmCreate: confirm,
       };
       const invoke = async (args: string[], exitCode = 0) => {
@@ -701,6 +732,8 @@ describe("concrete trusted verification qualification", () => {
       const runArgs = [
         "task",
         "run",
+        "--repair",
+        "--routing",
         ...common,
         "--plan",
         artifact("plan"),
@@ -761,19 +794,27 @@ describe("concrete trusted verification qualification", () => {
         checkpoint.run.finalVerification!.checks.find((c) => c.checkId === "ts.unit")
           ?.executedTests,
       ).toBe(3);
-      expect(checkpoint.run.resourceLedger.reservations).toHaveLength(2);
+      expect(checkpoint.run.resourceLedger.reservations).toHaveLength(3);
+      expect(checkpoint.run.attempts).toHaveLength(2);
+      expect(checkpoint.run.attempts[0]).toMatchObject({
+        status: "failed",
+        failure: { class: "implementation" },
+        application: { status: "applied" },
+      });
+      expect(checkpoint.bindings[1]!.repair).toMatchObject({ action: "repair_implementation" });
+      expect(checkpoint.bindings.every((b) => Boolean(b.routing))).toBe(true);
       expect(checkpoint.compilation?.compilationId).toBe(receipt.managedCompilationId);
       expect(checkpoint.run.resourceLedger.consumed.totalTokens).toEqual({
         provenance: "reported",
-        value: 60,
+        value: 90,
       });
-      expect(transport).toHaveBeenCalledTimes(2);
+      expect(transport).toHaveBeenCalledTimes(3);
       expect(providerFactory).toHaveBeenCalledTimes(1);
       expect(compilationHost).toHaveBeenCalledTimes(1);
       expect(managedHost).toHaveBeenCalledTimes(2);
       expect(confirm).toHaveBeenCalledTimes(3);
       expect(network).not.toHaveBeenCalled();
-      expect(runner).toHaveBeenCalledTimes(18); // 12 tool checks + 6 real Git baseline probes
+      expect(runner).toHaveBeenCalledTimes(21); // 15 tool checks (including failed edit) + 6 real Git probes
       expect(runner.mock.calls.filter(([r]) => r.command === git.executable)).toHaveLength(6);
       expect(f.review.mock.calls.map(([r]) => r.checkId)).toEqual([
         "task.acceptance",

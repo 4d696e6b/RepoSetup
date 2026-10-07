@@ -296,6 +296,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
 function resolveDeps(deps: CliDeps): ResolvedCliDeps {
   const runProcess = deps.runProcess ?? createDefaultProcessRunner();
   const resolved: ResolvedCliDeps = {
+    ...(deps.taskRoutingCatalog ? { taskRoutingCatalog: deps.taskRoutingCatalog } : {}),
     createTaskManagedHost: deps.createTaskManagedHost ?? createDefaultManagedTaskHost,
     createTaskCompilationHost: deps.createTaskCompilationHost ?? createDefaultTaskCompilationHost,
     createTaskRepository: deps.createTaskRepository ?? createTaskRepositoryReader,

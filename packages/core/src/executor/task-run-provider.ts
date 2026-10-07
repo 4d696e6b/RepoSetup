@@ -1,3 +1,4 @@
+import { routeTask, taskRemainingAllowance, type TaskRoutingAuthority } from "../tasks/routing.js";
 import { prepareTaskContext, checkTaskContextFreshness } from "../tasks/context.js";
 import { taskContentHash } from "../tasks/canonical.js";
 import { parseTaskDocument, taskFailure, type TaskParseResult } from "../tasks/parse.js";
@@ -95,6 +96,7 @@ export async function requestTaskRunProposal(input: {
   compilationPolicy: TaskCompilationPolicy;
   adapter: TaskRunAdapter;
   provider: TaskProviderAdapter;
+  routing?: TaskRoutingAuthority;
   op: {
     maxOutputTokens: number;
     timeoutMs: number;
@@ -206,6 +208,43 @@ export async function requestTaskRunProposal(input: {
     const current = await input.adapter.snapshot();
     if (!current.success || current.data.revision !== binding().beforeSnapshot.revision)
       return stop("TASK_PROJECT_DRIFT");
+    if (binding().routing) {
+      if (!input.routing) return stop("TASK_PROVIDER_CONFIGURATION_UNSUPPORTED");
+      const previous = c.run.attempts.find(
+        (a) => a.attemptId === binding().repair?.previousAttemptId,
+      );
+      const current = routeTask({
+        ...input.routing,
+        task,
+        planId: plan.planId,
+        context: packet.context,
+        allowProviderUsage: true,
+        now: new Date().toISOString(),
+        maxOutputTokens: input.op.maxOutputTokens,
+        remaining: taskRemainingAllowance(c.run),
+        ...(previous
+          ? {
+              repair: {
+                previousConfiguration: previous.requestedConfiguration,
+                implementationFailures: c.run.attempts.filter(
+                  (a) =>
+                    a.taskId === task.taskId &&
+                    a.attemptNumber < opened.attemptNumber &&
+                    a.failure?.class === "implementation",
+                ).length,
+              },
+            }
+          : {}),
+      });
+      if (!current.success) return stop(current.error.code as TaskErrorCode);
+      const selected = current.data.selected;
+      if (
+        binding().routing!.catalogRevision !== current.data.catalogRevision ||
+        binding().routing!.policyRevision !== current.data.policyRevision ||
+        taskContentHash(binding().routing!.selected) !== taskContentHash(selected)
+      )
+        return stop("TASK_PROVIDER_CONFIGURATION_UNSUPPORTED");
+    }
     const prepared = provider.prepare({
       purpose: "coding",
       document: {
@@ -238,6 +277,26 @@ export async function requestTaskRunProposal(input: {
     )
       return stop("TASK_PROVIDER_OUTPUT_INVALID");
     const r = prepared.data.reservation;
+    if (binding().routing) {
+      const selected = binding().routing!.selected;
+      const profile = input.routing?.catalog.profiles.find(
+        (p) => p.profileId === selected.modelProfileId,
+      );
+      if (
+        !profile ||
+        Date.now() < Date.parse(profile.reviewedAt) ||
+        Date.now() >= Date.parse(profile.validUntil) ||
+        r.outputTokens !== selected.maxOutputTokens ||
+        r.inputTokens + r.outputTokens > selected.maxContextTokens ||
+        prepared.data.priceCatalogRevision !== profile.price.catalogRevision ||
+        r.costMicrousd <
+          Math.ceil(
+            r.inputTokens * profile.price.inputMicrousdPerToken +
+              r.outputTokens * profile.price.outputMicrousdPerToken,
+          )
+      )
+        return stop("TASK_PROVIDER_CONFIGURATION_UNSUPPORTED");
+    }
     const held = c.run.resourceLedger.reservations;
     const ceilings = c.run.resourceLimits;
     for (const [key, limit] of [
@@ -311,6 +370,15 @@ export async function requestTaskRunProposal(input: {
     const usage = parsed.data.usage;
     for (const key of ["inputTokens", "outputTokens", "costMicrousd"] as const)
       if ("value" in usage[key] && usage[key].value > r[key]) return stop("TASK_BUDGET_EXHAUSTED");
+    if (
+      (binding().routing &&
+        ["completed", "incomplete"].includes(parsed.data.outcome) &&
+        parsed.data.effectiveConfiguration.provenance === "unknown") ||
+      (parsed.data.effectiveConfiguration.provenance !== "unknown" &&
+        taskContentHash(parsed.data.effectiveConfiguration.configuration) !==
+          taskContentHash(state().requestedConfiguration))
+    )
+      return stop("TASK_PROVIDER_CONFIGURATION_UNSUPPORTED");
     if (parsed.data.outcome !== "completed") {
       const code =
         parsed.data.outcome === "refused"
@@ -331,12 +399,6 @@ export async function requestTaskRunProposal(input: {
             : "invalid",
       );
     }
-    if (
-      parsed.data.effectiveConfiguration.provenance !== "unknown" &&
-      taskContentHash(parsed.data.effectiveConfiguration.configuration) !==
-        taskContentHash(state().requestedConfiguration)
-    )
-      return stop("TASK_PROVIDER_CONFIGURATION_UNSUPPORTED");
     if (
       [usage.inputTokens, usage.outputTokens, usage.costMicrousd].some(
         (u) => u.provenance === "unknown",
@@ -386,6 +448,13 @@ export async function requestTaskRunProposal(input: {
         const repair = buildTaskRepairContext(previous, packet);
         if (!repair.success) return stop(repair.error.code as TaskErrorCode);
         binding().repair = repair.data;
+      }
+      if (binding().routing) {
+        const { routingId: _old, ...payload } = binding().routing!;
+        void _old;
+        const updated = { ...payload, contextId: packet.context.contextId };
+        binding().routing = { ...updated, routingId: taskContentHash(updated) };
+        state().routingId = binding().routing!.routingId;
       }
       state().status = "prepared";
       const stored = await save("transition", task.taskId);
