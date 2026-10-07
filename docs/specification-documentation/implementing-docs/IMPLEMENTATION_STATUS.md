@@ -6,7 +6,7 @@ Cursor/maintainers should update this file as phases are completed.
 
 **Phase 27 — Release-candidate qualification: complete for the frozen alpha candidate.** Its closure is explicitly recorded on `codex/phase-27-closeout` at `837b20d438d92fb6bcd557cb4e5145230238ee13`.
 
-**Phase 28 — Stable release preparation: in progress.** The frozen alpha candidate completed its seven-day soak, but its package version is `0.2.0-alpha.1`, so it cannot be published unchanged as `0.2.0`. The stable manifest and publication tooling are being qualified on `codex/phase-28-stable-release`; publication and registry delivery remain incomplete. Phase 20 through Phase 26 implementation gates are complete.
+**Phase 28 — Stable release preparation: in progress.** The frozen alpha candidate completed its seven-day soak, but its package version is `0.2.0-alpha.1`, so it cannot be published unchanged as `0.2.0`. The stable manifest and publication tooling passed initial qualification on `codex/phase-28-stable-release`; publication and registry delivery remain incomplete. Phase 20 through Phase 26 implementation gates are complete.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
 
@@ -21,7 +21,9 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Local verification on temporary Node 24.21.0: all 438 unit tests, typecheck, lint and build pass; 36 e2e tests pass. One local Python add test skips because uv is unavailable on this host; required CI installs uv and must pass it. The release validator also accepts the three actual completed alpha API responses at the recorded deadline.
 - [x] Initial stable [benchmark 37647160928](https://github.com/4d696e6b/RepoSetup/actions/runs/37647160928), full qualification [37647145314](https://github.com/4d696e6b/RepoSetup/actions/runs/37647145314) and [usability checks 37647167901](https://github.com/4d696e6b/RepoSetup/actions/runs/37647167901) passed at preparation source `3821519511acd79b3263f42f1be14a752149cd4f`. [Run 37647155958](https://github.com/4d696e6b/RepoSetup/actions/runs/37647155958) failed a Windows local-file locked-install fixture's 30-second deadline, so no stable soak was started and the failed run remains recorded.
 - [x] Corrected that test fixture to use a second local-file dependency for manifest drift and npm offline mode; it no longer performs an accidental public-registry lookup. Its four real npm subprocesses retain a bounded 90-second test budget for slower Windows runners. Production code and package dependencies are unchanged. The corrected fixture passes locally on Node 24.21.0; typecheck and lint also pass.
-- [ ] Freeze and qualify the corrected stable source with three full cross-platform runs and its exact-source soak. The alpha evidence remains preserved; it cannot satisfy the stable tag/version gate.
+- [x] Corrected stable source frozen at `4a6f49ca139cbd4f0915a3556497f48ae7543ae6` on `codex/phase-28-stable-release`. Full qualifications [37648824809](https://github.com/4d696e6b/RepoSetup/actions/runs/37648824809), [37648831078](https://github.com/4d696e6b/RepoSetup/actions/runs/37648831078), and [37648836155](https://github.com/4d696e6b/RepoSetup/actions/runs/37648836155) each passed all 16 required jobs and steps. Exact-source [benchmark 37648841040](https://github.com/4d696e6b/RepoSetup/actions/runs/37648841040) and [usability checks 37648846715](https://github.com/4d696e6b/RepoSetup/actions/runs/37648846715) also passed.
+- [ ] Stable seven-day soak ends `2026-10-14 16:14:59 UTC` (`2026-10-14 23:14:59 Asia/Bangkok`), seven days after the latest qualification completion. The existing monitor now follows this stable source and evidence. No stable tag or npm publication has been performed.
+- [x] Qualification progress is committed on `codex/phase-28-release-evidence` so documentation updates do not move the frozen candidate. See [the stable qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md).
 - [ ] Owner reviews stable evidence and authorizes publication; npm trusted publisher must permit `npm publish` from `publish-npm.yml`.
 - [ ] Publish, retain provenance, and pass all three install-from-registry delivery jobs. Phase 28 is not complete until this evidence exists.
 
@@ -135,7 +137,7 @@ Researched versions are the registry releases observed on this date. Direct spec
 - [x] Experimental catalog IDs that still installed unversioned packages (`fastify`, `mongoose`, `drizzle`) now pin researched direct versions so they cannot quietly float while remaining experimental.
 - [x] Phase 27 moves the public CLI and all workspace package engine metadata to Node 24 or later, matching the 0.2.0 candidate support contract.
 
-Phase 22 implementation gates for reproducible recipes are complete. Phase 27 closes the deferred Node 24 product-metadata change; its release qualification gates remain open.
+Phase 22 implementation gates for reproducible recipes are complete. Phase 27 completed the deferred Node 24 product-metadata change and frozen alpha qualification; stable publication and delivery remain Phase 28 work.
 
 ## Current release
 
@@ -169,7 +171,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 24 — Daily CLI usability and recovery guidance
 - [x] Phase 25 — Existing integration qualification
 - [x] Phase 26 — Important new integrations
-- [ ] Phase 27 — Release-candidate qualification
+- [x] Phase 27 — Release-candidate qualification (frozen alpha candidate)
 - [ ] Phase 28 — 0.2.0 publication and delivery verification
 
 ## Historical Phase 18 checkpoint
