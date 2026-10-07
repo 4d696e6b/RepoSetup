@@ -48,6 +48,18 @@ export const pipAdapter: PackageManagerAdapter = {
       return { ok: false, error: cwdError };
     }
 
+    if (request.frozen === true) {
+      return {
+        ok: false,
+        error: createRepoSetupError({
+          code: "UNSUPPORTED_CONTEXT",
+          message: "pip cannot install from a lockfile.",
+          details: { packageManager: "pip" },
+          suggestion: "Use uv when a Python install must be repeated from uv.lock.",
+        }),
+      };
+    }
+
     const requirements = validateRequirementsFile(request.requirementsFile);
     if (!requirements.ok) {
       return requirements;

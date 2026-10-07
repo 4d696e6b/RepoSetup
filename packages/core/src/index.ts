@@ -46,6 +46,7 @@ export type { DetectProjectResult } from "./detection/detect-project.js";
 export { errorsFromDoctor, failedDoctorChecks, runDoctor } from "./doctor/run-doctor.js";
 export type { DoctorCheck, DoctorResult, RunDoctorResult } from "./doctor/run-doctor.js";
 export { existingEnvKeys } from "./executor/env-example.js";
+export { redactProcessOutput, summarizeFailedProcessOutput } from "./executor/output-snippet.js";
 export { pathPrerequisite } from "./prerequisites/path.js";
 export type { PathPrerequisite, PathPrerequisiteId } from "./prerequisites/path.js";
 export { createDetectionContext } from "./detection/context.js";
@@ -88,7 +89,26 @@ export type {
 export type { RegistryLookup } from "./resolution/registry-lookup.js";
 export { resolveConfig } from "./resolution/resolve.js";
 export { planInstallation, planInstallationSubset, toInstallationPlan } from "./planning/plan.js";
-export { planAdd } from "./planning/plan-add.js";
+export { batchInstallPackages } from "./planning/batch-install.js";
+export type { BatchInstallResult } from "./planning/batch-install.js";
+export {
+  createRecipeRecord,
+  lockfileForPackageManager,
+  parseRecipeRecord,
+  planLockedReproduction,
+  planRecipeRecord,
+  recipeContentHash,
+  recipeRecordSchema,
+  RECIPE_RECORD_VERSION,
+  reproductionRequirements,
+} from "./planning/recipe.js";
+export type {
+  RecipeLockfile,
+  RecipeParseResult,
+  RecipeRecord,
+  ReproductionRequirements,
+} from "./planning/recipe.js";
+export { planAdd, planAddMany } from "./planning/plan-add.js";
 export type { PlanAddResult } from "./planning/plan-add.js";
 export { planRemove } from "./planning/plan-remove.js";
 export type { PlanRemoveResult } from "./planning/plan-remove.js";
@@ -101,9 +121,17 @@ export { executeInstallation } from "./executor/execute.js";
 export type {
   ExecuteOptions,
   ExecuteResult,
+  ExecutionLock,
+  ExecutionLockAcquireResult,
+  ExecutionLockHandle,
+  ExecutionEvent,
+  ExecutionJournal,
+  ExecutionJournalEntry,
+  ExecutableResolver,
   ExecutorFileSystem,
   ExecutorLogger,
   ProcessRunRequest,
+  ProcessOutputEvent,
   ProcessRunResult,
   ProcessRunner,
 } from "./executor/types.js";

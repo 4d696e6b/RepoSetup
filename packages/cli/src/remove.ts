@@ -1,7 +1,13 @@
 import { executeInstallation, planRemove, type PackageManager } from "@reposetup/core";
 
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
+import {
+  DEFAULT_COMMAND_TIMEOUT_MS,
+  DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+  DEFAULT_MINIMUM_FREE_DISK_BYTES,
+} from "./execution-adapters.js";
 import { formatError } from "./format-error.js";
+import { renderErrorJson, renderPartialRunReport, renderPlanJson } from "./machine-output.js";
 import { writeLine } from "./io.js";
 import { isKnownPackageManager } from "./prompt-create.js";
 import { renderPlan } from "./render-plan.js";
@@ -18,12 +24,19 @@ export async function handleRemove(input: {
   if (input.packageManager !== undefined && !isKnownPackageManager(input.packageManager)) {
     writeLine(
       input.deps.io.writeErr,
-      formatError({
-        code: "CONFIG_INVALID",
-        message: `Unknown package manager "${input.packageManager}".`,
-        details: { packageManager: input.packageManager },
-        suggestion: "Use npm, pnpm, bun, uv, or pip.",
-      }),
+      input.globals.json
+        ? renderErrorJson({
+            code: "CONFIG_INVALID",
+            message: `Unknown package manager "${input.packageManager}".`,
+            details: { packageManager: input.packageManager },
+            suggestion: "Use npm, pnpm, bun, uv, or pip.",
+          })
+        : formatError({
+            code: "CONFIG_INVALID",
+            message: `Unknown package manager "${input.packageManager}".`,
+            details: { packageManager: input.packageManager },
+            suggestion: "Use npm, pnpm, bun, uv, or pip.",
+          }),
     );
     return EXIT_CODES.INVALID_INPUT;
   }
@@ -38,15 +51,20 @@ export async function handleRemove(input: {
   });
 
   if (!planned.ok) {
-    writeLine(input.deps.io.writeErr, formatError(planned.error));
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json ? renderErrorJson(planned.error) : formatError(planned.error),
+    );
     return exitCodeForError(planned.error);
   }
 
-  const rendered = renderPlan(planned.result, {
-    dryRun: input.dryRun,
-    verbose: input.globals.verbose,
-    quiet: input.globals.quiet,
-  });
+  const rendered = input.globals.json
+    ? renderPlanJson(planned.result, input.dryRun)
+    : renderPlan(planned.result, {
+        dryRun: input.dryRun,
+        verbose: input.globals.verbose,
+        quiet: input.globals.quiet,
+      });
 
   if (!planned.result.valid) {
     writeLine(input.deps.io.writeErr, rendered);
@@ -83,31 +101,63 @@ export async function handleRemove(input: {
     }
   }
 
+  const executionStartedAt = Date.now();
   const executed = await executeInstallation(planned.result.operations, {
     rootDir: planned.projectRoot,
+    fs: input.deps.executorFs,
+    runProcess: input.deps.runProcess,
+    resolveExecutable: input.deps.resolveExecutable,
+    executionLock: input.deps.executionLock,
+    executionJournal: input.deps.executionJournal,
+    ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
+    commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
+    longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+    minimumFreeDiskBytes: DEFAULT_MINIMUM_FREE_DISK_BYTES,
     logger: {
       info(message) {
         if (!input.globals.quiet) {
-          writeLine(input.deps.io.writeOut, message);
+          writeLine(input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut, message);
         }
       },
       verbose(message) {
         if (input.globals.verbose) {
-          writeLine(input.deps.io.writeOut, message);
+          writeLine(input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut, message);
         }
       },
+      ...(input.globals.verbose && !input.globals.quiet
+        ? {
+            output(message: string) {
+              (input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut)(message);
+            },
+          }
+        : {}),
     },
-    ...(input.deps.runProcess === undefined ? {} : { runProcess: input.deps.runProcess }),
     ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
   });
 
   if (!executed.ok) {
-    writeLine(input.deps.io.writeErr, formatError(executed.error));
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json
+        ? renderErrorJson(executed.error, {
+            completed: executed.executed,
+            total: planned.result.operations.length,
+          })
+        : formatError(executed.error),
+    );
+    if (!input.globals.json) {
+      writeLine(
+        input.deps.io.writeErr,
+        renderPartialRunReport(executed.executed, planned.result.operations.length),
+      );
+    }
     return exitCodeForError(executed.error);
   }
 
   if (!input.globals.quiet) {
+    const elapsedSeconds = ((Date.now() - executionStartedAt) / 1000).toFixed(1);
     writeLine(input.deps.io.writeOut, `Executed ${executed.executed} operations.`);
+    writeLine(input.deps.io.writeOut, `Elapsed: ${elapsedSeconds}s.`);
   }
 
   return EXIT_CODES.SUCCESS;

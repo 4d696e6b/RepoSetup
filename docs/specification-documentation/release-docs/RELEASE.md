@@ -1,5 +1,7 @@
 # Release process
 
+This process describes the published 0.1.x line. The 0.2.0 qualification scope and blockers are frozen in [Phase 19 baseline and acceptance scope](../implementing-docs/PHASE_19_BASELINE.md); do not use historical checked boxes as 0.2.0 release evidence.
+
 Target: **`0.1.1`**. This is not `1.0.0`.
 
 The public npm package is **`rsetup`** (Model A: one bundled CLI; executables `rsetup` and `reposetup`). Workspace libraries stay private. The root workspace is `@reposetup/workspace`. Unscoped `reposetup` and `reposetup-cli` are blocked by npm similarity to `repo-setup` and `repo-setup-cli`.

@@ -12,6 +12,7 @@ import {
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
 import { addPackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { failVerify, mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
 const POSTCSS_CONFIG_PATHS = ["postcss.config.mjs", "postcss.config.js"] as const;
@@ -93,9 +94,16 @@ export const tailwindIntegration = defineIntegration({
   plan(context) {
     if (context.config.framework.id === "react-vite") {
       return [
-        addPackages(context, ["tailwindcss", "@tailwindcss/vite"], {
-          description: "Install Tailwind CSS and the official Vite plugin",
-        }),
+        addPackages(
+          context,
+          [
+            npmPin("tailwindcss", QUALIFIED_VERSIONS.tailwindcss),
+            npmPin("@tailwindcss/vite", QUALIFIED_VERSIONS.tailwindVite),
+          ],
+          {
+            description: "Install Tailwind CSS and the official Vite plugin",
+          },
+        ),
         {
           type: "show_message",
           message:
@@ -106,9 +114,17 @@ export const tailwindIntegration = defineIntegration({
     }
 
     return [
-      addPackages(context, ["tailwindcss", "@tailwindcss/postcss", "postcss"], {
-        description: "Install Tailwind CSS, @tailwindcss/postcss, and postcss",
-      }),
+      addPackages(
+        context,
+        [
+          npmPin("tailwindcss", QUALIFIED_VERSIONS.tailwindcss),
+          npmPin("@tailwindcss/postcss", QUALIFIED_VERSIONS.tailwindPostcss),
+          npmPin("postcss", QUALIFIED_VERSIONS.postcss),
+        ],
+        {
+          description: "Install Tailwind CSS, @tailwindcss/postcss, and postcss",
+        },
+      ),
       {
         type: "create_file",
         path: "postcss.config.mjs",

@@ -7,12 +7,22 @@ import {
   type RepoSetupError,
   type RuntimeId,
 } from "@reposetup/core";
+import path from "node:path";
+
+import { findBundledPreset } from "./presets.js";
 
 import { configFromAnswers } from "./config-from-answers.js";
+import {
+  DEFAULT_COMMAND_TIMEOUT_MS,
+  DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+  DEFAULT_MINIMUM_FREE_DISK_BYTES,
+} from "./execution-adapters.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import { formatError } from "./format-error.js";
+import { renderErrorJson, renderPartialRunReport, renderPlanJson } from "./machine-output.js";
 import { writeLine } from "./io.js";
 import { loadRepoSetupConfigFile } from "./load-config.js";
+import { postCreateCommands } from "./post-create.js";
 import { isKnownPackageManager } from "./prompt-create.js";
 import { renderPlan } from "./render-plan.js";
 import type {
@@ -30,16 +40,21 @@ export async function handleCreate(input: {
 }): Promise<number> {
   const loaded = await resolveCreateConfig(input);
   if (!loaded.ok) {
-    writeLine(input.deps.io.writeErr, formatError(loaded.error));
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json ? renderErrorJson(loaded.error) : formatError(loaded.error),
+    );
     return exitCodeForError(loaded.error);
   }
 
   const planned = planInstallation(loaded.config, input.deps.registry);
-  const rendered = renderPlan(planned, {
-    dryRun: input.options.dryRun,
-    verbose: input.globals.verbose,
-    quiet: input.globals.quiet,
-  });
+  const rendered = input.globals.json
+    ? renderPlanJson(planned, input.options.dryRun)
+    : renderPlan(planned, {
+        dryRun: input.options.dryRun,
+        verbose: input.globals.verbose,
+        quiet: input.globals.quiet,
+      });
 
   if (!planned.valid) {
     writeLine(input.deps.io.writeErr, rendered);
@@ -63,31 +78,70 @@ export async function handleCreate(input: {
     }
   }
 
+  const executionStartedAt = Date.now();
   const executed = await executeInstallation(planned.operations, {
     rootDir: input.deps.cwd,
+    fs: input.deps.executorFs,
+    runProcess: input.deps.runProcess,
+    resolveExecutable: input.deps.resolveExecutable,
+    executionLock: input.deps.executionLock,
+    executionJournal: input.deps.executionJournal,
+    ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
+    commandTimeoutMs: DEFAULT_COMMAND_TIMEOUT_MS,
+    longRunningCommandTimeoutMs: DEFAULT_LONG_RUNNING_COMMAND_TIMEOUT_MS,
+    minimumFreeDiskBytes: DEFAULT_MINIMUM_FREE_DISK_BYTES,
     logger: {
       info(message) {
         if (!input.globals.quiet) {
-          writeLine(input.deps.io.writeOut, message);
+          writeLine(input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut, message);
         }
       },
       verbose(message) {
         if (input.globals.verbose) {
-          writeLine(input.deps.io.writeOut, message);
+          writeLine(input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut, message);
         }
       },
+      ...(input.globals.verbose && !input.globals.quiet
+        ? {
+            output(message: string) {
+              (input.globals.json ? input.deps.io.writeErr : input.deps.io.writeOut)(message);
+            },
+          }
+        : {}),
     },
-    ...(input.deps.runProcess === undefined ? {} : { runProcess: input.deps.runProcess }),
     ...(input.deps.commandExists === undefined ? {} : { commandExists: input.deps.commandExists }),
   });
 
   if (!executed.ok) {
-    writeLine(input.deps.io.writeErr, formatError(executed.error));
+    writeLine(
+      input.deps.io.writeErr,
+      input.globals.json
+        ? renderErrorJson(executed.error, {
+            completed: executed.executed,
+            total: planned.operations.length,
+          })
+        : formatError(executed.error),
+    );
+    if (!input.globals.json) {
+      writeLine(
+        input.deps.io.writeErr,
+        renderPartialRunReport(executed.executed, planned.operations.length),
+      );
+    }
     return exitCodeForError(executed.error);
   }
 
   if (!input.globals.quiet) {
+    const elapsedSeconds = ((Date.now() - executionStartedAt) / 1000).toFixed(1);
     writeLine(input.deps.io.writeOut, `Executed ${executed.executed} operations.`);
+    writeLine(input.deps.io.writeOut, `Elapsed: ${elapsedSeconds}s.`);
+    writeLine(
+      input.deps.io.writeOut,
+      `Project directory: ${path.resolve(input.deps.cwd, planned.config.project.path ?? ".")}`,
+    );
+    for (const command of postCreateCommands(planned.config)) {
+      writeLine(input.deps.io.writeOut, `Next: ${command}`);
+    }
   }
 
   return EXIT_CODES.SUCCESS;
@@ -98,8 +152,22 @@ async function resolveCreateConfig(input: {
   options: CreateCommandOptions;
   deps: ResolvedCliDeps;
 }): Promise<{ ok: true; config: RepoSetupConfig } | { ok: false; error: RepoSetupError }> {
-  if (input.options.config !== undefined) {
+  if (input.options.config !== undefined)
     return loadRepoSetupConfigFile(input.options.config, input.deps);
+  if (input.options.preset !== undefined) {
+    const preset = findBundledPreset(input.options.preset);
+    if (preset === undefined)
+      return {
+        ok: false,
+        error: {
+          code: "CONFIG_INVALID",
+          message: `Unknown preset "${input.options.preset}". Run "reposetup presets" to list bundled presets.`,
+          suggestion: "Choose one of the listed preset IDs.",
+        },
+      };
+    const config = structuredClone(preset.config);
+    if (input.name !== undefined) config.project.name = input.name;
+    return { ok: true, config };
   }
 
   if (canBuildFromFlags(input.name, input.options)) {

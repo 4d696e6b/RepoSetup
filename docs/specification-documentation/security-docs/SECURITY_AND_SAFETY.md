@@ -110,4 +110,6 @@ On command failure:
 - never falsely report success;
 - explain whether partial changes were made.
 
-Full transactional rollback is not required for v1, but operations should be designed to support recovery later.
+RepoSetup does not perform automatic rollback. Package installs, framework generators, lifecycle scripts, databases, and user-owned files may have effects that cannot be safely reversed from local information alone.
+
+When execution fails, RepoSetup preserves a content-free temporary failure journal containing hashed operation identities and statuses. It removes journals for successful executions. Recovery is manual: inspect the failed operation, review project changes and package-manager output, then repair or remove only changes the user can verify. A future restore feature may touch only explicitly RepoSetup-owned files after matching their recorded hashes; it must never delete or overwrite a changed user file.

@@ -35,7 +35,6 @@ describe("packed-CLI smoke via monorepo dist", () => {
     const version = await runNodeCli(monorepoBin, ["--version"], { cwd });
     expect(version.exitCode).toBe(0);
     expect(version.stdout.trim()).toBe(cliPackageVersion());
-    expect(version.stdout.trim()).toBe("0.1.1");
 
     const search = await runNodeCli(monorepoBin, ["search", "prisma"], { cwd });
     expect(search.exitCode).toBe(0);

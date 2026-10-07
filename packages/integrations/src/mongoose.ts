@@ -10,6 +10,7 @@ import {
 import { ORM_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { addPackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { mergeVerify, missingAnyFile, missingEnvKeys, missingPackage } from "./verify.js";
 
@@ -67,7 +68,9 @@ export const mongooseIntegration = defineIntegration({
   },
   plan(context: PlanContext) {
     return [
-      addPackages(context, ["mongoose"], { description: "Install Mongoose" }),
+      addPackages(context, [npmPin("mongoose", QUALIFIED_VERSIONS.mongoose)], {
+        description: "Install Mongoose",
+      }),
       {
         type: "create_directory",
         path: "src",

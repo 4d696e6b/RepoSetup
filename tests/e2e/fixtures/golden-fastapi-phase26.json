@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "project": { "name": "phase-26-fastapi" },
+  "runtime": { "id": "python" },
+  "packageManager": "uv",
+  "framework": { "id": "fastapi" },
+  "integrations": [
+    { "id": "pydantic" },
+    { "id": "pytest" },
+    { "id": "ruff" },
+    { "id": "httpx" },
+    { "id": "pydantic-settings" }
+  ]
+}

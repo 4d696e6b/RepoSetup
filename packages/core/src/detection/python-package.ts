@@ -1,7 +1,9 @@
 export function pythonDistributionName(spec: string): string {
   const extras = spec.indexOf("[");
   const withoutExtras = extras === -1 ? spec : spec.slice(0, extras);
-  return withoutExtras.toLowerCase();
+  const versionMarker = withoutExtras.search(/[<>=!~]/);
+  const name = versionMarker === -1 ? withoutExtras : withoutExtras.slice(0, versionMarker);
+  return name.toLowerCase();
 }
 
 export function textDeclaresPythonPackage(text: string, spec: string): boolean {

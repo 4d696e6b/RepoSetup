@@ -59,9 +59,9 @@ describe("filterSatisfiedOperations", () => {
       {
         type: "run_command",
         command: "pnpm",
-        args: ["exec", "vitest", "run", "--passWithNoTests"],
+        args: ["exec", "vitest", "run"],
         cwd: ".",
-        description: "Load Vitest config",
+        description: "Run the generated Next.js sample assertion",
       },
       {
         type: "modify_json",
@@ -89,6 +89,63 @@ describe("filterSatisfiedOperations", () => {
     ]);
   });
 
+  it("drops typed install_package when the dependency is already declared", async () => {
+    const nodeFiles = createMemoryDetectionFs({
+      "package.json": JSON.stringify({ dependencies: { zod: "4.0.0" } }),
+    });
+    const nodeRemaining = await filterSatisfiedOperations(
+      [
+        {
+          type: "install_package",
+          packageManager: "pnpm",
+          packages: ["zod"],
+          cwd: ".",
+          description: "Install Zod",
+          requiresNetwork: true,
+        },
+        {
+          type: "install_package",
+          packageManager: "pnpm",
+          packages: ["left-pad"],
+          cwd: ".",
+          description: "Install missing package",
+          requiresNetwork: true,
+        },
+      ],
+      nodeFiles,
+      await readPackageJson(nodeFiles),
+    );
+    expect(nodeRemaining).toEqual([
+      expect.objectContaining({ description: "Install missing package" }),
+    ]);
+
+    const pythonRemaining = await filterSatisfiedOperations(
+      [
+        {
+          type: "install_package",
+          packageManager: "uv",
+          packages: ["pydantic==2.13.5"],
+          cwd: ".",
+          description: "Install Pydantic",
+          requiresNetwork: true,
+        },
+        {
+          type: "install_package",
+          packageManager: "uv",
+          packages: ["flask"],
+          cwd: ".",
+          description: "Install Flask",
+          requiresNetwork: true,
+        },
+      ],
+      createMemoryDetectionFs({
+        "pyproject.toml": '[project]\ndependencies = ["pydantic"]\n',
+      }),
+      undefined,
+    );
+    expect(pythonRemaining).toEqual([expect.objectContaining({ description: "Install Flask" })]);
+  });
+
   it("drops uv add when pyproject.toml already declares the package", async () => {
     const files = createMemoryDetectionFs({
       "pyproject.toml": '[project]\ndependencies = ["fastapi[standard]"]\n',
@@ -114,6 +171,54 @@ describe("filterSatisfiedOperations", () => {
       undefined,
     );
     expect(remaining).toEqual([expect.objectContaining({ description: "Install Flask" })]);
+  });
+
+  it("drops a version check once the integration work is already present", async () => {
+    const files = createMemoryDetectionFs({
+      "package.json": JSON.stringify({ devDependencies: { eslint: "9.39.5" } }),
+      "eslint.config.js": "export default [];\n",
+    });
+    const packageJson = await readPackageJson(files);
+    const check: InstallationOperation = {
+      type: "check_prerequisite",
+      id: "node",
+      versionRange: "^18.18.0 || ^20.9.0 || >=21.1.0",
+      description: "Require an ESLint-compatible Node.js",
+    };
+    const present = await filterSatisfiedOperations(
+      [
+        check,
+        {
+          type: "run_command",
+          command: "pnpm",
+          args: ["add", "--save-dev", "eslint@9.39.5"],
+          cwd: ".",
+          description: "Install ESLint",
+        },
+      ],
+      files,
+      packageJson,
+    );
+    expect(present).toEqual([]);
+
+    const missing = await filterSatisfiedOperations(
+      [
+        check,
+        {
+          type: "run_command",
+          command: "pnpm",
+          args: ["add", "--save-dev", "eslint@9.39.5"],
+          cwd: ".",
+          description: "Install ESLint",
+        },
+      ],
+      createMemoryDetectionFs({}),
+      undefined,
+    );
+    expect(missing.map((operation) => operation.type)).toEqual([
+      "check_prerequisite",
+      "run_command",
+    ]);
   });
 
   it("drops uv init when pyproject.toml already exists", async () => {

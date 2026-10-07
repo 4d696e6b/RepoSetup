@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "golden-react-playwright-app"
+  },
+  "runtime": {
+    "id": "node"
+  },
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "react-vite",
+    "options": {
+      "typescript": true
+    }
+  },
+  "integrations": [{ "id": "playwright" }]
+}

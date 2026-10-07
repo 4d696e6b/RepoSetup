@@ -2,6 +2,7 @@ import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, removePackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
 const PRETTIER_CONFIG_PATHS = [
@@ -12,6 +13,12 @@ const PRETTIER_CONFIG_PATHS = [
   "prettier.config.js",
   "prettier.config.mjs",
 ] as const;
+
+const PRETTIER_CONFIG = `{
+  "singleQuote": true,
+  "semi": false
+}
+`;
 
 export const prettierIntegration = defineIntegration({
   id: "prettier",
@@ -42,8 +49,9 @@ export const prettierIntegration = defineIntegration({
     return detectNpmPackage(context, "prettier", PRETTIER_CONFIG_PATHS);
   },
   plan(context) {
+    const config = context.config.framework.id === "react-vite" ? PRETTIER_CONFIG : "{}\n";
     return [
-      addPackages(context, ["prettier"], {
+      addPackages(context, [npmPin("prettier", QUALIFIED_VERSIONS.prettier)], {
         description: "Install Prettier as an exact dev dependency",
         dev: true,
         exact: true,
@@ -51,9 +59,9 @@ export const prettierIntegration = defineIntegration({
       {
         type: "create_file",
         path: ".prettierrc",
-        content: "{}\n",
+        content: config,
         behavior: "fail_if_exists",
-        description: "Add an empty Prettier config so editors detect Prettier",
+        description: "Add the project Prettier config so editors detect Prettier",
       },
       {
         type: "create_file",

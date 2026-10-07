@@ -74,15 +74,25 @@ describe("pnpmAdapter", () => {
       packages: ["@prisma/adapter-better-sqlite3"],
       cwd: ".",
       description: "Install Prisma SQLite adapter",
-      allowBuild: ["esbuild", "!better-sqlite3"],
+      allowBuild: ["esbuild", "better-sqlite3"],
     });
 
     expectArgs(result, [
       "add",
       "--allow-build=esbuild",
-      "--allow-build=!better-sqlite3",
+      "--allow-build=better-sqlite3",
       "@prisma/adapter-better-sqlite3",
     ]);
+  });
+
+  it("installs a frozen project without updating pnpm-lock.yaml", () => {
+    const result = pnpmAdapter.install({
+      cwd: ".",
+      description: "Install from pnpm-lock.yaml",
+      frozen: true,
+    });
+
+    expectArgs(result, ["install", "--frozen-lockfile"]);
   });
 
   it("installs the project with pnpm install", () => {
@@ -91,7 +101,7 @@ describe("pnpmAdapter", () => {
       description: "Install pnpm dependencies",
     });
 
-    expectArgs(result, ["install"]);
+    expectArgs(result, ["install", "--no-frozen-lockfile"]);
   });
 
   it("removes packages with pnpm remove", () => {
@@ -112,5 +122,14 @@ describe("pnpmAdapter", () => {
     });
 
     expectArgs(result, ["remove", "prettier"]);
+  });
+});
+
+describe("pnpm cache preference", () => {
+  it("uses prefer-offline without requiring an offline cache hit", () => {
+    expectArgs(
+      pnpmAdapter.install({ cwd: ".", description: "Cached install", preferOffline: true }),
+      ["install", "--no-frozen-lockfile", "--prefer-offline"],
+    );
   });
 });

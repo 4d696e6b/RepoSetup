@@ -12,6 +12,8 @@ import type { ProjectRelativePath } from "../paths/project-path.js";
 import type { RegistryLookup } from "../resolution/registry-lookup.js";
 import type { ResolutionResult } from "../resolution/types.js";
 
+import { declaresPnpmWorkspacePackages } from "./pnpm-workspace.js";
+
 import {
   exportConfigFromDetectedStack,
   presentItems,
@@ -69,6 +71,12 @@ export async function planRemove(input: {
     return { ok: false, error: detected.error };
   }
 
+  const files = createNodeDetectionFs(detected.stack.projectRoot);
+  const workspace = await files.readText("pnpm-workspace.yaml");
+  if (workspace !== undefined && declaresPnpmWorkspacePackages(workspace)) {
+    return { ok: false, error: workspaceRootError() };
+  }
+
   const runtimeId = selectRuntime(detected.stack);
   if (runtimeId === undefined) {
     return {
@@ -112,7 +120,6 @@ export async function planRemove(input: {
     };
   }
 
-  const files = createNodeDetectionFs(detected.stack.projectRoot);
   const context = await createDetectionContext(detected.stack.projectRoot, files);
   const config = {
     ...exportConfigFromDetectedStack({
@@ -231,4 +238,13 @@ function integrationsThatRequire(
   }
 
   return dependents;
+}
+
+function workspaceRootError(): RepoSetupError {
+  return createRepoSetupError({
+    code: "UNSUPPORTED_CONTEXT",
+    message: "Removing integrations from a workspace root is ambiguous.",
+    suggestion:
+      "Run reposetup remove from one workspace package directory. RepoSetup does not compose an entire workspace in this release.",
+  });
 }

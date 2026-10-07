@@ -14,7 +14,7 @@
   "description": "Terminal-first stack composer and installer (pnpm workspace).",
   "packageManager": "pnpm@12.5.1",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "scripts": {
     "build": "pnpm -r --if-present build",
@@ -26,7 +26,12 @@
     "pack:packages": "pnpm --filter rsetup pack",
     "test:e2e": "pnpm build && vitest run --config tests/e2e/vitest.config.ts",
     "test:golden": "pnpm build && vitest run --config tests/e2e/vitest.golden.config.ts",
-    "prepublishOnly": "node -e \"process.stderr.write('Do not publish the workspace root. From packages/cli run: npm publish --access public\\n'); process.exit(1)\""
+    "test:usability": "pnpm build && vitest run --config tests/e2e/vitest.usability.config.ts",
+    "prepublishOnly": "node -e \"process.stderr.write('Do not publish the workspace root. From packages/cli run: npm publish --access public\\n'); process.exit(1)\"",
+    "benchmark:plans": "pnpm build && node scripts/benchmark-plans.mjs",
+    "benchmark:real-installs": "pnpm build && node scripts/benchmark-real-installs.mjs",
+    "benchmark:install-passes": "pnpm build && node scripts/benchmark-install-passes.mjs",
+    "review:licenses": "node scripts/check-dependency-licenses.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

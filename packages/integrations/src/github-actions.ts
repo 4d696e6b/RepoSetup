@@ -10,50 +10,51 @@ import {
 } from "@reposetup/core";
 
 import { defineIntegration } from "./define.js";
+import { hasSelectedIntegration } from "./operations.js";
 import { missingAnyFile } from "./verify.js";
 
-const NPM_WORKFLOW = `name: Node.js CI
-
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+function nodeWorkflow(packageManager: "npm" | "pnpm", runTest: boolean, runLint: boolean): string {
+  const setup =
+    packageManager === "pnpm"
+      ? `      - uses: pnpm/action-setup@v4
+        with:
+          version: "12.5.1"
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: npm
-      - run: npm ci
-      - run: npm test
-`;
-
-const PNPM_WORKFLOW = `name: Node.js CI
-
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+          node-version: "24"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test
+`
+      : `      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
 `;
+  const test = packageManager === "pnpm" ? "pnpm test" : "npm test";
+  const lint = packageManager === "pnpm" ? "pnpm run lint" : "npm run lint";
+  const build = packageManager === "pnpm" ? "pnpm run build" : "npm run build";
+  const checks = [
+    ...(runLint ? [`      - run: ${lint}\n`] : []),
+    ...(runTest ? [`      - run: ${test}\n`] : []),
+    `      - run: ${build}\n`,
+  ];
+
+  return `name: Node.js CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+${setup}${checks.join("")}`;
+}
 
 export const githubActionsIntegration = defineIntegration({
   id: "github-actions",
@@ -93,7 +94,12 @@ export const githubActionsIntegration = defineIntegration({
     ]);
   },
   plan(context: PlanContext) {
-    const content = context.config.packageManager === "pnpm" ? PNPM_WORKFLOW : NPM_WORKFLOW;
+    const packageManager = context.config.packageManager === "pnpm" ? "pnpm" : "npm";
+    const content = nodeWorkflow(
+      packageManager,
+      hasSelectedIntegration(context, "vitest"),
+      hasSelectedIntegration(context, "eslint"),
+    );
     return [
       {
         type: "create_directory",

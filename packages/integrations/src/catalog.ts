@@ -11,6 +11,7 @@ import { fastapiIntegration } from "./fastapi.js";
 import { fastifyIntegration } from "./fastify.js";
 import { flaskIntegration } from "./flask.js";
 import { githubActionsIntegration } from "./github-actions.js";
+import { httpxIntegration } from "./httpx.js";
 import { mongodbIntegration } from "./mongodb.js";
 import { mongooseIntegration } from "./mongoose.js";
 import { nextjsIntegration } from "./nextjs.js";
@@ -23,6 +24,7 @@ import { postgresqlIntegration } from "./postgresql.js";
 import { prettierIntegration } from "./prettier.js";
 import { prismaIntegration } from "./prisma.js";
 import { pydanticIntegration } from "./pydantic.js";
+import { pydanticSettingsIntegration } from "./pydantic-settings.js";
 import { pytestIntegration } from "./pytest.js";
 import { pythonIntegration } from "./python.js";
 import { reactViteIntegration } from "./react-vite.js";
@@ -31,6 +33,8 @@ import { shadcnIntegration } from "./shadcn.js";
 import { sqlalchemyIntegration } from "./sqlalchemy.js";
 import { sqliteIntegration } from "./sqlite.js";
 import { tailwindIntegration } from "./tailwind.js";
+import { tanstackQueryIntegration } from "./tanstack-query.js";
+import { testingLibraryIntegration } from "./testing-library.js";
 import { uvIntegration } from "./uv.js";
 import { vitestIntegration } from "./vitest.js";
 import { zodIntegration } from "./zod.js";
@@ -60,12 +64,16 @@ export const builtInIntegrations: IntegrationDefinition[] = [
   alembicIntegration,
   zodIntegration,
   pydanticIntegration,
+  pydanticSettingsIntegration,
   vitestIntegration,
+  testingLibraryIntegration,
+  tanstackQueryIntegration,
   playwrightIntegration,
   pytestIntegration,
   eslintIntegration,
   prettierIntegration,
   ruffIntegration,
+  httpxIntegration,
   dockerIntegration,
   dockerComposeIntegration,
   githubActionsIntegration,

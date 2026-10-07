@@ -9,11 +9,16 @@ import type {
 } from "../operations/types.js";
 
 import { pathPrerequisite } from "../prerequisites/path.js";
+import { isSupportedVersionRange, versionSatisfiesRange } from "../prerequisites/version-range.js";
 
 import { isSafeExecutableName, isSafeProcessArg } from "./command-name.js";
-import { commandFailureSuggestion, summarizeFailedProcessOutput } from "./output-snippet.js";
-import { resolveInsideRoot } from "./resolve-path.js";
-import type { ExecutionContext, ProcessRunResult } from "./types.js";
+import {
+  commandFailureSuggestion,
+  isTransientDownloadFailure,
+  summarizeFailedProcessOutput,
+} from "./output-snippet.js";
+import { assertRealPathInsideRoot, resolveInsideRoot } from "./resolve-path.js";
+import type { ExecutionContext, ProcessRunRequest, ProcessRunResult } from "./types.js";
 
 export async function executeCheckPrerequisite(
   operation: CheckPrerequisiteOperation,
@@ -30,18 +35,73 @@ export async function executeCheckPrerequisite(
     });
   }
 
-  const exists =
-    context.commandExists === undefined
-      ? await binaryExists(spec.command, context)
-      : await context.commandExists(spec.command);
-
-  if (!exists) {
+  const command = await resolveExecutable(spec.command, context);
+  if (command === undefined) {
     return createRepoSetupError({
       code: "PREREQUISITE_MISSING",
       message: `${spec.command} was not found on PATH.`,
       details: { id: operation.id, command: spec.command },
       suggestion: spec.hint,
     });
+  }
+
+  const exists =
+    context.commandExists === undefined
+      ? await binaryExists(command, context)
+      : await context.commandExists(command);
+
+  if (!exists) {
+    return createRepoSetupError({
+      code: "PREREQUISITE_MISSING",
+      message: `${command} was not found on PATH.`,
+      details: { id: operation.id, command },
+      suggestion: spec.hint,
+    });
+  }
+
+  if (spec.minimumVersion !== undefined || operation.versionRange !== undefined) {
+    const version = await readCommandVersion(command, context);
+    if (
+      spec.minimumVersion !== undefined &&
+      (version === undefined || isVersionBelow(version, spec.minimumVersion))
+    ) {
+      return createRepoSetupError({
+        code: "PREREQUISITE_MISSING",
+        message: `${command} does not meet the required version ${formatVersion(spec.minimumVersion)} or later.`,
+        details: {
+          id: operation.id,
+          command,
+          ...(version === undefined ? {} : { detectedVersion: formatVersion(version) }),
+          minimumVersion: formatVersion(spec.minimumVersion),
+        },
+        suggestion: spec.hint,
+      });
+    }
+
+    if (operation.versionRange !== undefined) {
+      if (!isSupportedVersionRange(operation.versionRange)) {
+        return createRepoSetupError({
+          code: "PLAN_INVALID",
+          message: `Prerequisite "${operation.id}" has an unsupported version range.`,
+          details: { id: operation.id, versionRange: operation.versionRange },
+          suggestion: "Use a range made of >= and ^ comparators joined by ||.",
+        });
+      }
+
+      if (version === undefined || !versionSatisfiesRange(version, operation.versionRange)) {
+        return createRepoSetupError({
+          code: "PREREQUISITE_MISSING",
+          message: `${command} does not satisfy the required range ${operation.versionRange}.`,
+          details: {
+            id: operation.id,
+            command,
+            ...(version === undefined ? {} : { detectedVersion: formatVersion(version) }),
+            versionRange: operation.versionRange,
+          },
+          suggestion: spec.hint,
+        });
+      }
+    }
   }
 
   return undefined;
@@ -63,7 +123,11 @@ export async function executeRunCommand(
   operation: RunCommandOperation,
   context: ExecutionContext,
 ): Promise<RepoSetupError | undefined> {
-  const commandError = validateCommand(operation.command, operation.args);
+  const command = await resolveExecutable(operation.command, context);
+  if (command === undefined) {
+    return missingCommand(operation.command);
+  }
+  const commandError = validateCommand(command, operation.args);
   if (commandError !== undefined) {
     return commandError;
   }
@@ -72,16 +136,41 @@ export async function executeRunCommand(
   if (!cwd.ok) {
     return cwd.error;
   }
+  const realPath = await assertRealPathInsideRoot(context.rootDir, cwd.absolutePath, context.fs);
+  if (!realPath.ok) {
+    return realPath.error;
+  }
 
-  context.logger.verbose(`${operation.command} ${operation.args.join(" ")}`);
+  context.logger.verbose(`${command} ${operation.args.join(" ")}`);
 
-  const result = await context.runProcess({
-    command: operation.command,
+  let result = await context.runProcess({
+    command,
     args: operation.args,
     cwd: cwd.absolutePath,
+    ...(context.signal === undefined ? {} : { signal: context.signal }),
+    ...outputHandler(context),
+    ...timeoutFor(operation, context),
   });
 
-  return commandFailure(operation.command, operation.args, result, context);
+  // Locked installs do not resolve a new dependency graph, so one retry is safe
+  // for a classified transient download failure. Generators and package adds are
+  // never replayed automatically.
+  if (
+    operation.requiresLockfile !== undefined &&
+    isTransientDownloadFailure(summarizeFailedProcessOutput(result.stdout, result.stderr))
+  ) {
+    await new Promise<void>((resolve) => setTimeout(resolve, 250));
+    result = await context.runProcess({
+      command,
+      args: operation.args,
+      cwd: cwd.absolutePath,
+      ...(context.signal === undefined ? {} : { signal: context.signal }),
+      ...outputHandler(context),
+      ...timeoutFor(operation, context),
+    });
+  }
+
+  return commandFailure(command, operation.args, result, context);
 }
 
 export async function executeVerify(
@@ -93,7 +182,11 @@ export async function executeVerify(
   }
 
   const args = operation.args ?? [];
-  const commandError = validateCommand(operation.command, args);
+  const command = await resolveExecutable(operation.command, context);
+  if (command === undefined) {
+    return missingCommand(operation.command);
+  }
+  const commandError = validateCommand(command, args);
   if (commandError !== undefined) {
     return commandError;
   }
@@ -102,16 +195,23 @@ export async function executeVerify(
   if (!cwd.ok) {
     return cwd.error;
   }
+  const realPath = await assertRealPathInsideRoot(context.rootDir, cwd.absolutePath, context.fs);
+  if (!realPath.ok) {
+    return realPath.error;
+  }
 
-  context.logger.verbose(`${operation.command} ${args.join(" ")}`);
+  context.logger.verbose(`${command} ${args.join(" ")}`);
 
   const result = await context.runProcess({
-    command: operation.command,
+    command,
     args,
     cwd: cwd.absolutePath,
+    ...(context.signal === undefined ? {} : { signal: context.signal }),
+    ...outputHandler(context),
+    ...timeoutFor(operation, context),
   });
 
-  const failed = commandFailure(operation.command, args, result, context);
+  const failed = commandFailure(command, args, result, context);
   if (failed === undefined) {
     return undefined;
   }
@@ -158,6 +258,23 @@ function validateCommand(command: string, args: readonly string[]): RepoSetupErr
   return undefined;
 }
 
+async function resolveExecutable(
+  command: string,
+  context: ExecutionContext,
+): Promise<string | undefined> {
+  return context.resolveExecutable === undefined ? command : context.resolveExecutable(command);
+}
+
+function missingCommand(command: string): RepoSetupError {
+  return createRepoSetupError({
+    code: "COMMAND_FAILED",
+    message: `Command "${command}" was not found.`,
+    details: { command },
+    suggestion:
+      "Install the executable and ensure it is on PATH. RepoSetup will not install it for you.",
+  });
+}
+
 async function binaryExists(command: string, context: ExecutionContext): Promise<boolean> {
   const result = await context.runProcess({
     command,
@@ -168,12 +285,68 @@ async function binaryExists(command: string, context: ExecutionContext): Promise
   return result.notFound !== true && result.exitCode === 0;
 }
 
+async function readCommandVersion(
+  command: string,
+  context: ExecutionContext,
+): Promise<readonly [number, number, number] | undefined> {
+  const result = await context.runProcess({
+    command,
+    args: ["--version"],
+    cwd: context.rootDir,
+  });
+  if (result.notFound === true || result.exitCode !== 0) {
+    return undefined;
+  }
+
+  const match = `${result.stdout}\n${result.stderr}`.match(
+    /(?:v|Python\s+)?(\d+)\.(\d+)(?:\.(\d+))?/i,
+  );
+  if (match === null) {
+    return undefined;
+  }
+  return [Number(match[1]), Number(match[2]), Number(match[3] ?? 0)];
+}
+
+function isVersionBelow(
+  actual: readonly [number, number, number],
+  minimum: readonly [number, number, number],
+): boolean {
+  for (const index of [0, 1, 2] as const) {
+    if (actual[index] !== minimum[index]) {
+      return actual[index] < minimum[index];
+    }
+  }
+  return false;
+}
+
+function formatVersion(version: readonly [number, number, number]): string {
+  return version.join(".");
+}
+
 function commandFailure(
   command: string,
   args: readonly string[],
   result: ProcessRunResult,
   context: ExecutionContext,
 ): RepoSetupError | undefined {
+  if (result.aborted === true) {
+    return createRepoSetupError({
+      code: "EXECUTION_ABORTED",
+      message: `Command "${command}" was cancelled.`,
+      details: { command, args: [...args] },
+      suggestion: "Review completed changes before retrying the plan.",
+    });
+  }
+
+  if (result.timedOut === true) {
+    return createRepoSetupError({
+      code: "COMMAND_TIMED_OUT",
+      message: `Command "${command}" exceeded its execution time limit.`,
+      details: { command, args: [...args] },
+      suggestion: "Check network, package-manager, and project state before retrying the plan.",
+    });
+  }
+
   if (result.notFound === true) {
     return createRepoSetupError({
       code: "COMMAND_FAILED",
@@ -205,4 +378,24 @@ function commandFailure(
     },
     suggestion: commandFailureSuggestion(snippet),
   });
+}
+
+function timeoutFor(
+  operation: RunCommandOperation | VerifyOperation,
+  context: ExecutionContext,
+): { timeoutMs?: number } {
+  const timeoutMs =
+    operation.type === "run_command" && operation.longRunning === true
+      ? context.longRunningCommandTimeoutMs
+      : context.commandTimeoutMs;
+
+  return timeoutMs === undefined ? {} : { timeoutMs };
+}
+
+function outputHandler(context: ExecutionContext): Pick<ProcessRunRequest, "onOutput"> {
+  if (context.logger.output === undefined) {
+    return {};
+  }
+
+  return { onOutput: (event) => context.logger.output?.(event.text) };
 }

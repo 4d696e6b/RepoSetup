@@ -17,13 +17,21 @@ export async function filterSatisfiedOperations(
   packageJson: PackageJsonSummary | undefined,
 ): Promise<InstallationOperation[]> {
   const remaining: InstallationOperation[] = [];
+  let removedWork = false;
 
   for (const operation of operations) {
     if (await isOperationSatisfied(operation, files, packageJson)) {
+      if (operation.type !== "show_message") {
+        removedWork = true;
+      }
       continue;
     }
 
     remaining.push(operation);
+  }
+
+  if (removedWork && remaining.every((operation) => operation.type === "check_prerequisite")) {
+    return [];
   }
 
   return remaining;
@@ -40,6 +48,9 @@ export async function isOperationSatisfied(
     case "show_message":
       return true;
     case "install_package":
+      if (operation.packageManager === "uv" || operation.packageManager === "pip") {
+        return pythonPackagesAlreadyPresent(operation.packages, files);
+      }
       return packagesAlreadyPresent(operation.packages, packageJson);
     case "run_command":
       return isRunCommandSatisfied(operation.command, operation.args, files, packageJson);

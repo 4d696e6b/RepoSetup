@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is currently an **early-stage** open-source project (`v0.1.1`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is currently an **early-stage** open-source project (preparing `v0.2.0`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -44,7 +44,7 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 ## Quick start
 
-Requires **Node.js 20+** and **pnpm 12.5.1**.
+Requires **Node.js 24+** and **pnpm 12.5.1**. Python recipes require **Python 3.12+** and **uv**; 3.12 and 3.13 are qualified for this candidate.
 
 ```bash
 git clone https://github.com/4d696e6b/RepoSetup.git
@@ -52,7 +52,7 @@ cd RepoSetup
 pnpm install
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.1.1
+node packages/cli/dist/bin.js --version   # 0.2.0
 ```
 
 Preview a Next.js example without changing files:
@@ -85,7 +85,7 @@ rsetup --help
 reposetup --help
 ```
 
-`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project. Python stacks also need **Python 3.9+** and **uv**.
+`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project.
 
 ## Example
 
@@ -172,13 +172,13 @@ reposetup registry validate
 
 There is no separate `import` command. Apply an exported file with `create --config`.
 
-`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in v0.1.1.**
+`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in the 0.2.0 support contract.**
 
 ## Integration status
 
 Status is per ID, not “the catalog is production-ready.”
 
-| Status | Meaning in v0.1.1 |
+| Status | Meaning in the 0.2.0 support contract |
 | --- | --- |
 | **stable** | Real execute + advertised-platform evidence. **None yet.** |
 | **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |
@@ -201,12 +201,14 @@ Status is per ID, not “the catalog is production-ready.”
 | ORM / data | `prisma`, `sqlalchemy`, `alembic` | candidate |
 | ORM / data | `drizzle`, `mongoose` | experimental |
 | Validation | `zod`, `pydantic` | candidate |
-| Testing | `vitest`, `pytest` | candidate |
+| Application settings | `pydantic-settings` | candidate (FastAPI only) |
+| Testing | `vitest`, `testing-library`, `pytest`, `httpx` | candidate (`testing-library` and `httpx` have generated interaction/API tests) |
 | Testing | `playwright` | experimental |
+| Client state | `tanstack-query` | candidate (React + Vite only) |
 | Quality | `eslint`, `prettier`, `ruff` | candidate |
 | Infrastructure / CI | `docker`, `docker-compose`, `github-actions` | experimental |
 
-`remove` currently has package-only recipes for `zod`, `prettier`, `pydantic`, `pytest`, and `ruff`. `pip uninstall` is refused.
+`remove` currently has package-only recipes for `zod`, `prettier`, `pydantic`, `pydantic-settings`, `pytest`, `ruff`, `testing-library`, `tanstack-query`, and `httpx`. Generated source, tests, and `.env.example` files are preserved. `pip uninstall` is refused.
 
 ## Tested stack recipes
 
@@ -217,6 +219,8 @@ Status is per ID, not “the catalog is production-ready.”
 | Express + TypeScript + Prisma (PostgreSQL **config** only) | yes | generation + `tsc`; no live database |
 | FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` in this workspace |
 | Flask + uv + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` |
+| React + Vite + Vitest + Testing Library + TanStack Query | yes | generated interaction/query tests |
+| FastAPI + Pydantic + pytest + HTTPX + Pydantic Settings | yes | generated HTTPX/settings tests; no real secrets |
 
 Example configs live in `examples/`.
 
@@ -273,6 +277,8 @@ pnpm test:golden
 There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
 
 ## Roadmap
+
+See the [phased roadmap to 0.2.0](docs/specification-documentation/implementing-docs/ROADMAP_0.2.0.md) for cross-platform qualification, faster installation, usability improvements, integration priorities, and release gates.
 
 - Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
 - Promote integrations to `stable` only with that evidence

@@ -12,8 +12,11 @@ const fixturesDir = join(dirname(fileURLToPath(import.meta.url)), "../../../test
 const fixtures = [
   ["golden-react-vite.json", ["react-vite", "zod", "vitest", "prettier"]],
   ["golden-express.json", ["express", "postgresql", "prisma", "zod", "vitest", "prettier"]],
+  ["golden-fastify-drizzle.json", ["fastify", "postgresql", "drizzle", "vitest", "eslint"]],
   ["golden-fastapi.json", ["fastapi", "pydantic", "sqlalchemy", "alembic", "pytest", "ruff"]],
   ["golden-flask.json", ["flask", "sqlalchemy", "alembic", "pytest", "ruff"]],
+  ["golden-react-phase26.json", ["react-vite", "vitest", "testing-library", "tanstack-query"]],
+  ["golden-fastapi-phase26.json", ["fastapi", "pydantic", "pytest", "httpx", "pydantic-settings"]],
 ] as const;
 
 describe("golden qualification fixtures", () => {

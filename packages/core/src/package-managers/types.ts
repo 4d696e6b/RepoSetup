@@ -16,6 +16,10 @@ export interface InstallProjectRequest {
   cwd: ProjectRelativePath;
   description: string;
   requirementsFile?: ProjectRelativePath;
+  /** Install only from the existing lockfile. Do not resolve or rewrite it. */
+  frozen?: boolean;
+  /** Prefer cached metadata/packages while allowing cache misses to use the configured registry. */
+  preferOffline?: boolean;
 }
 
 export interface RemovePackagesRequest {

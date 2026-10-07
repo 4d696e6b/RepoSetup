@@ -8,6 +8,7 @@ import {
 
 import { defineIntegration } from "./define.js";
 import { addPackages, afterPythonPackageInstall, removePackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, pypiPin } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingPythonPackage } from "./verify.js";
@@ -40,7 +41,7 @@ export const ruffIntegration = defineIntegration({
   },
   plan(context) {
     return [
-      addPackages(context, ["ruff"], {
+      addPackages(context, [pypiPin("ruff", QUALIFIED_VERSIONS.ruff)], {
         description: "Install Ruff as a development dependency",
         dev: true,
       }),

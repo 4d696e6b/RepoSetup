@@ -49,6 +49,20 @@ describe("pipAdapter", () => {
     expectArgs(result, ["-m", "pip", "install", "-r", "requirements.txt"]);
   });
 
+  it("refuses a frozen install because pip has no lockfile", () => {
+    const result = pipAdapter.install({
+      cwd: ".",
+      description: "Install from a lockfile",
+      frozen: true,
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.code).toBe("UNSUPPORTED_CONTEXT");
+  });
+
   it("requires a requirements file for project install", () => {
     const result = pipAdapter.install({
       cwd: ".",

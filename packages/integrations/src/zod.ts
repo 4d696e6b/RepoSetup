@@ -2,6 +2,7 @@ import { detectNpmPackage, type DetectionContext, type DetectionResult } from "@
 
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, removePackages } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { mergeVerify, missingPackage } from "./verify.js";
 
 export const zodIntegration = defineIntegration({
@@ -34,7 +35,7 @@ export const zodIntegration = defineIntegration({
   },
   plan(context) {
     return [
-      addPackages(context, ["zod"], {
+      addPackages(context, [npmPin("zod", QUALIFIED_VERSIONS.zod)], {
         description: "Install Zod",
       }),
     ];

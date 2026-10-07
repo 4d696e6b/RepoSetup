@@ -5,6 +5,7 @@ import { nextjsIntegration } from "./nextjs.js";
 import { nodeIntegration } from "./node.js";
 import { npmIntegration } from "./npm.js";
 import { addPackages, execLocalBin, hasSelectedIntegration } from "./operations.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 import { pnpmIntegration } from "./pnpm.js";
 import { prettierIntegration } from "./prettier.js";
 import { prismaIntegration } from "./prisma.js";
@@ -45,9 +46,7 @@ function planContext<TOptions = unknown>(
 }
 
 function runCommands(operations: ReturnType<typeof nextjsIntegration.plan>) {
-  return operations
-    .filter((operation) => operation.type === "run_command")
-    .map((operation) => [operation.command, ...operation.args]);
+  return plannedCommandArgv(operations);
 }
 
 describe("integration plans", () => {
@@ -73,7 +72,7 @@ describe("integration plans", () => {
       [
         "pnpm",
         "create",
-        "next-app@latest",
+        "next-app@16.3.5",
         ".",
         "--ts",
         "--eslint",
@@ -83,6 +82,7 @@ describe("integration plans", () => {
         "--import-alias",
         "@/*",
         "--use-pnpm",
+        "--skip-install",
         "--yes",
       ],
     ]);
@@ -101,7 +101,7 @@ describe("integration plans", () => {
       [
         "npx",
         "--yes",
-        "create-next-app@latest",
+        "create-next-app@16.3.5",
         "app",
         "--js",
         "--eslint",
@@ -111,14 +111,53 @@ describe("integration plans", () => {
         "--import-alias",
         "@/*",
         "--use-npm",
+        "--skip-install",
         "--yes",
       ],
     ]);
   });
 
+  it("pins the available ESLint config after scaffolding Next.js", () => {
+    expect(nextjsIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_json",
+          path: "package.json",
+          merge: { devDependencies: { "eslint-config-next": "16.3.5" } },
+        }),
+      ]),
+    );
+  });
+
+  it("replaces the create-next-app pnpm build-policy placeholders", () => {
+    expect(nextjsIntegration.plan(planContext({ integrations: [{ id: "prisma" }] }))).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_text",
+          path: "pnpm-workspace.yaml",
+          newText: expect.stringContaining("better-sqlite3: true"),
+        }),
+      ]),
+    );
+  });
+
+  it("makes a generated TypeScript Next.js layout typecheck before Next type generation", () => {
+    expect(nextjsIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_text",
+          path: "app/layout.tsx",
+          newText: expect.stringContaining("React.ReactNode"),
+        }),
+      ]),
+    );
+  });
+
   it("installs the official Tailwind Vite plugin for React + Vite", () => {
     const plan = tailwindIntegration.plan(planContext({ frameworkId: "react-vite" }));
-    expect(runCommands(plan)).toEqual([["pnpm", "add", "tailwindcss", "@tailwindcss/vite"]]);
+    expect(runCommands(plan)).toEqual([
+      ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/vite@4.3.3"],
+    ]);
     expect(plan).toEqual(
       expect.arrayContaining([expect.objectContaining({ type: "show_message" })]),
     );
@@ -127,7 +166,7 @@ describe("integration plans", () => {
   it("installs Tailwind v4 PostCSS packages without --save-dev", () => {
     const plan = tailwindIntegration.plan(planContext());
     expect(runCommands(plan)).toEqual([
-      ["pnpm", "add", "tailwindcss", "@tailwindcss/postcss", "postcss"],
+      ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/postcss@4.3.3", "postcss@8.5.28"],
     ]);
     expect(plan).toEqual(
       expect.arrayContaining([
@@ -151,17 +190,17 @@ describe("integration plans", () => {
         "--save-dev",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
-        "prisma@prev",
-        "@types/better-sqlite3",
+        "prisma@7.10.0",
+        "@types/better-sqlite3@9.6.0",
       ],
       [
         "pnpm",
         "add",
         "--allow-build=esbuild",
-        "--allow-build=!better-sqlite3",
-        "@prisma/client@7",
-        "@prisma/adapter-better-sqlite3",
-        "dotenv",
+        "--allow-build=better-sqlite3",
+        "@prisma/client@7.10.0",
+        "@prisma/adapter-better-sqlite3@7.10.0",
+        "dotenv@18.0.3",
       ],
       [
         "pnpm",
@@ -178,7 +217,7 @@ describe("integration plans", () => {
   });
 
   it("installs Zod as a runtime dependency", () => {
-    expect(runCommands(zodIntegration.plan(planContext()))).toEqual([["pnpm", "add", "zod"]]);
+    expect(runCommands(zodIntegration.plan(planContext()))).toEqual([["pnpm", "add", "zod@4.6.5"]]);
   });
 
   it("follows the Next.js Vitest guide for TypeScript and JavaScript", () => {
@@ -190,14 +229,14 @@ describe("integration plans", () => {
         "add",
         "--save-dev",
         "--allow-build=esbuild",
-        "vitest",
-        "@vitejs/plugin-react",
-        "jsdom",
-        "@testing-library/react",
-        "@testing-library/dom",
-        "vite-tsconfig-paths",
+        "vitest@5.0.1",
+        "@vitejs/plugin-react@6.1.1",
+        "jsdom@28.1.0",
+        "@testing-library/react@16.3.3",
+        "@testing-library/dom@10.4.2",
+        "vite-tsconfig-paths@6.1.1",
       ],
-      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
+      ["pnpm", "exec", "vitest", "run"],
     ]);
 
     const javascriptPlan = vitestIntegration.plan(
@@ -209,25 +248,52 @@ describe("integration plans", () => {
         "add",
         "--save-dev",
         "--allow-build=esbuild",
-        "vitest",
-        "@vitejs/plugin-react",
-        "jsdom",
-        "@testing-library/react",
-        "@testing-library/dom",
+        "vitest@5.0.1",
+        "@vitejs/plugin-react@6.1.1",
+        "jsdom@28.1.0",
+        "@testing-library/react@16.3.3",
+        "@testing-library/dom@10.4.2",
       ],
-      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
+      ["pnpm", "exec", "vitest", "run"],
     ]);
     expect(javascriptPlan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "vitest.config.js" }),
+        expect.objectContaining({ type: "create_file", path: "health.test.js" }),
+      ]),
+    );
+  });
+
+  it("adds a React sample assertion when Vitest is planned for Vite", () => {
+    expect(
+      vitestIntegration.plan(
+        planContext({ frameworkId: "react-vite", frameworkOptions: { typescript: true } }),
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: "create_file", path: "src/sample.ts" }),
+        expect.objectContaining({
+          type: "create_file",
+          path: "src/sample.test.ts",
+          content: expect.stringContaining("Hello from RepoSetup"),
+        }),
       ]),
     );
   });
 
   it("installs Prettier as an exact dev dependency", () => {
     expect(runCommands(prettierIntegration.plan(planContext()))).toEqual([
-      ["pnpm", "add", "--save-dev", "--save-exact", "prettier"],
+      ["pnpm", "add", "--save-dev", "--save-exact", "prettier@3.9.8"],
     ]);
+    expect(prettierIntegration.plan(planContext({ frameworkId: "react-vite" }))).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: ".prettierrc",
+          content: expect.stringContaining('"singleQuote": true'),
+        }),
+      ]),
+    );
   });
 
   it("initializes Prisma PostgreSQL with the official adapter packages", () => {
@@ -240,17 +306,17 @@ describe("integration plans", () => {
         "--save-dev",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
-        "prisma@prev",
-        "@types/pg",
+        "prisma@7.10.0",
+        "@types/pg@8.23.1",
       ],
       [
         "pnpm",
         "add",
         "--allow-build=esbuild",
-        "@prisma/client@7",
-        "@prisma/adapter-pg",
-        "pg",
-        "dotenv",
+        "@prisma/client@7.10.0",
+        "@prisma/adapter-pg@7.10.0",
+        "pg@8.23.0",
+        "dotenv@18.0.3",
       ],
       [
         "pnpm",
@@ -282,14 +348,34 @@ describe("integration plans", () => {
 });
 
 describe("operation helpers", () => {
-  it("emits adapter argv arrays for package adds", () => {
+  it("emits typed install_package operations for package adds", () => {
     const operation = addPackages(planContext(), ["zod"], { description: "Install Zod" });
     expect(operation).toMatchObject({
-      type: "run_command",
-      command: "pnpm",
-      args: ["add", "zod"],
+      type: "install_package",
+      packageManager: "pnpm",
+      packages: ["zod"],
       cwd: ".",
       requiresNetwork: true,
+    });
+  });
+
+  it("preserves exact and allowBuild on install_package", () => {
+    const operation = addPackages(planContext(), ["prettier"], {
+      description: "Install Prettier",
+      dev: true,
+      exact: true,
+      allowBuild: ["esbuild"],
+    });
+    expect(operation).toEqual({
+      type: "install_package",
+      packageManager: "pnpm",
+      packages: ["prettier"],
+      cwd: ".",
+      description: "Install Prettier",
+      requiresNetwork: true,
+      dev: true,
+      exact: true,
+      allowBuild: ["esbuild"],
     });
   });
 

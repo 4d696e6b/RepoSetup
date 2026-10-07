@@ -1,0 +1,86 @@
+name: Installation performance
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/performance.yml"
+      - "scripts/benchmark-real-installs.mjs"
+      - "packages/cli/src/execution-adapters.ts"
+  workflow_dispatch:
+    inputs:
+      trials:
+        description: Cold and warm trials per recipe
+        required: true
+        default: "5"
+      recipes:
+        description: Comma-separated configured recipe paths
+        required: true
+        default: tests/e2e/fixtures/golden-react-vite.json,tests/e2e/fixtures/golden-express.json
+
+jobs:
+  compare:
+    name: ${{ matrix.runner }} / Node 24
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            architecture: x64
+          - runner: macos-15
+            architecture: arm64
+          - runner: windows-2025
+            architecture: x64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: candidate
+      - uses: actions/checkout@v4
+        with:
+          ref: a0e48a19479dc574c3f2bc3fba4a39608dc33e77
+          path: baseline
+      # The Phase 19 process runner predates the Windows `Path` casing fix from
+      # Phase 21. This harness-only compatibility change lets it find pnpm; it
+      # does not change its package plan or installation operations.
+      - name: Normalize the Phase 19 Windows launcher environment
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: baseline
+        run: |
+          $file = 'packages/core/src/executor/process.ts'
+          $source = Get-Content $file -Raw
+          $old = 'const child = spawn(request.command, [...request.args], {'
+          $new = 'const child = spawn(process.platform === "win32" && request.command === "pnpm" ? process.env.ComSpec ?? "cmd.exe" : request.command, process.platform === "win32" && request.command === "pnpm" ? ["/d", "/v:off", "/c", "pnpm", ...request.args] : [...request.args], {'
+          if (-not $source.Contains($old)) { throw 'Phase 19 process runner shape changed unexpectedly.' }
+          Set-Content -Path $file -Value $source.Replace($old, $new) -NoNewline
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.5.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
+          cache: pnpm
+          cache-dependency-path: candidate/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: candidate
+      - run: pnpm build
+        working-directory: candidate
+      - run: pnpm install --frozen-lockfile
+        working-directory: baseline
+      - run: pnpm build
+        working-directory: baseline
+      - name: Measure controlled installation passes
+        run: pnpm benchmark:install-passes
+        working-directory: candidate
+        env:
+          REPOSETUP_ALLOW_REAL_INSTALL_BENCHMARK: "1"
+          REPOSETUP_INSTALL_PASS_TRIALS: ${{ inputs.trials || '5' }}
+          REPOSETUP_INSTALL_PASS_OUTPUT: ../install-passes.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installation-performance-${{ matrix.runner }}
+          path: |
+            install-passes.json
+          if-no-files-found: error

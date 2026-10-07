@@ -53,6 +53,8 @@ export function appendEnvLines(existing: string, lines: readonly string[]): stri
     return existing;
   }
 
-  const prefix = existing.length === 0 || existing.endsWith("\n") ? existing : `${existing}\n`;
-  return `${prefix}${lines.join("\n")}\n`;
+  const newline = existing.includes("\r\n") ? "\r\n" : "\n";
+  const prefix =
+    existing.length === 0 || existing.endsWith("\n") ? existing : `${existing}${newline}`;
+  return `${prefix}${lines.join(newline)}${newline}`;
 }

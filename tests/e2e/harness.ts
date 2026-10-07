@@ -28,8 +28,9 @@ export async function runProcess(
   args: readonly string[],
   options: { cwd: string; env?: NodeJS.ProcessEnv },
 ): Promise<CliRunResult> {
+  const launch = windowsLaunch(command, args);
   return new Promise((resolve, reject) => {
-    const child = spawn(command, [...args], {
+    const child = spawn(launch.command, launch.args, {
       cwd: options.cwd,
       env: options.env ?? process.env,
       shell: false,
@@ -55,6 +56,30 @@ export async function runProcess(
       });
     });
   });
+}
+
+function windowsLaunch(
+  command: string,
+  args: readonly string[],
+): {
+  command: string;
+  args: readonly string[];
+} {
+  if (process.platform !== "win32") {
+    return { command, args };
+  }
+
+  if ([".exe", ".com"].includes(path.win32.extname(command).toLowerCase())) {
+    return { command, args };
+  }
+  if (!/^[A-Za-z0-9._-]+$/.test(command)) {
+    throw new Error(`Unsafe Windows test executable: ${command}`);
+  }
+
+  return {
+    command: process.env.ComSpec ?? "cmd.exe",
+    args: ["/d", "/c", command, ...args],
+  };
 }
 
 export async function createTempWorkspace(prefix: string): Promise<string> {

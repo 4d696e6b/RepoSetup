@@ -1,63 +1,85 @@
 name: Publish npm
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      qualification_run_ids:
+        description: Three passing release.yml run IDs from the exact stable SHA, oldest first
+        required: true
+        type: string
+      publish:
+        description: Owner authorization to publish the qualified artifact (false performs a dry-run)
+        default: false
+        type: boolean
 
 permissions:
   contents: read
+  actions: read
+
+concurrency:
+  group: publish-rsetup-0.2.0
+  cancel-in-progress: false
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
+    outputs:
+      artifact_id: ${{ steps.qualification.outputs.artifact_id }}
+      run_id: ${{ steps.qualification.outputs.run_id }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     permissions:
       contents: read
+      actions: read
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
-          cache: pnpm
+      - name: Verify exact-source qualification
+        id: qualification
+        run: node scripts/check-release-qualification.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          QUALIFICATION_RUN_IDS: ${{ inputs.qualification_run_ids }}
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ steps.qualification.outputs.artifact_id }}
+          run-id: ${{ steps.qualification.outputs.run_id }}
+          github-token: ${{ github.token }}
+          path: candidate
+      - name: Verify qualified tarball and actual launchers without rebuilding
+        run: node scripts/verify-packed-artifact.mjs --directory candidate
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.sha }}
+          EXPECTED_PACKAGE_VERSION: "0.2.0"
       - name: Ensure npm CLI supports trusted publishing
         run: npm install -g npm@^11.5.1
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm test
-      - run: pnpm build
-      - run: pnpm registry:validate
-      - run: pnpm test:e2e
-      - run: pnpm pack:packages
-      - name: Skip publish when this version already exists
-        id: existing
-        working-directory: packages/cli
-        run: |
-          NAME="$(node -p "require('./package.json').name")"
-          VERSION="$(node -p "require('./package.json').version")"
-          echo "name=${NAME}" >> "$GITHUB_OUTPUT"
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "npm already has ${NAME}@${VERSION}; skipping publish"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Publish reposetup
-        if: steps.existing.outputs.exists == 'false'
-        working-directory: packages/cli
-        run: npm publish --access public
+      - name: Publish or dry-run the previously qualified artifact
+        run: node scripts/publish-qualified-artifact.mjs
         env:
+          PUBLISH_RELEASE: ${{ inputs.publish }}
           NPM_CONFIG_PROVENANCE: "true"
-      - name: Verify registry version
-        if: steps.existing.outputs.exists == 'false'
-        run: |
-          NAME="${{ steps.existing.outputs.name }}"
-          VERSION="${{ steps.existing.outputs.version }}"
-          PUBLISHED="$(npm view "${NAME}@${VERSION}" version)"
-          test "${PUBLISHED}" = "${VERSION}"
-          npm view "${NAME}" dist-tags
+
+  registry-acceptance:
+    if: inputs.publish
+    needs: publish
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.publish.outputs.artifact_id }}
+          run-id: ${{ needs.publish.outputs.run_id }}
+          github-token: ${{ github.token }}
+          path: candidate
+      - name: Verify exact published version outside the monorepo
+        run: node scripts/verify-registry-release.mjs

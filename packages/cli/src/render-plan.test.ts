@@ -37,6 +37,8 @@ describe("renderPlan", () => {
           packages: ["fake-orm"],
           cwd: ".",
           description: "Install fake ORM",
+          exact: true,
+          allowBuild: ["esbuild"],
         },
       ]),
       { dryRun: true, verbose: false, quiet: false },
@@ -47,6 +49,8 @@ describe("renderPlan", () => {
     expect(output).toContain("path  src");
     expect(output).toContain("2. install_package  Install fake ORM");
     expect(output).toContain("packages  fake-orm");
+    expect(output).toContain("exact  true");
+    expect(output).toContain("allowBuild  esbuild");
     expect(output).toContain("No files or commands were executed.");
   });
 

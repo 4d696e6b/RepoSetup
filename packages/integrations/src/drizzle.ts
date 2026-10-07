@@ -10,18 +10,24 @@ import {
 import { ORM_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { addPackages, hasSelectedIntegration } from "./operations.js";
+import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { mergeVerify, missingAnyFile, missingEnvKeys, missingPackage } from "./verify.js";
 
 const DRIZZLE_CONFIG = `import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
 
+const url = process.env.DATABASE_URL;
+if (url === undefined) {
+  throw new Error("DATABASE_URL is required");
+}
+
 export default defineConfig({
   out: './drizzle',
   schema: './src/db/schema.ts',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url,
   },
 });
 `;
@@ -29,7 +35,22 @@ export default defineConfig({
 const DRIZZLE_CLIENT = `import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 
-export const db = drizzle(process.env.DATABASE_URL);
+const connectionString = process.env.DATABASE_URL;
+if (connectionString === undefined) {
+  throw new Error("DATABASE_URL is required");
+}
+
+export const db = drizzle(connectionString);
+`;
+
+const DRIZZLE_SCHEMA_TEST = `import { getTableName } from "drizzle-orm";
+import { expect, it } from "vitest";
+
+import { items } from "./schema.js";
+
+it("names the generated items table", () => {
+  expect(getTableName(items)).toBe("items");
+});
 `;
 
 const DRIZZLE_SCHEMA = `import { pgTable, serial, text } from 'drizzle-orm/pg-core';
@@ -87,13 +108,30 @@ export const drizzleIntegration = defineIntegration({
     }
 
     return [
-      addPackages(context, ["drizzle-orm", "pg", "dotenv"], {
-        description: "Install Drizzle ORM, node-postgres, and dotenv",
-      }),
-      addPackages(context, ["drizzle-kit", "tsx", "@types/pg"], {
-        description: "Install Drizzle Kit and PostgreSQL types",
-        dev: true,
-      }),
+      addPackages(
+        context,
+        [
+          npmPin("drizzle-orm", QUALIFIED_VERSIONS.drizzleOrm),
+          npmPin("pg", QUALIFIED_VERSIONS.pg),
+          npmPin("dotenv", QUALIFIED_VERSIONS.dotenv),
+        ],
+        {
+          description: "Install Drizzle ORM, node-postgres, and dotenv",
+        },
+      ),
+      addPackages(
+        context,
+        [
+          npmPin("drizzle-kit", QUALIFIED_VERSIONS.drizzleKit),
+          npmPin("tsx", QUALIFIED_VERSIONS.tsx),
+          npmPin("@types/pg", QUALIFIED_VERSIONS.typesPg),
+        ],
+        {
+          description: "Install Drizzle Kit and PostgreSQL types",
+          dev: true,
+          allowBuild: ["esbuild"],
+        },
+      ),
       {
         type: "create_directory",
         path: "src/db",
@@ -121,6 +159,17 @@ export const drizzleIntegration = defineIntegration({
         behavior: "fail_if_exists",
         description: "Add the official Drizzle node-postgres client",
       },
+      ...(hasSelectedIntegration(context, "vitest")
+        ? [
+            {
+              type: "create_file" as const,
+              path: "src/db/schema.test.ts",
+              content: DRIZZLE_SCHEMA_TEST,
+              behavior: "fail_if_exists" as const,
+              description: "Add a Drizzle schema assertion that does not connect to PostgreSQL",
+            },
+          ]
+        : []),
     ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {

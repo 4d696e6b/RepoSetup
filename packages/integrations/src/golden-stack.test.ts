@@ -6,6 +6,7 @@ import { parseRepoSetupConfig, planInstallation } from "@reposetup/core";
 import { describe, expect, it } from "vitest";
 
 import { createBuiltInRegistry } from "./catalog.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 
 const examplePath = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -36,15 +37,13 @@ describe("golden Next.js/SQLite stack", () => {
       "zod",
     ]);
 
-    const commands = result.operations
-      .filter((operation) => operation.type === "run_command")
-      .map((operation) => [operation.command, ...operation.args]);
+    const commands = plannedCommandArgv(result.operations);
 
     expect(commands).toEqual([
       [
         "pnpm",
         "create",
-        "next-app@latest",
+        "next-app@16.3.5",
         ".",
         "--ts",
         "--eslint",
@@ -54,27 +53,10 @@ describe("golden Next.js/SQLite stack", () => {
         "--import-alias",
         "@/*",
         "--use-pnpm",
+        "--skip-install",
         "--yes",
       ],
-      ["pnpm", "add", "--save-dev", "--save-exact", "prettier"],
-      [
-        "pnpm",
-        "add",
-        "--save-dev",
-        "--allow-build=prisma",
-        "--allow-build=@prisma/engines",
-        "prisma@prev",
-        "@types/better-sqlite3",
-      ],
-      [
-        "pnpm",
-        "add",
-        "--allow-build=esbuild",
-        "--allow-build=!better-sqlite3",
-        "@prisma/client@7",
-        "@prisma/adapter-better-sqlite3",
-        "dotenv",
-      ],
+      ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
       [
         "pnpm",
         "exec",
@@ -86,27 +68,20 @@ describe("golden Next.js/SQLite stack", () => {
         "../generated/prisma",
       ],
       ["pnpm", "exec", "prisma", "generate"],
-      ["pnpm", "add", "tailwindcss", "@tailwindcss/postcss", "postcss"],
-      [
-        "pnpm",
-        "add",
-        "--save-dev",
-        "--allow-build=esbuild",
-        "vitest",
-        "@vitejs/plugin-react",
-        "jsdom",
-        "@testing-library/react",
-        "@testing-library/dom",
-        "vite-tsconfig-paths",
-      ],
-      ["pnpm", "exec", "vitest", "run", "--passWithNoTests"],
-      ["pnpm", "add", "zod"],
+      ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
+      ["pnpm", "exec", "vitest", "run"],
+      ["pnpm", "add", "zod@4.6.5"],
     ]);
 
     expect(result.operations).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "check_prerequisite", id: "node" }),
         expect.objectContaining({ type: "check_prerequisite", id: "pnpm" }),
+        expect.objectContaining({
+          type: "modify_json",
+          path: "package.json",
+          description: "Assemble package.json dependencies before a consolidated install",
+        }),
         expect.objectContaining({
           type: "add_env_example",
           path: ".env.example",

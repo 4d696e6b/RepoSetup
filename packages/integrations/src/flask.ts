@@ -10,10 +10,25 @@ import {
 
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
-import { addPackages, afterPythonPackageInstall, initPythonProject } from "./operations.js";
+import {
+  addPackages,
+  afterPythonPackageInstall,
+  hasSelectedIntegration,
+  initPythonProject,
+} from "./operations.js";
+import { QUALIFIED_VERSIONS, pypiPin } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
+
+const FLASK_README = `# Flask app
+
+From this directory, start the development server with:
+
+\`uv run flask run\`
+
+Run the generated endpoint test with \`uv run pytest\`.
+`;
 
 const FLASK_APP = `from flask import Flask
 
@@ -22,6 +37,16 @@ app = Flask(__name__)
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
+`;
+
+const FLASK_TEST = `from app import app
+
+
+def test_hello_world() -> None:
+    response = app.test_client().get("/")
+
+    assert response.status_code == 200
+    assert response.get_data(as_text=True) == "<p>Hello, World!</p>"
 `;
 
 export const flaskIntegration = defineIntegration({
@@ -55,7 +80,7 @@ export const flaskIntegration = defineIntegration({
   plan(context: PlanContext) {
     const operations: InstallationOperation[] = [
       ...initPythonProject(context),
-      addPackages(context, ["Flask"], {
+      addPackages(context, [pypiPin("Flask", QUALIFIED_VERSIONS.flask)], {
         description: "Install Flask",
       }),
       ...afterPythonPackageInstall(context, "Flask"),
@@ -65,6 +90,24 @@ export const flaskIntegration = defineIntegration({
         content: FLASK_APP,
         behavior: "fail_if_exists",
         description: "Add the official Flask quickstart app as app.py",
+      },
+      ...(hasSelectedIntegration(context, "pytest")
+        ? [
+            {
+              type: "create_file" as const,
+              path: "test_app.py",
+              content: FLASK_TEST,
+              behavior: "fail_if_exists" as const,
+              description: "Add a Flask endpoint response test",
+            },
+          ]
+        : []),
+      {
+        type: "create_file",
+        path: "README.md",
+        content: FLASK_README,
+        behavior: "fail_if_exists",
+        description: "Add Flask run instructions",
       },
       {
         type: "show_message",

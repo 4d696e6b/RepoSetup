@@ -1,6 +1,7 @@
 import {
   type DetectionContext,
   type DetectionResult,
+  type InstallationOperation,
   type SupportContext,
   type VerificationContext,
   type VerificationResult,
@@ -8,6 +9,7 @@ import {
 
 import { defineIntegration } from "./define.js";
 import { addPackages, afterPythonPackageInstall, runPythonTool } from "./operations.js";
+import { QUALIFIED_VERSIONS, pypiPin } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
@@ -35,8 +37,8 @@ export const alembicIntegration = defineIntegration({
     return detectPythonPackage(context, "alembic", ["alembic.ini"]);
   },
   plan(context) {
-    return [
-      addPackages(context, ["alembic"], {
+    const operations: InstallationOperation[] = [
+      addPackages(context, [pypiPin("alembic", QUALIFIED_VERSIONS.alembic)], {
         description: "Install Alembic",
       }),
       ...afterPythonPackageInstall(context, "alembic"),
@@ -50,6 +52,18 @@ export const alembicIntegration = defineIntegration({
         description: "Explain that Alembic migrations are not applied automatically",
       },
     ];
+
+    if (context.config.integrations.some((integration) => integration.id === "ruff")) {
+      operations.splice(
+        operations.length - 1,
+        0,
+        runPythonTool(context, "ruff", ["check", "--fix", "alembic/env.py"], {
+          description: "Fix lint-safe import ordering in Alembic's generated environment",
+        }),
+      );
+    }
+
+    return operations;
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {
     return mergeVerify([

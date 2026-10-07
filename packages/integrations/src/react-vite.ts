@@ -17,8 +17,20 @@ import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
 import { supportsNodeNpmPnpm, VITE_CONFIG_PATHS } from "./node-support.js";
+import { requireNodeRange } from "./node-range.js";
+import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS } from "./qualified-versions.js";
 import { pnpmOrNpmCreate, usesTypescript } from "./scaffold.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
+
+function pnpmViteBuildApproval() {
+  return {
+    type: "create_file" as const,
+    path: "pnpm-workspace.yaml",
+    content: 'allowBuilds:\n  "esbuild": true\n',
+    behavior: "create_if_missing" as const,
+    description: "Allow the Vite esbuild dependency build script",
+  };
+}
 
 const reactViteOptionsSchema = z.strictObject({
   typescript: z.boolean().optional(),
@@ -82,13 +94,16 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
   },
   plan(context: PlanContext<ReactViteOptions>) {
     const template = usesTypescript(context) ? "react-ts" : "react";
+    const vite = `vite@${QUALIFIED_VERSIONS.vite}`;
     return [
+      requireNodeRange(NODE_ENGINE_RANGES.vite, `Vite ${QUALIFIED_VERSIONS.vite}`),
       pnpmOrNpmCreate(
         context,
-        { pnpmName: "vite", npmName: "vite@latest" },
+        { pnpmName: vite, npmName: vite },
         ["--template", template, "--no-interactive"],
         { description: "Scaffold React with create-vite", longRunning: true },
       ),
+      ...(context.config.packageManager === "pnpm" ? [pnpmViteBuildApproval()] : []),
     ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {

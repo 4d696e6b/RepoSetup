@@ -23,6 +23,7 @@ import { fastifyIntegration } from "./fastify.js";
 import { githubActionsIntegration } from "./github-actions.js";
 import { mongodbIntegration } from "./mongodb.js";
 import { mongooseIntegration } from "./mongoose.js";
+import { plannedCommandArgv } from "./planned-commands.js";
 import { playwrightIntegration } from "./playwright.js";
 import { postgresqlIntegration } from "./postgresql.js";
 import { reactViteIntegration } from "./react-vite.js";
@@ -63,9 +64,7 @@ function planContext<TOptions = unknown>(
 }
 
 function runCommands(operations: ReturnType<typeof expressIntegration.plan>) {
-  return operations
-    .filter((operation) => operation.type === "run_command")
-    .map((operation) => [operation.command, ...operation.args]);
+  return plannedCommandArgv(operations);
 }
 
 async function contextOf(files: Record<string, string>): Promise<DetectionContext> {
@@ -91,7 +90,22 @@ describe("Phase 13 JS ecosystem plans", () => {
           planContext({ frameworkId: "react-vite", options: { typescript: true } }),
         ),
       ),
-    ).toEqual([["pnpm", "create", "vite", ".", "--template", "react-ts", "--no-interactive"]]);
+    ).toEqual([
+      ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
+    ]);
+    expect(
+      reactViteIntegration.plan(
+        planContext({ frameworkId: "react-vite", options: { typescript: true } }),
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: "pnpm-workspace.yaml",
+          content: 'allowBuilds:\n  "esbuild": true\n',
+        }),
+      ]),
+    );
 
     expect(
       runCommands(
@@ -106,7 +120,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         ),
       ),
     ).toEqual([
-      ["npm", "create", "vite@latest", "app", "--", "--template", "react", "--no-interactive"],
+      ["npm", "create", "vite@8.3.0", "app", "--", "--template", "react", "--no-interactive"],
     ]);
   });
 
@@ -115,13 +129,43 @@ describe("Phase 13 JS ecosystem plans", () => {
       planContext({ frameworkId: "express", options: { typescript: true } }),
     );
     expect(runCommands(plan)).toEqual([
-      ["pnpm", "add", "express"],
-      ["pnpm", "add", "--save-dev", "typescript", "@types/express", "@types/node"],
+      ["pnpm", "add", "express@5.2.1"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "typescript@5.9.3",
+        "@types/express@5.0.6",
+        "@types/node@22.20.4",
+        "tsx@4.23.15",
+      ],
     ]);
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "package.json" }),
         expect.objectContaining({ type: "create_file", path: "src/app.ts" }),
+        expect.objectContaining({ type: "modify_json", path: "package.json" }),
+        expect.objectContaining({ type: "create_file", path: "README.md" }),
+      ]),
+    );
+  });
+
+  it("adds an HTTP response test when Express is configured with Vitest", () => {
+    const plan = expressIntegration.plan(
+      planContext({
+        frameworkId: "express",
+        options: { typescript: true },
+        integrations: [{ id: "vitest" }],
+      }),
+    );
+
+    expect(plan).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: "src/app.test.ts",
+          content: expect.stringContaining("fetch(origin)"),
+        }),
       ]),
     );
   });
@@ -130,10 +174,38 @@ describe("Phase 13 JS ecosystem plans", () => {
     const plan = fastifyIntegration.plan(
       planContext({ frameworkId: "fastify", options: { typescript: true } }),
     );
-    expect(runCommands(plan)).toEqual([["pnpm", "add", "fastify"]]);
+    expect(runCommands(plan)).toEqual([
+      ["pnpm", "add", "fastify@5.12.5"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "--allow-build=esbuild",
+        "typescript@5.9.3",
+        "@types/node@22.20.4",
+        "tsx@4.23.15",
+      ],
+    ]);
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "src/server.ts" }),
+      ]),
+    );
+    expect(JSON.stringify(plan)).toContain("tsx watch src/server.ts");
+    const tested = fastifyIntegration.plan(
+      planContext({
+        frameworkId: "fastify",
+        options: { typescript: true },
+        integrations: [{ id: "vitest" }],
+      }),
+    );
+    expect(tested).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: "src/server.test.ts",
+          content: expect.stringContaining("app.inject"),
+        }),
       ]),
     );
   });
@@ -153,14 +225,35 @@ describe("Phase 13 JS ecosystem plans", () => {
     expect(
       runCommands(drizzleIntegration.plan(planContext({ integrations: [{ id: "postgresql" }] }))),
     ).toEqual([
-      ["pnpm", "add", "drizzle-orm", "pg", "dotenv"],
-      ["pnpm", "add", "--save-dev", "drizzle-kit", "tsx", "@types/pg"],
+      ["pnpm", "add", "drizzle-orm@0.45.3", "pg@8.23.0", "dotenv@18.0.3"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "--allow-build=esbuild",
+        "drizzle-kit@0.31.11",
+        "tsx@4.23.15",
+        "@types/pg@8.23.1",
+      ],
     ]);
+    expect(
+      drizzleIntegration.plan(
+        planContext({ integrations: [{ id: "postgresql" }, { id: "vitest" }] }),
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "create_file",
+          path: "src/db/schema.test.ts",
+          content: expect.stringContaining("getTableName"),
+        }),
+      ]),
+    );
   });
 
   it("installs Mongoose and a connection helper", () => {
     const plan = mongooseIntegration.plan(planContext({ integrations: [{ id: "mongodb" }] }));
-    expect(runCommands(plan)).toEqual([["pnpm", "add", "mongoose"]]);
+    expect(runCommands(plan)).toEqual([["pnpm", "add", "mongoose@9.10.2"]]);
     expect(plan).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ type: "create_file", path: "src/mongoose.js" }),
@@ -174,31 +267,83 @@ describe("Phase 13 JS ecosystem plans", () => {
         playwrightIntegration.plan(planContext({ frameworkOptions: { typescript: true } })),
       ),
     ).toEqual([
-      ["pnpm", "create", "playwright", ".", "--quiet", "--lang=TypeScript", "--no-browsers"],
+      [
+        "pnpm",
+        "create",
+        "playwright@1.17.139",
+        ".",
+        "--quiet",
+        "--lang=TypeScript",
+        "--no-browsers",
+      ],
+      ["pnpm", "add", "--save-dev", "--save-exact", "@playwright/test@1.63.0"],
     ]);
     expect(playwrightIntegration.plan(planContext())).toEqual(
-      expect.arrayContaining([expect.objectContaining({ type: "show_message" })]),
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_json",
+          path: "package.json",
+          merge: { devDependencies: { "@playwright/test": "1.63.0" } },
+        }),
+        expect.objectContaining({
+          type: "show_message",
+          message: expect.stringContaining("pnpm exec playwright install"),
+        }),
+      ]),
+    );
+    expect(playwrightIntegration.plan(planContext({ packageManager: "npm" }))).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "show_message",
+          message: expect.stringContaining("npx playwright install"),
+        }),
+      ]),
     );
   });
 
-  it("installs ESLint with the official recommended packages", () => {
+  it("installs ESLint with the official recommended packages for TypeScript", () => {
     expect(runCommands(eslintIntegration.plan(planContext()))).toEqual([
-      ["pnpm", "add", "--save-dev", "eslint@latest", "@eslint/js@latest"],
+      [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "eslint@9.39.5",
+        "@eslint/js@9.39.5",
+        "typescript-eslint@8.70.1",
+      ],
+      ["pnpm", "exec", "eslint", "."],
+    ]);
+    expect(eslintIntegration.plan(planContext())).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_json",
+          merge: { scripts: { lint: "eslint ." } },
+        }),
+      ]),
+    );
+  });
+
+  it("does not install TypeScript ESLint for JavaScript projects", () => {
+    expect(
+      runCommands(eslintIntegration.plan(planContext({ frameworkOptions: { typescript: false } }))),
+    ).toEqual([
+      ["pnpm", "add", "--save-dev", "eslint@9.39.5", "@eslint/js@9.39.5"],
+      ["pnpm", "exec", "eslint", "."],
     ]);
   });
 
   it("initializes shadcn/ui with the documented --yes template flags", () => {
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "nextjs" })))).toEqual([
-      ["pnpm", "dlx", "shadcn@latest", "init", "--yes", "-t", "next"],
+      ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "next"],
     ]);
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "react-vite" })))).toEqual(
-      [["pnpm", "dlx", "shadcn@latest", "init", "--yes", "-t", "vite"]],
+      [["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"]],
     );
     expect(
       runCommands(
         shadcnIntegration.plan(planContext({ packageManager: "npm", frameworkId: "nextjs" })),
       ),
-    ).toEqual([["npx", "--yes", "shadcn@latest", "init", "--yes", "-t", "next"]]);
+    ).toEqual([["npx", "--yes", "shadcn@4.21.0", "init", "--yes", "-t", "next"]]);
   });
 
   it("does not install Docker and writes Compose without starting it", () => {
@@ -226,12 +371,21 @@ describe("Phase 13 JS ecosystem plans", () => {
       ]),
     );
     const file = plan.find((operation) => operation.type === "create_file");
-    expect(file?.type === "create_file" ? file.content : "").toContain("pnpm/action-setup@v4");
+    const content = file?.type === "create_file" ? file.content : "";
+    expect(content).toContain("pnpm/action-setup@v4");
+    expect(content).toContain('version: "12.5.1"');
+    expect(content).toContain('node-version: "24"');
+    expect(content).toContain("pnpm run build");
+    expect(content).not.toContain("pnpm test");
+
+    const tested = githubActionsIntegration.plan(planContext({ integrations: [{ id: "vitest" }] }));
+    const testedFile = tested.find((operation) => operation.type === "create_file");
+    expect(testedFile?.type === "create_file" ? testedFile.content : "").toContain("pnpm test");
   });
 
   it("installs Vitest only for non-Next.js frameworks", () => {
     expect(runCommands(vitestIntegration.plan(planContext({ frameworkId: "express" })))).toEqual([
-      ["pnpm", "add", "--save-dev", "vitest"],
+      ["pnpm", "add", "--save-dev", "--allow-build=esbuild", "vitest@5.0.1"],
     ]);
   });
 });
@@ -327,9 +481,9 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "create", "vite", ".", "--template", "react-ts", "--no-interactive"],
-        ["pnpm", "add", "tailwindcss", "@tailwindcss/vite"],
-        ["pnpm", "dlx", "shadcn@latest", "init", "--yes", "-t", "vite"],
+        ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
+        ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
+        ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"],
       ]),
     );
   });
@@ -352,7 +506,7 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "add", "express"],
+        ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
         [
           "pnpm",
           "exec",

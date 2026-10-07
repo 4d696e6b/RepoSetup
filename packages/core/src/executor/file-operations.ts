@@ -11,7 +11,7 @@ import type {
 
 import { appendEnvLines, existingEnvKeys, formatEnvLine, validateEnvEntry } from "./env-example.js";
 import { mergeJsonObjects, parseJsonObject, stringifyJson } from "./json.js";
-import { resolveInsideRoot } from "./resolve-path.js";
+import { assertRealPathInsideRoot, resolveInsideRoot } from "./resolve-path.js";
 import type { ExecutionContext } from "./types.js";
 
 export async function executeCreateDirectory(
@@ -21,6 +21,14 @@ export async function executeCreateDirectory(
   const resolved = resolveInsideRoot(context.rootDir, operation.path);
   if (!resolved.ok) {
     return resolved.error;
+  }
+  const realPath = await assertRealPathInsideRoot(
+    context.rootDir,
+    resolved.absolutePath,
+    context.fs,
+  );
+  if (!realPath.ok) {
+    return realPath.error;
   }
 
   const exists = await context.fs.exists(resolved.absolutePath);
@@ -58,6 +66,14 @@ export async function executeCreateFile(
   if (!resolved.ok) {
     return resolved.error;
   }
+  const realPath = await assertRealPathInsideRoot(
+    context.rootDir,
+    resolved.absolutePath,
+    context.fs,
+  );
+  if (!realPath.ok) {
+    return realPath.error;
+  }
 
   const exists = await context.fs.exists(resolved.absolutePath);
   if (operation.behavior === "fail_if_exists" && exists) {
@@ -74,8 +90,15 @@ export async function executeCreateFile(
   }
 
   try {
-    await context.fs.writeFile(resolved.absolutePath, operation.content);
+    if (operation.behavior === "fail_if_exists") {
+      await context.fs.writeFileExclusive(resolved.absolutePath, operation.content);
+    } else {
+      await context.fs.writeFile(resolved.absolutePath, operation.content);
+    }
   } catch (error) {
+    if (operation.behavior === "fail_if_exists" && isAlreadyExistsError(error)) {
+      return alreadyExists(operation.path);
+    }
     return mutationFailed(`Could not write file "${operation.path}".`, {
       path: operation.path,
       reason: error instanceof Error ? error.message : "write failed",
@@ -92,6 +115,14 @@ export async function executeModifyJson(
   const resolved = resolveInsideRoot(context.rootDir, operation.path);
   if (!resolved.ok) {
     return resolved.error;
+  }
+  const realPath = await assertRealPathInsideRoot(
+    context.rootDir,
+    resolved.absolutePath,
+    context.fs,
+  );
+  if (!realPath.ok) {
+    return realPath.error;
   }
 
   if (!(await context.fs.exists(resolved.absolutePath))) {
@@ -116,7 +147,7 @@ export async function executeModifyJson(
   }
 
   try {
-    await context.fs.writeFile(
+    await context.fs.writeFileAtomic(
       resolved.absolutePath,
       stringifyJson(mergeJsonObjects(parsed.value, operation.merge)),
     );
@@ -147,6 +178,14 @@ export async function executeModifyText(
   if (!resolved.ok) {
     return resolved.error;
   }
+  const realPath = await assertRealPathInsideRoot(
+    context.rootDir,
+    resolved.absolutePath,
+    context.fs,
+  );
+  if (!realPath.ok) {
+    return realPath.error;
+  }
 
   if (!(await context.fs.exists(resolved.absolutePath))) {
     return mutationFailed(`Text file "${operation.path}" does not exist.`, {
@@ -164,7 +203,18 @@ export async function executeModifyText(
     });
   }
 
-  const matches = content.split(operation.oldText).length - 1;
+  // Plans are stored with LF line endings, while framework generators can
+  // write CRLF files on Windows. Preserve exact-match safety while accepting
+  // that platform-level representation difference.
+  const crlfOldText = operation.oldText.replaceAll("\n", "\r\n");
+  const matchedText = content.includes(operation.oldText)
+    ? operation.oldText
+    : content.includes(crlfOldText)
+      ? crlfOldText
+      : operation.oldText;
+  const replacementText =
+    matchedText === crlfOldText ? operation.newText.replaceAll("\n", "\r\n") : operation.newText;
+  const matches = content.split(matchedText).length - 1;
   if (matches === 0) {
     return mutationFailed(`Text to replace was not found in "${operation.path}".`, {
       path: operation.path,
@@ -178,9 +228,9 @@ export async function executeModifyText(
   }
 
   try {
-    await context.fs.writeFile(
+    await context.fs.writeFileAtomic(
       resolved.absolutePath,
-      content.replace(operation.oldText, operation.newText),
+      content.replace(matchedText, replacementText),
     );
   } catch (error) {
     return mutationFailed(`Could not write text file "${operation.path}".`, {
@@ -199,6 +249,14 @@ export async function executeAddEnvExample(
   const resolved = resolveInsideRoot(context.rootDir, operation.path);
   if (!resolved.ok) {
     return resolved.error;
+  }
+  const realPath = await assertRealPathInsideRoot(
+    context.rootDir,
+    resolved.absolutePath,
+    context.fs,
+  );
+  if (!realPath.ok) {
+    return realPath.error;
   }
 
   for (const entry of operation.entries) {
@@ -241,7 +299,7 @@ export async function executeAddEnvExample(
   }
 
   try {
-    await context.fs.writeFile(resolved.absolutePath, appendEnvLines(content, lines));
+    await context.fs.writeFileAtomic(resolved.absolutePath, appendEnvLines(content, lines));
   } catch (error) {
     return mutationFailed(`Could not write env example "${operation.path}".`, {
       path: operation.path,
@@ -295,4 +353,8 @@ function mutationFailed(message: string, details: Record<string, unknown>): Repo
     details,
     suggestion: "Fix the file path or contents and re-run the plan.",
   });
+}
+
+function isAlreadyExistsError(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error && error.code === "EEXIST";
 }

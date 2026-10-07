@@ -1,4 +1,5 @@
-import { mkdtemp, readFile, readdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { mkdir, mkdtemp, readFile, readdir } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -25,8 +26,10 @@ describe("npm pack artifact", () => {
   it("packs the public CLI, inspects the tarball, and runs the installed binary", async () => {
     const packDir = await mkdtemp(path.join(os.tmpdir(), "reposetup-pack-out-"));
     tempDirs.push(packDir);
-    const installDir = await createTempWorkspace("reposetup-pack-install-");
-    tempDirs.push(installDir);
+    const installParent = await createTempWorkspace("RepoSetup packed 日本語 path-");
+    tempDirs.push(installParent);
+    const installDir = path.join(installParent, "package-under-test");
+    await mkdir(installDir);
 
     const packed = await runProcess(
       "pnpm",
@@ -38,9 +41,13 @@ describe("npm pack artifact", () => {
     expect(packed.exitCode, packed.stderr).toBe(0);
 
     const tarballs = (await readdir(packDir)).filter((name) => name.endsWith(".tgz")).sort();
-    expect(tarballs).toEqual(["rsetup-0.1.1.tgz"]);
+    expect(tarballs).toEqual(["rsetup-".concat(cliPackageVersion(), ".tgz")]);
 
     const tarballPath = path.join(packDir, tarballs[0] as string);
+    const sha256 = createHash("sha256")
+      .update(await readFile(tarballPath))
+      .digest("hex");
+    expect(sha256).toMatch(/^[a-f0-9]{64}$/);
     const listing = await runProcess("tar", ["-tzf", tarballPath], { cwd: packDir });
     expect(listing.exitCode, listing.stderr).toBe(0);
     expect(listing.stdout).toContain("package/package.json");
@@ -68,7 +75,7 @@ describe("npm pack artifact", () => {
       dependencies?: Record<string, string>;
     };
     expect(packedManifest.name).toBe("rsetup");
-    expect(packedManifest.version).toBe("0.1.1");
+    expect(packedManifest.version).toBe(cliPackageVersion());
     expect(packedManifest.bin?.rsetup).toBe("./dist/bin.js");
     expect(packedManifest.bin?.reposetup).toBe("./dist/bin.js");
     expect(packedManifest.dependencies?.["@reposetup/core"]).toBeUndefined();
@@ -118,9 +125,18 @@ describe("npm pack artifact", () => {
     expect(dryRun.exitCode, dryRun.stderr).toBe(0);
     expect(dryRun.stdout).toContain("No files or commands were executed.");
 
-    if (process.platform !== "win32") {
-      const shim = path.join(installDir, "node_modules", ".bin", "rsetup");
-      const shimVersion = await runProcess(shim, ["--version"], { cwd: installDir });
+    for (const alias of ["rsetup", "reposetup"]) {
+      if (process.platform !== "win32") {
+        const shim = path.join(installDir, "node_modules", ".bin", alias);
+        const shimVersion = await runProcess(shim, ["--version"], { cwd: installDir });
+        expect(shimVersion.exitCode, shimVersion.stderr).toBe(0);
+        expect(shimVersion.stdout.trim()).toBe(cliPackageVersion());
+        continue;
+      }
+
+      const shimVersion = await runProcess("npm", ["exec", "--", alias, "--version"], {
+        cwd: installDir,
+      });
       expect(shimVersion.exitCode, shimVersion.stderr).toBe(0);
       expect(shimVersion.stdout.trim()).toBe(cliPackageVersion());
     }

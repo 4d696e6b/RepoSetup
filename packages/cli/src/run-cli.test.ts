@@ -281,6 +281,20 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("doctor");
     expect(captured.stdout()).toContain("export");
     expect(captured.stdout()).toContain("registry");
+    expect(captured.stdout()).toContain("presets");
+  });
+
+  it("lists bundled guaranteed presets", async () => {
+    const captured = captureIo();
+    const result = await runCli(["presets"], { io: captured.io });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("next-sqlite");
+    expect(captured.stdout()).toContain("react-vite");
+    expect(captured.stdout()).toContain("express-postgres");
+    expect(captured.stdout()).toContain("fastapi");
+    expect(captured.stdout()).toContain("flask");
+    expect(captured.stdout()).toContain("guaranteed");
   });
 
   it("prints the CLI version", async () => {
@@ -384,6 +398,7 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Executed 3 operations.");
+    expect(captured.stdout()).toContain(`Project directory: ${path.resolve(root)}`);
     expect(captured.stderr()).toBe("");
     expect(await readdir(root)).toEqual(
       expect.arrayContaining(["db.txt", "reposetup.json", "src"]),
@@ -394,6 +409,7 @@ describe("runCli", () => {
         command: "pnpm",
         args: ["add", "fake-orm"],
         cwd: path.resolve(root),
+        timeoutMs: 300_000,
       },
     ]);
   });
@@ -528,14 +544,14 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("nextjs");
     expect(captured.stdout()).toContain("prisma");
     expect(captured.stdout()).toContain(
-      "pnpm create next-app@latest . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --yes",
+      "pnpm create next-app@16.3.5 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
     );
     expect(captured.stdout()).toContain(
-      "pnpm add --save-dev --allow-build=prisma --allow-build=@prisma/engines prisma@prev @types/better-sqlite3",
+      "modify_json  Assemble package.json dependencies before a consolidated install",
     );
+    expect(captured.stdout()).toContain("pnpm install --no-frozen-lockfile --prefer-offline");
     expect(captured.stdout()).toContain("pnpm exec prisma generate");
-    expect(captured.stdout()).toContain("pnpm exec vitest run --passWithNoTests");
-    expect(captured.stdout()).toContain("pnpm add --save-dev --save-exact prettier");
+    expect(captured.stdout()).toContain("pnpm exec vitest run");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });
@@ -560,8 +576,10 @@ describe("runCli", () => {
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Dry-run for example-react-app");
     expect(captured.stdout()).toContain("react-vite");
-    expect(captured.stdout()).toContain("pnpm create vite . --template react-ts --no-interactive");
-    expect(captured.stdout()).toContain("pnpm dlx shadcn@latest init --yes -t vite");
+    expect(captured.stdout()).toContain(
+      "pnpm create vite@8.3.0 . --template react-ts --no-interactive",
+    );
+    expect(captured.stdout()).toContain("pnpm dlx shadcn@4.21.0 init --yes -t vite");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });
@@ -615,7 +633,12 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("Dry-run for example-fastapi-app");
     expect(captured.stdout()).toContain("fastapi");
     expect(captured.stdout()).toContain("uv init . --bare --name example-fastapi-app");
-    expect(captured.stdout()).toContain("uv add fastapi[standard]");
+    expect(captured.stdout()).toContain(
+      "install_package  Install fastapi[standard]==0.141.1, pydantic==2.13.5, SQLAlchemy==2.0.54, alembic==1.20.0",
+    );
+    expect(captured.stdout()).toContain(
+      "packages  fastapi[standard]==0.141.1, pydantic==2.13.5, SQLAlchemy==2.0.54, alembic==1.20.0",
+    );
     expect(captured.stdout()).toContain("uv run alembic init alembic");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
@@ -641,7 +664,12 @@ describe("runCli", () => {
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
     expect(captured.stdout()).toContain("Dry-run for example-flask-app");
     expect(captured.stdout()).toContain("flask");
-    expect(captured.stdout()).toContain("uv add Flask");
+    expect(captured.stdout()).toContain(
+      "install_package  Install Flask==3.1.3, SQLAlchemy==2.0.54, alembic==1.20.0",
+    );
+    expect(captured.stdout()).toContain(
+      "packages  Flask==3.1.3, SQLAlchemy==2.0.54, alembic==1.20.0",
+    );
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });
@@ -651,7 +679,7 @@ describe("runCli", () => {
     const result = await runCli(["registry", "validate"], { io: captured.io });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toContain("Registry is valid (33 integrations).");
+    expect(captured.stdout()).toContain("Registry is valid (37 integrations).");
   });
 
   it("reports PROJECT_NOT_FOUND for stack outside a project", async () => {
@@ -725,6 +753,71 @@ describe("runCli", () => {
     expect(await snapshotTree(root)).toEqual(before);
   });
 
+  it("keeps quiet and no-color output concise and free of ANSI escapes", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["--no-color", "add", "zod", "--dry-run", "--quiet"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Dry-run succeeded");
+    expect(captured.stdout()).not.toContain("\u001B[");
+  });
+
+  it("writes a versioned JSON add plan without progress on stdout", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["--json", "add", "zod", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(JSON.parse(captured.stdout())).toMatchObject({
+      version: 1,
+      kind: "plan",
+      dryRun: true,
+      plan: { valid: true },
+    });
+  });
+
+  it("reports partial execution with a safe checked retry path", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["add", "zod", "--yes"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+      runProcess: async () => ({ exitCode: 1, stdout: "", stderr: "failed" }),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.GENERAL_FAILURE);
+    expect(captured.stderr()).toContain("Execution stopped after 0 of 1 operations completed.");
+    expect(captured.stderr()).toContain("run reposetup doctor");
+  });
+
   it("dry-runs add for an addable integration without mutating files", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
     tempDirs.push(root);
@@ -747,6 +840,26 @@ describe("runCli", () => {
     expect(captured.stdout()).not.toContain("create-next-app");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
+  });
+
+  it("dry-runs multiple additions as one plan", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-add-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const captured = captureIo();
+    const result = await runCli(["add", "zod", "prettier", "--dry-run"], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(captured.stdout()).toContain("Install Zod");
+    expect(captured.stdout()).toContain("Prettier config");
   });
 
   it("reports a no-op when adding an already installed integration", async () => {
@@ -933,16 +1046,15 @@ describe("runCli", () => {
     await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
     const before = await snapshotTree(root);
     const captured = captureIo();
-    const result = await runCli(["doctor"], {
+    const result = await runCli(["--json", "doctor"], {
       cwd: root,
       io: captured.io,
       commandExists: async () => true,
+      runProcess: async () => ({ exitCode: 0, stdout: "v24.0.0\n", stderr: "" }),
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toContain("Doctor passed.");
-    expect(captured.stdout()).toContain("Node.js");
-    expect(captured.stdout()).toContain("Next.js");
+    expect(JSON.parse(captured.stdout())).toMatchObject({ version: 1, kind: "doctor", failed: 0 });
     expect(await snapshotTree(root)).toEqual(before);
   });
 

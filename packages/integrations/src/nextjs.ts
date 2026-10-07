@@ -17,6 +17,7 @@ import {
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
+import { QUALIFIED_VERSIONS } from "./qualified-versions.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
 const NEXT_CONFIG_PATHS = [
@@ -107,6 +108,11 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
       "--import-alias",
       "@/*",
       context.config.packageManager === "pnpm" ? "--use-pnpm" : "--use-npm",
+      // Official create-next-app flag: skip the generator's install so later
+      // install_package ops (or a deferred project install) own node_modules.
+      // Verified for create-next-app@16.3.5 via --help and
+      // https://nextjs.org/docs/app/api-reference/cli/create-next-app
+      "--skip-install",
       "--yes",
     ];
 
@@ -115,7 +121,7 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
         ? {
             type: "run_command",
             command: "pnpm",
-            args: ["create", "next-app@latest", directory, ...flags],
+            args: ["create", `next-app@${QUALIFIED_VERSIONS.createNextApp}`, directory, ...flags],
             cwd: ".",
             description: "Scaffold Next.js with create-next-app",
             requiresNetwork: true,
@@ -126,14 +132,64 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
             command: "npx",
             // npx flags must come before the package. --yes suppresses the
             // "Ok to proceed?" install prompt (npm exec / npx docs).
-            args: ["--yes", "create-next-app@latest", directory, ...flags],
+            args: [
+              "--yes",
+              `create-next-app@${QUALIFIED_VERSIONS.createNextApp}`,
+              directory,
+              ...flags,
+            ],
             cwd: ".",
             description: "Scaffold Next.js with create-next-app",
             requiresNetwork: true,
             longRunning: true,
           };
 
-    return [operation];
+    const usesPrisma = context.config.integrations.some(({ id }) => id === "prisma");
+    const pnpmBuildPolicy: InstallationOperation | undefined =
+      context.config.packageManager === "pnpm"
+        ? {
+            // create-next-app 16.3.5 writes this placeholder policy when its
+            // install is skipped. Replace it before RepoSetup's consolidated
+            // install so the generator's known native dependencies can build.
+            type: "modify_text",
+            path: "pnpm-workspace.yaml",
+            oldText: `allowBuilds:\n  sharp: false\n  unrs-resolver: false\n`,
+            newText: usesPrisma
+              ? `allowBuilds:\n  '@prisma/engines': true\n  better-sqlite3: true\n  prisma: true\n  sharp: true\n  unrs-resolver: true\n`
+              : `allowBuilds:\n  sharp: true\n  unrs-resolver: true\n`,
+            description: "Enable create-next-app's declared pnpm dependency builds",
+          }
+        : undefined;
+    const standaloneTypecheckFix: InstallationOperation | undefined = typescript
+      ? {
+          // create-next-app 16.3.5's default LayoutProps global is emitted
+          // by Next's type generation. Use an explicit type so `tsc --noEmit`
+          // works before a development server or build has run.
+          type: "modify_text",
+          path: "app/layout.tsx",
+          oldText: 'export default function RootLayout({ children }: LayoutProps<"/">) {',
+          newText:
+            "export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {",
+          description: "Make the generated Next.js layout pass standalone TypeScript checks",
+        }
+      : undefined;
+
+    return [
+      operation,
+      ...(pnpmBuildPolicy === undefined ? [] : [pnpmBuildPolicy]),
+      ...(standaloneTypecheckFix === undefined ? [] : [standaloneTypecheckFix]),
+      {
+        type: "modify_json",
+        path: "package.json",
+        merge: {
+          devDependencies: {
+            "eslint-config-next": QUALIFIED_VERSIONS.eslintConfigNext,
+          },
+        },
+        behavior: "merge",
+        description: "Pin the qualified Next.js ESLint config release",
+      },
+    ];
   },
   async verify(context: VerificationContext): Promise<VerificationResult> {
     return mergeVerify([

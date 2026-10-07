@@ -5,6 +5,8 @@ import { pythonDistributionName, textDeclaresPythonPackage } from "./python-pack
 describe("python package detection", () => {
   it("strips extras from a PEP 508 spec", () => {
     expect(pythonDistributionName("fastapi[standard]")).toBe("fastapi");
+    expect(pythonDistributionName("fastapi[standard]==0.141.1")).toBe("fastapi");
+    expect(pythonDistributionName("Flask==3.1.3")).toBe("flask");
     expect(pythonDistributionName("SQLAlchemy")).toBe("sqlalchemy");
   });
 

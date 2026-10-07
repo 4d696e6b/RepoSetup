@@ -10,7 +10,7 @@ export function summarizeFailedProcessOutput(stdout: string, stderr: string): st
     return undefined;
   }
 
-  const redacted = combined.replace(SECRET_ASSIGNMENT, "$1=<redacted>");
+  const redacted = redactProcessOutput(combined);
   const lines = redacted.split(/\r?\n/).slice(-MAX_SNIPPET_LINES);
   let snippet = lines.join("\n");
   if (snippet.length > MAX_SNIPPET_CHARS) {
@@ -20,10 +20,24 @@ export function summarizeFailedProcessOutput(stdout: string, stderr: string): st
   return snippet;
 }
 
+export function redactProcessOutput(output: string): string {
+  return output.replace(SECRET_ASSIGNMENT, "$1=<redacted>");
+}
+
 export function commandFailureSuggestion(snippet: string | undefined): string {
   if (snippet?.includes("cache folder contains root-owned files") === true) {
     return "npm cannot write its cache because some files are owned by root. Run the chown command npm printed, then retry. RepoSetup will not run sudo for you.";
   }
 
   return "Inspect the command output, fix the project, and re-run the plan.";
+}
+
+/** Network failures that package managers document as transient. This is classification only; generators are never replayed. */
+export function isTransientDownloadFailure(snippet: string | undefined): boolean {
+  return (
+    snippet !== undefined &&
+    /\b(?:ECONNRESET|ECONNREFUSED|ETIMEDOUT|EAI_AGAIN|ENETUNREACH|fetch failed|network timeout)\b/i.test(
+      snippet,
+    )
+  );
 }

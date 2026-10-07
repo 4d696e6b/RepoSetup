@@ -1,4 +1,6 @@
-# Integration support report (`0.1.0`)
+# Integration support report (`0.1.1` baseline)
+
+This is the current catalog classification, not the `0.2.0` guaranteed support matrix. [Phase 19 baseline and acceptance scope](./PHASE_19_BASELINE.md) freezes the latter. No integration is stable in this baseline.
 
 Statuses below are **not fabricated as stable**. `candidate` means plan/detect/verify tests exist. `experimental` means implemented but not treated as a qualified path. Real execute evidence is recorded separately in `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md`.
 
@@ -28,9 +30,13 @@ Statuses below are **not fabricated as stable**. `candidate` means plan/detect/v
 | alembic | candidate | FastAPI/Flask goldens |
 | zod | candidate | create/add |
 | pydantic | candidate | create/add |
+| pydantic-settings | candidate | FastAPI create/add with safe `.env.example`; no secret values are requested or stored |
 | vitest | candidate | create/add |
+| testing-library | candidate | React + Vite create/add with a real accessible interaction test |
+| tanstack-query | candidate | React + Vite create/add with a provider and mocked-response query test |
 | playwright | experimental | plan/detect only |
 | pytest | candidate | create/add; `pytest` may exit 5 when no tests exist |
+| httpx | candidate | FastAPI create/add with an in-process API response test |
 | eslint | candidate | plan/detect (React example) |
 | prettier | candidate | create/add |
 | ruff | candidate | FastAPI/Flask goldens |

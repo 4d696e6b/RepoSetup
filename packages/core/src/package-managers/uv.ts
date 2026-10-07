@@ -17,6 +17,9 @@ import { validateCwd, validatePackageSpecs } from "./validate.js";
  * - add: `uv add [OPTIONS] <PACKAGES|--requirements <REQUIREMENTS>>`
  * - add (dev): `--dev` (alias for `--group dev`)
  * - install project: `uv sync [OPTIONS]`
+ * - frozen install: `uv sync --locked`
+ *   (https://docs.astral.sh/uv/reference/cli/#uv-sync). `--locked` asserts that
+ *   uv.lock stays unchanged and requires it to be up to date.
  * - remove: `uv remove [OPTIONS] <PACKAGES>...` (no `--dev`; names work for any dependency group)
  */
 export const uvAdapter: PackageManagerAdapter = {
@@ -57,7 +60,7 @@ export const uvAdapter: PackageManagerAdapter = {
       ok: true,
       operation: createPackageManagerCommand({
         command: "uv",
-        args: ["sync"],
+        args: request.frozen === true ? ["sync", "--locked"] : ["sync"],
         cwd: request.cwd,
         description: request.description,
       }),

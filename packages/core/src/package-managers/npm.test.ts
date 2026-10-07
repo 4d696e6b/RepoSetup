@@ -51,6 +51,16 @@ describe("npmAdapter", () => {
     expectArgs(result, "npm", ["install", "--save-dev", "--save-exact", "prettier"]);
   });
 
+  it("installs a frozen project with npm ci", () => {
+    const result = npmAdapter.install({
+      cwd: ".",
+      description: "Install from package-lock.json",
+      frozen: true,
+    });
+
+    expectArgs(result, "npm", ["ci"]);
+  });
+
   it("installs the project from the lockfile with npm install", () => {
     const result = npmAdapter.install({
       cwd: ".",
@@ -110,5 +120,15 @@ describe("npmAdapter", () => {
       return;
     }
     expect(result.error.code).toBe("PLAN_INVALID");
+  });
+});
+
+describe("npm cache preference", () => {
+  it("uses prefer-offline without requiring an offline cache hit", () => {
+    expectArgs(
+      npmAdapter.install({ cwd: ".", description: "Cached install", preferOffline: true }),
+      "npm",
+      ["install", "--prefer-offline"],
+    );
   });
 });

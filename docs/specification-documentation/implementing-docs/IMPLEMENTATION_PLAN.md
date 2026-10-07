@@ -1,5 +1,7 @@
 # RepoSetup Implementation Plan for Cursor
 
+For the proposed next release, follow [Roadmap to 0.2.0](./ROADMAP_0.2.0.md). It extends this historical Phase 0–18 plan with Phases 19–28 and stricter cross-platform, performance, usability, and release gates. Existing Phase 18 qualification gaps remain open until proven.
+
 Implement sequentially.
 
 Do not start later phases until the acceptance gate for the current phase passes.

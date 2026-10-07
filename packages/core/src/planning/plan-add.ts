@@ -14,7 +14,10 @@ import {
   selectRuntime,
 } from "./config-from-detected.js";
 import { filterSatisfiedOperations } from "./delta.js";
+import { batchInstallPackages } from "./batch-install.js";
+import { consolidateManifestInstalls } from "./consolidate-manifests.js";
 import { planInstallationSubset } from "./plan.js";
+import { declaresPnpmWorkspacePackages } from "./pnpm-workspace.js";
 
 export type PlanAddResult =
   | { ok: true; projectRoot: string; result: ResolutionResult }
@@ -26,30 +29,53 @@ export async function planAdd(input: {
   registry: RegistryLookup;
   packageManager?: PackageManager;
 }): Promise<PlanAddResult> {
-  const definition = input.registry.get(input.integrationId);
-  if (definition === undefined) {
+  return planAddMany({ ...input, integrationIds: [input.integrationId] });
+}
+
+export async function planAddMany(input: {
+  startDir: string;
+  integrationIds: readonly string[];
+  registry: RegistryLookup;
+  packageManager?: PackageManager;
+}): Promise<PlanAddResult> {
+  const integrationIds = [...new Set(input.integrationIds)];
+  if (integrationIds.length === 0) {
     return {
       ok: false,
       error: createRepoSetupError({
-        code: "UNKNOWN_INTEGRATION",
-        message: `Unknown integration "${input.integrationId}".`,
-        details: { integrationId: input.integrationId },
+        code: "CONFIG_INVALID",
+        message: "Select at least one integration to add.",
         suggestion: "Run reposetup search to list available integrations.",
       }),
     };
   }
 
-  if (definition.addable !== true) {
-    return {
-      ok: false,
-      error: createRepoSetupError({
-        code: "UNSUPPORTED_CONTEXT",
-        message: `Integration "${input.integrationId}" cannot be added to an existing project yet.`,
-        details: { integrationId: input.integrationId },
-        suggestion:
-          "This phase supports add for zod, prisma, vitest, prettier, drizzle, mongoose, pydantic, pytest, and ruff. Use reposetup create for new apps.",
-      }),
-    };
+  for (const integrationId of integrationIds) {
+    const definition = input.registry.get(integrationId);
+    if (definition === undefined) {
+      return {
+        ok: false,
+        error: createRepoSetupError({
+          code: "UNKNOWN_INTEGRATION",
+          message: `Unknown integration "${integrationId}".`,
+          details: { integrationId },
+          suggestion: "Run reposetup search to list available integrations.",
+        }),
+      };
+    }
+
+    if (definition.addable !== true) {
+      return {
+        ok: false,
+        error: createRepoSetupError({
+          code: "UNSUPPORTED_CONTEXT",
+          message: `Integration "${integrationId}" cannot be added to an existing project yet.`,
+          details: { integrationId },
+          suggestion:
+            "This phase supports add for zod, prisma, vitest, prettier, drizzle, mongoose, pydantic, pytest, and ruff. Use reposetup create for new apps.",
+        }),
+      };
+    }
   }
 
   const detected = await detectProject({
@@ -58,6 +84,11 @@ export async function planAdd(input: {
   });
   if (!detected.ok) {
     return { ok: false, error: detected.error };
+  }
+
+  const files = createNodeDetectionFs(detected.stack.projectRoot);
+  if (await isAmbiguousWorkspaceRoot(files)) {
+    return { ok: false, error: workspaceRootError() };
   }
 
   const runtimeId = selectRuntime(detected.stack);
@@ -83,14 +114,13 @@ export async function planAdd(input: {
       ok: false,
       error: createRepoSetupError({
         code: "MISSING_REQUIREMENT",
-        message: `Integration "${input.integrationId}" needs a detected framework in the current project.`,
-        details: { integrationId: input.integrationId, requiredCategory: "framework" },
+        message: `Selected integrations need a detected framework in the current project.`,
+        details: { integrationIds, requiredCategory: "framework" },
         suggestion: "Run reposetup add from an existing supported app, such as Next.js.",
       }),
     };
   }
 
-  const files = createNodeDetectionFs(detected.stack.projectRoot);
   const context = await createDetectionContext(detected.stack.projectRoot, files);
   const config = configFromDetectedStack({
     stack: detected.stack,
@@ -98,28 +128,67 @@ export async function planAdd(input: {
     runtimeId,
     packageManager: packageManager.packageManager,
     frameworkId,
-    requestedId: input.integrationId,
+    requestedIds: integrationIds,
     projectName: projectNameFromStack(detected.stack, context.packageJson?.name),
     typescript: detected.stack.language?.id === "typescript",
   });
 
-  const planned = planInstallationSubset(config, input.registry, [input.integrationId]);
+  const planned = planInstallationSubset(config, input.registry, integrationIds);
   if (!planned.valid) {
     return { ok: true, projectRoot: detected.stack.projectRoot, result: planned };
   }
 
-  const operations = await filterSatisfiedOperations(
-    planned.operations,
-    files,
-    context.packageJson,
-  );
+  const remaining = await filterSatisfiedOperations(planned.operations, files, context.packageJson);
+  const batched = batchInstallPackages(remaining);
+  if (!batched.ok) {
+    return {
+      ok: true,
+      projectRoot: detected.stack.projectRoot,
+      result: {
+        ...planned,
+        valid: false,
+        operations: [],
+        errors: [...planned.errors, batched.error],
+      },
+    };
+  }
+
+  const consolidated = consolidateManifestInstalls(batched.operations);
+  if (!consolidated.ok) {
+    return {
+      ok: true,
+      projectRoot: detected.stack.projectRoot,
+      result: {
+        ...planned,
+        valid: false,
+        operations: [],
+        errors: [...planned.errors, consolidated.error],
+      },
+    };
+  }
 
   return {
     ok: true,
     projectRoot: detected.stack.projectRoot,
     result: {
       ...planned,
-      operations,
+      operations: consolidated.operations,
     },
   };
+}
+
+async function isAmbiguousWorkspaceRoot(
+  files: ReturnType<typeof createNodeDetectionFs>,
+): Promise<boolean> {
+  const content = await files.readText("pnpm-workspace.yaml");
+  return content !== undefined && declaresPnpmWorkspacePackages(content);
+}
+
+function workspaceRootError(): RepoSetupError {
+  return createRepoSetupError({
+    code: "UNSUPPORTED_CONTEXT",
+    message: "Adding integrations from a workspace root is ambiguous.",
+    suggestion:
+      "Run reposetup add from one workspace package directory. RepoSetup does not compose an entire workspace in this release.",
+  });
 }

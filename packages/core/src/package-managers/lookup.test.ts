@@ -39,6 +39,38 @@ describe("toPackageManagerCommand", () => {
     });
   });
 
+  it("forwards exact and allowBuild into adapter argv", () => {
+    const result = toPackageManagerCommand({
+      type: "install_package",
+      packageManager: "pnpm",
+      packages: ["prisma"],
+      cwd: ".",
+      description: "Install Prisma CLI",
+      dev: true,
+      exact: true,
+      allowBuild: ["prisma", "@prisma/engines"],
+    });
+
+    expect(result).toEqual({
+      ok: true,
+      operation: {
+        type: "run_command",
+        command: "pnpm",
+        args: [
+          "add",
+          "--save-dev",
+          "--save-exact",
+          "--allow-build=prisma",
+          "--allow-build=@prisma/engines",
+          "prisma",
+        ],
+        cwd: ".",
+        description: "Install Prisma CLI",
+        requiresNetwork: true,
+      },
+    });
+  });
+
   it("rejects Bun until that adapter exists", () => {
     const result = toPackageManagerCommand({
       type: "install_package",

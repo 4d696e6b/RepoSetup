@@ -17,6 +17,8 @@ import { validateCwd, validatePackageSpecs } from "./validate.js";
  * - add: `pnpm add <pkg>`
  * - add (dev): `--save-dev, -D, -d`
  * - install project: `pnpm install` (alias `i`)
+ * - frozen install: `pnpm install --frozen-lockfile`
+ *   (https://pnpm.io/cli/install). pnpm-lock.yaml is not updated.
  * - remove: `pnpm remove <pkg>` (aliases `rm`, `uninstall`, `un`)
  */
 export const pnpmAdapter: PackageManagerAdapter = {
@@ -51,11 +53,18 @@ export const pnpmAdapter: PackageManagerAdapter = {
       return { ok: false, error: cwdError };
     }
 
+    const args =
+      request.frozen === true
+        ? ["install", "--frozen-lockfile"]
+        : ["install", "--no-frozen-lockfile"];
+    if (request.preferOffline === true) {
+      args.push("--prefer-offline");
+    }
     return {
       ok: true,
       operation: createPackageManagerCommand({
         command: "pnpm",
-        args: ["install"],
+        args,
         cwd: request.cwd,
         description: request.description,
       }),
