@@ -47,7 +47,12 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 if (process.env.REPOSETUP_NO_LISTEN !== "1") {
-  app.listen(Number(process.env.PORT ?? "3000"));
+  const server = app.listen(Number(process.env.PORT ?? "3000"), () => {
+    const address = server.address();
+    if (address !== null && typeof address !== "string") {
+      console.log("http://localhost:" + address.port);
+    }
+  });
 }
 `;
 
@@ -100,7 +105,12 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(3000);
+const server = app.listen(3000, () => {
+  const address = server.address();
+  if (address !== null && typeof address !== "string") {
+    console.log("http://localhost:" + address.port);
+  }
+});
 `;
 
 export const expressIntegration = defineIntegration<ExpressOptions>({

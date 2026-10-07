@@ -67,3 +67,13 @@ tsx. Full recipes had supplied that approval via Vitest, hiding the defect.
 A dedicated plan-order regression and real npx rerun cover this fix. The four
 bare Next cases are included in the CI matrix; local disk pressure limits full
 qualification here.
+
+### Preset follow-up
+
+Next/SQLite and React packaged sessions passed. Expanded sessions exposed that
+Docker detection recognized only Dockerfile, while generated presets wrote only
+Compose files. Adding an integration to FastAPI/Flask consequently lost Docker
+context and failed resolution. Detection now retains that declarative context
+from all supported Compose filenames without claiming Docker is installed.
+Express/Fastify generated servers now print their listening URL for usable
+startup feedback and an actual HTTP probe in qualification.

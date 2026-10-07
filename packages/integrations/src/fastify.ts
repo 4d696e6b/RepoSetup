@@ -47,11 +47,12 @@ app.get("/", function () {
 });
 
 if (process.env.REPOSETUP_NO_LISTEN !== "1") {
-  app.listen({ port: Number(process.env.PORT ?? "3000"), host: "127.0.0.1" }, (error) => {
+  app.listen({ port: Number(process.env.PORT ?? "3000"), host: "127.0.0.1" }, (error, address) => {
     if (error) {
       app.log.error(error);
       process.exit(1);
     }
+    console.log(address);
   });
 }
 `;

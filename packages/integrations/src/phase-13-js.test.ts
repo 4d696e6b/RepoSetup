@@ -82,6 +82,22 @@ function planExample(fileName: string) {
   return planInstallation(parsed.config, createBuiltInRegistry());
 }
 
+describe("Docker prerequisite detection from Compose", () => {
+  it.each(["compose.yaml", "compose.yml", "docker-compose.yaml", "docker-compose.yml"])(
+    "retains Docker context for add/export when %s exists",
+    async (file) => {
+      const detected = await dockerIntegration.detect?.(
+        await contextOf({ [file]: "services: {}" }),
+      );
+      expect(detected).toMatchObject({
+        detected: true,
+        confidence: "likely",
+        evidence: [{ kind: "file", path: file }],
+      });
+    },
+  );
+});
+
 describe("Phase 13 JS ecosystem plans", () => {
   it("scaffolds React + Vite with official create-vite flags", () => {
     expect(
