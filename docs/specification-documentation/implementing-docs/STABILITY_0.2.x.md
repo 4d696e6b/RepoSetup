@@ -171,6 +171,13 @@ creates now report installed test-tool versions in the qualification logs.
 The workflow's optional `next-vitest` scope provides a focused diagnostic run;
 its evidence is labeled with that scope and cannot qualify the complete matrix.
 
+The focused run exposed a separate doctor false positive after making Vite a
+direct test dependency: Next.js plus React plus Vite was detected as a Vite app
+even though it had only a Vitest config. Detection now excludes Next.js in that
+case unless a Vite application config exists. Regression tests cover both the
+test-only dependency and explicit Vite config evidence. Cross-platform execution
+must still pass before closing this gate.
+
 ## Reproducing the stability checks
 
 Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.

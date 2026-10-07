@@ -428,6 +428,33 @@ describe("Phase 13 JS ecosystem detection and verify", () => {
     expect(result).toEqual(expect.objectContaining({ detected: false }));
   });
 
+  it("does not detect React + Vite when Next.js uses Vite for Vitest", async () => {
+    const result = await reactViteIntegration.detect?.(
+      await contextOf({
+        "package.json": JSON.stringify({
+          dependencies: { next: "16.3.6", react: "19.0.0" },
+          devDependencies: { vite: "8.3.0", vitest: "5.0.1" },
+        }),
+        "next.config.ts": "export default {};\n",
+        "vitest.config.ts": "export default {};\n",
+      }),
+    );
+    expect(result).toEqual(expect.objectContaining({ detected: false }));
+  });
+
+  it("retains Vite config evidence alongside a Next.js dependency", async () => {
+    const result = await reactViteIntegration.detect?.(
+      await contextOf({
+        "package.json": JSON.stringify({
+          dependencies: { next: "16.3.6", react: "19.0.0" },
+          devDependencies: { vite: "8.3.0" },
+        }),
+        "vite.config.ts": "export default {};\n",
+      }),
+    );
+    expect(result).toEqual(expect.objectContaining({ detected: true, confidence: "certain" }));
+  });
+
   it("detects Express, Fastify, PostgreSQL, MongoDB, and GitHub Actions", async () => {
     expect(
       await expressIntegration.detect?.(
