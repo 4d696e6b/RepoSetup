@@ -220,3 +220,23 @@ export async function checkTaskRunPostimages(
   }
   return { success: true, data: true };
 }
+
+/** Rebase only this owner's earlier executor-recorded writes; immutable reads stay frozen. */
+export function taskOwnedWriteRevisions(
+  c: import("./checkpoint.js").TaskRunCheckpoint,
+  taskId: string,
+  beforeAttemptNumber = 4,
+): { path: string; fileHash: string }[] {
+  const prior = new Set(
+    c.run.attempts
+      .filter((a) => a.taskId === taskId && a.attemptNumber < beforeAttemptNumber)
+      .map((a) => a.attemptId),
+  );
+  return [
+    ...new Map(
+      c.journal
+        .filter((e) => e.type === "file" && e.status === "applied" && prior.has(e.attemptId))
+        .map((e) => [e.path, { path: e.path, fileHash: e.afterHash }]),
+    ).values(),
+  ];
+}

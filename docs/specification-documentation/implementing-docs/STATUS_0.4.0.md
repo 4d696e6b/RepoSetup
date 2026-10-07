@@ -762,3 +762,28 @@ document formatting and Git whitespace checks passed before committing this slic
 The inherited website build produced no tracked changes. Full workspace tests and
 joined repair execution are reserved for the completed H wiring; this slice's
 tests do not claim live model capability or H completion.
+
+### H focused repair executor slice — 2026-10-07
+
+Implemented failure classification, bounded failure metadata, current owned-write
+preimages, transitive acceptance invalidation and a serial task-local repair loop.
+Failed edits and call reservations remain retained. Only fresh executor failure
+receipts authorize automatic repair; imported failure claims require fresh checks.
+Implementation failures can retry up to the reviewed maximum (never above three).
+Known model truncation can increase output within the reviewed ceiling; verifier
+truncation, policy violations, drift and infrastructure failures cannot trigger
+implementation repair. Typed executor stop transitions retain terminal state when
+allowance or output headroom is exhausted. Existing fixed-run behavior remains the
+default; CLI opt-in and routed dispatcher wiring are the next H slice.
+
+Validation on existing Node 24.21.0/pnpm 12.5.1: 62 selected core tests across five
+files and 35 selected CLI tests across three files passed, including actual scoped
+filesystem repair, retained edits, forged failure rejection, dependency blocking,
+and the terminal third failure. Workspace build, typecheck and lint passed. An
+initial declaration-generation optional-field mismatch was fixed. Four initial
+CLI failures exposed default skipped checks masking the actual implementation
+failure; classification now excludes unexecuted blocked checks, with a regression
+test. No real credentials, live provider calls, dependency installation or later
+milestone implementation. H remains in progress pending CLI/routing wiring and
+joined acceptance coverage; production model capability qualification stays
+unconfirmed and remains an I/J release gate.

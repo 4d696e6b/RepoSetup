@@ -7,7 +7,7 @@ import {
   taskContextSchema,
   type TaskContext,
 } from "./evidence-schema.js";
-import { taskSourceRefSchema, taskPathSchema } from "./primitives.js";
+import { taskSourceRefSchema, taskPathSchema, taskHashSchema } from "./primitives.js";
 import { taskFailure, type TaskParseResult } from "./parse.js";
 import { taskCanRead } from "./scope.js";
 import { scanLocalTaskImports, resolveLocalTaskImport } from "./context-imports.js";
@@ -37,6 +37,9 @@ const optionsSchema = z.strictObject({
   acceptedArtifacts: z.array(taskArtifactRevisionSchema).max(512),
   requests: z.array(taskSourceRefSchema).max(128),
   maxContextBytes: z.number().int().positive().max(TASK_CONTEXT_LIMITS.maxContextBytes),
+  ownedWriteRevisions: z
+    .array(z.strictObject({ path: taskPathSchema, fileHash: taskHashSchema }))
+    .max(20),
 });
 
 /** Select metadata and transient bodies through a read-only port. No process, provider or persistence effects. */
@@ -48,6 +51,8 @@ export async function prepareTaskContext(input: {
   acceptedArtifacts?: TaskArtifactRevision[];
   requests?: z.infer<typeof taskSourceRefSchema>[];
   maxContextBytes?: number;
+  /** Trusted executor ledger input only; never accepted from plans, preferences or model replies. */
+  ownedWriteRevisions?: { path: string; fileHash: string }[];
 }): Promise<TaskParseResult<TaskMaterializedContext>> {
   try {
     return await prepare(input);
@@ -69,6 +74,7 @@ async function prepare(
     acceptedArtifacts: input.acceptedArtifacts ?? [],
     requests: input.requests ?? [],
     maxContextBytes: input.maxContextBytes ?? TASK_CONTEXT_LIMITS.maxContextBytes,
+    ownedWriteRevisions: input.ownedWriteRevisions ?? [],
   });
   if (!options.success)
     return taskFailure(
@@ -78,6 +84,18 @@ async function prepare(
   const task = plan.tasks.find((item) => item.taskId === options.data.taskId);
   if (task === undefined)
     return taskFailure("TASK_REFERENCE_INVALID", "Context task is absent from the validated plan.");
+  if (
+    new Set(options.data.ownedWriteRevisions.map((r) => r.path)).size !==
+      options.data.ownedWriteRevisions.length ||
+    options.data.ownedWriteRevisions.some(
+      (r) => !task.scope.write.includes(r.path) || r.path === plan.phase.sourcePath,
+    )
+  )
+    return taskFailure(
+      "TASK_SCOPE_VIOLATION",
+      "Only executor-owned writable inputs may be rebased.",
+    );
+  const owned = new Map(options.data.ownedWriteRevisions.map((r) => [r.path, r.fileHash]));
   const inventoryScope = { read: task.scope.read, deny: task.scope.deny };
   const inventory = await input.repository.inventory(inventoryScope);
   if (!inventory.success) return inventory;
@@ -104,7 +122,18 @@ async function prepare(
     reason: Reason,
     required = true,
     depth = 0,
-  ) => seeds.push({ ...source, reason, required, depth });
+  ) =>
+    seeds.push({
+      ...source,
+      ...(source.path !== plan.phase.sourcePath &&
+      (reason === "requirement" || reason === "interface") &&
+      owned.has(source.path)
+        ? { fileHash: owned.get(source.path)! }
+        : {}),
+      reason,
+      required,
+      depth,
+    });
   add(
     {
       path: plan.phase.sourcePath,

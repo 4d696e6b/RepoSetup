@@ -17,6 +17,8 @@ import {
   taskUsageSchema,
 } from "./evidence-schema.js";
 import { taskProviderReservationSchema } from "./provider.js";
+import { taskRepairContextSchema } from "./repair-context.js";
+import { taskRepairAction } from "./failure.js";
 
 export const taskRunCheckpointSchema = z.strictObject({
   kind: z.literal("task_run_checkpoint"),
@@ -72,6 +74,7 @@ export const taskRunCheckpointSchema = z.strictObject({
           .array(z.strictObject({ path: taskPathSchema, fileHash: taskHashSchema }))
           .max(20),
         beforeSnapshot: taskVerifierSnapshotSchema,
+        repair: taskRepairContextSchema.optional(),
       }),
     )
     .max(288),
@@ -118,12 +121,22 @@ export function validateTaskRunCheckpoint(value: unknown): TaskParseResult<TaskR
   const run = c.run;
   const ids = new Set(run.tasks.map((t) => t.taskId));
   const attempts = new Map(run.attempts.map((a) => [a.attemptId, a]));
+  const latestWrites = new Map<string, { hash: string; taskId: string }>();
+  const brokenWriteChain = c.journal.some((e) => {
+    if (e.type !== "file" || e.status !== "applied") return false;
+    const taskId = attempts.get(e.attemptId)?.taskId;
+    const prior = latestWrites.get(e.path);
+    if (!taskId || (prior && (prior.hash !== e.beforeHash || prior.taskId !== taskId))) return true;
+    latestWrites.set(e.path, { hash: e.afterHash, taskId });
+    return false;
+  });
   if (
     checkpointHash !== taskContentHash(payload) ||
     c.baselineSnapshot.rootIdentity !== run.project.rootIdentity ||
     !compareTaskVerifierSnapshots(c.baselineSnapshot, c.baselineSnapshot).success ||
     ids.size !== run.tasks.length ||
     attempts.size !== run.attempts.length ||
+    brokenWriteChain ||
     (c.compilation !== undefined &&
       !run.resourceLedger.reservations.some(
         (r) =>
@@ -172,12 +185,36 @@ export function validateTaskRunCheckpoint(value: unknown): TaskParseResult<TaskR
     c.bindings.some((b) => {
       const a = attempts.get(b.attemptId);
       const { contextId, ...context } = b.context;
+      const previous = b.repair ? attempts.get(b.repair.previousAttemptId) : undefined;
       return (
         !a ||
         b.context.planId !== run.planId ||
         b.context.taskId !== a.taskId ||
         b.context.contextId !== a.contextId ||
         b.context.inputRevision !== a.inputRevision ||
+        (b.repair !== undefined &&
+          (!previous ||
+            taskRepairAction(previous) !== b.repair.action ||
+            taskContentHash(previous.failure) !== taskContentHash(b.repair.failure) ||
+            taskContentHash(previous.application.effects) !==
+              taskContentHash(b.repair.retainedEffects) ||
+            taskContentHash(previous.verification?.checks ?? []) !==
+              taskContentHash(b.repair.checks) ||
+            taskContentHash(
+              previous.verification?.criterionCoverage
+                .filter((c) => !c.satisfied)
+                .map((c) => c.criterionId) ?? [],
+            ) !== taskContentHash(b.repair.unsatisfiedCriterionIds))) ||
+        (b.repair !== undefined &&
+          (b.repair.taskId !== a.taskId ||
+            b.repair.contextId !== a.contextId ||
+            b.repair.inputRevision !== a.inputRevision ||
+            !attempts.has(b.repair.previousAttemptId) ||
+            attempts.get(b.repair.previousAttemptId)!.taskId !== a.taskId ||
+            attempts.get(b.repair.previousAttemptId)!.attemptNumber !== a.attemptNumber - 1 ||
+            taskContentHash(
+              Object.fromEntries(Object.entries(b.repair).filter(([key]) => key !== "repairId")),
+            ) !== b.repair.repairId)) ||
         contextId !== taskContentHash(context) ||
         b.beforeSnapshot.rootIdentity !== run.project.rootIdentity ||
         !compareTaskVerifierSnapshots(b.beforeSnapshot, b.beforeSnapshot).success ||

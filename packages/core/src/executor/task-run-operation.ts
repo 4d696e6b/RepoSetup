@@ -33,9 +33,23 @@ export const taskRunOperationSchema = z.discriminatedUnion("type", [
     allowProviderUsage: z.literal(true),
     maxOutputTokens: taskPositiveCounterSchema.max(16384),
     timeoutMs: taskPositiveCounterSchema.max(120000),
+    allowRepair: z.boolean().optional(),
   }),
   z.strictObject({ type: z.literal("verify"), runId: taskRunIdSchema, taskId: taskIdSchema }),
   z.strictObject({ type: z.literal("finalize"), runId: taskRunIdSchema }),
+  z.strictObject({
+    type: z.literal("stop"),
+    runId: taskRunIdSchema,
+    taskId: taskIdSchema,
+    code: z.enum([
+      "TASK_BUDGET_EXHAUSTED",
+      "TASK_ATTEMPT_LIMIT_EXCEEDED",
+      "TASK_OUTPUT_INCOMPLETE",
+      "TASK_CAPABILITY_UNAVAILABLE",
+      "TASK_PROVIDER_CONFIGURATION_UNSUPPORTED",
+      "TASK_CONTEXT_UNRESOLVED",
+    ]),
+  }),
   z.strictObject({
     type: z.literal("reconcile"),
     runId: taskRunIdSchema,

@@ -12,6 +12,8 @@ import { taskFailure } from "../tasks/parse.js";
 import type { TaskRunCheckpoint } from "../tasks/checkpoint.js";
 import type { ProcessRunner } from "./types.js";
 import type { RepoSetupError } from "../errors/model.js";
+import { taskRepairAction } from "../tasks/failure.js";
+import { taskRemainingAllowance } from "../tasks/routing.js";
 
 export type TaskManagedPhaseResult =
   | { success: true; checkpoint: TaskRunCheckpoint }
@@ -36,6 +38,7 @@ export async function executeManagedTaskPhase(input: {
   allowProviderUsage: boolean;
   maxOutputTokens: number;
   timeoutMs: number;
+  allowRepair?: boolean;
   signal?: AbortSignal;
 }): Promise<TaskManagedPhaseResult> {
   const started = performance.now();
@@ -167,49 +170,125 @@ export async function executeManagedTaskPhase(input: {
   let checkpoint = created.data.checkpoint;
   runId = checkpoint.run.runId;
   for (const taskId of plan.data.orderedTaskIds) {
-    for (const operation of [
-      {
-        type: "begin" as const,
-        runId,
-        taskId,
-        requestedConfiguration: input.provider.configuration,
-        routingId: taskContentHash({
-          selection: "explicit",
-          planId: plan.data.planId,
+    let outputTokens = input.allowRepair
+      ? Math.min(4096, input.maxOutputTokens)
+      : input.maxOutputTokens;
+    for (;;) {
+      const remaining = taskRemainingAllowance(checkpoint.run);
+      if (
+        remaining.calls < 1 ||
+        remaining.outputTokens < outputTokens ||
+        remaining.costMicrousd === 0 ||
+        remaining.wallTimeMs === 0
+      ) {
+        const stopped = await execute({
+          type: "stop",
+          runId,
           taskId,
-          configuration: input.provider.configuration,
-        }),
-      },
-      {
-        type: "request" as const,
-        runId,
-        allowProviderUsage: true as const,
-        maxOutputTokens: input.maxOutputTokens,
-        timeoutMs: input.timeoutMs,
-      },
-      { type: "verify" as const, runId, taskId },
-    ]) {
-      const result = await execute(operation);
-      if (!result.success) return fail(result.error);
-      if (result.data.dryRun)
+          code: "TASK_BUDGET_EXHAUSTED",
+        });
         return fail(
-          taskFailure("TASK_STATE_CONFLICT", "Managed operations require live executor state.")
-            .error,
+          stopped.success
+            ? taskFailure(
+                "TASK_BUDGET_EXHAUSTED",
+                "Retained reservations exhaust the next implementation request allowance.",
+              ).error
+            : stopped.error,
         );
-      checkpoint = result.data.checkpoint;
-      if (checkpoint.run.status !== "active")
+      }
+      for (const operation of [
+        {
+          type: "begin" as const,
+          runId,
+          taskId,
+          requestedConfiguration: input.provider.configuration,
+          routingId: taskContentHash({
+            selection: "explicit",
+            planId: plan.data.planId,
+            taskId,
+            configuration: input.provider.configuration,
+          }),
+        },
+        {
+          type: "request" as const,
+          runId,
+          allowProviderUsage: true as const,
+          maxOutputTokens: outputTokens,
+          timeoutMs: input.timeoutMs,
+          ...(input.allowRepair ? { allowRepair: true } : {}),
+        },
+        { type: "verify" as const, runId, taskId },
+      ]) {
+        if (
+          operation.type === "verify" &&
+          checkpoint.run.tasks.find((t) => t.taskId === taskId)?.status === "needs_repair"
+        )
+          break;
+        const result = await execute(operation);
+        if (!result.success) return fail(result.error);
+        if (result.data.dryRun)
+          return fail(
+            taskFailure("TASK_STATE_CONFLICT", "Managed operations require live executor state.")
+              .error,
+          );
+        checkpoint = result.data.checkpoint;
+        if (
+          checkpoint.run.status !== "active" &&
+          !(
+            input.allowRepair &&
+            checkpoint.run.status === "blocked" &&
+            checkpoint.run.tasks.find((t) => t.taskId === taskId)?.status === "needs_repair"
+          )
+        )
+          return fail(
+            taskFailure(
+              checkpoint.run.status === "failed"
+                ? "TASK_ATTEMPT_LIMIT_EXCEEDED"
+                : "TASK_NEEDS_REVIEW",
+              "Managed execution stopped; inspect durable run state.",
+            ).error,
+          );
+      }
+      const taskState = checkpoint.run.tasks.find((t) => t.taskId === taskId)!;
+      if (taskState.status === "accepted") break;
+      const attempt = checkpoint.run.attempts.find(
+        (a) => a.attemptId === taskState.attemptIds.at(-1),
+      )!;
+      const action = taskRepairAction(attempt);
+      if (!input.allowRepair || taskState.status !== "needs_repair" || !action)
         return fail(
-          taskFailure("TASK_NEEDS_REVIEW", "Managed execution stopped; inspect durable run state.")
-            .error,
+          taskFailure(
+            "TASK_CHECK_FAILED",
+            "Current task was not accepted or its failure is ineligible for the reviewed repair policy.",
+          ).error,
         );
+      if (attempt.attemptNumber >= limits.data.maxImplementationAttemptsPerTask)
+        return fail(
+          taskFailure(
+            "TASK_ATTEMPT_LIMIT_EXCEEDED",
+            "At most three implementation attempts are permitted.",
+          ).error,
+        );
+      if (action === "increase_output") {
+        const larger = Math.min(input.maxOutputTokens, outputTokens * 2);
+        if (larger <= outputTokens) {
+          const stopped = await execute({
+            type: "stop",
+            runId,
+            taskId,
+            code: "TASK_OUTPUT_INCOMPLETE",
+          });
+          if (!stopped.success) return fail(stopped.error);
+          return fail(
+            taskFailure(
+              "TASK_OUTPUT_INCOMPLETE",
+              "The reviewed per-call output ceiling has no room for an increase; no more expensive model is selected.",
+            ).error,
+          );
+        }
+        outputTokens = larger;
+      }
     }
-    if (checkpoint.run.tasks.find((t) => t.taskId === taskId)?.status !== "accepted")
-      return fail(
-        taskFailure(
-          "TASK_CHECK_FAILED",
-          "Current task was not independently accepted; no automatic repair or escalation occurs.",
-        ).error,
-      );
   }
   const finalized = await execute({ type: "finalize", runId });
   if (!finalized.success) return fail(finalized.error);

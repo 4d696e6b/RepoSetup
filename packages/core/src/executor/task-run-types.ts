@@ -55,3 +55,5 @@ export type TaskRunAcceptanceReceipt = {
   bindingHash: string;
   artifactHash: string;
 };
+/** Current-process failed evidence only; serialized failure claims cannot authorize repair. */
+export type TaskRunFailureReceipt = { attemptHash: string; bindingHash: string };

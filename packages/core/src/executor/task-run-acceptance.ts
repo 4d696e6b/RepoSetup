@@ -5,8 +5,15 @@ import type { TaskPlan } from "../tasks/plan-schema.js";
 import type { TaskCompilationPolicy } from "../tasks/compile.js";
 import type { TaskVerificationPolicy } from "../tasks/verification-policy.js";
 import { executeTaskVerification, type TaskVerificationAdapter } from "./task-verification.js";
-import type { TaskRunAdapter, TaskRunSave, TaskRunAcceptanceReceipt } from "./task-run-types.js";
+import type {
+  TaskRunAdapter,
+  TaskRunSave,
+  TaskRunAcceptanceReceipt,
+  TaskRunFailureReceipt,
+} from "./task-run-types.js";
 import type { ProcessRunner } from "./types.js";
+import { classifyTaskVerificationFailure } from "../tasks/failure.js";
+import { invalidateTaskConsumers } from "../tasks/invalidation.js";
 
 /** Fresh executor evidence, original input and owned postimages precede a durable acceptance commit. */
 export async function verifyTaskRunAttempt({
@@ -19,6 +26,7 @@ export async function verifyTaskRunAttempt({
   bindingCurrent,
   operationSignal,
   receipts,
+  failures,
   save,
 }: {
   checkpoint: TaskRunCheckpoint;
@@ -34,6 +42,7 @@ export async function verifyTaskRunAttempt({
   bindingCurrent(attemptId: string): Promise<TaskParseResult<true>>;
   operationSignal: AbortSignal | undefined;
   receipts: Map<string, TaskRunAcceptanceReceipt>;
+  failures: Map<string, TaskRunFailureReceipt>;
   save: TaskRunSave;
 }): Promise<TaskParseResult<true>> {
   const state = c.run.tasks.find((t) => t.taskId === taskId);
@@ -42,7 +51,7 @@ export async function verifyTaskRunAttempt({
     !state ||
     !a ||
     a.application.status !== "applied" ||
-    !["verifying", "accepted"].includes(a.status)
+    !["verifying", "accepted", "failed"].includes(a.status)
   )
     return taskFailure(
       "TASK_STATE_CONFLICT",
@@ -86,10 +95,22 @@ export async function verifyTaskRunAttempt({
   attempt.usage.durationMs += v.durationMs;
   c.bindings.find((b) => b.attemptId === a.attemptId)!.verificationPending = false;
   c.run.project.latestProjectRevision = v.checkedRevision;
+  const failure = v.outcome === "pass" ? null : classifyTaskVerificationFailure(v);
+  attempt.failure = failure
+    ? {
+        ...failure,
+        affectedTaskIds: [taskId],
+        affectedEvidenceIds: v.checks.filter((c) => c.status !== "pass").map((c) => c.checkId),
+        suggestedAction:
+          failure.class === "implementation"
+            ? "Repair only this task's failed behavior using fresh scoped context and retained edits."
+            : "Resolve the recorded verification prerequisite or review condition before further mutation.",
+      }
+    : null;
   s.status =
     v.outcome === "pass"
       ? "accepted"
-      : v.outcome === "fail"
+      : failure?.class === "implementation"
         ? "needs_repair"
         : v.outcome === "needs_review"
           ? "needs_review"
@@ -103,12 +124,20 @@ export async function verifyTaskRunAttempt({
           ? "needs_review"
           : "blocked";
   s.acceptedVerificationId = v.outcome === "pass" ? v.verificationId : null;
-  s.reasonCode =
-    v.outcome === "pass" ? null : v.outcome === "fail" ? "TASK_CHECK_FAILED" : "TASK_NEEDS_REVIEW";
+  s.reasonCode = failure?.code ?? null;
   c.run.activeAttemptId = null;
   c.run.status =
     v.outcome === "pass" ? "active" : v.outcome === "needs_review" ? "needs_review" : "blocked";
+  if (
+    failure?.class === "implementation" &&
+    attempt.attemptNumber >= c.run.resourceLimits.maxImplementationAttemptsPerTask
+  ) {
+    s.status = "blocked";
+    s.reasonCode = "TASK_ATTEMPT_LIMIT_EXCEEDED";
+    c.run.status = "failed";
+  }
   c.run.acceptedArtifacts = c.run.acceptedArtifacts.filter((a) => a.producerTaskId !== taskId);
+  if (failure) for (const id of invalidateTaskConsumers(plan, c.run, taskId)) receipts.delete(id);
   if (v.outcome === "pass") {
     const task = plan.tasks.find((t) => t.taskId === taskId)!;
     for (const output of task.outputs) {
@@ -150,6 +179,7 @@ export async function verifyTaskRunAttempt({
   stored = await save("verification", taskId, s.reasonCode ?? undefined);
   if (!stored.success) {
     receipts.delete(taskId);
+    failures.delete(taskId);
     return stored;
   }
   if (v.outcome === "pass")
@@ -161,5 +191,11 @@ export async function verifyTaskRunAttempt({
       ),
     });
   else receipts.delete(taskId);
+  if (failure?.class === "implementation")
+    failures.set(taskId, {
+      attemptHash: taskContentHash(c.run.attempts.find((x) => x.attemptId === a.attemptId)),
+      bindingHash: taskContentHash(c.bindings.find((b) => b.attemptId === a.attemptId)),
+    });
+  else failures.delete(taskId);
   return { success: true, data: true };
 }

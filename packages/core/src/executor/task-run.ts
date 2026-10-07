@@ -10,6 +10,7 @@ import {
   checkTaskAppliedContextFreshness,
   auditTaskApplication,
   checkTaskRunPostimages,
+  taskOwnedWriteRevisions,
 } from "../tasks/application.js";
 import {
   sealTaskRunCheckpoint,
@@ -24,10 +25,17 @@ import type { TaskVerificationPolicy } from "../tasks/verification-policy.js";
 import type { TaskErrorCode } from "../tasks/errors.js";
 import type { ProcessRunner } from "./types.js";
 import { executeTaskVerification, type TaskVerificationAdapter } from "./task-verification.js";
-import type { TaskRunAdapter, TaskRunLease, TaskRunAcceptanceReceipt } from "./task-run-types.js";
+import type {
+  TaskRunAdapter,
+  TaskRunLease,
+  TaskRunAcceptanceReceipt,
+  TaskRunFailureReceipt,
+} from "./task-run-types.js";
 import { taskRunOperationSchema, type TaskRunOperation } from "./task-run-operation.js";
 import type { TaskProviderAdapter } from "../tasks/provider.js";
 import { requestTaskRunProposal } from "./task-run-provider.js";
+import { buildTaskRepairContext } from "../tasks/repair-context.js";
+import { invalidateTaskConsumers } from "../tasks/invalidation.js";
 import {
   validateTaskCompilationCheckpoint,
   taskCompilationAllowanceId,
@@ -38,6 +46,7 @@ export type TaskRunExecution =
   | { dryRun: true; operation: TaskRunOperation["type"]; writePaths: string[] }
   | { dryRun: false; checkpoint: TaskRunCheckpoint; packet?: TaskMaterializedContext };
 const liveAccepted = new Map<string, Map<string, TaskRunAcceptanceReceipt>>();
+const liveFailed = new Map<string, Map<string, TaskRunFailureReceipt>>();
 const unknownUsage = () => ({
   inputTokens: { provenance: "unknown" as const },
   outputTokens: { provenance: "unknown" as const },
@@ -357,13 +366,30 @@ export async function executeTaskRun(input: {
           .filter((r) => task.requirementIds.includes(r.requirementId))
           .flatMap((r) => r.sourceRefs),
       ];
+      const attemptNumber = c.run.attempts.find((a) => a.attemptId === b.attemptId)!.attemptNumber;
+      const owned = taskOwnedWriteRevisions(c, task.taskId, attemptNumber);
       if (
         refs.some(
           (ref) =>
             !b.context.sources.some(
               (s) =>
                 s.path === ref.path &&
-                s.fileHash === ref.fileHash &&
+                (s.fileHash === ref.fileHash ||
+                  (ref.path !== plan.phase.sourcePath &&
+                    owned.some((p) => p.path === ref.path && p.fileHash === s.fileHash) &&
+                    c.journal.some(
+                      (e) =>
+                        e.type === "file" &&
+                        e.path === ref.path &&
+                        e.status === "applied" &&
+                        e.beforeHash === ref.fileHash &&
+                        c.run.attempts.some(
+                          (a) =>
+                            a.attemptId === e.attemptId &&
+                            a.taskId === task.taskId &&
+                            a.attemptNumber < attemptNumber,
+                        ),
+                    ))) &&
                 s.inclusionReasons.includes("requirement"),
             ),
         )
@@ -395,6 +421,8 @@ export async function executeTaskRun(input: {
     let accountedDuration = 0;
     const receipts = liveAccepted.get(c.run.runId) ?? new Map<string, TaskRunAcceptanceReceipt>();
     liveAccepted.set(c.run.runId, receipts);
+    const failures = liveFailed.get(c.run.runId) ?? new Map<string, TaskRunFailureReceipt>();
+    liveFailed.set(c.run.runId, failures);
     if (input.verification && op.type !== "reconcile") {
       const definitions = await input.verification.adapter.verifyDefinitions();
       if (!definitions.success) return definitions;
@@ -453,26 +481,13 @@ export async function executeTaskRun(input: {
     };
     const invalidated = new Set<string>();
     const invalidate = (taskId: string) => {
-      invalidated.add(taskId);
-      for (let changed = true; changed;) {
-        changed = false;
-        for (const edge of plan.dependencies)
-          if (invalidated.has(edge.predecessorTaskId) && !invalidated.has(edge.consumerTaskId)) {
-            invalidated.add(edge.consumerTaskId);
-            changed = true;
-          }
+      for (const id of invalidateTaskConsumers(plan, c.run, taskId)) {
+        invalidated.add(id);
+        receipts.delete(id);
       }
-      for (const t of c.run.tasks)
-        if (invalidated.has(t.taskId)) {
-          t.status = t.taskId === taskId ? "invalidated" : "blocked";
-          t.reasonCode = "TASK_VERIFICATION_STALE";
-          t.acceptedVerificationId = null;
-          receipts.delete(t.taskId);
-        }
-      c.run.acceptedArtifacts = c.run.acceptedArtifacts.filter(
-        (a) => !invalidated.has(a.producerTaskId),
-      );
-      c.run.finalVerification = null;
+      const root = c.run.tasks.find((t) => t.taskId === taskId)!;
+      root.status = "invalidated";
+      root.reasonCode = "TASK_VERIFICATION_STALE";
     };
     const bindingCurrent = async (attemptId: string) => {
       const b = c.bindings.find((b) => b.attemptId === attemptId)!;
@@ -530,6 +545,28 @@ export async function executeTaskRun(input: {
       });
       return reconciled.success ? finish() : reconciled;
     }
+    if (op.type === "stop") {
+      if (c.run.activeAttemptId !== null)
+        return taskFailure(
+          "TASK_STATE_CONFLICT",
+          "An active attempt needs reconciliation before a terminal policy stop.",
+        );
+      const state = c.run.tasks.find((t) => t.taskId === op.taskId);
+      if (!state || state.status === "accepted")
+        return taskFailure("TASK_STATE_CONFLICT", "A policy stop cannot rewrite accepted work.");
+      state.status = "blocked";
+      state.reasonCode = op.code;
+      for (const id of invalidateTaskConsumers(plan, c.run, op.taskId)) {
+        receipts.delete(id);
+        failures.delete(id);
+      }
+      c.run.status =
+        op.code === "TASK_BUDGET_EXHAUSTED" || op.code === "TASK_ATTEMPT_LIMIT_EXCEEDED"
+          ? "failed"
+          : "blocked";
+      const stopped = await save("transition", op.taskId, op.code);
+      return stopped.success ? finish() : stopped;
+    }
     if (c.run.resourceLedger.consumed.durationMs >= c.run.resourceLimits.maxWallTimeMs)
       return taskFailure("TASK_BUDGET_EXHAUSTED", "Run wall-time allowance is exhausted.");
     if (op.type === "begin") {
@@ -576,15 +613,33 @@ export async function executeTaskRun(input: {
           "TASK_ATTEMPT_LIMIT_EXCEEDED",
           "Implementation attempt ceiling is exhausted.",
         );
+      const previous = c.run.attempts.find((a) => a.attemptId === state.attemptIds.at(-1));
+      if (
+        state.status === "needs_repair" &&
+        (!previous ||
+          failures.get(task.taskId)?.attemptHash !== taskContentHash(previous) ||
+          failures.get(task.taskId)?.bindingHash !==
+            taskContentHash(c.bindings.find((b) => b.attemptId === previous.attemptId)))
+      )
+        return taskFailure(
+          "TASK_NEEDS_REVIEW",
+          "Repair requires current executor failure evidence; restarted or imported claims need fresh verification.",
+        );
       const packet = await prepareTaskContext({
         plan,
         policy: input.compilationPolicy,
         taskId: task.taskId,
         repository: input.adapter.repository,
         acceptedArtifacts: c.run.acceptedArtifacts,
+        ownedWriteRevisions: taskOwnedWriteRevisions(c, task.taskId),
       });
       if (!packet.success) return packet;
       const attemptId = `${c.run.runId}/${task.taskId}/${attemptNumber}`;
+      const repair =
+        state.status === "needs_repair" && previous
+          ? buildTaskRepairContext(previous, packet.data)
+          : null;
+      if (repair && !repair.success) return repair;
       const a = executionAttemptSchema.safeParse({
         kind: "execution_attempt",
         schemaVersion: 1,
@@ -627,6 +682,7 @@ export async function executeTaskRun(input: {
         writeTargets: packet.data.writeTargets,
         postimages: [],
         beforeSnapshot: snapshot.data,
+        ...(repair?.success ? { repair: repair.data } : {}),
       });
       c.run.project.latestProjectRevision = snapshot.data.revision;
       const stored = await save("transition", task.taskId);
@@ -648,6 +704,7 @@ export async function executeTaskRun(input: {
         op,
         operationSignal,
         save,
+        failures,
         bindingCurrent,
         apply: async (proposal) => {
           const current = await input.adapter.snapshot();
@@ -694,6 +751,7 @@ export async function executeTaskRun(input: {
         bindingCurrent,
         operationSignal,
         receipts,
+        failures,
         save,
       });
     if (op.type === "verify") {

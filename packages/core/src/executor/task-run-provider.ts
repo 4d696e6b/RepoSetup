@@ -9,10 +9,14 @@ import {
 import type { TaskRunCheckpoint } from "../tasks/checkpoint.js";
 import type { TaskPlan } from "../tasks/plan-schema.js";
 import type { TaskCompilationPolicy } from "../tasks/compile.js";
-import type { TaskRunAdapter, TaskRunSave } from "./task-run-types.js";
+import type { TaskRunAdapter, TaskRunSave, TaskRunFailureReceipt } from "./task-run-types.js";
 import type { TaskErrorCode } from "../tasks/errors.js";
 import type { TaskMaterializedContext } from "../tasks/context-types.js";
 import type { ExecutionAttempt } from "../tasks/run-schema.js";
+import { classifyTaskFailure, taskRepairAction } from "../tasks/failure.js";
+import { buildTaskRepairContext } from "../tasks/repair-context.js";
+import { taskOwnedWriteRevisions } from "../tasks/application.js";
+import { invalidateTaskConsumers } from "../tasks/invalidation.js";
 
 async function dispatchUntilAbort(
   provider: TaskProviderAdapter,
@@ -91,9 +95,15 @@ export async function requestTaskRunProposal(input: {
   compilationPolicy: TaskCompilationPolicy;
   adapter: TaskRunAdapter;
   provider: TaskProviderAdapter;
-  op: { maxOutputTokens: number; timeoutMs: number; allowProviderUsage: true };
+  op: {
+    maxOutputTokens: number;
+    timeoutMs: number;
+    allowProviderUsage: true;
+    allowRepair?: boolean | undefined;
+  };
   operationSignal: AbortSignal | undefined;
   save: TaskRunSave;
+  failures: Map<string, TaskRunFailureReceipt>;
   bindingCurrent(attemptId: string): Promise<TaskParseResult<true>>;
   apply(
     op: { type: "apply"; proposal: unknown } | { type: "no_change" },
@@ -137,12 +147,7 @@ export async function requestTaskRunProposal(input: {
     a.finishedAt = new Date().toISOString();
     a.failure = {
       code,
-      class:
-        code === "TASK_EXECUTION_ABORTED"
-          ? "cancellation"
-          : code === "TASK_BUDGET_EXHAUSTED"
-            ? "budget"
-            : "infrastructure",
+      class: classifyTaskFailure(code),
       affectedTaskIds: [a.taskId],
       affectedEvidenceIds: [],
       suggestedAction:
@@ -152,7 +157,29 @@ export async function requestTaskRunProposal(input: {
       a.status === "cancelled" ? "cancelled" : "needs_review";
     c.run.tasks.find((t) => t.taskId === a.taskId)!.reasonCode = code;
     c.run.status = a.status === "cancelled" ? "cancelled" : "needs_review";
+    if (input.op.allowRepair && code === "TASK_OUTPUT_INCOMPLETE") {
+      a.status = "failed";
+      if (taskRepairAction(a) === "increase_output") {
+        c.run.activeAttemptId = null;
+        c.run.tasks.find((t) => t.taskId === a.taskId)!.status = "needs_repair";
+        c.run.status = "blocked";
+        if (a.attemptNumber >= c.run.resourceLimits.maxImplementationAttemptsPerTask) {
+          c.run.tasks.find((t) => t.taskId === a.taskId)!.status = "blocked";
+          c.run.tasks.find((t) => t.taskId === a.taskId)!.reasonCode =
+            "TASK_ATTEMPT_LIMIT_EXCEEDED";
+          c.run.status = "failed";
+        }
+      } else a.status = "needs_review";
+    }
+    invalidateTaskConsumers(plan, c.run, a.taskId);
     const stored = await save("transition", a.taskId, code);
+    if (stored.success && input.op.allowRepair && taskRepairAction(state()) === "increase_output") {
+      input.failures.set(a.taskId, {
+        attemptHash: taskContentHash(state()),
+        bindingHash: taskContentHash(binding()),
+      });
+      return { success: true as const, data: true as const };
+    }
     return stored.success
       ? taskFailure(
           code,
@@ -166,6 +193,7 @@ export async function requestTaskRunProposal(input: {
     taskId: task.taskId,
     repository: input.adapter.repository,
     acceptedArtifacts: c.run.acceptedArtifacts,
+    ownedWriteRevisions: taskOwnedWriteRevisions(c, task.taskId, opened.attemptNumber),
   });
   if (!initial.success) return initial;
   let packet: TaskMaterializedContext = initial.data;
@@ -192,6 +220,7 @@ export async function requestTaskRunProposal(input: {
           task.requirementIds.includes(r.requirementId),
         ),
         context: packet,
+        ...(binding().repair ? { repair: binding().repair } : {}),
       },
       maxOutputTokens: input.op.maxOutputTokens,
       timeoutMs: Math.min(
@@ -303,6 +332,12 @@ export async function requestTaskRunProposal(input: {
       );
     }
     if (
+      parsed.data.effectiveConfiguration.provenance !== "unknown" &&
+      taskContentHash(parsed.data.effectiveConfiguration.configuration) !==
+        taskContentHash(state().requestedConfiguration)
+    )
+      return stop("TASK_PROVIDER_CONFIGURATION_UNSUPPORTED");
+    if (
       [usage.inputTokens, usage.outputTokens, usage.costMicrousd].some(
         (u) => u.provenance === "unknown",
       )
@@ -334,6 +369,7 @@ export async function requestTaskRunProposal(input: {
         repository: input.adapter.repository,
         requests,
         acceptedArtifacts: c.run.acceptedArtifacts,
+        ownedWriteRevisions: taskOwnedWriteRevisions(c, task.taskId, opened.attemptNumber),
       });
       if (!expanded.success) return stop(expanded.error.code as TaskErrorCode);
       if (expanded.data.context.contextId === packet.context.contextId)
@@ -343,6 +379,14 @@ export async function requestTaskRunProposal(input: {
       binding().writeTargets = packet.writeTargets;
       state().contextId = packet.context.contextId;
       state().inputRevision = packet.context.inputRevision;
+      if (binding().repair) {
+        const previous = c.run.attempts.find(
+          (a) => a.attemptId === binding().repair!.previousAttemptId,
+        )!;
+        const repair = buildTaskRepairContext(previous, packet);
+        if (!repair.success) return stop(repair.error.code as TaskErrorCode);
+        binding().repair = repair.data;
+      }
       state().status = "prepared";
       const stored = await save("transition", task.taskId);
       if (!stored.success) return stored;
