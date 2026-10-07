@@ -19,11 +19,13 @@ After qualification, create the tag at the exact selected candidate SHA. If `v0.
 
 ## Publication
 
-The `publish-npm.yml` manual workflow must already exist on the default branch, and the selected tag must contain this updated workflow. GitHub supports dispatching a manual workflow against a branch or tag. [GitHub manual workflow documentation](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)
+The `publish-npm.yml` manual workflow exists on the default `main` branch. Dispatch it from `main`; it checks out the immutable `v0.2.0` tag, proves that tag still resolves to the exact qualified source, and uses that source for all artifact and registry checks. GitHub runs the workflow version at the selected dispatch ref, so a release-tooling correction on `main` does not require moving the already created tag. [GitHub workflow version rules](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflows)
 
-Select the existing `v0.2.0` tag and provide the three qualification run IDs as a comma-separated list, oldest first. Leave `publish` false for a dry-run. After review and explicit authorization, dispatch it with `publish` true. Inputs are validated and passed through environment variables, never interpolated into shell commands.
+Select `main` as the workflow ref and provide the three qualification run IDs as a comma-separated list, oldest first. Leave `publish` false for a dry-run. After its checks pass, dispatch the same workflow with `publish` true. Inputs are validated and passed through environment variables, never interpolated into shell commands.
 
 The workflow checks the repository, tag/version/source, exact candidate branch, latest three successful first-attempt full runs, required jobs and steps, and retained artifact. It downloads the immutable artifact ID from the final qualifying run using Actions read permission. It verifies size, source SHA, SHA-256, version and both launchers, then publishes that same tarball. There is no build or pack step in publication. [Official download-artifact inputs](https://github.com/actions/download-artifact/tree/v4)
+
+The first `v0.2.0` dry-run [37655329425](https://github.com/4d696e6b/RepoSetup/actions/runs/37655329425) passed exact-source qualification and downloaded the correct artifact, then stopped before publication because `download-artifact` nested that archive under its name. The corrected default-branch workflow flattens only the selected immutable artifact and keeps the tag at its original source. No npm bytes were published by that failed dry-run.
 
 Only an HTTP 404 means the version does not exist. Authentication, rate-limit and registry errors fail closed. If the version already exists, a retry succeeds only when registry integrity matches the qualified bytes. The three delivery jobs subsequently require `latest` to identify those same bytes. Trusted publishing automatically supplies provenance; retain the publishing run and verify its source/provenance links. [npm provenance documentation](https://docs.npmjs.com/generating-provenance-statements/)
 

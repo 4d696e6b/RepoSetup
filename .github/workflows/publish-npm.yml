@@ -25,6 +25,7 @@ jobs:
     outputs:
       artifact_id: ${{ steps.qualification.outputs.artifact_id }}
       run_id: ${{ steps.qualification.outputs.run_id }}
+      source_sha: ${{ steps.tag.outputs.sha }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
@@ -33,13 +34,23 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: v0.2.0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Confirm the selected tag still names the qualified source
+        id: tag
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main"
+          source_sha="$(git rev-parse HEAD)"
+          test "$source_sha" = "ee93373c59615a197d0e724353738fd3e695a1a2"
+          echo "sha=$source_sha" >> "$GITHUB_OUTPUT"
       - name: Verify exact-source qualification
         id: qualification
-        run: node scripts/check-release-qualification.mjs
+        run: GITHUB_REF=refs/tags/v0.2.0 GITHUB_SHA="$RELEASE_SOURCE_SHA" node scripts/check-release-qualification.mjs
         env:
+          RELEASE_SOURCE_SHA: ${{ steps.tag.outputs.sha }}
           GITHUB_TOKEN: ${{ github.token }}
           QUALIFICATION_RUN_IDS: ${{ inputs.qualification_run_ids }}
       - uses: actions/download-artifact@v4
@@ -48,16 +59,18 @@ jobs:
           run-id: ${{ steps.qualification.outputs.run_id }}
           github-token: ${{ github.token }}
           path: candidate
+          merge-multiple: true
       - name: Verify qualified tarball and actual launchers without rebuilding
         run: node scripts/verify-packed-artifact.mjs --directory candidate
         env:
-          EXPECTED_SOURCE_SHA: ${{ github.sha }}
+          EXPECTED_SOURCE_SHA: ${{ steps.tag.outputs.sha }}
           EXPECTED_PACKAGE_VERSION: "0.2.0"
       - name: Ensure npm CLI supports trusted publishing
         run: npm install -g npm@^11.5.1
       - name: Publish or dry-run the previously qualified artifact
-        run: node scripts/publish-qualified-artifact.mjs
+        run: GITHUB_REF=refs/tags/v0.2.0 GITHUB_SHA="$RELEASE_SOURCE_SHA" node scripts/publish-qualified-artifact.mjs
         env:
+          RELEASE_SOURCE_SHA: ${{ steps.tag.outputs.sha }}
           PUBLISH_RELEASE: ${{ inputs.publish }}
           NPM_CONFIG_PROVENANCE: "true"
 
@@ -72,6 +85,8 @@ jobs:
         os: [ubuntu-24.04, macos-15, windows-2025]
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: v0.2.0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -81,5 +96,8 @@ jobs:
           run-id: ${{ needs.publish.outputs.run_id }}
           github-token: ${{ github.token }}
           path: candidate
+          merge-multiple: true
       - name: Verify exact published version outside the monorepo
-        run: node scripts/verify-registry-release.mjs
+        run: GITHUB_SHA="$RELEASE_SOURCE_SHA" node scripts/verify-registry-release.mjs
+        env:
+          RELEASE_SOURCE_SHA: ${{ needs.publish.outputs.source_sha }}
