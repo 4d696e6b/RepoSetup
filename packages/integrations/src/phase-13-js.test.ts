@@ -408,6 +408,25 @@ describe("Phase 13 JS ecosystem plans", () => {
 });
 
 describe("Phase 13 JS ecosystem detection and verify", () => {
+  it.each([true, false])(
+    "anchors Next.js Vitest to the canonical config directory (TypeScript %s)",
+    (typescript) => {
+      const plan = vitestIntegration.plan(
+        planContext({ frameworkId: "nextjs", frameworkOptions: { typescript } }),
+      );
+      const config = plan.find(
+        (operation) =>
+          operation.type === "create_file" &&
+          operation.path === (typescript ? "vitest.config.mts" : "vitest.config.js"),
+      );
+      expect(config).toMatchObject({
+        content: expect.stringContaining(
+          "root: realpathSync.native(fileURLToPath(new URL('.', import.meta.url)))",
+        ),
+      });
+    },
+  );
+
   it("detects React + Vite as certain from vite and react", async () => {
     const result = await reactViteIntegration.detect?.(
       await contextOf({

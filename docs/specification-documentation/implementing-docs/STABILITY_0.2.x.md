@@ -178,6 +178,16 @@ case unless a Vite application config exists. Regression tests cover both the
 test-only dependency and explicit Vite config evidence. Cross-platform execution
 must still pass before closing this gate.
 
+The focused Windows/npm run at `f5a49eb` still failed to resolve
+`/health.test.ts` with the exact qualified versions installed; the Vite pin alone
+does not fix it. Its root uses Windows's `RUNNER~1` short path. The Next.js
+Vitest config now supplies a canonical root derived from its own file URL using
+Node's native realpath API. This addresses path identity as a hypothesis; the
+focused Windows run and full matrix must verify it. Vitest documents the
+[root option](https://vitest.dev/config/root.html). Related Windows path identity
+failures were fixed in [Angular CLI's Vitest integration](https://github.com/angular/angular-cli/pull/33567);
+that is supporting context, not evidence that RepoSetup's failure is fixed.
+
 ## Reproducing the stability checks
 
 Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.

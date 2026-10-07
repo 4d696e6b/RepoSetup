@@ -6,11 +6,14 @@ import { addPackages, execLocalBin } from "./operations.js";
 import { NODE_ENGINE_RANGES, QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
-const VITEST_CONFIG_TS = `import { defineConfig } from 'vitest/config'
+const VITEST_CONFIG_TS = `import { realpathSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
+  root: realpathSync.native(fileURLToPath(new URL('.', import.meta.url))),
   plugins: [tsconfigPaths(), react()],
   test: {
     environment: 'jsdom',
@@ -18,10 +21,13 @@ export default defineConfig({
 })
 `;
 
-const VITEST_CONFIG_JS = `import { defineConfig } from 'vitest/config'
+const VITEST_CONFIG_JS = `import { realpathSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+  root: realpathSync.native(fileURLToPath(new URL('.', import.meta.url))),
   plugins: [react()],
   test: {
     environment: 'jsdom',
