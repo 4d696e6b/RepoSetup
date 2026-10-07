@@ -25,7 +25,7 @@ all possible integration combinations or all operating systems were tested.
 ## 0.2.2 — Expand release qualification
 
 - Plan matrix: all six frameworks, npm/pnpm or uv/pip, current/named/nested directories, curated integrations with their required dependencies, JavaScript options, and incompatible runtime/manager rejection.
-- Real execution: nine qualified recipes in named directories, generated tests/typechecks/builds/lints and stack/doctor checks; repeat JavaScript recipes with npm and pnpm.
+- Real execution: twelve qualified recipes in named directories, generated tests/typechecks/builds/lints and stack/doctor checks; repeat JavaScript recipes with npm and pnpm.
 - Real npx delivery: pack the patch candidate, then create the sixteen bare JavaScript framework/manager/language combinations and four isolated Python framework/manager combinations in nested directories. Check dry-run leaves no files and successful creation installs/imports/builds.
 - Presets: packaged CLI preview, create, displayed run/build/test commands, add, doctor and export. Check all five presets; Docker checks require an existing Docker executable, not automatic installation.
 - Failure coverage: invalid config/options, unsupported combinations, missing prerequisites, unwritable paths, symlink escape, existing-file protection, missing/conflicting lockfiles, interrupted/failed installs and safe add/remove repetition.
@@ -51,7 +51,7 @@ all possible integration combinations or all operating systems were tested.
 ## Initial evidence and limitations
 
 - Published 0.2.0 named Next.js creation reproduces `FILE_MUTATION_FAILED` on `app/layout.tsx` after scaffolding into the child directory. Existing golden tests used only `.` and missed the regression.
-- Patch unit regressions and the 494-case plan matrix pass locally.
+- Patch unit regressions and the 495-check plan matrix pass locally.
 - All nine real recipes pass locally with pnpm and uv across separately run groups, including Next.js create/typecheck/tests/build and Python import/pytest/Ruff.
 - Packaged React preset preview/create/server/build/test/add/doctor/export passes locally.
 - The first npm matrix attempts hit local `ENOSPC`, and later cases failed the executor's disk-space preflight. These are failed qualification attempts, not passes. Tests now keep npm caches per test to avoid accumulation; the complete matrix needs adequate disk space in CI.
@@ -86,3 +86,24 @@ Real bare/golden tests check that the start-script entry actually exists after
 building; the Express preset session also probes its production server.
 Generated README commands now follow npm/pnpm or uv/pip and do not advertise
 pytest unless it was selected.
+
+### Execution boundary and expanded coverage
+
+Packed npx qualification exposed outer npm exec launch settings leaking into
+nested framework generators. Child processes now discard only npm's package/call
+launch settings, preserving registry, cache, PATH and other user configuration.
+A regression checks this environment boundary. All twenty bare npx solutions
+passed on Linux/macOS before the final formatting follow-up; complete reruns
+must qualify the final candidate rather than reuse those results as its gate.
+
+All fifteen packaged preset sessions passed at `1b05852` across Ubuntu, macOS
+and Windows Server ([run 37679024048](https://github.com/4d696e6b/RepoSetup/actions/runs/37679024048)).
+Windows readiness checks retry HTTP until the server responds and await process
+shutdown before cleanup. Express's occupied-port test matches its actual bind.
+The final expanded recipe suite additionally executes shadcn initialization and
+builds for both Next.js and Vite, and builds/imports the Express Mongoose helper
+with a missing-URI safety check. No live MongoDB connection is claimed.
+
+The final Express callback formatting fix passes its real generated-app build,
+endpoint tests and Prettier check locally. The Mongoose build/import/doctor check
+also passes locally. These are targeted passes; full final CI remains required.
