@@ -280,6 +280,6 @@ work is tracked in [STABILITY_0.2.x.md](STABILITY_0.2.x.md), on
 `codex/fix-create-project-paths`, based on released 0.2.0 source.
 Named-folder Next.js failure is reproduced; planner scoping, destination creation,
 bare Vite installation, install ordering, destination lockfile checks and printed
-Node server commands have regression coverage. The 494-case plan matrix passes.
+Node server commands have regression coverage. The 495-check plan matrix passes.
 Full npm/npx/platform qualification and patch publication remain open until their
 results are recorded; do not mark them complete from unit tests alone.

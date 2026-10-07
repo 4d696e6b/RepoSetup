@@ -6,6 +6,12 @@ on:
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
+    inputs:
+      scope:
+        description: Qualification scope (only full runs qualify the complete matrix)
+        type: choice
+        default: full
+        options: [full, next-vitest]
 
 jobs:
   golden:
@@ -42,16 +48,23 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm test:golden
+        if: ${{ inputs.scope != 'next-vitest' }}
+        env:
+          CI: true
+          REPOSETUP_GOLDEN_PACKAGE_MANAGER: ${{ matrix.package-manager }}
+      - run: pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t "Golden A"
+        if: ${{ inputs.scope == 'next-vitest' }}
         env:
           CI: true
           REPOSETUP_GOLDEN_PACKAGE_MANAGER: ${{ matrix.package-manager }}
       - name: Write golden qualification evidence
         env:
           GOLDEN_PACKAGE_MANAGER: ${{ matrix.package-manager }}
+          GOLDEN_SCOPE: ${{ inputs.scope || 'full' }}
         run: >-
           node -e "require('node:fs').writeFileSync('golden-evidence.json',
           JSON.stringify({ platform: process.platform, architecture: process.arch,
-          node: process.version, sourceCommit: process.env.GITHUB_SHA, packageManager: process.env.GOLDEN_PACKAGE_MANAGER, python: require('node:child_process').execFileSync('python',
+          node: process.version, sourceCommit: process.env.GITHUB_SHA, scope: process.env.GOLDEN_SCOPE, packageManager: process.env.GOLDEN_PACKAGE_MANAGER, python: require('node:child_process').execFileSync('python',
           ['--version'], { encoding: 'utf8' }).trim(), uv: require('node:child_process').execFileSync('uv',
           ['--version'], { encoding: 'utf8' }).trim() }, null, 2) + '\\n')"
       - uses: actions/upload-artifact@v4

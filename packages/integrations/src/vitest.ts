@@ -185,6 +185,7 @@ export const vitestIntegration = defineIntegration({
     const packages = typescript
       ? [
           npmPin("vitest", QUALIFIED_VERSIONS.vitest),
+          npmPin("vite", QUALIFIED_VERSIONS.vite),
           npmPin("@vitejs/plugin-react", QUALIFIED_VERSIONS.vitePluginReact),
           npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
           npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
@@ -195,6 +196,7 @@ export const vitestIntegration = defineIntegration({
         ]
       : [
           npmPin("vitest", QUALIFIED_VERSIONS.vitest),
+          npmPin("vite", QUALIFIED_VERSIONS.vite),
           npmPin("@vitejs/plugin-react", QUALIFIED_VERSIONS.vitePluginReact),
           npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
           npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
@@ -208,6 +210,7 @@ export const vitestIntegration = defineIntegration({
         description: "Install Vitest and the official Next.js test packages",
         dev: true,
         allowBuild: ["esbuild"],
+        exact: true,
       }),
       {
         type: "create_file",

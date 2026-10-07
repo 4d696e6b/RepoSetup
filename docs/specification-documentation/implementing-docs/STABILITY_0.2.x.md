@@ -37,7 +37,10 @@ all possible integration combinations or all operating systems were tested.
 - Preserve qualified direct version pins and record exact toolchain/source revisions for each qualification.
 - Review registry availability, transitive engine ranges and security advisories before refreshing pins; regenerate and execute affected recipes.
 - Capture actionable errors, remediation and reproducible reports; add a regression for every confirmed create failure.
+- Measure peak disk use of real generated stacks and improve prerequisite guidance. The existing 512 MiB preflight is a minimum guard, not a guarantee that a Next.js dependency install will fit.
 - Measure warm/cold installs after correctness gates. Do not trade isolation, integrity or reproducibility for speed.
+- Add automated live PostgreSQL/MongoDB and ORM connection checks against disposable services before promoting those integrations to stable; keep SQLAlchemy's separately required DBAPI explicit.
+- Extend qualification to native Windows 11 and Linux arm64 when those environments are available; do not infer these results from Windows Server or Linux x64.
 - Expand only combinations that pass real creation and execution; keep unsupported contexts explicit.
 
 ## Release gate for each patch
@@ -90,8 +93,9 @@ pytest unless it was selected.
 ### Execution boundary and expanded coverage
 
 Packed npx qualification exposed outer npm exec launch settings leaking into
-nested framework generators. Child processes now discard only npm's package/call
-launch settings, preserving registry, cache, PATH and other user configuration.
+nested framework generators. The initial fix discarded npm's package/call launch settings, preserving
+registry, cache, PATH and other user configuration. Later npm recipe tests
+required isolating package-manager identity too, as recorded below.
 A regression checks this environment boundary. All twenty bare npx solutions
 passed on Linux/macOS before the final formatting follow-up; complete reruns
 must qualify the final candidate rather than reuse those results as its gate.
@@ -156,3 +160,43 @@ support `--no-skills`; both SQLite/PostgreSQL recipes now use that opt-out.
 The real Next/SQLite check asserts no coding-agent directories were created.
 The post-fix Playwright npm recipe passes locally; the Next/SQLite npm attempt
 ran out of disk during dependency installation and is not a pass.
+
+At `3ae33a7`, ten full matrix jobs passed all 34 tests; the two Windows/npm
+jobs each passed 33 and failed the Next/SQLite generated Vitest assertion with
+`Cannot find module '/health.test.ts'`. Qualification remains open. The Next
+test recipe did not pin Vite, allowing npm to resolve a newer version than the
+qualified 8.3.0. The follow-up pins Vite and saves the Next test toolchain exactly;
+this must be verified rather than assumed to fix the Windows failure. Failed
+creates now report installed test-tool versions in the qualification logs.
+The workflow's optional `next-vitest` scope provides a focused diagnostic run;
+its evidence is labeled with that scope and cannot qualify the complete matrix.
+
+## Reproducing the stability checks
+
+Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.
+These commands test the unpublished checkout; they do not install a fixed patch
+from the public npm registry.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm test
+pnpm typecheck
+pnpm lint
+pnpm build
+pnpm registry:validate
+pnpm test:e2e
+```
+
+For the real generators and downloaded dependencies, use a fresh machine or
+runner with enough disk space. Each golden run executes twenty packed-npx bare
+solutions and fourteen recipes; the Next recipe is enabled locally explicitly:
+
+```sh
+REPOSETUP_GOLDEN_NEXT=1 REPOSETUP_GOLDEN_PACKAGE_MANAGER=npm pnpm test:golden
+REPOSETUP_GOLDEN_NEXT=1 REPOSETUP_GOLDEN_PACKAGE_MANAGER=pnpm pnpm test:golden
+```
+
+The above environment assignment syntax is for POSIX shells. GitHub Actions
+sets the variables through `env`, including on Windows. The committed
+`golden.yml` and `usability.yml` workflows provide the cross-platform entry
+points and retained evidence artifacts.

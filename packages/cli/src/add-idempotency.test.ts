@@ -84,6 +84,7 @@ describe("add idempotency (built-in catalog)", () => {
               dependencies: { next: "16.0.0" },
               devDependencies: {
                 vitest: "3.0.0",
+                vite: "8.3.0",
                 "@vitejs/plugin-react": "5.0.0",
                 jsdom: "26.0.0",
                 "@testing-library/react": "16.0.0",

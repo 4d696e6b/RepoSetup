@@ -162,6 +162,7 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
   zod: [npmPin("zod", QUALIFIED_VERSIONS.zod)],
   vitest: [
     npmPin("vitest", QUALIFIED_VERSIONS.vitest),
+    npmPin("vite", QUALIFIED_VERSIONS.vite),
     npmPin("@vitejs/plugin-react", QUALIFIED_VERSIONS.vitePluginReact),
     npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
     npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),

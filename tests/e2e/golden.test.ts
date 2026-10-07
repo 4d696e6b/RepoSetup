@@ -57,6 +57,20 @@ async function createProject(
   });
   expect(await readdir(startingDir), created.stderr).toEqual(["app"]);
   const cwd = path.join(startingDir, "app");
+  if (created.exitCode !== 0 && config.runtime.id === "node") {
+    const versions: Record<string, string> = {};
+    for (const name of ["vite", "vitest", "vite-tsconfig-paths", "@types/node"]) {
+      try {
+        const pkg = JSON.parse(
+          await readFile(path.join(cwd, "node_modules", name, "package.json"), "utf8"),
+        );
+        versions[name] = pkg.version;
+      } catch {
+        versions[name] = "unavailable";
+      }
+    }
+    created.stderr += `\nInstalled test tooling: ${JSON.stringify(versions)}\n`;
+  }
   return { cwd, created };
 }
 
@@ -127,6 +141,9 @@ describe("golden stack real execution", () => {
       expect(created.stdout).toContain("Executed ");
       expect(created.stdout).not.toContain("Installing skills");
       const files = await readdir(cwd);
+      const pkg = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8"));
+      expect(pkg.devDependencies.vite).toBe("8.3.0");
+      expect(pkg.devDependencies.vitest).toBe("5.0.1");
       for (const agentDir of [".agents", ".claude", ".cursor", ".windsurf"]) {
         expect(files).not.toContain(agentDir);
       }
