@@ -13,8 +13,8 @@ D handoff commands stay advisory.
 Milestone G is in progress: the provider transport and managed coding run are
 implemented, including managed decomposition. Separately authorized live provider
 qualification remains open. The joined no-key test now demonstrates compilation,
-an actual bug fix, real qualified checks and durable final-phase acceptance with
-simulated HTTP. See the [roadmap](./ROADMAP_0.4.0.md).
+an actual bug fix, real qualified checks and durable final-phase acceptance through
+the managed CLI and real Git with simulated HTTP. See the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -589,3 +589,58 @@ the unresolved G acceptance gate under the original no-paid-call boundary. H is
 next only after that gate closes; no H or later implementation, dependency/system
 installation, package version bump, website source change, merge or publication
 occurred. Commit this reviewed slice and preserve the clean worktree.
+
+### G offline managed CLI and real Git follow-up
+
+Continued from committed no-key qualification **`1dcaa7b`**. The same serial concrete
+fixture now runs actual `task compile --managed` and `task run` through the parser,
+bounded artifact loaders, JSON previews, exact approvals, managed receipt accounting
+and independent CLI criterion prompts. Test-injected host factories compose the
+production profile/state/verification adapters with the actual SDK's fake transport;
+the default credential-backed host factory and a packed binary remain untested here.
+Provider construction is lazy: previews, missing allowance and wrong approvals
+construct no SDK, enter no host factory, invoke no process or acceptance prompt and
+create no private state. The already completed compilation stays separate from run
+preview/approval, with no additional dispatch.
+
+Added a test-only Git fixture helper using preinstalled **Git 2.39.5 (Apple Git-154)**,
+an empty template directory, fictional author/committer identity, disabled hooks and
+signing and filtered global/system configuration. Fixed setup options were checked
+against current official Git documentation, linked in the
+[smoke protocol](./TASK_PROVIDER_SMOKE_0.4.0.md#testing-without-an-api-key). One local
+baseline commit precedes review; the model/executor creates no Git commit. The
+existing single-package metadata guard and independently pinned installed verifier
+tree are used without any installation. This proves the current metadata guard,
+not a dependency/lockfile consistency guarantee.
+
+A deliberately introduced untracked file produces **`TASK_PROJECT_DRIFT`, exit 3**
+from real Git probes before coding or creation of a run checkpoint. Compilation
+state and the original source remain intact and no acceptance prompt occurs. The
+test removes only its introduced drift, then uses the same reviewed receipt and
+approval for the successful run. The executor performs **6 real Git probes** across
+the rejected and accepted baselines and **12 real tool checks** across broken
+baseline, task, fresh task and final phase. Both managed call reservations and the
+compilation identity are retained; the public JSON run equals the saved private
+checkpoint's run. Three independent native CLI review prompts inspect current source,
+frozen oracle bytes, exact revision and separate criterion statements. Final checks
+prove unchanged HEAD, empty staged diff, only `src/add.ts` changed, unchanged Git
+inventory metadata, three final executed tests, empty verifier scratch and no SDK
+network call or sentinel credential in state.
+
+Validation on existing temporary **Node 24.21.0** / pnpm **12.5.1**: the expanded
+joined fixture passed in **338.43 seconds**, and **77 offline tests across 6 CLI
+files** passed. That is **78 selected passing tests across 7 files**; the other
+concrete fixture cases and full workspace suite were not repeated. Workspace
+typecheck/lint/build passed. Initial fixture testing correctly rejected drift but
+caught an incorrect assertion expecting exit 5; it was corrected to the established
+exit 3 without changing production code. Final formatting and whitespace checks
+passed before this slice's commit. Default Node **22.12.0** remains unchanged
+and unsupported; no system software/dependencies were installed.
+
+**G remains open for real provider account/model/schema/configuration/usage evidence.**
+All provider responses/IDs/counters in this test are simulated, and no model quality
+or billing qualification is claimed. The owner's no-paid-call boundary remains in
+force. H is next under the current roadmap after G's live gate; offline H sequencing
+is a scope question presented to the owner, not assumed authorization or a completed
+gate. No H or later implementation, package version bump, website source change,
+merge, publication or paid request occurred. Commit this slice before continuing.

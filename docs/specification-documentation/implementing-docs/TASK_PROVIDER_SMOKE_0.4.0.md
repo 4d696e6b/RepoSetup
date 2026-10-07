@@ -22,18 +22,37 @@ The fixture starts with subtraction, freezes positive/negative/zero addition tes
 and their qualified tool bindings before decomposition, and first demonstrates a
 real unit-check failure. Two simulated responses then drive actual SDK decoding,
 core compilation, executor-owned replacement, private compilation/run state,
-inclusive allowance accounting and real TypeScript/ESLint/Vitest checks. An
-independent test reviewer checks current source, immutable oracle bytes, exact
+inclusive allowance accounting and real TypeScript/ESLint/Vitest checks through
+`task compile --managed` and `task run`. Both commands require their exact CLI
+preview approvals and explicit simulated usage allowance. Previews and rejected
+approvals enter no host factory, create no state, construct no SDK and launch no
+process. A real untracked-file drift fails Git baseline checks before a coding call
+or run checkpoint; only the test's deliberately introduced drift is then removed.
+An independent test reviewer checks current source, immutable oracle bytes, exact
 revision and distinct task/phase criteria. Finalization rechecks the task and phase;
 the test requires a durable `succeeded` checkpoint and unchanged oracle.
 
 Provider configuration, request IDs and usage in this test are simulated evidence.
-Git identity probes are also simulated; tool processes, project effects, snapshots
-and private state are real. This checks local integration and regression behavior,
-not model quality, remote schema acceptance, account access, billing or CLI/Git
-qualification. It cannot close the separately authorized live gate below. There is
-no charge or requirement to buy credits for the offline test. Run expensive concrete
-verifier fixtures serially to avoid the previously observed overlapping-job timeout.
+The fixture uses real preinstalled Git, a clean local baseline commit, trusted
+profile/check adapters, actual processes and private state. Final Git checks require
+the same HEAD, an empty staged diff, only `src/add.ts` changed, and unchanged Git
+metadata in the complete snapshot. Test-injected host factories compose the production
+adapters with the fake SDK transport; the default credential-backed factory and a
+packed binary are not exercised by this test. Lockfile/profile evidence covers the
+current metadata checks, not an installed-dependency/lockfile consistency guarantee.
+This checks local CLI integration and regression behavior, not model quality, remote
+schema acceptance, account access or billing. It cannot close the separately
+authorized live gate below. There is no charge or requirement to buy credits for
+the offline test. Run expensive concrete verifier fixtures serially to avoid the
+previously observed overlapping-job timeout.
+
+Fixture setup uses an empty template directory, disabled hooks/signing, explicit
+fictional commit identities and a filtered environment with global/system Git
+configuration excluded. The setup flags were checked against the official
+[Git init](https://git-scm.com/docs/git-init),
+[Git commit](https://git-scm.com/docs/git-commit) and
+[Git environment](https://git-scm.com/docs/git) documentation. These local setup
+commits precede the reviewed baseline; no generated-code commit or publication occurs.
 
 ## Concrete proposed qualification
 

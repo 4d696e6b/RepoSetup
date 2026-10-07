@@ -19,9 +19,6 @@ import {
   compileTaskPlan,
   executeTaskVerification,
   executeTaskRun,
-  executeTaskCompilation,
-  executeManagedTaskPhase,
-  prepareTaskCompilationContext,
   qualifiedTaskCheckHash,
   taskByteHash,
   taskContentHash,
@@ -35,6 +32,8 @@ import {
   type TaskCompilationPolicy,
   type TaskParseResult,
   type TaskReview,
+  type TaskProviderAdapter,
+  type TaskRunCheckpoint,
 } from "@reposetup/core";
 import { createTaskCheckRecipe, taskTestIdentity, type TaskToolCheckId } from "./check-recipes.js";
 import { captureVerifierRoot, readVerifierFile } from "./verifier-read.js";
@@ -45,6 +44,11 @@ import { verifyQualifiedTaskCheck } from "./check-qualification.js";
 import { allocateTaskVerifierScratch } from "./verifier-scratch.js";
 import { createDefaultProcessRunner } from "../execution-adapters.js";
 import { createOpenAITaskProvider } from "./provider-adapter.js";
+import { createTaskGitFixture } from "./git-fixture.test-helper.js";
+import { validateManagedTaskProject } from "./managed-project.js";
+import { runCli } from "../run-cli.js";
+import { createDefaultFs } from "../io.js";
+import type { CliDeps } from "../types.js";
 
 const require = createRequire(import.meta.url);
 const HASH = `sha256:${"a".repeat(64)}`;
@@ -399,11 +403,19 @@ describe("concrete trusted verification qualification", () => {
     const f = await fixture(false, true);
     const network = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Network forbidden"));
     try {
+      const git = await createTaskGitFixture(f.projectRoot, f.parent);
       const oraclePath = path.join(f.projectRoot, "test/add.test.ts");
       const oracle = await readFile(oraclePath, "utf8");
       const brokenSource = await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8");
       const runner = vi.fn(f.input.runProcess);
-      const failing = data(await executeTaskVerification({ ...f.input, runProcess: runner }));
+      const before = data(await f.input.adapter.snapshot());
+      const failing = data(
+        await executeTaskVerification({
+          ...f.input,
+          expectedRevision: before.revision,
+          runProcess: runner,
+        }),
+      );
       expect(failing).toMatchObject({ verification: { outcome: "fail" } });
       if (failing.dryRun) throw new Error("unexpected preview");
       expect(failing.verification.checks.find((c) => c.checkId === "ts.unit")).toMatchObject({
@@ -429,7 +441,11 @@ describe("concrete trusted verification qualification", () => {
         kind: "task_review",
         schemaVersion: 1,
         phase: f.input.plan.phase,
-        project: { ...f.input.plan.project, baselineTreeHash: taskContentHash(baseline.entries) },
+        project: {
+          ...f.input.plan.project,
+          baselineCommit: git.baselineCommit,
+          baselineTreeHash: taskContentHash(baseline.entries),
+        },
         policy: f.input.compilationPolicy,
       };
       const transport = vi.fn<typeof fetch>(async (url, options): Promise<Response> => {
@@ -500,14 +516,18 @@ describe("concrete trusted verification qualification", () => {
           },
         );
       });
-      const provider = data(
-        createOpenAITaskProvider({
-          model: "gpt-6.1-sol",
-          effort: "low",
-          environment: { OPENAI_API_KEY: "fake-offline-test-sentinel" },
-          transport,
-        }),
+      const providerFactory = vi.fn(() =>
+        data(
+          createOpenAITaskProvider({
+            model: "gpt-6.1-sol",
+            effort: "low",
+            environment: { OPENAI_API_KEY: "fake-offline-test-sentinel" },
+            transport,
+          }),
+        ),
       );
+      let selectedProvider: TaskProviderAdapter | undefined;
+      const provider = () => (selectedProvider ??= providerFactory());
       const resourceLimits = {
         maxImplementationAttemptsPerTask: 3,
         maxProviderCalls: 2,
@@ -516,23 +536,6 @@ describe("concrete trusted verification qualification", () => {
         maxWallTimeMs: 900000,
         maxCostMicrousd: 1000000,
       };
-      const context = data(
-        await prepareTaskCompilationContext({ review, repository: adapter.repository }),
-      );
-      const compiled = data(
-        await executeTaskCompilation({
-          review,
-          adapter,
-          provider,
-          resourceLimits,
-          maxOutputTokens: 4096,
-          timeoutMs: 1000,
-          expectedContextId: context.contextId,
-          allowProviderUsage: true,
-        }),
-      );
-      if (compiled.dryRun) throw new Error("unexpected preview");
-      expect(compiled.checkpoint.status).toBe("completed");
       // The independent reviewer inspects current source and the frozen oracle,
       // never the fake provider's claim of success. The executor gates this port
       // behind successful real tool checks at the exact requested revision.
@@ -547,40 +550,207 @@ describe("concrete trusted verification qualification", () => {
         ]);
         return { request, approved: true, evidenceArtifactIds: ["reviewed-evidence"] };
       });
-      // Git identity probes are simulated here; all verification processes below
-      // execute real installed tools. Live Git/CLI qualification is separate.
-      const git = vi.fn(async () => ({ exitCode: 0, stdout: "", stderr: "" }));
-      const result = await executeManagedTaskPhase({
-        plan: compiled.checkpoint.plan,
-        compilationPolicy: f.input.compilationPolicy,
-        managedCompilationId: compiled.checkpoint.compilationId,
-        resourceLimits,
-        projectRoot: f.projectRoot,
-        gitExecutable: "/offline-test/git",
-        adapter,
-        provider,
-        verification: {
-          policy: f.input.policy,
-          adapter: f.input.adapter,
-          runProcess: async (r) => {
-            if (r.command !== "/offline-test/git") return runner(r);
-            const probe = await git();
-            return {
-              ...probe,
-              stdout: r.args.includes("--show-toplevel")
-                ? `${f.projectRoot}\n`
-                : r.args.includes("HEAD")
-                  ? `${review.project.baselineCommit}\n`
-                  : "",
-            };
-          },
-        },
-        allowProviderUsage: true,
-        maxOutputTokens: 4096,
-        timeoutMs: 1000,
+      const confirm = vi.fn(async (message?: string) => {
+        expect(message).toContain("Independent ");
+        expect(message).toContain(data(await f.input.adapter.snapshot()).revision);
+        expect(message).toContain(
+          message?.includes("Independent phase.acceptance ")
+            ? f.input.plan.phaseCriteria[0]!.statement
+            : f.input.plan.tasks[0]!.criteria[0]!.statement,
+        );
+        expect(await readFile(oraclePath, "utf8")).toBe(oracle);
+        expect(await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8")).toBe(
+          brokenSource.replace("a - b", "a + b"),
+        );
+        return true;
       });
-      if (!result.success) throw new Error(`${result.error.code}: ${result.error.message}`);
-      const checkpoint = result.checkpoint;
+      const compilationHost = vi.fn<NonNullable<CliDeps["createTaskCompilationHost"]>>(
+        async (input) => ({
+          success: true,
+          data: {
+            adapter: data(
+              await createTaskRunAdapter({
+                projectRoot: input.projectRoot,
+                stateRoot: input.stateRoot,
+                authority: input.policy.authority,
+              }),
+            ),
+            provider: provider(),
+          },
+        }),
+      );
+      // Only provider construction is replaced. Host profile, state, verifier,
+      // Git resolution, executor processes and the CLI review callback are real.
+      const managedHost = vi.fn<NonNullable<CliDeps["createTaskManagedHost"]>>(async (input) => {
+        data(
+          await validateManagedTaskProject(
+            input.projectRoot,
+            input.compilationPolicy.authority.write,
+          ),
+        );
+        return {
+          success: true,
+          data: {
+            adapter: data(
+              await createTaskRunAdapter({
+                projectRoot: input.projectRoot,
+                stateRoot: input.stateRoot,
+                authority: input.compilationPolicy.authority,
+              }),
+            ),
+            provider: provider(),
+            verification: data(
+              await createQualifiedTaskVerificationAdapter({
+                projectRoot: input.projectRoot,
+                scratchParent: input.scratchRoot,
+                checks: input.authority.checks,
+                policy: input.authority.policy,
+                review: async (request) => {
+                  await f.review(request);
+                  return input.review(request);
+                },
+              }),
+            ),
+            gitExecutable: git.executable,
+          },
+        };
+      });
+      const artifact = (name: string) => path.join(f.parent, `${name}.json`);
+      await writeFile(artifact("review"), JSON.stringify(review));
+      await writeFile(
+        artifact("preferences"),
+        JSON.stringify({
+          kind: "task_preferences",
+          schemaVersion: 1,
+          executionMode: "managed",
+          qualityPreference: "conservative",
+          supportProfileId: "managed-ts-node-v1",
+          providerAvailability: [
+            { providerId: "openai-responses-v1", enabled: true, modelProfileIds: ["gpt-6.1-sol"] },
+          ],
+          effortPreference: { type: "explicit", nativeEffortId: "low" },
+          resourceLimits,
+          exclusions: [],
+        }),
+      );
+      await writeFile(
+        artifact("authority"),
+        JSON.stringify({
+          kind: "task_execution_authority",
+          schemaVersion: 1,
+          checks: f.checks,
+          policy: f.input.policy,
+        }),
+      );
+      const output: string[] = [];
+      const deps: CliDeps = {
+        cwd: f.projectRoot,
+        fs: createDefaultFs(),
+        runProcess: runner,
+        io: { writeOut: (s) => output.push(s), writeErr: (s) => output.push(s) },
+        createTaskCompilationHost: compilationHost,
+        createTaskManagedHost: managedHost,
+        confirmCreate: confirm,
+      };
+      const invoke = async (args: string[], exitCode = 0) => {
+        output.length = 0;
+        expect(await runCli(args, deps), output.join("\n")).toMatchObject({ exitCode });
+        return JSON.parse(output.at(-1)!);
+      };
+      const common = [
+        "--root",
+        f.projectRoot,
+        "--review",
+        artifact("review"),
+        "--preferences",
+        artifact("preferences"),
+        "--state-root",
+        stateRoot,
+        "--effort",
+        "low",
+        "--max-output-tokens",
+        "4096",
+        "--timeout-ms",
+        "1000",
+        "--json",
+      ];
+      const compileArgs = ["task", "compile", "--managed", ...common];
+      const compilePreview = await invoke([...compileArgs, "--dry-run"]);
+      expect(compilePreview).toMatchObject({
+        kind: "task_managed_compilation_review",
+        dryRun: true,
+      });
+      await invoke(compileArgs, 4);
+      await invoke([...compileArgs, "--allow-provider-usage", "--approve-compilation", HASH], 5);
+      expect(compilationHost).not.toHaveBeenCalled();
+      expect(providerFactory).not.toHaveBeenCalled();
+      expect(runner).toHaveBeenCalledTimes(3);
+      expect(await readdir(stateRoot)).toEqual([]);
+      const receipt = await invoke([
+        ...compileArgs,
+        "--allow-provider-usage",
+        "--approve-compilation",
+        compilePreview.summaryId,
+      ]);
+      expect(receipt).toMatchObject({
+        kind: "task_compilation",
+        managedCompilationId: compilePreview.compilationId,
+        plan: { project: { baselineCommit: git.baselineCommit } },
+      });
+      await writeFile(artifact("plan"), JSON.stringify(receipt));
+      const runArgs = [
+        "task",
+        "run",
+        ...common,
+        "--plan",
+        artifact("plan"),
+        "--authority",
+        artifact("authority"),
+        "--scratch-root",
+        f.scratchParent,
+      ];
+      const runPreview = await invoke([...runArgs, "--dry-run"]);
+      expect(runPreview).toMatchObject({
+        kind: "task_managed_run_review",
+        dryRun: true,
+        managedCompilationId: receipt.managedCompilationId,
+        baselineGit: "not_checked",
+        verification: "not_checked",
+      });
+      expect(JSON.stringify([compilePreview, runPreview])).not.toContain("export const");
+      await invoke(runArgs, 4);
+      await invoke([...runArgs, "--allow-provider-usage", "--approve-run", HASH], 5);
+      expect(managedHost).not.toHaveBeenCalled();
+      expect(transport).toHaveBeenCalledTimes(1);
+      expect(runner).toHaveBeenCalledTimes(3);
+      expect(confirm).not.toHaveBeenCalled();
+      const approvedRun = [
+        ...runArgs,
+        "--allow-provider-usage",
+        "--approve-run",
+        runPreview.summaryId,
+      ];
+      const untracked = path.join(f.projectRoot, "unreviewed.txt");
+      await writeFile(untracked, "Unreviewed fixture file.\n");
+      expect(await invoke(approvedRun, 3)).toMatchObject({
+        error: { code: "TASK_PROJECT_DRIFT" },
+      });
+      expect(transport).toHaveBeenCalledTimes(1);
+      expect(confirm).not.toHaveBeenCalled();
+      expect(await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8")).toBe(brokenSource);
+      const privateDirectory = path.join(stateRoot, taskByteHash(f.projectRoot).slice(7));
+      expect((await readdir(privateDirectory)).filter((p) => p.endsWith(".json"))).toEqual([
+        `compilation-${receipt.managedCompilationId.slice(7)}.json`,
+      ]);
+      // Remove only the deliberately introduced fixture drift. Product code
+      // performed no rollback and created no coding run on the rejected baseline.
+      await rm(untracked);
+      const result = await invoke(approvedRun);
+      expect(result).toMatchObject({ kind: "task_managed_run", run: { status: "succeeded" } });
+      const checkpoint: TaskRunCheckpoint = JSON.parse(
+        await readFile(path.join(privateDirectory, `${result.run.runId}.json`), "utf8"),
+      );
+      expect(checkpoint.run).toEqual(result.run);
       expect(checkpoint.run.status).toBe("succeeded");
       expect(checkpoint.run.tasks).toMatchObject([{ taskId: "add", status: "accepted" }]);
       expect(checkpoint.run.finalVerification).toMatchObject({
@@ -592,32 +762,32 @@ describe("concrete trusted verification qualification", () => {
           ?.executedTests,
       ).toBe(3);
       expect(checkpoint.run.resourceLedger.reservations).toHaveLength(2);
-      expect(checkpoint.compilation?.compilationId).toBe(compiled.checkpoint.compilationId);
+      expect(checkpoint.compilation?.compilationId).toBe(receipt.managedCompilationId);
       expect(checkpoint.run.resourceLedger.consumed.totalTokens).toEqual({
         provenance: "reported",
         value: 60,
       });
       expect(transport).toHaveBeenCalledTimes(2);
-      expect(git).toHaveBeenCalledTimes(3);
+      expect(providerFactory).toHaveBeenCalledTimes(1);
+      expect(compilationHost).toHaveBeenCalledTimes(1);
+      expect(managedHost).toHaveBeenCalledTimes(2);
+      expect(confirm).toHaveBeenCalledTimes(3);
       expect(network).not.toHaveBeenCalled();
-      expect(runner).toHaveBeenCalledTimes(12); // broken baseline, task, fresh task, final phase
+      expect(runner).toHaveBeenCalledTimes(18); // 12 tool checks + 6 real Git baseline probes
+      expect(runner.mock.calls.filter(([r]) => r.command === git.executable)).toHaveLength(6);
       expect(f.review.mock.calls.map(([r]) => r.checkId)).toEqual([
         "task.acceptance",
         "task.acceptance",
         "phase.acceptance",
       ]);
-      const durable = JSON.parse(
-        await readFile(
-          path.join(
-            stateRoot,
-            taskByteHash(f.projectRoot).slice(7),
-            `${checkpoint.run.runId}.json`,
-          ),
-          "utf8",
-        ),
+      expect(JSON.stringify(checkpoint)).not.toContain("fake-offline-test-sentinel");
+      expect(await git.git(["rev-parse", "--verify", "HEAD"])).toBe(`${git.baselineCommit}\n`);
+      expect(await git.git(["diff", "--name-only"])).toBe("src/add.ts\n");
+      expect(await git.git(["diff", "--cached", "--name-only"])).toBe("");
+      const after = data(await adapter.snapshot());
+      expect(after.entries.filter((e) => e.path === ".git" || e.path.startsWith(".git/"))).toEqual(
+        baseline.entries.filter((e) => e.path === ".git" || e.path.startsWith(".git/")),
       );
-      expect(durable).toEqual(checkpoint);
-      expect(JSON.stringify(durable)).not.toContain("fake-offline-test-sentinel");
       expect(await readdir(f.scratchParent)).toEqual([]);
     } finally {
       network.mockRestore();
