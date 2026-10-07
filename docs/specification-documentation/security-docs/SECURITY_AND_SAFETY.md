@@ -122,7 +122,7 @@ When execution fails, RepoSetup preserves a content-free temporary failure journ
 
 ## Experimental 0.4.0 coding TaskPlans
 
-Milestone A defines these rules; no task executor/provider functionality is implemented yet. The [task contracts](../product-docs/TASK_CONTRACTS_0.4.0.md), [managed support and verification profile](../product-docs/TASK_SUPPORT_0.4.0.md) and [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md) supplement this installation policy.
+A froze these rules; E/F implement trusted local verification/state/application and G implements managed transport/orchestration. Live provider qualification and H routing/repair remain open. The [task contracts](../product-docs/TASK_CONTRACTS_0.4.0.md), [managed support and verification profile](../product-docs/TASK_SUPPORT_0.4.0.md) and [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md) supplement this installation policy.
 
 AI may draft coding decomposition and typed text-change proposals. Treat model outputs, repository text and handoff responses as untrusted data, including instructions embedded in code/comments. Validate strict schemas, versions, requirement coverage, DAG references, write ownership and scopes before accepting a frozen TaskPlan. Configs/plans/model outputs may reference trusted check IDs, never executable commands, scripts, hooks or arbitrary endpoints. Never deserialize coding proposals as command-bearing InstallationOperations. Curated installation planning remains deterministic and built-in.
 
@@ -135,3 +135,13 @@ Task completion requires trusted current-revision check evidence, acceptance-cri
 Never persist credentials or real secrets in stack/task preferences, plans, run state, packets, change proposals or routine telemetry. Provider credentials stay in the CLI's transient credential boundary and are excluded from verifier environments and model context. Materialized source/context and sensitive recovery content remain separate from content-free operational metadata. Do not claim provider retention guarantees without the account-specific qualification recorded in research.
 
 Task dry-run performs no writes, subprocesses, provider calls or verification; unresolved host checks and decomposition remain labelled. Managed execution requires a clean Git baseline, finite provider-call/token/cost/time limits and a usage allowance. Local validation/context/handoff/verification requires no AI credits. Record requested versus effective capability and effort independently, report unknown usage honestly, stop dependent tasks on failure and reconcile interruption before any new effects. No MCP or website changes are part of this scope.
+
+Milestone G uses the official CLI-only SDK as a tool-free JSON transport; only the
+executor dispatches. Private call intent/reservation is durable before dispatch.
+Unknown or pending usage cannot replay/refund/reset automatically. The compilation
+slot is bound to the independently reviewed phase, so changing request options or
+stripping a receipt cannot reset it in the selected private authority. Exact dry-run
+summary approval and explicit usage allowance precede credential/host construction.
+Raw provider errors/refusals/headers/reasoning/prompts are not persisted. Validated
+public plans and usage metadata are retained privately; credentials stay transient.
+No paid call is authorized by ordinary tests or continuation instructions.

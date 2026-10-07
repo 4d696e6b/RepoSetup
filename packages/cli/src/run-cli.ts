@@ -28,6 +28,7 @@ import { cliVersion } from "./version.js";
 import { registerTaskCommands } from "./tasks/register.js";
 import { createTaskRepositoryReader } from "./tasks/repository-reader.js";
 import { createDefaultManagedTaskHost } from "./tasks/managed-command.js";
+import { createDefaultTaskCompilationHost } from "./tasks/managed-compile.js";
 import type {
   CliDeps,
   CliResult,
@@ -296,6 +297,7 @@ function resolveDeps(deps: CliDeps): ResolvedCliDeps {
   const runProcess = deps.runProcess ?? createDefaultProcessRunner();
   const resolved: ResolvedCliDeps = {
     createTaskManagedHost: deps.createTaskManagedHost ?? createDefaultManagedTaskHost,
+    createTaskCompilationHost: deps.createTaskCompilationHost ?? createDefaultTaskCompilationHost,
     createTaskRepository: deps.createTaskRepository ?? createTaskRepositoryReader,
     registry: deps.registry ?? createDefaultRegistry(),
     io: deps.io ?? createDefaultIo(),

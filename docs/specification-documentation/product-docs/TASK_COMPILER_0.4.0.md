@@ -70,7 +70,7 @@ Keep failed changes for targeted repair and manual review. No automatic rollback
 
 ## CLI and configuration proposal
 
-Portable `reposetup task compile`, `next` and `status` use independently reviewed inputs and explicit artifact paths with text/JSON output and zero-effect dry-run. See the [CLI contract](./CLI_SPEC.md#experimental-040-portable-task-cli--milestone-d). `run` and `verify` remain absent until their behavior is implemented. Reuse existing dependency injection and error/output conventions; no provider call, acceptance or state advancement is implied by a portable packet.
+Portable `reposetup task compile`, `next` and `status` use independently reviewed inputs and explicit artifact paths with text/JSON output and zero-effect dry-run. See the [CLI contract](./CLI_SPEC.md#experimental-040-portable-task-cli--milestone-d). G adds reviewed managed `run` and optional managed decomposition; standalone `verify` remains absent. Live provider qualification remains open. Reuse existing dependency injection and error/output conventions; no provider call, acceptance or state advancement is implied by a portable packet.
 
 Dry-run performs no writes, provider calls, process execution or verification; unresolved decomposition and host checks are labelled. New JSON kinds are additive. Keep stack configuration untouched; optional `reposetup.tasks.json` holds execution preference, provider availability, quality preference, budget, verification profile and exclusions. It contains no secrets, command strings, hooks or arbitrary endpoints.
 

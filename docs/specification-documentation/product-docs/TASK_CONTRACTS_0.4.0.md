@@ -455,3 +455,54 @@ the process port, and acceptance checks the phase ceiling. Provider reservations
 usage reconciliation and ambiguous paid requests remain G/H. Cancellation/failures
 retain edits, snapshots, stages and review evidence; no automatic rollback, cleanup,
 dependency installation or replay is available.
+
+## Milestone G managed execution amendment — revision 1
+
+The provider-neutral core port prepares bounded requests and returns strict
+observations. Only the executor dispatches; concrete HTTP/SDK/filesystem/process
+ports remain CLI-owned. The SDK is a transport rather than an executable agent:
+no model/config/plan tools or executable recipes exist. Capability qualification
+and routing remain H; G uses one explicit fixed strong transport and separate
+native effort, recording requested versus reported/unknown effective configuration.
+
+Private `task_run_checkpoint` version 1 gains optional `providerCalls` metadata and
+an optional imported `compilation` allowance; earlier F checkpoints remain valid.
+Each serial coding call records sequential call identity, attempt, context/input,
+request hash, requested/effective configuration, reservation, outcome and nullable
+usage. Durable intent precedes dispatch. Reservations are conservative and retained,
+including reported failed calls; unknown/pending counters prevent automatic replay
+or allowance reset. Reasoning/cache usage is a subset, not an additional token bill.
+Up to three explicit context expansions follow the initial request in one attempt,
+within the same call/token/cost/deadline ceilings and unchanged reviewed read scope.
+Changed context rebinds the input identity before the next call. The final typed
+proposal still passes F preflight/application and E verification/independent review.
+
+Private `task_compilation_checkpoint` version 1 has a content checksum and a
+review-bound allowance identity. Context/configuration/limits are frozen in the
+checkpoint and exact approval summary; changing options cannot create a new slot
+for the same reviewed phase. Revision 1 is a pending reserved
+call; revision 2 records its observation and either a validated plan or a stopped
+outcome. Stored fields contain hashes, configuration, limits, reservation, usage and
+validated public plan; raw prompt/response/refusal/reasoning and credentials are not
+stored. Private CAS, owner/mode/symlink/byte checks and the existing project lease
+apply. A completed matching record may be read repeatedly without a call; failed or
+pending records cannot be retried automatically. Context/complete baseline checks
+run before dispatch and again before accepting the compiled result. Compilation is
+not project acceptance and never executes a process or mutates project files.
+
+The additive managed compilation receipt field `managedCompilationId` binds a
+subsequent managed run to the completed private ledger. The initial reservation
+uses `attemptId: null` and `reservationId: compilation`. All coding reservations
+and consumed counters include it; startup and compilation duration consume the
+phase wall-time allowance. Imported caller plans without the identity disclose
+unobserved external decomposition allowance. If the selected private authority
+already has a compilation ledger for the phase, omitted identities are rejected. No accounting or savings claim may
+exclude this external overhead; I's inclusive benchmark rules still apply.
+
+Dry-run remains zero-effect: read-only source/authority validation and metadata
+review without credential access, provider factory/dispatch, project/private writes,
+locks, attempts, prompts or subprocesses. Real managed compilation/run require
+explicit usage allowance and exact reviewed summary approval. Fresh task/final-phase
+acceptance requires live independent review, not blanket confirmation or stored pass
+flags. This implementation does not add repair, escalation, install, rollback,
+workers, MCP or later platform/release qualification.

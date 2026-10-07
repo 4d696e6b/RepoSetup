@@ -237,6 +237,11 @@ describe("durable managed SDK dispatch", () => {
         );
         expect(saved.providerCalls[0]).toMatchObject({ status: "pending", usage: null });
         expect(saved.run.resourceLedger.reservations).toHaveLength(1);
+        expect(saved.run.resourceLedger.consumed).toMatchObject({
+          inputTokens: { provenance: "unknown" },
+          reserved: { calls: 1 },
+        });
+        expect(saved.run.attempts[0].usage.reserved.calls).toBe(1);
         return original(prepared, signal);
       };
       const c = await f.requireRun(request(runId), { provider: p.adapter });

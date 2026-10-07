@@ -8,10 +8,11 @@ Last updated: 2026-10-07.
 schemas/compiler/context, portable compile/next/status, trusted checks, scoped text
 application, private durable state and interruption reconciliation are implemented.
 Actual tool/state qualification is macOS arm64 on Node 24.21.0; Linux/packed gates
-remain I/J. Run/application/acceptance APIs are internal; D commands stay advisory.
+remain I/J. E/F application/acceptance APIs now support G's reviewed managed CLI;
+D handoff commands stay advisory.
 Milestone G is in progress: the provider transport and managed coding run are
-implemented; managed decomposition and separately authorized live qualification
-remain open. See the [roadmap](./ROADMAP_0.4.0.md).
+implemented, including managed decomposition. Separately authorized live provider
+qualification remains open. See the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -356,7 +357,7 @@ G is next: one researched provider adapter, usage allowance/reservations, cancel
 and explicit run CLI wiring. H retains managed routing/repair automation; I/J retain
 Linux/packed/benchmark/release qualification. Local F functionality needs no AI credits.
 
-## Next implementation handoff
+## F completion handoff (historical)
 
 Stay in this worktree on `codex/0.4.0-task-compiler` and preserve unrelated changes.
 The first F slice is `d7072d6`; this completed slice must be committed before any
@@ -432,3 +433,57 @@ Final second-slice checks passed on Node 24.21.0: workspace build/typecheck/lint
 fixture cleanup method, caught by both targeted test and typecheck; corrected and
 rerun successfully. Git whitespace checks passed. Commit this slice before the
 managed compilation extension.
+
+## Milestone G, third slice — managed decomposition and inclusive allowance
+
+Continued after committing the managed coding slice as `cc0881e`. Added read-only
+bounded decomposition context, exact phase/requirement selection, current write
+preimages, full applicable rules and permitted inventory metadata. Subtree body
+expansion is explicit, and required rules outside authority fail closed. The executor
+performs one structured draft call under the existing private project lease, with
+fresh context/complete-baseline guards and durable intent before dispatch. The draft
+still passes independent coverage, DAG, check and ownership validation.
+
+Private version 1 compilation checkpoints use CAS revisions and content checksums.
+One allowance slot belongs to the independently reviewed phase; changing effort,
+timeout or limits cannot retry a failed/unknown call. A completed matching result is
+reused without dispatch. Private state records validated public plans and sanitized
+usage/configuration/hashes, never raw prompts/responses or credentials. Managed
+receipts carry `managedCompilationId` into `task run`; private authority rejects
+stripped existing phase identities. Compilation calls/tokens/cost/duration and host
+startup consume the phase allowance before coding. Pending dispatch counters are
+unknown with reservations already retained, rather than showing a stale known total.
+
+Added actual `task compile --managed`, exact dry-run summary approval and explicit
+usage allowance, preserving portable compilation and both binary aliases. Updated
+architecture/CLI/security/contracts/support/current-position documentation and the
+[finite live smoke protocol](./TASK_PROVIDER_SMOKE_0.4.0.md). No H routing, repair or
+escalation, I benchmark, package bump, system/target dependency install, website source
+change, merge or publication occurred. **No paid/live provider call was made.**
+
+Validation caught and corrected a strict inventory scope shape, exact-optional
+TypeScript annotation, synthetic preference shape and fake wire-format assertion.
+The broad workspace run then had one real-tool fixture timeout at 180 seconds while
+a second heavy qualification job overlapped: **239 other CLI tests** passed, as did
+core **446**, registry **15**, integrations **126** and the inherited website **14**.
+The overlapping targeted real-tool run had the same timeout; its **17 other tests**
+passed, including the actual SDK/fake HTTP through real pinned verification tools.
+These failing runs are not passing qualification. An isolated sequential rerun is
+in progress; its final result will be recorded in the validation follow-up.
+
+Current G acceptance: SDK boundary, structured decomposition/context/proposals,
+credential/cancellation/budget/failure handling and reviewed run CLI are implemented.
+G remains **incomplete** until separately authorized live account/schema/usage and
+real task/final-phase acceptance pass. The proposed smoke is one isolated addition
+fixture, fixed gpt-6.1-sol/low, at most two calls and $1 estimated allowance; no retry
+or extra failure probes. H is next only after G's gate closes. Linux/packed/benchmark
+and release remain I/J. Continue in the same worktree and commit each reviewed slice.
+
+Final third-slice focused validation passed on Node **24.21.0** / pnpm **12.5.1**:
+workspace build/typecheck/lint and **68 affected CLI tests across 6 files**, including
+ledger replay/cancellation, changed options, stripped receipt, inclusive reservation,
+exhausted startup, real SDK fake responses, portable compatibility and F lifecycle.
+The latest core suite passed **446 tests across 54 files** before the final startup
+guard; that guard is covered by the final CLI suite. Documentation formatting,
+local links and whitespace passed. The full serial verifier/workspace result remains
+pending at this slice's commit; G is not marked complete.

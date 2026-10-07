@@ -10,6 +10,8 @@ import {
   taskFailure,
   taskRunIdSchema,
   validateTaskRunCheckpoint,
+  validateTaskCompilationCheckpoint,
+  type TaskCompilationCheckpoint,
   type TaskRunCheckpoint,
   type TaskRunLease,
   type TaskParseResult,
@@ -266,6 +268,62 @@ export async function createTaskStateAcquire(
           };
           const lease: TaskRunLease = {
             load,
+            loadCompilation: async (id) => {
+              try {
+                await guard();
+                if (!/^sha256:[a-f0-9]{64}$/.test(id)) throw new Error("compilation id");
+                const bytes = await readPrivate(directory, `compilation-${id.slice(7)}.json`);
+                if (!bytes) return { success: true, data: null };
+                const json = decodeTaskJson(bytes);
+                if (!json.success) return json;
+                const checked = validateTaskCompilationCheckpoint(json.data);
+                if (!checked.success) return checked;
+                if (checked.data.compilationId !== id || taskContainsPrivateMaterial(checked.data))
+                  throw new Error("compilation identity/privacy");
+                return checked;
+              } catch {
+                return taskFailure(
+                  "TASK_RUN_STATE_INVALID",
+                  "Private compilation ledger cannot be safely read.",
+                );
+              }
+            },
+            saveCompilation: async (value: TaskCompilationCheckpoint, expected) => {
+              try {
+                await guard();
+                const valid = validateTaskCompilationCheckpoint(value);
+                if (!valid.success || taskContainsPrivateMaterial(value))
+                  throw new Error("compilation policy");
+                const current = await lease.loadCompilation!(value.compilationId);
+                if (!current.success) return current;
+                if (
+                  (current.data?.stateRevision ?? null) !== expected ||
+                  value.stateRevision !== (expected === null ? 1 : expected + 1)
+                )
+                  return taskFailure("TASK_STATE_CONFLICT", "Compilation CAS revision changed.");
+                const temp = `compilation-${randomUUID()}.tmp`;
+                await writePrivate(directory, temp, Buffer.from(JSON.stringify(value)));
+                await guard();
+                const recheck = await lease.loadCompilation!(value.compilationId);
+                if (!recheck.success) return recheck;
+                if ((recheck.data?.stateRevision ?? null) !== expected)
+                  return taskFailure(
+                    "TASK_STATE_CONFLICT",
+                    "Compilation changed before replacement.",
+                  );
+                await rename(
+                  path.join(directory.path, temp),
+                  path.join(directory.path, `compilation-${value.compilationId.slice(7)}.json`),
+                );
+                await syncTaskDirectory(directory.path);
+                return { success: true, data: true };
+              } catch {
+                return taskFailure(
+                  "TASK_STATE_WRITE_FAILED",
+                  "Private compilation snapshot failed; retain intent for review.",
+                );
+              }
+            },
             save: async (value, expected) => {
               try {
                 await guard();

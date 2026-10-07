@@ -6,6 +6,15 @@ import type { TaskPreparedTextChange } from "../tasks/application.js";
 
 /** These capabilities are trusted host ports, never plan/config/model fields. Only the executor invokes mutations. */
 export interface TaskRunLease {
+  loadCompilation?(
+    compilationId: string,
+  ): Promise<
+    TaskParseResult<import("../tasks/compilation-state.js").TaskCompilationCheckpoint | null>
+  >;
+  saveCompilation?(
+    checkpoint: import("../tasks/compilation-state.js").TaskCompilationCheckpoint,
+    expectedRevision: number | null,
+  ): Promise<TaskParseResult<true>>;
   load(runId: string): Promise<TaskParseResult<TaskRunCheckpoint | null>>;
   save(
     checkpoint: TaskRunCheckpoint,

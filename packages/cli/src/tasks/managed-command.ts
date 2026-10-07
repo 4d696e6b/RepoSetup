@@ -5,6 +5,8 @@ import {
   taskContentHash,
   taskFailure,
   executeManagedTaskPhase,
+  decodeTaskJson,
+  taskCompilationReceiptSchema,
   type RepoSetupError,
   type TaskRunAdapter,
   type TaskProviderAdapter,
@@ -12,7 +14,7 @@ import {
   type TaskParseResult,
   type TaskCompilationPolicy,
 } from "@reposetup/core";
-import { loadTaskReview, loadReviewedPlan, checkReviewedPhase } from "./input.js";
+import { loadTaskReview, loadReviewedPlan, checkReviewedPhase, readTaskInput } from "./input.js";
 import { loadManagedTaskAuthority, type ManagedTaskAuthority } from "./managed-authority.js";
 import { createTaskRunAdapter } from "./application-adapter.js";
 import { createQualifiedTaskVerificationAdapter } from "./verification-adapter.js";
@@ -97,6 +99,7 @@ export async function handleManagedTask(
   deps: ResolvedCliDeps,
   globals: GlobalCliOptions,
 ): Promise<number> {
+  const started = performance.now();
   const fail = (error: RepoSetupError, runId?: string | null) => {
     writeLine(
       globals.json ? deps.io.writeOut : deps.io.writeErr,
@@ -128,6 +131,12 @@ export async function handleManagedTask(
     if (!phase.success) return fail(phase.error);
     const plan = await loadReviewedPlan(options.plan, review, deps);
     if (!plan.success) return fail(plan.error);
+    const planText = await readTaskInput(options.plan, deps);
+    if (!planText.success) return fail(planText.error);
+    const decoded = decodeTaskJson(planText.data);
+    if (!decoded.success) return fail(decoded.error);
+    const receipt = taskCompilationReceiptSchema.safeParse(decoded.data);
+    const managedCompilationId = receipt.success ? receipt.data.managedCompilationId : undefined;
     const authority = await loadManagedTaskAuthority(options.authority, deps);
     if (!authority.success) return fail(authority.error);
     if (authority.data.authority.policy.catalogRevision !== plan.data.checkCatalogRevision)
@@ -195,6 +204,10 @@ export async function handleManagedTask(
       version: CLI_OUTPUT_VERSION,
       kind: "task_managed_run_review",
       planId: plan.data.planId,
+      managedCompilationId: managedCompilationId ?? null,
+      compilationAccounting: managedCompilationId
+        ? "private_ledger_import_required"
+        : "external_draft_allowance_not_observed",
       authorityId: authority.data.authorityId,
       contexts,
       provider: {
@@ -286,10 +299,27 @@ export async function handleManagedTask(
       },
     });
     if (!host.success) return fail(host.error);
+    if (
+      taskContentHash(host.data.provider.configuration) !==
+      taskContentHash({
+        adapterId: "openai-responses-v1",
+        providerId: "openai-responses-v1",
+        modelProfileId: "gpt-6.1-sol",
+        nativeEffortId: options.effort,
+      })
+    )
+      return fail(
+        taskFailure(
+          "TASK_PROVIDER_CONFIGURATION_UNSUPPORTED",
+          "Host provider differs from the approved managed run configuration.",
+        ).error,
+      );
     const result = await executeManagedTaskPhase({
       plan: plan.data,
       compilationPolicy: review.policy,
       resourceLimits: preferences.resourceLimits,
+      initialDurationMs: Math.max(0, Math.ceil(performance.now() - started)),
+      ...(managedCompilationId ? { managedCompilationId } : {}),
       projectRoot: root,
       gitExecutable: host.data.gitExecutable,
       adapter: host.data.adapter,

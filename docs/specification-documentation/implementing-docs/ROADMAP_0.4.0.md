@@ -117,10 +117,11 @@ and release qualification retain later gates.
 
 **Objective:** automate scoped compilation and coding under an explicit usage allowance.
 
-- [ ] Add the researched provider SDK boundary in CLI, not core.
-- [ ] Support structured drafts, bounded context requests and typed ChangeSet proposals.
-- [ ] Handle credentials, cancellation, incomplete/refused responses, call/output limits and usage provenance.
-- [ ] Add task run with reviewed context/provider/check/budget summary.
+- [x] Add the researched provider SDK boundary in CLI, not core.
+- [x] Support structured drafts, bounded context requests and typed ChangeSet proposals.
+- [x] Handle credentials, cancellation, incomplete/refused responses, call/output limits and usage provenance.
+- [x] Add task run with reviewed context/provider/check/budget summary.
+- [ ] Complete separately authorized live provider/profile smoke; no paid calls have been made.
 
 **Likely modules:** CLI provider adapter/run handler and dependency packaging. **Dependencies:** C, E, F. **Tests:** fake API boundary failures plus separately authorized live smoke evidence. **Done:** no model command reaches a process runner; one supported profile completes real tasks.
 

@@ -71,7 +71,7 @@ export function isTaskPathExcluded(path: string, mode: "read" | "write"): boolea
     /\.(?:png|jpg|jpeg|gif|webp|pdf|zip|gz|wasm|exe|dll|so|dylib|bin)$/.test(name)
   );
 }
-export function taskCanRead(task: Task, path: string): boolean {
+export function taskCanRead(task: Pick<Task, "scope">, path: string): boolean {
   return (
     !isTaskPathExcluded(path, "read") &&
     !task.scope.deny.some((selector) => taskSelectorContains(selector, path)) &&

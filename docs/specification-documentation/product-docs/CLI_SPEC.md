@@ -18,7 +18,7 @@ reposetup
 └── version/help
 ```
 
-This tree reflects the inspected `0.3.0-alpha.1` source in [runCli](../../../packages/cli/src/run-cli.ts). `import` remains a proposal, as described below. The experimental task command group is specified at the end of this document and is unimplemented.
+This tree reflects the inspected `0.3.0-alpha.1` source in [runCli](../../../packages/cli/src/run-cli.ts). `import` remains a proposal, as described below. The experimental task command group is implemented as described at the end of this document; live provider qualification remains open.
 
 ## 2. `reposetup create`
 
@@ -299,7 +299,7 @@ Ink is optional later for a richer explorer but must not be required for basic f
 
 ## Experimental 0.4.0 portable task CLI — Milestone D
 
-`task compile`, `task next` and `task status` are implemented as read-only portable workflows. `task run` and `task verify` remain absent; managed execution and trusted checks belong to later milestones. Both binary aliases use the same entry point. The [versioned contracts](./TASK_CONTRACTS_0.4.0.md) and [support profile](./TASK_SUPPORT_0.4.0.md) are authoritative for inputs and acceptance.
+`task compile`, `task next` and `task status` are implemented as read-only portable workflows. Milestone G adds reviewed managed `task run` and optional managed decomposition below; a standalone `task verify` remains absent. E/F trusted execution is internal to the managed run. Both binary aliases use the same entry point. The [versioned contracts](./TASK_CONTRACTS_0.4.0.md) and [support profile](./TASK_SUPPORT_0.4.0.md) are authoritative for inputs and acceptance.
 
 - Every command requires `--review <path>`, a strict `task_review` schemaVersion 1 document containing independently reviewed `phase`, `project` and `policy` records. It may use `--root <path>` (default current directory), explicit `--preferences <path>`, `--dry-run`, `--json`, `--quiet` and `--verbose`. There is no implicit preferences/state discovery, write/output-path flag or confirmation prompt. Artifacts require the bounded UTF-8 reader, at most 1 MiB; phase/source reads use the stricter C profile. Caller-reviewed baseline commit/tree metadata remains `baselineGit: not_checked`; these commands never invoke Git or a runtime probe.
 - `compile` reads the reviewed Markdown phase and optional `--draft <path>` (`task_plan_draft`). `--heading <text>` chooses a unique exact ATX heading, ignoring fenced-code headings and including nested sections through the next equal/higher heading. `--lines <start:end>` chooses inclusive lines. These selectors are mutually exclusive and must match the independent review's range; omission uses that range. Duplicate/unsupported headings require explicit lines. Neither selection mode invents requirements or decomposition. Missing draft returns exit 3 and an actionable `task_decomposition_request`; no provider is called. A valid draft yields a frozen plan in a `task_compilation` receipt with output `version: 1`. Plain output summarizes IDs/order; JSON output is directly accepted by next/status, as is a raw `task_plan`.
@@ -351,5 +351,40 @@ final-phase acceptance require independent reviewer responses. Failure retains
 private state and project effects for inspection; there is no automatic repair,
 escalation, retry or rollback. CLI JSON errors include the run ID once created.
 `task status --state` continues to treat caller snapshots as unverified claims.
-Managed compilation is still pending in this slice. Portable compile/next behavior
+Managed compilation is described below. Portable compile/next behavior
 remains compatible and needs no provider credits.
+
+### Milestone G managed decomposition
+
+`task compile --managed` requests one tool-free structured draft. Supply reviewed
+managed `--preferences`, `--state-root`, and explicit `--effort`; omit `--draft`.
+Per-call output/deadline defaults and maxima match `task run`. Portable compilation
+still imports `--draft` locally; provider options without `--managed` are rejected.
+
+Inspect `--dry-run --json`, then pass `--allow-provider-usage` and
+`--approve-compilation <summaryId>` for the exact preview. The preview contains
+source hashes, bounded permitted inventory metadata, independent phase/policy,
+configuration, budgets and paths, with no source bodies or credentials. Compilation
+bodies include selected requirement lines, exact read references, current write
+preimages and complete applicable rules. Subtree inventories do not automatically
+upload subtree bodies. Required rules outside authority fail closed.
+
+The executor acquires the same private project lease, rechecks context and the
+reviewed complete baseline, reserves before dispatch, and persists a version 1
+compilation checkpoint. There is one call per compilation identity. A repeated
+completed approval returns the validated stored plan without dispatch; a failed,
+unknown or interrupted phase allowance cannot replay or reset by changing call
+options. A new independently reviewed phase revision is required. No automatic
+reallocation occurs. Compilation does not probe Git or execute verification; these
+remain explicitly unverified in its receipt.
+
+Managed JSON uses the existing `task_compilation` wrapper with optional
+`managedCompilationId`. Existing consumers accept it. `task run` imports that
+identity from the receipt and requires its completed private ledger in the same
+state authority; compilation calls, tokens, costs and duration count against the
+phase allowance before coding. Naked plans/external drafts have no observed
+compilation history, clearly disclosed in the run review. Keep the full managed
+receipt for inclusive accounting; the selected private state authority rejects
+stripping an existing phase ledger identity. Model drafts still
+pass independent requirement coverage, ownership, DAG, scope and check validation.
+No raw provider response/prompt, credential or command is stored in the ledger.

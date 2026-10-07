@@ -42,6 +42,13 @@ export function registerTaskCommands(
     )
     .option("--heading <text>", "exact unique ATX heading matching the reviewed range")
     .option("--lines <start:end>", "inclusive range matching the reviewed phase")
+    .option("--managed", "request one structured draft under explicit provider allowance", false)
+    .option("--state-root <path>", "preexisting private compilation ledger directory")
+    .option("--effort <id>", "explicit native effort for fixed gpt-6.1-sol decomposition")
+    .option("--max-output-tokens <count>", "managed output ceiling (default 4096)")
+    .option("--timeout-ms <count>", "managed deadline (default 120000)")
+    .option("--allow-provider-usage", "explicitly allow a potentially billable draft call", false)
+    .option("--approve-compilation <hash>", "exact managed compilation dry-run summaryId")
     .action(async (options: TaskCommandOptions, command: Command) => {
       setExitCode(await handleTask("compile", options, deps, globals(command)));
     });

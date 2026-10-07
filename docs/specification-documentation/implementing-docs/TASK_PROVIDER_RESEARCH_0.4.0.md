@@ -187,3 +187,13 @@ Executor reservation/state orchestration, managed CLI integration and separately
 authorized account/schema/usage/effective-configuration smoke evidence remain
 required before G can be marked complete. H model qualification/routing and I/J
 benchmark/platform/release gates remain separate.
+
+### G orchestration follow-up
+
+Executor-owned reservation, private compilation/run ledgers, managed decomposition,
+bounded coding context requests and reviewed CLI wiring are now implemented. Ordinary
+CI uses the real pinned SDK with fake HTTP and real pinned verifier tools, without
+credentials or credits. This evidence qualifies local transport/orchestration, not
+account/model access or actual provider acceptance of the strict schema. Live smoke
+remains separately authorized; see the [concrete smoke protocol](./TASK_PROVIDER_SMOKE_0.4.0.md).
+A supported profile completing real provider tasks is still required to close G.

@@ -5,8 +5,10 @@ Milestone A specification frozen 2026-10-06; Milestones E/F implementation updat
 implemented. Qualification evidence covers the reviewed macOS arm64 / Node 24.21.0
 single-package fixture, including the TypeScript ESLint parser/plugin. Linux x64,
 packed artifacts and broader project configurations retain their I/J gates.
-Managed coding/provider execution remains G. F implements the internal private-state
-and scoped application boundary; local qualification passed as recorded in status.
+G implements managed compilation/coding with fake-SDK local qualification; real
+provider/profile completion remains unqualified pending separately authorized smoke.
+F implements the internal private-state and scoped application boundary; local
+qualification passed as recorded in status.
 Milestone D's portable compile/next/status commands remain advisory; no task
 verify/run command or imported evidence acceptance is added by E.
 Use with the [contracts](./TASK_CONTRACTS_0.4.0.md),
@@ -396,3 +398,23 @@ concurrent rename/symlink races. File sync is OS/device specific; the
 [official Node 24 filesystem documentation](https://nodejs.org/docs/latest-v24.x/api/fs.html#filehandlesync)
 is the researched boundary, not a universal durability guarantee. Retention and
 stale/unknown recovery remain explicit user-owned lifecycle work.
+
+## Milestone G transport and managed command boundary
+
+The initial command profile requires a canonical single-package TypeScript project
+on the reviewed Node 24 POSIX host, consistent npm/pnpm metadata and preinstalled
+dependencies. Managed run rechecks clean Git root/commit and complete reviewed
+snapshot under the lease; manifest-qualified fixed checks remain independent of
+model output, project scripts and preferences. Decomposition is read-only with
+respect to the project and carries its retained usage into coding. Private ledger
+identity is bound to the reviewed phase; changing effort/budgets or removing a
+receipt cannot reset an existing phase allowance in the selected state authority.
+
+The fixed strong transport and explicit native effort are unqualified for capability
+routing until H. Fake HTTP with the actual SDK verifies local orchestration; actual
+TypeScript/ESLint/Vitest fixtures verify application/acceptance. Neither establishes
+account access or live provider schema/usage/effective-configuration behavior.
+The [smoke protocol](../implementing-docs/TASK_PROVIDER_SMOKE_0.4.0.md) defines the
+remaining G gate and its separately authorized allowance. Linux/packed/benchmark
+and release remain I/J. Host-private state and filesystem audits are not an OS
+sandbox or protection against hostile same-UID rewrites/concurrent renames.

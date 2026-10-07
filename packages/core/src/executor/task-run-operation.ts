@@ -6,6 +6,7 @@ import {
   taskResourceLimitsSchema,
   taskRunIdSchema,
   taskPositiveCounterSchema,
+  taskCounterSchema,
 } from "../tasks/primitives.js";
 
 /** Host operation boundary; never a model tool or persisted executable recipe. */
@@ -14,6 +15,8 @@ export const taskRunOperationSchema = z.discriminatedUnion("type", [
     type: z.literal("create"),
     resourceLimits: taskResourceLimitsSchema,
     expectedBaselineTreeHash: taskHashSchema.optional(),
+    managedCompilationId: taskHashSchema.optional(),
+    initialDurationMs: taskCounterSchema.optional(),
   }),
   z.strictObject({
     type: z.literal("begin"),

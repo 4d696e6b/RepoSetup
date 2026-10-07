@@ -37,7 +37,7 @@ async function dispatchUntilAbort(
 }
 
 function aggregateUsage(
-  calls: NonNullable<TaskRunCheckpoint["providerCalls"]>,
+  calls: Pick<NonNullable<TaskRunCheckpoint["providerCalls"]>[number], "usage" | "reservation">[],
   durationMs: number,
 ): ExecutionAttempt["usage"] {
   const usages = calls.map((c) => c.usage);
@@ -236,6 +236,14 @@ export async function requestTaskRunProposal(input: {
       usage: null,
     });
     state().status = "requesting";
+    state().usage = aggregateUsage(
+      c.providerCalls.filter((call) => call.attemptId === attemptId),
+      state().usage.durationMs,
+    );
+    c.run.resourceLedger.consumed = aggregateUsage(
+      c.compilation ? [c.compilation, ...c.providerCalls] : c.providerCalls,
+      c.run.resourceLedger.consumed.durationMs,
+    );
     c.run.executionMode = "managed";
     c.run.supportQualification.reasons = [
       "Local executor/check qualification is separate from live provider and model capability qualification.",
@@ -264,7 +272,7 @@ export async function requestTaskRunProposal(input: {
       attemptCalls.reduce((n, call) => n + (call.usage?.durationMs ?? 0), 0),
     );
     c.run.resourceLedger.consumed = aggregateUsage(
-      allCalls,
+      c.compilation ? [c.compilation, ...allCalls] : allCalls,
       c.run.resourceLedger.consumed.durationMs,
     );
     state().status = "proposal_received";

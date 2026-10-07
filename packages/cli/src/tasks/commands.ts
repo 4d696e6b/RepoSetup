@@ -16,6 +16,7 @@ import { exitCodeForError } from "../exit-codes.js";
 import { writeLine } from "../io.js";
 import { formatError } from "../format-error.js";
 import type { GlobalCliOptions, ResolvedCliDeps } from "../types.js";
+import { handleManagedCompilation } from "./managed-compile.js";
 
 export type TaskCommandOptions = {
   review: string;
@@ -29,6 +30,13 @@ export type TaskCommandOptions = {
   runId?: string;
   attempt?: string;
   state?: string;
+  managed?: boolean;
+  stateRoot?: string;
+  effort?: string;
+  maxOutputTokens?: string;
+  timeoutMs?: string;
+  allowProviderUsage?: boolean;
+  approveCompilation?: string;
   dryRun: boolean;
 };
 const notChecked = {
@@ -60,6 +68,25 @@ export async function handleTask(
   globals: GlobalCliOptions,
 ): Promise<number> {
   try {
+    if (mode === "compile" && options.managed)
+      return await handleManagedCompilation(options, deps, globals);
+    if (
+      mode === "compile" &&
+      (options.stateRoot ||
+        options.effort ||
+        options.maxOutputTokens ||
+        options.timeoutMs ||
+        options.allowProviderUsage ||
+        options.approveCompilation)
+    )
+      return fail(
+        taskFailure(
+          "TASK_SELECTION_INVALID",
+          "Provider options require --managed; portable compilation stays local.",
+        ).error,
+        deps,
+        globals,
+      );
     return await handle(mode, options, deps, globals);
   } catch {
     return fail(
@@ -245,7 +272,7 @@ async function handle(
     return fail(
       taskFailure(
         "TASK_PROVIDER_UNAVAILABLE",
-        "Managed execution is unavailable in this milestone; choose handoff preferences.",
+        "task next is advisory; choose handoff preferences or use reviewed task run.",
       ).error,
       deps,
       globals,

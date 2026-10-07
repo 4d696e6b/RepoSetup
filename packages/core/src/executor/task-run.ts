@@ -28,6 +28,10 @@ import type { TaskRunAdapter, TaskRunLease, TaskRunAcceptanceReceipt } from "./t
 import { taskRunOperationSchema, type TaskRunOperation } from "./task-run-operation.js";
 import type { TaskProviderAdapter } from "../tasks/provider.js";
 import { requestTaskRunProposal } from "./task-run-provider.js";
+import {
+  validateTaskCompilationCheckpoint,
+  taskCompilationAllowanceId,
+} from "../tasks/compilation-state.js";
 
 export type { TaskRunOperation } from "./task-run-operation.js";
 export type TaskRunExecution =
@@ -163,12 +167,65 @@ export async function executeTaskRun(input: {
           "Reviewed baseline changed before leased run creation.",
         );
       const runId = randomUUID();
+      let compilation: TaskRunCheckpoint["compilation"];
+      if (lease.loadCompilation) {
+        const phaseCompilationId = taskCompilationAllowanceId({
+          kind: "task_review",
+          schemaVersion: 1,
+          phase: plan.phase,
+          project: plan.project,
+          policy: input.compilationPolicy,
+        });
+        const retained = await lease.loadCompilation(phaseCompilationId);
+        if (!retained.success) return retained;
+        if (retained.data && op.managedCompilationId !== phaseCompilationId)
+          return taskFailure(
+            "TASK_NEEDS_REVIEW",
+            "This phase has a retained compilation allowance; preserve its managed receipt identity instead of resetting or omitting it.",
+          );
+      }
+      if (op.managedCompilationId !== undefined) {
+        if (!lease.loadCompilation)
+          return taskFailure(
+            "TASK_PREREQUISITE_MISSING",
+            "Compilation ledger is required for a managed receipt.",
+          );
+        const loaded = await lease.loadCompilation(op.managedCompilationId);
+        if (!loaded.success) return loaded;
+        const checked = validateTaskCompilationCheckpoint(loaded.data);
+        if (!checked.success) return checked;
+        if (
+          checked.data.status !== "completed" ||
+          checked.data.plan?.planId !== plan.planId ||
+          checked.data.rootInstance !== input.adapter.rootInstance ||
+          !checked.data.usage
+        )
+          return taskFailure(
+            "TASK_NEEDS_REVIEW",
+            "Managed compilation receipt lacks current completed private authority.",
+          );
+        const usage = checked.data.usage;
+        const reserved = checked.data.reservation;
+        if (
+          reserved.calls > limits!.data!.maxProviderCalls ||
+          reserved.inputTokens > limits!.data!.maxInputTokens ||
+          reserved.outputTokens > limits!.data!.maxOutputTokens ||
+          reserved.costMicrousd > limits!.data!.maxCostMicrousd ||
+          usage.durationMs >= limits!.data!.maxWallTimeMs
+        )
+          return taskFailure(
+            "TASK_BUDGET_EXHAUSTED",
+            "Compilation already exceeds this phase allowance.",
+          );
+        compilation = { compilationId: checked.data.compilationId, reservation: reserved, usage };
+      }
       c = sealTaskRunCheckpoint({
         kind: "task_run_checkpoint",
         schemaVersion: 1,
         policyRevision: taskContentHash(input.compilationPolicy),
         phaseVerificationPending: false,
         rootInstance: input.adapter.rootInstance,
+        ...(compilation ? { compilation } : {}),
         baselineSnapshot: snapshot.data,
         run: {
           kind: "phase_run",
@@ -197,7 +254,12 @@ export async function executeTaskRun(input: {
           })),
           attempts: [],
           resourceLimits: limits!.data!,
-          resourceLedger: { reservations: [], consumed: unknownUsage() },
+          resourceLedger: {
+            reservations: compilation
+              ? [{ reservationId: "compilation", attemptId: null, ...compilation.reservation }]
+              : [],
+            consumed: compilation ? compilation.usage : unknownUsage(),
+          },
           acceptedArtifacts: [],
           activeAttemptId: null,
           finalVerification: null,
@@ -206,6 +268,29 @@ export async function executeTaskRun(input: {
         bindings: [],
         journal: [],
       });
+      const { checkpointHash: _initial, ...createdPayload } = c;
+      void _initial;
+      c = sealTaskRunCheckpoint({
+        ...createdPayload,
+        run: {
+          ...c.run,
+          resourceLedger: {
+            ...c.run.resourceLedger,
+            consumed: {
+              ...c.run.resourceLedger.consumed,
+              durationMs:
+                c.run.resourceLedger.consumed.durationMs +
+                (op.initialDurationMs ?? 0) +
+                Math.max(0, Math.ceil(performance.now() - start)),
+            },
+          },
+        },
+      });
+      if (c.run.resourceLedger.consumed.durationMs >= c.run.resourceLimits.maxWallTimeMs)
+        return taskFailure(
+          "TASK_BUDGET_EXHAUSTED",
+          "Compilation and startup already exhaust the phase wall-time allowance.",
+        );
       const saved = await lease.save(c, null);
       if (!saved.success) return saved;
       return { success: true, data: { dryRun: false, checkpoint: c } };

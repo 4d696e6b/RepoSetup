@@ -22,6 +22,8 @@ export async function executeManagedTaskPhase(input: {
   plan: unknown;
   compilationPolicy: TaskCompilationPolicy;
   resourceLimits: unknown;
+  managedCompilationId?: string;
+  initialDurationMs?: number;
   projectRoot: string;
   gitExecutable: string;
   adapter: TaskRunAdapter;
@@ -36,6 +38,7 @@ export async function executeManagedTaskPhase(input: {
   timeoutMs: number;
   signal?: AbortSignal;
 }): Promise<TaskManagedPhaseResult> {
+  const started = performance.now();
   let runId: string | null = null;
   const fail = (error: RepoSetupError): TaskManagedPhaseResult => ({
     success: false,
@@ -48,6 +51,14 @@ export async function executeManagedTaskPhase(input: {
   if (!limits.success)
     return fail(
       taskFailure("TASK_PREFERENCES_INVALID", "Finite managed resource limits are required.").error,
+    );
+  if (!Number.isSafeInteger(input.initialDurationMs ?? 0) || (input.initialDurationMs ?? 0) < 0)
+    return fail(
+      taskFailure("TASK_PREFERENCES_INVALID", "Managed startup duration is invalid.").error,
+    );
+  if ((input.initialDurationMs ?? 0) >= limits.data.maxWallTimeMs)
+    return fail(
+      taskFailure("TASK_BUDGET_EXHAUSTED", "Managed startup exhausted the phase allowance.").error,
     );
   if (!input.allowProviderUsage)
     return fail(
@@ -143,6 +154,9 @@ export async function executeManagedTaskPhase(input: {
     type: "create",
     resourceLimits: limits.data,
     expectedBaselineTreeHash: plan.data.project.baselineTreeHash,
+    initialDurationMs:
+      (input.initialDurationMs ?? 0) + Math.max(0, Math.ceil(performance.now() - started)),
+    ...(input.managedCompilationId ? { managedCompilationId: input.managedCompilationId } : {}),
   });
   if (!created.success) return fail(created.error);
   if (created.data.dryRun)

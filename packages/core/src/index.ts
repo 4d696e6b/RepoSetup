@@ -184,3 +184,6 @@ export * from "./executor/task-verification.js";
 export * from "./executor/task-run-types.js";
 export * from "./executor/task-run.js";
 export * from "./executor/task-managed.js";
+export * from "./tasks/compilation-context.js";
+export * from "./tasks/compilation-state.js";
+export * from "./executor/task-compilation.js";

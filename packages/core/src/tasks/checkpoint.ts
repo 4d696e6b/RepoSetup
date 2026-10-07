@@ -26,6 +26,13 @@ export const taskRunCheckpointSchema = z.strictObject({
   rootInstance: taskHashSchema,
   baselineSnapshot: taskVerifierSnapshotSchema,
   phaseVerificationPending: z.boolean(),
+  compilation: z
+    .strictObject({
+      compilationId: taskHashSchema,
+      reservation: taskProviderReservationSchema,
+      usage: taskUsageSchema,
+    })
+    .optional(),
   providerCalls: z
     .array(
       z.strictObject({
@@ -117,6 +124,18 @@ export function validateTaskRunCheckpoint(value: unknown): TaskParseResult<TaskR
     !compareTaskVerifierSnapshots(c.baselineSnapshot, c.baselineSnapshot).success ||
     ids.size !== run.tasks.length ||
     attempts.size !== run.attempts.length ||
+    (c.compilation !== undefined &&
+      !run.resourceLedger.reservations.some(
+        (r) =>
+          r.reservationId === "compilation" &&
+          r.attemptId === null &&
+          taskContentHash({
+            calls: r.calls,
+            inputTokens: r.inputTokens,
+            outputTokens: r.outputTokens,
+            costMicrousd: r.costMicrousd,
+          }) === taskContentHash(c.compilation!.reservation),
+      )) ||
     (c.providerCalls ?? []).some(
       (call, i) =>
         call.callId !== `call-${i + 1}` ||

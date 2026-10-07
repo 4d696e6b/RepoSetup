@@ -40,6 +40,7 @@ import { createQualifiedTaskVerificationAdapter } from "./verification-adapter.j
 import { verifyQualifiedTaskCheck } from "./check-qualification.js";
 import { allocateTaskVerifierScratch } from "./verifier-scratch.js";
 import { createDefaultProcessRunner } from "../execution-adapters.js";
+import { createOpenAITaskProvider } from "./provider-adapter.js";
 
 const require = createRequire(import.meta.url);
 const HASH = `sha256:${"a".repeat(64)}`;
@@ -421,102 +422,173 @@ describe("concrete trusted verification qualification", () => {
       await f.dispose();
     }
   }, 180000);
-  it("binds an executor-owned replacement and durable task acceptance to real qualified checks", async () => {
-    const f = await fixture();
-    try {
-      const stateRoot = path.join(f.parent, "state");
-      await mkdir(stateRoot, { mode: 0o700 });
-      const adapter = data(
-        await createTaskRunAdapter({
-          projectRoot: f.projectRoot,
-          stateRoot,
-          authority: f.input.compilationPolicy.authority,
-        }),
-      );
-      const execute = async (operation: Parameters<typeof executeTaskRun>[0]["operation"]) => {
-        const result = data(
-          await executeTaskRun({
-            plan: f.input.plan,
-            compilationPolicy: f.input.compilationPolicy,
-            adapter,
-            operation,
-            verification: {
-              policy: f.input.policy,
-              adapter: f.input.adapter,
-              runProcess: f.input.runProcess,
-            },
+  it.each(["portable", "managed SDK"])(
+    "binds %s executor-owned replacement and durable acceptance to real qualified checks",
+    async (mode) => {
+      const f = await fixture();
+      try {
+        const stateRoot = path.join(f.parent, "state");
+        await mkdir(stateRoot, { mode: 0o700 });
+        const adapter = data(
+          await createTaskRunAdapter({
+            projectRoot: f.projectRoot,
+            stateRoot,
+            authority: f.input.compilationPolicy.authority,
           }),
         );
-        if (result.dryRun) throw new Error("unexpected dry run");
-        return result.checkpoint;
-      };
-      const created = await execute({
-        type: "create",
-        resourceLimits: {
-          maxImplementationAttemptsPerTask: 3,
-          maxProviderCalls: 24,
-          maxInputTokens: 240000,
-          maxOutputTokens: 48000,
-          maxWallTimeMs: 1800000,
-          maxCostMicrousd: 10000000,
-        },
-      });
-      const runId = created.run.runId;
-      const begun = await execute({
-        type: "begin",
-        runId,
-        taskId: "add",
-        routingId: HASH,
-        requestedConfiguration: {
-          adapterId: "openai-responses-v1",
-          providerId: "openai-responses-v1",
-          modelProfileId: "qualified-strong",
-          nativeEffortId: "low",
-        },
-      });
-      const attempt = begun.run.attempts[0]!;
-      const before = await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8");
-      const proposal = {
-        kind: "change_set",
-        schemaVersion: 1,
-        planId: f.input.plan.planId,
-        taskId: "add",
-        attemptId: attempt.attemptId,
-        inputRevision: attempt.inputRevision,
-        changes: [
-          {
-            type: "replace_text",
-            path: "src/add.ts",
-            expectedFileHash: taskByteHash(before),
-            oldText: "a + b",
-            newText: "(a + b)",
+        const transport = vi.fn<typeof fetch>(async (_url, options) => {
+          const input = JSON.parse(JSON.parse(options!.body as string).input);
+          const before = await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8");
+          const document = {
+            kind: "task_provider_reply",
+            schemaVersion: 1,
+            ...input.identity,
+            reply: {
+              type: "change_set",
+              changeSet: {
+                kind: "change_set",
+                schemaVersion: 1,
+                ...input.identity,
+                changes: [
+                  {
+                    type: "replace_text",
+                    path: "src/add.ts",
+                    expectedFileHash: taskByteHash(before),
+                    oldText: "a + b",
+                    newText: "(a + b)",
+                  },
+                ],
+              },
+            },
+          };
+          return new Response(
+            JSON.stringify({
+              model: "gpt-6.1-sol",
+              reasoning: { effort: "low" },
+              service_tier: "default",
+              status: "completed",
+              error: null,
+              usage: { input_tokens: 10, output_tokens: 20, total_tokens: 30 },
+              output: [
+                {
+                  type: "message",
+                  status: "completed",
+                  content: [{ type: "output_text", text: JSON.stringify(document) }],
+                },
+              ],
+            }),
+            { headers: { "content-type": "application/json" } },
+          );
+        });
+        const provider =
+          mode === "managed SDK"
+            ? data(
+                createOpenAITaskProvider({
+                  model: "gpt-6.1-sol",
+                  effort: "low",
+                  environment: { OPENAI_API_KEY: "fake-real-tools-key" },
+                  transport,
+                }),
+              )
+            : undefined;
+        const execute = async (operation: Parameters<typeof executeTaskRun>[0]["operation"]) => {
+          const result = data(
+            await executeTaskRun({
+              plan: f.input.plan,
+              compilationPolicy: f.input.compilationPolicy,
+              adapter,
+              operation,
+              ...(provider ? { provider } : {}),
+              verification: {
+                policy: f.input.policy,
+                adapter: f.input.adapter,
+                runProcess: f.input.runProcess,
+              },
+            }),
+          );
+          if (result.dryRun) throw new Error("unexpected dry run");
+          return result.checkpoint;
+        };
+        const created = await execute({
+          type: "create",
+          resourceLimits: {
+            maxImplementationAttemptsPerTask: 3,
+            maxProviderCalls: 24,
+            maxInputTokens: 240000,
+            maxOutputTokens: 48000,
+            maxWallTimeMs: 1800000,
+            maxCostMicrousd: 10000000,
           },
-        ],
-      };
-      const applied = await execute({
-        type: "apply",
-        runId,
-        proposal: { ...proposal, changeSetId: taskContentHash(proposal) },
-      });
-      expect(applied.run.attempts[0]!.application.status).toBe("applied");
-      const accepted = await execute({ type: "verify", runId, taskId: "add" });
-      expect(accepted.run.tasks[0]!.status).toBe("accepted");
-      expect(accepted.run.attempts[0]!.verification!.checkedRevision).toBe(
-        applied.run.attempts[0]!.application.resultingProjectRevision,
-      );
-      expect(accepted.run.attempts[0]!.verification!.inputRevision).toBe(attempt.inputRevision);
-      expect(accepted.bindings[0]!.postimages[0]!.fileHash).toBe(
-        taskByteHash(await readFile(path.join(f.projectRoot, "src/add.ts"))),
-      );
-      expect(
-        accepted.run.attempts[0]!.verification!.checks.find((c) => c.checkId === "ts.unit")!
-          .executedTests,
-      ).toBe(1);
-      expect(await readdir(f.scratchParent)).toEqual([]);
-    } finally {
-      await f.dispose();
-    }
-  }, 180000);
+        });
+        const runId = created.run.runId;
+        const begun = await execute({
+          type: "begin",
+          runId,
+          taskId: "add",
+          routingId: HASH,
+          requestedConfiguration: provider?.configuration ?? {
+            adapterId: "openai-responses-v1",
+            providerId: "openai-responses-v1",
+            modelProfileId: "qualified-strong",
+            nativeEffortId: "low",
+          },
+        });
+        const attempt = begun.run.attempts[0]!;
+        const before = await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8");
+        const proposal = {
+          kind: "change_set",
+          schemaVersion: 1,
+          planId: f.input.plan.planId,
+          taskId: "add",
+          attemptId: attempt.attemptId,
+          inputRevision: attempt.inputRevision,
+          changes: [
+            {
+              type: "replace_text",
+              path: "src/add.ts",
+              expectedFileHash: taskByteHash(before),
+              oldText: "a + b",
+              newText: "(a + b)",
+            },
+          ],
+        };
+        const applied = await execute(
+          provider
+            ? {
+                type: "request",
+                runId,
+                allowProviderUsage: true,
+                maxOutputTokens: 4096,
+                timeoutMs: 1000,
+              }
+            : {
+                type: "apply",
+                runId,
+                proposal: { ...proposal, changeSetId: taskContentHash(proposal) },
+              },
+        );
+        expect(transport).toHaveBeenCalledTimes(provider ? 1 : 0);
+        expect(applied.run.attempts[0]!.application.status).toBe("applied");
+        const accepted = await execute({ type: "verify", runId, taskId: "add" });
+        expect(accepted.run.tasks[0]!.status).toBe("accepted");
+        expect(accepted.run.attempts[0]!.verification!.checkedRevision).toBe(
+          applied.run.attempts[0]!.application.resultingProjectRevision,
+        );
+        expect(accepted.run.attempts[0]!.verification!.inputRevision).toBe(attempt.inputRevision);
+        expect(accepted.bindings[0]!.postimages[0]!.fileHash).toBe(
+          taskByteHash(await readFile(path.join(f.projectRoot, "src/add.ts"))),
+        );
+        expect(
+          accepted.run.attempts[0]!.verification!.checks.find((c) => c.checkId === "ts.unit")!
+            .executedTests,
+        ).toBe(1);
+        expect(await readdir(f.scratchParent)).toEqual([]);
+      } finally {
+        await f.dispose();
+      }
+    },
+    180000,
+  );
   it("retains and reports an actual exit-zero verifier write, without calling review", async () => {
     const f = await fixture(true);
     try {
