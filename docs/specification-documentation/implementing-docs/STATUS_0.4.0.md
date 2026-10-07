@@ -278,3 +278,21 @@ and `cfeb84a`. E is complete; the next milestone is
 separate continuation authorization; this request completes E only. Only the
 executor may execute processes or mutate project files. Keep local verification
 free of AI-credit requirements and managed calls gated by provider allowance.
+
+## Milestone F, first slice — application and checkpoint policy
+
+Started at committed `4d27866` with a clean worktree. F is in progress; no new CLI
+command or provider capability is introduced.
+
+- Added pure whole-batch typed text preflight, exact unique replacements,
+  expected-absent creation, owned-target checks and finite encoding/privacy/byte
+  policy. Added post-application input checking that retains immutable inputs and
+  substitutes only recorded owned postimages, plus complete project-effect audit.
+- Added strict internal version 1 checkpoint/checksum and relationship validation,
+  metadata-only context bindings and ordered intent/effect records. Checksum and
+  imported pass flags do not authenticate acceptance. Concrete durable storage,
+  locking, application and interruption recovery are still required.
+- Checked default Node 22.12.0 and reused existing temporary Node 24.21.0.
+  Core tests passed **442 tests across 53 files**; workspace build, typecheck and
+  lint passed. No installation, paid call, package/version/website change or later
+  milestone implementation occurred.

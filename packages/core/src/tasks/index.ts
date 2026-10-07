@@ -23,3 +23,5 @@ export * from "./verification-policy.js";
 export * from "./verification.js";
 export * from "./verifier-files.js";
 export * from "./check-qualification.js";
+export * from "./application.js";
+export * from "./checkpoint.js";
