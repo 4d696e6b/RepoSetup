@@ -66,6 +66,7 @@ describe("golden Next.js/SQLite stack", () => {
         "sqlite",
         "--output",
         "../generated/prisma",
+        "--no-skills",
       ],
       ["pnpm", "exec", "prisma", "generate"],
       ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],

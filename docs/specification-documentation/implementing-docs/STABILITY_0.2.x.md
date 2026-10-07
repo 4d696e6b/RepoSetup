@@ -133,3 +133,26 @@ now uses the source file's line endings for that case; actual LF/CRLF file
 regressions cover it. Later local runs again hit the disk preflight as this
 machine fell below 512 MiB free; these attempts are failures, not qualification
 passes. Final CI must prove the current candidate with adequate space.
+
+### npm-only dependency and environment regressions
+
+The npm qualification found Next.js's generated Node 20 types outside Vitest
+5.0.1's `^22.0.0 || >=24.0.0` peer range (verified against the exact npm registry
+metadata). The TypeScript Next.js Vitest recipe now installs the qualified Node
+22 types with the test dependencies, including when adding Vitest to an existing
+project. It does not bypass npm dependency resolution with force flags.
+
+The pinned create-playwright source determines its installer from
+`npm_config_user_agent`. An inherited pnpm identity made `npm init playwright`
+install using pnpm inside an npm project. Child processes now discard the outer
+package-manager identity and executable paths as well as outer npm exec launch
+options, letting the invoked manager identify itself. Registry/cache settings
+are preserved. The real recipe checks the selected manager's lockfile and the
+absence of the other manager's lockfile. Final qualification remains required.
+
+Prisma 7.10.0 initialization was also observed launching `skills add` to fetch
+remote coding-agent instructions. Its exact published CLI source and help text
+support `--no-skills`; both SQLite/PostgreSQL recipes now use that opt-out.
+The real Next/SQLite check asserts no coding-agent directories were created.
+The post-fix Playwright npm recipe passes locally; the Next/SQLite npm attempt
+ran out of disk during dependency installation and is not a pass.

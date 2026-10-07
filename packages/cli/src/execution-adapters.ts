@@ -173,12 +173,17 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
   };
 }
 
-/** npm exec launch options describe the outer CLI, not child generators. */
+/** Outer package-manager identity and exec options do not describe child generators. */
 export function childProcessEnvironment(environment: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const outerLaunchKeys = new Set([
+    "npm_config_package",
+    "npm_config_call",
+    "npm_config_user_agent",
+    "npm_execpath",
+    "npm_node_execpath",
+  ]);
   return Object.fromEntries(
-    Object.entries(environment).filter(
-      ([key]) => !["npm_config_package", "npm_config_call"].includes(key.toLowerCase()),
-    ),
+    Object.entries(environment).filter(([key]) => !outerLaunchKeys.has(key.toLowerCase())),
   );
 }
 

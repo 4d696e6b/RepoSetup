@@ -190,6 +190,8 @@ export const vitestIntegration = defineIntegration({
           npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
           npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
           npmPin("vite-tsconfig-paths", QUALIFIED_VERSIONS.viteTsconfigPaths),
+          // create-next-app defaults to Node 20 types, outside Vitest 5's peer range.
+          npmPin("@types/node", QUALIFIED_VERSIONS.typesNode),
         ]
       : [
           npmPin("vitest", QUALIFIED_VERSIONS.vitest),

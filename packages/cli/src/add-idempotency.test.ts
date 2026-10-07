@@ -89,6 +89,7 @@ describe("add idempotency (built-in catalog)", () => {
                 "@testing-library/react": "16.0.0",
                 "@testing-library/dom": "10.0.0",
                 "vite-tsconfig-paths": "5.0.0",
+                "@types/node": "22.20.4",
               },
             }),
           );

@@ -125,6 +125,11 @@ describe("golden stack real execution", () => {
       );
       expect(created.exitCode, created.stderr).toBe(0);
       expect(created.stdout).toContain("Executed ");
+      expect(created.stdout).not.toContain("Installing skills");
+      const files = await readdir(cwd);
+      for (const agentDir of [".agents", ".claude", ".cursor", ".windsurf"]) {
+        expect(files).not.toContain(agentDir);
+      }
 
       await access(path.join(cwd, "package.json"));
       await access(path.join(cwd, "lib/prisma.ts"));
@@ -260,6 +265,14 @@ describe("golden stack real execution", () => {
 
     await access(path.join(cwd, "playwright.config.ts"));
     await access(path.join(cwd, "tests", "example.spec.ts"));
+    const files = await readdir(cwd);
+    if (process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm") {
+      expect(files).toContain("package-lock.json");
+      expect(files).not.toContain("pnpm-lock.yaml");
+    } else {
+      expect(files).toContain("pnpm-lock.yaml");
+      expect(files).not.toContain("package-lock.json");
+    }
     const pkg = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8")) as {
       devDependencies?: Record<string, string>;
     };

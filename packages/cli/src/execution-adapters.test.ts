@@ -109,6 +109,9 @@ describe("nested npm execution environment", () => {
     const original = {
       npm_config_package: "rsetup.tgz",
       NPM_CONFIG_CALL: "outer command",
+      npm_config_user_agent: "pnpm/12.5.1 npm/? node/v24.21.0",
+      NPM_EXECPATH: "outer/pnpm.cjs",
+      npm_node_execpath: "outer/node",
       npm_config_cache: "cache",
       npm_config_registry: "https://registry.npmjs.org",
       PATH: "tools",

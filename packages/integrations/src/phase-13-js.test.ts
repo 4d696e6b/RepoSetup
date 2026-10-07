@@ -533,6 +533,7 @@ describe("Phase 13 example stacks", () => {
           "postgresql",
           "--output",
           "../generated/prisma",
+          "--no-skills",
         ],
       ]),
     );

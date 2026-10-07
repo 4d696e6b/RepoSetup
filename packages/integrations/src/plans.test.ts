@@ -222,6 +222,7 @@ describe("integration plans", () => {
         "sqlite",
         "--output",
         "../generated/prisma",
+        "--no-skills",
       ],
       ["pnpm", "exec", "prisma", "generate"],
     ]);
@@ -246,6 +247,7 @@ describe("integration plans", () => {
         "@testing-library/react@16.3.3",
         "@testing-library/dom@10.4.2",
         "vite-tsconfig-paths@6.1.1",
+        "@types/node@22.20.4",
       ],
       ["pnpm", "exec", "vitest", "run"],
     ]);
@@ -338,6 +340,7 @@ describe("integration plans", () => {
         "postgresql",
         "--output",
         "../generated/prisma",
+        "--no-skills",
       ],
       ["pnpm", "exec", "prisma", "generate"],
     ]);

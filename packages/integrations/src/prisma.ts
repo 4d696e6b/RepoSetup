@@ -169,7 +169,8 @@ function sqlitePlan(context: PlanContext) {
     execLocalBin(
       context,
       "prisma",
-      ["init", "--datasource-provider", "sqlite", "--output", "../generated/prisma"],
+      // Verified Prisma 7.10.0 CLI flag: avoid fetching unrelated agent instructions.
+      ["init", "--datasource-provider", "sqlite", "--output", "../generated/prisma", "--no-skills"],
       { description: "Initialize Prisma with the SQLite provider" },
     ),
     {
@@ -221,7 +222,14 @@ function postgresPlan(context: PlanContext) {
     execLocalBin(
       context,
       "prisma",
-      ["init", "--datasource-provider", "postgresql", "--output", "../generated/prisma"],
+      [
+        "init",
+        "--datasource-provider",
+        "postgresql",
+        "--output",
+        "../generated/prisma",
+        "--no-skills",
+      ],
       { description: "Initialize Prisma with the PostgreSQL provider" },
     ),
     {
