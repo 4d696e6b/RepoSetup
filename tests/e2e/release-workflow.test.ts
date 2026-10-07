@@ -17,13 +17,10 @@ describe("release publishing workflow", () => {
     expect(workflow).toContain("check-release-qualification.mjs");
     expect(workflow).toContain("artifact-ids: ${{ steps.qualification.outputs.artifact_id }}");
     expect(workflow).toContain("run-id: ${{ steps.qualification.outputs.run_id }}");
-    expect(workflow).toContain("merge-multiple: true");
-    expect(workflow).toContain("ref: v0.2.0");
-    expect(workflow).toContain('test "$GITHUB_REF" = "refs/heads/main"');
-    expect(workflow).toContain("ee93373c59615a197d0e724353738fd3e695a1a2");
-    expect(workflow).toContain('GITHUB_REF=refs/tags/v0.2.0 GITHUB_SHA="$RELEASE_SOURCE_SHA"');
+    expect(workflow.match(/merge-multiple: true/g)).toHaveLength(2);
     expect(workflow).toContain("verify-packed-artifact.mjs --directory candidate");
-    expect(workflow).toContain("EXPECTED_SOURCE_SHA: ${{ steps.tag.outputs.sha }}");
+    expect(workflow).toContain("EXPECTED_SOURCE_SHA: ${{ github.sha }}");
+    expect(workflow).not.toContain("ref: v0.2.0");
     expect(workflow).toContain("publish-qualified-artifact.mjs");
     expect(workflow).toContain("verify-registry-release.mjs");
     expect(workflow).not.toContain("pnpm build");
