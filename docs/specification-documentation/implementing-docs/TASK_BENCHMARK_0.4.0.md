@@ -251,3 +251,16 @@ incomplete valid campaign; exit 2 denotes rejected input. Recording the full liv
 75-trial campaign, authenticating retained evidence and joining E's qualified
 managed verifier remain unimplemented/unrun I work. Unit-test campaigns are
 synthetic accounting inputs, never benchmark results or model-quality evidence.
+
+## Offline packed-contract test scope
+
+`tests/e2e/task-packed.test.ts` uses the actual packed CLI bytes with dependencies
+hydrated from the preinstalled frozen workspace, without npm installation. It
+checks the two declared bin targets via Node, local task compile/next/status,
+managed preview and missing-key/allowance failures, rejected executable/broader
+scope inputs, project/state preservation and existing preset/config/selection
+dry-runs. Child environments carry no credentials and have no project tools on
+PATH. Its metadata records artifact/source/lock/host identities and keeps
+qualification false. This does not replace installed-package, native shell, real
+legacy installation or Linux/platform acceptance. Full fixtures, report and packed
+tests run serially under `pnpm test:tasks:fixtures`; normal CI needs no API key.

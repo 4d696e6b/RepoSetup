@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 implementation status
 
-Last updated: 2026-10-07.
+Last updated: 2026-10-08.
 
 ## Current position
 
@@ -943,7 +943,7 @@ Validation passed on Node 24.21.0/macOS arm64: workspace build/typecheck/lint,
 separate task-runner typecheck, changed-document formatting and Git whitespace
 checks. Six offline e2e cases across two files pass, including the report command;
 16 core boundary/accounting tests across two files pass. Thirteen accounting tests
-cover including a synthetic 75-slot matrix, shared compile charging, failed
+cover a synthetic 75-slot matrix, shared compile charging, failed
 compilation, failed repairs, paired setup blockers, missing records, unknown usage,
 subset accounting and rejection of mismatched plan/authority/order/request IDs,
 missing holdouts, zero tests, forbidden effects and command fields. These are
@@ -956,3 +956,48 @@ checks, live capability/native-effort qualification and authorized provider smok
 The report reducer validates metadata but cannot authenticate an evaluator/provider
 artifact; genuine qualification requires independently retained execution evidence.
 No model calls or cost/savings claim occurred. Milestone I remains in progress.
+
+## Milestone I — offline extracted artifact and compatibility slice (2026-10-07–08)
+
+Added serial packed-contract tests that pack the existing unchanged CLI version,
+identify its bytes, extract it and hydrate dependencies from the already installed
+frozen workspace. No npm/project dependency installation or lifecycle script is
+run. Both `rsetup` and `reposetup` manifest bin targets execute through Node with an
+empty project-tools PATH and no inherited credentials. This is extracted artifact
+contract evidence, not npm installation or native shell alias qualification.
+
+The security fixture exercises local compile, advisory next/status, their zero
+effect previews, managed decomposition preview, missing allowance/key rejection
+and executable/broader/traversal draft rejection. Public README instructions stay
+inert and the denied synthetic marker never appears in output. Hash inventories
+prove project preservation; the private state directory stays empty. Preset,
+stack-config, selection-token and selection-file create dry-runs retain existing
+JSON plan behavior and preserve files. Real installations remain outside this
+no-install slice. The suite emits bounded artifact/source/lock/host metadata with
+qualification explicitly false, including dirty-source disclosure.
+
+Validation: 499 core tests across 58 files and 155 selected CLI tests across 12
+files pass on Node 24.21.0/macOS arm64. The CLI selection covers portable/managed
+commands, provider/catalog/repair boundaries, selection, preview, intended doctor,
+curated repair, existing CLI behavior and concrete process adapters. The combined serial e2e run passes 10 cases across three files; workspace
+typecheck/lint, separate task-runner typecheck, changed-document formatting and
+Git whitespace checks pass. Build passed in the preceding accounting slice; this
+slice changes only tests/docs. Initial test assumptions
+about optional process-result flags, handoff envelope fields, selection fixture ID
+and managed preview/state prerequisites were corrected against current source;
+no product behavior was changed to make those tests pass.
+
+The inspected artifact payload hash was
+`sha256:095fa1ccba94a9437cfd7c2bce909f6ae48bf679d76086721a8043d96b5c972c`;
+pre-commit test metadata identified source `dab365e` with dirty test-source
+disclosure, inherited package `0.3.0-alpha.1`, Node 24.21.0 and the frozen workspace
+lock. This is local development evidence, not candidate/release acceptance.
+
+Remaining I work: full managed verifier qualification for the five fixtures, a
+real retained-evidence trial orchestration/campaign, npm-installed artifact and
+full legacy installation journeys, Linux x64/native shell/platform evidence,
+production capability/native-effort qualification and separately authorized live
+provider/profile smoke. None is waived or inferred from mocks/extracted tests.
+Milestone I remains in progress; the next milestone is J after I's required gates.
+No API key, paid call, system installation, rollback, package version change,
+website source change, merge, push or publication occurred.
