@@ -48,7 +48,12 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 if (process.env.REPOSETUP_NO_LISTEN !== "1") {
-  const server = app.listen(Number(process.env.PORT ?? "3000"), () => {
+  const server = app.listen(Number(process.env.PORT ?? "3000"), (error?: Error) => {
+    if (error !== undefined) {
+      console.error(error);
+      process.exitCode = 1;
+      return;
+    }
     const address = server.address();
     if (address !== null && typeof address !== "string") {
       console.log("http://localhost:" + address.port);
@@ -97,7 +102,12 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-const server = app.listen(3000, () => {
+const server = app.listen(3000, (error) => {
+  if (error !== undefined) {
+    console.error(error);
+    process.exitCode = 1;
+    return;
+  }
   const address = server.address();
   if (address !== null && typeof address !== "string") {
     console.log("http://localhost:" + address.port);

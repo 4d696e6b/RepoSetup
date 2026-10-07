@@ -120,6 +120,22 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
     expect(result.exitCode, `${command}\n${result.stdout}\n${result.stderr}`).toBe(0);
   }
 
+  if (presetId === "express-postgres") {
+    const occupied = await occupyLoopbackPort(3000);
+    try {
+      const collision = await runBoundedProcess("pnpm", ["start"], projectDir, 20_000);
+      steps.push({
+        name: "production start refuses an occupied port",
+        exitCode: collision.exitCode,
+        expectedFailure: true,
+      });
+      expect(collision.exitCode).not.toBe(0);
+      expect(`${collision.stdout}\n${collision.stderr}`).toContain("EADDRINUSE");
+    } finally {
+      await closeServer(occupied);
+    }
+  }
+
   const added = await cli(bin, ["--no-color", "add", integrationId, "--yes"], { cwd: projectDir });
   steps.push({ name: "add", exitCode: added.exitCode });
   expect(added.exitCode, `${added.stdout}\n${added.stderr}`).toBe(0);
