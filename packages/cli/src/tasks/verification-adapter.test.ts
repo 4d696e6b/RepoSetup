@@ -102,6 +102,13 @@ async function fixture(lintEffect = false) {
       "@reposetup/registry",
     ])
       await rm(path.join(isolatedTools, ".pnpm/node_modules", workspace));
+    // The CLI-only SDK is outside the verifier dependency closure. Its generated
+    // credentials.* API files intentionally fail the unchanged privacy guard.
+    // Build this verifier-only fixture without that unrelated package/link.
+    for (const entry of await readdir(path.join(isolatedTools, ".pnpm")))
+      if (entry.startsWith("openai@"))
+        await rm(path.join(isolatedTools, ".pnpm", entry), { recursive: true });
+    await rm(path.join(isolatedTools, ".pnpm/node_modules/openai"), { force: true });
     const roots = {
       runtime: await realpath(path.dirname(process.execPath)),
       tools: isolatedTools,

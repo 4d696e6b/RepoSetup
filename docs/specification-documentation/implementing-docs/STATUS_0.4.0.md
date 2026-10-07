@@ -363,3 +363,33 @@ implement G or later work under the F request. Provider SDK/model/account and us
 allowance qualification remain open; any live paid call needs separate authorization.
 Linux/packed/benchmark/release qualification remains I/J. No system/dependency
 installation, package version bump, website change, merge or publication occurred.
+
+## Milestone G, first slice — researched SDK transport
+
+Started from committed `d3fdad5` on the expected branch with a clean worktree.
+G remains incomplete. Added provider-neutral request/observation contracts in core
+and a CLI-only official Responses SDK adapter with strict draft/proposal wire
+schemas, environment-only credentials, bounded fixed-origin HTTP, cancellation,
+no tools/retries, usage provenance and conservative cost estimates. The SDK is
+external to the CLI bundle and pinned in the lockfile; no package version changed.
+
+The verifier fixture now excludes the unrelated CLI-only SDK from its isolated
+toolchain. Its generated credentials API filenames triggered the existing private
+path guard when the fixture copied the entire workspace dependency tree. Production
+privacy/closure rules are unchanged. The initially selected newest SDK failed pnpm's
+publication-age policy; it was replaced by 7.28.0 without retaining an exception.
+
+Validation uses existing temporary Node 24.21.0, not the Node 22 system default.
+Targeted fake transport and real verifier qualification, build/typecheck/lint results
+are recorded after execution below. No live provider call or paid smoke was made.
+Next G work: executor-owned durable call reservations, context-request handling and
+reviewed managed run CLI. Live provider qualification still needs separate approval.
+
+First-slice validation: **15 fake SDK transport tests** and **442 core tests**
+passed. Full workspace build, typecheck and lint passed on Node 24.21.0. The
+frozen-lockfile install passes pnpm supply-chain policies with lifecycle scripts
+disabled; license review found no unreviewed licenses. The real verifier fixture
+rerun remains in progress at this slice's commit; its result must be recorded before
+G completion. The first broad CLI run failed four fixture cases because it copied
+the unrelated SDK; that failure is preserved here and the fixture correction is
+under validation. Documentation formatting and whitespace checks passed.

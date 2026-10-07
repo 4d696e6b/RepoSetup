@@ -147,3 +147,43 @@ Milestone A freezes the boundary and records these questions. Managed support,
 exact model catalog entries, provider spending and release qualification remain
 blocked on the listed later evidence. Local functionality needs no AI credits;
 managed requests need explicit provider credentials and usage allowance.
+
+## Milestone G transport implementation, 2026-10-07
+
+The CLI now pins the official `openai` SDK at **7.28.0**, with an explicit
+`zod` **4.6.5** dependency for wire-schema generation. npm package metadata and
+installed SDK declarations confirm Node >=22 support and Apache-2.0 licensing;
+RepoSetup validation uses Node **24.21.0**. Lifecycle scripts are disabled. The
+newest 7.30.0 was initially inspected, but its publication age failed pnpm's
+supply-chain policy; the automatically added exception was removed and the older
+7.28.0 selected. No policy exception is retained.
+
+Official documentation was searched and fetched again on 2026-10-07:
+
+- [TypeScript SDK](https://developers.openai.com/api/reference/typescript?lang=typescript): explicit `maxRetries: 0`, deadline and AbortSignal support; SDK defaults must not define the task allowance.
+- [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs): object roots, required properties and `additionalProperties: false`. Only the optional source `lineRange` uses explicit nullable wire representation. Strict domain validation remains authoritative; unexpected keys are never discarded.
+- [Luna](https://developers.openai.com/api/docs/models/gpt-6-luna), [Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol) and [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra): documented API identifiers/efforts remain as previously researched. These are explicit transport choices, not qualified capability/routing entries.
+- [Data controls](https://developers.openai.com/api/docs/guides/your-data): `store: false` does not remove abuse-monitoring retention or encrypted prompt-cache state, which may remain up to 24 hours. The adapter leaves cache retention unspecified rather than assuming `in_memory` is accepted by these model families.
+
+Current standard input/output prices per million tokens remain Luna $0.10/$0.50,
+Sol $2/$10 and Astra $10/$50. Cache writes cost 1.25 times standard input;
+long-context pricing changes above 272K input tokens. Fixed default-tier requests
+reserve all input at the cache-write rate plus a conservative 10% regional margin,
+with byte-based input bounds below the long-context threshold. This is an estimated
+upper allowance, not a reported bill or promise of account-specific pricing.
+Cache-write attribution/account controls remain a live qualification question.
+
+The adapter permits only POST to the fixed Responses endpoint, rejects redirects,
+disables storage/background/streaming/tools/retries and bounds the entire HTTP
+response to 1 MiB. Requests are transient, immutable and single-dispatch. SDK
+logging is disabled regardless of environment log settings; endpoint/org/project
+settings are not taken from configuration. Raw provider errors, headers, refusal
+text and reasoning content are not returned to task state. Cancellation/disconnect
+can still incur unreported usage. A model proposes ChangeSet text/identities;
+only its canonical digest is derived locally. No command-capable SDK tools are
+registered. Fake HTTP tests use the real SDK, with no provider calls.
+
+Executor reservation/state orchestration, managed CLI integration and separately
+authorized account/schema/usage/effective-configuration smoke evidence remain
+required before G can be marked complete. H model qualification/routing and I/J
+benchmark/platform/release gates remain separate.

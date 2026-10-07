@@ -25,3 +25,4 @@ export * from "./verifier-files.js";
 export * from "./check-qualification.js";
 export * from "./application.js";
 export * from "./checkpoint.js";
+export * from "./provider.js";

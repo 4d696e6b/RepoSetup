@@ -6,6 +6,6 @@ export default defineConfig({
   dts: true,
   clean: true,
   sourcemap: true,
-  external: ["commander", "@inquirer/prompts"],
+  external: ["commander", "@inquirer/prompts", "openai"],
   noExternal: ["@reposetup/core", "@reposetup/registry", "@reposetup/integrations", "zod"],
 });
