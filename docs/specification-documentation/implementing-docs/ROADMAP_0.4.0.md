@@ -121,9 +121,11 @@ and release qualification retain later gates.
 - [x] Support structured drafts, bounded context requests and typed ChangeSet proposals.
 - [x] Handle credentials, cancellation, incomplete/refused responses, call/output limits and usage provenance.
 - [x] Add task run with reviewed context/provider/check/budget summary.
-- [ ] Complete separately authorized live provider/profile smoke; no paid calls have been made.
+- [x] Qualify managed compilation, a real bug fix, real Git/tool checks and durable final-phase acceptance without API keys, using the pinned SDK with simulated HTTP.
 
-**Likely modules:** CLI provider adapter/run handler and dependency packaging. **Dependencies:** C, E, F. **Tests:** fake API boundary failures plus separately authorized live smoke evidence. **Done:** no model command reaches a process runner; one supported profile completes real tasks.
+**Likely modules:** CLI provider adapter/run handler and dependency packaging. **Dependencies:** C, E, F. **Tests:** fake API boundary failures and joined no-key CLI/Git/tool/state qualification. **Done:** no model command reaches a process runner; the reviewed local fixture completes compilation, scoped changes and independent final acceptance with simulated provider responses.
+
+**Owner-approved scope amendment, 2026-10-07:** G is complete for offline implementation following the request to finish without API access. The former live smoke condition is transferred to I and remains mandatory for J's managed candidate qualification. It is deferred, not passed or waived. Account/model access, remote strict-schema acceptance, effective configuration and actual usage remain unconfirmed; no paid call occurred. See the [smoke protocol](./TASK_PROVIDER_SMOKE_0.4.0.md) and [status evidence](./STATUS_0.4.0.md). H is next; G completion neither enables unqualified routing profiles nor authorizes provider spending.
 
 ## Milestone H — routing and targeted escalation
 
@@ -144,6 +146,7 @@ and release qualification retain later gates.
 - [ ] Compare whole-phase strong, compiled fixed-strong and compiled routed treatments.
 - [ ] Include all compilation, context expansion, retries and verification overhead and every failed trial.
 - [ ] Qualify packed aliases, legacy workflows and task boundaries across the advertised platforms.
+- [ ] Complete the separately authorized live provider/profile smoke transferred from G: record actual account/model/schema acceptance, effective configuration/usage and independent task/final-phase acceptance under the [finite protocol](./TASK_PROVIDER_SMOKE_0.4.0.md).
 
 **Likely modules:** task e2e fixtures, benchmark runner and targeted CI jobs. **Dependencies:** D–H. **Tests:** end-to-end acceptance, failure injection, drift, ownership and compatibility. **Done:** reproducible reports with limited, evidence-backed claims; ordinary CI needs no AI credentials.
 
@@ -155,6 +158,7 @@ and release qualification retain later gates.
 - [ ] Review safety, dependency licenses, provider research and exact support scope.
 - [ ] Intentionally version a candidate only after implementation; test the same identified packed artifact.
 - [ ] Complete required repeated-source/platform qualification and established soak gates.
+- [ ] Require I's live provider/profile smoke evidence before qualifying the managed candidate; offline G completion cannot substitute for that evidence or authorize spending.
 
 **Likely modules:** release documentation, package metadata and qualification workflows. **Dependencies:** I. **Tests:** complete required quality checks and artifact acceptance. **Done:** all gates pass; publication remains separately authorized.
 
@@ -172,4 +176,5 @@ Each implementation slice must record targeted tests, `pnpm typecheck`, `pnpm li
 - Dry-run performs no writes, provider calls or subprocesses.
 - State, interruption, partial effects, secrets and budgets have passing regression coverage.
 - Packed/platform gates and a held-out benchmark support the documented experimental contract.
+- I's separately authorized live provider/profile smoke passes before J's managed candidate qualification; offline tests cannot establish remote provider support.
 - MCP, ML, parallelism, automatic worktrees/rollback, local models and broad provider support remain deferred.

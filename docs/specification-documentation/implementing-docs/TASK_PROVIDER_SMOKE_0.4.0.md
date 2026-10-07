@@ -1,10 +1,13 @@
-# Milestone G live smoke protocol
+# Live provider smoke protocol — Milestone I / J release gate
 
 Status: **not authorized or run**. All existing transport tests use fake HTTP.
 This is a finite qualification procedure, not a benchmark, routing qualification
 or release endorsement. The owner expressly prohibited paid calls in the initial
-request. Roadmap G requires separately authorized live smoke evidence; continuation
-instructions do not override that boundary.
+request. On 2026-10-07 the owner requested completion of G without API access.
+G now closes offline implementation; its original live smoke condition moves to
+I and remains mandatory before J's managed candidate qualification. This changes
+milestone ownership, not the required evidence or spending boundary. No live
+condition has passed, and no provider call is authorized by this amendment.
 
 ## Testing without an API key
 
@@ -41,8 +44,9 @@ adapters with the fake SDK transport; the default credential-backed factory and 
 packed binary are not exercised by this test. Lockfile/profile evidence covers the
 current metadata checks, not an installed-dependency/lockfile consistency guarantee.
 This checks local CLI integration and regression behavior, not model quality, remote
-schema acceptance, account access or billing. It cannot close the separately
-authorized live gate below. There is no charge or requirement to buy credits for
+schema acceptance, account access or billing. It satisfies G's amended offline
+integration condition, but cannot close I/J's separately authorized live gate
+below. There is no charge or requirement to buy credits for
 the offline test. Run expensive concrete verifier fixtures serially to avoid the
 previously observed overlapping-job timeout.
 
@@ -102,7 +106,8 @@ run ID/status. Record incomplete/refused/access/cancellation failures honestly a
 retain effects/unknown allowance for manual review. Actual account retention/cache,
 model availability and schema behavior remain observations, not inferred guarantees.
 
-A successful two-call run plus the existing offline boundary failures can close G's
-real task gate. A failed or unapproved run cannot. Cancellation/unknown usage is
+A successful two-call run plus the existing offline boundary failures can close I's
+live provider/profile smoke condition, required before J's managed candidate
+qualification. A failed, unapproved or simulated run cannot. Cancellation/unknown usage is
 covered offline; this budget does not authorize extra failure probes. H routing,
 capability and repair, and I/J platform/packed/benchmark/release remain open.

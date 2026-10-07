@@ -324,6 +324,11 @@ Local draft validation, context preparation, handoff and trusted local verificat
 
 ### Milestone G managed run (experimental, live qualification pending)
 
+G's offline implementation is complete under the owner's 2026-10-07 scope amendment.
+The live provider/profile smoke is now I's responsibility and remains required
+before J's managed candidate qualification. This amendment does not change command
+behavior, credential requirements or the runtime's unconfirmed live qualification.
+
 `task run` now executes a reviewed phase serially. Required inputs are `--review`,
 `--plan`, managed `--preferences`, a separate `--authority` fixed-check manifest,
 `--state-root`, `--scratch-root`, and explicit native `--effort`. The transport is

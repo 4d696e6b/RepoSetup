@@ -130,7 +130,7 @@ in the default dataset.
 - **G:** Pin SDK version with Node 24 compatibility, dependency/license review,
   complete strict-schema translation and fake-response/cancellation tests. No SDK
   version has been installed or qualified in A.
-- **G:** Qualify account/model access, effective-configuration reporting, uncertain
+- **I / J release gate (transferred from G on 2026-10-07):** Qualify account/model access, effective-configuration reporting, uncertain
   usage after disconnect, response IDs and cancellation using separately
   authorized live smoke calls. This request grants no such authorization.
 - **G/H:** Reconfirm snapshot IDs or explicitly record mutable API aliases; freeze
@@ -183,10 +183,11 @@ can still incur unreported usage. A model proposes ChangeSet text/identities;
 only its canonical digest is derived locally. No command-capable SDK tools are
 registered. Fake HTTP tests use the real SDK, with no provider calls.
 
-Executor reservation/state orchestration, managed CLI integration and separately
-authorized account/schema/usage/effective-configuration smoke evidence remain
-required before G can be marked complete. H model qualification/routing and I/J
-benchmark/platform/release gates remain separate.
+At the first transport slice, executor reservation/state orchestration, managed CLI
+integration and separately authorized account/schema/usage/effective-configuration
+smoke evidence were required before G completion. The orchestration follow-up and
+owner-approved offline scope amendment below record their current disposition.
+H model qualification/routing and I/J benchmark/platform/release gates remain separate.
 
 ### G orchestration follow-up
 
@@ -196,4 +197,17 @@ CI uses the real pinned SDK with fake HTTP and real pinned verifier tools, witho
 credentials or credits. This evidence qualifies local transport/orchestration, not
 account/model access or actual provider acceptance of the strict schema. Live smoke
 remains separately authorized; see the [concrete smoke protocol](./TASK_PROVIDER_SMOKE_0.4.0.md).
-A supported profile completing real provider tasks is still required to close G.
+A supported profile completing real provider tasks remains required by I/J's live
+qualification gate, not established by this offline evidence.
+
+### Owner-approved offline G completion — 2026-10-07
+
+The owner requested finishing G without API access. G's implementation and no-key
+integration acceptance are complete; the original live smoke condition is now
+owned by I and required before J's managed candidate qualification. This supersedes
+the earlier G gate assignment without claiming it passed. Account/model/schema,
+effective-configuration/usage and retention questions remain unresolved. Production
+runtime still reports live qualification as unconfirmed and requires credentials
+and explicit usage allowance for managed calls. H's model capability qualification
+remains separate. No API request, spending authorization or paid call follows from
+this milestone amendment.

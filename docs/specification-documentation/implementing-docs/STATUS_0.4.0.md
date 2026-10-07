@@ -4,17 +4,21 @@ Last updated: 2026-10-07.
 
 ## Current position
 
-**Milestones A–F are complete for the reviewed local qualification scope.** Core
+**Milestones A–G are complete for the reviewed local/offline implementation scope.** Core
 schemas/compiler/context, portable compile/next/status, trusted checks, scoped text
 application, private durable state and interruption reconciliation are implemented.
 Actual tool/state qualification is macOS arm64 on Node 24.21.0; Linux/packed gates
 remain I/J. E/F application/acceptance APIs now support G's reviewed managed CLI;
 D handoff commands stay advisory.
-Milestone G is in progress: the provider transport and managed coding run are
-implemented, including managed decomposition. Separately authorized live provider
-qualification remains open. The joined no-key test now demonstrates compilation,
+Milestone G is complete for offline implementation following the owner's
+2026-10-07 request to finish without API access. Provider transport, managed coding
+and decomposition are implemented. G's original separately authorized live provider
+condition is transferred to I and required before J's managed candidate qualification;
+it remains unrun and unconfirmed. The joined no-key test demonstrates compilation,
 an actual bug fix, real qualified checks and durable final-phase acceptance through
 the managed CLI and real Git with simulated HTTP. See the [roadmap](./ROADMAP_0.4.0.md).
+H is the next milestone and remains unimplemented. Historical records below retain
+the original G gate; the final scope amendment supersedes that gate assignment.
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -43,7 +47,7 @@ the managed CLI and real Git with simulated HTTP. See the [roadmap](./ROADMAP_0.
 - [x] D — Portable compile/next/status CLI, reviewed phase selection and advisory handoff identities.
 - [x] E — Serial executor, qualified fixed checks, complete admitted dependency inventories, private scratch/effect audits and live task/final-phase acceptance; reviewed local fixture validated.
 - [x] F — Private CAS state, project leases, scoped text/parent effects, original-input/postimage acceptance and honest interruption recovery.
-- [ ] G — Single managed provider adapter.
+- [x] G — Single managed provider adapter, complete for offline implementation and no-key integration; live qualification transferred to I/J by the owner.
 - [ ] H — Model/effort routing and targeted escalation.
 - [ ] I — Packed/platform qualification and held-out benchmark.
 - [ ] J — Experimental candidate qualification.
@@ -676,3 +680,45 @@ requires a transient API credential and explicit spending authorization under th
 closes or the owner explicitly changes that milestone boundary. No H/later code,
 paid call, dependency/system installation, package bump, website source change,
 merge or publication occurred. Commit this validation record before continuing.
+
+### G complete offline — owner-approved scope amendment
+
+On 2026-10-07 the owner explicitly requested finishing G without API access,
+following the presented option to close offline implementation and defer live
+qualification to the release gate. Reinspected the clean expected branch at
+**`8d18b0b`**, actual instructions and current CLI source: managed previews still
+report `liveQualification: "unconfirmed"`, and real provider construction still
+requires an environment credential. No runtime behavior was changed.
+
+Reconciled the roadmap, smoke protocol, provider research, support profile, product,
+architecture, CLI specification and documentation index. G now closes the completed
+local SDK/compilation/coding/CLI/Git/tool/state implementation. Its original live
+provider/profile smoke condition is explicitly transferred to I and remains required
+before J's managed candidate qualification. The condition was deferred, not passed
+or waived. Earlier incomplete-G records remain historical evidence of the former
+gate; this owner-approved amendment supersedes their milestone assignment.
+
+Acceptance evidence remains the **845 passing tests across 107 files** recorded in
+`8d18b0b` for unchanged runtime source, including all **244 CLI tests** and the joined
+no-key actual bug fix with real Git, frozen independent oracles, qualified tool
+checks and durable final-phase acceptance. SDK responses/configuration/IDs/usage
+remain simulated; this establishes local integration, not remote schema/account,
+model quality, billing or effective-configuration qualification. No real key or paid
+call is needed to close this amended G scope. Real managed requests still need
+credentials and explicit provider usage allowance.
+
+**Next milestone: H — model/effort routing and targeted escalation.** H is not
+implemented in this amendment. Its qualified capability/catalog work and I's live
+smoke, frozen benchmark/platform/packed evidence and J's candidate/release gates
+remain open. No provider spending, feature code, dependency/system installation,
+package/version bump, website source change, branch merge or publication is
+authorized or performed by this documentation-only completion.
+
+Completion validation: checked default Node **22.12.0** first, then used the existing
+temporary **Node 24.21.0** / pnpm **12.5.1**. Workspace `pnpm typecheck` and `pnpm lint`
+passed; explicit Prettier checks, **88 local link targets across 9 changed Markdown
+documents** and Git whitespace checks passed. Only specification Markdown changed.
+The just-recorded full suite and prior build remain evidence for unchanged runtime
+source; feature tests/build were not repeated for this documentation-only amendment.
+No validation failure remains for G's amended offline scope. Commit this completed
+scope record before any later implementation.

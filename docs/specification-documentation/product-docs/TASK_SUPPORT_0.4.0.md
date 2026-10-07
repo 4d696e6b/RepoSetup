@@ -5,8 +5,10 @@ Milestone A specification frozen 2026-10-06; Milestones E/F implementation updat
 implemented. Qualification evidence covers the reviewed macOS arm64 / Node 24.21.0
 single-package fixture, including the TypeScript ESLint parser/plugin. Linux x64,
 packed artifacts and broader project configurations retain their I/J gates.
-G implements managed compilation/coding with fake-SDK local qualification; real
-provider/profile completion remains unqualified pending separately authorized smoke.
+G is complete for offline managed compilation/coding implementation and no-key
+SDK/CLI/Git/tool/state qualification under the owner's 2026-10-07 scope amendment.
+Real provider/profile completion remains unqualified pending separately authorized
+smoke in I, required before J's managed candidate qualification.
 F implements the internal private-state and scoped application boundary; local
 qualification passed as recorded in status.
 Milestone D's portable compile/next/status commands remain advisory; no task
@@ -182,10 +184,12 @@ Milestones C/E/F must demonstrate secret exclusions and content screening before
 upload, canonical scope enforcement, stale hash rejection, check trust drift,
 zero/filtered tests, report overflow, verifier side effects, environment filtering,
 missing tools, concurrency locks, cancellation and honest partial-write recovery.
-Milestone G needs fake boundary tests plus separately authorized live smoke
-evidence; H needs qualified model/effort/cost catalogs; I needs the frozen fixture
-artifacts and platform evidence. Profile constants, check IDs and portable
-envelopes are frozen here; these later gates remain open.
+Milestone G's fake boundary tests and no-key integration condition passed.
+Under the owner's 2026-10-07 amendment, I now owns G's former separately authorized
+live smoke condition, which remains required before J's managed candidate
+qualification. H needs qualified model/effort/cost catalogs; I also needs the
+frozen fixture artifacts and platform evidence. Profile constants, check IDs and
+portable envelopes are frozen here; these later gates remain open.
 
 ## Milestone E research refresh — 2026-10-06
 
@@ -415,6 +419,8 @@ routing until H. Fake HTTP with the actual SDK verifies local orchestration; act
 TypeScript/ESLint/Vitest fixtures verify application/acceptance. Neither establishes
 account access or live provider schema/usage/effective-configuration behavior.
 The [smoke protocol](../implementing-docs/TASK_PROVIDER_SMOKE_0.4.0.md) defines the
-remaining G gate and its separately authorized allowance. Linux/packed/benchmark
+remaining I/J live gate and its separately authorized allowance. G's offline
+completion does not qualify remote provider support or remove production credential
+and usage-allowance requirements. Linux/packed/benchmark
 and release remain I/J. Host-private state and filesystem audits are not an OS
 sandbox or protection against hostile same-UID rewrites/concurrent renames.
