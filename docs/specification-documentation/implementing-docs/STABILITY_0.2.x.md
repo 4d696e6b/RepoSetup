@@ -188,6 +188,14 @@ focused Windows run and full matrix must verify it. Vitest documents the
 failures were fixed in [Angular CLI's Vitest integration](https://github.com/angular/angular-cli/pull/33567);
 that is supporting context, not evidence that RepoSetup's failure is fixed.
 
+All twelve focused Next/Vitest cases passed at `448beb4`, including both
+Windows/npm cases. Full qualification on that product revision is still required.
+Parsing downloaded evidence exposed another Windows-only defect: the inline
+workflow command appended a literal backslash-n rather than a JSON newline.
+Golden/platform writers now use a shell-independent newline and parse each JSON
+file before upload. The `evidence-only` diagnostic scope checks that writer and
+is explicitly labeled; it does not execute or qualify generated applications.
+
 ## Reproducing the stability checks
 
 Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.

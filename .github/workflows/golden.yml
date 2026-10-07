@@ -11,7 +11,7 @@ on:
         description: Qualification scope (only full runs qualify the complete matrix)
         type: choice
         default: full
-        options: [full, next-vitest]
+        options: [full, next-vitest, evidence-only]
 
 jobs:
   golden:
@@ -46,9 +46,11 @@ jobs:
         with:
           enable-cache: true
       - run: pnpm install --frozen-lockfile
+        if: ${{ inputs.scope != 'evidence-only' }}
       - run: pnpm build
+        if: ${{ inputs.scope != 'evidence-only' }}
       - run: pnpm test:golden
-        if: ${{ inputs.scope != 'next-vitest' }}
+        if: ${{ inputs.scope != 'next-vitest' && inputs.scope != 'evidence-only' }}
         env:
           CI: true
           REPOSETUP_GOLDEN_PACKAGE_MANAGER: ${{ matrix.package-manager }}
@@ -66,7 +68,9 @@ jobs:
           JSON.stringify({ platform: process.platform, architecture: process.arch,
           node: process.version, sourceCommit: process.env.GITHUB_SHA, scope: process.env.GOLDEN_SCOPE, packageManager: process.env.GOLDEN_PACKAGE_MANAGER, python: require('node:child_process').execFileSync('python',
           ['--version'], { encoding: 'utf8' }).trim(), uv: require('node:child_process').execFileSync('uv',
-          ['--version'], { encoding: 'utf8' }).trim() }, null, 2) + '\\n')"
+          ['--version'], { encoding: 'utf8' }).trim() }, null, 2) + String.fromCharCode(10))"
+      - name: Validate golden evidence JSON
+        run: node -e "JSON.parse(require('node:fs').readFileSync('golden-evidence.json', 'utf8'))"
       - uses: actions/upload-artifact@v4
         with:
           name: golden-evidence-${{ matrix.runner }}-python-${{ matrix.python }}-${{ matrix.package-manager }}
