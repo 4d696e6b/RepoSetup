@@ -517,3 +517,26 @@ criteria and finite two-call/$1 estimated allowance are documented in
 remains in force. H is the next milestone only after this gate closes; no H or later
 implementation has started. All implementation changes are committed; record this
 validation follow-up as its own commit and preserve the clean worktree.
+
+### G continuation prerequisite check
+
+On the owner's next continuation, Git was clean on the expected branch and the
+remaining smoke protocol/status were reread. Runtime availability is unchanged:
+default Node **22.12.0**, existing temporary Node **24.21.0** available. A presence-only
+check found **`OPENAI_API_KEY` is not set in this execution session**; no credential
+value was read or printed. The desktop sign-in does not establish that this CLI
+session has an API credential or provider allowance.
+
+All authorized local G implementation is already committed and qualified above.
+The next executable gate needs both a transient API key in the terminal/process
+environment and explicit owner authorization for the documented two-call/$1
+estimated smoke. The latest general continuation does not explicitly override the
+original no-paid-provider-call instruction. No live request, installation, project
+fixture mutation or H implementation occurred during this prerequisite check.
+Keep G open until the real gate passes; do not manufacture provider evidence or
+advance its completion checkbox because the API test cannot currently run.
+
+Continuation validation on Node 24.21.0: workspace typecheck and lint, explicit
+changed-document formatting and Git whitespace passed. No runtime source changed;
+feature tests/build were not repeated for this documentation-only prerequisite
+record. Existing offline qualification above remains the implementation evidence.
