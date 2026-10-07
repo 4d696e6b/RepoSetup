@@ -17,7 +17,8 @@ condition is transferred to I and required before J's managed candidate qualific
 it remains unrun and unconfirmed. The joined no-key test demonstrates compilation,
 an actual bug fix, real qualified checks and durable final-phase acceptance through
 the managed CLI and real Git with simulated HTTP. See the [roadmap](./ROADMAP_0.4.0.md).
-H is the next milestone and remains unimplemented. Historical records below retain
+H is in progress: strict dated catalogs and pure routing are implemented; durable
+routing/repair orchestration remains the next slice. Historical records below retain
 the original G gate; the final scope amendment supersedes that gate assignment.
 
 - Development branch: `codex/0.4.0-task-compiler`.
@@ -722,3 +723,42 @@ The just-recorded full suite and prior build remain evidence for unchanged runti
 source; feature tests/build were not repeated for this documentation-only amendment.
 No validation failure remains for G's amended offline scope. Commit this completed
 scope record before any later implementation.
+
+## Milestone H — routing foundation
+
+Started from clean **`e67cd09`** on the expected worktree/branch. Reinspected current
+core lifecycle, context, provider reservation, application, acceptance and recovery
+code and the concrete managed CLI/SDK ports. Default Node **22.12.0** remains
+unsupported; validation uses the existing temporary **Node 24.21.0** / pnpm **12.5.1**.
+
+Added strict version 1 trusted-host model catalogs with canonical identities, dated
+validity, native effort/output policies, price revision and explicit qualification
+scope/evidence. Pure routing independently filters capabilities, native effort,
+context/output capacities, availability, qualification and remaining finite
+reservations. Equal-cost eligible choices retain stable catalog order. Requested
+configuration never becomes effective evidence by inference. The first focused
+repair preserves its configuration; two implementation failures may independently
+raise capability or the same model's reviewed native effort. No router effects occur.
+
+The CLI's dated Luna/Sol/Astra transport mappings were refreshed from official
+documentation using the OpenAI Docs skill; see the [research record](./TASK_PROVIDER_RESEARCH_0.4.0.md).
+Actual pinned SDK request preparation is checked offline for every mapped effort.
+These production profiles remain **unconfirmed for capability routing**. Synthetic
+offline-qualified test catalogs cannot authorize live routing; live capability
+evidence stays an I/J qualification requirement. This slice does not add a command
+or alter G's explicit fixed-model behavior. H remains incomplete until routing,
+classified repair, durable evidence and dependent invalidation are wired and tested.
+
+Initial targeted validation passed **55 core tests across 3 files**. The first
+workspace build caught a callback narrowing error in the capability filter;
+it was corrected before final validation. Final results are recorded below after
+execution. No API call, secret, paid usage, installation, version bump, website
+source change, merge or publication is introduced.
+
+Final foundation validation: **55 core tests across 3 files** and **17 CLI tests
+across 2 files** passed (**72 selected tests / 5 files**). Workspace build,
+typecheck and lint passed on Node 24.21.0 after the narrowing fix. Explicit changed
+document formatting and Git whitespace checks passed before committing this slice.
+The inherited website build produced no tracked changes. Full workspace tests and
+joined repair execution are reserved for the completed H wiring; this slice's
+tests do not claim live model capability or H completion.

@@ -126,6 +126,8 @@ export const taskRoutingSchema = z.strictObject({
               "output_capacity",
               "allowance_required",
               "budget_exhausted",
+              "model_unqualified",
+              "qualification_expired",
             ]),
           )
           .min(1),

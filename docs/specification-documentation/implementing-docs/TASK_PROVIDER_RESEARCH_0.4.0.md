@@ -211,3 +211,25 @@ runtime still reports live qualification as unconfirmed and requires credentials
 and explicit usage allowance for managed calls. H's model capability qualification
 remains separate. No API request, spending authorization or paid call follows from
 this milestone amendment.
+
+## Milestone H mapping refresh — 2026-10-07
+
+Searched and fetched current official pages for
+[Luna](https://developers.openai.com/api/docs/models/gpt-6-luna),
+[Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol),
+[Astra](https://developers.openai.com/api/docs/models/gpt-6-astra) and
+[model selection](https://developers.openai.com/api/docs/guides/model-selection).
+The existing API identifiers, native effort sets and conservative standard-tier
+price inputs remain consistent with these dated pages. Luna admits `none`; Sol and
+Astra start at `low`. Effort is independent from model choice. Provider guidance
+calls for representative comparisons rather than treating recommendations as
+application qualification.
+
+The CLI catalog binds these mappings and SDK request-preparation evidence, with
+an explicit review/expiry window. The 512-token minimum output allocation is
+RepoSetup's reviewed allocation policy, not a documented provider minimum. All
+production capability qualifications remain unconfirmed: official descriptions and
+fake HTTP cannot prove RepoSetup task quality or account access. Core's trusted-host
+catalog supports separately bound offline/live qualification evidence and rejects
+offline evidence for live routing. I must record actual capability fixture evidence
+before J can claim managed routed support. No model invocation or paid research occurred.
