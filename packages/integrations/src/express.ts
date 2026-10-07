@@ -28,6 +28,7 @@ type ExpressOptions = z.infer<typeof expressOptionsSchema>;
 const EXPRESS_TSCONFIG = `{
   "compilerOptions": {
     "target": "esnext",
+    "rootDir": ".",
     "module": "nodenext",
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
@@ -86,15 +87,6 @@ it("returns the Hello World response", async () => {
   expect(response.status).toBe(200);
   expect(await response.text()).toBe("Hello World!");
 });
-`;
-
-const EXPRESS_README = `# Express app
-
-Run the JavaScript entry with:
-
-\`node app.js\`
-
-For the TypeScript entry, use \`npm run dev\` while developing, then run \`npm run build\` and \`npm start\`.
 `;
 
 const EXPRESS_APP_JS = `import express from "express";
@@ -194,7 +186,7 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
             scripts: {
               dev: "tsx watch src/app.ts",
               build: "tsc --outDir dist",
-              start: "node dist/app.js",
+              start: "node dist/src/app.js",
             },
           },
           behavior: "merge",
@@ -223,7 +215,22 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
     operations.push({
       type: "create_file",
       path: "README.md",
-      content: EXPRESS_README,
+      content: [
+        "# Express app",
+        "",
+        "From this directory:",
+        "",
+        typescript
+          ? "Develop with `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " dev`, then build with `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " build` and run `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " start`."
+          : "Run the JavaScript entry with `node app.js`.",
+        "",
+      ].join("\n"),
       behavior: "fail_if_exists",
       description: "Add Express run instructions",
     });

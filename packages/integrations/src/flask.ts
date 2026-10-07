@@ -18,17 +18,9 @@ import {
 } from "./operations.js";
 import { QUALIFIED_VERSIONS, pypiPin } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
+import { pythonAppReadme } from "./python-readme.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
-
-const FLASK_README = `# Flask app
-
-From this directory, start the development server with:
-
-\`uv run flask run\`
-
-Run the generated endpoint test with \`uv run pytest\`.
-`;
 
 const FLASK_APP = `from flask import Flask
 
@@ -105,7 +97,7 @@ export const flaskIntegration = defineIntegration({
       {
         type: "create_file",
         path: "README.md",
-        content: FLASK_README,
+        content: pythonAppReadme(context, "Flask", "flask run"),
         behavior: "fail_if_exists",
         description: "Add Flask run instructions",
       },

@@ -154,6 +154,8 @@ describe("golden stack real execution", () => {
 
     const built = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+    const manifest = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8"));
+    await access(path.join(cwd, manifest.scripts.start.split(" ")[1]));
 
     const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
     expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
@@ -195,6 +197,8 @@ describe("golden stack real execution", () => {
 
     const built = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+    const manifest = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8"));
+    await access(path.join(cwd, manifest.scripts.start.split(" ")[1]));
 
     const lint = await runProcess("pnpm", ["run", "lint"], { cwd });
     expect(lint.exitCode, `${lint.stdout}\n${lint.stderr}`).toBe(0);

@@ -84,6 +84,11 @@ describe("npx create supported bare solutions", () => {
       if (["nextjs", "react-vite"].includes(framework) || typescript) {
         const built = await runProcess(manager, ["run", "build"], { cwd, env });
         expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+        if (["express", "fastify"].includes(framework)) {
+          const [command, entry] = pkg.scripts.start.split(" ");
+          expect(command).toBe("node");
+          await access(path.join(cwd, entry));
+        }
       } else {
         const checked = await runProcess(
           process.execPath,

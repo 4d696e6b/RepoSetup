@@ -77,3 +77,12 @@ context and failed resolution. Detection now retains that declarative context
 from all supported Compose filenames without claiming Docker is installed.
 Express/Fastify generated servers now print their listening URL for usable
 startup feedback and an actual HTTP probe in qualification.
+
+The Express PostgreSQL preset built successfully but `start` pointed to
+`dist/app.js`, while TypeScript inferred a broader root after Prisma added
+`lib/` and `generated/`. Both TypeScript server scaffolds now explicitly use
+`rootDir: "."` and `dist/src/` startup entries, independent of integrations.
+Real bare/golden tests check that the start-script entry actually exists after
+building; the Express preset session also probes its production server.
+Generated README commands now follow npm/pnpm or uv/pip and do not advertise
+pytest unless it was selected.

@@ -28,6 +28,7 @@ type FastifyOptions = z.infer<typeof fastifyOptionsSchema>;
 const FASTIFY_TSCONFIG = `{
   "compilerOptions": {
     "target": "esnext",
+    "rootDir": ".",
     "module": "nodenext",
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
@@ -171,7 +172,7 @@ export const fastifyIntegration = defineIntegration<FastifyOptions>({
             scripts: {
               dev: "tsx watch src/server.ts",
               build: "tsc --outDir dist",
-              start: "node dist/server.js",
+              start: "node dist/src/server.js",
             },
           },
           behavior: "merge",
