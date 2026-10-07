@@ -4,9 +4,20 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 27 — Release-candidate qualification: in progress.** Phase 24's five observed manual usability sessions, the candidate soak, repeated exact-SHA qualification, and release evidence remain blocking gates. Phase 20 through Phase 26 implementation gates are complete.
+**Phase 27 — Release-candidate qualification: complete for the frozen `0.2.0-alpha.1` candidate.** All three full exact-source qualifications, cross-platform failure-path checks, benchmark evidence and the seven-day soak passed at `145e167e6b60897da96942545ba6dbd40359ad4a`. Phase 20 through Phase 27 implementation gates are complete.
+
+**Phase 28 — Stable release preparation: in progress.** Stable version correction and publication/delivery tooling are committed on `codex/phase-28-stable-release` at `3821519511acd79b3263f42f1be14a752149cd4f`. Stable artifact qualification, its source-specific soak, owner release authorization, npm publication and registry acceptance remain incomplete. Phase 27 completion does not authorize publication or make the alpha tarball a stable package.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
+
+### Phase 27 closure — 2026-10-07
+
+- [x] Frozen source and branch rechecked: `145e167e6b60897da96942545ba6dbd40359ad4a`, `codex/phase-27-release-candidate`.
+- [x] Three consecutive full passing exact-source runs: [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011). Every required platform, Python recipe, failure-path, pack and artifact-acceptance job passed without skipped steps.
+- [x] Seven-day soak completed 2026-10-07 11:30:20 UTC (18:30:20 Asia/Bangkok); the frozen branch remains unchanged and no newer failed release qualification exists on it.
+- [x] Exact-source [benchmark run 36704251139](https://github.com/4d696e6b/RepoSetup/actions/runs/36704251139) passed. [Usability evidence 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) and the bounded [security review](../security-docs/SECURITY_REVIEW_0.2.0.md) remain recorded. No open P0/P1, security, or data-loss defect was identified in the candidate review.
+- [x] The final candidate archive is retained in run 36708257011. Its `candidate-artifact.json` identifies `rsetup@0.2.0-alpha.1`, the exact frozen source, 106652 bytes, and SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`. Phase 28 must publish a correctly versioned, separately qualified stable tarball.
+- [x] Phase 27 is marked complete. This documentation closeout uses its own branch to preserve both the frozen alpha source and the stable source undergoing qualification.
 
 ### Phase 27 progress — 2026-09-29
 
@@ -21,7 +32,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] The candidate benchmark report records its exact `GITHUB_SHA` when run in Actions, in addition to the existing platform/runtime and per-trial results. This makes final benchmark evidence auditable against the frozen candidate source.
 - [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) completed five cold and five warm trials for fixed React and Express package profiles on Ubuntu, macOS, and Windows with Node 24. All measurements passed; consolidated installs use one subprocess versus five baseline passes.
 - [x] Candidate failure qualification is implemented at `33354279088970dd3d1dfcf8e5cfbc73a741c20c`: each supported OS runs the real timeout/interruption, permission, existing-user-file, invalid-input, cleanup, and packed usability checks. The React/Vite usability command is additionally exercised while its default Vite port is deliberately occupied; the temporary listener is always closed. The fault job blocks both packing and publication and retains its per-OS usability evidence. Cache-miss behavior is separately measured by the candidate benchmark's fresh, benchmark-owned caches.
-- [ ] Exact-SHA CI evidence, three consecutive full candidate passes, seven-day soak, and observed failure-path evidence remain release blockers. See [the candidate record](../release-docs/RELEASE_CANDIDATE_0.2.0.md).
+- [x] These alpha gates subsequently passed at the frozen source above; Phase 27 is complete. Stable delivery remains Phase 28 work.
 
 ### Phase 25 progress — 2026-09-24
 
