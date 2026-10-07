@@ -644,3 +644,35 @@ force. H is next under the current roadmap after G's live gate; offline H sequen
 is a scope question presented to the owner, not assumed authorization or a completed
 gate. No H or later implementation, package version bump, website source change,
 merge, publication or paid request occurred. Commit this slice before continuing.
+
+### G completion attempt — full current-source regression
+
+On 2026-10-07, rechecked the actual worktree instructions and clean expected branch
+at **`dce8210`**, then reread G's roadmap and live smoke gate. Default Node remains
+**22.12.0**; validation used the existing temporary **Node 24.21.0** and pnpm
+**12.5.1**, without installing software. A presence-only environment check again
+found **`OPENAI_API_KEY` unset**; no credential value was read or printed.
+
+Fresh full workspace `pnpm test` passed **845 tests across 107 files**: core
+**446/54**, registry **15/4**, integrations **126/18**, CLI **244/29** and inherited
+website **14/2**. This includes every concrete verifier case and the latest joined
+no-key managed CLI/real Git qualification, rather than only the selected cases in
+the previous record. The CLI suite ran serially in **796.83 seconds** with no
+overlapping heavy verification job; no timeout or failing test remained. Inherited
+tar locale warnings were non-failing. Workspace `pnpm typecheck` and `pnpm lint`
+also passed. No runtime source changed during this completion attempt; the passing
+workspace build recorded for `dce8210` remains its build evidence and was not
+repeated for this documentation-only update. Final explicit document formatting,
+local-link and Git whitespace checks passed before committing this record.
+
+**G's local implementation and regression checks are finished; G's original live
+acceptance condition is still unsatisfied.** Simulated SDK responses do not prove
+actual account/model access, strict-schema acceptance or remote effective
+configuration/usage. The owner was asked whether to close the offline implementation
+scope and defer live qualification to the release gate; no such scope change was
+authorized during this attempt. Keep the original G checkbox open. The live smoke
+requires a transient API credential and explicit spending authorization under the
+[recorded protocol](./TASK_PROVIDER_SMOKE_0.4.0.md). H is next only after G's gate
+closes or the owner explicitly changes that milestone boundary. No H/later code,
+paid call, dependency/system installation, package bump, website source change,
+merge or publication occurred. Commit this validation record before continuing.
