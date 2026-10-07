@@ -166,6 +166,18 @@ describe("stable artifact and registry identity", () => {
     await expect(publication.registryVersion()).resolves.toBeUndefined();
   });
 
+  it("waits for npm to expose a publish before verifying its identity", async () => {
+    const metadata = { name: "rsetup", version: "0.2.0" };
+    const lookup = vi.fn().mockResolvedValueOnce(undefined).mockResolvedValue(metadata);
+    await expect(
+      publication.waitForRegistryVersion({ lookup, timeoutMs: 100, intervalMs: 0 }),
+    ).resolves.toBe(metadata);
+    expect(lookup).toHaveBeenCalledTimes(2);
+    await expect(
+      publication.waitForRegistryVersion({ lookup: async () => undefined, timeoutMs: 0 }),
+    ).rejects.toThrow("not yet visible");
+  });
+
   it("refuses to treat a conflicting published version as a successful retry", () => {
     const identity = { integrity: "sha512-qualified" };
     const metadata = { name: "rsetup", version: "0.2.0", dist: { integrity: identity.integrity } };

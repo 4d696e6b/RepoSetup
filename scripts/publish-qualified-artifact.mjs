@@ -1,6 +1,8 @@
 import { spawn } from "node:child_process";
 import path from "node:path";
+import { performance } from "node:perf_hooks";
 import process from "node:process";
+import { setTimeout as delay } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 
 import { verifyArtifactIdentity } from "./artifact-identity.mjs";
@@ -25,6 +27,25 @@ export async function registryVersion() {
   if (!response.ok)
     throw new Error(`npm registry lookup failed (${response.status}); publication stopped.`);
   return response.json();
+}
+
+export async function waitForRegistryVersion({
+  timeoutMs = 20 * 60_000,
+  intervalMs = 15_000,
+  lookup = registryVersion,
+} = {}) {
+  const deadline = performance.now() + timeoutMs;
+  while (true) {
+    const metadata = await lookup();
+    if (metadata) return metadata;
+    const remaining = deadline - performance.now();
+    if (remaining <= 0) {
+      throw new Error(
+        "npm accepted the publish, but the version is not yet visible in the registry; retain this run and check visibility before a safe retry.",
+      );
+    }
+    await delay(Math.min(intervalMs, remaining));
+  }
 }
 
 async function main() {
@@ -70,11 +91,7 @@ async function main() {
     process.stdout.write("Dry-run complete; no package was published.\n");
     return;
   }
-  const metadata = await registryVersion();
-  if (!metadata)
-    throw new Error(
-      "Published version is not visible in the registry; retain this run and investigate before retrying.",
-    );
+  const metadata = await waitForRegistryVersion();
   verifyRegistryIdentity(metadata, identity);
   process.stdout.write(`Published rsetup@0.2.0 with qualified integrity ${identity.integrity}.\n`);
 }
