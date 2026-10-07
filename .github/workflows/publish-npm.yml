@@ -48,6 +48,7 @@ jobs:
           run-id: ${{ steps.qualification.outputs.run_id }}
           github-token: ${{ github.token }}
           path: candidate
+          merge-multiple: true
       - name: Verify qualified tarball and actual launchers without rebuilding
         run: node scripts/verify-packed-artifact.mjs --directory candidate
         env:
@@ -81,5 +82,6 @@ jobs:
           run-id: ${{ needs.publish.outputs.run_id }}
           github-token: ${{ github.token }}
           path: candidate
+          merge-multiple: true
       - name: Verify exact published version outside the monorepo
         run: node scripts/verify-registry-release.mjs
