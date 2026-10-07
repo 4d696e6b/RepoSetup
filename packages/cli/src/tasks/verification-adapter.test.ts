@@ -18,8 +18,10 @@ import path from "node:path";
 import {
   compileTaskPlan,
   executeTaskVerification,
+  executeTaskRun,
   qualifiedTaskCheckHash,
   taskByteHash,
+  taskContentHash,
   taskCheckFileDefinitionHash,
   taskVerificationCatalogHash,
   TASK_CHECK_IDS,
@@ -33,6 +35,7 @@ import {
 import { createTaskCheckRecipe, taskTestIdentity, type TaskToolCheckId } from "./check-recipes.js";
 import { captureVerifierRoot, readVerifierFile } from "./verifier-read.js";
 import { readTaskClosureInventory } from "./verifier-closure.js";
+import { createTaskRunAdapter } from "./application-adapter.js";
 import { createQualifiedTaskVerificationAdapter } from "./verification-adapter.js";
 import { verifyQualifiedTaskCheck } from "./check-qualification.js";
 import { allocateTaskVerifierScratch } from "./verifier-scratch.js";
@@ -231,7 +234,14 @@ async function fixture(lintEffect = false) {
       checkCatalogRevision: policy.catalogRevision,
       checkIds: [...TASK_CHECK_IDS],
       requiredCheckIds: [...TASK_REQUIRED_CHECK_IDS],
-      authority: { read: [{ type: "subtree", path: "src" }], write: ["src/add.ts"], deny: [] },
+      authority: {
+        read: [
+          { type: "subtree", path: "src" },
+          { type: "subtree", path: "docs" },
+        ],
+        write: ["src/add.ts"],
+        deny: [],
+      },
       caseSensitivePaths: true,
     };
     const phaseHash = taskByteHash(await readFile(path.join(projectRoot, "docs/phase.md")));
@@ -279,7 +289,14 @@ async function fixture(lintEffect = false) {
               requirementIds: ["req-one"],
               kind: "implementation",
               constraints: [],
-              scope: { read: [{ type: "subtree", path: "src" }], write: ["src/add.ts"], deny: [] },
+              scope: {
+                read: [
+                  { type: "subtree", path: "src" },
+                  { type: "subtree", path: "docs" },
+                ],
+                write: ["src/add.ts"],
+                deny: [],
+              },
               criteria: [
                 {
                   criterionId: "task-criterion",
@@ -393,6 +410,102 @@ describe("concrete trusted verification qualification", () => {
           ([r]) => r.env?.NODE_OPTIONS === undefined && r.env?.HOME?.startsWith(f.scratchParent),
         ),
       ).toBe(true);
+    } finally {
+      await f.dispose();
+    }
+  }, 180000);
+  it("binds an executor-owned replacement and durable task acceptance to real qualified checks", async () => {
+    const f = await fixture();
+    try {
+      const stateRoot = path.join(f.parent, "state");
+      await mkdir(stateRoot, { mode: 0o700 });
+      const adapter = data(
+        await createTaskRunAdapter({
+          projectRoot: f.projectRoot,
+          stateRoot,
+          authority: f.input.compilationPolicy.authority,
+        }),
+      );
+      const execute = async (operation: Parameters<typeof executeTaskRun>[0]["operation"]) => {
+        const result = data(
+          await executeTaskRun({
+            plan: f.input.plan,
+            compilationPolicy: f.input.compilationPolicy,
+            adapter,
+            operation,
+            verification: {
+              policy: f.input.policy,
+              adapter: f.input.adapter,
+              runProcess: f.input.runProcess,
+            },
+          }),
+        );
+        if (result.dryRun) throw new Error("unexpected dry run");
+        return result.checkpoint;
+      };
+      const created = await execute({
+        type: "create",
+        resourceLimits: {
+          maxImplementationAttemptsPerTask: 3,
+          maxProviderCalls: 24,
+          maxInputTokens: 240000,
+          maxOutputTokens: 48000,
+          maxWallTimeMs: 1800000,
+          maxCostMicrousd: 10000000,
+        },
+      });
+      const runId = created.run.runId;
+      const begun = await execute({
+        type: "begin",
+        runId,
+        taskId: "add",
+        routingId: HASH,
+        requestedConfiguration: {
+          adapterId: "openai-responses-v1",
+          providerId: "openai-responses-v1",
+          modelProfileId: "qualified-strong",
+          nativeEffortId: "low",
+        },
+      });
+      const attempt = begun.run.attempts[0]!;
+      const before = await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8");
+      const proposal = {
+        kind: "change_set",
+        schemaVersion: 1,
+        planId: f.input.plan.planId,
+        taskId: "add",
+        attemptId: attempt.attemptId,
+        inputRevision: attempt.inputRevision,
+        changes: [
+          {
+            type: "replace_text",
+            path: "src/add.ts",
+            expectedFileHash: taskByteHash(before),
+            oldText: "a + b",
+            newText: "(a + b)",
+          },
+        ],
+      };
+      const applied = await execute({
+        type: "apply",
+        runId,
+        proposal: { ...proposal, changeSetId: taskContentHash(proposal) },
+      });
+      expect(applied.run.attempts[0]!.application.status).toBe("applied");
+      const accepted = await execute({ type: "verify", runId, taskId: "add" });
+      expect(accepted.run.tasks[0]!.status).toBe("accepted");
+      expect(accepted.run.attempts[0]!.verification!.checkedRevision).toBe(
+        applied.run.attempts[0]!.application.resultingProjectRevision,
+      );
+      expect(accepted.run.attempts[0]!.verification!.inputRevision).toBe(attempt.inputRevision);
+      expect(accepted.bindings[0]!.postimages[0]!.fileHash).toBe(
+        taskByteHash(await readFile(path.join(f.projectRoot, "src/add.ts"))),
+      );
+      expect(
+        accepted.run.attempts[0]!.verification!.checks.find((c) => c.checkId === "ts.unit")!
+          .executedTests,
+      ).toBe(1);
+      expect(await readdir(f.scratchParent)).toEqual([]);
     } finally {
       await f.dispose();
     }

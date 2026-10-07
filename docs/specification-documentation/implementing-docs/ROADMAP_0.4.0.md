@@ -94,12 +94,24 @@ by E. F is next and is not implemented by this milestone.
 
 **Objective:** apply proposals through the executor and recover honestly from interruption.
 
-- [ ] Store versioned run state outside the tracked project tree.
-- [ ] Support expected-absent text creation and hash-guarded unique replacement only.
-- [ ] Add scope/realpath checks, locks, batch preflight, individual atomic writes and partial-effect records.
-- [ ] Reconcile interrupted attempts before resume; retain failed edits for manual review/targeted repair.
+- [x] Store versioned run state outside the tracked project tree.
+- [x] Support expected-absent text creation and hash-guarded unique replacement only.
+- [x] Add scope/realpath checks, locks, batch preflight, individual atomic writes and partial-effect records.
+- [x] Reconcile interrupted attempts before resume; retain failed edits for manual review/targeted repair.
 
 **Likely modules:** core task executor/change handling and CLI state adapter. **Dependencies:** B–C and E's check contract. **Tests:** stale output, races, escaping paths, partial failure, corrupted state and interruption. **Done:** every effect is recorded; no automatic rollback or atomic multi-file claim.
+
+Implemented as an internal core lifecycle with private CLI state/application ports.
+Run snapshots and whole-batch intents are outside the project, CAS/lease guarded and
+synced; individual scoped files/parents have recorded effects. Complete run-baseline,
+physical-root, original-input and owned-postimage guards precede fresh verification
+and durable acceptance. Partial/unknown effects are retained; interruption never
+causes automatic rollback, adoption or replay. Restarted processes cannot unlock
+dependents from pass flags alone. Actual local qualification and conservative
+recovery limits are recorded in [status](./STATUS_0.4.0.md) and the
+[F contract amendment](../product-docs/TASK_CONTRACTS_0.4.0.md#milestone-f-durable-application-amendment--revision-1).
+No provider call or run/verify CLI command is added. G is next; managed, Linux/packed
+and release qualification retain later gates.
 
 ## Milestone G — one managed provider adapter
 

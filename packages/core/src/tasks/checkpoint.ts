@@ -8,7 +8,7 @@ import {
   taskPathSchema,
   taskPositiveCounterSchema,
 } from "./primitives.js";
-import { taskVerifierSnapshotSchema } from "./verifier-files.js";
+import { taskVerifierSnapshotSchema, compareTaskVerifierSnapshots } from "./verifier-files.js";
 import { freezeTaskValue, taskContentHash } from "./canonical.js";
 import { taskFailure, type TaskParseResult } from "./parse.js";
 
@@ -17,11 +17,15 @@ export const taskRunCheckpointSchema = z.strictObject({
   schemaVersion: z.literal(1),
   checkpointHash: taskHashSchema,
   policyRevision: taskHashSchema,
+  rootInstance: taskHashSchema,
+  baselineSnapshot: taskVerifierSnapshotSchema,
+  phaseVerificationPending: z.boolean(),
   run: phaseRunSchema,
   bindings: z
     .array(
       z.strictObject({
         attemptId: taskAttemptIdSchema,
+        verificationPending: z.boolean(),
         context: taskContextSchema,
         writeTargets: z
           .array(z.strictObject({ path: taskPathSchema, fileHash: taskHashSchema.nullable() }))
@@ -45,6 +49,14 @@ export const taskRunCheckpointSchema = z.strictObject({
         afterHash: taskHashSchema,
         stagingId: z.uuid().nullable(),
         status: z.enum(["pending", "applied", "not_applied", "unknown"]),
+        observation: z
+          .discriminatedUnion("type", [
+            z.strictObject({ type: z.literal("absent") }),
+            z.strictObject({ type: z.literal("file"), fileHash: taskHashSchema }),
+            z.strictObject({ type: z.literal("directory") }),
+            z.strictObject({ type: z.literal("unavailable") }),
+          ])
+          .nullable(),
       }),
     )
     .max(10000),
@@ -70,6 +82,8 @@ export function validateTaskRunCheckpoint(value: unknown): TaskParseResult<TaskR
   const attempts = new Map(run.attempts.map((a) => [a.attemptId, a]));
   if (
     checkpointHash !== taskContentHash(payload) ||
+    c.baselineSnapshot.rootIdentity !== run.project.rootIdentity ||
+    !compareTaskVerifierSnapshots(c.baselineSnapshot, c.baselineSnapshot).success ||
     ids.size !== run.tasks.length ||
     attempts.size !== run.attempts.length ||
     new Set(c.bindings.map((b) => b.attemptId)).size !== c.bindings.length ||
@@ -98,12 +112,69 @@ export function validateTaskRunCheckpoint(value: unknown): TaskParseResult<TaskR
         b.context.contextId !== a.contextId ||
         b.context.inputRevision !== a.inputRevision ||
         contextId !== taskContentHash(context) ||
+        b.beforeSnapshot.rootIdentity !== run.project.rootIdentity ||
+        !compareTaskVerifierSnapshots(b.beforeSnapshot, b.beforeSnapshot).success ||
         new Set(b.writeTargets.map((t) => t.path)).size !== b.writeTargets.length ||
         new Set(b.postimages.map((t) => t.path)).size !== b.postimages.length ||
         b.postimages.some((p) => !b.writeTargets.some((t) => t.path === p.path))
       );
     }) ||
-    c.journal.some((e, i) => e.sequence !== i + 1 || !attempts.has(e.attemptId)) ||
+    c.journal.some(
+      (e, i) =>
+        e.sequence !== i + 1 ||
+        !attempts.has(e.attemptId) ||
+        (e.type === "file" ? e.stagingId === null : e.stagingId !== null) ||
+        (e.status === "applied" && e.observation === null),
+    ) ||
+    new Set(c.journal.filter((e) => e.stagingId).map((e) => e.stagingId)).size !==
+      c.journal.filter((e) => e.stagingId).length ||
+    run.tasks.some((t) => {
+      const a = attempts.get(t.attemptIds.at(-1) ?? "");
+      return (
+        t.status === "accepted" &&
+        (!a ||
+          a.status !== "accepted" ||
+          a.application.status !== "applied" ||
+          a.verification?.outcome !== "pass" ||
+          a.verification.verificationId !== t.acceptedVerificationId)
+      );
+    }) ||
+    c.bindings.some((b) => {
+      const expected = c.journal
+        .filter((e) => e.attemptId === b.attemptId && e.type === "file" && e.status === "applied")
+        .map((e) => ({ path: e.path, fileHash: e.afterHash }));
+      return taskContentHash(expected) !== taskContentHash(b.postimages);
+    }) ||
+    run.attempts.some((a) =>
+      a.application.effects.some(
+        (effect) =>
+          !c.journal.some(
+            (e) =>
+              e.sequence === effect.sequence &&
+              e.attemptId === a.attemptId &&
+              e.type === "file" &&
+              e.status === "applied" &&
+              e.path === effect.path &&
+              e.beforeHash === effect.beforeHash &&
+              e.afterHash === effect.afterHash &&
+              e.changeIndex === effect.changeIndex,
+          ),
+      ),
+    ) ||
+    run.attempts.some((a) => {
+      const v = a.verification;
+      if (!v) return false;
+      const { verificationId, ...payload } = v;
+      return (
+        verificationId !== taskContentHash(payload) ||
+        v.planId !== run.planId ||
+        v.runId !== run.runId ||
+        v.inputRevision !== a.inputRevision ||
+        v.target.type !== "task" ||
+        v.target.taskId !== a.taskId
+      );
+    }) ||
+    run.stateRevision !== run.events.length + 1 ||
     run.events.some(
       (e, i) =>
         e.sequence !== i + 1 ||

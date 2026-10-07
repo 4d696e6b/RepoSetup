@@ -4,12 +4,27 @@ import {
   validateTaskRunCheckpoint,
   type TaskRunCheckpoint,
 } from "./checkpoint.js";
+import { taskVerifierSnapshotHash } from "./verifier-files.js";
 import { HASH, RUN, LIMITS, USAGE } from "./fixtures.test-helper.js";
 function checkpoint(): TaskRunCheckpoint {
   return sealTaskRunCheckpoint({
     kind: "task_run_checkpoint",
     schemaVersion: 1,
     policyRevision: HASH,
+    rootInstance: HASH,
+    baselineSnapshot: {
+      schemaVersion: 1,
+      rootIdentity: HASH,
+      rootFingerprint: HASH,
+      entries: [],
+      revision: taskVerifierSnapshotHash({
+        schemaVersion: 1,
+        rootIdentity: HASH,
+        rootFingerprint: HASH,
+        entries: [],
+      }),
+    },
+    phaseVerificationPending: false,
     run: {
       kind: "phase_run",
       schemaVersion: 1,

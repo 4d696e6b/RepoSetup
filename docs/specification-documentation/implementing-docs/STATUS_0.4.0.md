@@ -4,12 +4,12 @@ Last updated: 2026-10-07.
 
 ## Current position
 
-**Milestones A–E are complete for the reviewed local qualification scope.** Core
-schemas/compiler/context, portable compile/next/status commands and internal trusted
-verification are implemented. E's actual tool/profile evidence is macOS arm64 on
-Node 24.21.0; Linux/packed qualification retains I/J gates. Durable task acceptance,
-project effects and managed provider execution remain absent. See the
-[roadmap](./ROADMAP_0.4.0.md).
+**Milestones A–F are complete for the reviewed local qualification scope.** Core
+schemas/compiler/context, portable compile/next/status, trusted checks, scoped text
+application, private durable state and interruption reconciliation are implemented.
+Actual tool/state qualification is macOS arm64 on Node 24.21.0; Linux/packed gates
+remain I/J. Run/application/acceptance APIs are internal; D commands stay advisory.
+Managed provider execution remains absent. G is next; see the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -37,7 +37,7 @@ project effects and managed provider execution remain absent. See the
 - [x] C — Bounded safe context selection, concrete read-only repository adapter and freshness checks.
 - [x] D — Portable compile/next/status CLI, reviewed phase selection and advisory handoff identities.
 - [x] E — Serial executor, qualified fixed checks, complete admitted dependency inventories, private scratch/effect audits and live task/final-phase acceptance; reviewed local fixture validated.
-- [ ] F — Durable state and bounded text changes.
+- [x] F — Private CAS state, project leases, scoped text/parent effects, original-input/postimage acceptance and honest interruption recovery.
 - [ ] G — Single managed provider adapter.
 - [ ] H — Model/effort routing and targeted escalation.
 - [ ] I — Packed/platform qualification and held-out benchmark.
@@ -256,28 +256,13 @@ OS isolation, atomic filesystem snapshots and Linux/packed release qualification
 are not established by this fixture. Linux x64 and advertised-platform/packed
 qualification retain their explicit I/J gates; this is not a release-support claim.
 
-## Remaining blockers and next milestone
+## Milestone E handoff (historical)
 
-Milestone E has no remaining implementation acceptance blocker for its reviewed
-local profile: fixed published check adapters, explicit environment and identity,
-complete admitted dependency/effect audits, genuine nonzero required tests and
-independent task/final-phase decisions have passing evidence. F must add original-context/application/owned-postimage binding, cross-process
-locks, durable acceptance, partial-effect records and interruption reconciliation.
-Until then portable dependents remain blocked by absent durable acceptance.
-Provider/catalog allowance/routing qualification remains G/H; Linux/packed/held-out
-benchmark and release qualification remain I/J. Trusted-project privacy/race and
-external-host enforcement limits remain documented; no isolation guarantee exists.
-
-## Next implementation handoff
-
-Stay in the existing worktree and preserve unrelated changes. Commit this E slice
-before any continuation. Prior commits: A `65a5c41`, A validation `0c7904c`, B
-`010b38c`, C `47db339`, D `484455e`; E `005d1a6`, `750955c`, `3bb4595`, `3c3a36f`
-and `cfeb84a`. E is complete; the next milestone is
-**F — durable state and bounded text changes**. F and later feature work require
-separate continuation authorization; this request completes E only. Only the
-executor may execute processes or mutate project files. Keep local verification
-free of AI-credit requirements and managed calls gated by provider allowance.
+E closed its reviewed local implementation scope in `4d27866`, following
+`cfeb84a`. The subsequent user continuation authorizes F only. Provider/catalog
+allowance/routing qualification remains G/H; Linux/packed/held-out benchmark and
+release qualification remain I/J. Qualification is local evidence, not a release
+or hostile-repository isolation claim.
 
 ## Milestone F, first slice — application and checkpoint policy
 
@@ -296,3 +281,85 @@ command or provider capability is introduced.
   Core tests passed **442 tests across 53 files**; workspace build, typecheck and
   lint passed. No installation, paid call, package/version/website change or later
   milestone implementation occurred.
+
+## Milestone F, second slice — executor, private state and recovery
+
+First slice committed as `d7072d6` before continuation. This slice implements F's
+internal lifecycle and concrete ports; final qualification passed as recorded below.
+
+- Added an executor-owned run UUID, monotonic CAS snapshots, bounded attempt
+  opening, original metadata-only context/preimages, no-change outcomes and ordered
+  batch intents/effects. Application, reconciliation and acceptance have separate
+  executor modules. No provider dispatch or task run/verify CLI command is added.
+- Added private same-filesystem state outside the project: canonical owner-private
+  roots/directories, 0600 snapshots/stages, a 1 MiB snapshot cap, bounded duplicate-
+  key-aware reads, checksums/relational validation, file/directory sync, individual
+  snapshot replacement and exclusive project leases. Recovery needs the exact
+  reviewed token and a confirmed dead local PID; live owners cannot be stolen.
+- Added entire-batch path/hash/encoding/privacy/ownership/writeability preflight,
+  canonical component/case/link guards, recorded necessary parent directories,
+  individual staged text publication and immediate precondition rechecks. Each
+  effect is persisted before continuing; partial or uncertain writes are retained.
+  Neither multi-file atomicity nor automatic rollback/installation is claimed.
+- Acceptance binds genuine E verification to original immutable inputs, recorded
+  owned postimages and current artifact hashes. Required definitions/oracles are
+  immutable targets. Consumer dispatch needs live binding/artifact receipts;
+  persisted flags alone cannot unlock it after restart. Finalization freshly
+  verifies every task at the current revision, then performs separate phase review.
+  Original input/output drift invalidates active-run acceptance and consumers;
+  succeeded snapshots remain immutable history.
+- Reconciliation records absent/current/unavailable observations without replaying
+  intents or adopting a coincidental matching pending postimage. Explicit reviewed
+  reconciliation can resume a fully recorded batch for fresh checks, or abandon a
+  known partial attempt before a bounded fresh attempt. Unknown ownership or
+  interrupted verification allowance stays needs-review. Observed wall/check work
+  is counted; exhausted allowances or cancellation cannot commit acceptance.
+- Targeted evidence: **22 real-filesystem lifecycle/failure cases**, **10 core
+  application/checkpoint cases**, and E's existing **19 executor cases** passed.
+  A separate real-tool fixture passed after an executor-owned TypeScript replacement:
+  TypeScript 5.9.3, ESLint 10.11.0, typescript-eslint 8.70.0 and Vitest 5.0.1 executed
+  the independently required test, then bound live review and durable acceptance to
+  the original input and exact postimage. Qualification remains macOS arm64 /
+  Node 24.21.0; fixture dependencies reuse existing installed bytes.
+- Initial fixture failures caught a strict reader-authority mismatch, a recovery
+  task-state transition, a missing test import and test-string escaping. These were
+  corrected before final qualification. Final review also added a physical-root and
+  complete run-baseline guard: unrelated changes before checks and unrecorded edits
+  to failed owned outputs cannot be adopted as a fresh execution baseline. A
+  concurrently launched typecheck initially raced build cleaning declarations; it
+  passed when rerun against stable output. No install, provider/paid call, package or
+  version change, website source change, merge, publish or later milestone code.
+
+### F validation and remaining work
+
+Validation used existing temporary **Node 24.21.0** and pnpm **12.5.1**; default
+Node **22.12.0** remains unsupported and unchanged. Full workspace tests passed
+**799 tests across 102 files** (core 442, registry 15, integrations 126, CLI 202,
+existing website 14) before the final inventory/root guards. After those guards,
+final core **442 tests across 53 files** and affected CLI **28 tests across 2 files**
+(22 lifecycle/failure cases plus 6 real-tool qualification cases) passed. Final
+build, stable-output workspace typecheck and lint passed; changed-document
+formatting, **141 local links across 5 documents** and Git whitespace passed.
+Inherited tar locale warnings remain non-failing; no tracked website source changed.
+No implementation acceptance blocker remains for F's reviewed local scope.
+
+The concrete state authority must be
+one host-selected, preexisting private POSIX directory outside the project on the
+same filesystem. Checksums detect corruption, not a hostile same-UID user's rewrite;
+filesystem audits/locks do not provide an OS sandbox or hostile concurrent rename
+protection. Ambiguous stages, failed edits and stale locks are explicitly user-owned
+recovery/lifecycle work. No automatic deletion, adoption, rollback or replay occurs.
+
+G is next: one researched provider adapter, usage allowance/reservations, cancellation
+and explicit run CLI wiring. H retains managed routing/repair automation; I/J retain
+Linux/packed/benchmark/release qualification. Local F functionality needs no AI credits.
+
+## Next implementation handoff
+
+Stay in this worktree on `codex/0.4.0-task-compiler` and preserve unrelated changes.
+The first F slice is `d7072d6`; this completed slice must be committed before any
+continuation. The next milestone is **G — one managed provider adapter**. Do not
+implement G or later work under the F request. Provider SDK/model/account and usage
+allowance qualification remain open; any live paid call needs separate authorization.
+Linux/packed/benchmark/release qualification remains I/J. No system/dependency
+installation, package version bump, website change, merge or publication occurred.

@@ -1,11 +1,12 @@
 # RepoSetup 0.4.0 — experimental task support profile
 
-Milestone A specification frozen 2026-10-06; Milestone E implementation updated
+Milestone A specification frozen 2026-10-06; Milestones E/F implementation updated
 2026-10-07. The internal verification executor and concrete fixed-check adapter are
 implemented. Qualification evidence covers the reviewed macOS arm64 / Node 24.21.0
 single-package fixture, including the TypeScript ESLint parser/plugin. Linux x64,
 packed artifacts and broader project configurations retain their I/J gates.
-Managed coding/provider execution and durable task acceptance remain G and F.
+Managed coding/provider execution remains G. F implements the internal private-state
+and scoped application boundary; local qualification passed as recorded in status.
 Milestone D's portable compile/next/status commands remain advisory; no task
 verify/run command or imported evidence acceptance is added by E.
 Use with the [contracts](./TASK_CONTRACTS_0.4.0.md),
@@ -344,3 +345,54 @@ identifies its parser/plugin exports used by the fixture. Installed 8.70.0 peer
 metadata permits ESLint 10 and TypeScript 5.9; actual executions establish the local
 compatibility evidence. No new dependency installation or paid provider call is
 required for local verification.
+
+## Milestone F local state and application boundary
+
+The [durable executor](../../../packages/core/src/executor/task-run.ts) coordinates
+separate [application](../../../packages/core/src/executor/task-run-application.ts),
+[recovery](../../../packages/core/src/executor/task-run-recovery.ts) and
+[acceptance](../../../packages/core/src/executor/task-run-acceptance.ts) modules.
+Domain preflight/checkpoint validation stays core. CLI supplies canonical guarded
+[application ports](../../../packages/cli/src/tasks/application-adapter.ts) and
+[private state/leases](../../../packages/cli/src/tasks/run-state-adapter.ts).
+The initial internal F profile needs one preexisting canonical same-owner 0700
+state directory outside the project on its POSIX filesystem; the host must use one
+consistent authority. The factory performs reads only. Executor dry-run calls no
+adapter and cannot create a run, lease, stage, snapshot or project effect.
+
+Runs also bind physical root identity across newly constructed adapters and the
+complete initial inventory; unrelated later edits and unrecorded changes to formerly
+owned failed outputs block new work. State reads/snapshots are capped at 1 MiB. Version/checksum/duplicate-key and
+relationship failures block. Source bodies and check reports remain transient;
+private stages contain only preflight-screened proposed text and are addressed by
+recorded UUIDs. Scoped replacements preserve exact UTF-8/line endings and require a
+single exact match under the expected hash; creation requires absence. Parent paths,
+case aliases, special files and links are checked before any batch effect and again
+per effect. Each individual effect and necessary parent is recorded; state-save
+failure leaves a pending intent rather than accepted work. Complete staged bytes
+are published with individual rename or exclusive link, with file/directory sync.
+A link-window crash, stale/replaced root, unexpected write or unknown private stage
+requires review and remains retained. No automatic rollback or replay occurs.
+
+Acceptance checks original immutable inputs and owned postimages against current
+bytes, requires qualified definitions/oracles and fresh E evidence, and saves
+revision-bound artifacts. Qualification's project definition/oracle paths are
+immutable even if a draft asks for them. A restarted process needs fresh task
+checks to authenticate predecessor acceptance; separate final review is mandatory.
+Manual reviewed reconciliation can resume a fully recorded application, but cannot
+adopt matching pending bytes or restore unknown interrupted verification allowance.
+Observed wall/check time and finite attempt ceilings remain enforced. These are
+internal host capabilities; portable D commands stay advisory and no provider/task
+run command is introduced. Managed calls and allowance reservations remain G.
+
+Evidence covers macOS arm64 / Node 24.21.0: real filesystem fault injection,
+cancellation, corrupted/CAS state, live and dead local leases, a real restarted
+process, retained partial edits, independent phase review, and a real qualified
+TypeScript replacement followed by the pinned checks and independently required
+unit test. Linux/packed/full managed-project qualification remains I/J. Owner-private
+state, checksums, point-in-time inventories and Node path guards do not authenticate
+against hostile same-UID rewrites, provide OS isolation, or defeat arbitrary
+concurrent rename/symlink races. File sync is OS/device specific; the
+[official Node 24 filesystem documentation](https://nodejs.org/docs/latest-v24.x/api/fs.html#filehandlesync)
+is the researched boundary, not a universal durability guarantee. Retention and
+stale/unknown recovery remain explicit user-owned lifecycle work.

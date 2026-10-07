@@ -36,6 +36,8 @@ export type TaskReviewDecision = {
 };
 /** Trusted host ports. These are not config, artifact import or model tool APIs. */
 export interface TaskVerificationAdapter {
+  /** Host-qualified project definitions/oracles are immutable application targets. */
+  readonly immutableProjectPaths?: readonly string[];
   snapshot(): Promise<TaskParseResult<TaskVerifierSnapshot>>;
   verifyDefinitions(): Promise<TaskParseResult<true>>;
   prepare(checkId: "ts.typecheck" | "ts.lint" | "ts.unit"): Promise<

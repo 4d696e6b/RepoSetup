@@ -19,6 +19,7 @@ export interface TaskRunLease {
   release(): Promise<TaskParseResult<true>>;
 }
 export interface TaskRunAdapter {
+  readonly rootInstance: string;
   repository: TaskRepositoryReader;
   snapshot(): Promise<TaskParseResult<TaskVerifierSnapshot>>;
   acquire(recoverLockToken?: string): Promise<TaskParseResult<TaskRunLease>>;
@@ -32,3 +33,16 @@ export interface TaskRunAdapter {
     change: TaskPreparedTextChange,
   ): Promise<TaskParseResult<true>>;
 }
+
+export type TaskRunSave = (
+  type: "transition" | "effect" | "verification" | "reconciliation",
+  taskId?: string,
+  code?: import("../tasks/errors.js").TaskErrorCode,
+) => Promise<TaskParseResult<true>>;
+
+/** Ephemeral authentication of the durable binding, never serialized/imported authority. */
+export type TaskRunAcceptanceReceipt = {
+  verification: import("../tasks/evidence-schema.js").TaskVerificationResult;
+  bindingHash: string;
+  artifactHash: string;
+};

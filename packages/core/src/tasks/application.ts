@@ -194,3 +194,29 @@ export function auditTaskApplication(
   }
   return { success: true, data: true };
 }
+
+/** Historical ownership of a path cannot authorize a later unrecorded edit. */
+export async function checkTaskRunPostimages(
+  effects: readonly {
+    type: "file" | "directory";
+    status: string;
+    path: string;
+    afterHash: string;
+  }[],
+  repository: TaskRepositoryReader,
+): Promise<TaskParseResult<true>> {
+  const latest = new Map(
+    effects
+      .filter((e) => e.type === "file" && e.status === "applied")
+      .map((e) => [e.path, e.afterHash]),
+  );
+  for (const [path, hash] of latest) {
+    const read = await repository.read(path);
+    if (!read.success || read.data?.fileHash !== hash)
+      return taskFailure(
+        "TASK_PROJECT_DRIFT",
+        "A recorded postimage changed outside the executor ledger.",
+      );
+  }
+  return { success: true, data: true };
+}

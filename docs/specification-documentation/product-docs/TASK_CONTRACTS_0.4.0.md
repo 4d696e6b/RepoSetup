@@ -1,6 +1,11 @@
 # RepoSetup 0.4.0 — frozen task-domain contracts
 
-Status: Milestones A–D implemented/validated, 2026-10-06. Core validation/context APIs, a read-only CLI repository adapter and portable compile/next/status commands are implemented; trusted verification, durable state and managed execution are not. Contract versions below are independent of package versions, stack configuration `schemaVersion: 1`, and selection format v1.
+Status: Milestones A–F implemented/validated for the reviewed local scope on
+2026-10-07. Core domain/context, portable
+compile/next/status, trusted verification, scoped text application and private state
+are implemented. Managed provider execution remains G. Contract versions below
+are independent of package versions, stack configuration `schemaVersion: 1` and
+selection format v1.
 
 Read the [product contract](./TASK_COMPILER_0.4.0.md), [initial support profile](./TASK_SUPPORT_0.4.0.md), [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md), [reuse decisions](../implementing-docs/TASK_COMPILER_REUSE_0.4.0.md), and [benchmark protocol](../implementing-docs/TASK_BENCHMARK_0.4.0.md) with this document. Any later contract amendment requires an explicit revision and corresponding fixtures; silently changing a frozen plan is prohibited.
 
@@ -171,7 +176,7 @@ Acceptance requires all required checks and criteria to pass, current immutable 
 
 `evaluateTaskVerification` consumes a previously validated plan, this reviewed policy, trusted in-memory check observations and a complete executor audit. Required tests come from the catalog, never an execution report. Observations carry revision, provenance, disposition, required report validation status (`valid`, `invalid`, or `incomplete`), actual exit/timeout/overflow, digest, evidence references and complete disjoint test inventories. An invalid exit-zero report fails without synthesizing an exit code; incomplete reports block. Missing reviewer-authority evidence requires review, while missing executor observations block. Report status is supplied only by the trusted adapter and does not authenticate itself. Unit success requires nonzero execution, every required test passing and no failed/skipped/todo/focused tests. Generic check success alone cannot satisfy a criterion without independently bound evidence. Task and final-phase targets each require applicable typecheck, lint, unit and independent acceptance checks. Audit incompleteness blocks; project writes, revision drift or unconfirmed immutable inputs prevent pass. Any non-pass clears satisfied criterion claims in the resulting immutable hashed record.
 
-These functions do not authenticate a serialized provenance label or execute a check. Caller-supplied snapshots, model/config output and parsed verification records cannot become trusted observations. The actual executor must produce audits/observations through qualified adapters. E supplies the domain evaluator, serial core executor and concrete qualified CLI ports, including complete admitted dependency inventories, exact runtime/tool/config binding, fresh private scratch/report handling and live reviewer authority. Actual qualification is limited to the reviewed macOS/Node 24 fixture described in the support document; wider platform/config and packed qualification remains I/J. No CLI command imports observations for acceptance, and no task state or artifact is accepted by this evaluator. F must bind original input to application receipts, current owned postimages and durable acceptance before advancing dependents.
+These functions do not authenticate a serialized provenance label or execute a check. Caller-supplied snapshots, model/config output and parsed verification records cannot become trusted observations. The actual executor must produce audits/observations through qualified adapters. E supplies the domain evaluator, serial core executor and concrete qualified CLI ports, including complete admitted dependency inventories, exact runtime/tool/config binding, fresh private scratch/report handling and live reviewer authority. Actual qualification is limited to the reviewed macOS/Node 24 fixture described in the support document; wider platform/config and packed qualification remains I/J. No CLI command imports observations for acceptance, and no task state or artifact is accepted by this evaluator. F now adds the internal original-input/application/postimage and durable acceptance boundary below; portable command wiring remains advisory.
 
 ### Internal verifier file contracts
 
@@ -355,7 +360,98 @@ Final-phase checks require a current receipt for every task, on the same plan/ru
 and repeat all mandatory tools plus independent phase acceptance. Serialized/copied
 records cannot authenticate that prerequisite. This deliberately does not accept
 artifacts, advance task states, unblock portable dependents or persist approval.
-F must bind receipts to applied/owned postimages and durable state before those
-transitions exist. The current per-process overlap guard is not a filesystem lock.
+F now binds receipts to applied/owned postimages and durable state through the internal executor below. The current per-process overlap guard is not a filesystem lock.
 See the [qualified support boundary](./TASK_SUPPORT_0.4.0.md#milestone-e-qualified-execution-boundary)
 for exact closure, runtime, temporary effect and qualification limits.
+
+## Milestone F durable application amendment — revision 1
+
+`executeTaskRun` is an internal trusted host API, separate from the portable D
+commands and installation executor. Its strict operations create a run, open an
+attempt, apply a ChangeSet or explicit no-change, verify a task, reconcile, or
+finalize. Unknown operations/fields fail before any port. This is not an imported
+model/config tool declaration and adds no CLI command. Run/attempt identities are
+executor-created; requested model capability/effort metadata remains advisory with
+unknown effective configuration and usage, and no provider call is performed.
+
+The internal `task_run_checkpoint`, schema version 1, contains `checkpointHash`,
+`policyRevision`, `rootInstance`, the complete `baselineSnapshot`,
+`phaseVerificationPending`, the existing `PhaseRun`, ordered
+`bindings` and `journal`. It is decoded only by the trusted private state adapter,
+not included in model/portable document import. Each binding retains attempt ID,
+original context metadata, exact writable preimages, owned postimages, complete
+before snapshot and a verification-pending flag. No source bodies, old/new text or
+raw check reports are stored in snapshots. Context/input, verification and
+checkpoint identities, run/attempt/task relationships, event/revision order and
+journal/effect/postimage relationships are validated. A checksum establishes
+integrity, not execution provenance or authentication against the same UID.
+
+Before mutation the executor saves the entire batch intent. Journal entries bind
+sequence, attempt/change index, file/directory kind, path, absence/before/after hash,
+nullable private staging UUID, pending/applied/not-applied/unknown status and a
+nullable observation (absent, file hash, directory or unavailable). Necessary parent
+directories and file effects are both recorded here; the existing application's
+`effects` retains file preimage/postimage records. Successful effects are persisted
+individually before the next effect. A failed effect/state write preserves prior
+files and the pending intent; success/acceptance is never inferred from a write.
+
+All targets must have an owning exact write path, safe canonical existing parents,
+permitted in-scope necessary parents, current expected absence/hash and an exact
+unique replacement. Entire-batch preflight precedes project effects; each effect
+rechecks roots, inputs, project inventory and file preconditions. Bounds remain 20
+changes, 65536 UTF-8 bytes per resulting file and 262144 resulting batch bytes.
+Secret/binary/malformed text, private/manifest/lock/generated targets, hardlinks,
+component links and case aliases block. The concrete qualified E adapter exposes
+its frozen project definitions/oracles as immutable application targets. Root/path
+checks use the trusted-project profile; they are not an atomic OS sandbox.
+
+Private staging is outside the project on the same filesystem. Replacement uses
+one guarded rename. Creation publishes complete staged bytes with an exclusive
+hardlink, then removes only its staging link. A crash in that link window retains
+ambiguous hardlinks for review. Files preserve existing ordinary permission bits;
+new files use 0644 and necessary parents 0755, subject to platform/umask constraints.
+The run binds the physical root inode/device across restarts and retains its original
+complete inventory. Verification cannot silently establish a new baseline for an
+unrelated edit between application and checks. Recorded paths must still match their
+latest journaled postimages, including failed attempts, before new work.
+
+Snapshot replacement, stage writes and containing directories request sync; failure
+stops work. No atomic multi-file transaction or universally power-loss-proof
+storage guarantee is made. State roots/directories require the current owner and
+0700, snapshots/stages 0600, regular single-link bounded reads and a 1 MiB snapshot
+limit. Unknown stages and failed snapshot temporary files remain private for explicit
+user lifecycle work. Node's [file sync](https://nodejs.org/docs/latest-v24.x/api/fs.html#filehandlesync),
+[rename](https://nodejs.org/docs/latest-v24.x/api/fs.html#fspromisesrenameoldpath-newpath)
+and [link](https://nodejs.org/docs/latest-v24.x/api/fs.html#fspromiseslinkexistingpath-newpath)
+semantics depend on the platform/filesystem; same-filesystem admission is mandatory.
+
+One host-selected state authority holds a project lease across every operation,
+including checks/review and CAS saves. No timestamp can steal a lease. Explicit
+stale recovery requires the exact inspected token, same local host and confirmed
+dead PID; live or uncertain owners block. Scope/config/model artifacts cannot choose
+a different state authority or request lock recovery. Competing state revisions,
+unsafe permissions, root replacement or corrupted snapshots block all work.
+
+Acceptance retains original immutable requirement/source/rule/predecessor hashes
+and substitutes only recorded owned postimages for mutable preimages. Check/result
+identity, current snapshot and owned bytes are rechecked before the durable commit.
+Live receipt caches bind the accepted verification, original binding and artifact
+record; parsed/copied flags cannot unlock a dependent. After process restart,
+previous accepted tasks need fresh verification before dependent dispatch. Final
+acceptance freshly verifies every task at the current revision, runs the mandatory
+phase checks and separate live phase review, then commits immutable success history.
+This does not qualify managed provider/host execution or connect durable records to
+D's stateless portable `next`/`status` commands.
+
+Reconciliation observes recorded effects and stages without reapplying them.
+Matching pending bytes are still unknown ownership. Explicit reviewed recovery can
+resume an exactly recorded complete application for fresh verification, or abandon
+a proven partial/not-applied attempt before a new context/attempt. Historical effects
+remain recorded when a later recorded attempt owns a path. Unknown effects and an
+interrupted verification's unknown elapsed allowance remain needs-review and cannot
+reset the phase budget; new reviewed work must not silently adopt those effects.
+Observed operation/check duration is durably accounted, timed cancellation reaches
+the process port, and acceptance checks the phase ceiling. Provider reservations,
+usage reconciliation and ambiguous paid requests remain G/H. Cancellation/failures
+retain edits, snapshots, stages and review evidence; no automatic rollback, cleanup,
+dependency installation or replay is available.

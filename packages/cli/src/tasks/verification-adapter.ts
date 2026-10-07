@@ -96,6 +96,17 @@ export async function createQualifiedTaskVerificationAdapter(input: {
     return {
       success: true,
       data: {
+        immutableProjectPaths: Object.freeze(
+          [
+            ...new Set(
+              qualified.flatMap((q) =>
+                q.fileDefinition.files
+                  .filter((f) => q.roots[f.rootId] === projectRoot)
+                  .map((f) => f.path),
+              ),
+            ),
+          ].sort(),
+        ),
         snapshot: reader.data.snapshot,
         verifyDefinitions,
         ...(review === undefined ? {} : { review }),

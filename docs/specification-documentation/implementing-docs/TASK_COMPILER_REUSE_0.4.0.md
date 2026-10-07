@@ -112,3 +112,29 @@ Live reviewer callbacks and in-memory issued receipts replace imported provenanc
 as ephemeral acceptance authority. F still needs cross-process locking, original
 input/application/owned-postimage binding, durable acceptance and interrupted-state
 reconciliation. No task verify/run command or state mutation is introduced by E.
+
+## Milestone F implementation follow-up
+
+The [durable task executor](../../../packages/core/src/executor/task-run.ts) reuses
+B's frozen plans/errors/strict schemas, C's context reader and byte/privacy policy,
+and E's snapshots, qualified definitions and live verification/review receipts.
+Separate application, recovery and acceptance modules orchestrate typed host ports;
+no installation operation or installer repair command is accepted as a ChangeSet.
+The [pure application policy](../../../packages/core/src/tasks/application.ts) and
+[checkpoint validator](../../../packages/core/src/tasks/checkpoint.ts) live in core.
+
+CLI's new [application adapter](../../../packages/cli/src/tasks/application-adapter.ts)
+reuses canonical POSIX verifier root guards, C's bounded text reader and E's complete
+project inventories. The [state adapter](../../../packages/cli/src/tasks/run-state-adapter.ts)
+extends individual writes with mandatory sync, private external stages/snapshots,
+CAS revisions and exclusive project leases. It deliberately does not reuse the
+installer's best-effort journal as task acceptance storage. Port construction is
+read-only; only core executor entry points invoke mutation/process capabilities.
+Qualified E adapters now expose frozen project definition/oracle paths to prevent
+F application authority from overlapping verification authority.
+
+G still needs provider/usage/allowance and real CLI run wiring; H owns automated
+routing/targeted repair; I/J own broader platform/packed/benchmark qualification.
+F preserves D's advisory stateless commands and all legacy configuration/selection
+paths. No package/version/website changes, provider calls, installation or rollback
+are part of F. Exact validation is recorded in [status](./STATUS_0.4.0.md).
