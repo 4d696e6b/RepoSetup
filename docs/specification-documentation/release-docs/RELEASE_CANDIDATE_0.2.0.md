@@ -1,11 +1,12 @@
 # 0.2.0 release-candidate record
 
-**Phase 27 status: complete for the frozen alpha candidate** `145e167e6b60897da96942545ba6dbd40359ad4a`. Its seven-day soak closed 2026-10-07 11:30:20 UTC. Phase 28 stable qualification and publication remain incomplete. This is the retained Phase 27 record. Historical `0.1.x` release documents remain historical evidence and do not qualify this release.
+**Phase 27 status: complete for the frozen alpha candidate.** This file records its qualification and the subsequent transition. Stable 0.2.0 publication and delivery are complete in [the Phase 28 evidence record](./STABLE_QUALIFICATION_0.2.0.md). Historical `0.1.x` release documents remain historical evidence and do not qualify this release.
 
 ## Candidate identity
 
-- Candidate package: `rsetup@0.2.0-alpha.1`
-- Intended stable package/tag: `rsetup@0.2.0` / `v0.2.0`
+- Subsequently published stable package: `rsetup@0.2.0` (separately qualified in Phase 28)
+- Completed alpha package: `rsetup@0.2.0-alpha.1` at `145e167e6b60897da96942545ba6dbd40359ad4a`
+- Published stable package/tag: `rsetup@0.2.0` / `v0.2.0`
 - Required runtime: Node.js 24 or later
 - Python recipe coverage: CPython 3.12 and 3.13, with uv 0.12.17
 - Artifact identity: `candidate-artifact.json`, produced once beside the packed `.tgz`
@@ -26,19 +27,21 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 - [x] The manually dispatched candidate-qualification workflow and the `v0.2.0` publishing workflow wait for Node 24 platform, Python 3.12/3.13 golden, cross-platform failure-path, single-artifact, and cross-platform artifact-acceptance jobs. Required jobs do not allow `continue-on-error`.
 - [x] Dependency-license review uses `pnpm licenses list --json`; the current review allows Apache-2.0, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0, ISC, MIT, and MPL-2.0. The result is stored with candidate artifacts.
 - [x] [Run 36563444045](https://github.com/4d696e6b/RepoSetup/actions/runs/36563444045) completed one full qualification for `7aa910e24dfd57be59e41c9b831c7f0d5656ecb4` and retained its candidate artifact record (SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`).
-- [x] Three consecutive exact-source qualifications passed: [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), and [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011).
-- [x] Seven-calendar-day soak completed for the unchanged frozen alpha source on October 7, 2026 at 11:30:20 UTC; no blocking defect was identified.
+- [x] Run three consecutive passing full alpha candidate qualifications from the same frozen alpha SHA.
+- [x] Complete the frozen alpha seven-calendar-day soak. Stable source qualification was completed separately in Phase 28.
 - [x] [Usability run 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) recorded five successful observed sessions across Ubuntu, macOS, and Windows, closing Phase 24.
 - [x] Complete a [targeted current-source security review](../security-docs/SECURITY_REVIEW_0.2.0.md) covering process/path boundaries, lifecycle scripts, redaction, config injection, and existing-file preservation.
 - [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) recorded five cold and five warm trials for React and Express fixed-package profiles on Ubuntu, macOS, and Windows, with no failed measurements and one consolidated install subprocess versus five baseline passes.
-- [x] Complete the exact-SHA cross-platform failure-path job in all three final runs. It exercises timeout/interruption, permission and existing-user-file safeguards, invalid input and cleanup, plus a React/Vite development command while its default port is occupied. Its per-OS usability evidence is retained as an artifact. The separate exact-SHA candidate benchmark uses fresh benchmark-owned caches to exercise cache misses.
-- [x] Node 24 LTS and current npm trusted publication requirements rechecked October 7. Phase 28 stable preparation uses Node 24 and a compatible npm 11.x CLI; owner publishing access and authorization remain separate gates.
+- [x] Complete the alpha exact-SHA cross-platform failure-path job. It exercises timeout/interruption, permission and existing-user-file safeguards, invalid input and cleanup, plus a React/Vite development command while its default port is occupied. Its per-OS usability evidence is retained as an artifact. The separate exact-SHA candidate benchmark uses fresh benchmark-owned caches to exercise cache misses.
+- [x] Recheck Node 24 LTS and current npm trusted publication requirements on October 7. Owner publishing access was subsequently verified in Phase 28.
 
-All Phase 27 alpha blockers above are closed. The final candidate benchmark [36704251139](https://github.com/4d696e6b/RepoSetup/actions/runs/36704251139) also passed at the frozen source. The package remains `0.2.0-alpha.1`: it cannot be renamed or republished unchanged as `0.2.0`. Stable source `3821519511acd79b3263f42f1be14a752149cd4f` is undergoing fresh qualification on `codex/phase-28-stable-release`; stable soak, owner authorization, publication, and registry delivery remain Phase 28 blockers.
+The alpha runs [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), and [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011) passed at the exact frozen alpha SHA, with every required platform, Python recipe, failure-path, pack, and artifact-acceptance step passing without skips. Its unchanged-source soak ended 2026-10-07 11:30:20 UTC, and no open P0/P1, security, or data-loss defect was identified in candidate review. The final candidate archive in run 36708257011 contains `rsetup@0.2.0-alpha.1`, 106652 bytes, SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`. Candidate benchmark [36704251139](https://github.com/4d696e6b/RepoSetup/actions/runs/36704251139) also passed at that SHA. Phase 27 was closed on a separate documentation branch to preserve the frozen source.
+
+The stable version correction changed the source and packed manifest, so the alpha tarball was not renamed or relabeled as stable. The owner removed the additional stable seven-day wait and requested release after qualification. The stable matrix, artifact identity, trusted publisher, publication, and registry delivery gates were completed separately; see [stable delivery evidence](./STABLE_QUALIFICATION_0.2.0.md). A green unit suite or a passing historical workflow did not replace them.
 
 ## Publication boundary
 
-No tag is created, moved, or published by Phase 27 work. Publication requires the owner’s explicit release authorization and must publish the previously qualified tarball, never a rebuilt workspace. The Phase 28 replacement publication workflow defaults to a manual dry-run and downloads a previously qualified stable artifact instead of rebuilding it. Its exact-source/tag/version/soak gates and registry delivery are described in the [stable runbook at preparation commit 3821519](https://github.com/4d696e6b/RepoSetup/blob/3821519511acd79b3263f42f1be14a752149cd4f/docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.0.md).
+No tag was created, moved, or published by Phase 27 work. Phase 28 publication used the owner's explicit release authorization and published the separately qualified stable tarball, never a rebuilt workspace. The manually dispatched publishing workflow rejects a tag/version/source mismatch and verifies three previous full stable qualification runs before downloading their final immutable artifact. It defaults to a dry-run and never rebuilds or repacks. The completed tag-bound publication is recorded in [stable delivery evidence](./STABLE_QUALIFICATION_0.2.0.md).
 
 ## Evidence locations
 

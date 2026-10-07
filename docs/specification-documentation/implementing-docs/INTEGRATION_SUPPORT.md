@@ -1,6 +1,6 @@
-# Integration support report (`0.1.1` baseline)
+# Integration support report (`0.2.0`)
 
-This is the current catalog classification, not the `0.2.0` guaranteed support matrix. [Phase 19 baseline and acceptance scope](./PHASE_19_BASELINE.md) freezes the latter. No integration is stable in this baseline.
+This is the published 0.2.0 catalog classification. The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
 
 Statuses below are **not fabricated as stable**. `candidate` means plan/detect/verify tests exist. `experimental` means implemented but not treated as a qualified path. Real execute evidence is recorded separately in `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md`.
 
@@ -35,7 +35,7 @@ Statuses below are **not fabricated as stable**. `candidate` means plan/detect/v
 | testing-library | candidate | React + Vite create/add with a real accessible interaction test |
 | tanstack-query | candidate | React + Vite create/add with a provider and mocked-response query test |
 | playwright | experimental | plan/detect only |
-| pytest | candidate | create/add; `pytest` may exit 5 when no tests exist |
+| pytest | candidate | create/add; guaranteed Python recipes generate a real endpoint test and require pytest to pass |
 | httpx | candidate | FastAPI create/add with an in-process API response test |
 | eslint | candidate | plan/detect (React example) |
 | prettier | candidate | create/add |
@@ -45,4 +45,4 @@ Statuses below are **not fabricated as stable**. `candidate` means plan/detect/v
 | github-actions | experimental | template write; not CI-qualified as a product surface |
 | bun | — | not in catalog |
 
-No IDs are `stable` or `deprecated` in this alpha.
+No IDs are `stable` or `deprecated` in 0.2.0. The five guaranteed recipe tuples passed Ubuntu 24.04, macOS 15, and Windows Server 2025 CI qualification with Node 24 and the documented Python 3.12/3.13 variants. Windows 11 desktop behavior is not separately claimed by this CI evidence.
