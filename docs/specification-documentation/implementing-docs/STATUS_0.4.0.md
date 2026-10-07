@@ -12,7 +12,9 @@ remain I/J. E/F application/acceptance APIs now support G's reviewed managed CLI
 D handoff commands stay advisory.
 Milestone G is in progress: the provider transport and managed coding run are
 implemented, including managed decomposition. Separately authorized live provider
-qualification remains open. See the [roadmap](./ROADMAP_0.4.0.md).
+qualification remains open. The joined no-key test now demonstrates compilation,
+an actual bug fix, real qualified checks and durable final-phase acceptance with
+simulated HTTP. See the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -540,3 +542,50 @@ Continuation validation on Node 24.21.0: workspace typecheck and lint, explicit
 changed-document formatting and Git whitespace passed. No runtime source changed;
 feature tests/build were not repeated for this documentation-only prerequisite
 record. Existing offline qualification above remains the implementation evidence.
+
+### G no-key integration qualification
+
+At the owner's request, extended the existing concrete verifier fixture with a
+deliberate subtraction bug and frozen positive/negative/zero addition oracles.
+Distinct task/phase criterion bindings and immutable tool/test definitions are
+established before decomposition. The joined test first observes a real unit-check
+failure with passing typecheck/lint and no acceptance review. Two simulated HTTP
+responses then exercise the actual installed SDK, strict compilation, executor-owned
+replacement, inclusive compilation/coding allowance and private run state.
+
+Real pinned TypeScript/ESLint/Vitest processes run for the broken baseline, task
+acceptance, fresh task re-verification and final-phase acceptance: **12 processes**.
+After the fix, the final unit check reports **3 executed tests**. The independent
+test reviewer checks current source, frozen oracle bytes, exact revision and distinct
+criteria at all three acceptance requests. The saved checkpoint equals the returned
+`succeeded` run, contains both call reservations and the compilation identity, and
+contains no sentinel credential. Verifier scratch is cleaned up. Default `fetch`
+is forbidden and asserted unused; no real key, network request or credits are needed.
+The [smoke protocol](./TASK_PROVIDER_SMOKE_0.4.0.md#testing-without-an-api-key) now
+documents the runnable no-key command and its limits.
+
+Validation uses the existing temporary **Node 24.21.0** / pnpm **12.5.1**. Default
+Node **22.12.0** was checked first and remains unsupported and unchanged. The joined
+test passed in **340.78 seconds**; **77 offline tests across 6 CLI files** also passed
+(SDK boundary, compilation ledger, managed/portable commands, durable lifecycle and
+report parsing). The shared fixture's original managed-SDK mode passed separately
+in **105.43 seconds**. That is **79 passing selected tests across 7 files** over the
+three runs, not a repeat of every concrete fixture case. Workspace build/typecheck/lint,
+final changed-document formatting and Git whitespace passed. The full workspace
+suite is not repeated for this test/documentation-only change; its prior result
+remains recorded above.
+
+Initial validation found a recursive test callback return-type inference error and
+an incorrect assertion using `outcome` instead of check `status` and expecting a
+count on nonzero exit. Both test issues were corrected. The existing verifier
+intentionally leaves that failure's count unset; no runtime behavior was changed
+to make the assertion pass. The final joined test and typecheck pass.
+
+**G remains open.** HTTP responses, requested/effective model configuration, request
+IDs and usage are simulated; Git baseline probes are simulated too. The successful
+local integration test establishes neither actual model capability nor remote
+schema/account/usage/billing or CLI/Git smoke qualification. Live evidence remains
+the unresolved G acceptance gate under the original no-paid-call boundary. H is
+next only after that gate closes; no H or later implementation, dependency/system
+installation, package version bump, website source change, merge or publication
+occurred. Commit this reviewed slice and preserve the clean worktree.

@@ -19,6 +19,9 @@ import {
   compileTaskPlan,
   executeTaskVerification,
   executeTaskRun,
+  executeTaskCompilation,
+  executeManagedTaskPhase,
+  prepareTaskCompilationContext,
   qualifiedTaskCheckHash,
   taskByteHash,
   taskContentHash,
@@ -31,6 +34,7 @@ import {
   type TaskVerificationPolicy,
   type TaskCompilationPolicy,
   type TaskParseResult,
+  type TaskReview,
 } from "@reposetup/core";
 import { createTaskCheckRecipe, taskTestIdentity, type TaskToolCheckId } from "./check-recipes.js";
 import { captureVerifierRoot, readVerifierFile } from "./verifier-read.js";
@@ -49,7 +53,7 @@ function data<T>(r: TaskParseResult<T>): T {
   if (!r.success) throw new Error(`${r.error.code}: ${r.error.message}`);
   return r.data;
 }
-async function fixture(lintEffect = false) {
+async function fixture(lintEffect = false, additionBug = false) {
   const parent = await realpath(
     await mkdtemp(path.join(os.tmpdir(), "reposetup-qualified-verifier-")),
   );
@@ -66,11 +70,19 @@ async function fixture(lintEffect = false) {
     await writeFile(path.join(projectRoot, "docs/phase.md"), "Implement addition.\n");
     await writeFile(
       path.join(projectRoot, "src/add.ts"),
-      "export const add = (a = 0, b = 0): number => a + b;\n",
+      `export const add = (a = 0, b = 0): number => a ${additionBug ? "-" : "+"} b;\n`,
     );
+    const testNames = additionBug
+      ? ["adds positive inputs", "adds negative inputs", "adds zero inputs"]
+      : ["adds independently"];
     await writeFile(
       path.join(projectRoot, "test/add.test.ts"),
-      'import {it, expect} from "vitest"; import {add} from "../src/add"; it("adds independently", () => expect(add(2,3)).toBe(5));\n',
+      additionBug
+        ? 'import {it, expect} from "vitest"; import {add} from "../src/add";\n' +
+            'it("adds positive inputs", () => expect(add(2,3)).toBe(5));\n' +
+            'it("adds negative inputs", () => expect(add(-2,-3)).toBe(-5));\n' +
+            'it("adds zero inputs", () => expect(add(0,0)).toBe(0));\n'
+        : 'import {it, expect} from "vitest"; import {add} from "../src/add"; it("adds independently", () => expect(add(2,3)).toBe(5));\n',
     );
     await writeFile(
       path.join(projectRoot, "tsconfig.json"),
@@ -207,13 +219,11 @@ async function fixture(lintEffect = false) {
         targets,
         testBindings:
           checkId === "ts.unit"
-            ? [
-                {
-                  testId: taskTestIdentity("test/add.test.ts", "adds independently"),
-                  filePath: "test/add.test.ts",
-                  fullName: "adds independently",
-                },
-              ]
+            ? testNames.map((fullName) => ({
+                testId: taskTestIdentity("test/add.test.ts", fullName),
+                filePath: "test/add.test.ts",
+                fullName,
+              }))
             : [],
         toolPackage: { rootId: "tools", path: path.relative(roots.tools, packagePath) },
       };
@@ -225,9 +235,16 @@ async function fixture(lintEffect = false) {
         definitionRevision:
           checks.find((q) => q.fileDefinition.checkId === checkId)?.definitionRevision ?? HASH,
         authority: checkId.endsWith("acceptance") ? "reviewer" : "executor",
-        criterionIds: ["task-criterion", "phase-criterion"],
+        criterionIds:
+          additionBug && checkId === "task.acceptance"
+            ? ["task-criterion"]
+            : additionBug && checkId === "phase.acceptance"
+              ? ["phase-criterion"]
+              : ["task-criterion", "phase-criterion"],
         requiredTestIds:
-          checkId === "ts.unit" ? [taskTestIdentity("test/add.test.ts", "adds independently")] : [],
+          checkId === "ts.unit"
+            ? testNames.map((name) => taskTestIdentity("test/add.test.ts", name))
+            : [],
         evidenceArtifactIds: ["reviewed-evidence"],
       }),
     );
@@ -378,6 +395,235 @@ async function fixture(lintEffect = false) {
   }
 }
 describe("concrete trusted verification qualification", () => {
+  it("completes no-key SDK compilation and a real bug fix with frozen tests and durable final phase acceptance", async () => {
+    const f = await fixture(false, true);
+    const network = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Network forbidden"));
+    try {
+      const oraclePath = path.join(f.projectRoot, "test/add.test.ts");
+      const oracle = await readFile(oraclePath, "utf8");
+      const brokenSource = await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8");
+      const runner = vi.fn(f.input.runProcess);
+      const failing = data(await executeTaskVerification({ ...f.input, runProcess: runner }));
+      expect(failing).toMatchObject({ verification: { outcome: "fail" } });
+      if (failing.dryRun) throw new Error("unexpected preview");
+      expect(failing.verification.checks.find((c) => c.checkId === "ts.unit")).toMatchObject({
+        status: "fail",
+        exitCode: 1,
+        failureCode: "TASK_CHECK_FAILED",
+      });
+      for (const checkId of ["ts.typecheck", "ts.lint"])
+        expect(failing.verification.checks.find((c) => c.checkId === checkId)?.status).toBe("pass");
+      expect(f.review).not.toHaveBeenCalled();
+
+      const stateRoot = path.join(f.parent, "state");
+      await mkdir(stateRoot, { mode: 0o700 });
+      const adapter = data(
+        await createTaskRunAdapter({
+          projectRoot: f.projectRoot,
+          stateRoot,
+          authority: f.input.compilationPolicy.authority,
+        }),
+      );
+      const baseline = data(await adapter.snapshot());
+      const review: TaskReview = {
+        kind: "task_review",
+        schemaVersion: 1,
+        phase: f.input.plan.phase,
+        project: { ...f.input.plan.project, baselineTreeHash: taskContentHash(baseline.entries) },
+        policy: f.input.compilationPolicy,
+      };
+      const transport = vi.fn<typeof fetch>(async (url, options): Promise<Response> => {
+        expect(String(url)).toBe("https://api.openai.com/v1/responses");
+        const request = JSON.parse(options!.body as string);
+        const input = JSON.parse(request.input);
+        const decomposition = request.text.format.name.includes("decomposition");
+        if (!decomposition) {
+          expect(input.context.files).toContainEqual({ path: "src/add.ts", text: brokenSource });
+          expect(input.context.writeTargets).toContainEqual({
+            path: "src/add.ts",
+            fileHash: taskByteHash(brokenSource),
+          });
+        }
+        const document = decomposition
+          ? {
+              kind: "task_plan_draft",
+              schemaVersion: 1,
+              phaseId: review.phase.phaseId,
+              selectionHash: review.phase.selectionHash,
+              tasks: f.input.plan.tasks,
+              dependencies: [],
+              unresolvedQuestions: [],
+            }
+          : {
+              kind: "task_provider_reply",
+              schemaVersion: 1,
+              ...input.identity,
+              reply: {
+                type: "change_set",
+                changeSet: {
+                  kind: "change_set",
+                  schemaVersion: 1,
+                  ...input.identity,
+                  changes: [
+                    {
+                      type: "replace_text",
+                      path: "src/add.ts",
+                      expectedFileHash: taskByteHash(brokenSource),
+                      oldText: "a - b",
+                      newText: "a + b",
+                    },
+                  ],
+                },
+              },
+            };
+        return new Response(
+          JSON.stringify({
+            model: "gpt-6.1-sol",
+            reasoning: { effort: "low" },
+            service_tier: "default",
+            status: "completed",
+            error: null,
+            usage: { input_tokens: 10, output_tokens: 20, total_tokens: 30 },
+            output: [
+              {
+                type: "message",
+                status: "completed",
+                content: [{ type: "output_text", text: JSON.stringify(document) }],
+              },
+            ],
+          }),
+          {
+            headers: {
+              "content-type": "application/json",
+              "x-request-id": `fake_${transport.mock.calls.length}`,
+            },
+          },
+        );
+      });
+      const provider = data(
+        createOpenAITaskProvider({
+          model: "gpt-6.1-sol",
+          effort: "low",
+          environment: { OPENAI_API_KEY: "fake-offline-test-sentinel" },
+          transport,
+        }),
+      );
+      const resourceLimits = {
+        maxImplementationAttemptsPerTask: 3,
+        maxProviderCalls: 2,
+        maxInputTokens: 100000,
+        maxOutputTokens: 8192,
+        maxWallTimeMs: 900000,
+        maxCostMicrousd: 1000000,
+      };
+      const context = data(
+        await prepareTaskCompilationContext({ review, repository: adapter.repository }),
+      );
+      const compiled = data(
+        await executeTaskCompilation({
+          review,
+          adapter,
+          provider,
+          resourceLimits,
+          maxOutputTokens: 4096,
+          timeoutMs: 1000,
+          expectedContextId: context.contextId,
+          allowProviderUsage: true,
+        }),
+      );
+      if (compiled.dryRun) throw new Error("unexpected preview");
+      expect(compiled.checkpoint.status).toBe("completed");
+      // The independent reviewer inspects current source and the frozen oracle,
+      // never the fake provider's claim of success. The executor gates this port
+      // behind successful real tool checks at the exact requested revision.
+      f.review.mockImplementation(async (request) => {
+        expect(await readFile(path.join(f.projectRoot, "src/add.ts"), "utf8")).toBe(
+          brokenSource.replace("a - b", "a + b"),
+        );
+        expect(await readFile(oraclePath, "utf8")).toBe(oracle);
+        expect(request.checkedRevision).toBe(data(await f.input.adapter.snapshot()).revision);
+        expect(request.criterionIds).toEqual([
+          request.checkId === "task.acceptance" ? "task-criterion" : "phase-criterion",
+        ]);
+        return { request, approved: true, evidenceArtifactIds: ["reviewed-evidence"] };
+      });
+      // Git identity probes are simulated here; all verification processes below
+      // execute real installed tools. Live Git/CLI qualification is separate.
+      const git = vi.fn(async () => ({ exitCode: 0, stdout: "", stderr: "" }));
+      const result = await executeManagedTaskPhase({
+        plan: compiled.checkpoint.plan,
+        compilationPolicy: f.input.compilationPolicy,
+        managedCompilationId: compiled.checkpoint.compilationId,
+        resourceLimits,
+        projectRoot: f.projectRoot,
+        gitExecutable: "/offline-test/git",
+        adapter,
+        provider,
+        verification: {
+          policy: f.input.policy,
+          adapter: f.input.adapter,
+          runProcess: async (r) => {
+            if (r.command !== "/offline-test/git") return runner(r);
+            const probe = await git();
+            return {
+              ...probe,
+              stdout: r.args.includes("--show-toplevel")
+                ? `${f.projectRoot}\n`
+                : r.args.includes("HEAD")
+                  ? `${review.project.baselineCommit}\n`
+                  : "",
+            };
+          },
+        },
+        allowProviderUsage: true,
+        maxOutputTokens: 4096,
+        timeoutMs: 1000,
+      });
+      if (!result.success) throw new Error(`${result.error.code}: ${result.error.message}`);
+      const checkpoint = result.checkpoint;
+      expect(checkpoint.run.status).toBe("succeeded");
+      expect(checkpoint.run.tasks).toMatchObject([{ taskId: "add", status: "accepted" }]);
+      expect(checkpoint.run.finalVerification).toMatchObject({
+        outcome: "pass",
+        target: { type: "phase" },
+      });
+      expect(
+        checkpoint.run.finalVerification!.checks.find((c) => c.checkId === "ts.unit")
+          ?.executedTests,
+      ).toBe(3);
+      expect(checkpoint.run.resourceLedger.reservations).toHaveLength(2);
+      expect(checkpoint.compilation?.compilationId).toBe(compiled.checkpoint.compilationId);
+      expect(checkpoint.run.resourceLedger.consumed.totalTokens).toEqual({
+        provenance: "reported",
+        value: 60,
+      });
+      expect(transport).toHaveBeenCalledTimes(2);
+      expect(git).toHaveBeenCalledTimes(3);
+      expect(network).not.toHaveBeenCalled();
+      expect(runner).toHaveBeenCalledTimes(12); // broken baseline, task, fresh task, final phase
+      expect(f.review.mock.calls.map(([r]) => r.checkId)).toEqual([
+        "task.acceptance",
+        "task.acceptance",
+        "phase.acceptance",
+      ]);
+      const durable = JSON.parse(
+        await readFile(
+          path.join(
+            stateRoot,
+            taskByteHash(f.projectRoot).slice(7),
+            `${checkpoint.run.runId}.json`,
+          ),
+          "utf8",
+        ),
+      );
+      expect(durable).toEqual(checkpoint);
+      expect(JSON.stringify(durable)).not.toContain("fake-offline-test-sentinel");
+      expect(await readdir(f.scratchParent)).toEqual([]);
+    } finally {
+      network.mockRestore();
+      await f.dispose();
+    }
+  }, 600000);
   it("executes real pinned tools under full immutable inventories and live task/phase review, with no project effects", async () => {
     const f = await fixture();
     try {

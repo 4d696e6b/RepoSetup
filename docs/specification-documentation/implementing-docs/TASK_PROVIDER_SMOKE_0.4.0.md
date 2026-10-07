@@ -6,6 +6,35 @@ or release endorsement. The owner expressly prohibited paid calls in the initial
 request. Roadmap G requires separately authorized live smoke evidence; continuation
 instructions do not override that boundary.
 
+## Testing without an API key
+
+The joined offline test in `packages/cli/src/tasks/verification-adapter.test.ts`
+uses the installed official SDK with an injected fake HTTP transport. It supplies
+a test-only sentinel credential, reads no real API key, and makes no provider call.
+The test rejects default `fetch` and asserts that it was never invoked. On Node
+24+ with the existing installed development dependencies, run:
+
+```sh
+pnpm --filter rsetup test src/tasks/verification-adapter.test.ts -t 'completes no-key'
+```
+
+The fixture starts with subtraction, freezes positive/negative/zero addition tests
+and their qualified tool bindings before decomposition, and first demonstrates a
+real unit-check failure. Two simulated responses then drive actual SDK decoding,
+core compilation, executor-owned replacement, private compilation/run state,
+inclusive allowance accounting and real TypeScript/ESLint/Vitest checks. An
+independent test reviewer checks current source, immutable oracle bytes, exact
+revision and distinct task/phase criteria. Finalization rechecks the task and phase;
+the test requires a durable `succeeded` checkpoint and unchanged oracle.
+
+Provider configuration, request IDs and usage in this test are simulated evidence.
+Git identity probes are also simulated; tool processes, project effects, snapshots
+and private state are real. This checks local integration and regression behavior,
+not model quality, remote schema acceptance, account access, billing or CLI/Git
+qualification. It cannot close the separately authorized live gate below. There is
+no charge or requirement to buy credits for the offline test. Run expensive concrete
+verifier fixtures serially to avoid the previously observed overlapping-job timeout.
+
 ## Concrete proposed qualification
 
 Use one isolated single-package addition fixture derived from
