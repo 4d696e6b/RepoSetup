@@ -2,6 +2,7 @@ import { mkdtemp } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
+import { pathToFileURL } from "node:url";
 
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -49,5 +50,9 @@ describe("candidate packed-artifact acceptance", () => {
       { cwd: directory },
     );
     expect(accepted.exitCode, accepted.stderr).toBe(0);
+    const delivery = await import(
+      pathToFileURL(path.join(repoRoot, "scripts/verify-registry-release.mjs")).href
+    );
+    await delivery.verifyDelivery(tarball);
   });
 });

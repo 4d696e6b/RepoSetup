@@ -34,4 +34,16 @@ Reviewed on 2026-09-30 against code source commit `67e555eaeb4090f585228797e9569
 
 ## Findings
 
+### Stable publication tooling follow-up — 2026-10-07
+
+The stable preparation review additionally covers `check-release-qualification.mjs`, `artifact-identity.mjs`, `publish-qualified-artifact.mjs`, `verify-registry-release.mjs`, and the replacement manual publication workflow. The product executor, configuration parser, integration commands and dependency lockfile are unchanged from the soaked alpha source.
+
+- Qualification IDs accept exactly three distinct decimal identifiers; workflow inputs reach Node through environment variables rather than shell interpolation. GitHub requests use the fixed official repository/API origin, an Actions read token, and bounded timeouts. The token is not printed or persisted.
+- The gate verifies official repository and workflow identity, first-attempt successful exact-source runs, every required job and step, unchanged branch, latest consecutive evidence, seven elapsed days, and a retained immutable artifact ID. It rejects missing/truncated evidence instead of assuming success.
+- Publication checks stable tag/source/version, artifact size and SHA-256, installed manifest and both launchers. The publishing job never builds or repacks. `npm publish` receives an argument array with `shell: false`, an explicit registry/dist-tag and `--ignore-scripts`; it defaults to `--dry-run`. A conflicting existing version or registry error fails closed.
+- Registry acceptance compares SHA-512 integrity against the qualified bytes before installation. Its generated fixture and cleanup are restricted to an owned temporary directory. Windows npm invocations use fixed arguments; generated-project execution uses Node with argument arrays. No user project or system runtime is modified.
+- Regression tests reject changed sources, fork evidence, missing/skipped/failed gates, stale runs, expired artifacts, tampered bytes, and conflicting registry identity. The owner removed the additional stable soak gate on October 7; the three-run exact-source and artifact gates remain. The packed delivery test launches both aliases, verifies dry-run in an empty directory, and builds/tests the actual generated Express recipe.
+
+No P0/P1 security or data-loss issue was identified in this bounded publication-tooling review. This is not a registry publication or provenance acceptance result; owner review and the remaining stable gates still apply.
+
 No P0/P1 security or data-loss defect was identified in the reviewed source. This result does not close the Phase 27 release gate: exact-SHA CI evidence, soak, repeated qualification, manual sessions, and the executed candidate failure-path exercises remain required. Any source change to executor, adapters, config parsing, recipe validation, artifact packaging, or release workflow requires this review to be repeated.

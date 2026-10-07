@@ -4,24 +4,37 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 27 — Release-candidate qualification: complete for the frozen `0.2.0-alpha.1` candidate.** All three full exact-source qualifications, cross-platform failure-path checks, benchmark evidence and the seven-day soak passed at `145e167e6b60897da96942545ba6dbd40359ad4a`. Phase 20 through Phase 27 implementation gates are complete.
+**Phase 27 — Release-candidate qualification: complete for the frozen alpha candidate.** Its closure is explicitly recorded on `codex/phase-27-closeout` at `837b20d438d92fb6bcd557cb4e5145230238ee13`.
 
-**Phase 28 — Stable release preparation: in progress.** Stable version correction and publication/delivery tooling are committed on `codex/phase-28-stable-release` at `3821519511acd79b3263f42f1be14a752149cd4f`. Stable artifact qualification, its source-specific soak, owner release authorization, npm publication and registry acceptance remain incomplete. Phase 27 completion does not authorize publication or make the alpha tarball a stable package.
+**Phase 28 — Stable release and delivery verification: complete.** `rsetup@0.2.0` is published with a signed attestation from qualified tag source `04228d5206617355b609f640267c73669880e060`. The registry's `latest` tag and tarball integrity match the retained candidate. [Install-from-registry acceptance 37659541713](https://github.com/4d696e6b/RepoSetup/actions/runs/37659541713) passed on Ubuntu 24.04, macOS 15, and Windows 2025. On October 7 the owner removed the additional stable seven-day wait. Phase 19 through Phase 28 gates are complete.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
 
-### Phase 27 closure — 2026-10-07
+### Stable preparation and delivery — 2026-10-07
 
-- [x] Frozen source and branch rechecked: `145e167e6b60897da96942545ba6dbd40359ad4a`, `codex/phase-27-release-candidate`.
-- [x] Three consecutive full passing exact-source runs: [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011). Every required platform, Python recipe, failure-path, pack and artifact-acceptance job passed without skipped steps.
-- [x] Seven-day soak completed 2026-10-07 11:30:20 UTC (18:30:20 Asia/Bangkok); the frozen branch remains unchanged and no newer failed release qualification exists on it.
-- [x] Exact-source [benchmark run 36704251139](https://github.com/4d696e6b/RepoSetup/actions/runs/36704251139) passed. [Usability evidence 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) and the bounded [security review](../security-docs/SECURITY_REVIEW_0.2.0.md) remain recorded. No open P0/P1, security, or data-loss defect was identified in the candidate review.
-- [x] The final candidate archive is retained in run 36708257011. Its `candidate-artifact.json` identifies `rsetup@0.2.0-alpha.1`, the exact frozen source, 106652 bytes, and SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`. Phase 28 must publish a correctly versioned, separately qualified stable tarball.
-- [x] Phase 27 is marked complete. This documentation closeout uses its own branch to preserve both the frozen alpha source and the stable source undergoing qualification.
+The current [stable qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md) gives the final source, failed and superseded attempts, signed provenance, and passing delivery run. The entries below also preserve the earlier preparation sequence.
+
+- [x] Rechecked the frozen alpha source `145e167e6b60897da96942545ba6dbd40359ad4a`: qualification runs [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), and [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011) passed; the branch remains frozen. Its soak ended October 7 at 11:30:20 UTC. This qualifies the alpha source, not a newly versioned stable artifact.
+- [x] Stable preparation is isolated from that frozen branch. The public manifest now identifies `rsetup@0.2.0`; CLI version tests derive from the manifest.
+- [x] Publication is manually dispatched, defaults to a dry-run, requires the existing `v0.2.0` tag, and downloads the immutable artifact ID from a previous qualification run. Publication never builds or packs another artifact.
+- [x] The publication gate checks three consecutive successful first-attempt full runs from the exact source, all 16 required jobs and their steps without skips, an unchanged candidate branch, and one unexpired artifact. Missing API data fails closed. The owner removed the additional stable seven-day wait on October 7; prior exact-source evidence remains recorded but cannot qualify a changed release source.
+- [x] Artifact size, SHA-256, source, version and installed launcher checks block publication. Registry errors other than 404 block publication. A retry accepts an existing version only when its integrity equals the qualified tarball; published bytes are never replaced.
+- [x] Delivery automation checks exact registry integrity and the stable dist-tag, installs outside the monorepo on Ubuntu/macOS/Windows, checks both aliases, and exercises dry-run plus a real TypeScript Express build and HTTP-response test. The same delivery routine is exercised locally using the packed stable artifact.
+- [x] Local verification on temporary Node 24.21.0: all 438 unit tests, typecheck, lint and build pass; 36 e2e tests pass. One local Python add test skips because uv is unavailable on this host; required CI installs uv and must pass it. The release validator also accepts the three actual completed alpha API responses at the recorded deadline.
+- [x] Initial stable [benchmark 37647160928](https://github.com/4d696e6b/RepoSetup/actions/runs/37647160928), full qualification [37647145314](https://github.com/4d696e6b/RepoSetup/actions/runs/37647145314) and [usability checks 37647167901](https://github.com/4d696e6b/RepoSetup/actions/runs/37647167901) passed at preparation source `3821519511acd79b3263f42f1be14a752149cd4f`. [Run 37647155958](https://github.com/4d696e6b/RepoSetup/actions/runs/37647155958) failed a Windows local-file locked-install fixture's 30-second deadline, so no stable soak was started and the failed run remains recorded.
+- [x] Corrected that test fixture to use a second local-file dependency for manifest drift and npm offline mode; it no longer performs an accidental public-registry lookup. Its four real npm subprocesses retain a bounded 90-second test budget for slower Windows runners. Production code and package dependencies are unchanged. The corrected fixture passes locally on Node 24.21.0; typecheck and lint also pass.
+- [x] Initial stable source `4a6f49ca139cbd4f0915a3556497f48ae7543ae6` passed full qualification runs [37648824809](https://github.com/4d696e6b/RepoSetup/actions/runs/37648824809), [37648831078](https://github.com/4d696e6b/RepoSetup/actions/runs/37648831078), and [37648836155](https://github.com/4d696e6b/RepoSetup/actions/runs/37648836155), plus exact-source benchmark [37648841040](https://github.com/4d696e6b/RepoSetup/actions/runs/37648841040) and usability checks [37648846715](https://github.com/4d696e6b/RepoSetup/actions/runs/37648846715). Its tarball was 106623 bytes, SHA-256 `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`. The release-gate change creates a new source requiring new runs.
+- [x] The earlier source `ee93373c59615a197d0e724353738fd3e695a1a2` passed three full cross-platform qualifications. The final corrected source `04228d5206617355b609f640267c73669880e060` passed [37657135210](https://github.com/4d696e6b/RepoSetup/actions/runs/37657135210), [37657140756](https://github.com/4d696e6b/RepoSetup/actions/runs/37657140756), and [37657146191](https://github.com/4d696e6b/RepoSetup/actions/runs/37657146191), with all 16 required jobs and steps on each run; final artifact ID `11498793067` retains the 106623-byte tarball with SHA-256 `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`.
+- [x] Qualification progress is committed on `codex/phase-28-release-evidence` so documentation updates do not move the selected release source. See [the stable qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md).
+- [x] The owner approved npm's GitHub OIDC trusted publisher for `4d696e6b/RepoSetup` and `publish-npm.yml` with direct `npm publish`; npm reports it as valid after the accepted publish. The owner's October 7 instruction authorized proceeding without the additional calendar wait.
+- [x] The former candidate `ee93373c59615a197d0e724353738fd3e695a1a2` passed all three full qualifications [37653362998](https://github.com/4d696e6b/RepoSetup/actions/runs/37653362998), [37653376658](https://github.com/4d696e6b/RepoSetup/actions/runs/37653376658), and [37653392242](https://github.com/4d696e6b/RepoSetup/actions/runs/37653392242), plus benchmark [37653407874](https://github.com/4d696e6b/RepoSetup/actions/runs/37653407874) and usability checks [37653421554](https://github.com/4d696e6b/RepoSetup/actions/runs/37653421554). Artifact ID `11497374204` retained the same 106623-byte tarball with SHA-256 `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`. The tag initially pointed to this source, then the owner authorized replacing it before publication after fresh qualification of the workflow correction.
+- [x] Initial publication dry-run [37655329425](https://github.com/4d696e6b/RepoSetup/actions/runs/37655329425) passed the exact-source gate and fetched the retained archive but stopped at a nested download path before npm execution. A default-branch workaround subsequently failed npm provenance (`E422`); the tag-bound correction and fresh qualification are recorded above.
+- [x] Tag-bound [dry run 37658608341](https://github.com/4d696e6b/RepoSetup/actions/runs/37658608341) passed. [Publish run 37658713089](https://github.com/4d696e6b/RepoSetup/actions/runs/37658713089) uploaded the exact qualified tarball and signed [Sigstore entry 3133834168](https://search.sigstore.dev/?logIndex=3133834168); its immediate metadata check failed while npm scanned the package. The package is now visible, with matching integrity and `latest: 0.2.0`.
+- [x] [Safe delivery retry 37659541713](https://github.com/4d696e6b/RepoSetup/actions/runs/37659541713) passed its integrity-preserving skip-publish step and registry acceptance on Ubuntu 24.04, macOS 15, and Windows 2025. Every step of all four jobs succeeded; no required step was skipped.
 
 ### Phase 27 progress — 2026-09-29
 
-- [x] The public CLI is now `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17.
+- [x] At this Phase 27 checkpoint, the CLI was `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17. The current published version is `0.2.0`, as recorded above.
 - [x] Packed-artifact tests derive the tarball and manifest version from `packages/cli/package.json`, record the SHA-256, and install the tarball in a temporary directory outside the monorepo. Both `rsetup` and `reposetup` launch through npm's actual platform launcher.
 - [x] `write-artifact-evidence.mjs` writes a source-SHA and SHA-256 identity record once for each packed candidate. `verify-packed-artifact.mjs` verifies that record before installing and launching the same artifact.
 - [x] The manually dispatched candidate workflow and the `v0.2.0` publish workflow make Node 24 platform qualification, Python 3.12/3.13 golden qualification, exact-SHA failure-path qualification, a one-time candidate pack, and cross-platform artifact acceptance blocking dependencies. The publishing path uses the downloaded qualifying tarball only after its source SHA and tag/version agree.
@@ -32,7 +45,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] The candidate benchmark report records its exact `GITHUB_SHA` when run in Actions, in addition to the existing platform/runtime and per-trial results. This makes final benchmark evidence auditable against the frozen candidate source.
 - [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) completed five cold and five warm trials for fixed React and Express package profiles on Ubuntu, macOS, and Windows with Node 24. All measurements passed; consolidated installs use one subprocess versus five baseline passes.
 - [x] Candidate failure qualification is implemented at `33354279088970dd3d1dfcf8e5cfbc73a741c20c`: each supported OS runs the real timeout/interruption, permission, existing-user-file, invalid-input, cleanup, and packed usability checks. The React/Vite usability command is additionally exercised while its default Vite port is deliberately occupied; the temporary listener is always closed. The fault job blocks both packing and publication and retains its per-OS usability evidence. Cache-miss behavior is separately measured by the candidate benchmark's fresh, benchmark-owned caches.
-- [x] These alpha gates subsequently passed at the frozen source above; Phase 27 is complete. Stable delivery remains Phase 28 work.
+- [x] These alpha gates subsequently passed at `145e167e6b60897da96942545ba6dbd40359ad4a`; see the October 7 transition record above. Stable source qualification remains separate.
 
 ### Phase 25 progress — 2026-09-24
 
@@ -129,11 +142,11 @@ Researched versions are the registry releases observed on this date. Direct spec
 - [x] Experimental catalog IDs that still installed unversioned packages (`fastify`, `mongoose`, `drizzle`) now pin researched direct versions so they cannot quietly float while remaining experimental.
 - [x] Phase 27 moves the public CLI and all workspace package engine metadata to Node 24 or later, matching the 0.2.0 candidate support contract.
 
-Phase 22 implementation gates for reproducible recipes are complete. Phase 27 closes the deferred Node 24 product-metadata change; its release qualification gates remain open.
+Phase 22 implementation gates for reproducible recipes are complete. Phase 27 completed the deferred Node 24 product-metadata change and frozen alpha qualification. Stable publication and registry delivery acceptance are complete in Phase 28, as recorded above.
 
 ## Current release
 
-The observed npm dist-tag is `rsetup@0.1.1`; the source, tag, integrity, and remaining unobserved GitHub evidence are recorded in [Phase 19 baseline](./PHASE_19_BASELINE.md).
+The observed npm `latest` dist-tag is `rsetup@0.2.0`. Its registry integrity matches the qualified artifact, and its signed provenance names the `v0.2.0` tag at `04228d5206617355b609f640267c73669880e060`. See [the stable qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md). The older `0.1.1` baseline remains in [Phase 19 baseline](./PHASE_19_BASELINE.md).
 
 ## Planning checkpoint — 2026-09-22
 
@@ -163,8 +176,8 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 24 — Daily CLI usability and recovery guidance
 - [x] Phase 25 — Existing integration qualification
 - [x] Phase 26 — Important new integrations
-- [ ] Phase 27 — Release-candidate qualification
-- [ ] Phase 28 — 0.2.0 publication and delivery verification
+- [x] Phase 27 — Release-candidate qualification (frozen alpha candidate)
+- [x] Phase 28 — 0.2.0 publication and delivery verification
 
 ## Historical Phase 18 checkpoint
 
