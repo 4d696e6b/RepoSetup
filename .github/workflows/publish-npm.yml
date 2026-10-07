@@ -3,61 +3,195 @@ name: Publish npm
 on:
   push:
     tags:
-      - "v*"
+      - "v0.2.0"
 
 permissions:
   contents: read
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    permissions:
-      contents: read
-      id-token: write
+  platform:
+    name: Platform qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
           cache: pnpm
-      - name: Ensure npm CLI supports trusted publishing
-        run: npm install -g npm@^11.5.1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.17"
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm test
       - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
       - run: pnpm registry:validate
       - run: pnpm test:e2e
-      - run: pnpm pack:packages
+
+  golden:
+    name: Recipe qualification (${{ matrix.os }}, Python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.17"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:golden
+
+  faults:
+    name: Failure-path qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Exercise timeout, interruption, permission, and user-file safeguards
+        run: pnpm test
+      - name: Exercise invalid input and mutation failure paths
+        run: pnpm test:e2e
+      - name: Exercise a generated development server with its default port occupied
+        run: pnpm test:usability
+        env:
+          CI: true
+          REPOSETUP_USABILITY: "1"
+          REPOSETUP_USABILITY_PRESET: react-vite
+          REPOSETUP_USABILITY_ADD: zod
+          REPOSETUP_USABILITY_OCCUPY_DEV_PORT: "1"
+          REPOSETUP_USABILITY_EVIDENCE: usability-fault-evidence.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: usability-fault-${{ matrix.os }}
+          path: usability-fault-evidence.json
+          if-no-files-found: error
+
+  pack-candidate:
+    name: Pack identified candidate
+    needs: [platform, golden, faults]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm review:licenses --output candidate/dependency-licenses.json
+      - run: pnpm --filter rsetup pack --pack-destination candidate
+      - name: Record artifact identity
+        run: node scripts/write-artifact-evidence.mjs --tarball candidate/rsetup-*.tgz --source-sha "$GITHUB_SHA" --output candidate/candidate-artifact.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: candidate-artifact
+          path: candidate/
+          if-no-files-found: error
+
+  artifact-acceptance:
+    name: Packed artifact acceptance (${{ matrix.os }})
+    needs: pack-candidate
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          name: candidate-artifact
+          path: candidate
+      - run: node scripts/verify-packed-artifact.mjs --directory candidate
+
+  publish:
+    needs: [platform, golden, faults, pack-candidate, artifact-acceptance]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          name: candidate-artifact
+          path: candidate
+      - name: Ensure tag, source, and artifact agree
+        run: |
+          VERSION="$(node -p "require('./candidate/candidate-artifact.json').version")"
+          SOURCE_SHA="$(node -p "require('./candidate/candidate-artifact.json').sourceSha")"
+          test "v${VERSION}" = "$GITHUB_REF_NAME"
+          test "$SOURCE_SHA" = "$GITHUB_SHA"
+      - name: Ensure npm CLI supports trusted publishing
+        run: npm install -g npm@^11.5.1
       - name: Skip publish when this version already exists
         id: existing
-        working-directory: packages/cli
         run: |
-          NAME="$(node -p "require('./package.json').name")"
-          VERSION="$(node -p "require('./package.json').version")"
+          NAME="$(node -p "require('./candidate/candidate-artifact.json').package")"
+          VERSION="$(node -p "require('./candidate/candidate-artifact.json').version")"
           echo "name=${NAME}" >> "$GITHUB_OUTPUT"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "npm already has ${NAME}@${VERSION}; skipping publish"
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
-      - name: Publish reposetup
+      - name: Publish identified candidate artifact
         if: steps.existing.outputs.exists == 'false'
-        working-directory: packages/cli
-        run: npm publish --access public
+        run: |
+          TARBALL="$(find candidate -maxdepth 1 -type f -name '*.tgz' -print -quit)"
+          test -n "$TARBALL"
+          npm publish "$TARBALL" --access public
         env:
           NPM_CONFIG_PROVENANCE: "true"
       - name: Verify registry version
         if: steps.existing.outputs.exists == 'false'
         run: |
-          NAME="${{ steps.existing.outputs.name }}"
-          VERSION="${{ steps.existing.outputs.version }}"
-          PUBLISHED="$(npm view "${NAME}@${VERSION}" version)"
-          test "${PUBLISHED}" = "${VERSION}"
-          npm view "${NAME}" dist-tags
+          PUBLISHED="$(npm view "${{ steps.existing.outputs.name }}@${{ steps.existing.outputs.version }}" version)"
+          test "$PUBLISHED" = "${{ steps.existing.outputs.version }}"
+          npm view "${{ steps.existing.outputs.name }}" dist-tags

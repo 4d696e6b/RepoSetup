@@ -17,22 +17,10 @@ jobs:
         include:
           - runner: ubuntu-24.04
             architecture: x64
-            node: 20
-          - runner: ubuntu-24.04
-            architecture: x64
-            node: 22
-          - runner: ubuntu-24.04
-            architecture: x64
             node: 24
           - runner: macos-15
             architecture: arm64
-            node: 22
-          - runner: macos-15
-            architecture: arm64
             node: 24
-          - runner: windows-2025
-            architecture: x64
-            node: 22
           - runner: windows-2025
             architecture: x64
             node: 24

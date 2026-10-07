@@ -4,9 +4,35 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Phase 24 — Daily CLI usability: in progress.** Phase 22 recipe gates are complete (Node 24 engines floor deferred). Phase 20 and Phase 21 are complete. Phase 18's historical qualification gaps remain open until their replacement gates have evidence.
+**Phase 27 — Release-candidate qualification: complete for the frozen `0.2.0-alpha.1` candidate.** All three full exact-source qualifications, cross-platform failure-path checks, benchmark evidence and the seven-day soak passed at `145e167e6b60897da96942545ba6dbd40359ad4a`. Phase 20 through Phase 27 implementation gates are complete.
+
+**Phase 28 — Stable release preparation: in progress.** Stable version correction and publication/delivery tooling are committed on `codex/phase-28-stable-release` at `3821519511acd79b3263f42f1be14a752149cd4f`. Stable artifact qualification, its source-specific soak, owner release authorization, npm publication and registry acceptance remain incomplete. Phase 27 completion does not authorize publication or make the alpha tarball a stable package.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
+
+### Phase 27 closure — 2026-10-07
+
+- [x] Frozen source and branch rechecked: `145e167e6b60897da96942545ba6dbd40359ad4a`, `codex/phase-27-release-candidate`.
+- [x] Three consecutive full passing exact-source runs: [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011). Every required platform, Python recipe, failure-path, pack and artifact-acceptance job passed without skipped steps.
+- [x] Seven-day soak completed 2026-10-07 11:30:20 UTC (18:30:20 Asia/Bangkok); the frozen branch remains unchanged and no newer failed release qualification exists on it.
+- [x] Exact-source [benchmark run 36704251139](https://github.com/4d696e6b/RepoSetup/actions/runs/36704251139) passed. [Usability evidence 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) and the bounded [security review](../security-docs/SECURITY_REVIEW_0.2.0.md) remain recorded. No open P0/P1, security, or data-loss defect was identified in the candidate review.
+- [x] The final candidate archive is retained in run 36708257011. Its `candidate-artifact.json` identifies `rsetup@0.2.0-alpha.1`, the exact frozen source, 106652 bytes, and SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`. Phase 28 must publish a correctly versioned, separately qualified stable tarball.
+- [x] Phase 27 is marked complete. This documentation closeout uses its own branch to preserve both the frozen alpha source and the stable source undergoing qualification.
+
+### Phase 27 progress — 2026-09-29
+
+- [x] The public CLI is now `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17.
+- [x] Packed-artifact tests derive the tarball and manifest version from `packages/cli/package.json`, record the SHA-256, and install the tarball in a temporary directory outside the monorepo. Both `rsetup` and `reposetup` launch through npm's actual platform launcher.
+- [x] `write-artifact-evidence.mjs` writes a source-SHA and SHA-256 identity record once for each packed candidate. `verify-packed-artifact.mjs` verifies that record before installing and launching the same artifact.
+- [x] The manually dispatched candidate workflow and the `v0.2.0` publish workflow make Node 24 platform qualification, Python 3.12/3.13 golden qualification, exact-SHA failure-path qualification, a one-time candidate pack, and cross-platform artifact acceptance blocking dependencies. The publishing path uses the downloaded qualifying tarball only after its source SHA and tag/version agree.
+- [x] `pnpm review:licenses` produces a path-free dependency license record and rejects unreviewed license categories. The current lockfile review contains Apache-2.0, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0, ISC, MIT, and MPL-2.0 only.
+- [x] Local targeted candidate artifact, launcher, workflow, and dependency-license tests pass; workspace unit tests, typecheck, and lint pass. The local host is Node 22.12.0, below the candidate floor, so full create/add e2e qualification correctly stops at preflight and must be run by the required Node 24 CI matrix.
+- [x] A targeted current-source review covers process/path boundaries, lifecycle scripts, redaction, config injection, and existing-file preservation; it found no P0/P1 security or data-loss defect. See [the 0.2.0 security review](../security-docs/SECURITY_REVIEW_0.2.0.md).
+- [x] [Candidate qualification run 36563444045](https://github.com/4d696e6b/RepoSetup/actions/runs/36563444045) passed the complete Ubuntu 24.04, macOS 15, and Windows 2025 Node 24 platform suite; every Python 3.12/3.13 golden recipe; and same-tarball artifact acceptance on all three systems. Its `7aa910e24dfd57be59e41c9b831c7f0d5656ecb4` artifact is `rsetup-0.2.0-alpha.1.tgz` (SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`).
+- [x] The candidate benchmark report records its exact `GITHUB_SHA` when run in Actions, in addition to the existing platform/runtime and per-trial results. This makes final benchmark evidence auditable against the frozen candidate source.
+- [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) completed five cold and five warm trials for fixed React and Express package profiles on Ubuntu, macOS, and Windows with Node 24. All measurements passed; consolidated installs use one subprocess versus five baseline passes.
+- [x] Candidate failure qualification is implemented at `33354279088970dd3d1dfcf8e5cfbc73a741c20c`: each supported OS runs the real timeout/interruption, permission, existing-user-file, invalid-input, cleanup, and packed usability checks. The React/Vite usability command is additionally exercised while its default Vite port is deliberately occupied; the temporary listener is always closed. The fault job blocks both packing and publication and retains its per-OS usability evidence. Cache-miss behavior is separately measured by the candidate benchmark's fresh, benchmark-owned caches.
+- [x] These alpha gates subsequently passed at the frozen source above; Phase 27 is complete. Stable delivery remains Phase 28 work.
 
 ### Phase 25 progress — 2026-09-24
 
@@ -46,7 +72,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Express post-create commands match the generated `dev`, `build`, `start`, and Vitest scripts.
 - [x] The React/Vite pnpm preset allows the esbuild dependency build without treating that approval file as an ambiguous workspace root, so `add` still runs in the generated app.
 - [x] `pnpm test:usability` runs the documented non-TTY flow from a packed install: preview, create, the printed Next commands, add, doctor, and export. One local macOS session passed for `react-vite` plus `zod` on 2026-09-25.
-- [ ] Five observed sessions across Ubuntu, macOS, and Windows remain required. `.github/workflows/usability.yml` runs that flow twice on Ubuntu, twice on macOS, and once on Windows. Phase 24 stays open until those runs are recorded.
+- [x] [Usability sessions run 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) recorded two Ubuntu 24.04/x64 sessions, two macOS 15/arm64 sessions, and one Windows 2025/x64 session. Each Node 24 session completed preview, create, dev server, build, test, add, doctor, and export without manual repair. Phase 24 is complete.
 
 ### Phase 23 progress — 2026-09-23
 
@@ -74,7 +100,7 @@ Phase 23 implementation and performance gates are complete. The next phase is Ph
 - [x] Disk-space preflight requires 512 MiB free before CLI execution; recovery policy forbids automatic rollback and limits any future restore to verified RepoSetup-owned files.
 - [x] Full workspace tests (355), packed-CLI e2e tests (12), and available golden recipes (2) pass after the executor changes; 3 golden recipes remain environment-gated skips.
 - [x] POSIX cancellation terminates spawned descendant processes; the regression fixture proves the descendant cannot continue and mutate the project after cancellation.
-- [x] Prerequisite preflight verifies the current documented Node 20.9 and Python 3.9 minimums before mutation. The Node 24/Python 3.12–3.13 matrix and Windows-native process handling are Phase 21 qualification requirements.
+- [x] Phase 20 introduced prerequisite preflight before mutation. Phase 27 updates the product contract from its historical Node 20.9/Python 3.9 floors to Node 24/Python 3.12 and uses the Phase 21 matrix for qualification.
 
 ### Phase 21 progress — 2026-09-23
 
@@ -82,7 +108,7 @@ Phase 23 implementation and performance gates are complete. The next phase is Ph
 - [x] Windows process execution resolves trusted `PATH` entries. Native `.exe`/`.com` files execute directly; `.cmd`/`.bat` shims use an explicit `cmd.exe` invocation with `shell: false`, and shim paths or arguments containing command metacharacters are rejected before execution.
 - [x] Packed-artifact e2e coverage uses a parent path containing spaces and Unicode, executes both aliases on POSIX native shims, and executes both Windows `.cmd` aliases through npm's native launcher.
 - [x] Executor tests cover Unicode project-file paths below a parent directory containing spaces and Unicode; `.env.example` additions preserve an existing CRLF line-ending convention.
-- [x] Platform CI uses explicit Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64 runners. It runs packed-artifact e2e on Node 22 and 24 across all targets, with Node 20 retained on Ubuntu for the supported floor.
+- [x] Platform CI uses explicit Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64 runners. Phase 27 narrows its active matrix to the Node 24 product floor on every target; its prior Node 20/22 matrix is historical evidence only.
 - [x] The platform matrix runs for pull requests as well as the protected development and release branches.
 - [x] Platform and golden workflow runs retain uniquely named JSON evidence artifacts with their runtime and architecture details for later qualification review.
 - [x] Golden CI now provisions uv and runs the complete recipe suite on every supported runner with Python 3.12 and 3.13.
@@ -101,9 +127,9 @@ Researched versions are the registry releases observed on this date. Direct spec
 - [x] A locked repeat install is `npm ci`, `pnpm install --frozen-lockfile`, or `uv sync --locked`. It does not re-run generators. A missing lockfile or a lockfile for a different package manager fails before `npm ci` can delete `node_modules`. pip has no lockfile and is refused.
 - [x] Hermetic evidence: a local `file:` package is installed twice with `npm ci` through the executor. The lockfile SHA-256 stays identical, the user `.npmrc` is unchanged, and a drifted `package.json` fails before the lockfile can change. This does not claim a public-registry cold install.
 - [x] Experimental catalog IDs that still installed unversioned packages (`fastify`, `mongoose`, `drizzle`) now pin researched direct versions so they cannot quietly float while remaining experimental.
-- [ ] Published CLI `engines` stay `>=20`. Raising the floor to Node 24 is deferred to a later release phase after the Phase 19 qualification target is the product claim.
+- [x] Phase 27 moves the public CLI and all workspace package engine metadata to Node 24 or later, matching the 0.2.0 candidate support contract.
 
-Phase 22 implementation gates for reproducible recipes are complete. The Node 24 engines floor remains an explicit deferred product-metadata change.
+Phase 22 implementation gates for reproducible recipes are complete. Phase 27 closes the deferred Node 24 product-metadata change; its release qualification gates remain open.
 
 ## Current release
 
@@ -134,7 +160,7 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 21 — Cross-platform execution
 - [x] Phase 22 — Reproducible recipes and compatibility
 - [x] Phase 23 — Measured installation performance
-- [ ] Phase 24 — Daily CLI usability and recovery guidance
+- [x] Phase 24 — Daily CLI usability and recovery guidance
 - [x] Phase 25 — Existing integration qualification
 - [x] Phase 26 — Important new integrations
 - [ ] Phase 27 — Release-candidate qualification

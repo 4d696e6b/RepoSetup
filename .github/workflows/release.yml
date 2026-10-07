@@ -1,23 +1,33 @@
-name: Release
+name: Release candidate qualification
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*"
+
+permissions:
+  contents: read
 
 jobs:
-  qualify:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
+  platform:
+    name: Platform qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
-          registry-url: https://registry.npmjs.org
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.17"
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm typecheck
@@ -25,8 +35,109 @@ jobs:
       - run: pnpm test
       - run: pnpm registry:validate
       - run: pnpm test:e2e
-      - run: pnpm pack:packages
+
+  golden:
+    name: Recipe qualification (${{ matrix.os }}, Python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.17"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:golden
+
+  faults:
+    name: Failure-path qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Exercise timeout, interruption, permission, and user-file safeguards
+        run: pnpm test
+      - name: Exercise invalid input and mutation failure paths
+        run: pnpm test:e2e
+      - name: Exercise a generated development server with its default port occupied
+        run: pnpm test:usability
+        env:
+          CI: true
+          REPOSETUP_USABILITY: "1"
+          REPOSETUP_USABILITY_PRESET: react-vite
+          REPOSETUP_USABILITY_ADD: zod
+          REPOSETUP_USABILITY_OCCUPY_DEV_PORT: "1"
+          REPOSETUP_USABILITY_EVIDENCE: usability-fault-evidence.json
       - uses: actions/upload-artifact@v4
         with:
-          name: reposetup-packs
-          path: packages/cli/*.tgz
+          name: usability-fault-${{ matrix.os }}
+          path: usability-fault-evidence.json
+          if-no-files-found: error
+
+  pack-candidate:
+    name: Pack identified candidate
+    needs: [platform, golden, faults]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm review:licenses --output candidate/dependency-licenses.json
+      - run: pnpm --filter rsetup pack --pack-destination candidate
+      - name: Record artifact identity
+        run: node scripts/write-artifact-evidence.mjs --tarball candidate/rsetup-*.tgz --source-sha "$GITHUB_SHA" --output candidate/candidate-artifact.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: candidate-artifact
+          path: candidate/
+          if-no-files-found: error
+
+  artifact-acceptance:
+    name: Packed artifact acceptance (${{ matrix.os }})
+    needs: pack-candidate
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          name: candidate-artifact
+          path: candidate
+      - run: node scripts/verify-packed-artifact.mjs --directory candidate

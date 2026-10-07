@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { createServer, type Server } from "node:net";
 import { mkdir, mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -18,6 +19,7 @@ import {
 const preset = process.env.REPOSETUP_USABILITY_PRESET ?? "react-vite";
 const addId = process.env.REPOSETUP_USABILITY_ADD ?? "zod";
 const enabled = process.env.REPOSETUP_USABILITY === "1";
+const occupyDevPort = process.env.REPOSETUP_USABILITY_OCCUPY_DEV_PORT === "1";
 const tempDirs: string[] = [];
 
 afterEach(async () => {
@@ -34,7 +36,11 @@ describe("non-TTY usability session", () => {
       if (evidencePath !== undefined) {
         await writeFile(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
       }
-      expect(evidence.steps.every((step) => step.exitCode === 0)).toBe(true);
+      expect(
+        evidence.steps
+          .filter((step) => step.expectedFailure !== true)
+          .every((step) => step.exitCode === 0),
+      ).toBe(true);
     },
   );
 });
@@ -64,7 +70,7 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
   const projectDir = path.join(parent, "app");
   await mkdir(projectDir);
 
-  const steps: Array<{ name: string; exitCode: number }> = [];
+  const steps: Array<{ name: string; exitCode: number; expectedFailure?: boolean }> = [];
   const preview = await cli(
     bin,
     ["--no-color", "--json", "create", "--preset", presetId, "--dry-run"],
@@ -94,6 +100,17 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
     .filter((line) => line.startsWith("Next: "))
     .map((line) => line.slice("Next: ".length).trim());
   expect(nextCommands.length).toBeGreaterThan(0);
+
+  if (occupyDevPort && presetId === "react-vite") {
+    const occupied = await exerciseOccupiedDevPort(projectDir);
+    steps.push({
+      name: "pnpm dev -- --host 127.0.0.1 --port 5173 --strictPort",
+      exitCode: occupied.exitCode,
+      expectedFailure: true,
+    });
+    expect(occupied.exitCode).not.toBe(0);
+    expect(`${occupied.stdout}\n${occupied.stderr}`).toMatch(/port|address/i);
+  }
 
   for (const command of nextCommands) {
     const result = isServerCommand(command)
@@ -149,6 +166,85 @@ function cliArgs(cwd: string, command: string): Promise<CliRunResult> {
 
 function isServerCommand(command: string): boolean {
   return /(\sdev|\sstart|flask run|node (dist\/)?app\.js)$/.test(command);
+}
+
+async function exerciseOccupiedDevPort(cwd: string): Promise<CliRunResult> {
+  const server = await occupyLoopbackPort(5173);
+  try {
+    return await runBoundedProcess(
+      "pnpm",
+      ["dev", "--", "--host", "127.0.0.1", "--port", "5173", "--strictPort"],
+      cwd,
+      20_000,
+    );
+  } finally {
+    await closeServer(server);
+  }
+}
+
+async function occupyLoopbackPort(port: number): Promise<Server> {
+  const server = createServer();
+  await new Promise<void>((resolve, reject) => {
+    const onError = (error: Error) => {
+      server.off("listening", onListening);
+      reject(error);
+    };
+    const onListening = () => {
+      server.off("error", onError);
+      resolve();
+    };
+    server.once("error", onError);
+    server.once("listening", onListening);
+    server.listen({ host: "127.0.0.1", port });
+  });
+  return server;
+}
+
+function closeServer(server: Server): Promise<void> {
+  return new Promise((resolve, reject) => {
+    server.close((error) => (error === undefined ? resolve() : reject(error)));
+  });
+}
+
+function runBoundedProcess(
+  command: string,
+  args: readonly string[],
+  cwd: string,
+  timeoutMs: number,
+): Promise<CliRunResult> {
+  const launch = windowsCommand(command, args);
+  return new Promise((resolve) => {
+    const child = spawn(launch.command, launch.args, {
+      cwd,
+      env: sessionEnv(),
+      shell: false,
+      detached: process.platform !== "win32",
+      stdio: ["ignore", "pipe", "pipe"],
+      windowsHide: true,
+    });
+    let output = "";
+    let settled = false;
+    const finish = (exitCode: number, timeout = false) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      if (timeout) stopChild(child.pid);
+      resolve({
+        exitCode,
+        stdout: output,
+        stderr: timeout ? `${output}\nOccupied-port command timed out.` : output,
+      });
+    };
+    const timer = setTimeout(() => finish(1, true), timeoutMs);
+    child.stdout?.on("data", (chunk: Buffer) => {
+      output += chunk.toString("utf8");
+    });
+    child.stderr?.on("data", (chunk: Buffer) => {
+      output += chunk.toString("utf8");
+    });
+    child.on("error", () => finish(1));
+    child.on("close", (code) => finish(code ?? 1));
+  });
 }
 
 function probeServer(cwd: string, command: string): Promise<CliRunResult> {
