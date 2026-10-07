@@ -173,6 +173,15 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
   };
 }
 
+/** npm exec launch options describe the outer CLI, not child generators. */
+export function childProcessEnvironment(environment: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  return Object.fromEntries(
+    Object.entries(environment).filter(
+      ([key]) => !["npm_config_package", "npm_config_call"].includes(key.toLowerCase()),
+    ),
+  );
+}
+
 export function createDefaultProcessRunner(): ProcessRunner {
   return (request) => {
     if (request.signal?.aborted === true) {
@@ -190,7 +199,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
     return new Promise((resolve) => {
       const child = spawn(launch.command, [...launch.args], {
         cwd: request.cwd,
-        env: process.env,
+        env: childProcessEnvironment(process.env),
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,

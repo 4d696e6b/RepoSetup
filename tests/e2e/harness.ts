@@ -116,7 +116,7 @@ export async function cleanupWorkspace(dir: string, keep: boolean): Promise<void
   if (keep) {
     return;
   }
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 }
 
 export function keepOnFailure(): boolean {
