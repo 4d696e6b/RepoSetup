@@ -487,3 +487,33 @@ The latest core suite passed **446 tests across 54 files** before the final star
 guard; that guard is covered by the final CLI suite. Documentation formatting,
 local links and whitespace passed. The full serial verifier/workspace result remains
 pending at this slice's commit; G is not marked complete.
+
+### G final offline validation follow-up
+
+The third implementation slice is committed as **`4ecddd4`**; the coding slice is
+**`cc0881e`**, following transport **`16ea4ce`**. The isolated workspace rerun passed
+**844 tests across 107 files**: core **446/54**, registry **15/4**, integrations
+**126/18**, CLI **243/29**, inherited website **14/2**. All seven concrete verifier
+fixture cases passed, including the real SDK with fake HTTP through executor-owned
+text replacement and actual pinned TypeScript/ESLint/Vitest task acceptance. The
+180-second timeout from the overlapping runs did not recur; serial CLI validation
+completed in 460.51 seconds. Inherited tar locale warnings remain non-failing.
+
+The full rerun started before the final host-startup budget guard refinement. Final
+source validation after that refinement passed workspace build/typecheck/lint and
+**68 affected CLI tests across 6 files**, including exhausted startup before
+acquisition/dispatch. All validation uses the existing temporary **Node 24.21.0**;
+default Node **22.12.0** is unchanged and unsupported. No system install or paid call.
+Changed-document formatting, **92 local links across 11 documents**, and Git
+whitespace checks passed before the implementation commit; this documentation-only
+follow-up is formatted and whitespace-checked separately. No failing offline check
+remains for the implemented local scope.
+
+**G is still not complete.** Actual provider account/model access, strict-schema
+acceptance, reported effective configuration/usage and real task/final-phase
+completion need the separately authorized smoke. Its concrete fixture, independent
+criteria and finite two-call/$1 estimated allowance are documented in
+[the smoke protocol](./TASK_PROVIDER_SMOKE_0.4.0.md). The owner's no-paid-call boundary
+remains in force. H is the next milestone only after this gate closes; no H or later
+implementation has started. All implementation changes are committed; record this
+validation follow-up as its own commit and preserve the clean worktree.
