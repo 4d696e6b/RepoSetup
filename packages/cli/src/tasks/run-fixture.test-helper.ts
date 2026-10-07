@@ -288,6 +288,8 @@ export async function runFixture() {
       proposal,
       producerChanges,
       reviews,
+      verifier,
+      verificationPolicy,
       get adapter() {
         return adapter;
       },

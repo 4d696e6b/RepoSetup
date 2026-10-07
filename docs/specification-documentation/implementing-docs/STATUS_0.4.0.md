@@ -9,7 +9,9 @@ schemas/compiler/context, portable compile/next/status, trusted checks, scoped t
 application, private durable state and interruption reconciliation are implemented.
 Actual tool/state qualification is macOS arm64 on Node 24.21.0; Linux/packed gates
 remain I/J. Run/application/acceptance APIs are internal; D commands stay advisory.
-Managed provider execution remains absent. G is next; see the [roadmap](./ROADMAP_0.4.0.md).
+Milestone G is in progress: the provider transport and managed coding run are
+implemented; managed decomposition and separately authorized live qualification
+remain open. See the [roadmap](./ROADMAP_0.4.0.md).
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -393,3 +395,40 @@ rerun remains in progress at this slice's commit; its result must be recorded be
 G completion. The first broad CLI run failed four fixture cases because it copied
 the unrelated SDK; that failure is preserved here and the fixture correction is
 under validation. Documentation formatting and whitespace checks passed.
+
+## Milestone G, second slice — durable managed coding run
+
+Continued from `16ea4ce`. Added executor-owned pre-dispatch call reservations,
+bounded context expansion, fresh proposal identity/preimage guards, usage
+aggregation, cancellation and conservative interruption handling. Unknown/pending
+usage stops without replay or refund. The serial phase orchestrator uses fixed
+filtered-environment Git baseline probes, then existing scoped application and
+fresh trusted task/final-phase acceptance. Leased run creation rechecks the reviewed
+complete snapshot hash. No model/config command reaches the process port.
+
+Added `task run` with an exact dry-run summary approval and explicit usage allowance,
+a separate strict host check manifest, preinstalled single-package profile checks,
+fixed strong model and explicit native effort. The dry-run performs read-only review
+without credential access, provider factory, subprocess, prompt, lock or state.
+Independent task/phase review is requested live; persisted/model claims cannot
+approve acceptance. H's routing, escalation and repair remain unimplemented.
+
+The first slice's real-tool qualification rerun passed **20 tests across 2 files**,
+including six real verifier cases; this resolves its pending fixture check. For the
+second slice, **56 targeted CLI tests across 5 files** and **442 core tests across
+53 files** passed before the final leased-baseline guard. Final guard validation and
+workspace build/typecheck/lint are recorded below. No paid/live provider call,
+system install, target dependency installation, package version bump, website source
+change, merge or publication occurred.
+
+G remains **incomplete**: managed decomposition integration and the separately
+authorized real provider smoke are next. Account access, actual effective model/effort,
+usage and real task completion remain unqualified. The next milestone after G is H;
+do not start it while these G gates are open.
+
+Final second-slice checks passed on Node 24.21.0: workspace build/typecheck/lint,
+**10 managed run tests** including the leased-baseline race guard, and the preceding
+**56-test affected CLI suite**. The new guard test initially used a nonexistent
+fixture cleanup method, caught by both targeted test and typecheck; corrected and
+rerun successfully. Git whitespace checks passed. Commit this slice before the
+managed compilation extension.

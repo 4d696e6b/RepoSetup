@@ -394,7 +394,7 @@ describe("portable task CLI", () => {
     expect(help.stdout).toContain("compile");
     expect(help.stdout).toContain("next");
     expect(help.stdout).toContain("status");
-    expect(help.stdout).not.toMatch(/\n\s+run\s/);
+    expect(help.stdout).toMatch(/\n\s+run\s/);
     expect(help.stdout).not.toMatch(/\n\s+verify\s/);
     expect((await f.call(["task", "run"])).exitCode).toBe(2);
     expect((await f.call(["task"])).exitCode).toBe(2);

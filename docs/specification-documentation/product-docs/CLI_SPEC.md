@@ -321,3 +321,35 @@ rsetup task status --review review.json --plan compilation.json --json
 Keep `reposetup.json` schemaVersion 1 and selection v1 unchanged. Optional `reposetup.tasks.json` is a separately versioned preference file without secrets, commands, hooks or arbitrary endpoints. Task JSON kinds are additive to output version 1; preserve existing `plan`, `error`, `doctor` and other envelopes, stdout/stderr conventions, binary aliases and exit codes 0–5. New task errors map to those existing meanings as defined in the task contracts.
 
 Local draft validation, context preparation, handoff and trusted local verification require no RepoSetup AI credits. An external agent uses its own allowance; managed model calls require the selected provider's credentials and usage allowance. Do not claim universally free automatic decomposition or coding. No task command installs dependencies or system prerequisites, rolls back changes, runs parallel workers, uses MCP or changes the website.
+
+### Milestone G managed run (experimental, live qualification pending)
+
+`task run` now executes a reviewed phase serially. Required inputs are `--review`,
+`--plan`, managed `--preferences`, a separate `--authority` fixed-check manifest,
+`--state-root`, `--scratch-root`, and explicit native `--effort`. The transport is
+fixed to `gpt-6.1-sol`; capability qualification/routing remains H. Optional per-call
+`--max-output-tokens` defaults to 4096 (maximum 16384); `--timeout-ms` defaults to
+120000 (maximum 120000). Credentials come only from `OPENAI_API_KEY` at real host
+construction, never from artifacts.
+
+First inspect `--dry-run --json`: it returns a deterministic `summaryId`, scoped
+context metadata, checks, paths, independent criteria, retention disclosure and
+finite limits without credentials, calls, locks, writes, prompts or processes.
+Real execution requires both `--allow-provider-usage` and `--approve-run <summaryId>`.
+The independently reviewed `task_execution_authority` version 1 manifest contains
+only three qualified check bindings and verification policy; its content hash is
+part of the approval. It is separate from model output and stack configuration.
+Actual tool definitions and the reviewed clean Git baseline are revalidated before
+run creation. Baseline tree identity is the hash of the verifier snapshot entries;
+it is checked again under the project lease. No Git command is provided by a plan.
+
+Provider calls have durable pre-dispatch reservations. Up to three bounded context
+expansions may follow the initial coding request, within the same attempt and phase
+allowance. Unknown/pending usage prevents replay or allowance reset. A valid typed
+proposal passes the existing scoped executor and fresh trusted checks; live task and
+final-phase acceptance require independent reviewer responses. Failure retains
+private state and project effects for inspection; there is no automatic repair,
+escalation, retry or rollback. CLI JSON errors include the run ID once created.
+`task status --state` continues to treat caller snapshots as unverified claims.
+Managed compilation is still pending in this slice. Portable compile/next behavior
+remains compatible and needs no provider credits.

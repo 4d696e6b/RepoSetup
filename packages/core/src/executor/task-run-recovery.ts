@@ -20,7 +20,16 @@ export async function reconcileTaskRun({
   save: TaskRunSave;
 }): Promise<TaskParseResult<true>> {
   // A killed verification has unknown elapsed allowance; it cannot reset the phase budget.
-  let uncertain = c.phaseVerificationPending || c.bindings.some((b) => b.verificationPending);
+  let uncertain =
+    c.phaseVerificationPending ||
+    c.bindings.some((b) => b.verificationPending) ||
+    (c.providerCalls ?? []).some(
+      (call) =>
+        call.status === "pending" ||
+        call.usage?.inputTokens.provenance === "unknown" ||
+        call.usage?.outputTokens.provenance === "unknown" ||
+        call.usage?.costMicrousd.provenance === "unknown",
+    );
   const latest = new Map(c.journal.map((e) => [e.path, e.sequence]));
   for (const e of c.journal) {
     if (latest.get(e.path) !== e.sequence && e.status !== "unknown") continue;

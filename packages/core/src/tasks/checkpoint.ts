@@ -11,6 +11,12 @@ import {
 import { taskVerifierSnapshotSchema, compareTaskVerifierSnapshots } from "./verifier-files.js";
 import { freezeTaskValue, taskContentHash } from "./canonical.js";
 import { taskFailure, type TaskParseResult } from "./parse.js";
+import {
+  taskConfigurationSchema,
+  taskEffectiveConfigurationSchema,
+  taskUsageSchema,
+} from "./evidence-schema.js";
+import { taskProviderReservationSchema } from "./provider.js";
 
 export const taskRunCheckpointSchema = z.strictObject({
   kind: z.literal("task_run_checkpoint"),
@@ -20,6 +26,31 @@ export const taskRunCheckpointSchema = z.strictObject({
   rootInstance: taskHashSchema,
   baselineSnapshot: taskVerifierSnapshotSchema,
   phaseVerificationPending: z.boolean(),
+  providerCalls: z
+    .array(
+      z.strictObject({
+        callId: z.string().regex(/^call-[1-9][0-9]*$/),
+        attemptId: taskAttemptIdSchema,
+        requestHash: taskHashSchema,
+        contextId: taskHashSchema,
+        inputRevision: taskHashSchema,
+        requestedConfiguration: taskConfigurationSchema,
+        effectiveConfiguration: taskEffectiveConfigurationSchema,
+        reservation: taskProviderReservationSchema,
+        status: z.enum([
+          "pending",
+          "completed",
+          "refused",
+          "incomplete",
+          "invalid",
+          "failed",
+          "cancelled",
+        ]),
+        usage: taskUsageSchema.nullable(),
+      }),
+    )
+    .max(10000)
+    .optional(),
   run: phaseRunSchema,
   bindings: z
     .array(
@@ -86,6 +117,23 @@ export function validateTaskRunCheckpoint(value: unknown): TaskParseResult<TaskR
     !compareTaskVerifierSnapshots(c.baselineSnapshot, c.baselineSnapshot).success ||
     ids.size !== run.tasks.length ||
     attempts.size !== run.attempts.length ||
+    (c.providerCalls ?? []).some(
+      (call, i) =>
+        call.callId !== `call-${i + 1}` ||
+        !attempts.has(call.attemptId) ||
+        !run.resourceLedger.reservations.some(
+          (r) =>
+            r.reservationId === call.callId &&
+            r.attemptId === call.attemptId &&
+            taskContentHash({
+              calls: r.calls,
+              inputTokens: r.inputTokens,
+              outputTokens: r.outputTokens,
+              costMicrousd: r.costMicrousd,
+            }) === taskContentHash(call.reservation),
+        ) ||
+        (call.status === "pending" ? call.usage !== null : call.usage === null),
+    ) ||
     new Set(c.bindings.map((b) => b.attemptId)).size !== c.bindings.length ||
     c.bindings.length !== run.attempts.length ||
     run.attempts.some(

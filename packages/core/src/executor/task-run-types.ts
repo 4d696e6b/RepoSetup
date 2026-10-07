@@ -35,7 +35,7 @@ export interface TaskRunAdapter {
 }
 
 export type TaskRunSave = (
-  type: "transition" | "effect" | "verification" | "reconciliation",
+  type: "transition" | "effect" | "verification" | "reconciliation" | "request",
   taskId?: string,
   code?: import("../tasks/errors.js").TaskErrorCode,
 ) => Promise<TaskParseResult<true>>;

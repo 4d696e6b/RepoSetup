@@ -26,6 +26,8 @@ import type { ProcessRunner } from "./types.js";
 import { executeTaskVerification, type TaskVerificationAdapter } from "./task-verification.js";
 import type { TaskRunAdapter, TaskRunLease, TaskRunAcceptanceReceipt } from "./task-run-types.js";
 import { taskRunOperationSchema, type TaskRunOperation } from "./task-run-operation.js";
+import type { TaskProviderAdapter } from "../tasks/provider.js";
+import { requestTaskRunProposal } from "./task-run-provider.js";
 
 export type { TaskRunOperation } from "./task-run-operation.js";
 export type TaskRunExecution =
@@ -45,12 +47,13 @@ const unknownUsage = () => ({
   reserved: { calls: 0, inputTokens: 0, outputTokens: 0, costMicrousd: 0 },
 });
 
-/** Executor-owned durable lifecycle. No provider dispatch, imported acceptance, rollback or automatic retry. */
+/** Executor-owned durable lifecycle. No imported acceptance, rollback or automatic retry. */
 export async function executeTaskRun(input: {
   plan: unknown;
   compilationPolicy: TaskCompilationPolicy;
   operation: TaskRunOperation;
   adapter: TaskRunAdapter;
+  provider?: TaskProviderAdapter;
   verification?: {
     policy: TaskVerificationPolicy;
     adapter: TaskVerificationAdapter;
@@ -151,6 +154,14 @@ export async function executeTaskRun(input: {
     let c: TaskRunCheckpoint;
     let durableRevision: number | null;
     if (op.type === "create") {
+      if (
+        op.expectedBaselineTreeHash !== undefined &&
+        taskContentHash(snapshot.data.entries) !== op.expectedBaselineTreeHash
+      )
+        return taskFailure(
+          "TASK_PROJECT_DRIFT",
+          "Reviewed baseline changed before leased run creation.",
+        );
       const runId = randomUUID();
       c = sealTaskRunCheckpoint({
         kind: "task_run_checkpoint",
@@ -279,7 +290,9 @@ export async function executeTaskRun(input: {
     }
     if (
       op.type !== "reconcile" &&
-      (c.phaseVerificationPending || c.bindings.some((b) => b.verificationPending))
+      (c.phaseVerificationPending ||
+        c.bindings.some((b) => b.verificationPending) ||
+        c.providerCalls?.some((call) => call.status === "pending"))
     )
       return taskFailure(
         "TASK_EXECUTION_INTERRUPTED",
@@ -302,7 +315,7 @@ export async function executeTaskRun(input: {
       if (!definitions.success) return definitions;
     }
     const save = async (
-      type: "transition" | "effect" | "verification" | "reconciliation",
+      type: "transition" | "effect" | "verification" | "reconciliation" | "request",
       taskId?: string,
       code?: TaskErrorCode,
     ): Promise<TaskParseResult<true>> => {
@@ -537,6 +550,37 @@ export async function executeTaskRun(input: {
       return completed.success && !completed.data.dryRun
         ? { success: true, data: { ...completed.data, packet: packet.data } }
         : completed;
+    }
+    if (op.type === "request") {
+      if (!input.provider)
+        return taskFailure("TASK_PROVIDER_UNAVAILABLE", "A trusted provider port is required.");
+      const requested = await requestTaskRunProposal({
+        checkpoint: c,
+        plan,
+        compilationPolicy: input.compilationPolicy,
+        adapter: input.adapter,
+        provider: input.provider,
+        op,
+        operationSignal,
+        save,
+        bindingCurrent,
+        apply: async (proposal) => {
+          const current = await input.adapter.snapshot();
+          if (!current.success) return current;
+          return applyTaskRunProposal({
+            checkpoint: c,
+            plan,
+            op: proposal,
+            adapter: input.adapter,
+            lease,
+            bindingCurrent,
+            operationSignal,
+            snapshot: current.data,
+            save,
+          });
+        },
+      });
+      return requested.success ? finish() : requested;
     }
     if (op.type === "apply" || op.type === "no_change") {
       const applied = await applyTaskRunProposal({

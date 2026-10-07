@@ -14,7 +14,8 @@ const absolute = z
       path.normalize(s) === s &&
       ![...s].some((c) => c.charCodeAt(0) < 32 || c.charCodeAt(0) === 127),
   );
-/** Independent host authority only. Never loaded from plans, preferences, model output or task CLI artifacts. */
+/** Independent host authority only. G admits a separately reviewed host manifest;
+ * never obtain authority from plans, preferences or model-generated task artifacts. */
 export const qualifiedTaskCheckSchema = z.strictObject({
   schemaVersion: z.literal(1),
   definitionRevision: taskHashSchema,

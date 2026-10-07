@@ -183,3 +183,4 @@ export * from "./tasks/index.js";
 export * from "./executor/task-verification.js";
 export * from "./executor/task-run-types.js";
 export * from "./executor/task-run.js";
+export * from "./executor/task-managed.js";

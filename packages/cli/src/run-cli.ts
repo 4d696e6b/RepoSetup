@@ -27,6 +27,7 @@ import { handleStack } from "./stack.js";
 import { cliVersion } from "./version.js";
 import { registerTaskCommands } from "./tasks/register.js";
 import { createTaskRepositoryReader } from "./tasks/repository-reader.js";
+import { createDefaultManagedTaskHost } from "./tasks/managed-command.js";
 import type {
   CliDeps,
   CliResult,
@@ -294,6 +295,7 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
 function resolveDeps(deps: CliDeps): ResolvedCliDeps {
   const runProcess = deps.runProcess ?? createDefaultProcessRunner();
   const resolved: ResolvedCliDeps = {
+    createTaskManagedHost: deps.createTaskManagedHost ?? createDefaultManagedTaskHost,
     createTaskRepository: deps.createTaskRepository ?? createTaskRepositoryReader,
     registry: deps.registry ?? createDefaultRegistry(),
     io: deps.io ?? createDefaultIo(),

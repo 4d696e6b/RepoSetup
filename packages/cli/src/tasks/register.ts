@@ -2,6 +2,7 @@ import type { Command } from "commander";
 import { handleTask, type TaskCommandOptions } from "./commands.js";
 import { writeLine } from "../io.js";
 import type { ResolvedCliDeps, GlobalCliOptions } from "../types.js";
+import { handleManagedTask, type TaskManagedOptions } from "./managed-command.js";
 
 export function registerTaskCommands(
   program: Command,
@@ -65,5 +66,31 @@ export function registerTaskCommands(
     .option("--state <path>", "explicit phase_run snapshot; reported evidence remains unverified")
     .action(async (options: TaskCommandOptions, command: Command) => {
       setExitCode(await handleTask("status", options, deps, globals(command)));
+    });
+  common(
+    task
+      .command("run")
+      .description("Execute an explicitly reviewed experimental managed coding phase"),
+  )
+    .requiredOption("--plan <path>", "frozen task plan or compilation receipt")
+    .requiredOption(
+      "--authority <path>",
+      "separate independently reviewed fixed-check host authority",
+    )
+    .requiredOption(
+      "--state-root <path>",
+      "preexisting private 0700 state directory outside the project",
+    )
+    .requiredOption(
+      "--scratch-root <path>",
+      "reviewed preexisting verifier scratch parent outside the project",
+    )
+    .requiredOption("--effort <id>", "native effort for the fixed gpt-6.1-sol transport")
+    .option("--max-output-tokens <count>", "per-call output ceiling including reasoning", "4096")
+    .option("--timeout-ms <count>", "per-call deadline within the phase allowance", "120000")
+    .option("--allow-provider-usage", "explicitly allow potentially billable provider calls", false)
+    .option("--approve-run <hash>", "exact summaryId reviewed from task run --dry-run --json")
+    .action(async (options: TaskManagedOptions, command: Command) => {
+      setExitCode(await handleManagedTask(options, deps, globals(command)));
     });
 }

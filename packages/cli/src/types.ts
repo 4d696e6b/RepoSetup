@@ -43,6 +43,7 @@ export interface PromptCreateContext {
 }
 
 export interface CliDeps {
+  createTaskManagedHost?: import("./tasks/managed-command.js").TaskManagedHostFactory;
   createTaskRepository?: TaskRepositoryFactory;
   registry?: IntegrationRegistry;
   io?: CliIo;
@@ -60,6 +61,7 @@ export interface CliDeps {
 }
 
 export interface ResolvedCliDeps {
+  createTaskManagedHost: import("./tasks/managed-command.js").TaskManagedHostFactory;
   createTaskRepository: TaskRepositoryFactory;
   registry: IntegrationRegistry;
   io: CliIo;
