@@ -1,60 +1,35 @@
-# Stable 0.2.0 qualification evidence
+# Stable 0.2.0 qualification and delivery evidence
 
-Phase 27 is complete for the alpha source. Phase 28 stable qualification passed. On October 7 the owner removed the additional seven-day stable soak requirement and asked to complete the release after exact-source qualification. Publication/provenance and install-from-registry acceptance remain incomplete because npm rejected the first publication attempt with `ENEEDAUTH`.
+Phase 27 closed for the alpha source after its seven-day soak. On October 7, 2026 the owner removed the proposed *additional* seven-day stable soak and authorized completing 0.2.0 after exact-source qualification. Phase 28 is complete: the exact qualified artifact is published with provenance, and installed-package acceptance passed on all three supported operating systems.
 
-## Current release source
+## Published source and artifact
 
-- Branch: `codex/phase-28-stable-release`
-- Source: `ee93373c59615a197d0e724353738fd3e695a1a2`
-- Package: `rsetup@0.2.0`, requiring Node.js 24+
-- Full qualification runs [37653362998](https://github.com/4d696e6b/RepoSetup/actions/runs/37653362998), [37653376658](https://github.com/4d696e6b/RepoSetup/actions/runs/37653376658), and [37653392242](https://github.com/4d696e6b/RepoSetup/actions/runs/37653392242) completed successfully on this exact source. Exact-source [benchmark 37653407874](https://github.com/4d696e6b/RepoSetup/actions/runs/37653407874) and [usability checks 37653421554](https://github.com/4d696e6b/RepoSetup/actions/runs/37653421554) passed too.
-- Final retained artifact: `candidate-artifact` ID `11497374204` from run `37653392242`. Its `rsetup-0.2.0.tgz` is 106623 bytes with SHA-256 `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`.
-- Tag `v0.2.0` points to this exact source. The publication workflow checks out the tag and downloads this retained artifact; it does not repack the package.
+- Git tag: `v0.2.0` at `04228d5206617355b609f640267c73669880e060` on `codex/phase-28-provenance-correction`.
+- Package: `rsetup@0.2.0`, Node.js 24+.
+- Three consecutive successful first-attempt full qualifications: [37657135210](https://github.com/4d696e6b/RepoSetup/actions/runs/37657135210), [37657140756](https://github.com/4d696e6b/RepoSetup/actions/runs/37657140756), [37657146191](https://github.com/4d696e6b/RepoSetup/actions/runs/37657146191). Each passed all 16 required jobs and steps without a required skip, including Ubuntu, macOS, Windows, Python 3.12/3.13 recipes, failure paths, one pack, and same-tarball acceptance.
+- Exact-source [benchmark 37657151415](https://github.com/4d696e6b/RepoSetup/actions/runs/37657151415) and [usability checks 37657157460](https://github.com/4d696e6b/RepoSetup/actions/runs/37657157460) passed.
+- Retained `candidate-artifact` ID `11498793067` from the final qualification contains `rsetup-0.2.0.tgz`, 106623 bytes, SHA-256 `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`, npm integrity `sha512-Lykt5gGuxFGlEXMUuMZZ1Y3n9bxLF63OWo+zQQaV1ZtqKF2T5QqhQPokpSuSaZ1GeCuJAyKvLdXZ+88SbSHZQA==`.
+- The downloaded artifact passed `verify-packed-artifact.mjs` again on macOS outside the monorepo.
 
-This documentation branch is not the source to tag. The selected release branch must remain at the exact qualified source through tag creation and publication; any further source change requires fresh exact-source runs. There is no additional calendar soak.
+The tag had initially pointed to `ee93373c59615a197d0e724353738fd3e695a1a2`. Its package tarball had the *same* SHA-256, but its publication workflow nested the downloaded archive. A default-branch workaround verified the archive but npm rejected its provenance with `E422`, because the workflow event source differed from the tag source. The owner explicitly authorized a one-time replacement of the unpublished `v0.2.0` tag **after** fresh qualification. The corrected `04228d5` source flattens artifact downloads while preserving the tag event, and the tag was moved only after npm confirmed 0.2.0 did not yet exist. Never move this released tag or replace published bytes.
 
-## Superseded initial stable identity
+## Publication and registry state
 
-- Branch: `codex/phase-28-stable-release`
-- Source: `4a6f49ca139cbd4f0915a3556497f48ae7543ae6`
-- Package: `rsetup@0.2.0`, requiring Node.js 24+
-- Tarball: `rsetup-0.2.0.tgz`, 106623 bytes
-- SHA-256: `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`
-- Final Actions archive: `candidate-artifact`, immutable artifact ID `11496212208`, retained by run `37648836155`
+The package owner authenticated and approved a GitHub OIDC trusted publisher for `4d696e6b/RepoSetup`, workflow `publish-npm.yml`, with direct `npm publish` permission and no environment restriction. npm reports that publisher as `Valid` after the first tag-bound publish. [Tag-bound dry run 37658608341](https://github.com/4d696e6b/RepoSetup/actions/runs/37658608341) passed against the exact source and retained artifact.
 
-This initial stable source passed qualification before the owner removed the additional soak gate. Its artifact remains valid evidence for that source, but it cannot qualify the updated release-gate source or final tag.
+[Tag-bound publish 37658713089](https://github.com/4d696e6b/RepoSetup/actions/runs/37658713089) returned `+ rsetup@0.2.0` and published its signed provenance statement to [Sigstore log entry 3133834168](https://search.sigstore.dev/?logIndex=3133834168). The registry attestation identifies `refs/tags/v0.2.0`, source digest `04228d5206617355b609f640267c73669880e060`, and that publishing run. Its workflow failed *after npm accepted the upload* because an immediate metadata lookup returned 404 while npm's publish-time scan was still processing the package. The package subsequently appeared in the registry with the qualified SHA-512 integrity, and `latest` points to `0.2.0`. This delayed visibility is expected under [npm's publish-time scanning policy](https://github.blog/changelog/2026-07-28-npm-publish-time-malware-scanning-and-dual-use-metadata/). The release-tooling correction in this evidence branch waits up to 20 minutes for visibility on future publishes; no second upload or package-byte replacement was attempted.
 
-## Initial stable qualification runs
+[Safe delivery retry 37659541713](https://github.com/4d696e6b/RepoSetup/actions/runs/37659541713) succeeded on the same tag and qualification IDs. Its publication step detected the existing version, verified exact integrity, and skipped `npm publish`. All three registry acceptance jobs passed on Ubuntu 24.04, macOS 15, and Windows 2025, with no skipped step. Each installed the published package outside the monorepo, checked both aliases, help/version and dry-run, and built and tested a real TypeScript Express/Vitest recipe.
 
-Three consecutive first-attempt `release.yml` runs passed from the same source:
+## Superseded and failed evidence retained
 
-- [37648824809](https://github.com/4d696e6b/RepoSetup/actions/runs/37648824809), completed `2026-10-07 16:14:59 UTC`.
-- [37648831078](https://github.com/4d696e6b/RepoSetup/actions/runs/37648831078), completed `2026-10-07 16:10:23 UTC`.
-- [37648836155](https://github.com/4d696e6b/RepoSetup/actions/runs/37648836155), completed `2026-10-07 16:12:59 UTC`.
+- Initial stable preparation source `3821519511acd79b3263f42f1be14a752149cd4f` passed [37647145314](https://github.com/4d696e6b/RepoSetup/actions/runs/37647145314) and [37647150898](https://github.com/4d696e6b/RepoSetup/actions/runs/37647150898), but [37647155958](https://github.com/4d696e6b/RepoSetup/actions/runs/37647155958) failed a Windows locked-install fixture deadline. The fixture was corrected; those runs do not count for release.
+- Intermediate source `4a6f49ca139cbd4f0915a3556497f48ae7543ae6` passed [37648824809](https://github.com/4d696e6b/RepoSetup/actions/runs/37648824809), [37648831078](https://github.com/4d696e6b/RepoSetup/actions/runs/37648831078), and [37648836155](https://github.com/4d696e6b/RepoSetup/actions/runs/37648836155), plus benchmark and usability checks. Its identical tarball hash does not replace exact-source qualification.
+- The prior tag source `ee93373c59615a197d0e724353738fd3e695a1a2` passed [37653362998](https://github.com/4d696e6b/RepoSetup/actions/runs/37653362998), [37653376658](https://github.com/4d696e6b/RepoSetup/actions/runs/37653376658), and [37653392242](https://github.com/4d696e6b/RepoSetup/actions/runs/37653392242), plus benchmark and usability checks. [First dry run 37655329425](https://github.com/4d696e6b/RepoSetup/actions/runs/37655329425) exposed the artifact layout issue. [Main-branch publish 37655948630](https://github.com/4d696e6b/RepoSetup/actions/runs/37655948630) failed npm authentication (`ENEEDAUTH`), and [retry 37656653901](https://github.com/4d696e6b/RepoSetup/actions/runs/37656653901) failed provenance (`E422`). Neither published package bytes.
 
-Each run passed all 16 required jobs and their steps: Ubuntu/macOS/Windows platform checks, six OS/Python 3.12/3.13 recipe checks, three failure-path checks, one identified pack, and three same-tarball installation/launcher acceptance jobs. Required jobs and steps were not skipped. The first run finished last; the soak deadline uses the latest completion across all three, not their creation order.
+## Gate result
 
-Exact-source [benchmark run 37648841040](https://github.com/4d696e6b/RepoSetup/actions/runs/37648841040) and [usability-check run 37648846715](https://github.com/4d696e6b/RepoSetup/actions/runs/37648846715) also passed. These usability checks are automated delivery checks; previously recorded Phase 24 observed-session evidence remains separate.
+- [x] Exact-source qualification, benchmark, usability, retained artifact, trusted publisher, tag-bound dry run, signed npm publish, registry integrity, and `latest` tag.
+- [x] Safe retry and installed-package acceptance passed on all three supported operating systems, with final results linked in [implementation status](../implementing-docs/IMPLEMENTATION_STATUS.md).
 
-A downloaded CI tarball was additionally verified on macOS outside the monorepo: expected source/version, byte count, SHA-256, installed manifest and both npm aliases matched. Its hash is identical to the local stable build. This is tarball acceptance, not an npm registry publication result.
-
-## Final exact-source qualification and publication attempts
-
-The three final `release.yml` runs listed above passed their first attempts on `ee93373c59615a197d0e724353738fd3e695a1a2`. Each passed all 16 required jobs and steps, including Ubuntu/macOS/Windows platform checks, Python recipes, failure paths, one pack, and three same-tarball acceptance jobs. The exact-source benchmark and usability runs also passed. The final retained tarball was downloaded and verified outside the monorepo on macOS against its recorded size, hash, source, version, manifest and launchers.
-
-After `v0.2.0` was created, [first publication dry run 37655329425](https://github.com/4d696e6b/RepoSetup/actions/runs/37655329425) exposed a GitHub artifact download layout mismatch before npm ran. The workflow-only correction is on `main` at `b54027839d6d04df661f39abb3ca82cb505d959c`; it leaves the tag and tarball unchanged. [Corrected dry run 37655843186](https://github.com/4d696e6b/RepoSetup/actions/runs/37655843186) passed exact-source qualification, artifact and launcher verification, and npm's publication dry run.
-
-[Publication run 37655948630](https://github.com/4d696e6b/RepoSetup/actions/runs/37655948630) reached `npm publish` but npm returned `ENEEDAUTH`. The registry still reports `latest: 0.1.1` and no `rsetup@0.2.0`; no registry acceptance job ran. The npm owner must inspect the package's trusted publisher settings after authenticating with their security key. The intended GitHub publisher is repository `4d696e6b/RepoSetup`, workflow filename `publish-npm.yml`, with direct `npm publish` allowed. The workflow already uses a GitHub-hosted runner, Node 24, npm 11.5.1 or later, and `id-token: write`. Do not use a long-lived write token to bypass this gate.
-
-## Recorded failed attempt
-
-Initial stable preparation source `3821519511acd79b3263f42f1be14a752149cd4f` passed [37647145314](https://github.com/4d696e6b/RepoSetup/actions/runs/37647145314) and [37647150898](https://github.com/4d696e6b/RepoSetup/actions/runs/37647150898), but [37647155958](https://github.com/4d696e6b/RepoSetup/actions/runs/37647155958) failed a Windows locked-install test's 30-second deadline. The local-file fixture could perform a registry lookup when its manifest was deliberately drifted. The correction uses a second local-file dependency, npm offline mode and a bounded 90-second budget for four npm processes. Production code and dependencies were unchanged. The failed run is preserved and none of these superseded runs count toward the current three-pass gate.
-
-## Remaining gates
-
-- [x] Pass all three new full cross-platform qualifications and exact-source benchmark/usability checks with no blocking product, security or data-loss defect. Record the final run's retained artifact ID, size and SHA-256.
-- [ ] Verify the npm trusted publisher permits direct `npm publish` from `4d696e6b/RepoSetup` and `publish-npm.yml`. The owner's October 7 instruction authorizes proceeding to publication after qualification without the additional wait.
-- [x] The manual publication workflow is available on the default branch; tag `v0.2.0` names the final qualified source and older tags remain unchanged.
-- [ ] Publish the retained qualified tarball with provenance; pass all three registry-delivery jobs and verify the `latest` dist-tag and exact integrity.
-
-The release validator no longer has a calendar delay; it still rejects missing, failed, stale, mismatched or skipped qualifications and an expired or wrong artifact. Follow [the stable delivery runbook](./STABLE_RELEASE_0.2.0.md) after the remaining gates pass.
+Follow [the stable delivery runbook](./STABLE_RELEASE_0.2.0.md) for acceptance and patch recovery. The final tag and npm version are immutable release identities.

@@ -30,7 +30,7 @@ export async function registryVersion() {
 }
 
 export async function waitForRegistryVersion({
-  timeoutMs = 5 * 60_000,
+  timeoutMs = 20 * 60_000,
   intervalMs = 15_000,
   lookup = registryVersion,
 } = {}) {
