@@ -38,6 +38,12 @@ jobs:
       - run: pnpm build
       - run: pnpm test
       - run: pnpm test:e2e
+      - name: Typecheck offline task qualification infrastructure
+        if: runner.os != 'Windows'
+        run: pnpm typecheck:task-tests
+      - name: Check frozen task fixtures and extracted packed contracts without AI credentials
+        if: runner.os != 'Windows'
+        run: pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts
       - name: Measure planner benchmark
         if: matrix.node == 24
         run: pnpm benchmark:plans

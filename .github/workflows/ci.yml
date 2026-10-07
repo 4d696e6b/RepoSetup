@@ -22,4 +22,8 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test
+      - name: Typecheck offline task qualification infrastructure
+        run: pnpm typecheck:task-tests
+      - name: Check frozen task fixtures and extracted packed contracts without AI credentials
+        run: pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts
       - run: pnpm registry:validate

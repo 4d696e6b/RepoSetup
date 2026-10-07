@@ -42,7 +42,7 @@
     "website:dev": "pnpm --filter @reposetup/core --filter @reposetup/registry --filter @reposetup/integrations build && pnpm --filter @reposetup/website dev",
     "website:test": "pnpm --filter @reposetup/website test",
     "fixtures:tasks:freeze": "pnpm --filter @reposetup/core build && node scripts/freeze-task-fixtures.ts",
-    "test:tasks:fixtures": "pnpm --filter @reposetup/core build && vitest run --config tests/e2e/vitest.tasks.config.ts",
+    "test:tasks:fixtures": "pnpm build && vitest run --config tests/e2e/vitest.tasks.config.ts",
     "typecheck:task-tests": "tsc --project tests/e2e/tsconfig.tasks.json",
     "benchmark:tasks:report": "pnpm --filter @reposetup/core build && node scripts/summarize-task-benchmark.ts"
   },

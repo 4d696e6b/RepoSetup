@@ -1001,3 +1001,33 @@ provider/profile smoke. None is waived or inferred from mocks/extracted tests.
 Milestone I remains in progress; the next milestone is J after I's required gates.
 No API key, paid call, system installation, rollback, package version change,
 website source change, merge, push or publication occurred.
+
+## Milestone I — ordinary CI coverage wiring (2026-10-08)
+
+Connected the standalone task infrastructure typecheck and serial fixture/report/
+extracted-pack suite to existing fast CI and existing Linux/macOS platform jobs.
+No provider secrets, new jobs, extra workers or live campaign are configured.
+Windows continues its existing installer/portable qualification; this POSIX managed
+fixture suite is not advertised there. Existing action/dependency bootstrap steps
+are reused without running them locally or dispatching remote workflows.
+
+Reviewed current official
+[GitHub runner labels](https://docs.github.com/en/actions/reference/runners/github-hosted-runners),
+[setup-node inputs](https://github.com/actions/setup-node) and
+[pnpm setup behavior](https://github.com/pnpm/action-setup). The existing
+`ubuntu-24.04` x64 and `macos-15` arm64 matrix matches the advertised support targets;
+workflow/action/server execution is still untested here. The setup steps prepare
+the development toolchain before the no-install trial infrastructure starts.
+These added steps record ordinary offline contract behavior, not the full installed
+artifact/live/platform acceptance gates.
+
+Adjusted the task-suite command to build the packed CLI and its dependencies before
+testing, so a fresh checkout can run the complete suite. Workflow YAML syntax/
+format review and workspace lint passed locally; GitHub execution/action semantics
+remain unverified. The standalone combined build-and-test command passed (workspace build plus
+10 serial e2e cases across three files). `actionlint` is unavailable locally; no
+workflow runner/action validation is claimed. Workspace lint and whitespace checks
+passed after the YAML/package-script changes.
+No remote CI was started and Linux remains unqualified until actual results exist.
+Milestone I is open for the remaining campaign, full fixture recipe, installed/
+native/platform and live evidence listed above. J remains unstarted.
