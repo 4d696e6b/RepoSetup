@@ -214,15 +214,17 @@ Status is per ID, not “the catalog is production-ready.”
 
 | Recipe | Dry-run plan | Real execute |
 | --- | --- | --- |
-| Next.js + TypeScript + Tailwind + SQLite + Prisma + Zod + Vitest + Prettier | yes | pending CI / a machine with enough disk |
-| React + Vite + TypeScript + Tailwind + Zod + Vitest + Prettier | yes | yes (local `pnpm test:golden`) |
-| Express + TypeScript + Prisma (PostgreSQL **config** only) | yes | generation + `tsc`; no live database |
-| FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` in this workspace |
-| Flask + uv + SQLAlchemy + Alembic + pytest + Ruff | yes | pending `uv` |
+| Next.js + TypeScript + Tailwind + SQLite + Prisma + Zod + Vitest + Prettier | yes | passed cross-platform golden qualification |
+| React + Vite + TypeScript + Tailwind + Zod + Vitest + Prettier | yes | passed cross-platform golden qualification |
+| Express + TypeScript + Prisma (PostgreSQL **config** only) | yes | passed cross-platform generation, build and HTTP test; no live database |
+| FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff | yes | passed cross-platform Python 3.12/3.13 golden qualification |
+| Flask + uv + SQLAlchemy + Alembic + pytest + Ruff | yes | passed cross-platform Python 3.12/3.13 golden qualification |
 | React + Vite + Vitest + Testing Library + TanStack Query | yes | generated interaction/query tests |
 | FastAPI + Pydantic + pytest + HTTPX + Pydantic Settings | yes | generated HTTPX/settings tests; no real secrets |
 
 Example configs live in `examples/`.
+
+The five required recipes and the published package passed the [0.2.0 qualification and delivery evidence](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md) on Ubuntu 24.04, macOS 15, and Windows Server 2025 CI runners. The Windows CI runner is not a direct Windows 11 desktop test. Generated PostgreSQL configuration does not install or verify a database server.
 
 ## How it works
 

@@ -1,7 +1,7 @@
 # RepoSetup roadmap to 0.2.0
 
 Planning baseline: 2026-09-22, commit `a0e48a1`, CLI package `rsetup@0.1.1`.
-Status: proposed implementation sequence; no phase below is implemented by this planning task.
+Status: historical planning baseline. Phases 19–28 are complete as recorded in [implementation status](./IMPLEMENTATION_STATUS.md) and [stable release evidence](../release-docs/STABLE_QUALIFICATION_0.2.0.md); the observations below describe what was known when this roadmap was written.
 
 ## Release outcome
 
@@ -168,7 +168,7 @@ Defer auth services, payments, queues/Redis, additional frameworks, Bun/Yarn, de
 
 ### Phase 27 — Freeze, beta-test, and qualify the release candidate
 
-**Status:** Complete for frozen alpha candidate `145e167e6b60897da96942545ba6dbd40359ad4a`; its seven-day soak closed October 7, 2026. Stable version conversion and delivery remain Phase 28 work.
+**Status:** Complete for frozen alpha candidate `145e167e6b60897da96942545ba6dbd40359ad4a`; its seven-day soak closed October 7, 2026. Stable version conversion and delivery were subsequently completed in Phase 28.
 
 **Depends on:** 26. **Deliverable:** one evidence-backed candidate artifact.
 

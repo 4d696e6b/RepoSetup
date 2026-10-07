@@ -1,6 +1,6 @@
 # 0.2.0 release-candidate record
 
-**Phase 27 status: complete for the frozen alpha candidate.** This records its qualification and the stable transition before Phase 28 publication; stable qualification and delivery remain incomplete. Historical `0.1.x` release documents remain historical evidence and do not qualify this release.
+**Phase 27 status: complete for the frozen alpha candidate.** This file records its qualification and the subsequent transition. Stable 0.2.0 publication and delivery are complete in [the Phase 28 evidence record](./STABLE_QUALIFICATION_0.2.0.md). Historical `0.1.x` release documents remain historical evidence and do not qualify this release.
 
 ## Candidate identity
 
