@@ -55,8 +55,10 @@ Implementation, automated regression validation, publication and delivery: compl
 New post-release work: [post-create dependency health repair](./POST_CREATE_DEPENDENCY_HEALTH.md).
 The pip bare tests previously allowed doctor to select the parent config directory;
 the updated suite requires the generated project, framework and installed packages.
-Its new exact-source execution qualification is tracked separately from the
-released 0.2.1 result above.
+Its new exact-source execution qualification passed all twelve jobs and 408
+creation/recipe executions, with no skipped test cases, in
+[run 37743848281](https://github.com/4d696e6b/RepoSetup/actions/runs/37743848281).
+This unreleased repair is tracked separately from the released 0.2.1 result above.
 
 
 The automated matrix and preset sessions below are complete. Native platforms

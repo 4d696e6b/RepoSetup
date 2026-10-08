@@ -1,7 +1,7 @@
 # Post-create dependency health repair
 
 Date: 2026-10-08. Branch: `codex/fix-post-create-health`.
-Status: implemented; cross-platform execution qualification pending. This is
+Status: implemented; automated cross-platform execution qualification passed. This is
 unreleased work after `rsetup@0.2.1`, not a change to published npm bytes.
 
 ## Confirmed problems
@@ -56,8 +56,31 @@ unreleased work after `rsetup@0.2.1`, not a change to published npm bytes.
   check, inspect their own project, and detect deliberately removed dependencies.
 - [x] Local final checks: 977 unit tests, typecheck, lint and build pass; all 38
   packed E2E tests pass with uv available and an explicit writable cache.
-- [ ] Full golden matrix on Ubuntu x64, macOS arm64 and Windows x64, Python
+- [x] Three local Python golden recipes pass their imports, endpoint tests,
+  lint and add checks; both uv and pip FastAPI CLI help commands run.
+- [x] Four extra local current-directory creates (FastAPI/Flask with uv/pip)
+  pass, including their own manifest, canonical project root and installed check.
+- [x] Full golden matrix on Ubuntu x64, macOS arm64 and Windows x64, Python
   3.12/3.13, npm/pnpm, including all twenty bare solutions and fourteen recipes.
+
+[Golden run 37743848281](https://github.com/4d696e6b/RepoSetup/actions/runs/37743848281)
+passed all twelve jobs: 408 test executions, no skipped cases. Every job log and
+artifact was checked against source
+`0432bd61b001b76a14f3b5b476bbd4bf49c0a6f6` and full scope.
+[Fast CI](https://github.com/4d696e6b/RepoSetup/actions/runs/37743855298),
+[three-platform checks](https://github.com/4d696e6b/RepoSetup/actions/runs/37743855295)
+and [controlled installation benchmarks](https://github.com/4d696e6b/RepoSetup/actions/runs/37743855307)
+also passed. PR workflows checked the synthetic merge `f4e54aff`, whose tree
+matches the tested branch; the golden run checked the branch commit directly.
+Later documentation-only commits do not change the qualified implementation.
+The [machine-readable evidence](../release-docs/qualification/post-create-health.json)
+records exact source identities, toolchains, job results and scope.
+
+Platform checks passed 977 unit tests on Linux/macOS and 976 plus one conditional
+symlink-permission skip on Windows. Their packaged E2E passed 37 plus one Python
+uv-add skip per platform because that workflow does not install uv. Local E2E
+passed all 38 with uv, and the full golden recipes also execute Python add.
+These platform skips are not hidden by the golden matrix's no-skip result.
 
 The first Windows platform run failed two new test assertions because the runner
 uses both RUNNER~1 short paths and full paths for the same directory. Package
@@ -65,9 +88,13 @@ verification itself returned the expected results. Assertions now compare resolv
 paths; the failed attempt is retained as run 37743472286.
 
 Tests now assert doctor's canonical root, selected framework check and installed
- dependency check. Earlier pip bare tests could accidentally inspect a parent
- reposetup.json; their application imports were real, but their doctor results
- must not be treated as proof of correct project identification.
+dependency check. Earlier pip bare tests could accidentally inspect a parent
+reposetup.json; their application imports were real, but their doctor results
+must not be treated as proof of correct project identification. The released
+failure was also reproduced using the actual registry command
+`npx --yes --package rsetup@0.2.1 rsetup create registry-pip-fastapi --framework fastapi --package-manager pip --yes`
+inside an isolated Python environment: create succeeded, but doctor from that
+project failed with PROJECT_NOT_FOUND.
 
 ## Boundaries
 

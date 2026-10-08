@@ -208,6 +208,16 @@ Checks:
 
 Exit codes should distinguish healthy vs issues.
 
+Unreleased post-0.2.1 behavior: doctor checks installed dependency metadata in
+addition to configuration. Node checks required runtime and development packages;
+Python checks project requirements and the default development group. FastAPI's
+standard extras require the CLI and Uvicorn. For uv, doctor reads the existing
+project environment without syncing or creating one; for pip, it uses the active
+Python interpreter. Missing packages fail the health check and include remediation.
+Configuration health alone does not prove application imports or live services.
+See [post-create dependency health](../implementing-docs/POST_CREATE_DEPENDENCY_HEALTH.md)
+for the implementation, qualification and boundaries.
+
 ## 9. `reposetup export`
 
 Creates `reposetup.json` in the detected project root.
