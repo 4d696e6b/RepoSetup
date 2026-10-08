@@ -2,14 +2,23 @@
 
 Created 2026-10-08, against released source `origin/main` at `1ddbdc6`.
 Regression branch: `codex/fix-create-project-paths` (merged through PR #10).
-Release branch: `codex/release-0.2.2`; [publication progress](../release-docs/STABLE_RELEASE_0.2.2.md).
+Release branch: `codex/release-0.2.2`; [published delivery evidence](../release-docs/STABLE_RELEASE_0.2.2.md).
 
 0.2.x prioritizes working supported recipes, safe failures, reproducibility and
 regression coverage. No new integrations are needed to close these regressions.
 A passing plan is not evidence of a working generated application. Never claim
 all possible integration combinations or all operating systems were tested.
 
-## Current qualification result — 2026-10-08
+## Current delivery — 2026-10-08
+
+**rsetup@0.2.2 is published and accepted from npm on all three release targets.**
+Dependency-health repairs pass exact-source qualification, including 408 successful
+full-matrix executions after a documented Windows install-timeout retry. Signed
+provenance and registry bytes match the retained candidate. See the
+[0.2.2 release record](../release-docs/STABLE_RELEASE_0.2.2.md). Manual/service
+gaps remain open.
+
+## Historical create-regression qualification — 2026-10-08
 
 The create-regression repairs are delivered in **rsetup@0.2.1**. Exact-source
 qualification, signed publication and three-platform registry delivery passed;
@@ -58,7 +67,7 @@ the updated suite requires the generated project, framework and installed packag
 Its new exact-source execution qualification passed all twelve jobs and 408
 creation/recipe executions, with no skipped test cases, in
 [run 37743848281](https://github.com/4d696e6b/RepoSetup/actions/runs/37743848281).
-The repair is included in the 0.2.2 candidate; its new version/artifact qualification is tracked in the release record.
+The repair is delivered in published 0.2.2; its new version/artifact qualification and registry delivery are complete in the release record.
 
 
 The automated matrix and preset sessions below are complete. Native platforms
@@ -240,7 +249,7 @@ is explicitly labeled; it does not execute or qualify generated applications.
 
 Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.
 These commands test the checkout. The published patch is available as
-`rsetup@0.2.1`; see the release record for npm installation and provenance.
+`rsetup@0.2.2`; see the release record for npm installation and provenance.
 
 ```sh
 pnpm install --frozen-lockfile

@@ -2,8 +2,8 @@
 
 Date: 2026-10-08. Branch: `codex/fix-post-create-health`.
 Status: implemented; automated cross-platform execution qualification passed. This is
-included in the 0.2.2 candidate. The older 0.2.1 bytes remain immutable; see
-[0.2.2 publication progress](../release-docs/STABLE_RELEASE_0.2.2.md).
+delivered in published 0.2.2. The older 0.2.1 bytes remain immutable; see
+[0.2.2 published delivery evidence](../release-docs/STABLE_RELEASE_0.2.2.md).
 
 ## Confirmed problems
 

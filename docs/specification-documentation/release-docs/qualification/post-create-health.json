@@ -302,5 +302,11 @@
     "latestPublishedVersion": "0.2.1",
     "existingTagUnchanged": "v0.2.1",
     "releaseApprovalAndQualificationRequiredBeforePublishingNextVersion": true
+  },
+  "delivery": {
+    "version": "0.2.2",
+    "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+    "releaseRecord": "0.2.2.json",
+    "note": "The original repair qualification source/status and evidence above are historical; final versioned publication and delivery are accepted separately."
   }
 }

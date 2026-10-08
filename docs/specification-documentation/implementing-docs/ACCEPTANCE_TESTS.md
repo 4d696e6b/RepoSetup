@@ -2,8 +2,9 @@
 
 The owner authorized publication. The repair passed 977 local unit tests, all
 38 packaged E2E tests and a twelve-job/408-execution full matrix before the
-version bump; final 0.2.2 exact-source artifact qualification is still required.
-See [release progress](../release-docs/STABLE_RELEASE_0.2.2.md) and
+version bump. Final 0.2.2 exact-source artifact qualification, signed publication
+and three-platform npm delivery now pass (408 successful matrix executions after
+one recorded Windows install-timeout retry). See [release evidence](../release-docs/STABLE_RELEASE_0.2.2.md) and
 [repair coverage](./POST_CREATE_DEPENDENCY_HEALTH.md). Missing Node/Python packages,
 FastAPI CLI metadata and missing uv environments are explicit failure regressions.
 
@@ -15,7 +16,7 @@ Historical unchecked entries describe what was unobserved at that checkpoint;
 they are not current blockers. Individual integration promotion to `stable`
 remains separate from qualifying a bounded recipe.
 
-## Current 0.2.x automated acceptance — 2026-10-08
+## Historical 0.2.1 automated acceptance — 2026-10-08
 
 Evidence: [stability plan](./STABILITY_0.2.x.md) and
 [machine-readable results](../release-docs/qualification/0.2.x-create-stability.json).
