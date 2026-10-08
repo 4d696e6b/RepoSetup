@@ -4,6 +4,13 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
+**0.2.x follow-up — automated create-regression qualification complete; patch
+publication pending.** The checked current acceptance items are in
+[ACCEPTANCE_TESTS.md](./ACCEPTANCE_TESTS.md#current-02x-automated-acceptance--2026-10-08);
+release preparation/delivery items remain open in the
+[patch release checklist](../release-docs/RELEASE_CHECKLIST.md#current-02x-patch--2026-10-08).
+The Phase 27/28 entries below describe the already published 0.2.0 milestone.
+
 **Phase 27 — Release-candidate qualification: complete for the frozen alpha candidate.** Its closure is explicitly recorded on `codex/phase-27-closeout` at `837b20d438d92fb6bcd557cb4e5145230238ee13`.
 
 **Phase 28 — Stable release and delivery verification: complete.** `rsetup@0.2.0` is published with a signed attestation from qualified tag source `04228d5206617355b609f640267c73669880e060`. The registry's `latest` tag and tarball integrity match the retained candidate. [Install-from-registry acceptance 37659541713](https://github.com/4d696e6b/RepoSetup/actions/runs/37659541713) passed on Ubuntu 24.04, macOS 15, and Windows 2025. On October 7 the owner removed the additional stable seven-day wait. Phase 19 through Phase 28 gates are complete.
@@ -161,7 +168,7 @@ Inspected baseline: `a0e48a1` on `main`, macOS, Node 22.12.0, pnpm 12.5.1.
 - [x] `node packages/cli/dist/bin.js registry validate`: passed, 33 integrations.
 - [x] `pnpm test:e2e`: 12 passed, including isolated packed CLI installation.
 - [x] Sequential golden baseline: 2 passed, 3 conditionally skipped; details in Phase 19 baseline.
-- [ ] Linux/Windows execution and remote workflow results: unobserved; Phase 21/27 release blockers.
+- [ ] At this September 22 checkpoint, Linux/Windows execution and remote workflow results were unobserved. Superseded by the checked Phase 21/27/28 and current 0.2.x matrix evidence; retained as history.
 - [x] Planning/process-count baseline recorded; no speed improvement claimed.
 
 Phase 19 changed planning and evidence documentation only. No product code, package versions, integration maturity labels, releases, or external publication changed.
@@ -288,6 +295,15 @@ packaged preset sessions passed 117 checks. Local 959 unit tests, typecheck,
 lint, build, 37 registry definitions and 37 packaged E2E tests passed; one
 external release-artifact E2E check was skipped. Workflow-only evidence fixes
 were separately qualified at `86352e3`; product files are unchanged.
+
+### Documentation reconciliation — 2026-10-08
+
+- [x] Reviewed all specification/product/security/release documentation and their unchecked status entries.
+- [x] Checked completed current Next.js/Python/platform, bare-solution, expanded recipe and preset execution gates in the acceptance and support documents.
+- [x] Added a current patch release checklist; published 0.2.0 and historical 0.1.x records remain separate.
+- [x] Corrected stale roadmap/implementation-plan next-step guidance and linked the current stability work from the documentation index.
+- [x] Recorded the completed npm trusted-publisher setup and corrected guidance to match the manually dispatched, artifact-only publication workflow.
+- [x] PR-head `8372f59` fast CI, all three platform jobs and all three controlled performance jobs passed ([CI](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942444), [platform](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942315), [performance](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942331)). Product files remain identical to `448beb4`.
 
 The stability plan and linked machine-readable record contain exact run/source
 references and the historical Windows JSON trailer issue. Patch publication,

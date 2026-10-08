@@ -1,4 +1,10 @@
-# Phase 18 — Release Hardening
+# Phase 18 — Release Hardening (historical 0.1.x)
+
+The environment limits and pending workflow/publisher observations below are
+historical checkpoint results. Current automated qualification is checked in
+[acceptance tests](../implementing-docs/ACCEPTANCE_TESTS.md); published 0.2.0
+evidence is in [stable qualification](./STABLE_QUALIFICATION_0.2.0.md). Current
+unpublished repairs follow the [0.2.x stability plan](../implementing-docs/STABILITY_0.2.x.md).
 
 ## Objective
 
