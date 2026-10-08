@@ -207,7 +207,7 @@ runs E's `ts.typecheck`, `ts.lint` and `ts.unit` fixed recipes and parses their 
 reports against the reviewed public test inventory. The dependency artifact hash
 identifies the direct TypeScript, ESLint, typescript-eslint and Vitest package bytes,
 not a qualified full transitive managed-profile tool closure. No trial/treatment qualification or savings result follows
-from reference/mutation checks. Full E recipe, predecessor-drift, packed/platform
+from reference/mutation checks. Candidate/trial verification, predecessor-drift, packed/platform
 and live-provider evidence remain separate I gates.
 
 Current official references reviewed for the fixed tooling (2026-10-07):
@@ -282,8 +282,43 @@ temporary project's hydration link before asserting an unchanged source inventor
 No private holdout is copied into a candidate's project or unit runner.
 
 This probe tests the actual local recipe argument/report path for every seed and
-reference. It is test infrastructure, not E's fully qualified immutable closure
-or a trial executor. A complete managed acceptance gate still needs the existing
-verifier adapter's reviewed transitive dependency inventory, protected config/oracle
-file definitions and executor-owned before/after effect audit for each fixture.
-Do not count these reference checks as model trials or platform qualification.
+reference. The separate suite below extends the frozen references through E's
+qualified immutable closure and effect audit locally. The probe alone is not a
+trial executor or full managed acceptance gate. General candidate review and
+retained trial evidence remain open. Do not count reference checks as model trials
+or platform qualification.
+
+## Frozen-reference executor qualification (2026-10-08)
+
+`pnpm test:tasks:verifier` builds the workspace and runs the expensive serial
+reference qualification separately from ordinary fixture CI. It uses E's actual
+qualified adapter and core verification executor. An isolated tool tree is copied
+from already installed workspace bytes, excluding workspace links and the unrelated
+CLI provider SDK. Nothing is installed and no package lifecycle or provider call
+runs. The complete copied tree is inventoried; runtime/tool entries, configs and
+every imported public-test file have independently constructed hash bindings.
+
+Each frozen reference receives a local whole-phase plan for verifier testing.
+Dry-run must launch no process or allocate scratch. Real task verification and
+final phase verification run all three fixed tools through the executor with
+scrubbed environments. The final phase consumes the actual executor-issued task
+receipt. Project snapshots and scratch cleanup are checked, and the executor
+rechecks immutable definitions/dependency closure around every launch. Separate
+fault injections change an imported public oracle and the dependency tree; both
+must block before any process or reviewer call.
+
+The reviewer approves only exact reviewed reference-file identities. This is a
+reference-verifier integration test, not an independent generic model-output
+reviewer, a compiled treatment or cross-module predecessor qualification. Private
+holdouts remain outside these projects and run in the existing separate evaluator.
+Qualification logs disclose fixture/source/runner/lock/host identities, complete
+per-run closure metadata, receipt IDs and that trial qualification is false.
+Temporary-root identities and closure fingerprints are host/run specific; these
+records are not a portable production host manifest or retained trial artifacts.
+
+Run with Node 24 on the supported POSIX host and the frozen preinstalled tool
+artifact. The suite uses one worker, serial execution, 180 seconds for hydration
+and 10 minutes per qualification case, without weakening E's inventory checks.
+It is intentionally excluded from the fast fixture suite and existing ordinary CI
+steps. Installed artifact, Linux execution, trial orchestration/evidence and live
+provider/profile qualification remain separate gates.

@@ -7,6 +7,7 @@
   "include": [
     "task-*.ts",
     "vitest.tasks.config.ts",
+    "vitest.task-verifier.config.ts",
     "../tasks/*.ts",
     "../../scripts/freeze-task-fixtures.ts",
     "../../scripts/summarize-task-benchmark.ts"

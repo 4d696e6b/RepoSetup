@@ -1091,3 +1091,37 @@ three files and Git whitespace checks passed. Milestone I stays in progress;
 J is unstarted.
 The roadmap now checks only I's frozen-fixture/holdout item; treatment comparison,
 full packed/platform qualification and live provider/profile gates remain open.
+
+## Milestone I — full reference verifier integration (2026-10-08)
+
+Added a separate serial `test:tasks:verifier` qualification using E's concrete
+adapter and core executor on the five frozen references. The test-only host copies
+preinstalled dependency bytes into an isolated, completely inventoried tree,
+removing workspace links and the unrelated provider SDK. Reviewed runtime/tool/
+config and imported public-oracle file bindings feed the existing verifier;
+no alternate product execution path or dependency installation is introduced.
+The reference task and final-phase checks use actual executor-issued receipts,
+full immutable audits, exact public test identities and scratch/project effect
+checks. Dry-run and imported-oracle/dependency-drift faults must execute nothing.
+Reference review is explicitly restricted to frozen source identity; generic
+candidate review, trial quality and cross-module treatment behavior remain open.
+
+Validation on Node 24.21.0/macOS arm64: the complete seven-case qualification
+passed in 973.12 seconds. All five references pass actual task and final-phase
+verification, with 30 fixed tool launches in total and no project effects or
+remaining scratch. Both drift faults block before any process or review call.
+The reviewed copied closure contains 7,294 entries and 134,098,040 bytes;
+qualification metadata discloses source `ce1c4c7` with dirty test-source status
+and runner revision `sha256:4dd2d1dfaf85f748c18a5134d70a4712bc89f0f0184c91d6bc05589a3b004cf7`.
+Workspace build/typecheck/lint, task-infrastructure typecheck and whitespace
+checks passed. All 11 ordinary fixture/report/packed regression cases across
+three files passed in 25.57 seconds, confirming the heavy suite stays separate.
+A first harness scope mistake was correctly rejected by the existing compiler
+and corrected in test authority; product scope rules were unchanged. The heavy
+suite is excluded from ordinary fixture CI and uses a documented serial runtime
+allowance. This establishes full E reference-verifier integration locally;
+generic candidate review, cross-module treatment/predecessor drift, retained
+trial execution/evidence, installed/native/Linux and live provider/profile gates
+remain open. Milestone I stays in progress; J is unstarted. No API keys or paid
+calls were used. No installation, version bump, website source change, merge,
+push or publication occurred.
