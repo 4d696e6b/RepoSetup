@@ -609,6 +609,50 @@ describe("executeInstallation", () => {
     }
   });
 
+  it("retains bounded redacted timeout diagnostics and stops before subsequent changes", async () => {
+    const root = await tempRoot();
+    const messages: string[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "run_command",
+          command: "npm",
+          args: ["install", "--include=dev"],
+          cwd: ".",
+          description: "Install dependencies",
+        },
+        {
+          type: "create_file",
+          path: "after.txt",
+          content: "must not be written",
+          behavior: "fail_if_exists",
+          description: "Must not run after timeout",
+        },
+      ],
+      {
+        rootDir: root,
+        logger: { info: (message) => messages.push(message), verbose() {} },
+        runProcess: async () => ({
+          exitCode: 1,
+          timedOut: true,
+          stdout: `${"earlier download output\n".repeat(200)}installing native dependency\nDATABASE_URL=super-secret`,
+          stderr: "token=super-secret",
+        }),
+      },
+    );
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) return;
+    expect(result.error.code).toBe("COMMAND_TIMED_OUT");
+    expect(result.error.message).toContain("installing native dependency");
+    expect(result.error.message).toContain("DATABASE_URL=<redacted>");
+    expect(result.error.message.length).toBeLessThan(2100);
+    expect(result.error.details).toEqual({ command: "npm", args: ["install", "--include=dev"] });
+    expect(JSON.stringify(result)).not.toContain("super-secret");
+    expect(messages.join("\n")).toContain("installing native dependency");
+    expect(messages.join("\n")).not.toContain("super-secret");
+    await expect(readFile(path.join(root, "after.txt"), "utf8")).rejects.toThrow();
+  });
+
   it("passes distinct regular and long-running timeout limits to process runners", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];

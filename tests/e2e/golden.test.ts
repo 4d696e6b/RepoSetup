@@ -1,7 +1,21 @@
-import { access, mkdir, readFile, readdir, realpath, rename, writeFile } from "node:fs/promises";
+import {
+  access,
+  mkdir,
+  open,
+  readFile,
+  readdir,
+  realpath,
+  rename,
+  writeFile,
+} from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
+
+import {
+  redactProcessOutput,
+  summarizeFailedProcessOutput,
+} from "../../packages/core/src/executor/output-snippet.js";
 
 import {
   cleanupWorkspace,
@@ -34,6 +48,45 @@ async function commandAvailable(command: string): Promise<boolean> {
 const runNextGolden = process.env.CI === "true" || process.env.REPOSETUP_GOLDEN_NEXT === "1";
 const hasUv = await commandAvailable("uv");
 
+async function retainNpmDiagnostics(parent: string): Promise<void> {
+  const destination = process.env.REPOSETUP_GOLDEN_DIAGNOSTICS_DIR;
+  if (destination === undefined || destination.trim() === "") return;
+  const logsDir = path.join(parent, "npm-cache", "_logs");
+  const maxBytes = 128 * 1024;
+  try {
+    const files = (await readdir(logsDir, { withFileTypes: true })).filter(
+      (entry) => entry.isFile() && /(?:-debug-\d+\.log|-timing\.json)$/.test(entry.name),
+    );
+    if (files.length === 0) return;
+    await mkdir(destination, { recursive: true });
+    for (const entry of files) {
+      try {
+        const file = await open(path.join(logsDir, entry.name), "r");
+        try {
+          const { size } = await file.stat();
+          const length = Math.min(size, maxBytes);
+          const buffer = Buffer.alloc(length);
+          const { bytesRead } = await file.read(buffer, 0, length, size - length);
+          const redacted = Buffer.from(
+            redactProcessOutput(buffer.subarray(0, bytesRead).toString("utf8")),
+          );
+          await writeFile(
+            path.join(destination, `${path.basename(parent)}-${entry.name}`),
+            redacted.subarray(Math.max(0, redacted.length - maxBytes)),
+            { flag: "wx" },
+          );
+        } finally {
+          await file.close();
+        }
+      } catch {
+        // Optional diagnostic retention must not hide the original create failure.
+      }
+    }
+  } catch {
+    // npm may not have created logs; retain the actual create result in that case.
+  }
+}
+
 async function createProject(
   configPath: string,
   typescript?: boolean,
@@ -55,8 +108,14 @@ async function createProject(
     cwd: startingDir,
     env: { ...process.env, npm_config_cache: path.join(parent, "npm-cache") },
   });
-  expect(await readdir(startingDir), created.stderr).toEqual(["app"]);
   const cwd = path.join(startingDir, "app");
+  if (created.exitCode !== 0) {
+    await retainNpmDiagnostics(parent);
+    const stdoutSnippet = summarizeFailedProcessOutput(created.stdout, "");
+    if (stdoutSnippet !== undefined) {
+      created.stderr += `\nCaptured create stdout (redacted tail):\n${stdoutSnippet}\n`;
+    }
+  }
   if (created.exitCode !== 0 && config.runtime.id === "node") {
     const versions: Record<string, string> = {};
     for (const name of ["vite", "vitest", "vite-tsconfig-paths", "@types/node"]) {
@@ -71,6 +130,7 @@ async function createProject(
     }
     created.stderr += `\nInstalled test tooling: ${JSON.stringify(versions)}\n`;
   }
+  expect(await readdir(startingDir), created.stderr).toEqual(["app"]);
   return { cwd, created };
 }
 

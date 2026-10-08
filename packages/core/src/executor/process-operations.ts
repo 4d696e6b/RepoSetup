@@ -373,9 +373,11 @@ function commandFailure(
   }
 
   if (result.timedOut === true) {
+    const snippet = recordFailedProcessOutput(result, context);
+    const summary = `Command "${command}" exceeded its execution time limit.`;
     return createRepoSetupError({
       code: "COMMAND_TIMED_OUT",
-      message: `Command "${command}" exceeded its execution time limit.`,
+      message: snippet === undefined ? summary : `${summary}\n${snippet}`,
       details: { command, args: [...args] },
       suggestion: "Check network, package-manager, and project state before retrying the plan.",
     });
@@ -395,11 +397,7 @@ function commandFailure(
     return undefined;
   }
 
-  const snippet = summarizeFailedProcessOutput(result.stdout, result.stderr);
-  if (snippet !== undefined) {
-    context.logger.info(snippet);
-    context.logs.push(snippet);
-  }
+  const snippet = recordFailedProcessOutput(result, context);
 
   const summary = `Command "${command}" exited with code ${result.exitCode}.`;
   return createRepoSetupError({
@@ -412,6 +410,18 @@ function commandFailure(
     },
     suggestion: commandFailureSuggestion(snippet),
   });
+}
+
+function recordFailedProcessOutput(
+  result: ProcessRunResult,
+  context: ExecutionContext,
+): string | undefined {
+  const snippet = summarizeFailedProcessOutput(result.stdout, result.stderr);
+  if (snippet !== undefined) {
+    context.logger.info(snippet);
+    context.logs.push(snippet);
+  }
+  return snippet;
 }
 
 function timeoutFor(
