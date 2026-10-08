@@ -2,14 +2,23 @@
 
 Created 2026-10-08, against released source `origin/main` at `1ddbdc6`.
 Regression branch: `codex/fix-create-project-paths` (merged through PR #10).
-Release branch: `codex/release-0.2.2`; [published delivery evidence](../release-docs/STABLE_RELEASE_0.2.2.md).
+Release branch: `codex/release-0.2.3`; [release progress](../release-docs/STABLE_RELEASE_0.2.3.md).
 
 0.2.x prioritizes working supported recipes, safe failures, reproducibility and
 regression coverage. No new integrations are needed to close these regressions.
 A passing plan is not evidence of a working generated application. Never claim
 all possible integration combinations or all operating systems were tested.
 
-## Current delivery — 2026-10-08
+## Current 0.2.3 preparation — 2026-10-08
+
+Installed-stack repairs are merged through PR #17. The [automated audit](./INSTALLED_STACK_AUDIT.md)
+passes 480 full-matrix cases after two Windows/npm retries, 1,043 local unit tests,
+38 packed E2E tests and targeted recovery checks. Workspace versions and active
+publication gates now target 0.2.3. The owner authorized publication after health
+qualification; exact-source artifact, service, publication and registry-delivery
+checks are pending. See [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+
+## Historical 0.2.2 delivery — 2026-10-08
 
 **rsetup@0.2.2 is published and accepted from npm on all three release targets.**
 Dependency-health repairs pass exact-source qualification, including 408 successful
@@ -248,8 +257,8 @@ is explicitly labeled; it does not execute or qualify generated applications.
 ## Reproducing the stability checks
 
 Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.
-These commands test the checkout. The published patch is available as
-`rsetup@0.2.2`; see the release record for npm installation and provenance.
+These commands test the checkout. The 0.2.3 candidate is not yet published;
+see the release record for publication and registry acceptance.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -262,8 +271,8 @@ pnpm test:e2e
 ```
 
 For the real generators and downloaded dependencies, use a fresh machine or
-runner with enough disk space. Each golden run executes twenty packed-npx bare
-solutions and fourteen recipes; the Next recipe is enabled locally explicitly:
+runner with enough disk space. Each current golden run executes twenty-two packed-npx bare
+solutions and eighteen recipes; the Next recipe is enabled locally explicitly:
 
 ```sh
 REPOSETUP_GOLDEN_NEXT=1 REPOSETUP_GOLDEN_PACKAGE_MANAGER=npm pnpm test:golden

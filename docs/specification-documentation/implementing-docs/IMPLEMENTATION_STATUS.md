@@ -4,7 +4,14 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Installed stack audit — automated qualification complete; unreleased.**
+**0.2.3 — release preparation; publication pending.** The owner authorized
+publication after health qualification. Installed-stack repairs were merged
+through PR #17. Workspace manifests and active publication checks target 0.2.3;
+new exact-source qualification, signed publication and registry delivery remain
+required. Additional isolated live database and Linux Compose acceptance are in
+progress. See [the 0.2.3 release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+
+**Installed stack audit — automated qualification complete; merged for 0.2.3; publication pending.**
 The reported Express project was repaired after a root-owned npm cache aborted installation.
 Additional confirmed defects were fixed in development dependency installation,
 SQLAlchemy's PostgreSQL driver, JavaScript Prisma imports, Docker prerequisite health
@@ -16,7 +23,7 @@ database connectivity remain unqualified.
 The branch is `codex/audit-installed-stack`; published 0.2.2 is unchanged.
 See [the installed stack audit](./INSTALLED_STACK_AUDIT.md) for evidence and remaining service limits.
 
-**0.2.2 — published and delivery accepted.** npm latest is 0.2.2.
+**0.2.2 — published and delivery accepted.** At this preparation checkpoint, npm latest is 0.2.2.
 PR #13/#14 deliver dependency-health repairs at immutable tag/source
 `v0.2.2` / `c447e461e6e66935f077449c99d8d759e6067482`. Three complete first-attempt release qualifications,
 the 408-case expanded matrix after one documented Windows install-timeout retry,

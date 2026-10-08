@@ -1,4 +1,4 @@
-# CLI Specification — 0.2.2
+# CLI Specification — 0.2.3
 
 ## 1. Command tree
 
@@ -208,7 +208,7 @@ Checks:
 
 Exit codes should distinguish healthy vs issues.
 
-0.2.2 behavior: doctor checks installed dependency metadata in
+Doctor checks installed dependency metadata in
 addition to configuration. Node checks required runtime and development packages;
 Python checks project requirements and the default development group. FastAPI's
 standard extras require the CLI and Uvicorn. For uv, doctor reads the existing
@@ -218,7 +218,7 @@ Configuration health alone does not prove application imports or live services.
 See [post-create dependency health](../implementing-docs/POST_CREATE_DEPENDENCY_HEALTH.md)
 for the implementation, qualification and boundaries.
 
-Unreleased installed-stack audit behavior: Docker selection writes discoverable
+0.2.3 installed-stack behavior: Docker selection writes discoverable
 prerequisite guidance. Doctor checks that Docker and, when detected, Docker Compose
 can run bounded version probes, without starting or connecting to the daemon.
 SQLAlchemy PostgreSQL recipes declare the Psycopg binary driver; its binary metadata

@@ -1,11 +1,12 @@
 # Documentation
 
-For the 0.2.2 stability patch, start with the root [README](../README.md),
+For the 0.2.3 installed-stack stability patch, start with the root [README](../README.md),
 [integration support](./specification-documentation/implementing-docs/INTEGRATION_SUPPORT.md)
-and [patch release status](./specification-documentation/release-docs/STABLE_RELEASE_0.2.2.md).
-The delivered fixes and checked automated results are in the
+and [patch release status](./specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md).
+The fixes and checked automated results are in the
+[installed-stack audit](./specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) and
 [0.2.x stability plan](./specification-documentation/implementing-docs/STABILITY_0.2.x.md).
-The current [0.2.2 user guide](./humanOnly/RepoSetup_0.2.2.md) explains installation and troubleshooting; older human-facing notes retain the historical 0.1.x line.
+The current [0.2.3 user guide](./humanOnly/RepoSetup_0.2.3.md) explains installation and troubleshooting; older guides and release records retain historical instructions.
 
 Specifications live in [`specification-documentation/`](./specification-documentation/), grouped by topic.
 
@@ -40,6 +41,7 @@ Specifications live in [`specification-documentation/`](./specification-document
 
 - [Security and safety](./specification-documentation/security-docs/SECURITY_AND_SAFETY.md)
 - [Security review](./specification-documentation/security-docs/SECURITY_REVIEW.md)
+- [0.2.3 release security review](./specification-documentation/security-docs/SECURITY_REVIEW_0.2.3.md)
 - [0.2.2 release security review](./specification-documentation/security-docs/SECURITY_REVIEW_0.2.2.md)
 - [Historical 0.2.0 candidate security review](./specification-documentation/security-docs/SECURITY_REVIEW_0.2.0.md)
 
@@ -50,7 +52,8 @@ Specifications live in [`specification-documentation/`](./specification-document
 - [Release process](./specification-documentation/release-docs/RELEASE.md)
 - [Release checklist](./specification-documentation/release-docs/RELEASE_CHECKLIST.md)
 - [Release hardening](./specification-documentation/release-docs/RELEASE_HARDENING.md)
-- [0.2.2 release and delivery record](./specification-documentation/release-docs/STABLE_RELEASE_0.2.2.md)
+- [0.2.3 release and delivery record](./specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md)
+- [Historical 0.2.2 release and delivery record](./specification-documentation/release-docs/STABLE_RELEASE_0.2.2.md)
 - [Historical 0.2.0 stable delivery runbook](./specification-documentation/release-docs/STABLE_RELEASE_0.2.0.md)
 - [Historical 0.2.0 stable qualification](./specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md)
 - [0.2.2 machine-readable qualification](./specification-documentation/release-docs/qualification/0.2.2.json)

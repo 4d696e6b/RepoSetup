@@ -1,8 +1,15 @@
-# Integration support report (`0.2.2`)
+# Integration support report (`0.2.3` preparation)
 
-The 0.2.2 patch preserves the published 0.2.0 catalog classification. Completed publication and exact-source delivery evidence are in [the patch release record](../release-docs/STABLE_RELEASE_0.2.2.md). The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
+The 0.2.3 candidate preserves the published 0.2.0 catalog classification. Version-specific qualification and publication are pending in [the patch release record](../release-docs/STABLE_RELEASE_0.2.3.md). The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
 
-## 0.2.x execution qualification — 2026-10-08
+## 0.2.3 installed-stack audit
+
+The [installed-stack audit](./INSTALLED_STACK_AUDIT.md) passes all 480 full-matrix
+cases after two same-source Windows/npm retries, plus scoped recovery checks.
+These repairs were merged through PR #17. New version-specific release and live
+service qualification remain pending. No integration maturity is promoted.
+
+## Historical 0.2.x execution qualification — 2026-10-08
 
 The published catalog table below retains its 0.2.0 classification. On patch
 product source `448beb4`, [full qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37703591131)
@@ -22,7 +29,7 @@ These completed checks expand observed execution coverage on the patch branch;
 they are retained in published 0.2.2 and do not promote catalog maturity.
 Final publication, dependency-health qualification and delivery evidence are in the release record.
 
-## Catalog classification retained in 0.2.2
+## Catalog classification retained in 0.2.3
 
 Statuses below are **not fabricated as stable**. `candidate` means plan/detect/verify tests exist. `experimental` means implemented but not treated as a qualified path. Real execute evidence is recorded separately in `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md`.
 
@@ -67,4 +74,4 @@ Statuses below are **not fabricated as stable**. `candidate` means plan/detect/v
 | github-actions | experimental | template write; not CI-qualified as a product surface |
 | bun | — | not in catalog |
 
-No IDs are `stable` or `deprecated` in 0.2.2. The five guaranteed recipe tuples passed Ubuntu 24.04, macOS 15, and Windows Server 2025 CI qualification with Node 24 and the documented Python 3.12/3.13 variants. Windows 11 desktop behavior is not separately claimed by this CI evidence.
+No IDs are `stable` or `deprecated` in 0.2.3. The five guaranteed recipe tuples passed Ubuntu 24.04, macOS 15, and Windows Server 2025 CI qualification with Node 24 and the documented Python 3.12/3.13 variants. Windows 11 desktop behavior is not separately claimed by this CI evidence.

@@ -7,6 +7,7 @@ export default defineConfig({
       "tests/e2e/golden.test.ts",
       "tests/e2e/create-solutions.test.ts",
       "tests/e2e/usability-session.test.ts",
+      "tests/e2e/live-services.test.ts",
     ],
     testTimeout: 180_000,
     hookTimeout: 60_000,
