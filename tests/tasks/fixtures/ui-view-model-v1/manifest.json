@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:bfc4dae158451a72bac47b61b2709ad97c7a0db5499767c857d78abd8c18b0d0",
+  "fixtureRevision": "sha256:17a88c7a25bf510f385c1513b96d01b1bb6606df7bee602d4dc00308cace042f",
   "fixtureId": "ui-view-model-v1",
   "fixtureVersion": 1,
   "phaseId": "list-view-state",
@@ -84,7 +84,7 @@
   "phaseDocumentHash": "sha256:f9fb999164a5e2518add95751ac71240f08c1049fdc2f436434be371df446943",
   "lockfileHash": "sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4",
   "dependencyArtifactId": "sha256:119bc8c433206f233f9c2fd689fe1f9f35554956fa08d3c0f5bcae7d21f30138",
-  "recipeRevision": "sha256:e32f9700e5879c436079f3d47bba69c83d68c19a2b2e9c0f640530570d93992a",
+  "recipeRevision": "sha256:327aa47ff89085f5044eebc1d26d4088a8ed037abb49f8659d366fc27060af33",
   "supportProfileId": "managed-ts-node-v1",
   "write": ["src/view-model.ts", "test/agent/view-model.test.ts"],
   "entrypoints": ["buildListView"],

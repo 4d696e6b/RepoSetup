@@ -183,7 +183,7 @@ Reuse Vitest assertion/test organization, CLI dependency injection, recording Pr
 
 ## Evidence still required
 
-Milestone I has versioned fixture manifests and oracles, reference/wrong-variant discrimination, a local fixed-recipe probe and holdout separation. Full managed verifier closure/effect qualification, an installed artifact and all platform evidence remain open. G/H offline tests cannot establish exact production provider/model capability, native effort, usage/pricing or quality. Live trials remain blocked until those prerequisites and an explicit provider allowance exist. No accuracy, savings, routing quality or managed support result is claimed by this document.
+Milestone I has versioned fixture manifests and oracles, reference/wrong-variant discrimination, a local fixed-recipe probe, full reference verifier integration and actual-candidate evaluator tests. Candidate/trial verifier joining, authenticated retained evidence, an installed artifact and remaining platform evidence are open. G/H offline tests cannot establish exact production provider/model capability, native effort, usage/pricing or quality. Live trials remain blocked until those prerequisites and an explicit provider allowance exist. No accuracy, savings, routing quality or managed support result is claimed by this document.
 
 ## Initial local fixture implementation (2026-10-07)
 
@@ -322,3 +322,47 @@ and 10 minutes per qualification case, without weakening E's inventory checks.
 It is intentionally excluded from the fast fixture suite and existing ordinary CI
 steps. Installed artifact, Linux execution, trial orchestration/evidence and live
 provider/profile qualification remain separate gates.
+
+## Actual-candidate evaluator prototype (2026-10-08)
+
+`tests/tasks/candidate-evaluation.ts` evaluates a supplied local candidate rather
+than selecting a named variant or requiring reference-byte equality. Its bounded
+read-only projection uses the existing verifier readers: frozen seed inputs are
+required, only exact fixture write paths may differ, and foreign paths, links,
+denied content and changed public definitions are blocked. Individual files have
+the verifier's 64 KiB ceiling; the projection has an 8 MiB ceiling. Candidate
+snapshots bind each evaluation to an expected revision and detect drift around
+capture and execution. Fixture/source/tool hashes are recomputed around evaluation.
+
+Public checks compile a private copy and run the frozen compatibility/acceptance
+cases with exact public IDs. Public feedback contains no holdout inventory or
+results and can be reused after a repair at a fresh revision. Final evaluation
+requires `declared_complete` or `limit_reached` and closes the session before
+evaluation begins, including on infrastructure failure. Only then are private
+runtime/type oracles copied to the evaluator's temporary tree. Final caller
+feedback is limited to revision, evidence hash and pass/fail; detailed immutable
+outcomes go to a separate trusted host recorder, never a repair port. Processes
+use existing fixed compiler/Node argument recipes, scrubbed environments and
+120-second compiler/10-second oracle timeouts. Bounded projected/emitted-tree
+snapshots check effects; temporary evaluator files are removed on exit.
+
+The ordinary serial fixture suite includes five candidates with changed reference
+bytes (including a distinct UI implementation), public failure/repair and stale
+revision, public-pass/private-fail discrimination, definition/scope/privacy/link
+rejections, emitted-file effects, malformed private reports and concurrent/session
+closure checks. These tests use vetted local candidates and require no credentials
+or installation. Public examples alone do not cover every criterion, as the
+public-pass/private-fail case demonstrates. This evaluator's behavior result must
+still be joined with E's full qualified checks and independent criterion review;
+it is not an executor-issued managed acceptance receipt.
+
+The prototype is not qualified to execute hostile model output: subprocesses share
+the host's OS authority, and importing candidate JavaScript does not establish
+report authenticity against runtime manipulation. Snapshot audits do not prove
+isolation outside their roots. Sessions are volatile; durable terminal enforcement,
+trial budgets, authenticated artifact retention and the three-treatment runner
+remain open. A failed evaluator call returns a sanitized error; the future trial
+driver must retain that terminal failure. No trial or quality claim follows from
+these tests. Runner hashing now includes both candidate helper modules, so all five
+manifests have new recipe/fixture revisions; campaigns from earlier freezes must
+not be combined with this revision.

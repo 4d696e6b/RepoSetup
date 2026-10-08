@@ -65,12 +65,17 @@ export async function fixtureManifest(fixtureId: string): Promise<TaskBenchmarkF
     ),
     recipeRevision: taskContentHash(
       await Promise.all(
-        ["fixture-tools.ts", "fixture-qualification.ts", "managed-checks.ts", "run-oracle.mjs"].map(
-          async (name) => ({
-            path: name,
-            fileHash: taskByteHash(await readFile(path.join(workspaceRoot, "tests/tasks", name))),
-          }),
-        ),
+        [
+          "fixture-tools.ts",
+          "fixture-qualification.ts",
+          "managed-checks.ts",
+          "candidate-projection.ts",
+          "candidate-evaluation.ts",
+          "run-oracle.mjs",
+        ].map(async (name) => ({
+          path: name,
+          fileHash: taskByteHash(await readFile(path.join(workspaceRoot, "tests/tasks", name))),
+        })),
       ),
     ),
     supportProfileId: "managed-ts-node-v1",

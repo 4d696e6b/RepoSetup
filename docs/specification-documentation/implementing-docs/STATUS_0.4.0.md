@@ -1125,3 +1125,45 @@ trial execution/evidence, installed/native/Linux and live provider/profile gates
 remain open. Milestone I stays in progress; J is unstarted. No API keys or paid
 calls were used. No installation, version bump, website source change, merge,
 push or publication occurred.
+
+## Milestone I — actual-candidate evaluator prototype (2026-10-08)
+
+Added test-only candidate projection/evaluation helpers and 14 serial acceptance
+tests. The evaluator reads an actual supplied project through the existing bounded
+verifier readers, preserves frozen public inputs and exact write scopes, and binds
+each check to a fresh project revision. Fixed compiler/Node assertions operate on
+a private copy with scrubbed environments, bounded reports and projected/emitted
+effect audits. Public checks remain reusable after repair; private runtime/type
+holdouts run only after an explicit terminal request irreversibly closes that
+session. Detailed frozen final outcomes use a separate host recorder; final caller
+feedback contains only pass/fail, revision and evidence hash.
+
+Tests cover all five candidates with changed reference bytes, including a distinct
+UI implementation; public failure/repair and stale evidence; a candidate passing
+public examples but failing private criteria; protected-oracle, foreign/secret-path
+and escaping-link rejection before processes; emitted effects, sanitized private
+report failure and concurrent/terminal session enforcement. The new helper bytes
+are included in the runner freeze and all five manifests were regenerated; only
+recipe/fixture revisions changed. Earlier campaign revisions remain separate.
+
+Validation on Node 24.21.0/macOS arm64 with pnpm 12.5.1: workspace build/typecheck,
+task-test typecheck and lint passed. All 19 targeted core fixture/report tests and
+25 ordinary serial task e2e tests across four files passed (combined suite 34.81
+seconds). The final focused candidate suite passed all 14 tests in 9.44 seconds;
+changed-document formatting and Git whitespace checks passed. The inherited root build
+also built the existing website, with no tracked website source change. The
+16-minute full-reference verifier suite was not repeated: E adapters, protected
+tool/config definitions and fixture source/oracles are unchanged; its previous
+record applies to its recorded freeze, not new trial qualification.
+
+This prototype checks vetted local candidate behavior, not hostile-runtime
+isolation/report authenticity, generic criterion review or complete managed
+acceptance. Public examples alone are insufficient. Sessions/recording are not
+durable or authenticated campaign evidence. Remaining I work includes joining
+candidate review with E receipts, serial three-treatment orchestration and budgets,
+retained terminal failures/evidence, cross-module predecessor drift, installed
+artifact/real legacy install and Linux/platform qualification. Production capability
+and native-effort profiles plus separately authorized live provider smoke/trials
+remain unconfirmed. Milestone I stays in progress; J is the next milestone after
+those gates and is unstarted. No keys, provider calls, payments, installation,
+version bump, merge, push or publication occurred.

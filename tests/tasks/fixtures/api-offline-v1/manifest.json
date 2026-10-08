@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:6af8d8831a5bcc270d2233eefe557a79227144548be291834e6f4fdfbf0a7c5a",
+  "fixtureRevision": "sha256:3c0593dd702870d4d2987e5b673b794e7264a5823692dbe6756db70d52d0621a",
   "fixtureId": "api-offline-v1",
   "fixtureVersion": 1,
   "phaseId": "offline-pagination-handler",
@@ -89,7 +89,7 @@
   "phaseDocumentHash": "sha256:4a6b2f2214d07e7eff98e008ccb452e8aec1b7a047a8d7e8dc02fa5c20a2633f",
   "lockfileHash": "sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4",
   "dependencyArtifactId": "sha256:119bc8c433206f233f9c2fd689fe1f9f35554956fa08d3c0f5bcae7d21f30138",
-  "recipeRevision": "sha256:e32f9700e5879c436079f3d47bba69c83d68c19a2b2e9c0f640530570d93992a",
+  "recipeRevision": "sha256:327aa47ff89085f5044eebc1d26d4088a8ed037abb49f8659d366fc27060af33",
   "supportProfileId": "managed-ts-node-v1",
   "write": ["src/query.ts", "src/handler.ts", "test/agent/handler.test.ts"],
   "entrypoints": ["decodeQuery", "handleRequest"],
