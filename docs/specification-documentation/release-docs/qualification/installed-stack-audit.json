@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-10-08",
+  "status": "local-complete-cross-platform-pending",
+  "deliveryStatus": "unreleased",
+  "repairSourceCommit": "d26b912eb321b55fd930b169b1fcd9a230f1d6da",
+  "baseSourceCommit": "4db2f406a713154ec1b3c4c0f5968493f358d624",
+  "branch": "codex/audit-installed-stack",
+  "publishedVersionUnchanged": "0.2.2",
+  "localToolchain": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "node": "24.21.0",
+    "python": "3.13.1",
+    "pnpm": "12.5.1"
+  },
+  "reportedProject": {
+    "path": "test/js_test",
+    "failure": "npm cache EEXIST/EACCES; root-owned parent directory; dependency install stopped at operation 14",
+    "originalCompletedOperations": 13,
+    "originalTotalOperations": 19,
+    "repairCompletedOperations": 6,
+    "repairStatus": "passed",
+    "installedRequiredPackages": 11,
+    "typescriptBuild": "passed",
+    "prismaGeneratedAndImported": "passed",
+    "expressHttpStatus": 200,
+    "globalCacheOwnershipChanged": false,
+    "existingSourceOverwritten": false,
+    "dockerGuidanceAdded": true,
+    "finalDoctor": {
+      "installedDependencies": "passed",
+      "express": "passed",
+      "prisma": "passed",
+      "postgresqlConfiguration": "passed",
+      "dockerCli": "prerequisite-missing-unusable-PATH-binary"
+    },
+    "evidence": [
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/js-test-repair.json",
+        "sha256": "6519dae3a6fc63533f2dd8a05379dc983bff3244232ef2c49d2e2b4d1c87aebf"
+      },
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/js-test-build.log",
+        "sha256": "ffe97c7819a39d1f8b547b82f5c7d329a676e1b39451313da6a27e58d9cbe3a4"
+      },
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/js-test-doctor-final.json",
+        "sha256": "37c8141187c8d7a3201f210a2b2519f695016b5a9c17e05f5bbeadf4a970c083"
+      },
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/js-test-docker-guide.json",
+        "sha256": "d5bb5eb82c4e9ecaa91c602f907b43c5f440d80100295e7fdccaca76421d4511"
+      }
+    ]
+  },
+  "localChecks": {
+    "unit": {
+      "passed": 1037,
+      "failed": 0,
+      "skipped": 0,
+      "packages": {
+        "core": 243,
+        "registry": 15,
+        "integrations": 670,
+        "cli": 109
+      },
+      "evidence": {
+        "path": "/tmp/reposetup-stack-audit-20261008/unit-final.log",
+        "sha256": "e5641ff38c44ca120cfc7d23ef681c574ac248217a05ac898ea5bea0b03594ec"
+      }
+    },
+    "packedE2E": {
+      "passed": 38,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "/tmp/reposetup-stack-audit-20261008/e2e-final.log",
+        "sha256": "34e0861ea94ecb20ac9a3335ff39763c4e1901ac2f2bc278fc44bd57cf0082e5"
+      }
+    },
+    "build": {
+      "status": "passed",
+      "evidence": {
+        "path": "/tmp/reposetup-stack-audit-20261008/build-final.log",
+        "sha256": "f3cc0ff5f743160abb0e744669a09a48da98f5c320364c5bbe4374c6a3ac8a39"
+      }
+    },
+    "typecheck": {
+      "status": "passed",
+      "evidence": {
+        "path": "/tmp/reposetup-stack-audit-20261008/typecheck-final.log",
+        "sha256": "459826c5ddc29dea4952531f5b1bab44733300e6b08767293a45ba00219025e9"
+      }
+    },
+    "lint": {
+      "status": "passed",
+      "evidence": {
+        "path": "/tmp/reposetup-stack-audit-20261008/lint-final.log",
+        "sha256": "26db9673ec89bc95699a8e66249537512722e2114018fc39c411bfb94c2d9eaa"
+      }
+    }
+  },
+  "targetedRealChecks": {
+    "productionOmit": {
+      "independentExpressInstallations": 5,
+      "status": "passed",
+      "checks": [
+        "create",
+        "local Express/Node types",
+        "TypeScript build",
+        "doctor",
+        "HTTP 200"
+      ],
+      "permanentPackedTests": 2,
+      "negativeMissingTypes": "doctor and build fail",
+      "evidenceRoot": "/tmp/reposetup-stack-audit-node-20261008"
+    },
+    "javascriptPrisma": {
+      "frameworks": [
+        "express",
+        "fastify"
+      ],
+      "databases": [
+        "sqlite",
+        "postgresql"
+      ],
+      "managers": [
+        "npm",
+        "pnpm"
+      ],
+      "executions": 8,
+      "status": "passed",
+      "checks": [
+        "regenerate model and enum",
+        "plain Node 24 helper import",
+        "model delegate available",
+        "client disconnect"
+      ],
+      "sqliteQuery": "SELECT 1 passed",
+      "postgresqlConnected": false
+    },
+    "pythonSqlalchemy": {
+      "frameworks": [
+        "fastapi",
+        "flask"
+      ],
+      "managers": [
+        "uv",
+        "pip"
+      ],
+      "installations": 4,
+      "status": "passed",
+      "checks": [
+        "create",
+        "doctor",
+        "framework/helper imports",
+        "binary driver",
+        "missing URL guard",
+        "connection trap",
+        "pytest",
+        "ruff",
+        "dependency consistency"
+      ],
+      "negativeBinaryMetadata": "doctor fails with code 5 without uv resync; metadata restored",
+      "postgresqlConnected": false
+    },
+    "databaseEvidenceRoot": "/tmp/reposetup-stack-audit-db-20261008",
+    "compose": {
+      "status": "passed",
+      "docker": "29.7.2",
+      "compose": "5.4.0",
+      "checks": [
+        "actual config parsing",
+        "default placeholders",
+        "custom user/database/port",
+        "IPv4 loopback port",
+        "PostgreSQL18 persistent volume",
+        "missing password refusal"
+      ],
+      "daemonContacted": false,
+      "containersStarted": false,
+      "rawRetainedLogPath": null,
+      "originalEvidenceStorage": "conversation-tool-output; disposable fixtures removed"
+    },
+    "dockerDoctor": {
+      "oldPathBinary": "five-second timeout reported prerequisite failure",
+      "workingBundledBinaries": "doctor passed with isolated PATH override",
+      "globalPathChanged": false
+    }
+  },
+  "permanentGoldenMatrix": {
+    "bareSolutionsPerJob": 22,
+    "recipesPerJob": 18,
+    "totalTestsPerJob": 40,
+    "jobs": 12,
+    "expectedExecutions": 480,
+    "status": "pending",
+    "run": null
+  },
+  "crossPlatform": {
+    "fast": null,
+    "platform": null,
+    "usability": null
+  },
+  "limits": [
+    "No live PostgreSQL/MongoDB connection or migrations",
+    "No Docker daemon/container proof",
+    "No actual Playwright browser journeys",
+    "No native Windows11 or Linuxarm64 qualification",
+    "Doctor metadata is not every import or editor-language-server proof",
+    "System software and real credentials are not installed or persisted",
+    "No integration maturity promotion",
+    "Published 0.2.2 bytes unchanged"
+  ],
+  "officialSources": [
+    "https://docs.npmjs.com/cli/v11/commands/npm-install/",
+    "https://pnpm.io/cli/install",
+    "https://www.prisma.io/docs/orm/v7/prisma-schema/overview/generators",
+    "https://nodejs.org/api/typescript.html",
+    "https://docs.sqlalchemy.org/en/20/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg",
+    "https://www.psycopg.org/psycopg3/docs/basic/install.html",
+    "https://docs.docker.com/reference/compose-file/services/#ports",
+    "https://docs.docker.com/reference/cli/docker/compose/config/",
+    "https://hub.docker.com/_/postgres"
+  ]
+}

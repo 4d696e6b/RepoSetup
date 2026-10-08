@@ -4,6 +4,18 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- Fresh Node scaffolds and selected development package additions include required dev dependencies even under production/omit settings.
+- PostgreSQL SQLAlchemy recipes install the pinned Psycopg binary driver and provide a guarded engine helper. JavaScript Prisma recipes import their generated client using supported Node 24 TypeScript paths.
+- Docker selections persist prerequisite guidance; doctor reports missing or unusable Docker/Compose CLIs with bounded probes. PostgreSQL Compose publishes a loopback port with aligned environment placeholders, a required password and persistent storage.
+- Cache permission failures and partial creation explain safe recovery and the actual project directory. Completion output distinguishes package installation from manual system-service setup and names the correct database environment variable.
+- Node prerequisite text and metadata match the existing Node 24 requirement.
+
+See the [installed stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) for qualification and limits. These fixes are not in the immutable published 0.2.2 package.
+
 ## [0.2.2] - 2026-10-08
 
 Published dependency-health stability patch; qualification and delivery evidence are in the

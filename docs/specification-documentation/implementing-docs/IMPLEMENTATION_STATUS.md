@@ -4,6 +4,15 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
+**Installed stack audit — implementation and local regression checks complete; cross-platform qualification pending; unreleased.**
+The reported Express project was repaired after a root-owned npm cache aborted installation.
+Additional confirmed defects were fixed in development dependency installation,
+SQLAlchemy's PostgreSQL driver, JavaScript Prisma imports, Docker prerequisite health
+and PostgreSQL Compose configuration. All 1,037 unit tests and 38 packed E2E tests
+pass, as do build/typecheck/lint and targeted real-install regressions.
+The branch is `codex/audit-installed-stack`; published 0.2.2 is unchanged.
+See [the installed stack audit](./INSTALLED_STACK_AUDIT.md) for evidence and remaining service limits.
+
 **0.2.2 — published and delivery accepted.** npm latest is 0.2.2.
 PR #13/#14 deliver dependency-health repairs at immutable tag/source
 `v0.2.2` / `c447e461e6e66935f077449c99d8d759e6067482`. Three complete first-attempt release qualifications,

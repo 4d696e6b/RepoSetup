@@ -218,6 +218,15 @@ Configuration health alone does not prove application imports or live services.
 See [post-create dependency health](../implementing-docs/POST_CREATE_DEPENDENCY_HEALTH.md)
 for the implementation, qualification and boundaries.
 
+Unreleased installed-stack audit behavior: Docker selection writes discoverable
+prerequisite guidance. Doctor checks that Docker and, when detected, Docker Compose
+can run bounded version probes, without starting or connecting to the daemon.
+SQLAlchemy PostgreSQL recipes declare the Psycopg binary driver; its binary metadata
+is included in installed dependency checks. Create includes development tools under
+production/omit settings and explains manual service setup after completion.
+Interrupted creation prints the target directory and does not imply resumable create.
+See [the audit record](../implementing-docs/INSTALLED_STACK_AUDIT.md).
+
 ## 9. `reposetup export`
 
 Creates `reposetup.json` in the detected project root.
