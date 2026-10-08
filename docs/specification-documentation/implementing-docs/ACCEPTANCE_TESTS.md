@@ -1,3 +1,12 @@
+# 0.2.2 dependency-health acceptance
+
+The owner authorized publication. The repair passed 977 local unit tests, all
+38 packaged E2E tests and a twelve-job/408-execution full matrix before the
+version bump; final 0.2.2 exact-source artifact qualification is still required.
+See [release progress](../release-docs/STABLE_RELEASE_0.2.2.md) and
+[repair coverage](./POST_CREATE_DEPENDENCY_HEALTH.md). Missing Node/Python packages,
+FastAPI CLI metadata and missing uv environments are explicit failure regressions.
+
 # RepoSetup acceptance criteria
 
 The checked Phase 0–18 entries below are historical coverage records. They do not establish the frozen `0.2.0` support contract. See [Phase 19 baseline and acceptance scope](./PHASE_19_BASELINE.md) for current source/artifact evidence, explicit blockers, and the replacement gates.

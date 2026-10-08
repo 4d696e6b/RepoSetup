@@ -4,6 +4,23 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.2] - 2026-10-08
+
+Dependency-health stability patch; qualification and publication status are in the
+[release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.2.md).
+
+### Fixed
+
+- Pip creation records every selected pinned runtime/development dependency in a new `requirements.txt`, so doctor detects the actual generated project instead of a parent config or no project.
+- Create verifies installed dependency metadata before reporting success; doctor detects missing required Node/Python packages instead of treating declarations as proof of installation.
+- FastAPI standard checks include its CLI and Uvicorn. Doctor inspects uv's existing project environment without syncing or recreating it; pip uses the active interpreter, including activated environments on Windows.
+- Python README/startup guidance explains environment activation, `uv run` and dependency recovery. Configuration checks describe their actual scope.
+
+### Changed
+
+- Packed create tests assert the canonical generated root, framework and installed dependency checks; damaged package metadata and missing uv environments are regression-tested across twenty bare solutions and fourteen recipes.
+- Node 24+, existing catalog maturity and native/live-service/browser qualification limits remain unchanged. Installed metadata does not prove all imports, transitive compatibility or live services.
+
 ## [0.2.1] - 2026-10-08
 
 Stability patch; qualification/publication status is in the

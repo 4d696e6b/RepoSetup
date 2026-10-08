@@ -98,15 +98,15 @@ export function validateQualification({ runs, jobs, latestRuns, artifact, source
 async function main() {
   if (
     process.env.GITHUB_REPOSITORY !== REPOSITORY ||
-    process.env.GITHUB_REF !== "refs/tags/v0.2.1"
+    process.env.GITHUB_REF !== "refs/tags/v0.2.2"
   ) {
     throw new Error(
-      "Stable publication must be dispatched against the existing v0.2.1 tag in the official repository.",
+      "Stable publication must be dispatched against the existing v0.2.2 tag in the official repository.",
     );
   }
   const manifest = JSON.parse(await readFile("packages/cli/package.json", "utf8"));
-  if (manifest.name !== "rsetup" || manifest.version !== "0.2.1") {
-    throw new Error("Stable tag requires rsetup@0.2.1.");
+  if (manifest.name !== "rsetup" || manifest.version !== "0.2.2") {
+    throw new Error("Stable tag requires rsetup@0.2.2.");
   }
   const ids = parseRunIds(process.env.QUALIFICATION_RUN_IDS);
   const token = process.env.GITHUB_TOKEN;

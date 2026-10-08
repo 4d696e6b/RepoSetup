@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-08",
+  "version": "0.2.2",
+  "status": "preparing-exact-source-qualification",
+  "sourceBranch": "codex/release-0.2.2",
+  "sourceCommit": null,
+  "tag": "v0.2.2",
+  "ownerAuthorizedPublication": true,
+  "repairPullRequest": "https://github.com/4d696e6b/RepoSetup/pull/13",
+  "repairQualificationRun": 37743848281,
+  "artifact": null,
+  "qualificationRuns": [],
+  "publication": {
+    "npmPublished": false,
+    "githubReleasePublished": false
+  },
+  "notQualified": [
+    "Every integration permutation",
+    "Native Windows 11",
+    "Linux arm64",
+    "Live PostgreSQL/MongoDB/container connections",
+    "SQLAlchemy DBAPI connectivity",
+    "Playwright browser execution"
+  ],
+  "local": {
+    "unitTestsPassed": 977,
+    "packagedE2ETestsPassed": 38,
+    "packagedE2ETestsSkipped": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "registryDefinitionsValidated": 37,
+    "productionAuditVulnerabilities": 0
+  }
+}
