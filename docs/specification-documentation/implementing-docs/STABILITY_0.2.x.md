@@ -8,7 +8,32 @@ regression coverage. No new integrations are needed to close these regressions.
 A passing plan is not evidence of a working generated application. Never claim
 all possible integration combinations or all operating systems were tested.
 
+## Current qualification result — 2026-10-08
+
+The create-regression repairs and automated qualification are complete. The
+patch remains unpublished; maintainer release review and the manual/service
+gaps below remain open. Earlier attempts are retained below as history, not
+as the current gate result.
+
+- Product source `448beb43d945dffa81ff403553200c7e04d3cba1` passed all twelve full matrix jobs: 34 tests per job, 408 successful executions, with no skipped golden/bare cases. Each job executes twenty packed-npx bare solutions and fourteen real recipes. [Full matrix](https://github.com/4d696e6b/RepoSetup/actions/runs/37703591131).
+- All fifteen packaged preset sessions passed 117 checks, including expected occupied-port refusal on all three operating systems. [Preset sessions](https://github.com/4d696e6b/RepoSetup/actions/runs/37703595169).
+- Local checks passed: 959 unit tests (including the 495-check plan matrix), typecheck, lint, build and all 37 registry definitions. Packaged E2E passed 37 tests; one external release-artifact check was skipped.
+- Subsequent changes affect workflow evidence formatting and documentation only; product files are unchanged. Fast CI, three-platform checks and controlled installation-pass benchmarks passed at `86352e3`. The benchmark is not a claim that every framework generator became faster. [CI](https://github.com/4d696e6b/RepoSetup/actions/runs/37704216808), [platform](https://github.com/4d696e6b/RepoSetup/actions/runs/37704216810), [performance](https://github.com/4d696e6b/RepoSetup/actions/runs/37704216851).
+- The full run's four Windows evidence files contain a literal backslash-n trailer. Original artifacts were retained and all twelve semantic payloads were validated against the full source revision. The corrected writer separately produced twelve valid golden JSON files and three valid platform JSON files. Its `evidence-only` scope does not qualify application execution. [Writer check](https://github.com/4d696e6b/RepoSetup/actions/runs/37704261590).
+
+The [machine-readable qualification record](../release-docs/qualification/0.2.x-create-stability.json)
+records source revisions, scopes, counts and exclusions. Native Windows 11,
+Linux arm64, live databases/containers, SQLAlchemy DBAPI connections and actual
+Playwright browser journeys are not qualified by this matrix. The documented
+unpatched development-tool advisory still requires maintainer review.
+
+This completes the automated stability pass, not every possible integration
+permutation, integration promotion, or an npm patch release. No new seven-day
+freeze is required.
+
 ## 0.2.1 — Repair published create regressions
+
+Implementation and automated regression validation: complete. Publication: pending.
 
 - Reproduce `npx rsetup@0.2.0 create my-next --framework nextjs --package-manager npm --typescript --yes` in a fresh folder.
 - Scope all generated file operations to the selected project directory; preserve generator commands that run from its parent.
@@ -23,6 +48,9 @@ all possible integration combinations or all operating systems were tested.
 - Commit fixes with focused regression tests; do not replace an already published npm version.
 
 ## 0.2.2 — Expand release qualification
+
+The automated matrix and preset sessions below are complete. Native platforms
+and live services remain open; this phase is not wholly complete.
 
 - Plan matrix: all six frameworks, npm/pnpm or uv/pip, current/named/nested directories, curated integrations with their required dependencies, JavaScript options, and incompatible runtime/manager rejection.
 - Real execution: fourteen qualified recipes in named directories, generated tests/typechecks/builds/lints and stack/doctor checks; repeat JavaScript recipes with npm and pnpm.

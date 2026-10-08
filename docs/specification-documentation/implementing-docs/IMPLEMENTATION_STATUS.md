@@ -281,5 +281,17 @@ work is tracked in [STABILITY_0.2.x.md](STABILITY_0.2.x.md), on
 Named-folder Next.js failure is reproduced; planner scoping, destination creation,
 bare Vite installation, install ordering, destination lockfile checks and printed
 Node server commands have regression coverage. The 495-check plan matrix passes.
-Full npm/npx/platform qualification and patch publication remain open until their
-results are recorded; do not mark them complete from unit tests alone.
+Automated qualification is complete on product source `448beb4`: all twelve
+full matrix jobs passed 34 tests each (408 successful executions), covering
+twenty packed-npx bare solutions and fourteen recipes per job. All fifteen
+packaged preset sessions passed 117 checks. Local 959 unit tests, typecheck,
+lint, build, 37 registry definitions and 37 packaged E2E tests passed; one
+external release-artifact E2E check was skipped. Workflow-only evidence fixes
+were separately qualified at `86352e3`; product files are unchanged.
+
+The stability plan and linked machine-readable record contain exact run/source
+references and the historical Windows JSON trailer issue. Patch publication,
+maintainer security review, native Windows 11/Linux arm64, live services and
+actual browser journeys remain open. Do not mark the entire 0.2.x roadmap or
+all integration permutations complete, and do not promote integrations from
+these results alone.
