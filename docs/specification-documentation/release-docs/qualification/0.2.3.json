@@ -1,15 +1,31 @@
 {
   "schemaVersion": 1,
   "version": "0.2.3",
-  "status": "preparation",
+  "status": "qualification-in-progress",
   "branch": "codex/release-0.2.3",
   "ownerAuthorization": "Publish 0.2.3 after health qualification; user request 2026-10-08.",
   "repairMerge": {
     "pullRequest": "https://github.com/4d696e6b/RepoSetup/pull/17",
     "commit": "7e5f815"
   },
-  "sourceCommit": null,
-  "qualificationRuns": [],
+  "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+  "qualificationRuns": [
+    {
+      "runId": 37813984536,
+      "status": "pending",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813984536"
+    },
+    {
+      "runId": 37813990336,
+      "status": "pending",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813990336"
+    },
+    {
+      "runId": 37813995872,
+      "status": "pending",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813995872"
+    }
+  ],
   "artifact": null,
   "publication": null,
   "registryAcceptance": null,
@@ -38,6 +54,11 @@
       ],
       "helperProvenance": "Copies of retained agent-owned generated projects, same helpers exercised in installed-stack audit. Their dependencies were reinstalled as isolated pinned runtime packages for this live acceptance; exact resolved versions and lockfile retained.",
       "limits": "macOS host instances and retained generated helpers; not new CLI creation or Compose18.6 qualification."
+    },
+    "linux": {
+      "runId": 37813979567,
+      "status": "pending",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567"
     }
   },
   "preVersionAudit": "installed-stack-audit.json",
@@ -68,12 +89,34 @@
       "build": "/tmp/reposetup-0.2.3-build.log",
       "typecheck": "/tmp/reposetup-0.2.3-typecheck-after-build.log",
       "lint": "/tmp/reposetup-0.2.3-lint.log",
-      "registry": "/tmp/reposetup-0.2.3-registry.log"
+      "registry": "/tmp/reposetup-0.2.3-registry.log",
+      "finalLint": "/tmp/reposetup-0.2.3-lint-final-prep.log"
     },
     "initialTypecheckAttempt": {
       "status": "failed",
       "log": "/tmp/reposetup-0.2.3-typecheck.log",
       "reason": "Concurrent build replaced core declaration output while registry typecheck read it. Sequential typecheck after completed build passed with no source change."
+    }
+  },
+  "preparationMerge": {
+    "pullRequest": "https://github.com/4d696e6b/RepoSetup/pull/18",
+    "commit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+  },
+  "additionalQualification": {
+    "fullMatrix": {
+      "runId": 37813953547,
+      "status": "pending",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547"
+    },
+    "usability": {
+      "runId": 37813953485,
+      "status": "pending",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813953485"
+    },
+    "performance": {
+      "runId": 37814000719,
+      "status": "pending",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37814000719"
     }
   }
 }
