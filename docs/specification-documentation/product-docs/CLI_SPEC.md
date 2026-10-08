@@ -223,13 +223,13 @@ Do not include:
 - local absolute paths unless unavoidable;
 - arbitrary commands.
 
-## 10. `reposetup import`
+## 10. Proposed `reposetup import` (not shipped)
 
 Alias/flow for applying a known declarative config to a target context may be considered, but `create --config` is canonical for new projects.
 
 ## 11. Global flags
 
-Recommended:
+Implemented global flags:
 
 ```text
 --help
@@ -249,7 +249,7 @@ Mutating commands:
 
 ## 12. Exit codes
 
-Suggested initial contract:
+Implemented exit-code contract:
 
 ```text
 0 success
@@ -260,7 +260,7 @@ Suggested initial contract:
 5 verification failure
 ```
 
-Document before v1 stable and avoid changing casually.
+Preserve these codes across compatible releases; changes require explicit migration guidance.
 
 ## 13. Non-TTY daily workflow
 
