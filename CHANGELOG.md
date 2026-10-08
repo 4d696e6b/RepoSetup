@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Docker selections persist prerequisite guidance; doctor reports missing or unusable Docker/Compose CLIs with bounded probes. PostgreSQL Compose publishes a loopback port with aligned environment placeholders, a required password and persistent storage.
 - Cache permission failures and partial creation explain safe recovery and the actual project directory. Completion output distinguishes package installation from manual system-service setup and names the correct database environment variable.
 - Node prerequisite text and metadata match the existing Node 24 requirement.
+- Timed-out installations retain bounded, redacted installer diagnostics and still stop before later operations.
+- Doctor recovery commands restore development packages under production/omit settings and rebuild damaged pnpm package links; packed regressions follow those commands through a successful repair.
 
 See the [installed stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) for qualification and limits. These fixes are not in the immutable published 0.2.2 package.
 

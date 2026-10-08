@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "auditDate": "2026-10-08",
-  "status": "local-complete-cross-platform-pending",
+  "status": "local-complete-full-matrix-retry-pending",
   "deliveryStatus": "unreleased",
   "repairSourceCommit": "d26b912eb321b55fd930b169b1fcd9a230f1d6da",
   "baseSourceCommit": "4db2f406a713154ec1b3c4c0f5968493f358d624",
@@ -99,7 +99,9 @@
         "path": "/tmp/reposetup-stack-audit-20261008/lint-final.log",
         "sha256": "26db9673ec89bc95699a8e66249537512722e2114018fc39c411bfb94c2d9eaa"
       }
-    }
+    },
+    "sourceCommit": "d26b912eb321b55fd930b169b1fcd9a230f1d6da",
+    "scope": "Primary implementation before diagnostic and fixture followups"
   },
   "targetedRealChecks": {
     "productionOmit": {
@@ -195,13 +197,846 @@
     "totalTestsPerJob": 40,
     "jobs": 12,
     "expectedExecutions": 480,
-    "status": "pending",
-    "run": null
+    "status": "same-source-failed-jobs-retry-pending",
+    "run": {
+      "runId": 37785128517,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37785128517",
+      "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+      "status": "completed",
+      "conclusion": "failure",
+      "runAttempt": 1,
+      "jobs": [
+        {
+          "name": "windows-2025 / x64 / Python 3.12 / npm",
+          "jobId": 113337805312,
+          "status": "completed",
+          "conclusion": "failure",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\"",
+            "Write golden qualification evidence",
+            "Validate golden evidence JSON",
+            "Run actions/upload-artifact@v4",
+            "Post Run astral-sh/setup-uv@v6",
+            "Post Run actions/setup-python@v5",
+            "Post Run actions/setup-node@v4"
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "failureSkippedRequiredSteps": [
+            "Write golden qualification evidence",
+            "Validate golden evidence JSON",
+            "Run actions/upload-artifact@v4",
+            "Post Run astral-sh/setup-uv@v6",
+            "Post Run actions/setup-python@v5",
+            "Post Run actions/setup-node@v4"
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.13 / npm",
+          "jobId": 113337805454,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.12 / pnpm",
+          "jobId": 113337805462,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.13 / pnpm",
+          "jobId": 113337805492,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.12 / pnpm",
+          "jobId": 113337805496,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.13 / pnpm",
+          "jobId": 113337805608,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.12 / npm",
+          "jobId": 113337805629,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.12 / pnpm",
+          "jobId": 113337805637,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.13 / npm",
+          "jobId": 113337805709,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.13 / pnpm",
+          "jobId": 113337805817,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.12 / npm",
+          "jobId": 113337805819,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.13 / npm",
+          "jobId": 113337805821,
+          "status": "completed",
+          "conclusion": "failure",
+          "skippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\"",
+            "Write golden qualification evidence",
+            "Validate golden evidence JSON",
+            "Run actions/upload-artifact@v4",
+            "Post Run astral-sh/setup-uv@v6",
+            "Post Run actions/setup-python@v5",
+            "Post Run actions/setup-node@v4"
+          ],
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ],
+          "failureSkippedRequiredSteps": [
+            "Write golden qualification evidence",
+            "Validate golden evidence JSON",
+            "Run actions/upload-artifact@v4",
+            "Post Run astral-sh/setup-uv@v6",
+            "Post Run actions/setup-python@v5",
+            "Post Run actions/setup-node@v4"
+          ]
+        }
+      ]
+    },
+    "passedJobs": 10,
+    "failedJobs": 2,
+    "passedTests": 478,
+    "failedTests": 2,
+    "skippedTests": 0,
+    "initialFailure": {
+      "test": "Golden A \u2014 Next.js / SQLite",
+      "config": "examples/reposetup.next-sqlite.json",
+      "jobs": [
+        113337805312,
+        113337805821
+      ],
+      "code": "COMMAND_TIMED_OUT",
+      "command": "npm install --include=dev --prefer-offline",
+      "deadlineMs": 300000,
+      "completedOperations": 12,
+      "plannedOperations": 28,
+      "failedOperationInference": "First consolidated install after scaffolding, before Prisma init; inferred from plan and prerequisite-first executor order.",
+      "underlyingCause": "Not established: initial failure assertions omitted captured installer stdout; neither failed-job log contains registry/network error evidence.",
+      "rawLogsRoot": "/tmp/reposetup-stack-audit-20261008/ci",
+      "testCountsFile": "golden-37785128517-full-test-counts.json"
+    },
+    "retry": {
+      "runId": 37785128517,
+      "runAttempt": 2,
+      "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+      "status": "in_progress",
+      "retriedJobs": 2,
+      "retriedTestExecutionsExpected": 80,
+      "carriedForwardSuccessfulJobs": 10,
+      "all480CasesReexecuted": false,
+      "initialFailureEvidenceRetained": true
+    }
   },
   "crossPlatform": {
-    "fast": null,
-    "platform": null,
-    "usability": null
+    "fast": {
+      "runId": 37793787603,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37793787603",
+      "status": "completed",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "jobs": [
+        {
+          "name": "Fast checks",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        }
+      ],
+      "event": "pull_request",
+      "headCommit": "a39610ecb2a7527b9c71fb555de6e2d854b0ac42",
+      "checkoutCommit": "4ee2c84c40d75e7e876a9673f6a70f687b73fcea",
+      "checkoutParents": [
+        "4db2f406a713154ec1b3c4c0f5968493f358d624",
+        "a39610ecb2a7527b9c71fb555de6e2d854b0ac42"
+      ],
+      "allJobCheckoutsMatch": true,
+      "checkoutEvidence": {
+        "archivePath": "/tmp/reposetup-stack-audit-20261008/ci/recovery-fast-logs.zip",
+        "sha256": "f1a7ac18e234ae16885d0c67c650ee1623a789d69d214b905bc35e973addd419",
+        "jobs": [
+          {
+            "job": "Fast checks",
+            "checkoutCommit": "4ee2c84c40d75e7e876a9673f6a70f687b73fcea",
+            "logMember": "0_Fast checks.txt"
+          }
+        ]
+      }
+    },
+    "platform": {
+      "runId": 37793786901,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37793786901",
+      "status": "completed",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "jobs": [
+        {
+          "name": "macos-15 / arm64 / Node 24",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Node 24",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "windows-2025 / x64 / Node 24",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        }
+      ],
+      "event": "pull_request",
+      "headCommit": "a39610ecb2a7527b9c71fb555de6e2d854b0ac42",
+      "checkoutCommit": "4ee2c84c40d75e7e876a9673f6a70f687b73fcea",
+      "checkoutParents": [
+        "4db2f406a713154ec1b3c4c0f5968493f358d624",
+        "a39610ecb2a7527b9c71fb555de6e2d854b0ac42"
+      ],
+      "allJobCheckoutsMatch": true,
+      "checkoutEvidence": {
+        "archivePath": "/tmp/reposetup-stack-audit-20261008/ci/recovery-platform-logs.zip",
+        "sha256": "844b28ccb833279d91cc844cc6e9790600a77ec4aa75349e06db7eaadc6df74e",
+        "jobs": [
+          {
+            "job": "ubuntu-24.04 _ x64 _ Node 24",
+            "checkoutCommit": "4ee2c84c40d75e7e876a9673f6a70f687b73fcea",
+            "logMember": "0_ubuntu-24.04 _ x64 _ Node 24.txt"
+          },
+          {
+            "job": "windows-2025 _ x64 _ Node 24",
+            "checkoutCommit": "4ee2c84c40d75e7e876a9673f6a70f687b73fcea",
+            "logMember": "1_windows-2025 _ x64 _ Node 24.txt"
+          },
+          {
+            "job": "macos-15 _ arm64 _ Node 24",
+            "checkoutCommit": "4ee2c84c40d75e7e876a9673f6a70f687b73fcea",
+            "logMember": "2_macos-15 _ arm64 _ Node 24.txt"
+          }
+        ]
+      }
+    },
+    "platformTestCounts": [
+      {
+        "job": "ubuntu-24.04 _ x64 _ Node 24",
+        "step": "7_Run pnpm test.txt",
+        "testCounts": [
+          "243 passed (243)",
+          "15 passed (15)",
+          "670 passed (670)",
+          "109 passed (109)"
+        ]
+      },
+      {
+        "job": "ubuntu-24.04 _ x64 _ Node 24",
+        "step": "8_Run pnpm teste2e.txt",
+        "testCounts": [
+          "37 passed | 1 skipped (38)"
+        ]
+      },
+      {
+        "job": "windows-2025 _ x64 _ Node 24",
+        "step": "7_Run pnpm test.txt",
+        "testCounts": [
+          "243 passed (243)",
+          "15 passed (15)",
+          "670 passed (670)",
+          "108 passed | 1 skipped (109)"
+        ]
+      },
+      {
+        "job": "windows-2025 _ x64 _ Node 24",
+        "step": "8_Run pnpm teste2e.txt",
+        "testCounts": [
+          "37 passed | 1 skipped (38)"
+        ]
+      },
+      {
+        "job": "macos-15 _ arm64 _ Node 24",
+        "step": "7_Run pnpm test.txt",
+        "testCounts": [
+          "243 passed (243)",
+          "15 passed (15)",
+          "670 passed (670)",
+          "109 passed (109)"
+        ]
+      },
+      {
+        "job": "macos-15 _ arm64 _ Node 24",
+        "step": "8_Run pnpm teste2e.txt",
+        "testCounts": [
+          "37 passed | 1 skipped (38)"
+        ]
+      }
+    ],
+    "platformConditionalSkips": [
+      "One uv-dependent E2E case on each runner without uv",
+      "One POSIX-only process unit case on Windows"
+    ],
+    "usability": {
+      "runId": 37785134229,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37785134229",
+      "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+      "status": "completed",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "jobs": [
+        {
+          "name": "ubuntu-24.04 / express-postgres",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "ubuntu-24.04 / react-vite",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "windows-2025 / react-vite",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "ubuntu-24.04 / next-sqlite",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "macos-15 / express-postgres",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "windows-2025 / next-sqlite",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "windows-2025 / flask",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "macos-15 / react-vite",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "macos-15 / flask",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "windows-2025 / express-postgres",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "windows-2025 / fastapi",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "ubuntu-24.04 / flask",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "ubuntu-24.04 / fastapi",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "macos-15 / next-sqlite",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        },
+        {
+          "name": "macos-15 / fastapi",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        }
+      ]
+    },
+    "usabilitySessions": [
+      {
+        "preset": "express-postgres",
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "steps": 9,
+        "expectedFailures": [
+          {
+            "name": "production start refuses an occupied port",
+            "exitCode": 1,
+            "expectedFailure": true
+          },
+          {
+            "name": "doctor reports unavailable Docker prerequisites",
+            "exitCode": 4,
+            "expectedFailure": true
+          }
+        ],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "fastapi",
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "steps": 7,
+        "expectedFailures": [
+          {
+            "name": "doctor reports unavailable Docker prerequisites",
+            "exitCode": 4,
+            "expectedFailure": true
+          }
+        ],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "flask",
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "steps": 7,
+        "expectedFailures": [
+          {
+            "name": "doctor reports unavailable Docker prerequisites",
+            "exitCode": 4,
+            "expectedFailure": true
+          }
+        ],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "next-sqlite",
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "steps": 8,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "react-vite",
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "steps": 8,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "express-postgres",
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 9,
+        "expectedFailures": [
+          {
+            "name": "production start refuses an occupied port",
+            "exitCode": 1,
+            "expectedFailure": true
+          }
+        ],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "fastapi",
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 7,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "flask",
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 7,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "next-sqlite",
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 8,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "react-vite",
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 8,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "express-postgres",
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 9,
+        "expectedFailures": [
+          {
+            "name": "production start refuses an occupied port",
+            "exitCode": 1,
+            "expectedFailure": true
+          },
+          {
+            "name": "doctor reports unavailable Docker prerequisites",
+            "exitCode": 4,
+            "expectedFailure": true
+          }
+        ],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "fastapi",
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 7,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "flask",
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 7,
+        "expectedFailures": [
+          {
+            "name": "doctor reports unavailable Docker prerequisites",
+            "exitCode": 4,
+            "expectedFailure": true
+          }
+        ],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "next-sqlite",
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 8,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      },
+      {
+        "preset": "react-vite",
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "steps": 8,
+        "expectedFailures": [],
+        "unexpectedFailures": []
+      }
+    ],
+    "usabilityStepChecks": 117,
+    "usabilityExpectedFailureChecks": 8,
+    "usabilityUnexpectedFailures": 0,
+    "performance": {
+      "runId": 37785093781,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37785093781",
+      "status": "completed",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "jobs": [
+        {
+          "name": "ubuntu-24.04 / Node 24",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Normalize the Phase 19 Windows launcher environment"
+          ]
+        },
+        {
+          "name": "macos-15 / Node 24",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Normalize the Phase 19 Windows launcher environment"
+          ]
+        },
+        {
+          "name": "windows-2025 / Node 24",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": []
+        }
+      ],
+      "event": "pull_request",
+      "headCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+      "checkoutCommit": "65dde7d5cb107044fdca747509319c9556cad623"
+    },
+    "performanceCheckoutSource": "65dde7d5cb107044fdca747509319c9556cad623",
+    "performanceCheckoutParents": [
+      "4db2f406a713154ec1b3c4c0f5968493f358d624",
+      "4630f86359123d118524f8a1d988fe7cd5ad611a"
+    ],
+    "performanceMeasurements": [
+      {
+        "environment": {
+          "platform": "win32",
+          "architecture": "x64",
+          "osRelease": "10.0.26100",
+          "node": "v24.21.0"
+        },
+        "checkoutSource": "65dde7d5cb107044fdca747509319c9556cad623",
+        "trialsPerRow": 5,
+        "failedMeasurements": 0,
+        "comparisons": [
+          {
+            "profile": "express-toolchain",
+            "cache": "cold",
+            "baselineMs": 12229.5121,
+            "candidateMs": 13176.7363,
+            "reductionPercent": -7.75,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "express-toolchain",
+            "cache": "warm",
+            "baselineMs": 5073.5569,
+            "candidateMs": 2791.866,
+            "reductionPercent": 44.97,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "react-toolchain",
+            "cache": "cold",
+            "baselineMs": 21139.0129,
+            "candidateMs": 18564.7255,
+            "reductionPercent": 12.18,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "react-toolchain",
+            "cache": "warm",
+            "baselineMs": 7008.7321,
+            "candidateMs": 3443.2223,
+            "reductionPercent": 50.87,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          }
+        ]
+      },
+      {
+        "environment": {
+          "platform": "linux",
+          "architecture": "x64",
+          "osRelease": "6.17.0-1022-azure",
+          "node": "v24.21.0"
+        },
+        "checkoutSource": "65dde7d5cb107044fdca747509319c9556cad623",
+        "trialsPerRow": 5,
+        "failedMeasurements": 0,
+        "comparisons": [
+          {
+            "profile": "express-toolchain",
+            "cache": "cold",
+            "baselineMs": 1395.947512,
+            "candidateMs": 545.537499,
+            "reductionPercent": 60.92,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "express-toolchain",
+            "cache": "warm",
+            "baselineMs": 486.643803,
+            "candidateMs": 157.454109,
+            "reductionPercent": 67.64,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "react-toolchain",
+            "cache": "cold",
+            "baselineMs": 1413.121473,
+            "candidateMs": 526.023423,
+            "reductionPercent": 62.78,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "react-toolchain",
+            "cache": "warm",
+            "baselineMs": 446.563449,
+            "candidateMs": 173.607948,
+            "reductionPercent": 61.12,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          }
+        ]
+      },
+      {
+        "environment": {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "osRelease": "24.6.0",
+          "node": "v24.20.0"
+        },
+        "checkoutSource": "65dde7d5cb107044fdca747509319c9556cad623",
+        "trialsPerRow": 5,
+        "failedMeasurements": 0,
+        "comparisons": [
+          {
+            "profile": "express-toolchain",
+            "cache": "cold",
+            "baselineMs": 1826.429708,
+            "candidateMs": 1982.24175,
+            "reductionPercent": -8.53,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "express-toolchain",
+            "cache": "warm",
+            "baselineMs": 548.199417,
+            "candidateMs": 183.627458,
+            "reductionPercent": 66.5,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "react-toolchain",
+            "cache": "cold",
+            "baselineMs": 3491.249542,
+            "candidateMs": 1080.636,
+            "reductionPercent": 69.05,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          },
+          {
+            "profile": "react-toolchain",
+            "cache": "warm",
+            "baselineMs": 493.669375,
+            "candidateMs": 195.412708,
+            "reductionPercent": 60.42,
+            "baselineProcesses": 5,
+            "candidateProcesses": 1
+          }
+        ]
+      }
+    ],
+    "performanceQualificationScope": "Controlled fixed-package install measurements; no blanket latency guarantee; two cold Express medians regressed"
   },
   "limits": [
     "No live PostgreSQL/MongoDB connection or migrations",
@@ -223,5 +1058,468 @@
     "https://docs.docker.com/reference/compose-file/services/#ports",
     "https://docs.docker.com/reference/cli/docker/compose/config/",
     "https://hub.docker.com/_/postgres"
-  ]
+  ],
+  "recoveryFollowup": {
+    "sourceCommit": "a39610ecb2a7527b9c71fb555de6e2d854b0ac42",
+    "changes": [
+      "doctor install recovery includes development dependencies",
+      "pnpm forced reinstall restores missing links",
+      "packed regressions follow doctor commands and require restored build/health",
+      "distinct dependency-recovery workflow scope"
+    ],
+    "localPackedCasesPassed": 2,
+    "localFilteredCases": 20,
+    "initialAttempt": {
+      "npm": "passed",
+      "pnpm": "plain install returned zero without restoring deleted link; changed instructions to documented forced reinstall"
+    },
+    "run": {
+      "runId": 37793811607,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37793811607",
+      "sourceCommit": "a39610ecb2a7527b9c71fb555de6e2d854b0ac42",
+      "status": "completed",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "jobs": [
+        {
+          "name": "macos-15 / arm64 / Python 3.12 / pnpm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.12 / npm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.13 / pnpm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.13 / pnpm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.13 / pnpm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.13 / npm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.12 / npm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.12 / npm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.13 / npm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.13 / npm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.12 / pnpm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.12 / pnpm",
+          "conclusion": "success",
+          "status": "completed",
+          "skippedSteps": [
+            "Run pnpm test:golden",
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        }
+      ]
+    },
+    "scope": "dependency-recovery",
+    "requiredExecutions": 24,
+    "passedExecutions": 24,
+    "unrelatedFilteredTestsPerJob": 20,
+    "artifactSourceAndScopeMatch": true,
+    "logSummary": [
+      {
+        "job": "windows-2025 _ x64 _ Python 3.12 _ pnpm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "macos-15 _ arm64 _ Python 3.12 _ npm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "ubuntu-24.04 _ x64 _ Python 3.12 _ pnpm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "macos-15 _ arm64 _ Python 3.13 _ npm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "windows-2025 _ x64 _ Python 3.13 _ npm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "ubuntu-24.04 _ x64 _ Python 3.12 _ npm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "ubuntu-24.04 _ x64 _ Python 3.13 _ npm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "macos-15 _ arm64 _ Python 3.13 _ pnpm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "ubuntu-24.04 _ x64 _ Python 3.13 _ pnpm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "windows-2025 _ x64 _ Python 3.12 _ npm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "windows-2025 _ x64 _ Python 3.13 _ pnpm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      },
+      {
+        "job": "macos-15 _ arm64 _ Python 3.12 _ pnpm",
+        "counts": [
+          "2 passed | 20 skipped (22)"
+        ]
+      }
+    ],
+    "notFullMatrixQualification": true
+  },
+  "timeoutDiagnosticFollowup": {
+    "sourceCommit": "d433f1b31739a751b3038ac74eb85f6cf1a06701",
+    "changes": [
+      "Retain bounded redacted timeout installer output without adding stdout/stderr to structured error details",
+      "Keep failed Golden captured stdout before directory/result assertions",
+      "Optionally retain bounded redacted task-owned npm debug/timing logs before cleanup",
+      "Enable npm timing/info only for the filtered Next diagnostic scope"
+    ],
+    "localChecks": {
+      "unitTestsPassed": 1038,
+      "packedE2ETestsPassed": 38,
+      "packedE2ESkips": 0,
+      "build": "passed",
+      "typecheck": "passed",
+      "lint": "passed",
+      "retentionHelperSyntheticChecks": [
+        "bounded output",
+        "secret assignment redaction",
+        "timing JSON",
+        "unrelated files and symlinks excluded",
+        "missing logs ignored"
+      ]
+    },
+    "logs": [
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/core-timeout-diagnostics.log",
+        "sha256": "42392ba7ffe91410d904eb75024ed30620b4ad99027eb02614c34b50dfc8a9de"
+      },
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/unit-timeout-diagnostics.log",
+        "sha256": "bca216cdd42830f22442bb641544c0654e01347c35229ce69050dedd9937601a"
+      },
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/e2e-timeout-diagnostics.log",
+        "sha256": "f1b561a44e7dd5691dd4342158f75acc9cb82821add7b0117091ccc837bb14fe"
+      },
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/build-timeout-diagnostics.log",
+        "sha256": "3130621c553aa4ce69193604d4c31ed442e5f0bf13bd28371ce4ccbe2c78b9be"
+      },
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/typecheck-timeout-diagnostics.log",
+        "sha256": "459826c5ddc29dea4952531f5b1bab44733300e6b08767293a45ba00219025e9"
+      },
+      {
+        "path": "/tmp/reposetup-stack-audit-20261008/lint-timeout-diagnostics.log",
+        "sha256": "26db9673ec89bc95699a8e66249537512722e2114018fc39c411bfb94c2d9eaa"
+      }
+    ],
+    "nextDiagnosticRun": {
+      "runId": 37797468777,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37797468777",
+      "sourceCommit": "d433f1b31739a751b3038ac74eb85f6cf1a06701",
+      "scope": "next-vitest",
+      "status": "completed",
+      "qualifiesFullMatrix": false,
+      "conclusion": "success",
+      "passedJobs": 12,
+      "selectedTestsPassed": 12,
+      "filteredTests": 204,
+      "failedTests": 0,
+      "allEvidenceSourceAndScopeMatch": true,
+      "evidencePath": "/tmp/reposetup-stack-audit-20261008/ci/next-diagnostics/next-37797468777-verified-evidence.json",
+      "windowsNpmFullRecipeTestDurationsMs": {
+        "python3.12": 376144,
+        "python3.13": 404733
+      },
+      "installationDurationMeasuredSeparately": false,
+      "failedInstallArtifactsProduced": false
+    },
+    "installationDeadlinesChanged": false,
+    "manualPlatform": {
+      "runId": 37797889659,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37797889659",
+      "sourceCommit": "d433f1b31739a751b3038ac74eb85f6cf1a06701",
+      "conclusion": "success",
+      "status": "completed",
+      "runAttempt": 1,
+      "jobs": [
+        {
+          "jobId": 113382010611,
+          "name": "macos-15 / arm64 / Node 24",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 113382010781,
+          "name": "ubuntu-24.04 / x64 / Node 24",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 113382011000,
+          "name": "windows-2025 / x64 / Node 24",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    "prPlatformFirstAttempt": {
+      "runId": 37798246208,
+      "conclusion": "failure",
+      "failedJob": 113383252882,
+      "failures": [
+        "Grouped six-case Node idempotency test exceeded its five-second test deadline, then temporary cleanup reported ENOTEMPTY",
+        "Missing-Python fixture performed real host executable discovery and exceeded its five-second test deadline"
+      ],
+      "rawLogsZip": "/tmp/reposetup-stack-audit-20261008/ci/platform-diagnostics-pr-logs.zip",
+      "productionTimeoutsChanged": false,
+      "sameSourceManualPlatformPassed": true,
+      "event": "pull_request",
+      "headCommit": "d433f1b31739a751b3038ac74eb85f6cf1a06701",
+      "checkoutCommit": "98920567ec4e60b3353b5947f8f48db5985fe472",
+      "checkoutParents": [
+        "4db2f406a713154ec1b3c4c0f5968493f358d624",
+        "d433f1b31739a751b3038ac74eb85f6cf1a06701"
+      ],
+      "allJobCheckoutsMatch": true
+    }
+  },
+  "fixtureDeterminismFollowup": {
+    "sourceCommit": "c4f50494aa743b839bb21a3cec7c5cd4d5f664ac",
+    "changes": [
+      "Split six Node idempotency cases into six independent tests preserving all assertions and each five-second deadline",
+      "Inject missing Python executable resolution and assert no process runs",
+      "Bound retries when removing test-owned temporary directories"
+    ],
+    "productionCodeChanged": false,
+    "unitTestsPassed": 1043,
+    "targetedTestsPassed": 19,
+    "extraTestCasesFromSplit": 5,
+    "unitLog": {
+      "path": "/tmp/reposetup-stack-audit-20261008/unit-fixture-determinism.log",
+      "sha256": "2915821f0cec061de830661512dc4c5df72589bf2daeeaee763f068443727395"
+    },
+    "typecheckLog": {
+      "path": "/tmp/reposetup-stack-audit-20261008/typecheck-fixture-determinism.log",
+      "sha256": "459826c5ddc29dea4952531f5b1bab44733300e6b08767293a45ba00219025e9",
+      "status": "passed"
+    },
+    "lintLog": {
+      "path": "/tmp/reposetup-stack-audit-20261008/lint-fixture-determinism.log",
+      "sha256": "26db9673ec89bc95699a8e66249537512722e2114018fc39c411bfb94c2d9eaa",
+      "status": "passed"
+    },
+    "ci": {
+      "runId": 37799760007,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37799760007",
+      "event": "pull_request",
+      "headCommit": "c4f50494aa743b839bb21a3cec7c5cd4d5f664ac",
+      "checkoutCommit": "f4c8bdfcf88bb9bb8c80ddecf811c7fe85915283",
+      "checkoutParents": [
+        "4db2f406a713154ec1b3c4c0f5968493f358d624",
+        "c4f50494aa743b839bb21a3cec7c5cd4d5f664ac"
+      ],
+      "status": "completed",
+      "conclusion": "success",
+      "unitTestsPassed": 1043
+    },
+    "platform": {
+      "runId": 37799760068,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37799760068",
+      "event": "pull_request",
+      "headCommit": "c4f50494aa743b839bb21a3cec7c5cd4d5f664ac",
+      "checkoutCommit": "f4c8bdfcf88bb9bb8c80ddecf811c7fe85915283",
+      "checkoutParents": [
+        "4db2f406a713154ec1b3c4c0f5968493f358d624",
+        "c4f50494aa743b839bb21a3cec7c5cd4d5f664ac"
+      ],
+      "status": "completed",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "jobs": [
+        {
+          "name": "ubuntu-24.04 / x64 / Node 24",
+          "jobId": 113388517462,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": []
+        },
+        {
+          "name": "windows-2025 / x64 / Node 24",
+          "jobId": 113388517478,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": []
+        },
+        {
+          "name": "macos-15 / arm64 / Node 24",
+          "jobId": 113388518062,
+          "status": "completed",
+          "conclusion": "success",
+          "skippedSteps": []
+        }
+      ],
+      "testCounts": [
+        {
+          "jobLog": "0_macos-15 _ arm64 _ Node 24.txt",
+          "testCounts": [
+            "244 passed (244)",
+            "15 passed (15)",
+            "670 passed (670)",
+            "114 passed (114)",
+            "37 passed | 1 skipped (38)"
+          ]
+        },
+        {
+          "jobLog": "1_windows-2025 _ x64 _ Node 24.txt",
+          "testCounts": [
+            "244 passed (244)",
+            "15 passed (15)",
+            "670 passed (670)",
+            "113 passed | 1 skipped (114)",
+            "37 passed | 1 skipped (38)"
+          ]
+        },
+        {
+          "jobLog": "2_ubuntu-24.04 _ x64 _ Node 24.txt",
+          "testCounts": [
+            "244 passed (244)",
+            "15 passed (15)",
+            "670 passed (670)",
+            "114 passed (114)",
+            "37 passed | 1 skipped (38)"
+          ]
+        }
+      ],
+      "conditionalTestSkips": [
+        "One uv-dependent E2E case on each runner without uv",
+        "One POSIX-only process unit case on Windows"
+      ],
+      "rawLogs": {
+        "path": "/tmp/reposetup-stack-audit-20261008/ci/platform-fixture-logs.zip",
+        "sha256": "01d5f8c013de466e33a5dcee4c18af109403d08c2d9949685edd954f80da6c0a"
+      }
+    }
+  },
+  "additionalServiceReadiness": {
+    "status": "live-services-not-qualified",
+    "dockerDaemon": "unresponsive",
+    "dockerVersionServerQueryTimeoutMs": 5000,
+    "dockerInfoTimeoutMs": 5000,
+    "unixSocketPingTimeoutMs": 3000,
+    "daemonSocketExists": true,
+    "availableDiskGiBAtCheck": 1.1,
+    "newContainersStarted": false,
+    "imagesPulled": false,
+    "systemOrUserProjectChanged": false,
+    "scope": "Read-only local daemon readiness, separate from doctor CLI checks and earlier Compose parser validation."
+  }
 }
