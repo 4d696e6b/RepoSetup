@@ -73,6 +73,11 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
     const hasReact = pkg !== undefined && hasPackageDependency(pkg, "react");
     const config = await firstExistingPath(context.files, VITE_CONFIG_PATHS);
 
+    // Next.js can depend on Vite only for Vitest; that does not make it a Vite app.
+    if (pkg !== undefined && hasPackageDependency(pkg, "next") && config === undefined) {
+      return notDetected();
+    }
+
     if (!hasReact || (!hasVite && config === undefined)) {
       return notDetected();
     }
@@ -97,12 +102,15 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
     const vite = `vite@${QUALIFIED_VERSIONS.vite}`;
     return [
       requireNodeRange(NODE_ENGINE_RANGES.vite, `Vite ${QUALIFIED_VERSIONS.vite}`),
-      pnpmOrNpmCreate(
-        context,
-        { pnpmName: vite, npmName: vite },
-        ["--template", template, "--no-interactive"],
-        { description: "Scaffold React with create-vite", longRunning: true },
-      ),
+      {
+        ...pnpmOrNpmCreate(
+          context,
+          { pnpmName: vite, npmName: vite },
+          ["--template", template, "--no-interactive"],
+          { description: "Scaffold React with create-vite", longRunning: true },
+        ),
+        skipsDependencyInstall: true,
+      },
       ...(context.config.packageManager === "pnpm" ? [pnpmViteBuildApproval()] : []),
     ];
   },

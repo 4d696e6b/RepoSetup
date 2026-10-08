@@ -173,6 +173,20 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
   };
 }
 
+/** Outer package-manager identity and exec options do not describe child generators. */
+export function childProcessEnvironment(environment: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const outerLaunchKeys = new Set([
+    "npm_config_package",
+    "npm_config_call",
+    "npm_config_user_agent",
+    "npm_execpath",
+    "npm_node_execpath",
+  ]);
+  return Object.fromEntries(
+    Object.entries(environment).filter(([key]) => !outerLaunchKeys.has(key.toLowerCase())),
+  );
+}
+
 export function createDefaultProcessRunner(): ProcessRunner {
   return (request) => {
     if (request.signal?.aborted === true) {
@@ -190,7 +204,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
     return new Promise((resolve) => {
       const child = spawn(launch.command, [...launch.args], {
         cwd: request.cwd,
-        env: process.env,
+        env: childProcessEnvironment(process.env),
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,

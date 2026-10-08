@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   MAX_CAPTURED_OUTPUT_BYTES,
+  childProcessEnvironment,
   createDefaultExecutorFileSystem,
   createDefaultExecutionLock,
   createDefaultExecutionJournal,
@@ -100,6 +101,27 @@ describe("createDefaultExecutionJournal", () => {
         rm(projectRoot, { recursive: true, force: true }),
       ]);
     }
+  });
+});
+
+describe("nested npm execution environment", () => {
+  it("drops outer exec options and preserves install configuration without mutating the parent", () => {
+    const original = {
+      npm_config_package: "rsetup.tgz",
+      NPM_CONFIG_CALL: "outer command",
+      npm_config_user_agent: "pnpm/12.5.1 npm/? node/v24.21.0",
+      NPM_EXECPATH: "outer/pnpm.cjs",
+      npm_node_execpath: "outer/node",
+      npm_config_cache: "cache",
+      npm_config_registry: "https://registry.npmjs.org",
+      PATH: "tools",
+    };
+    expect(childProcessEnvironment(original)).toEqual({
+      npm_config_cache: "cache",
+      npm_config_registry: "https://registry.npmjs.org",
+      PATH: "tools",
+    });
+    expect(original.npm_config_package).toBe("rsetup.tgz");
   });
 });
 

@@ -28,6 +28,7 @@ type ExpressOptions = z.infer<typeof expressOptionsSchema>;
 const EXPRESS_TSCONFIG = `{
   "compilerOptions": {
     "target": "esnext",
+    "rootDir": ".",
     "module": "nodenext",
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
@@ -47,7 +48,20 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 if (process.env.REPOSETUP_NO_LISTEN !== "1") {
-  app.listen(Number(process.env.PORT ?? "3000"));
+  const server = app.listen(
+    Number(process.env.PORT ?? "3000"),
+    (error?: Error) => {
+      if (error !== undefined) {
+        console.error(error);
+        process.exitCode = 1;
+        return;
+      }
+      const address = server.address();
+      if (address !== null && typeof address !== "string") {
+        console.log("http://localhost:" + address.port);
+      }
+    },
+  );
 }
 `;
 
@@ -83,15 +97,6 @@ it("returns the Hello World response", async () => {
 });
 `;
 
-const EXPRESS_README = `# Express app
-
-Run the JavaScript entry with:
-
-\`node app.js\`
-
-For the TypeScript entry, use \`npm run dev\` while developing, then run \`npm run build\` and \`npm start\`.
-`;
-
 const EXPRESS_APP_JS = `import express from "express";
 
 const app = express();
@@ -100,7 +105,17 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(3000);
+const server = app.listen(3000, (error) => {
+  if (error !== undefined) {
+    console.error(error);
+    process.exitCode = 1;
+    return;
+  }
+  const address = server.address();
+  if (address !== null && typeof address !== "string") {
+    console.log("http://localhost:" + address.port);
+  }
+});
 `;
 
 export const expressIntegration = defineIntegration<ExpressOptions>({
@@ -154,6 +169,7 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
           {
             description: "Install TypeScript, tsx, and Express type packages",
             dev: true,
+            allowBuild: ["esbuild"],
           },
         ),
         {
@@ -183,7 +199,7 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
             scripts: {
               dev: "tsx watch src/app.ts",
               build: "tsc --outDir dist",
-              start: "node dist/app.js",
+              start: "node dist/src/app.js",
             },
           },
           behavior: "merge",
@@ -212,7 +228,22 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
     operations.push({
       type: "create_file",
       path: "README.md",
-      content: EXPRESS_README,
+      content: [
+        "# Express app",
+        "",
+        "From this directory:",
+        "",
+        typescript
+          ? "Develop with `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " dev`, then build with `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " build` and run `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " start`."
+          : "Run the JavaScript entry with `node app.js`.",
+        "",
+      ].join("\n"),
       behavior: "fail_if_exists",
       description: "Add Express run instructions",
     });

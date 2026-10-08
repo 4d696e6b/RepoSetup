@@ -1,6 +1,6 @@
 # Release process
 
-This process describes the published 0.1.x line. The 0.2.0 qualification scope and blockers are frozen in [Phase 19 baseline and acceptance scope](../implementing-docs/PHASE_19_BASELINE.md); do not use historical checked boxes as 0.2.0 release evidence.
+For current patch work, use the [0.2.x stability plan](../implementing-docs/STABILITY_0.2.x.md) and [patch release checklist](./RELEASE_CHECKLIST.md); the [0.2.0 stable runbook](./STABLE_RELEASE_0.2.0.md) records artifact-only publication. The process below describes the historical published 0.1.x line. The 0.2.0 qualification scope and blockers are frozen in [Phase 19 baseline and acceptance scope](../implementing-docs/PHASE_19_BASELINE.md); do not use historical checked boxes as 0.2.0 release evidence.
 
 Target: **`0.1.1`**. This is not `1.0.0`.
 

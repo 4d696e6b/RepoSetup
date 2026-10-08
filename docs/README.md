@@ -1,6 +1,11 @@
 # Documentation
 
-Human-facing notes for this version live in [`humanOnly/`](./humanOnly/). Start with [`humanOnly/RepoSetup_0.1.0.md`](./humanOnly/RepoSetup_0.1.0.md).
+For published 0.2.0, start with the root [README](../README.md),
+[integration support](./specification-documentation/implementing-docs/INTEGRATION_SUPPORT.md)
+and [stable delivery evidence](./specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md).
+The unpublished fixes and checked automated results are in the
+[0.2.x stability plan](./specification-documentation/implementing-docs/STABILITY_0.2.x.md).
+Human-facing notes in [`humanOnly/`](./humanOnly/) describe the historical 0.1.x line.
 
 Specifications live in [`specification-documentation/`](./specification-documentation/), grouped by topic.
 
@@ -21,6 +26,7 @@ Specifications live in [`specification-documentation/`](./specification-document
 [`specification-documentation/implementing-docs/`](./specification-documentation/implementing-docs/)
 
 - [Implementation plan](./specification-documentation/implementing-docs/IMPLEMENTATION_PLAN.md)
+- [0.2.x stability plan](./specification-documentation/implementing-docs/STABILITY_0.2.x.md)
 - [Roadmap to 0.2.0](./specification-documentation/implementing-docs/ROADMAP_0.2.0.md)
 - [Phase 19 baseline and acceptance scope](./specification-documentation/implementing-docs/PHASE_19_BASELINE.md)
 - [Implementation status](./specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md)
@@ -43,6 +49,9 @@ Specifications live in [`specification-documentation/`](./specification-document
 - [Release process](./specification-documentation/release-docs/RELEASE.md)
 - [Release checklist](./specification-documentation/release-docs/RELEASE_CHECKLIST.md)
 - [Release hardening](./specification-documentation/release-docs/RELEASE_HARDENING.md)
+- [0.2.0 stable delivery runbook](./specification-documentation/release-docs/STABLE_RELEASE_0.2.0.md)
+- [0.2.0 stable qualification](./specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md)
+- [0.2.x machine-readable qualification](./specification-documentation/release-docs/qualification/0.2.x-create-stability.json)
 - [0.2.0 candidate record](./specification-documentation/release-docs/RELEASE_CANDIDATE_0.2.0.md)
 - [npm trusted publishing setup](./NPM_TRUSTED_PUBLISHING_SETUP.md)
 - [0.1.0 notes](./specification-documentation/release-docs/release-notes-0.1.0.md)

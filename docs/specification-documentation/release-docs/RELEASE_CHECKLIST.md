@@ -1,4 +1,29 @@
-# Release checklist (historical 0.1.x record)
+# Release checklists
+
+## Current 0.2.x patch — 2026-10-08
+
+The patch repairs published create regressions. Qualification links, source
+revisions and exclusions are in the [stability plan](../implementing-docs/STABILITY_0.2.x.md)
+and [acceptance checklist](../implementing-docs/ACCEPTANCE_TESTS.md).
+
+- [x] Confirmed create defects have regression fixes and tests on `codex/fix-create-project-paths`.
+- [x] Unit tests, typecheck, lint, build and registry validation pass.
+- [x] Packed CLI E2E passes with the external artifact skip disclosed.
+- [x] Full twelve-job / 408-execution matrix passes on product source `448beb4`.
+- [x] All fifteen packaged preset sessions pass.
+- [x] Platform CI, controlled installation benchmarks and corrected JSON evidence writers pass.
+- [x] Source revisions, failed attempts and manual/service limitations are documented.
+- [x] Existing npm trusted publisher was configured and validated by the 0.2.0 release; this does not qualify or publish the patch.
+- [ ] Maintainer security/release review is complete.
+- [ ] Patch version and release workflow are prepared for a new version; the existing publication workflow is still specific to 0.2.0.
+- [ ] Final release source/artifact passes its required publication gates.
+- [ ] New immutable tag/version is published with matching provenance and registry integrity.
+- [ ] Fresh install-from-registry acceptance passes for the patch on all release targets.
+
+Native/live-service/browser gaps remain documented in the stability plan;
+no additional seven-day freeze is required by that plan.
+
+## Historical 0.1.x record
 
 This file preserves the 0.1.x release record. It is not a current qualification checklist for 0.2.0. See [Phase 19 baseline and acceptance scope](../implementing-docs/PHASE_19_BASELINE.md) and the 0.2.0 roadmap for current gates.
 

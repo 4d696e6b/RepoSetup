@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "golden-mongo-app"
+  },
+  "runtime": {
+    "id": "node"
+  },
+  "packageManager": "pnpm",
+  "framework": {
+    "id": "express",
+    "options": {
+      "typescript": true
+    }
+  },
+  "integrations": [
+    {
+      "id": "mongodb"
+    },
+    {
+      "id": "mongoose"
+    }
+  ]
+}

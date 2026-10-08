@@ -544,7 +544,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("nextjs");
     expect(captured.stdout()).toContain("prisma");
     expect(captured.stdout()).toContain(
-      "pnpm create next-app@16.3.5 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
+      "pnpm create next-app@16.3.6 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
     );
     expect(captured.stdout()).toContain(
       "modify_json  Assemble package.json dependencies before a consolidated install",
@@ -579,7 +579,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain(
       "pnpm create vite@8.3.0 . --template react-ts --no-interactive",
     );
-    expect(captured.stdout()).toContain("pnpm dlx shadcn@4.21.0 init --yes -t vite");
+    expect(captured.stdout()).toContain("pnpm dlx shadcn@4.21.0 init --yes --defaults -t vite");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });

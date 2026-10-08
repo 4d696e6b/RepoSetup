@@ -22,11 +22,11 @@
  *   still installs prisma@prev and @prisma/client@7; on this date those tags
  *   resolve to 7.10.0. https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/sqlite
  */
-export const REGISTRY_REVISION = "2026-09-23";
+export const REGISTRY_REVISION = "2026-10-08";
 
 export const QUALIFIED_VERSIONS = {
-  createNextApp: "16.3.5",
-  eslintConfigNext: "16.3.5",
+  createNextApp: "16.3.6",
+  eslintConfigNext: "16.3.6",
   vite: "8.3.0",
   eslint: "9.39.5",
   eslintJs: "9.39.5",
@@ -94,6 +94,11 @@ export const QUALIFIED_PEERS = [
     satisfiedBy: "vite@8.3.0",
   },
   {
+    package: "vitest@5.0.1",
+    peers: "@types/node ^22.0.0 || >=24.0.0 (optional)",
+    satisfiedBy: "@types/node@22.20.4",
+  },
+  {
     package: "@vitejs/plugin-react@6.1.1",
     peers: "vite ^8.0.0",
     satisfiedBy: "vite@8.3.0",
@@ -157,11 +162,13 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
   zod: [npmPin("zod", QUALIFIED_VERSIONS.zod)],
   vitest: [
     npmPin("vitest", QUALIFIED_VERSIONS.vitest),
+    npmPin("vite", QUALIFIED_VERSIONS.vite),
     npmPin("@vitejs/plugin-react", QUALIFIED_VERSIONS.vitePluginReact),
     npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
     npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
     npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
     npmPin("vite-tsconfig-paths", QUALIFIED_VERSIONS.viteTsconfigPaths),
+    npmPin("@types/node", QUALIFIED_VERSIONS.typesNode),
   ],
   "testing-library": [
     npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),

@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { createServer, type Server } from "node:net";
-import { mkdir, mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -95,6 +95,7 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
   steps.push({ name: "create", exitCode: created.exitCode });
   expect(created.exitCode, `${created.stdout}\n${created.stderr}`).toBe(0);
   expect(created.stdout).toContain("Project directory:");
+  if (presetId === "react-vite") await access(path.join(projectDir, "components.json"));
   const nextCommands = created.stdout
     .split("\n")
     .filter((line) => line.startsWith("Next: "))
@@ -118,6 +119,22 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
       : await cliArgs(projectDir, command);
     steps.push({ name: command, exitCode: result.exitCode });
     expect(result.exitCode, `${command}\n${result.stdout}\n${result.stderr}`).toBe(0);
+  }
+
+  if (presetId === "express-postgres") {
+    const occupied = await occupyLoopbackPort(3000);
+    try {
+      const collision = await runBoundedProcess("pnpm", ["start"], projectDir, 20_000);
+      steps.push({
+        name: "production start refuses an occupied port",
+        exitCode: collision.exitCode,
+        expectedFailure: true,
+      });
+      expect(collision.exitCode).not.toBe(0);
+      expect(`${collision.stdout}\n${collision.stderr}`).toContain("EADDRINUSE");
+    } finally {
+      await closeServer(occupied);
+    }
   }
 
   const added = await cli(bin, ["--no-color", "add", integrationId, "--yes"], { cwd: projectDir });
@@ -169,7 +186,7 @@ function isServerCommand(command: string): boolean {
 }
 
 async function exerciseOccupiedDevPort(cwd: string): Promise<CliRunResult> {
-  const server = await occupyLoopbackPort(5173);
+  const server = await occupyLoopbackPort(5173, "127.0.0.1");
   try {
     return await runBoundedProcess(
       "pnpm",
@@ -182,7 +199,7 @@ async function exerciseOccupiedDevPort(cwd: string): Promise<CliRunResult> {
   }
 }
 
-async function occupyLoopbackPort(port: number): Promise<Server> {
+async function occupyLoopbackPort(port: number, host?: string): Promise<Server> {
   const server = createServer();
   await new Promise<void>((resolve, reject) => {
     const onError = (error: Error) => {
@@ -195,7 +212,7 @@ async function occupyLoopbackPort(port: number): Promise<Server> {
     };
     server.once("error", onError);
     server.once("listening", onListening);
-    server.listen({ host: "127.0.0.1", port });
+    server.listen({ port, ...(host === undefined ? {} : { host }) });
   });
   return server;
 }
@@ -228,12 +245,13 @@ function runBoundedProcess(
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      if (timeout) stopChild(child.pid);
-      resolve({
+      const result = {
         exitCode,
         stdout: output,
         stderr: timeout ? `${output}\nOccupied-port command timed out.` : output,
-      });
+      };
+      if (timeout) void stopChild(child.pid).then(() => resolve(result));
+      else resolve(result);
     };
     const timer = setTimeout(() => finish(1, true), timeoutMs);
     child.stdout?.on("data", (chunk: Buffer) => {
@@ -262,23 +280,44 @@ function probeServer(cwd: string, command: string): Promise<CliRunResult> {
     let output = "";
     let settled = false;
     let probing = false;
+    let port: number | undefined;
+    let retry: ReturnType<typeof setTimeout> | undefined;
     const finish = (exitCode: number) => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      stopChild(child.pid);
-      resolve({ exitCode, stdout: output, stderr: output });
+      clearTimeout(retry);
+      const closed = new Promise<void>((done) => {
+        if (child.exitCode !== null || child.signalCode !== null) done();
+        else {
+          const deadline = setTimeout(done, 5_000);
+          child.once("close", () => {
+            clearTimeout(deadline);
+            done();
+          });
+        }
+      });
+      void stopChild(child.pid)
+        .then(() => closed)
+        .then(() => resolve({ exitCode, stdout: output, stderr: output }));
     };
     const timer = setTimeout(() => finish(1), 90_000);
+    const probe = () => {
+      if (port === undefined || probing || settled) return;
+      probing = true;
+      void fetchReady(port).then((ready) => {
+        probing = false;
+        if (settled) return;
+        if (ready) finish(0);
+        else retry = setTimeout(probe, 250);
+      });
+    };
     const onData = (chunk: Buffer) => {
       output += chunk.toString("utf8");
       const match = /https?:\/\/(?:localhost|127\.0\.0\.1):(\d+)/.exec(output);
-      if (match?.[1] === undefined || probing) return;
-      probing = true;
-      void fetchReady(Number(match[1])).then((ready) => {
-        if (ready) finish(0);
-        else probing = false;
-      });
+      if (match?.[1] === undefined) return;
+      port = Number(match[1]);
+      probe();
     };
     child.stdout?.on("data", onData);
     child.stderr?.on("data", onData);
@@ -314,10 +353,17 @@ function windowsCommand(
   return { command: process.env.ComSpec ?? "cmd.exe", args: ["/d", "/c", command, ...args] };
 }
 
-function stopChild(pid: number | undefined): void {
+async function stopChild(pid: number | undefined): Promise<void> {
   if (pid === undefined) return;
   if (process.platform === "win32") {
-    spawn("taskkill", ["/pid", String(pid), "/t", "/f"], { shell: false, stdio: "ignore" });
+    await new Promise<void>((resolve) => {
+      const killed = spawn("taskkill", ["/pid", String(pid), "/t", "/f"], {
+        shell: false,
+        stdio: "ignore",
+      });
+      killed.once("close", () => resolve());
+      killed.once("error", () => resolve());
+    });
     return;
   }
   try {

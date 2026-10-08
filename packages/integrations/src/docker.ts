@@ -6,6 +6,7 @@ import {
   type DetectionResult,
 } from "@reposetup/core";
 
+import { firstExistingPath } from "./first-existing.js";
 import { defineIntegration } from "./define.js";
 import { supportsNodeOrPython } from "./python-support.js";
 
@@ -22,12 +23,20 @@ export const dockerIntegration = defineIntegration({
     return supportsNodeOrPython(context);
   },
   async detect(context: DetectionContext): Promise<DetectionResult> {
-    const dockerfile = await context.files.exists("Dockerfile");
-    if (!dockerfile) {
+    const dockerfile = await firstExistingPath(context.files, [
+      "Dockerfile",
+      "compose.yaml",
+      "compose.yml",
+      "docker-compose.yaml",
+      "docker-compose.yml",
+    ]);
+    if (dockerfile === undefined) {
       return notDetected();
     }
 
-    return detectedResult("likely", [evidence("file", "Found Dockerfile", "Dockerfile")]);
+    return detectedResult("likely", [
+      evidence("file", `Found Docker configuration: ${dockerfile}`, dockerfile),
+    ]);
   },
   plan() {
     return [

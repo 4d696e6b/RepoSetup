@@ -4,7 +4,7 @@
 
 ## Candidate identity
 
-- Stable preparation package: `rsetup@0.2.0` (not published)
+- Historical stable preparation package: `rsetup@0.2.0` (unpublished at that checkpoint; subsequently published in Phase 28)
 - Completed alpha package: `rsetup@0.2.0-alpha.1` at `145e167e6b60897da96942545ba6dbd40359ad4a`
 - Intended stable package/tag: `rsetup@0.2.0` / `v0.2.0`
 - Required runtime: Node.js 24 or later
@@ -28,20 +28,20 @@ All configuration remains declarative. RepoSetup does not persist real secrets, 
 - [x] Dependency-license review uses `pnpm licenses list --json`; the current review allows Apache-2.0, BSD-2-Clause, BSD-3-Clause, BlueOak-1.0.0, ISC, MIT, and MPL-2.0. The result is stored with candidate artifacts.
 - [x] [Run 36563444045](https://github.com/4d696e6b/RepoSetup/actions/runs/36563444045) completed one full qualification for `7aa910e24dfd57be59e41c9b831c7f0d5656ecb4` and retained its candidate artifact record (SHA-256 `789840214ed8a9f3c778ad197ef00f52890d698a51b8c223c55aaea958e89141`).
 - [x] Run three consecutive passing full alpha candidate qualifications from the same frozen alpha SHA.
-- [x] Complete the frozen alpha seven-calendar-day soak; stable source qualification remains pending.
+- [x] Complete the frozen alpha seven-calendar-day soak; subsequent stable source qualification and delivery are complete in the Phase 28 evidence record.
 - [x] [Usability run 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) recorded five successful observed sessions across Ubuntu, macOS, and Windows, closing Phase 24.
 - [x] Complete a [targeted current-source security review](../security-docs/SECURITY_REVIEW_0.2.0.md) covering process/path boundaries, lifecycle scripts, redaction, config injection, and existing-file preservation.
 - [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) recorded five cold and five warm trials for React and Express fixed-package profiles on Ubuntu, macOS, and Windows, with no failed measurements and one consolidated install subprocess versus five baseline passes.
 - [x] Complete the alpha exact-SHA cross-platform failure-path job. It exercises timeout/interruption, permission and existing-user-file safeguards, invalid input and cleanup, plus a React/Vite development command while its default port is occupied. Its per-OS usability evidence is retained as an artifact. The separate exact-SHA candidate benchmark uses fresh benchmark-owned caches to exercise cache misses.
-- [x] Recheck Node 24 LTS and current npm trusted publication requirements on October 7; owner publishing access still needs verification.
+- [x] Recheck Node 24 LTS and current npm trusted publication requirements on October 7; owner publishing access was subsequently validated by the accepted Phase 28 publish.
 
 The alpha runs [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), and [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011) passed at the exact frozen alpha SHA; its unchanged-source soak ended 2026-10-07 11:30:20 UTC. The earlier unchecked qualification entries are historical alpha progress, superseded by that evidence. Candidate benchmark [36704251139](https://github.com/4d696e6b/RepoSetup/actions/runs/36704251139) also passed at that SHA.
 
-The stable version correction changes the source and packed manifest. Stable qualification therefore requires its own exact-source evidence; the alpha tarball must not be renamed or relabeled as stable. See [stable delivery runbook](./STABLE_RELEASE_0.2.0.md). On October 7 the owner removed the additional stable seven-day wait and requested release after qualification. The final stable matrix, artifact identity, trusted publisher and actual publication remain release gates. A green unit suite or a passing historical workflow does not replace them.
+The stable version correction changes the source and packed manifest. Stable qualification therefore requires its own exact-source evidence; the alpha tarball must not be renamed or relabeled as stable. See [stable delivery runbook](./STABLE_RELEASE_0.2.0.md). On October 7 the owner removed the additional stable seven-day wait and requested release after qualification. The final stable matrix, artifact identity, trusted publisher and actual publication were required release gates and are now complete in the Phase 28 record. A green unit suite or a passing historical workflow does not replace them.
 
 ## Publication boundary
 
-No tag is created, moved, or published by Phase 27 work. Publication requires the owner’s explicit release authorization and must publish the previously qualified tarball, never a rebuilt workspace. The manually dispatched publishing workflow rejects a tag/version/source mismatch and verifies three previous full qualification runs and the completed soak before downloading their final immutable candidate artifact. It defaults to a dry-run and never rebuilds or repacks. An explicit owner-authorized dispatch against `v0.2.0` publishes that exact `.tgz`.
+No tag is created, moved, or published by Phase 27 work. Publication requires the owner’s explicit release authorization and must publish the previously qualified tarball, never a rebuilt workspace. The manually dispatched publishing workflow rejects a tag/version/source mismatch and verifies three previous full qualification runs before downloading their final immutable candidate artifact. It defaults to a dry-run and never rebuilds or repacks. An explicit owner-authorized dispatch against `v0.2.0` publishes that exact `.tgz`.
 
 ## Evidence locations
 

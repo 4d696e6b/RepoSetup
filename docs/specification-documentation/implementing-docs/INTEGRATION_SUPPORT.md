@@ -2,6 +2,27 @@
 
 This is the published 0.2.0 catalog classification. The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
 
+## Unpublished 0.2.x execution follow-up — 2026-10-08
+
+The published catalog table below retains its 0.2.0 classification. On patch
+product source `448beb4`, [full qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37703591131)
+passed twelve jobs with twenty bare solutions and fourteen recipes each.
+
+- [x] npm and pnpm execute all four Node frameworks in TypeScript and JavaScript.
+- [x] uv and isolated pip execute both Python frameworks.
+- [x] Fastify/Drizzle generated code is built and tested without a live database.
+- [x] shadcn initializes and builds on Next.js/Vite in TypeScript and JavaScript.
+- [x] Express/Mongoose helper builds/imports and refuses a missing URI; live MongoDB remains untested.
+- [x] Playwright initialization and test discovery pass; browser journeys remain untested.
+- [x] React Testing Library/TanStack Query and FastAPI HTTPX/settings execution and repeated add checks pass.
+- [x] All five presets pass packaged create/run/build/test/add/doctor/export sessions across the three CI platforms.
+
+See [the stability plan](./STABILITY_0.2.x.md) for exact scopes and exclusions.
+These completed checks expand observed execution coverage on the patch branch;
+they do not change the published package or promote catalog maturity.
+
+## Published 0.2.0 catalog
+
 Statuses below are **not fabricated as stable**. `candidate` means plan/detect/verify tests exist. `experimental` means implemented but not treated as a qualified path. Real execute evidence is recorded separately in `docs/specification-documentation/implementing-docs/IMPLEMENTATION_STATUS.md`.
 
 | Integration | Status | Proven paths |

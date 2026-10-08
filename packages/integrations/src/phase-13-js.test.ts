@@ -82,6 +82,22 @@ function planExample(fileName: string) {
   return planInstallation(parsed.config, createBuiltInRegistry());
 }
 
+describe("Docker prerequisite detection from Compose", () => {
+  it.each(["compose.yaml", "compose.yml", "docker-compose.yaml", "docker-compose.yml"])(
+    "retains Docker context for add/export when %s exists",
+    async (file) => {
+      const detected = await dockerIntegration.detect?.(
+        await contextOf({ [file]: "services: {}" }),
+      );
+      expect(detected).toMatchObject({
+        detected: true,
+        confidence: "likely",
+        evidence: [{ kind: "file", path: file }],
+      });
+    },
+  );
+});
+
 describe("Phase 13 JS ecosystem plans", () => {
   it("scaffolds React + Vite with official create-vite flags", () => {
     expect(
@@ -134,6 +150,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--allow-build=esbuild",
         "typescript@5.9.3",
         "@types/express@5.0.6",
         "@types/node@22.20.4",
@@ -332,18 +349,18 @@ describe("Phase 13 JS ecosystem plans", () => {
     ]);
   });
 
-  it("initializes shadcn/ui with the documented --yes template flags", () => {
+  it("initializes shadcn/ui with noninteractive defaults and explicit template flags", () => {
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "nextjs" })))).toEqual([
-      ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "next"],
+      ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "next"],
     ]);
     expect(runCommands(shadcnIntegration.plan(planContext({ frameworkId: "react-vite" })))).toEqual(
-      [["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"]],
+      [["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "vite"]],
     );
     expect(
       runCommands(
         shadcnIntegration.plan(planContext({ packageManager: "npm", frameworkId: "nextjs" })),
       ),
-    ).toEqual([["npx", "--yes", "shadcn@4.21.0", "init", "--yes", "-t", "next"]]);
+    ).toEqual([["npx", "--yes", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "next"]]);
   });
 
   it("does not install Docker and writes Compose without starting it", () => {
@@ -391,6 +408,25 @@ describe("Phase 13 JS ecosystem plans", () => {
 });
 
 describe("Phase 13 JS ecosystem detection and verify", () => {
+  it.each([true, false])(
+    "anchors Next.js Vitest to the canonical config directory (TypeScript %s)",
+    (typescript) => {
+      const plan = vitestIntegration.plan(
+        planContext({ frameworkId: "nextjs", frameworkOptions: { typescript } }),
+      );
+      const config = plan.find(
+        (operation) =>
+          operation.type === "create_file" &&
+          operation.path === (typescript ? "vitest.config.mts" : "vitest.config.js"),
+      );
+      expect(config).toMatchObject({
+        content: expect.stringContaining(
+          "root: realpathSync.native(fileURLToPath(new URL('.', import.meta.url)))",
+        ),
+      });
+    },
+  );
+
   it("detects React + Vite as certain from vite and react", async () => {
     const result = await reactViteIntegration.detect?.(
       await contextOf({
@@ -409,6 +445,33 @@ describe("Phase 13 JS ecosystem detection and verify", () => {
       }),
     );
     expect(result).toEqual(expect.objectContaining({ detected: false }));
+  });
+
+  it("does not detect React + Vite when Next.js uses Vite for Vitest", async () => {
+    const result = await reactViteIntegration.detect?.(
+      await contextOf({
+        "package.json": JSON.stringify({
+          dependencies: { next: "16.3.6", react: "19.0.0" },
+          devDependencies: { vite: "8.3.0", vitest: "5.0.1" },
+        }),
+        "next.config.ts": "export default {};\n",
+        "vitest.config.ts": "export default {};\n",
+      }),
+    );
+    expect(result).toEqual(expect.objectContaining({ detected: false }));
+  });
+
+  it("retains Vite config evidence alongside a Next.js dependency", async () => {
+    const result = await reactViteIntegration.detect?.(
+      await contextOf({
+        "package.json": JSON.stringify({
+          dependencies: { next: "16.3.6", react: "19.0.0" },
+          devDependencies: { vite: "8.3.0" },
+        }),
+        "vite.config.ts": "export default {};\n",
+      }),
+    );
+    expect(result).toEqual(expect.objectContaining({ detected: true, confidence: "certain" }));
   });
 
   it("detects Express, Fastify, PostgreSQL, MongoDB, and GitHub Actions", async () => {
@@ -483,7 +546,7 @@ describe("Phase 13 example stacks", () => {
       expect.arrayContaining([
         ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
         ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
-        ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "-t", "vite"],
+        ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "vite"],
       ]),
     );
   });
@@ -516,6 +579,7 @@ describe("Phase 13 example stacks", () => {
           "postgresql",
           "--output",
           "../generated/prisma",
+          "--no-skills",
         ],
       ]),
     );

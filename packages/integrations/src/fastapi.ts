@@ -18,17 +18,9 @@ import {
 } from "./operations.js";
 import { QUALIFIED_VERSIONS } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
+import { pythonAppReadme } from "./python-readme.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
-
-const FASTAPI_README = `# FastAPI app
-
-From this directory, start the development server with:
-
-\`uv run fastapi dev\`
-
-Run the generated endpoint test with \`uv run pytest\`.
-`;
 
 const FASTAPI_MAIN = `from fastapi import FastAPI
 
@@ -108,7 +100,7 @@ export const fastapiIntegration = defineIntegration({
       {
         type: "create_file",
         path: "README.md",
-        content: FASTAPI_README,
+        content: pythonAppReadme(context, "FastAPI", "fastapi dev"),
         behavior: "fail_if_exists",
         description: "Add FastAPI run instructions",
       },

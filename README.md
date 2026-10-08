@@ -275,9 +275,9 @@ There is no `test:pack` script; packing is covered by `pnpm test:e2e`.
 
 See the [phased roadmap to 0.2.0](docs/specification-documentation/implementing-docs/ROADMAP_0.2.0.md) for cross-platform qualification, faster installation, usability improvements, integration priorities, and release gates.
 
-- Qualify remaining golden stacks (Next.js execute, FastAPI/Flask with `uv`) and OS CI evidence
-- Promote integrations to `stable` only with that evidence
-- Configure npm trusted publishing so tag workflows can release without a local token
+- Follow the [0.2.x stability plan](docs/specification-documentation/implementing-docs/STABILITY_0.2.x.md) for create regressions, real generated-app checks and patch release gates
+- Qualify each patch candidate across npm/pnpm, all six frameworks and the supported CI platforms
+- Add live database and native platform evidence before promoting the corresponding integrations to `stable`
 - A website is explicitly out of scope for this architecture
 
 ## License

@@ -12,11 +12,12 @@ import {
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { firstExistingPath } from "./first-existing.js";
 import { addPackages } from "./operations.js";
+import { usesTypescript } from "./scaffold.js";
 import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { failVerify, mergeVerify, missingAnyFile, missingPackage } from "./verify.js";
 
 const POSTCSS_CONFIG_PATHS = ["postcss.config.mjs", "postcss.config.js"] as const;
-const GLOBAL_CSS_PATHS = ["app/globals.css", "src/app/globals.css"] as const;
+const GLOBAL_CSS_PATHS = ["app/globals.css", "src/app/globals.css", "src/index.css"] as const;
 
 const POSTCSS_CONFIG = `const config = {
   plugins: {
@@ -63,7 +64,7 @@ export const tailwindIntegration = defineIntegration({
     const postcss = await firstExistingPath(context.files, POSTCSS_CONFIG_PATHS);
     const cssPath = await firstExistingPath(context.files, GLOBAL_CSS_PATHS);
     const css = cssPath === undefined ? undefined : await context.files.readText(cssPath);
-    const hasImport = css !== undefined && css.includes('@import "tailwindcss"');
+    const hasImport = css !== undefined && /@import\s+["']tailwindcss["']/.test(css);
 
     if (!hasTailwind && postcss === undefined && !hasImport && !hasVitePlugin) {
       return notDetected();
@@ -105,10 +106,26 @@ export const tailwindIntegration = defineIntegration({
           },
         ),
         {
-          type: "show_message",
-          message:
-            'Add the @tailwindcss/vite plugin to vite.config and add @import "tailwindcss"; to your CSS. See https://tailwindcss.com/docs/installation/using-vite',
-          description: "Point at the official Tailwind Vite plugin steps",
+          type: "modify_text",
+          path: usesTypescript(context) ? "vite.config.ts" : "vite.config.js",
+          oldText: "import react from '@vitejs/plugin-react'",
+          newText:
+            "import react from '@vitejs/plugin-react'\nimport tailwindcss from '@tailwindcss/vite'",
+          description: "Import the official Tailwind Vite plugin",
+        },
+        {
+          type: "modify_text",
+          path: usesTypescript(context) ? "vite.config.ts" : "vite.config.js",
+          oldText: "plugins: [react()],",
+          newText: "plugins: [react(), tailwindcss()],",
+          description: "Enable the Tailwind Vite plugin",
+        },
+        {
+          type: "modify_text",
+          path: "src/index.css",
+          oldText: ":root {\n  font-family:",
+          newText: "@import 'tailwindcss';\n\n:root {\n  font-family:",
+          description: "Import Tailwind without removing existing Vite styles",
         },
       ];
     }
@@ -152,16 +169,21 @@ export const tailwindIntegration = defineIntegration({
   async verify(context: VerificationContext): Promise<VerificationResult> {
     const cssPath = await firstExistingPath(context.files, GLOBAL_CSS_PATHS);
     const css = cssPath === undefined ? undefined : await context.files.readText(cssPath);
-    const missingImport =
-      cssPath !== undefined && (css === undefined || !css.includes('@import "tailwindcss"'))
-        ? failVerify(
-            `${cssPath} does not import Tailwind.`,
-            `Add @import "tailwindcss"; to ${cssPath}. Doctor does not edit CSS.`,
-          )
-        : undefined;
     const hasVitePlugin =
       context.packageJson !== undefined &&
       hasPackageDependency(context.packageJson, "@tailwindcss/vite");
+    const missingImport =
+      cssPath === undefined && hasVitePlugin
+        ? failVerify(
+            "The Vite project is missing a known Tailwind CSS entry file.",
+            'Add @import "tailwindcss"; to src/index.css. Doctor does not edit CSS.',
+          )
+        : cssPath !== undefined && (css === undefined || !/@import\s+["']tailwindcss["']/.test(css))
+          ? failVerify(
+              `${cssPath} does not import Tailwind.`,
+              `Add @import "tailwindcss"; to ${cssPath}. Doctor does not edit CSS.`,
+            )
+          : undefined;
     const missingPostcss = hasVitePlugin
       ? undefined
       : await missingAnyFile(
