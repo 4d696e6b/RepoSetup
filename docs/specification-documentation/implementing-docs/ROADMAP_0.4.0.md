@@ -149,7 +149,7 @@ completion cannot certify model quality, account availability or savings.
 
 **Objective:** separate compilation benefits from routing benefits.
 
-- [ ] Add frozen local types/UI/API/cross-module/security fixture phases and holdout checks.
+- [x] Add frozen local types/UI/API/cross-module/security fixture phases and holdout checks.
 - [ ] Compare whole-phase strong, compiled fixed-strong and compiled routed treatments.
 - [ ] Include all compilation, context expansion, retries and verification overhead and every failed trial.
 - [ ] Qualify packed aliases, legacy workflows and task boundaries across the advertised platforms.

@@ -1089,3 +1089,5 @@ Validation on Node 24.21.0/macOS arm64: the focused packed suite passed five
 cases; task-test typecheck, workspace lint, all 11 serial task e2e cases across
 three files and Git whitespace checks passed. Milestone I stays in progress;
 J is unstarted.
+The roadmap now checks only I's frozen-fixture/holdout item; treatment comparison,
+full packed/platform qualification and live provider/profile gates remain open.
