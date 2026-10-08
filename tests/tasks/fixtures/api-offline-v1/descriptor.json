@@ -59,5 +59,6 @@
       "criterionIds": ["api-4"],
       "kind": "runtime"
     }
-  ]
+  ],
+  "publicTestIds": ["compat-default", "public-example", "public-limit", "public-invalid-limit"]
 }

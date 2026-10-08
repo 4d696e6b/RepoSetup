@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:c70b7f841c449fb6c0e8e23fa0c0025fc3890bca38473e97f74bf711ae3b287d",
+  "fixtureRevision": "sha256:bfc4dae158451a72bac47b61b2709ad97c7a0db5499767c857d78abd8c18b0d0",
   "fixtureId": "ui-view-model-v1",
   "fixtureVersion": 1,
   "phaseId": "list-view-state",
@@ -23,7 +23,7 @@
       "text": "preserve all inputs and baseline behavior, make repeated calls identical and handle labels containing markup-like text as plain strings. Public tests cover filtering, one selection and loading."
     }
   ],
-  "seedRevision": "sha256:f09bf05021bfe4e734228141aec1050ad28cbe7f2705d1fccabc624f0a00071b",
+  "seedRevision": "sha256:f9d837008d96bc2b2dd76bccfe4eb7803016ad34dc925df75ef9f13e2a3d4224",
   "seedFiles": [
     {
       "path": "AGENTS.md",
@@ -34,6 +34,11 @@
       "path": "docs/phase.md",
       "fileHash": "sha256:f9fb999164a5e2518add95751ac71240f08c1049fdc2f436434be371df446943",
       "bytes": 1014
+    },
+    {
+      "path": "eslint.config.mjs",
+      "fileHash": "sha256:c3595c37081c32d66f8b8a543e0c9f00b2978c2c850174a8872242afa6675a42",
+      "bytes": 291
     },
     {
       "path": "package.json",
@@ -61,18 +66,29 @@
       "bytes": 479
     },
     {
+      "path": "test/public/managed.test.mjs",
+      "fileHash": "sha256:dc93e69d62fe9ae6b4862b7ecca95150731e2cfdbab9c643f64ac7779c8f1f1d",
+      "bytes": 232
+    },
+    {
       "path": "tsconfig.json",
       "fileHash": "sha256:7ecb67310174039455aae94e4b21d346fd6fe8d4030886e33ff3b9502f90eccc",
       "bytes": 360
+    },
+    {
+      "path": "vitest.config.mjs",
+      "fileHash": "sha256:4919f43c68ba6a6808b38515fc18be7997c28b6cf771a88e814d8109612b1622",
+      "bytes": 278
     }
   ],
   "phaseDocumentHash": "sha256:f9fb999164a5e2518add95751ac71240f08c1049fdc2f436434be371df446943",
   "lockfileHash": "sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4",
-  "dependencyArtifactId": "sha256:49f799df966d5deeef3a5effd6d4593f7d922ed00934567c8bb8ca933aa3c82c",
-  "recipeRevision": "sha256:5d11d15c37afe636522a400d061f790a131fe9c99f5eceff9b3f62e9abaa4af7",
+  "dependencyArtifactId": "sha256:119bc8c433206f233f9c2fd689fe1f9f35554956fa08d3c0f5bcae7d21f30138",
+  "recipeRevision": "sha256:e32f9700e5879c436079f3d47bba69c83d68c19a2b2e9c0f640530570d93992a",
   "supportProfileId": "managed-ts-node-v1",
   "write": ["src/view-model.ts", "test/agent/view-model.test.ts"],
   "entrypoints": ["buildListView"],
+  "publicTestIds": ["compat-all", "public-example", "public-selection", "public-loading"],
   "referenceFiles": [
     {
       "path": "src/view-model.ts",

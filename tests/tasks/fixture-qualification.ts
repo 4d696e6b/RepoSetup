@@ -128,6 +128,13 @@ export async function qualifyFixture(
     const compatibility = await evaluate("compat"),
       publicAcceptance = await evaluate("public"),
       holdout = await evaluate("holdout");
+    if (
+      taskContentHash([
+        ...compatibility.results.map((r) => r.testId),
+        ...publicAcceptance.results.map((r) => r.testId),
+      ]) !== taskContentHash(manifest.publicTestIds)
+    )
+      throw new Error("Public test inventory changed");
     if (taskContentHash(await inventory(project)) !== taskContentHash(publicInventory))
       throw new Error("Oracle changed protected fixture inputs");
     let typeContract = true;

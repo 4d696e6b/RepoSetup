@@ -80,4 +80,13 @@ describe("frozen benchmark boundaries", () => {
       false,
     );
   });
+  it("rejects a rehashed reduction of the reviewed public test inventory", () => {
+    expect(
+      validateTaskBenchmarkFixture(
+        reseal((f) => {
+          f.publicTestIds[1] = f.publicTestIds[0]!;
+        }),
+      ).success,
+    ).toBe(false);
+  });
 });

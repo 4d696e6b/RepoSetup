@@ -14,6 +14,10 @@ const require = createRequire(import.meta.url);
 export const workspaceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 export const fixtureRoot = path.join(workspaceRoot, "tests/tasks/fixtures");
 export const typescriptRoot = path.dirname(require.resolve("typescript/package.json"));
+const managedToolRoots = ["typescript", "eslint", "typescript-eslint", "vitest"].map((name) => ({
+  name,
+  root: path.dirname(require.resolve(`${name}/package.json`)),
+}));
 export async function inventory(root: string): Promise<TaskBenchmarkFixture["seedFiles"]> {
   const rows: TaskBenchmarkFixture["seedFiles"] = [];
   async function walk(folder: string) {
@@ -54,13 +58,19 @@ export async function fixtureManifest(fixtureId: string): Promise<TaskBenchmarkF
     oracleRevision: taskContentHash(oracleFiles),
     phaseDocumentHash: seedFiles.find((r) => r.path === "docs/phase.md")!.fileHash,
     lockfileHash: taskByteHash(await readFile(path.join(workspaceRoot, "pnpm-lock.yaml"))),
-    dependencyArtifactId: taskContentHash(await inventory(typescriptRoot)),
+    dependencyArtifactId: taskContentHash(
+      await Promise.all(
+        managedToolRoots.map(async ({ name, root }) => ({ name, files: await inventory(root) })),
+      ),
+    ),
     recipeRevision: taskContentHash(
       await Promise.all(
-        ["fixture-tools.ts", "fixture-qualification.ts", "run-oracle.mjs"].map(async (name) => ({
-          path: name,
-          fileHash: taskByteHash(await readFile(path.join(workspaceRoot, "tests/tasks", name))),
-        })),
+        ["fixture-tools.ts", "fixture-qualification.ts", "managed-checks.ts", "run-oracle.mjs"].map(
+          async (name) => ({
+            path: name,
+            fileHash: taskByteHash(await readFile(path.join(workspaceRoot, "tests/tasks", name))),
+          }),
+        ),
       ),
     ),
     supportProfileId: "managed-ts-node-v1",

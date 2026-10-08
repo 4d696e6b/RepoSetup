@@ -74,5 +74,12 @@
       "criterionIds": ["type-1", "type-2"],
       "kind": "type"
     }
+  ],
+  "publicTestIds": [
+    "compat-valid-page",
+    "public-example",
+    "public-valid-page",
+    "public-invalid-item",
+    "public-map-failure"
   ]
 }

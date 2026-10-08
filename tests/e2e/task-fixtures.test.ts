@@ -7,6 +7,7 @@ import {
   validateTaskBenchmarkFixture,
 } from "../../packages/core/dist/index.js";
 import { fixtureManifest, fixtureRoot } from "../tasks/fixture-tools.js";
+import { checkManagedFixtureRecipes } from "../tasks/managed-checks.js";
 import { qualifyFixture } from "../tasks/fixture-qualification.js";
 describe("frozen task fixture and independent holdout qualification", () => {
   for (const fixtureId of TASK_BENCHMARK_FIXTURE_IDS)
@@ -30,6 +31,15 @@ describe("frozen task fixture and independent holdout qualification", () => {
       expect(reference.compatibility?.passed).toBe(true);
       expect(reference.publicAcceptance?.passed).toBe(true);
       expect(reference.holdout?.passed).toBe(true);
+      const managedSeed = await checkManagedFixtureRecipes(manifest.data, "seed");
+      const managedReference = await checkManagedFixtureRecipes(manifest.data, "reference");
+      expect(managedSeed.checks.find((c) => c.checkId === "ts.typecheck")?.passed).toBe(true);
+      expect(managedSeed.checks.find((c) => c.checkId === "ts.lint")?.passed).toBe(true);
+      expect(managedReference.checks.every((c) => c.passed)).toBe(true);
+      expect(managedReference.checks.find((c) => c.checkId === "ts.unit")?.discoveredTests).toBe(
+        manifest.data.publicTestIds.length,
+      );
+      expect(managedReference.protectedInputsUnchanged).toBe(true);
       for (const variant of manifest.data.incorrectVariants) {
         const result = await qualifyFixture(manifest.data, variant.variantId);
         expect(

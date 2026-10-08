@@ -59,6 +59,7 @@ export const taskBenchmarkFixtureSchema = z.strictObject({
     .array(z.string().regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/))
     .min(1)
     .max(16),
+  publicTestIds: z.array(taskIdSchema).min(2).max(32),
   referenceFiles: files,
   incorrectVariants: z
     .array(z.strictObject({ variantId: taskIdSchema, files }))
@@ -103,6 +104,7 @@ export function validateTaskBenchmarkFixture(
     requirements.size !== 4 ||
     new Set(f.write).size !== f.write.length ||
     new Set(f.entrypoints).size !== f.entrypoints.length ||
+    new Set(f.publicTestIds).size !== f.publicTestIds.length ||
     new Set(f.testInventory.map((t) => t.testId)).size !== f.testInventory.length ||
     new Set(f.incorrectVariants.map((v) => v.variantId)).size !== f.incorrectVariants.length ||
     [f.seedFiles, f.referenceFiles, f.oracleFiles, ...f.incorrectVariants.map((v) => v.files)].some(

@@ -1031,3 +1031,29 @@ passed after the YAML/package-script changes.
 No remote CI was started and Linux remains unqualified until actual results exist.
 Milestone I is open for the remaining campaign, full fixture recipe, installed/
 native/platform and live evidence listed above. J remains unstarted.
+
+## Milestone I — frozen managed-check recipe probe (2026-10-08)
+
+Added frozen ESLint/Vitest configs and a public unit wrapper to all five fixture
+seeds, plus exact reviewed public test identities. The manifest revision now
+includes those files and the direct TypeScript, ESLint, typescript-eslint and Vitest
+package inventories. The local evaluator runs the existing E fixed typecheck, lint
+and unit recipes with a filtered process environment, parses their bounded reports,
+requires the frozen unit identities and restores temporary hydration before checking
+for project changes. Private holdouts stay in the separate evaluator.
+
+Initial targeted qualification passed for all five references and their seeds:
+references pass the three managed recipes and independent public/holdout assertions;
+seeds pass typecheck/lint and preserve baseline tests while failing new acceptance.
+The 15 previously frozen wrong variants remain independently rejected. The test
+infrastructure links only the preinstalled frozen development dependencies and
+installs nothing. No provider calls or trial quality/savings claims occurred.
+
+Validation on Node 24.21.0/macOS arm64: workspace build, typecheck, task-test
+typecheck and lint passed; 500 core tests across 58 files, 16 selected CLI
+check-recipe/report/environment tests across three files, and 10 serial task e2e
+tests across three files passed. Git whitespace checks passed. This probe does not establish E's
+full transitive dependency closure, protected tool/config file definitions or
+executor-owned effect audit for these five fixtures. Actual retained 75-trial
+execution, installed/native/Linux evidence and live capability/provider gates
+remain open. Milestone I stays in progress; J is unstarted.

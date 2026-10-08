@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:c9e3565003fc6565bfddce1e9da5bcfb34b7572235b6142b9941398e23394b69",
+  "fixtureRevision": "sha256:6af8d8831a5bcc270d2233eefe557a79227144548be291834e6f4fdfbf0a7c5a",
   "fixtureId": "api-offline-v1",
   "fixtureVersion": 1,
   "phaseId": "offline-pagination-handler",
@@ -23,7 +23,7 @@
       "text": "preserve baseline response shape and input immutability. Public tests cover a default request, an explicit limit and one invalid query."
     }
   ],
-  "seedRevision": "sha256:21a17de7b592c4a78d8323b06e0ee4a14f550c1bb814e78e26e2c18b1b50fba6",
+  "seedRevision": "sha256:58ece0a2d13110f2061725156b4b8dbba29478b7b2d9f9de5c94c4df7dc776e5",
   "seedFiles": [
     {
       "path": "AGENTS.md",
@@ -34,6 +34,11 @@
       "path": "docs/phase.md",
       "fileHash": "sha256:4a6b2f2214d07e7eff98e008ccb452e8aec1b7a047a8d7e8dc02fa5c20a2633f",
       "bytes": 1278
+    },
+    {
+      "path": "eslint.config.mjs",
+      "fileHash": "sha256:c3595c37081c32d66f8b8a543e0c9f00b2978c2c850174a8872242afa6675a42",
+      "bytes": 291
     },
     {
       "path": "package.json",
@@ -66,18 +71,29 @@
       "bytes": 428
     },
     {
+      "path": "test/public/managed.test.mjs",
+      "fileHash": "sha256:dc93e69d62fe9ae6b4862b7ecca95150731e2cfdbab9c643f64ac7779c8f1f1d",
+      "bytes": 232
+    },
+    {
       "path": "tsconfig.json",
       "fileHash": "sha256:7ecb67310174039455aae94e4b21d346fd6fe8d4030886e33ff3b9502f90eccc",
       "bytes": 360
+    },
+    {
+      "path": "vitest.config.mjs",
+      "fileHash": "sha256:4919f43c68ba6a6808b38515fc18be7997c28b6cf771a88e814d8109612b1622",
+      "bytes": 278
     }
   ],
   "phaseDocumentHash": "sha256:4a6b2f2214d07e7eff98e008ccb452e8aec1b7a047a8d7e8dc02fa5c20a2633f",
   "lockfileHash": "sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4",
-  "dependencyArtifactId": "sha256:49f799df966d5deeef3a5effd6d4593f7d922ed00934567c8bb8ca933aa3c82c",
-  "recipeRevision": "sha256:5d11d15c37afe636522a400d061f790a131fe9c99f5eceff9b3f62e9abaa4af7",
+  "dependencyArtifactId": "sha256:119bc8c433206f233f9c2fd689fe1f9f35554956fa08d3c0f5bcae7d21f30138",
+  "recipeRevision": "sha256:e32f9700e5879c436079f3d47bba69c83d68c19a2b2e9c0f640530570d93992a",
   "supportProfileId": "managed-ts-node-v1",
   "write": ["src/query.ts", "src/handler.ts", "test/agent/handler.test.ts"],
   "entrypoints": ["decodeQuery", "handleRequest"],
+  "publicTestIds": ["compat-default", "public-example", "public-limit", "public-invalid-limit"],
   "referenceFiles": [
     {
       "path": "src/handler.ts",

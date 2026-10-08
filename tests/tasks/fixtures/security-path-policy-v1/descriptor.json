@@ -59,5 +59,6 @@
       "criterionIds": ["sec-3", "sec-4"],
       "kind": "runtime"
     }
-  ]
+  ],
+  "publicTestIds": ["compat-safe", "public-example", "public-traversal", "public-deny-overlap"]
 }

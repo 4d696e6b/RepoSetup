@@ -59,5 +59,6 @@
       "criterionIds": ["cross-4"],
       "kind": "runtime"
     }
-  ]
+  ],
+  "publicTestIds": ["compat-legacy", "public-example", "public-discount"]
 }

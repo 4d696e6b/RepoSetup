@@ -59,5 +59,6 @@
       "criterionIds": ["ui-4"],
       "kind": "runtime"
     }
-  ]
+  ],
+  "publicTestIds": ["compat-all", "public-example", "public-selection", "public-loading"]
 }

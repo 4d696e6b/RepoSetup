@@ -200,10 +200,13 @@ runner's TypeScript separately from the deliberately incomplete fixture sources.
 
 The assertion runner's private evaluation output sits outside the hydrated public
 project. Tests return safe case IDs and pass/fail; private expected values and
-exception text are not repair input. These initial fixtures use the installed
-TypeScript artifact and Node assertions. The dependency artifact hash identifies
-that compiler's complete file inventory, not a qualified full managed-profile
-ESLint/Vitest closure. No trial/treatment qualification or savings result follows
+exception text are not repair input. These fixtures use the installed TypeScript artifact and Node assertions.
+Their frozen seed now also contains reviewed ESLint/Vitest check configurations and
+a fixed public-test wrapper, with explicit `publicTestIds`. The test-only local probe
+runs E's `ts.typecheck`, `ts.lint` and `ts.unit` fixed recipes and parses their bounded
+reports against the reviewed public test inventory. The dependency artifact hash
+identifies the direct TypeScript, ESLint, typescript-eslint and Vitest package bytes,
+not a qualified full transitive managed-profile tool closure. No trial/treatment qualification or savings result follows
 from reference/mutation checks. Full E recipe, predecessor-drift, packed/platform
 and live-provider evidence remain separate I gates.
 
@@ -264,3 +267,20 @@ PATH. Its metadata records artifact/source/lock/host identities and keeps
 qualification false. This does not replace installed-package, native shell, real
 legacy installation or Linux/platform acceptance. Full fixtures, report and packed
 tests run serially under `pnpm test:tasks:fixtures`; normal CI needs no API key.
+
+## Local managed-check recipe probe (2026-10-08)
+
+The five public fixture projects now include frozen, read-only `eslint.config.mjs`,
+`vitest.config.mjs` and `test/public/managed.test.mjs` files. Each descriptor binds
+the exact baseline and public test IDs, and the reference probe requires their
+reported unit identities/counts. It uses the existing fixed recipes, pinned tool
+versions, filtered child environment and safe report parser. It restores the
+temporary project's hydration link before asserting an unchanged source inventory.
+No private holdout is copied into a candidate's project or unit runner.
+
+This probe tests the actual local recipe argument/report path for every seed and
+reference. It is test infrastructure, not E's fully qualified immutable closure
+or a trial executor. A complete managed acceptance gate still needs the existing
+verifier adapter's reviewed transitive dependency inventory, protected config/oracle
+file definitions and executor-owned before/after effect audit for each fixture.
+Do not count these reference checks as model trials or platform qualification.
