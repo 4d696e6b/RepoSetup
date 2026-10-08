@@ -1,6 +1,6 @@
 # Integration support report (`0.2.1`)
 
-The 0.2.1 patch preserves the published 0.2.0 catalog classification. Publication progress and exact-source gates are in [the patch release record](../release-docs/STABLE_RELEASE_0.2.1.md). The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
+The 0.2.1 patch preserves the published 0.2.0 catalog classification. Completed publication and exact-source delivery evidence are in [the patch release record](../release-docs/STABLE_RELEASE_0.2.1.md). The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
 
 ## 0.2.x execution qualification — 2026-10-08
 
@@ -19,7 +19,7 @@ passed twelve jobs with twenty bare solutions and fourteen recipes each.
 
 See [the stability plan](./STABILITY_0.2.x.md) for exact scopes and exclusions.
 These completed checks expand observed execution coverage on the patch branch;
-they do not change the published package or promote catalog maturity.
+they are delivered in 0.2.1 and do not promote catalog maturity.
 
 ## Catalog classification retained in 0.2.1
 
@@ -29,24 +29,24 @@ Statuses below are **not fabricated as stable**. `candidate` means plan/detect/v
 | --- | --- | --- |
 | node | candidate | create (prerequisite), detect |
 | python | candidate | create (prerequisite), detect |
-| npm | candidate | plan/detect |
+| npm | candidate | create, plan/detect; bare solutions and real npm recipes |
 | pnpm | candidate | create/detect |
 | uv | candidate | create/detect |
-| pip | candidate | plan/detect |
+| pip | candidate | isolated FastAPI/Flask bare creation; no locked-repeat guarantee |
 | nextjs | candidate | create dry-run; real execute in golden CI |
 | react-vite | candidate | create dry-run; real execute via `pnpm test:golden` |
 | express | candidate | create dry-run; generation golden (no live DB) |
-| fastify | experimental | plan/detect tests only |
+| fastify | experimental | TS/JS bare creation; Drizzle/Vitest generation, build and test |
 | fastapi | candidate | create dry-run; real execute via `pnpm test:golden` when uv exists |
 | flask | candidate | create dry-run; real execute via `pnpm test:golden` when uv exists |
 | tailwind | candidate | create (Next.js / Vite goldens) |
-| shadcn | experimental | plan tests; not in qualified goldens |
+| shadcn | experimental | Next.js/Vite TS/JS initialization and build; asserts components.json |
 | sqlite | candidate | Next.js golden (file DB) |
 | postgresql | experimental | generation/config only; no live connectivity qualification |
 | mongodb | experimental | generation/config only |
 | prisma | candidate | create/add; generate on SQLite golden |
-| drizzle | experimental | add tested; OS/execute incomplete |
-| mongoose | experimental | add tested; live MongoDB not qualified |
+| drizzle | experimental | Fastify PostgreSQL config/build/test; no live connectivity |
+| mongoose | experimental | Express helper build/import and missing-URI refusal; no live MongoDB |
 | sqlalchemy | candidate | FastAPI/Flask goldens (package + Alembic; no live DB) |
 | alembic | candidate | FastAPI/Flask goldens |
 | zod | candidate | create/add |
@@ -55,7 +55,7 @@ Statuses below are **not fabricated as stable**. `candidate` means plan/detect/v
 | vitest | candidate | create/add |
 | testing-library | candidate | React + Vite create/add with a real accessible interaction test |
 | tanstack-query | candidate | React + Vite create/add with a provider and mocked-response query test |
-| playwright | experimental | plan/detect only |
+| playwright | experimental | npm/pnpm initialization and test discovery; no browser journeys |
 | pytest | candidate | create/add; guaranteed Python recipes generate a real endpoint test and require pytest to pass |
 | httpx | candidate | FastAPI create/add with an in-process API response test |
 | eslint | candidate | plan/detect (React example) |

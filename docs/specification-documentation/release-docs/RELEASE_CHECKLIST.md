@@ -17,9 +17,9 @@ and [acceptance checklist](../implementing-docs/ACCEPTANCE_TESTS.md).
 - [x] Owner authorizes the release; the [bounded patch security review](../security-docs/SECURITY_REVIEW_0.2.1.md) records production audit results and the unresolved generated-tool advisory.
 - [x] Patch manifests and active publication checks target 0.2.1; exact-source qualification remains required.
 - [x] Owner requests 0.2.1 publication on October 8; [release progress](./STABLE_RELEASE_0.2.1.md) retains the remaining gates.
-- [ ] Final release source/artifact passes its required publication gates.
-- [ ] New immutable tag/version is published with matching provenance and registry integrity.
-- [ ] Fresh install-from-registry acceptance passes for the patch on all release targets.
+- [x] Final 0.2.1 source/artifact passes all required exact-source gates.
+- [x] New immutable v0.2.1 and npm 0.2.1 are published with matching provenance, registry integrity and latest.
+- [x] Fresh install-from-registry acceptance passes on Ubuntu/macOS/Windows; [final evidence](./STABLE_RELEASE_0.2.1.md).
 
 Native/live-service/browser gaps remain documented in the stability plan;
 no additional seven-day freeze is required by that plan.

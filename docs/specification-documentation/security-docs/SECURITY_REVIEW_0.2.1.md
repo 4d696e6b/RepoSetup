@@ -31,5 +31,6 @@ No new P0/P1 security or data-loss defect was identified in this bounded review.
 The unresolved generated-tool advisory remains documented; zero production audit
 findings are not an audit-clean claim for generated stacks. Live databases,
 native desktop platforms and browser journeys remain outside qualification.
-The owner authorized 0.2.1 publication on October 8; exact artifact and delivery
-acceptance are still required before release completion.
+The owner authorized 0.2.1 publication on October 8; exact artifact and three-platform delivery acceptance subsequently passed in
+[the release record](../release-docs/STABLE_RELEASE_0.2.1.md), with matching
+registry integrity, signed provenance and an isolated npm signature audit.

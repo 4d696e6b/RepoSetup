@@ -10,7 +10,9 @@ remains separate from qualifying a bounded recipe.
 
 Evidence: [stability plan](./STABILITY_0.2.x.md) and
 [machine-readable results](../release-docs/qualification/0.2.x-create-stability.json).
-Product source `448beb4` is qualified; the patch is not published.
+Repair source `448beb4` is qualified; the delivered 0.2.1 source is `c61b88a`.
+Exact-source publication, provenance and registry-delivery evidence is in
+[the release record](../release-docs/STABLE_RELEASE_0.2.1.md).
 
 - [x] Reported named-folder Next.js file-mutation failure is reproduced and repaired.
 - [x] Current, named and nested destinations have plan coverage; all twenty bare packed-npx solutions execute in nested destinations.
@@ -24,13 +26,13 @@ Product source `448beb4` is qualified; the patch is not published.
 - [x] Fastify/Drizzle and Express/Mongoose generated code builds/tests/imports as applicable; no live database connection is claimed.
 - [x] Playwright initializes and lists generated tests with the selected manager's lockfile; no browser execution is claimed.
 - [x] Local 959 unit tests, typecheck, lint, build and all 37 registry definitions pass.
-- [x] Packed E2E passes 37 tests; one external release-artifact check is explicitly skipped and remains outside this result.
+- [x] The 0.2.1 packed E2E rerun passes all 38 tests with uv and local delivery; historical 37-pass/one-skip results remain in the preparation record.
 - [x] Corrected workflow writers produce parseable JSON on all matrix targets; the original Windows artifact trailer limitation is recorded.
-- [ ] Maintainer review of the unresolved generated development-tool advisory is complete.
+- [x] Bounded release security review records the unresolved generated development-tool advisory without claiming an upstream fix.
 - [ ] Native Windows 11 and Linux arm64 qualification is complete.
 - [ ] Live database/container and SQLAlchemy DBAPI connectivity is qualified.
 - [ ] Actual Playwright browser journeys are qualified.
-- [ ] A separately versioned patch is published and accepted from the npm registry.
+- [x] Separately versioned 0.2.1 is published with matching integrity/provenance and accepted from npm on all three release targets.
 
 The historical checklists below retain their original results. None of the above
 checks promotes an integration ID to `stable` or qualifies every permutation.

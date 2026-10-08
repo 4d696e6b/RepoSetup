@@ -3,9 +3,9 @@
 For the 0.2.1 stability patch, start with the root [README](../README.md),
 [integration support](./specification-documentation/implementing-docs/INTEGRATION_SUPPORT.md)
 and [patch release status](./specification-documentation/release-docs/STABLE_RELEASE_0.2.1.md).
-The unpublished fixes and checked automated results are in the
+The delivered fixes and checked automated results are in the
 [0.2.x stability plan](./specification-documentation/implementing-docs/STABILITY_0.2.x.md).
-Human-facing notes in [`humanOnly/`](./humanOnly/) describe the historical 0.1.x line.
+The current [0.2.1 user guide](./humanOnly/RepoSetup_0.2.1.md) explains installation and troubleshooting; older human-facing notes retain the historical 0.1.x line.
 
 Specifications live in [`specification-documentation/`](./specification-documentation/), grouped by topic.
 
@@ -53,6 +53,7 @@ Specifications live in [`specification-documentation/`](./specification-document
 - [0.2.1 release and delivery record](./specification-documentation/release-docs/STABLE_RELEASE_0.2.1.md)
 - [Historical 0.2.0 stable delivery runbook](./specification-documentation/release-docs/STABLE_RELEASE_0.2.0.md)
 - [Historical 0.2.0 stable qualification](./specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md)
+- [0.2.1 machine-readable qualification](./specification-documentation/release-docs/qualification/0.2.1.json)
 - [0.2.x machine-readable qualification](./specification-documentation/release-docs/qualification/0.2.x-create-stability.json)
 - [0.2.0 candidate record](./specification-documentation/release-docs/RELEASE_CANDIDATE_0.2.0.md)
 - [npm trusted publishing setup](./NPM_TRUSTED_PUBLISHING_SETUP.md)
