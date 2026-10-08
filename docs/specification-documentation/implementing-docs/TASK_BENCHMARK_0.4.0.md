@@ -366,3 +366,36 @@ driver must retain that terminal failure. No trial or quality claim follows from
 these tests. Runner hashing now includes both candidate helper modules, so all five
 manifests have new recipe/fixture revisions; campaigns from earlier freezes must
 not be combined with this revision.
+
+## Cross-module dependency lifecycle tests (2026-10-08)
+
+`tests/tasks/cross-module-run.ts` compiles the frozen cross-module requirements
+into a test-only domain → totals → presenter DAG. The presenter declares both
+domain and totals artifacts because it directly imports both interfaces. Draft
+task order is reversed to exercise the compiler's dependency ordering. Each task
+owns one exact source path; its context includes the frozen phase/rules and its
+own/predecessor modules. The seed domain and presenter already match the reference
+and use explicit no-change outcomes; the executor applies only the guarded totals
+replacement. Filesystem reads, scoped application, project locks, private CAS state
+and reconciliation use the actual CLI adapters and core executor.
+
+The six ordinary serial e2e cases check zero-port-call previews, blocked consumers
+before acceptance, exact artifact/source hashes in downstream context, final
+receipt refresh, stale/substituted artifact rejection, and durable invalidation of
+accepted or queued transitive consumers after a domain/totals edit. Invalidation
+retains earlier attempts, journals and observed source bytes; no rollback or
+automatic repair occurs. A fresh executor module loses live receipts: intact
+durable pass records cannot open a consumer until the predecessor is freshly
+verified. This simulates loss of process-local authority within Vitest; it is not
+an actual OS restart/recovery qualification.
+
+Verification process/report/reviewer ports and the baseline commit identity are
+explicitly simulated. They test lifecycle authorization, not actual compiler/lint/
+unit behavior or generic criterion review. The positive case separately sends the
+resulting project through the actual-candidate final behavior evaluator, which
+must pass frozen public/private cases and leave public/protected bytes unchanged.
+That check does not replace E's full verifier closure or authenticate a trial.
+These cases are included in `test:tasks:fixtures` and `typecheck:task-tests`; no
+fixture definitions or runner freeze changes are needed. A real compiled treatment
+joined to qualified E checks, provider/routing execution and retained benchmark
+artifacts remains open. No comparison, model-quality or savings result is produced.

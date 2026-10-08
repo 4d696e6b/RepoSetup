@@ -1167,3 +1167,46 @@ and native-effort profiles plus separately authorized live provider smoke/trials
 remain unconfirmed. Milestone I stays in progress; J is the next milestone after
 those gates and is unstarted. No keys, provider calls, payments, installation,
 version bump, merge, push or publication occurred.
+
+## Milestone I — cross-module dependency lifecycle (2026-10-08)
+
+Added a test-only three-task domain → totals → presenter plan using the frozen
+cross-module requirements and exact source ownership. The presenter declares both
+direct predecessor artifacts. Actual compiler/context selection, filesystem/run
+adapters, locks, scoped application, private durable state and reconciliation are
+used. Seed domain/presenter already match the reference and explicitly record
+no-change; only the hash-guarded totals replacement mutates the project. Verification
+process/report/reviewer ports and baseline commit identity are simulated and cannot
+establish model quality, actual tool behavior or a qualified compiled treatment.
+
+Six serial e2e cases cover zero-port-call consumer/phase previews, dependency order
+despite reversed draft tasks, consumers blocked before acceptance, exact downstream
+artifact/source hashes, final receipt refresh, stale/substituted output rejection,
+accepted/queued transitive invalidation and retained attempts/journals/source edits.
+A fresh Vitest executor module cannot use intact durable pass flags to unlock a
+consumer; fresh predecessor verification restores that authority. This is loss of
+in-memory receipts, not OS process-restart qualification. The positive resulting
+project separately passes the actual-candidate terminal public/private behavior
+evaluator, without copying private oracles into the caller project. No fixture
+definitions, manifests, product code, commands or package metadata changed.
+
+Validation on Node 24.21.0/macOS arm64 and pnpm 12.5.1: workspace build/typecheck,
+task-test typecheck and lint passed. The focused initial five-case suite passed;
+the final ordinary task suite passed all 31 cases across five files in 43.10 seconds,
+including the new preview case and existing evaluator/fixture/report/packed
+regressions. Initial harness errors were corrected: task read authority omitted
+the frozen applicable `AGENTS.md`, and a post-invalidation assertion expected a
+dependency error instead of the earlier project-effect audit rejection. Product
+checks were not weakened. The inherited root build included the existing website;
+no tracked website source changed. The expensive reference-verifier suite was not
+rerun because its source, adapters and fixture freeze are unchanged.
+
+This closes concrete cross-fixture dependency lifecycle coverage with fake verifier
+ports; full managed cross-module treatment qualification remains open. Remaining I
+gates include candidate criterion review/qualified E joining, serial three-treatment
+trials and full overhead/budget accounting, durable authenticated evidence,
+installed/real legacy install and Linux/platform checks, production capability and
+native-effort qualification, and separately authorized live provider/profile
+smoke. Milestone I remains in progress. J is next after those gates and remains
+unstarted. No keys, provider calls, payments, installations, version bump, merge,
+push or publication occurred.
