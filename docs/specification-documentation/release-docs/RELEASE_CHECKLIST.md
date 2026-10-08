@@ -3,18 +3,19 @@
 ## Current 0.2.2 patch — 2026-10-08
 
 See [the release record](./STABLE_RELEASE_0.2.2.md) for exact source, artifact,
-qualification and publication progress. The owner has authorized publication.
+completed qualification, signed publication and three-platform delivery evidence.
+The owner authorized publication; npm latest and the GitHub release are 0.2.2.
 
 - [x] Merge dependency-health repair PR #13; its 408-case matrix passes.
 - [x] Prepare 0.2.2 manifests, publication checks and current guides.
 - [x] Local 977 unit tests, 38 packed E2E tests, typecheck, lint, build and 37 registry definitions pass.
-- [ ] Three full first-attempt exact-source release runs pass all required steps.
-- [ ] Full golden matrix, preset sessions and controlled benchmarks pass on the candidate.
-- [ ] Record final immutable artifact, bytes, hash, source and license review.
-- [ ] Tag-bound publication dry-run passes.
-- [ ] Publish the qualified artifact with OIDC; verify integrity and provenance.
-- [ ] Fresh registry acceptance passes on Linux/macOS/Windows.
-- [ ] Publish GitHub release and close current documentation/status.
+- [x] Three full first-attempt exact-source release runs pass all required steps.
+- [x] Full golden matrix, preset sessions and controlled benchmarks pass on the candidate; the original Windows install timeout and successful same-source retry are retained in the release record.
+- [x] Record final immutable artifact, bytes, hash, source and license review.
+- [x] Tag-bound publication dry-run passes.
+- [x] Publish the qualified artifact with OIDC; verify integrity and provenance.
+- [x] Fresh registry acceptance passes on Linux/macOS/Windows.
+- [x] Publish GitHub release and close current documentation/status.
 
 
 ## Historical 0.2.1 patch — 2026-10-08

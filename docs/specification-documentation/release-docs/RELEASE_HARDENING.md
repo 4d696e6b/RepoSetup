@@ -4,7 +4,8 @@ The environment limits and pending workflow/publisher observations below are
 historical checkpoint results. Current automated qualification is checked in
 [acceptance tests](../implementing-docs/ACCEPTANCE_TESTS.md); published 0.2.0
 evidence is in [stable qualification](./STABLE_QUALIFICATION_0.2.0.md). Current
-unpublished repairs follow the [0.2.x stability plan](../implementing-docs/STABILITY_0.2.x.md).
+dependency-health repairs are delivered in [published 0.2.2](./STABLE_RELEASE_0.2.2.md);
+remaining manual/service work follows the [0.2.x stability plan](../implementing-docs/STABILITY_0.2.x.md).
 
 ## Objective
 
