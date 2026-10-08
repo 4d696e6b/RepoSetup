@@ -1,6 +1,6 @@
 # Stable 0.2.0 qualification and delivery evidence
 
-Historical 0.2.0 evidence. The current patch is [0.2.1](./STABLE_RELEASE_0.2.1.md);
+Historical 0.2.0 evidence. The current patch is [0.2.2](./STABLE_RELEASE_0.2.2.md);
 its publication and delivery are recorded separately.
 
 Phase 27 closed for the alpha source after its seven-day soak. On October 7, 2026 the owner removed the proposed *additional* seven-day stable soak and authorized completing 0.2.0 after exact-source qualification. Phase 28 is complete: the exact qualified artifact is published with provenance, and installed-package acceptance passed on all three supported operating systems.

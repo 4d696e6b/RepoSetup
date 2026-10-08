@@ -2,7 +2,7 @@
 
 Created 2026-10-08, against released source `origin/main` at `1ddbdc6`.
 Regression branch: `codex/fix-create-project-paths` (merged through PR #10).
-Release branch: `codex/release-0.2.1`; [publication progress](../release-docs/STABLE_RELEASE_0.2.1.md).
+Release branch: `codex/release-0.2.2`; [publication progress](../release-docs/STABLE_RELEASE_0.2.2.md).
 
 0.2.x prioritizes working supported recipes, safe failures, reproducibility and
 regression coverage. No new integrations are needed to close these regressions.
@@ -58,7 +58,7 @@ the updated suite requires the generated project, framework and installed packag
 Its new exact-source execution qualification passed all twelve jobs and 408
 creation/recipe executions, with no skipped test cases, in
 [run 37743848281](https://github.com/4d696e6b/RepoSetup/actions/runs/37743848281).
-This unreleased repair is tracked separately from the released 0.2.1 result above.
+The repair is included in the 0.2.2 candidate; its new version/artifact qualification is tracked in the release record.
 
 
 The automated matrix and preset sessions below are complete. Native platforms

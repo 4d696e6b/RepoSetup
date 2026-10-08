@@ -10,7 +10,7 @@ import { verifyArtifactIdentity } from "./artifact-identity.mjs";
 export function verifyRegistryIdentity(metadata, identity) {
   if (
     metadata.name !== "rsetup" ||
-    metadata.version !== "0.2.1" ||
+    metadata.version !== "0.2.2" ||
     metadata.dist?.integrity !== identity.integrity
   ) {
     throw new Error(
@@ -20,7 +20,7 @@ export function verifyRegistryIdentity(metadata, identity) {
 }
 
 export async function registryVersion() {
-  const response = await globalThis.fetch("https://registry.npmjs.org/rsetup/0.2.1", {
+  const response = await globalThis.fetch("https://registry.npmjs.org/rsetup/0.2.2", {
     signal: globalThis.AbortSignal.timeout(30_000),
   });
   if (response.status === 404) return undefined;
@@ -50,20 +50,20 @@ export async function waitForRegistryVersion({
 
 async function main() {
   if (
-    process.env.GITHUB_REF !== "refs/tags/v0.2.1" ||
+    process.env.GITHUB_REF !== "refs/tags/v0.2.2" ||
     !/^[0-9a-f]{40}$/.test(process.env.GITHUB_SHA ?? "")
   ) {
-    throw new Error("Publication requires the exact v0.2.1 tag source.");
+    throw new Error("Publication requires the exact v0.2.2 tag source.");
   }
   const identity = await verifyArtifactIdentity("candidate", {
-    version: "0.2.1",
+    version: "0.2.2",
     sourceSha: process.env.GITHUB_SHA,
   });
   const existing = await registryVersion();
   if (existing) {
     verifyRegistryIdentity(existing, identity);
     process.stdout.write(
-      "rsetup@0.2.1 already exists with the qualified bytes; publication skipped.\n",
+      "rsetup@0.2.2 already exists with the qualified bytes; publication skipped.\n",
     );
     return;
   }
@@ -93,7 +93,7 @@ async function main() {
   }
   const metadata = await waitForRegistryVersion();
   verifyRegistryIdentity(metadata, identity);
-  process.stdout.write(`Published rsetup@0.2.1 with qualified integrity ${identity.integrity}.\n`);
+  process.stdout.write(`Published rsetup@0.2.2 with qualified integrity ${identity.integrity}.\n`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {

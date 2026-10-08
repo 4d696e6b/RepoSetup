@@ -1,4 +1,4 @@
-# CLI Specification — 0.2.1
+# CLI Specification — 0.2.2
 
 ## 1. Command tree
 
@@ -208,7 +208,7 @@ Checks:
 
 Exit codes should distinguish healthy vs issues.
 
-Unreleased post-0.2.1 behavior: doctor checks installed dependency metadata in
+0.2.2 behavior: doctor checks installed dependency metadata in
 addition to configuration. Node checks required runtime and development packages;
 Python checks project requirements and the default development group. FastAPI's
 standard extras require the CLI and Uvicorn. For uv, doctor reads the existing

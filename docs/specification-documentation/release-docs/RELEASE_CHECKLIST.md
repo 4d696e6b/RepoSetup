@@ -1,6 +1,23 @@
 # Release checklists
 
-## Current 0.2.1 patch — 2026-10-08
+## Current 0.2.2 patch — 2026-10-08
+
+See [the release record](./STABLE_RELEASE_0.2.2.md) for exact source, artifact,
+qualification and publication progress. The owner has authorized publication.
+
+- [x] Merge dependency-health repair PR #13; its 408-case matrix passes.
+- [x] Prepare 0.2.2 manifests, publication checks and current guides.
+- [x] Local 977 unit tests, 38 packed E2E tests, typecheck, lint, build and 37 registry definitions pass.
+- [ ] Three full first-attempt exact-source release runs pass all required steps.
+- [ ] Full golden matrix, preset sessions and controlled benchmarks pass on the candidate.
+- [ ] Record final immutable artifact, bytes, hash, source and license review.
+- [ ] Tag-bound publication dry-run passes.
+- [ ] Publish the qualified artifact with OIDC; verify integrity and provenance.
+- [ ] Fresh registry acceptance passes on Linux/macOS/Windows.
+- [ ] Publish GitHub release and close current documentation/status.
+
+
+## Historical 0.2.1 patch — 2026-10-08
 
 The patch repairs published create regressions. Qualification links, source
 revisions and exclusions are in the [stability plan](../implementing-docs/STABILITY_0.2.x.md)

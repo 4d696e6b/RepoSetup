@@ -4,7 +4,14 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Post-create dependency health repair — automated qualification complete, unreleased.**
+**0.2.2 — release preparation and exact-source qualification in progress.**
+The owner authorized publication and current-documentation updates on October 8.
+[PR #13](https://github.com/4d696e6b/RepoSetup/pull/13) merged the dependency-health
+repair; `codex/release-0.2.2` prepares the new version. Publication requires the
+new artifact's qualification; passing tests for the older version do not qualify
+new bytes. See [0.2.2 release progress](../release-docs/STABLE_RELEASE_0.2.2.md).
+
+**Post-create dependency health repair — automated repair qualification complete; included in the 0.2.2 candidate.**
 The owner reported missing FastAPI dependencies after successful creation. A pip
 manifest/detection bug and declaration-only doctor checks were confirmed.
 Implementation adds installed dependency checks, pip create manifests, active
@@ -16,8 +23,7 @@ records the platform suite's conditional skips and remaining manual/service gaps
 See [the repair and validation record](./POST_CREATE_DEPENDENCY_HEALTH.md).
 
 
-**0.2.1 — complete: published and delivery accepted.** npm `latest` identifies
-0.2.1. Three exact-source release runs (16 required jobs each), the twelve-job
+**0.2.1 — historical release: published and delivery accepted.** At its closeout, npm `latest` identified 0.2.1. Three exact-source release runs (16 required jobs each), the twelve-job
 expanded golden matrix (408 executions), fifteen preset sessions (117 checks),
 controlled benchmarks and all three fresh registry installs passed.
 The immutable tag/source is `v0.2.1` / `c61b88a88e18ef5d9c92291131f3c938fc0b521a`.
