@@ -442,6 +442,7 @@ export function createDefaultExecutableResolver(runProcess: ProcessRunner): Exec
 }
 
 function pythonCandidates(): readonly string[] {
+  if (process.env.VIRTUAL_ENV !== undefined) return ["python", "python3", "py"];
   return process.platform === "win32" ? ["py", "python", "python3"] : ["python3", "python"];
 }
 

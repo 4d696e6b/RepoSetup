@@ -1,5 +1,6 @@
 import { errorsFromDoctor, failedDoctorChecks, runDoctor } from "@reposetup/core";
 
+import { createDependencyHealthCheck } from "./dependency-health.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import { formatError } from "./format-error.js";
 import { renderErrorJson } from "./machine-output.js";
@@ -15,8 +16,19 @@ export async function handleDoctor(input: {
   const result = await runDoctor({
     startDir: input.deps.cwd,
     registry: input.deps.registry,
-    commandExists: input.deps.commandExists,
-    ...(input.commandVersion === undefined ? {} : { commandVersion: input.commandVersion }),
+    commandExists: async (command) => {
+      const resolved = await input.deps.resolveExecutable(command);
+      return resolved !== undefined && (await input.deps.commandExists(resolved));
+    },
+    checkInstalledDependencies: createDependencyHealthCheck(input.deps),
+    ...(input.commandVersion === undefined
+      ? {}
+      : {
+          commandVersion: async (command: string) => {
+            const resolved = await input.deps.resolveExecutable(command);
+            return resolved === undefined ? undefined : input.commandVersion?.(resolved);
+          },
+        }),
   });
 
   if (!result.ok) {

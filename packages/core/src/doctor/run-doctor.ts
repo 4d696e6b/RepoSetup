@@ -31,6 +31,7 @@ export async function runDoctor(input: {
   registry: RegistryLookup;
   commandExists: (command: string) => Promise<boolean>;
   commandVersion?: (command: string) => Promise<string | undefined>;
+  checkInstalledDependencies?: (context: VerificationContext) => Promise<DoctorCheck[]>;
 }): Promise<RunDoctorResult> {
   const detected = await detectProject({
     startDir: input.startDir,
@@ -49,6 +50,9 @@ export async function runDoctor(input: {
     input.commandVersion,
     checks,
   );
+  if (input.checkInstalledDependencies !== undefined) {
+    checks.push(...(await input.checkInstalledDependencies(detection)));
+  }
   await collectLockfileConflicts(files, checks);
   await collectEnvironmentGuidance(files, checks);
   await collectVerifyChecks(
@@ -200,7 +204,7 @@ async function collectVerifyChecks(
         id: item.id,
         name: item.name,
         ok: true,
-        message: result.message ?? `${item.name} looks healthy.`,
+        message: result.message ?? `${item.name} configuration looks healthy.`,
       });
       continue;
     }

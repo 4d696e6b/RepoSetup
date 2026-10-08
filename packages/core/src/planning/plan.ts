@@ -15,6 +15,8 @@ import type {
 import { validateInstallationPlan } from "./validate-plan.js";
 import { batchInstallPackages } from "./batch-install.js";
 import { consolidateManifestInstalls } from "./consolidate-manifests.js";
+import { createPipRequirements } from "./pip-requirements.js";
+import { dependencyVerificationOperation } from "../doctor/dependency-probe.js";
 import { ensureScaffoldDependencyInstall } from "./ensure-scaffold-install.js";
 
 export function planInstallation(
@@ -134,7 +136,19 @@ function withBatchedInstalls(result: ResolutionResult): ResolutionResult {
 
   return {
     ...result,
-    operations: ensured.operations,
+    operations: [
+      ...ensured.operations,
+      ...(result.config.packageManager === "pip"
+        ? [createPipRequirements(ensured.operations, projectRootFrom(result))].filter(
+            (operation): operation is NonNullable<typeof operation> => operation !== undefined,
+          )
+        : []),
+      dependencyVerificationOperation(
+        result.config.runtime.id,
+        result.config.packageManager,
+        projectRootFrom(result),
+      ),
+    ],
   };
 }
 

@@ -22,7 +22,14 @@ describe("generated Python run instructions", () => {
       const readme = pythonAppReadme(context, "FastAPI", "fastapi dev");
       expect(readme).toContain(packageManager === "uv" ? "`uv run fastapi dev`" : "`fastapi dev`");
       expect(readme).not.toContain("pytest");
-      if (packageManager === "pip") expect(readme).not.toContain("uv run");
+      if (packageManager === "pip") {
+        expect(readme).not.toContain("uv run");
+        expect(readme).toContain("python -m pip install -r requirements.txt");
+        expect(readme).toContain("environment activated");
+      } else {
+        expect(readme).toContain("plain command may use a different environment");
+      }
+      expect(readme).toContain("rsetup doctor");
       context.config.integrations = [{ id: "pytest" }];
       expect(pythonAppReadme(context, "FastAPI", "fastapi dev")).toContain(
         packageManager === "uv" ? "`uv run pytest`" : "`pytest`",

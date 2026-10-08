@@ -1,3 +1,8 @@
+import {
+  NODE_DEPENDENCY_PROBE,
+  PYTHON_DEPENDENCY_PROBE,
+  dependencyProbeResultSchema,
+} from "../doctor/dependency-probe.js";
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import { toPackageManagerCommand } from "../package-managers/lookup.js";
 import type {
@@ -214,6 +219,35 @@ export async function executeVerify(
   const failed = commandFailure(command, args, result, context);
   if (failed === undefined) {
     return undefined;
+  }
+
+  if (args.includes(NODE_DEPENDENCY_PROBE) || args.includes(PYTHON_DEPENDENCY_PROBE)) {
+    let report;
+    try {
+      report = dependencyProbeResultSchema.safeParse(JSON.parse(result.stdout));
+    } catch {
+      report = undefined;
+    }
+    if (report?.success === true) {
+      return createRepoSetupError({
+        code: "VERIFICATION_FAILED",
+        message:
+          report.data.missing.length > 0
+            ? `Required packages are not installed: ${report.data.missing.join(", ")}.`
+            : "Installed dependency metadata could not be verified.",
+        details: {
+          missing: report.data.missing,
+          environment: report.data.environment,
+          errors: report.data.errors,
+        },
+        suggestion:
+          operation.command === "uv"
+            ? "Run uv sync in the generated project, then rerun rsetup doctor."
+            : operation.command === "python"
+              ? "Activate the installation environment, run python -m pip install -r requirements.txt, then rerun rsetup doctor."
+              : "Run the selected package manager's install command in the generated project, then rerun rsetup doctor.",
+      });
+    }
   }
 
   return createRepoSetupError({

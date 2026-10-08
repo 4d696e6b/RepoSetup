@@ -1,4 +1,4 @@
-import { access, mkdir, readFile, readdir } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, realpath, rm, rename } from "node:fs/promises";
 import path from "node:path";
 
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
@@ -97,11 +97,46 @@ describe("npx create supported bare solutions", () => {
         );
         expect(checked.exitCode, checked.stderr).toBe(0);
       }
-      const doctor = await runProcess("npx", ["--yes", "--package", tarball, "rsetup", "doctor"], {
-        cwd,
-        env,
-      });
+      const doctor = await runProcess(
+        "npx",
+        ["--yes", "--package", tarball, "rsetup", "--json", "doctor"],
+        {
+          cwd,
+          env,
+        },
+      );
       expect(doctor.exitCode, `${doctor.stdout}\n${doctor.stderr}`).toBe(0);
+      const report = JSON.parse(doctor.stdout);
+      expect(await realpath(cwd)).toBe(report.result.projectRoot);
+      expect(report.result.checks).toContainEqual(
+        expect.objectContaining({ id: "dependencies:node", ok: true }),
+      );
+      expect(report.result.checks).toContainEqual(
+        expect.objectContaining({ id: framework, ok: true }),
+      );
+      const packageName = {
+        nextjs: "next",
+        "react-vite": "vite",
+        express: "express",
+        fastify: "fastify",
+      }[framework];
+      await rm(path.join(cwd, "node_modules", packageName as string), {
+        recursive: true,
+        force: true,
+      });
+      const damaged = await runProcess(
+        "npx",
+        ["--yes", "--package", tarball, "rsetup", "--json", "doctor"],
+        { cwd, env },
+      );
+      expect(damaged.exitCode).not.toBe(0);
+      expect(JSON.parse(damaged.stdout).result.checks).toContainEqual(
+        expect.objectContaining({
+          id: "dependencies:node",
+          ok: false,
+          message: expect.stringContaining(packageName as string),
+        }),
+      );
     },
   );
 
@@ -130,11 +165,91 @@ describe("npx create supported bare solutions", () => {
         { cwd, env },
       );
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
-      const doctor = await runProcess("npx", ["--yes", "--package", tarball, "rsetup", "doctor"], {
-        cwd,
-        env,
-      });
+      const doctor = await runProcess(
+        "npx",
+        ["--yes", "--package", tarball, "rsetup", "--json", "doctor"],
+        {
+          cwd,
+          env,
+        },
+      );
       expect(doctor.exitCode, `${doctor.stdout}\n${doctor.stderr}`).toBe(0);
+      const report = JSON.parse(doctor.stdout);
+      expect(await realpath(cwd)).toBe(report.result.projectRoot);
+      expect(report.result.checks).toContainEqual(
+        expect.objectContaining({ id: framework, ok: true }),
+      );
+      expect(report.result.checks).toContainEqual(
+        expect.objectContaining({ id: "dependencies:python", ok: true }),
+      );
+      if (manager === "pip") {
+        expect(await readFile(path.join(cwd, "requirements.txt"), "utf8")).toContain(
+          framework === "fastapi" ? "fastapi[standard]" : "Flask",
+        );
+      }
+      const python =
+        manager === "uv"
+          ? path.join(
+              cwd,
+              ".venv",
+              process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+            )
+          : path.join(venv, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+      const packagesToDamage = framework === "fastapi" ? ["fastapi-cli", "fastapi"] : ["flask"];
+      for (const name of packagesToDamage) {
+        const location = await runProcess(
+          python,
+          [
+            "-I",
+            "-B",
+            "-c",
+            "import importlib.metadata as m, pathlib, sys; d=m.distribution(sys.argv[1]); print(next(str(pathlib.Path(d.locate_file(f)).parent) for f in d.files if f.name == 'METADATA' and str(f.parent).endswith('.dist-info')))",
+            name,
+          ],
+          { cwd, env },
+        );
+        expect(location.exitCode, location.stderr).toBe(0);
+        const metadata = location.stdout.trim();
+        const removed = path.join(parent, `disabled-${name}`);
+        await rename(metadata, removed);
+        try {
+          const damaged = await runProcess(
+            "npx",
+            ["--yes", "--package", tarball, "rsetup", "--json", "doctor"],
+            { cwd, env },
+          );
+          expect(damaged.exitCode).not.toBe(0);
+          expect(JSON.parse(damaged.stdout).result.checks).toContainEqual(
+            expect.objectContaining({
+              id: "dependencies:python",
+              ok: false,
+              message: expect.stringMatching(new RegExp(name, "i")),
+            }),
+          );
+          // doctor must not run uv sync and silently repair the deliberately damaged environment.
+          await expect(access(metadata)).rejects.toThrow();
+        } finally {
+          await rename(removed, metadata);
+        }
+      }
+      if (manager === "uv") {
+        const environment = path.join(cwd, ".venv");
+        await rename(environment, `${environment}-unavailable`);
+        try {
+          const damaged = await runProcess(
+            "npx",
+            ["--yes", "--package", tarball, "rsetup", "--json", "doctor"],
+            { cwd, env },
+          );
+          expect(damaged.exitCode).not.toBe(0);
+          expect(JSON.parse(damaged.stdout).result.checks).toContainEqual(
+            expect.objectContaining({ id: "dependencies:python", ok: false }),
+          );
+          await expect(access(environment)).rejects.toThrow();
+        } finally {
+          await rename(`${environment}-unavailable`, environment);
+        }
+      }
     },
   );
 });

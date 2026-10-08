@@ -52,6 +52,13 @@ Implementation, automated regression validation, publication and delivery: compl
 
 ## 0.2.2 — Expand release qualification
 
+New post-release work: [post-create dependency health repair](./POST_CREATE_DEPENDENCY_HEALTH.md).
+The pip bare tests previously allowed doctor to select the parent config directory;
+the updated suite requires the generated project, framework and installed packages.
+Its new exact-source execution qualification is tracked separately from the
+released 0.2.1 result above.
+
+
 The automated matrix and preset sessions below are complete. Native platforms
 and live services remain open; this phase is not wholly complete.
 
