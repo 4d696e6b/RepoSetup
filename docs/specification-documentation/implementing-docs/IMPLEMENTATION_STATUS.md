@@ -1,5 +1,10 @@
 # Implementation Status
 
+This saved planning branch is based on the historical frozen alpha source
+`145e167`. Its unchecked release entries describe that earlier checkpoint.
+Published 0.2.0 and current patch qualification are recorded on `main` and
+`codex/fix-create-project-paths`; use those records for current release status.
+
 Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
@@ -23,6 +28,8 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Candidate failure qualification is implemented at `33354279088970dd3d1dfcf8e5cfbc73a741c20c`: each supported OS runs the real timeout/interruption, permission, existing-user-file, invalid-input, cleanup, and packed usability checks. The React/Vite usability command is additionally exercised while its default Vite port is deliberately occupied; the temporary listener is always closed. The fault job blocks both packing and publication and retains its per-OS usability evidence. Cache-miss behavior is separately measured by the candidate benchmark's fresh, benchmark-owned caches.
 - [ ] Exact-SHA CI evidence, three consecutive full candidate passes, seven-day soak, and observed failure-path evidence remain release blockers. See [the candidate record](../release-docs/RELEASE_CANDIDATE_0.2.0.md).
 
+
+
 ### Phase 25 progress — 2026-09-24
 
 - [x] Guaranteed FastAPI and Flask recipes now create pytest endpoint-response tests whenever pytest is selected. The golden suite requires pytest to pass instead of accepting exit code 5 from an empty suite.
@@ -41,6 +48,8 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] The generated Fastify / Drizzle / ESLint / Vitest pnpm workflow executed successfully in its own fresh private GitHub repository: [Node.js CI run 36288959163](https://github.com/4d696e6b/reposetup-phase25-ci-validation-1790476392/actions/runs/36288959163). It installed from the generated lockfile and ran `lint`, `test`, and `build` on Node 24.
 - [x] Phase 25 implementation qualification is complete. Phase 24's observed usability-session gate remains the release-order blocker before Phase 26.
 
+
+
 ### Phase 26 progress — 2026-09-27
 
 - [x] Added four curated candidate integrations on narrow, tested contexts: `testing-library` and `tanstack-query` for React + Vite, plus `httpx` and `pydantic-settings` for FastAPI under uv. Each pins its direct dependency and has detect, verify, safe package-only remove, plan, supported-context, and generated-artifact tests.
@@ -49,6 +58,8 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] Existing-project add coverage creates each combined React and Python selection, runs the generated tests, and verifies that repeating `add` makes no changes. Generated source, test, and environment-example files remain preserved on remove.
 - [x] [Golden stacks run 36290413867](https://github.com/4d696e6b/RepoSetup/actions/runs/36290413867) passed every Ubuntu 24.04, macOS 15, and Windows 2025 job with Python 3.12 and 3.13. It executed the React interaction/query and FastAPI HTTPX/settings fixtures, their existing-project add/idempotency checks, and the established golden recipes.
 - [x] Phase 26 implementation qualification is complete. Phase 24's five observed manual usability sessions remain required before release-candidate closure.
+
+
 
 ### Phase 24 progress — 2026-09-24
 
@@ -63,11 +74,13 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] `pnpm test:usability` runs the documented non-TTY flow from a packed install: preview, create, the printed Next commands, add, doctor, and export. One local macOS session passed for `react-vite` plus `zod` on 2026-09-25.
 - [x] [Usability sessions run 36699625878](https://github.com/4d696e6b/RepoSetup/actions/runs/36699625878) recorded two Ubuntu 24.04/x64 sessions, two macOS 15/arm64 sessions, and one Windows 2025/x64 session. Each Node 24 session completed preview, create, dev server, build, test, add, doctor, and export without manual repair. Phase 24 is complete.
 
+
+
 ### Phase 23 progress — 2026-09-23
 
 - [x] Package adds stay typed `install_package` through planning. `exact` and `allowBuild` are on the operation schema and forwarded into adapter argv at execute time. Plans no longer expand adds to `run_command` early.
 - [x] Compatible `install_package` ops batch within the same manager/root/dev/exact policy. Soft ops (files, messages, checks) do not block merging. `run_command` and `verify` stay barriers so generators, migrations, codegen, and verification still see dependencies installed first. Conflicting version specs in one policy fail the plan. Add plans filter satisfied packages before the batch pass.
-- [x] Next.js scaffolding uses verified `create-next-app@16.3.5 --skip-install` (official CLI docs and `--help`). When later `install_package` ops share the soft segment, they install scaffold deps; otherwise the planner inserts a project `install`. create-vite@8.3.0 already scaffolds without installing unless `--immediate` is set, so no Vite flag change.
+- [x] Next.js scaffolding uses verified `create-next-app@16.3.5 --skip-install` (official CLI docs and `--help`). When later `install_package` ops share the soft segment, they install scaffold deps; otherwise the planner inserts a project `install`. `create-vite@8.3.0` already scaffolds without installing unless `--immediate` is set, so no Vite flag change.
 - [x] Soft segments with two or more npm/pnpm `install_package` ops assemble `package.json` via `modify_json` and run one project install (pnpm forwards `--allow-build`). Single adds and uv/pip segments stay as typed adds. Existing-project add still filters before batching/consolidation.
 - [x] npm/pnpm generated-project installs use documented `--prefer-offline`, which permits registry fallback on cache misses. One 250 ms retry is limited to locked installs after classified transient network errors; generators and package additions are never replayed.
 - [x] Repeatable five-recipe dry-run planner benchmark (`pnpm benchmark:plans`) records input hashes, elapsed-time distribution, and rendered process-operation counts. It is explicitly separate from real-install performance evidence.
@@ -91,6 +104,8 @@ Phase 23 implementation and performance gates are complete. The next phase is Ph
 - [x] POSIX cancellation terminates spawned descendant processes; the regression fixture proves the descendant cannot continue and mutate the project after cancellation.
 - [x] Phase 20 introduced prerequisite preflight before mutation. Phase 27 updates the product contract from its historical Node 20.9/Python 3.9 floors to Node 24/Python 3.12 and uses the Phase 21 matrix for qualification.
 
+
+
 ### Phase 21 progress — 2026-09-23
 
 - [x] The CLI resolves the `python` operation command through a platform adapter: `python3` then `python` on POSIX, and `py`, `python`, then `python3` on Windows. The first working candidate is cached and reused for prerequisite version checks and subsequent planned commands.
@@ -102,6 +117,8 @@ Phase 23 implementation and performance gates are complete. The next phase is Ph
 - [x] Platform and golden workflow runs retain uniquely named JSON evidence artifacts with their runtime and architecture details for later qualification review.
 - [x] Golden CI now provisions uv and runs the complete recipe suite on every supported runner with Python 3.12 and 3.13.
 - [x] Remote CI and golden qualification passed on Ubuntu 24.04/x64, macOS 15/arm64, and Windows Server 2025/x64. Windows-native package-manager execution, all representative recipe creates, and evidence artifacts were observed in the qualification matrix.
+
+
 
 ### Phase 22 progress — 2026-09-23
 
@@ -155,6 +172,8 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [ ] Phase 27 — Release-candidate qualification
 - [ ] Phase 28 — 0.2.0 publication and delivery verification
 
+
+
 ## Historical Phase 18 checkpoint
 
 The remaining sections preserve the earlier 0.1.0 launch record. Their publication, CI, and local-environment entries are historical, not current verified status. Phase 19 must reconcile them against observed evidence; do not use their checked boxes to qualify 0.2.0.
@@ -190,6 +209,8 @@ The remaining sections preserve the earlier 0.1.0 launch record. Their publicati
   - [x] 18.7 Release automation (publish-npm.yml prepared; trusted publisher requires manual npmjs.com settings after first publish)
   - [ ] 18.8 Alpha/release-candidate validation (Next.js, FastAPI, Flask, OS matrix still open locally)
 
+
+
 ## Last completed work
 
 Public GitHub launch plus Model A npm packaging (2026-09-22): public package name `rsetup`; workspace libraries private and bundled into the CLI.
@@ -204,23 +225,33 @@ Public GitHub launch plus Model A npm packaging (2026-09-22): public package nam
 - GitHub tag `v0.1.0` points at pre-bundle `@reposetup/cli` source. Do not move that tag.
 - No integration is `stable`.
 
+
+
 ## Golden stacks proven
 
-| Stack | Dry-run plan | Real execute |
-| --- | --- | --- |
-| Next.js / SQLite | yes | pending CI / `REPOSETUP_GOLDEN_NEXT=1` |
-| React + Vite | yes | yes (local `pnpm test:golden`) |
-| Express / Postgres config | yes | yes generation + `tsc --noEmit`; no live DB |
-| FastAPI | yes | pending `uv` |
-| Flask | yes | pending `uv` |
+
+| Stack                     | Dry-run plan | Real execute                                |
+| ------------------------- | ------------ | ------------------------------------------- |
+| Next.js / SQLite          | yes          | pending CI / `REPOSETUP_GOLDEN_NEXT=1`      |
+| React + Vite              | yes          | yes (local `pnpm test:golden`)              |
+| Express / Postgres config | yes          | yes generation + `tsc --noEmit`; no live DB |
+| FastAPI                   | yes          | pending `uv`                                |
+| Flask                     | yes          | pending `uv`                                |
+
+
+
 
 ## OS environments proven
 
-| OS | Local | GitHub Actions |
-| --- | --- | --- |
-| macOS | unit/lint/build/e2e/golden B+C | platform workflow on `main`/`dev` |
-| Linux | not run here | ci + platform + golden workflows |
-| Windows | not run here | platform workflow |
+
+| OS      | Local                          | GitHub Actions                    |
+| ------- | ------------------------------ | --------------------------------- |
+| macOS   | unit/lint/build/e2e/golden B+C | platform workflow on `main`/`dev` |
+| Linux   | not run here                   | ci + platform + golden workflows  |
+| Windows | not run here                   | platform workflow                 |
+
+
+
 
 ## Integrations promoted to stable
 
@@ -228,20 +259,22 @@ None.
 
 ## npm publishing status
 
-| Item | Status |
-| --- | --- |
-| GitHub source release | complete (`v0.1.0` tag remains at `78ef16c`; do not move it) |
-| Public package name | `rsetup` (unscoped `reposetup` / `reposetup-cli` blocked by similarity) |
-| Model | A — single bundled CLI |
-| Local quality suite | passed (`lint`, `typecheck`, `test`, `build`, `registry:validate`, `test:e2e`, `test:golden` with A/D/E skipped) |
-| Tarball | `rsetup-0.1.0.tgz`; isolated install covered by `pnpm test:e2e` |
-| Packed golden | React + Vite create + `stack` + `doctor` + `tsc -b` passed from an earlier tarball; re-verify after rename |
-| npm v0.1.0 | not published |
-| npx verification | not run against the registry |
-| global install verification | not run against the registry |
-| Trusted publishing workflow | prepared (`.github/workflows/publish-npm.yml`) |
-| OIDC / provenance | workflow requests `id-token: write`; provenance not disabled |
-| Trusted publisher on npmjs.com | requires manual settings after first publish |
+
+| Item                           | Status                                                                                                           |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| GitHub source release          | complete (`v0.1.0` tag remains at `78ef16c`; do not move it)                                                     |
+| Public package name            | `rsetup` (unscoped `reposetup` / `reposetup-cli` blocked by similarity)                                          |
+| Model                          | A — single bundled CLI                                                                                           |
+| Local quality suite            | passed (`lint`, `typecheck`, `test`, `build`, `registry:validate`, `test:e2e`, `test:golden` with A/D/E skipped) |
+| Tarball                        | `rsetup-0.1.0.tgz`; isolated install covered by `pnpm test:e2e`                                                  |
+| Packed golden                  | React + Vite create + `stack` + `doctor` + `tsc -b` passed from an earlier tarball; re-verify after rename       |
+| npm v0.1.0                     | not published                                                                                                    |
+| npx verification               | not run against the registry                                                                                     |
+| global install verification    | not run against the registry                                                                                     |
+| Trusted publishing workflow    | prepared (`.github/workflows/publish-npm.yml`)                                                                   |
+| OIDC / provenance              | workflow requests `id-token: write`; provenance not disabled                                                     |
+| Trusted publisher on npmjs.com | requires manual settings after first publish                                                                     |
+
 
 See `docs/NPM_TRUSTED_PUBLISHING_SETUP.md`.
 

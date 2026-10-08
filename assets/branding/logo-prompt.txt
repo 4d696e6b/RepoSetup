@@ -1,0 +1,9 @@
+Generated using the built-in image generation tool.
+
+Use case: logo-brand
+Asset type: RepoSetup open-source CLI project logo, a finished usable logo asset.
+Primary request: Design a distinctive minimalist logo for RepoSetup, a reliable terminal-first development stack composer and installer. The symbol should combine the idea of modular stacked components with a terminal prompt. Use a compact geometric stack made of two or three clean aligned angular layers, with a subtle >_ terminal cue integrated into the geometry. The mark should feel intentional, balanced, memorable, and readable at small sizes.
+Style/medium: crisp flat vector-like graphic, professional developer-tool identity, restrained geometry, consistent stroke weights, no illustration texture.
+Composition/framing: one horizontal logo lockup, symbol on the left and the wordmark on the right, generous transparent padding around the whole asset. Large logo filling most of the available width, carefully balanced optical alignment.
+Text (verbatim): "RepoSetup" — capital R and S, all other letters lowercase. Clean medium-weight contemporary sans-serif wordmark, excellent kerning and clear readability.
+Constraints: monochrome charcoal-black mark and lettering. Truly transparent background. One finished logo only. No slogan, no additional text, no mockups, no presentation board, no shadows, no gradients, no 3D, no decorative border, no tiny intricate detail. Original visual identity.
