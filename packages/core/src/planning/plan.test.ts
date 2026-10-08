@@ -145,6 +145,7 @@ describe("planInstallation", () => {
       expect.objectContaining({ type: "modify_text", path: "apps/demo/app/layout.tsx" }),
       expect.objectContaining({ type: "create_file", path: "apps/demo/README.md" }),
       expect.objectContaining({ type: "install_package", cwd: "apps/demo" }),
+      expect.objectContaining({ type: "verify", cwd: "apps/demo" }),
     ]);
   });
 
@@ -186,6 +187,7 @@ describe("planInstallation", () => {
       "create_directory",
       "install_package",
       "run_command",
+      "verify",
     ]);
     expect(second).toEqual(first);
     expect(toInstallationPlan(first)).toEqual({

@@ -4,6 +4,18 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
+**Post-create dependency health repair — automated qualification complete, unreleased.**
+The owner reported missing FastAPI dependencies after successful creation. A pip
+manifest/detection bug and declaration-only doctor checks were confirmed.
+Implementation adds installed dependency checks, pip create manifests, active
+Python environment resolution and damaged-environment regressions.
+977 local unit tests and all 38 packed E2E tests pass; the full twelve-job
+matrix passed 408 creation/recipe executions with no skipped cases. Fast CI,
+three-platform checks and controlled installation benchmarks passed. Documentation
+records the platform suite's conditional skips and remaining manual/service gaps.
+See [the repair and validation record](./POST_CREATE_DEPENDENCY_HEALTH.md).
+
+
 **0.2.1 — complete: published and delivery accepted.** npm `latest` identifies
 0.2.1. Three exact-source release runs (16 required jobs each), the twelve-job
 expanded golden matrix (408 executions), fifteen preset sessions (117 checks),

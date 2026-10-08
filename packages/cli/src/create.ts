@@ -139,6 +139,10 @@ export async function handleCreate(input: {
       input.deps.io.writeOut,
       `Project directory: ${path.resolve(input.deps.cwd, planned.config.project.path ?? ".")}`,
     );
+    writeLine(
+      input.deps.io.writeOut,
+      "Installed dependency check passed. Run the following commands from the project directory:",
+    );
     for (const command of postCreateCommands(planned.config)) {
       writeLine(input.deps.io.writeOut, `Next: ${command}`);
     }

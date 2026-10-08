@@ -397,7 +397,7 @@ describe("runCli", () => {
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toContain("Executed 3 operations.");
+    expect(captured.stdout()).toContain("Executed 4 operations.");
     expect(captured.stdout()).toContain(`Project directory: ${path.resolve(root)}`);
     expect(captured.stderr()).toBe("");
     expect(await readdir(root)).toEqual(
@@ -411,7 +411,41 @@ describe("runCli", () => {
         cwd: path.resolve(root),
         timeoutMs: 300_000,
       },
+      expect.objectContaining({
+        command: "node",
+        args: ["-e", expect.any(String)],
+        cwd: path.resolve(root),
+      }),
     ]);
+  });
+
+  it("does not report create success when a package install exits zero but verification finds missing packages", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-create-incomplete-"));
+    tempDirs.push(root);
+    await writeFile(path.join(root, "reposetup.json"), JSON.stringify(sampleConfig()));
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--yes"], {
+      cwd: root,
+      registry: testRegistry(),
+      io: captured.io,
+      runProcess: async (request) =>
+        request.args[0] === "-e"
+          ? {
+              exitCode: 1,
+              stdout: JSON.stringify({
+                missing: ["fake-orm"],
+                checked: [],
+                errors: [],
+                environment: root,
+              }),
+              stderr: "",
+            }
+          : { exitCode: 0, stdout: "", stderr: "" },
+    });
+    expect(result.exitCode).toBe(EXIT_CODES.VERIFICATION_FAILURE);
+    expect(captured.stderr()).toContain("VERIFICATION_FAILED");
+    expect(captured.stderr()).toContain("fake-orm");
+    expect(captured.stdout()).not.toContain("Executed 4 operations.");
   });
 
   it("returns invalid input for a malformed config file", async () => {
@@ -1050,7 +1084,14 @@ describe("runCli", () => {
       cwd: root,
       io: captured.io,
       commandExists: async () => true,
-      runProcess: async () => ({ exitCode: 0, stdout: "v24.0.0\n", stderr: "" }),
+      runProcess: async (request) => ({
+        exitCode: 0,
+        stdout:
+          request.args[0] === "-e"
+            ? JSON.stringify({ checked: ["next"], missing: [], errors: [], environment: root })
+            : "v24.0.0\n",
+        stderr: "",
+      }),
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);

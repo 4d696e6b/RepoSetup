@@ -1,4 +1,4 @@
-import { access, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, realpath, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
@@ -85,8 +85,16 @@ async function expectHealthyCli(cwd: string, expectedIds: readonly string[]): Pr
     );
   }
 
-  const doctor = await runNodeCli(monorepoBin, ["doctor"], { cwd });
+  const doctor = await runNodeCli(monorepoBin, ["--json", "doctor"], { cwd });
   expect(doctor.exitCode, `${doctor.stdout}\n${doctor.stderr}`).toBe(0);
+  const report = JSON.parse(doctor.stdout);
+  expect(await realpath(report.result.projectRoot)).toBe(await realpath(cwd));
+  expect(report.result.checks).toContainEqual(
+    expect.objectContaining({
+      id: expectedIds.includes("uv") ? "dependencies:python" : "dependencies:node",
+      ok: true,
+    }),
+  );
 }
 
 describe("golden stack real execution", () => {
