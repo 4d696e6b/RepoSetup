@@ -5,6 +5,7 @@ import {
   readdir,
   realpath,
   rm,
+  stat,
   symlink,
   writeFile,
 } from "node:fs/promises";
@@ -33,6 +34,17 @@ const execute = async (command: string, args: string[], cwd: string, emptyPath =
     args,
     cwd,
     env: emptyPath ? { ...env, PATH: "" } : env,
+    timeoutMs: 30000,
+  });
+  expect(Boolean(result.timedOut || result.aborted || result.outputTruncated)).toBe(false);
+  return result;
+};
+const nativeCli = async (alias: string, args: string[], cwd: string) => {
+  const result = await runner({
+    command: aliases[alias]!,
+    args,
+    cwd,
+    env: { ...env, PATH: path.dirname(process.execPath) },
     timeoutMs: 30000,
   });
   expect(Boolean(result.timedOut || result.aborted || result.outputTruncated)).toBe(false);
@@ -85,7 +97,7 @@ beforeAll(async () => {
 });
 afterEach((context) => {
   if (context.task.result?.state === "pass") passedCases++;
-  packedPassed = passedCases === 4;
+  packedPassed = passedCases === 5;
 });
 afterAll(async () => {
   if (packedPassed)
@@ -95,7 +107,7 @@ afterAll(async () => {
         schemaVersion: 1,
         qualification: false,
         scope:
-          "Extracted tarball with preinstalled dependency hydration; Node-invoked aliases and zero-effect dry-run only.",
+          "Extracted tarball with preinstalled dependency hydration; Node-invoked and native POSIX aliases with zero-effect dry-run. No package installation.",
         sourceSha,
         sourceDirty,
         artifactHash,
@@ -115,6 +127,21 @@ describe("offline extracted packed task and legacy contracts", () => {
       expect(result.exitCode, result.stderr).toBe(0);
       expect(result.stdout).toContain("task");
       expect(result.stdout).toContain("create");
+    }
+  });
+  it("executes both packed aliases through the native POSIX shebang", async () => {
+    expect((await stat(bin)).mode & 0o111).not.toBe(0);
+    for (const alias of ["rsetup", "reposetup"]) {
+      const help = await nativeCli(alias, ["--help"], root);
+      expect(help.exitCode, help.stderr).toBe(0);
+      expect(help.stdout).toContain("task");
+      const dry = await nativeCli(
+        alias,
+        ["--json", "create", "--preset", "react-vite", "--dry-run"],
+        root,
+      );
+      expect(dry.exitCode, dry.stdout + dry.stderr).toBe(0);
+      expect(JSON.parse(dry.stdout)).toMatchObject({ kind: "plan", dryRun: true });
     }
   });
   it("compiles, hands off and inspects the hostile-text fixture without project effects", async () => {

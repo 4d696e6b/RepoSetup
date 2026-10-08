@@ -259,13 +259,16 @@ synthetic accounting inputs, never benchmark results or model-quality evidence.
 
 `tests/e2e/task-packed.test.ts` uses the actual packed CLI bytes with dependencies
 hydrated from the preinstalled frozen workspace, without npm installation. It
-checks the two declared bin targets via Node, local task compile/next/status,
+checks the two declared bin targets via Node and native POSIX shebang, local task compile/next/status,
 managed preview and missing-key/allowance failures, rejected executable/broader
 scope inputs, project/state preservation and existing preset/config/selection
 dry-runs. Child environments carry no credentials and have no project tools on
 PATH. Its metadata records artifact/source/lock/host identities and keeps
-qualification false. This does not replace installed-package, native shell, real
-legacy installation or Linux/platform acceptance. Full fixtures, report and packed
+qualification false. The direct alias test checks executable mode and a legacy
+create dry-run with only the current Node directory on `PATH`. It supplies local
+macOS native-shell evidence for the extracted, hydrated artifact; it does not
+replace npm-installed package, real legacy installation or Linux/Windows platform
+acceptance. Full fixtures, report and packed
 tests run serially under `pnpm test:tasks:fixtures`; normal CI needs no API key.
 
 ## Local managed-check recipe probe (2026-10-08)

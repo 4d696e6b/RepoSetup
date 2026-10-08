@@ -1075,3 +1075,17 @@ whitespace checks passed. Milestone I remains in progress;
 J remains unstarted. Full E verifier closure/effect qualification, retained
 campaign execution, installed/native/Linux evidence and live provider/profile
 qualification remain open. No API keys or paid calls were used.
+
+## Milestone I — extracted native POSIX alias smoke (2026-10-08)
+
+The offline packed-contract suite now checks executable mode and invokes both
+declared aliases directly through their shebang, using only the current Node
+runtime directory on `PATH`. Both aliases pass help and a legacy preset create
+dry-run on macOS arm64 without package installation or provider access. The
+extracted tarball retains preinstalled workspace dependency hydration; the test
+therefore does not qualify an npm-installed package or other platforms.
+
+Validation on Node 24.21.0/macOS arm64: the focused packed suite passed five
+cases; task-test typecheck, workspace lint, all 11 serial task e2e cases across
+three files and Git whitespace checks passed. Milestone I stays in progress;
+J is unstarted.
