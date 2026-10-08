@@ -4,8 +4,10 @@
 
 These repairs are implemented on `codex/audit-installed-stack` and are **unreleased**.
 The public `rsetup@0.2.2` package and its immutable tag remain unchanged.
-Local implementation checks pass; the failed Windows/npm full-matrix jobs are being
-retried on unchanged source. Qualification is pending that result.
+Automated installed-stack qualification is complete. All 480 cases pass across
+twelve full-scope jobs after retrying the two failed Windows/npm jobs on unchanged
+source. The initial timeout failures remain recorded. Live-service limits below
+remain unqualified; this audit does not qualify a newly versioned release artifact.
 Machine-readable evidence is in [installed-stack-audit.json](../release-docs/qualification/installed-stack-audit.json).
 
 ## Reported Express project
@@ -130,16 +132,19 @@ a newly versioned release artifact.
   PR-triggered measurements checked out GitHub's merge commit
   `65dde7d5cb107044fdca747509319c9556cad623`, whose parents are `4db2f40` and `4630f86`.
 - [The full expanded matrix](https://github.com/4d696e6b/RepoSetup/actions/runs/37785128517)
-  finished with 478 passes, two failures and no skipped tests. Both Windows/npm
+  initially finished with 478 passes, two failures and no skipped tests. Both Windows/npm
   jobs timed out at the 300-second deadline during the first Next.js/SQLite
   consolidated install, before Prisma initialization. The initial logs do not
   establish a registry/network cause. Timeout diagnostics now retain bounded,
   redacted installer output. A focused Next run then passed all twelve jobs
   with unchanged installation deadlines (twelve selected tests, 204 filtered
   tests). Its artifacts confirm `next-vitest` scope, so it does not qualify
-  the full matrix. Only the two failed full-matrix jobs are now being retried
-  on their unchanged source: 80 new executions, with ten successful jobs
-  carried forward. Full-matrix qualification is not complete.
+  the full matrix. The two failed full-matrix jobs then passed on unchanged
+  source: 80 new passes with no failures or skips, with ten successful jobs
+  carried forward. The latest qualification covers all 480 cases with no failures
+  or skipped tests. All twelve retained artifacts confirm the intended source,
+  Node 24 and `full` scope. This result does not establish the original timeout
+  cause, and it does not mean all 480 cases were reexecuted during the retry.
 
 A subsequent [manual platform run](https://github.com/4d696e6b/RepoSetup/actions/runs/37797889659)
 passes all three targets at timeout-diagnostic source `d433f1b`. The corresponding

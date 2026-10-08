@@ -4,12 +4,15 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**Installed stack audit — local checks complete; Windows full-matrix retry pending; unreleased.**
+**Installed stack audit — automated qualification complete; unreleased.**
 The reported Express project was repaired after a root-owned npm cache aborted installation.
 Additional confirmed defects were fixed in development dependency installation,
 SQLAlchemy's PostgreSQL driver, JavaScript Prisma imports, Docker prerequisite health
 and PostgreSQL Compose configuration. All 1,043 unit tests and 38 packed E2E tests
-pass, as do build/typecheck/lint and targeted real-install regressions.
+pass, as do build/typecheck/lint and targeted real-install regressions. The twelve-job
+full matrix now passes all 480 cases with no skips after two unchanged-source
+Windows/npm retries; initial timeout failures remain recorded. Live Docker and
+database connectivity remain unqualified.
 The branch is `codex/audit-installed-stack`; published 0.2.2 is unchanged.
 See [the installed stack audit](./INSTALLED_STACK_AUDIT.md) for evidence and remaining service limits.
 

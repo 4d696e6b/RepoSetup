@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "auditDate": "2026-10-08",
-  "status": "local-complete-full-matrix-retry-pending",
+  "status": "automated-installed-stack-audit-complete",
   "deliveryStatus": "unreleased",
   "repairSourceCommit": "d26b912eb321b55fd930b169b1fcd9a230f1d6da",
   "baseSourceCommit": "4db2f406a713154ec1b3c4c0f5968493f358d624",
@@ -197,196 +197,156 @@
     "totalTestsPerJob": 40,
     "jobs": 12,
     "expectedExecutions": 480,
-    "status": "same-source-failed-jobs-retry-pending",
+    "status": "qualified-after-same-source-failed-jobs-retry",
     "run": {
       "runId": 37785128517,
       "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37785128517",
       "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
       "status": "completed",
-      "conclusion": "failure",
-      "runAttempt": 1,
+      "conclusion": "success",
+      "runAttempt": 2,
       "jobs": [
         {
-          "name": "windows-2025 / x64 / Python 3.12 / npm",
-          "jobId": 113337805312,
-          "status": "completed",
-          "conclusion": "failure",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\"",
-            "Write golden qualification evidence",
-            "Validate golden evidence JSON",
-            "Run actions/upload-artifact@v4",
-            "Post Run astral-sh/setup-uv@v6",
-            "Post Run actions/setup-python@v5",
-            "Post Run actions/setup-node@v4"
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "failureSkippedRequiredSteps": [
-            "Write golden qualification evidence",
-            "Validate golden evidence JSON",
-            "Run actions/upload-artifact@v4",
-            "Post Run astral-sh/setup-uv@v6",
-            "Post Run actions/setup-python@v5",
-            "Post Run actions/setup-node@v4"
-          ]
-        },
-        {
-          "name": "macos-15 / arm64 / Python 3.13 / npm",
-          "jobId": 113337805454,
+          "name": "ubuntu-24.04 / x64 / Python 3.12 / npm",
+          "jobId": 113385099780,
           "status": "completed",
           "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ]
-        },
-        {
-          "name": "windows-2025 / x64 / Python 3.12 / pnpm",
-          "jobId": 113337805462,
-          "status": "completed",
-          "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ]
-        },
-        {
-          "name": "ubuntu-24.04 / x64 / Python 3.13 / pnpm",
-          "jobId": 113337805492,
-          "status": "completed",
-          "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
+          "startedAt": "2026-10-08T13:32:22Z",
+          "completedAt": "2026-10-08T13:47:27Z",
           "intentionalScopeSkippedSteps": [
             "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
           ]
         },
         {
           "name": "ubuntu-24.04 / x64 / Python 3.12 / pnpm",
-          "jobId": 113337805496,
+          "jobId": 113385100705,
           "status": "completed",
           "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ]
-        },
-        {
-          "name": "windows-2025 / x64 / Python 3.13 / pnpm",
-          "jobId": 113337805608,
-          "status": "completed",
-          "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ]
-        },
-        {
-          "name": "macos-15 / arm64 / Python 3.12 / npm",
-          "jobId": 113337805629,
-          "status": "completed",
-          "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ]
-        },
-        {
-          "name": "macos-15 / arm64 / Python 3.12 / pnpm",
-          "jobId": 113337805637,
-          "status": "completed",
-          "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ]
-        },
-        {
-          "name": "ubuntu-24.04 / x64 / Python 3.13 / npm",
-          "jobId": 113337805709,
-          "status": "completed",
-          "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ]
-        },
-        {
-          "name": "macos-15 / arm64 / Python 3.13 / pnpm",
-          "jobId": 113337805817,
-          "status": "completed",
-          "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "intentionalScopeSkippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ]
-        },
-        {
-          "name": "ubuntu-24.04 / x64 / Python 3.12 / npm",
-          "jobId": 113337805819,
-          "status": "completed",
-          "conclusion": "success",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
+          "startedAt": "2026-10-08T13:32:22Z",
+          "completedAt": "2026-10-08T13:40:26Z",
           "intentionalScopeSkippedSteps": [
             "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
           ]
         },
         {
           "name": "windows-2025 / x64 / Python 3.13 / npm",
-          "jobId": 113337805821,
+          "jobId": 113385100835,
           "status": "completed",
-          "conclusion": "failure",
-          "skippedSteps": [
-            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\"",
-            "Write golden qualification evidence",
-            "Validate golden evidence JSON",
-            "Run actions/upload-artifact@v4",
-            "Post Run astral-sh/setup-uv@v6",
-            "Post Run actions/setup-python@v5",
-            "Post Run actions/setup-node@v4"
-          ],
+          "conclusion": "success",
+          "startedAt": "2026-10-08T15:12:16Z",
+          "completedAt": "2026-10-08T16:13:43Z",
           "intentionalScopeSkippedSteps": [
             "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
-          ],
-          "failureSkippedRequiredSteps": [
-            "Write golden qualification evidence",
-            "Validate golden evidence JSON",
-            "Run actions/upload-artifact@v4",
-            "Post Run astral-sh/setup-uv@v6",
-            "Post Run actions/setup-python@v5",
-            "Post Run actions/setup-node@v4"
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.13 / npm",
+          "jobId": 113385100878,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T13:32:22Z",
+          "completedAt": "2026-10-08T13:45:36Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.12 / npm",
+          "jobId": 113385100978,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T15:12:16Z",
+          "completedAt": "2026-10-08T16:18:31Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.12 / pnpm",
+          "jobId": 113385101447,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T13:32:27Z",
+          "completedAt": "2026-10-08T13:42:43Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "ubuntu-24.04 / x64 / Python 3.13 / pnpm",
+          "jobId": 113385101714,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T13:32:22Z",
+          "completedAt": "2026-10-08T13:40:02Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.13 / pnpm",
+          "jobId": 113385102228,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T13:32:27Z",
+          "completedAt": "2026-10-08T13:42:38Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.12 / npm",
+          "jobId": 113385102536,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T13:35:24Z",
+          "completedAt": "2026-10-08T13:53:58Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "macos-15 / arm64 / Python 3.13 / npm",
+          "jobId": 113385102791,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T13:38:29Z",
+          "completedAt": "2026-10-08T13:56:11Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.13 / pnpm",
+          "jobId": 113385103683,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T13:32:22Z",
+          "completedAt": "2026-10-08T14:13:33Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+          ]
+        },
+        {
+          "name": "windows-2025 / x64 / Python 3.12 / pnpm",
+          "jobId": 113385103852,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-10-08T13:32:22Z",
+          "completedAt": "2026-10-08T14:02:44Z",
+          "intentionalScopeSkippedSteps": [
+            "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
           ]
         }
       ]
     },
-    "passedJobs": 10,
-    "failedJobs": 2,
-    "passedTests": 478,
-    "failedTests": 2,
+    "passedJobs": 12,
+    "failedJobs": 0,
+    "passedTests": 480,
+    "failedTests": 0,
     "skippedTests": 0,
     "initialFailure": {
-      "test": "Golden A \u2014 Next.js / SQLite",
+      "test": "Golden A — Next.js / SQLite",
       "config": "examples/reposetup.next-sqlite.json",
       "jobs": [
         113337805312,
@@ -406,10 +366,609 @@
       "runId": 37785128517,
       "runAttempt": 2,
       "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
-      "status": "in_progress",
+      "status": "completed",
       "retriedJobs": 2,
       "retriedTestExecutionsExpected": 80,
       "carriedForwardSuccessfulJobs": 10,
+      "all480CasesReexecuted": false,
+      "initialFailureEvidenceRetained": true,
+      "conclusion": "success",
+      "completedAt": "2026-10-08T16:18:32Z",
+      "retriedTestExecutionsPassed": 80,
+      "retriedTestExecutionsFailed": 0,
+      "retriedTestExecutionsSkipped": 0,
+      "jobs": [
+        {
+          "job": "windows-2025 _ x64 _ Python 3.12 _ npm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T16:18:19.3152187Z       Tests  40 passed (40)",
+          "checkoutCommits": [
+            "4630f86359123d118524f8a1d988fe7cd5ad611a"
+          ]
+        },
+        {
+          "job": "windows-2025 _ x64 _ Python 3.13 _ npm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T16:13:19.4073809Z       Tests  40 passed (40)",
+          "checkoutCommits": [
+            "4630f86359123d118524f8a1d988fe7cd5ad611a"
+          ]
+        }
+      ],
+      "verifiedEvidenceFile": "/tmp/reposetup-stack-audit-20261008/ci/golden-37785128517-attempt2-verified.json",
+      "rawLogsArchive": "/tmp/reposetup-stack-audit-20261008/ci/golden-37785128517-attempt2-logs.zip",
+      "rawLogsSha256": "3e44d87bd052a4da7537f3bf5509f2b0044726a588317e6a9c32519bdff0bede"
+    },
+    "initialAttempt": {
+      "run": {
+        "runId": 37785128517,
+        "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37785128517",
+        "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+        "status": "completed",
+        "conclusion": "failure",
+        "runAttempt": 1,
+        "jobs": [
+          {
+            "name": "windows-2025 / x64 / Python 3.12 / npm",
+            "jobId": 113337805312,
+            "status": "completed",
+            "conclusion": "failure",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\"",
+              "Write golden qualification evidence",
+              "Validate golden evidence JSON",
+              "Run actions/upload-artifact@v4",
+              "Post Run astral-sh/setup-uv@v6",
+              "Post Run actions/setup-python@v5",
+              "Post Run actions/setup-node@v4"
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "failureSkippedRequiredSteps": [
+              "Write golden qualification evidence",
+              "Validate golden evidence JSON",
+              "Run actions/upload-artifact@v4",
+              "Post Run astral-sh/setup-uv@v6",
+              "Post Run actions/setup-python@v5",
+              "Post Run actions/setup-node@v4"
+            ]
+          },
+          {
+            "name": "macos-15 / arm64 / Python 3.13 / npm",
+            "jobId": 113337805454,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "windows-2025 / x64 / Python 3.12 / pnpm",
+            "jobId": 113337805462,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "ubuntu-24.04 / x64 / Python 3.13 / pnpm",
+            "jobId": 113337805492,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "ubuntu-24.04 / x64 / Python 3.12 / pnpm",
+            "jobId": 113337805496,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "windows-2025 / x64 / Python 3.13 / pnpm",
+            "jobId": 113337805608,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "macos-15 / arm64 / Python 3.12 / npm",
+            "jobId": 113337805629,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "macos-15 / arm64 / Python 3.12 / pnpm",
+            "jobId": 113337805637,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "ubuntu-24.04 / x64 / Python 3.13 / npm",
+            "jobId": 113337805709,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "macos-15 / arm64 / Python 3.13 / pnpm",
+            "jobId": 113337805817,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "ubuntu-24.04 / x64 / Python 3.12 / npm",
+            "jobId": 113337805819,
+            "status": "completed",
+            "conclusion": "success",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ]
+          },
+          {
+            "name": "windows-2025 / x64 / Python 3.13 / npm",
+            "jobId": 113337805821,
+            "status": "completed",
+            "conclusion": "failure",
+            "skippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\"",
+              "Write golden qualification evidence",
+              "Validate golden evidence JSON",
+              "Run actions/upload-artifact@v4",
+              "Post Run astral-sh/setup-uv@v6",
+              "Post Run actions/setup-python@v5",
+              "Post Run actions/setup-node@v4"
+            ],
+            "intentionalScopeSkippedSteps": [
+              "Run pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/golden.test.ts -t \"Golden A\""
+            ],
+            "failureSkippedRequiredSteps": [
+              "Write golden qualification evidence",
+              "Validate golden evidence JSON",
+              "Run actions/upload-artifact@v4",
+              "Post Run astral-sh/setup-uv@v6",
+              "Post Run actions/setup-python@v5",
+              "Post Run actions/setup-node@v4"
+            ]
+          }
+        ]
+      },
+      "passedJobs": 10,
+      "failedJobs": 2,
+      "passedTests": 478,
+      "failedTests": 2,
+      "skippedTests": 0
+    },
+    "qualificationEvidence": {
+      "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+      "scope": "full",
+      "qualified": true,
+      "latestCases": [
+        {
+          "job": "ubuntu-24.04 _ x64 _ Python 3.12 _ npm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T13:47:23.0713728Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T13:47:23.0712602Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "ubuntu-24.04 _ x64 _ Python 3.13 _ npm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T13:45:31.7098164Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T13:45:31.7097353Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "windows-2025 _ x64 _ Python 3.13 _ pnpm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T14:13:26.5212071Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T14:13:26.5211234Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "macos-15 _ arm64 _ Python 3.12 _ npm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T13:53:50.3974180Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T13:53:50.3973320Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "macos-15 _ arm64 _ Python 3.12 _ pnpm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T13:42:32.9380620Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T13:42:32.9379960Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "macos-15 _ arm64 _ Python 3.13 _ pnpm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T13:42:29.1717480Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T13:42:29.1716830Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "windows-2025 _ x64 _ Python 3.12 _ pnpm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T14:02:37.5049447Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T14:02:37.5047976Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "ubuntu-24.04 _ x64 _ Python 3.13 _ pnpm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T13:39:56.1094962Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T13:39:56.1074385Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "macos-15 _ arm64 _ Python 3.13 _ npm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T13:56:03.3025210Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T13:56:03.3024170Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "ubuntu-24.04 _ x64 _ Python 3.12 _ pnpm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T13:40:20.6719333Z       Tests  40 passed (40)",
+          "fileSummary": "2026-10-08T13:40:20.6718444Z  Test Files  2 passed (2)"
+        },
+        {
+          "job": "windows-2025 _ x64 _ Python 3.12 _ npm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T16:18:19.3152187Z       Tests  40 passed (40)",
+          "checkoutCommits": [
+            "4630f86359123d118524f8a1d988fe7cd5ad611a"
+          ]
+        },
+        {
+          "job": "windows-2025 _ x64 _ Python 3.13 _ npm",
+          "passed": 40,
+          "failed": 0,
+          "skipped": 0,
+          "total": 40,
+          "testSummary": "2026-10-08T16:13:19.4073809Z       Tests  40 passed (40)",
+          "checkoutCommits": [
+            "4630f86359123d118524f8a1d988fe7cd5ad611a"
+          ]
+        }
+      ],
+      "artifactPayloads": [
+        {
+          "artifactName": "golden-evidence-macos-15-python-3.12-npm",
+          "payload": {
+            "platform": "darwin",
+            "architecture": "arm64",
+            "node": "v24.20.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "npm",
+            "python": "Python 3.12.10",
+            "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 aarch64-apple-darwin)"
+          },
+          "payloadSha256": "5da42f1f3b05e7e6080cebb041bd12b9aa27eac9a57a10f7f177082ecbf361af"
+        },
+        {
+          "artifactName": "golden-evidence-macos-15-python-3.12-pnpm",
+          "payload": {
+            "platform": "darwin",
+            "architecture": "arm64",
+            "node": "v24.20.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "pnpm",
+            "python": "Python 3.12.10",
+            "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 aarch64-apple-darwin)"
+          },
+          "payloadSha256": "94b0ffbc18dcec97c31dafc2fce5e6700b1243c15360191bb75ba4e7dfe3e9e1"
+        },
+        {
+          "artifactName": "golden-evidence-macos-15-python-3.13-npm",
+          "payload": {
+            "platform": "darwin",
+            "architecture": "arm64",
+            "node": "v24.20.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "npm",
+            "python": "Python 3.13.15",
+            "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 aarch64-apple-darwin)"
+          },
+          "payloadSha256": "2a6cced23d081b5fa76a78a00d54b7f4909910cbd89c196c57af325c1161332d"
+        },
+        {
+          "artifactName": "golden-evidence-macos-15-python-3.13-pnpm",
+          "payload": {
+            "platform": "darwin",
+            "architecture": "arm64",
+            "node": "v24.20.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "pnpm",
+            "python": "Python 3.13.15",
+            "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 aarch64-apple-darwin)"
+          },
+          "payloadSha256": "c7fabfc7ae995e93e8f7a97f46a49078507b6d6679a8330614d5223eebf51c4c"
+        },
+        {
+          "artifactName": "golden-evidence-ubuntu-24.04-python-3.12-npm",
+          "payload": {
+            "platform": "linux",
+            "architecture": "x64",
+            "node": "v24.21.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "npm",
+            "python": "Python 3.12.15",
+            "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)"
+          },
+          "payloadSha256": "a0e2ceede976c922a0c66111eee5265fb4f467493eb1d7299e5e5b0ec4d8bfca"
+        },
+        {
+          "artifactName": "golden-evidence-ubuntu-24.04-python-3.12-pnpm",
+          "payload": {
+            "platform": "linux",
+            "architecture": "x64",
+            "node": "v24.21.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "pnpm",
+            "python": "Python 3.12.15",
+            "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)"
+          },
+          "payloadSha256": "129b89d6151dc61d6040f5fd088f885d13e95e14218b0c4d6f6c7be343bd5089"
+        },
+        {
+          "artifactName": "golden-evidence-ubuntu-24.04-python-3.13-npm",
+          "payload": {
+            "platform": "linux",
+            "architecture": "x64",
+            "node": "v24.21.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "npm",
+            "python": "Python 3.13.16",
+            "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)"
+          },
+          "payloadSha256": "aac1338180b02fae76e16ed2c101047e1c51bf54434baeabc7a8445f19149f86"
+        },
+        {
+          "artifactName": "golden-evidence-ubuntu-24.04-python-3.13-pnpm",
+          "payload": {
+            "platform": "linux",
+            "architecture": "x64",
+            "node": "v24.21.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "pnpm",
+            "python": "Python 3.13.16",
+            "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)"
+          },
+          "payloadSha256": "fbff2e7dcbf3ca645f44e3cea6d6989f1725c4d6b6e56a20f29793d39cf59a36"
+        },
+        {
+          "artifactName": "golden-evidence-windows-2025-python-3.12-npm",
+          "payload": {
+            "platform": "win32",
+            "architecture": "x64",
+            "node": "v24.21.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "npm",
+            "python": "Python 3.12.10",
+            "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+          },
+          "payloadSha256": "19fcdd013a47d4ccb0f0833d82f354ad9bd2dcc0785fe208b61f58b2a317379a"
+        },
+        {
+          "artifactName": "golden-evidence-windows-2025-python-3.12-pnpm",
+          "payload": {
+            "platform": "win32",
+            "architecture": "x64",
+            "node": "v24.21.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "pnpm",
+            "python": "Python 3.12.10",
+            "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+          },
+          "payloadSha256": "842a53e5dbe9ed681485cde9db4251fd04b5dc38663456c19858019670fad404"
+        },
+        {
+          "artifactName": "golden-evidence-windows-2025-python-3.13-npm",
+          "payload": {
+            "platform": "win32",
+            "architecture": "x64",
+            "node": "v24.21.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "npm",
+            "python": "Python 3.13.15",
+            "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+          },
+          "payloadSha256": "23cf700cfe2f0452beb9fe25fefa675fd8e1f3831fefd7b3bdb574faafe6b029"
+        },
+        {
+          "artifactName": "golden-evidence-windows-2025-python-3.13-pnpm",
+          "payload": {
+            "platform": "win32",
+            "architecture": "x64",
+            "node": "v24.21.0",
+            "sourceCommit": "4630f86359123d118524f8a1d988fe7cd5ad611a",
+            "scope": "full",
+            "packageManager": "pnpm",
+            "python": "Python 3.13.15",
+            "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+          },
+          "payloadSha256": "23941d1affa030065ac530a3f3d4f636839bed8c16b07e98abd833c9f9105bf1"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 11563795729,
+          "name": "golden-evidence-windows-2025-python-3.13-npm",
+          "digest": "sha256:e23738efdc4f016c6858560022e5ff7fa546848b3583b6d37eddb8a233f28796",
+          "expired": false,
+          "createdAt": "2026-10-08T16:13:21Z"
+        },
+        {
+          "id": 11563503174,
+          "name": "golden-evidence-windows-2025-python-3.12-npm",
+          "digest": "sha256:42cd06c9fbf0654e3463a35fd403c224d5f62784a268e7aef4b38fba517e7242",
+          "expired": false,
+          "createdAt": "2026-10-08T16:18:21Z"
+        },
+        {
+          "id": 11556701085,
+          "name": "golden-evidence-windows-2025-python-3.13-pnpm",
+          "digest": "sha256:a81fcdbf24917539c4ff146bb7abde930815a2dd1a782913c3d61f2d0fdbe918",
+          "expired": false,
+          "createdAt": "2026-10-08T14:13:28Z"
+        },
+        {
+          "id": 11555640776,
+          "name": "golden-evidence-macos-15-python-3.13-npm",
+          "digest": "sha256:811a68328b97bbe634e1b9035d18e099ca35e76a9962a326c17aa27849a4b973",
+          "expired": false,
+          "createdAt": "2026-10-08T13:56:05Z"
+        },
+        {
+          "id": 11555457216,
+          "name": "golden-evidence-windows-2025-python-3.12-pnpm",
+          "digest": "sha256:bf7a0dc83c34d251c8889e7da9d32bba278b3ea3e872d5c2bf685672783003ab",
+          "expired": false,
+          "createdAt": "2026-10-08T14:02:39Z"
+        },
+        {
+          "id": 11555191865,
+          "name": "golden-evidence-macos-15-python-3.12-npm",
+          "digest": "sha256:23bcae552bce304aa2b61d27bf292ab9dcbde0efb3b7aefdf00cc6b2fa68d0dd",
+          "expired": false,
+          "createdAt": "2026-10-08T13:53:52Z"
+        },
+        {
+          "id": 11555065796,
+          "name": "golden-evidence-ubuntu-24.04-python-3.13-npm",
+          "digest": "sha256:bc2302b96a37a7336357cc9b2a6e71a333a847aabe5e18c14ec9a94fa9d88aa8",
+          "expired": false,
+          "createdAt": "2026-10-08T13:45:32Z"
+        },
+        {
+          "id": 11554825804,
+          "name": "golden-evidence-macos-15-python-3.13-pnpm",
+          "digest": "sha256:6550069623661459f6339783daf92da40f8825228e93f52be7b1004c41df8ac1",
+          "expired": false,
+          "createdAt": "2026-10-08T13:42:30Z"
+        },
+        {
+          "id": 11554780507,
+          "name": "golden-evidence-ubuntu-24.04-python-3.12-pnpm",
+          "digest": "sha256:cb45b56952df00351cecfb50074dfa365d4879be97e3b778aab4fa3c5650bee3",
+          "expired": false,
+          "createdAt": "2026-10-08T13:40:21Z"
+        },
+        {
+          "id": 11554317803,
+          "name": "golden-evidence-macos-15-python-3.12-pnpm",
+          "digest": "sha256:b49613d785b4694becfcc7a54cd3aee730cca26edb2f3d9b0df56af8aadad0a2",
+          "expired": false,
+          "createdAt": "2026-10-08T13:42:35Z"
+        },
+        {
+          "id": 11554313560,
+          "name": "golden-evidence-ubuntu-24.04-python-3.12-npm",
+          "digest": "sha256:5158f830982990b11128ed13ae26beea88a761c3540d74beefe118d7d7514737",
+          "expired": false,
+          "createdAt": "2026-10-08T13:47:24Z"
+        },
+        {
+          "id": 11553917908,
+          "name": "golden-evidence-ubuntu-24.04-python-3.13-pnpm",
+          "digest": "sha256:f7e2350d0990fb72c6e78c67c3f6f5b63fcdb1d898aec666e4744a1c951f3368",
+          "expired": false,
+          "createdAt": "2026-10-08T13:39:57Z"
+        }
+      ],
+      "qualificationCombinesTenInitialSuccessesAndTwoRetriedSuccesses": true,
       "all480CasesReexecuted": false,
       "initialFailureEvidenceRetained": true
     }
