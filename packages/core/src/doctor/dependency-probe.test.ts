@@ -47,12 +47,21 @@ async function probe(root: string) {
     const result = await promisify(execFile)(process.execPath, ["-e", NODE_DEPENDENCY_PROBE], {
       cwd: root,
     });
-    return { code: 0, data: dependencyProbeResultSchema.parse(JSON.parse(result.stdout)) };
+    return {
+      code: 0,
+      data: {
+        ...dependencyProbeResultSchema.parse(JSON.parse(result.stdout)),
+        environment: await realpath(JSON.parse(result.stdout).environment as string),
+      },
+    };
   } catch (error) {
     const result = error as { code: number; stdout: string };
     return {
       code: result.code,
-      data: dependencyProbeResultSchema.parse(JSON.parse(result.stdout)),
+      data: {
+        ...dependencyProbeResultSchema.parse(JSON.parse(result.stdout)),
+        environment: await realpath(JSON.parse(result.stdout).environment as string),
+      },
     };
   }
 }

@@ -107,7 +107,7 @@ describe("npx create supported bare solutions", () => {
       );
       expect(doctor.exitCode, `${doctor.stdout}\n${doctor.stderr}`).toBe(0);
       const report = JSON.parse(doctor.stdout);
-      expect(await realpath(cwd)).toBe(report.result.projectRoot);
+      expect(await realpath(cwd)).toBe(await realpath(report.result.projectRoot));
       expect(report.result.checks).toContainEqual(
         expect.objectContaining({ id: "dependencies:node", ok: true }),
       );
@@ -175,7 +175,7 @@ describe("npx create supported bare solutions", () => {
       );
       expect(doctor.exitCode, `${doctor.stdout}\n${doctor.stderr}`).toBe(0);
       const report = JSON.parse(doctor.stdout);
-      expect(await realpath(cwd)).toBe(report.result.projectRoot);
+      expect(await realpath(cwd)).toBe(await realpath(report.result.projectRoot));
       expect(report.result.checks).toContainEqual(
         expect.objectContaining({ id: framework, ok: true }),
       );

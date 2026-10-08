@@ -59,6 +59,11 @@ unreleased work after `rsetup@0.2.1`, not a change to published npm bytes.
 - [ ] Full golden matrix on Ubuntu x64, macOS arm64 and Windows x64, Python
   3.12/3.13, npm/pnpm, including all twenty bare solutions and fourteen recipes.
 
+The first Windows platform run failed two new test assertions because the runner
+uses both RUNNER~1 short paths and full paths for the same directory. Package
+verification itself returned the expected results. Assertions now compare resolved
+paths; the failed attempt is retained as run 37743472286.
+
 Tests now assert doctor's canonical root, selected framework check and installed
  dependency check. Earlier pip bare tests could accidentally inspect a parent
  reposetup.json; their application imports were real, but their doctor results
