@@ -112,6 +112,20 @@ describe("npx create supported bare solutions", () => {
       const missingTypesBuild = await runProcess(manager, ["run", "build"], { cwd, env });
       expect(missingTypesBuild.exitCode).not.toBe(0);
       expect(`${missingTypesBuild.stdout}\n${missingTypesBuild.stderr}`).toContain("express");
+
+      // Follow doctor's suggested install policy under the same production settings.
+      const missingCheck = JSON.parse(damaged.stdout).result.checks.find(
+        (check: { id: string }) => check.id === "dependencies:node",
+      );
+      const installArgs =
+        manager === "npm" ? ["install", "--include=dev"] : ["install", "--prod=false", "--force"];
+      expect(missingCheck.suggestion).toContain(`${manager} ${installArgs.join(" ")}`);
+      const repaired = await runProcess(manager, installArgs, { cwd, env });
+      expect(repaired.exitCode, `${repaired.stdout}\n${repaired.stderr}`).toBe(0);
+      const repairedBuild = await runProcess(manager, ["run", "build"], { cwd, env });
+      expect(repairedBuild.exitCode, `${repairedBuild.stdout}\n${repairedBuild.stderr}`).toBe(0);
+      const repairedDoctor = await runProcess("npx", doctorArgs, { cwd, env });
+      expect(repairedDoctor.exitCode, `${repairedDoctor.stdout}\n${repairedDoctor.stderr}`).toBe(0);
     },
   );
 
