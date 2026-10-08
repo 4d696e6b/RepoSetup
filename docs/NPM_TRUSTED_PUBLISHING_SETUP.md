@@ -78,10 +78,10 @@ Optional later hardening (after a successful Actions publish):
 8. Confirm registry version, integrity, provenance and dist-tag, then complete fresh delivery acceptance.
 9. Publish or update the GitHub Release for the same immutable tag.
 
-The current workflow and validation scripts are specific to 0.2.0. Prepare and
-qualify their version/source settings for a new patch before following this
-procedure; the create-regression matrix alone is not publication qualification.
-See [the delivery runbook](./specification-documentation/release-docs/STABLE_RELEASE_0.2.0.md).
+The current workflow and validation scripts target 0.2.1. Qualify its exact
+source/artifact before publication; the previous create-regression matrix alone
+is not publication qualification.
+See [the patch release record](./specification-documentation/release-docs/STABLE_RELEASE_0.2.1.md).
 An existing version is accepted only if its integrity matches the qualified
 artifact. npm versions are immutable; never force-overwrite.
 

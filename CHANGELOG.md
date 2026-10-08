@@ -4,6 +4,35 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.1] - 2026-10-08
+
+Stability patch; qualification/publication status is in the
+[release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.1.md).
+
+### Fixed
+
+- Named and nested create destinations now scope generated files and installation commands correctly, including Next.js `app/layout.tsx` and Python initialization.
+- Bare Vite dependencies and pnpm Express esbuild approval are installed before verification; dependency pins, install ordering and destination lockfile safeguards apply consistently.
+- Tailwind/Vite setup and shadcn TypeScript/JavaScript aliases, defaults and configuration-file verification produce usable generated projects.
+- npm launch settings and package-manager identity no longer leak into nested generators; Playwright uses the selected manager and Prisma initialization does not fetch coding-agent skills.
+- Next.js Vitest uses compatible pinned test tooling and canonical roots on Windows; doctor distinguishes a test-only Vite dependency from a Vite application.
+- Express/Fastify startup paths, server feedback, README commands and Python testing guidance match generated files; Compose context survives subsequent add operations.
+- Text insertion preserves LF/CRLF and workflow evidence is parsed before upload.
+
+### Changed
+
+- Next.js generator/framework/eslint pins use the qualified 16.3.6 security patch.
+- All six frameworks have packed-npx bare-solution coverage, with npm/pnpm, TypeScript/JavaScript and isolated uv/pip; fourteen recipes and five presets have expanded cross-platform regression coverage.
+- Node.js 24+ remains required. Native Windows 11, Linux arm64, live services and actual Playwright browser journeys remain outside the qualified matrix. No catalog integration is promoted to stable.
+- Generated development-tool advisory GHSA-vfj7-8cjw-p6xm has no published fix as of the release review; do not describe generated stacks as audit-clean.
+
+## [0.2.0] - 2026-10-07
+
+- Published the terminal-first CLI with Node 24+, Python 3.12/3.13 qualification, five curated presets, reproducible pinned recipes, consolidated installs, platform adapters and safer execution/recovery diagnostics.
+- Added React Testing Library/TanStack Query and FastAPI HTTPX/Pydantic Settings examples.
+- Qualified and verified registry delivery on Ubuntu 24.04, macOS 15 and Windows Server 2025. Individual integration maturity and external-service limitations remain explicit.
+- See the immutable [0.2.0 evidence record](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md).
+
 ## [0.1.1] - 2026-09-22
 
 Patch release. `rsetup@0.1.0` is on npm; this fixes the first failures real users hit.

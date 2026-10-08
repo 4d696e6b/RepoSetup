@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is an **early-stage** open-source project with `v0.2.0` published. The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is an **early-stage** open-source project preparing the `v0.2.1` stability patch (the published version is currently `0.2.0`). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -44,14 +44,16 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 ## Install and run
 
-The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and **uv**; Python 3.12 and 3.13 were qualified for 0.2.0. RepoSetup does not install these system prerequisites for you.
+The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and **uv**; Python 3.12 and 3.13 were covered by the 0.2.x qualification matrix. RepoSetup does not install these system prerequisites for you.
+
+After the 0.2.1 publication completes (see the release record):
 
 ```bash
-npx rsetup@0.2.0 --help
-npx rsetup@0.2.0 --version
+npx rsetup@0.2.1 --help
+npx rsetup@0.2.1 --version
 ```
 
-For a global install, run `npm install -g rsetup@0.2.0`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
+For a global install, run `npm install -g rsetup@0.2.1`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
 
 ## Develop from source
 
@@ -63,7 +65,7 @@ cd RepoSetup
 pnpm install
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.2.0
+node packages/cli/dist/bin.js --version   # 0.2.1
 ```
 
 Preview a Next.js example without changing files:
@@ -165,13 +167,13 @@ reposetup registry validate
 
 There is no separate `import` command. Apply an exported file with `create --config`.
 
-`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in the 0.2.0 support contract.**
+`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in the 0.2.1 support contract.**
 
 ## Integration status
 
 Status is per ID, not “the catalog is production-ready.”
 
-| Status | Meaning in the 0.2.0 support contract |
+| Status | Meaning in the 0.2.1 support contract |
 | --- | --- |
 | **stable** | Real execute + advertised-platform evidence. **None yet.** |
 | **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |
@@ -217,7 +219,7 @@ Status is per ID, not “the catalog is production-ready.”
 
 Example configs live in `examples/`.
 
-The five required recipes and the published package passed the [0.2.0 qualification and delivery evidence](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md) on Ubuntu 24.04, macOS 15, and Windows Server 2025 CI runners. The Windows CI runner is not a direct Windows 11 desktop test. Generated PostgreSQL configuration does not install or verify a database server.
+The published 0.2.0 baseline passed [qualification and delivery](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md). The expanded 0.2.x repairs passed the [stability matrix](docs/specification-documentation/implementing-docs/STABILITY_0.2.x.md); exact 0.2.1 publication and delivery are tracked in the [patch release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.1.md). Qualification runs on Ubuntu 24.04, macOS 15, and Windows Server 2025 CI runners. The Windows CI runner is not a direct Windows 11 desktop test. Generated PostgreSQL configuration does not install or verify a database server.
 
 ## How it works
 

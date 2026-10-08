@@ -132,9 +132,9 @@ describe("stable artifact and registry identity", () => {
     const record = {
       schemaVersion: 1,
       package: "rsetup",
-      version: "0.2.0",
+      version: "0.2.1",
       sourceSha: sha,
-      artifact: "rsetup-0.2.0.tgz",
+      artifact: "rsetup-0.2.1.tgz",
       bytes: bytes.length,
       sha256: createHash("sha256").update(bytes).digest("hex"),
     };
@@ -142,7 +142,7 @@ describe("stable artifact and registry identity", () => {
     await writeFile(path.join(directory, record.artifact), bytes);
     await writeFile(file, JSON.stringify(record));
     const identity = await artifacts.verifyArtifactIdentity(directory, {
-      version: "0.2.0",
+      version: "0.2.1",
       sourceSha: sha,
     });
     expect(identity.integrity).toMatch(/^sha512-/);
@@ -159,15 +159,19 @@ describe("stable artifact and registry identity", () => {
     await expect(artifacts.verifyArtifactIdentity(directory)).rejects.toThrow("SHA-256");
   });
 
-  it("only treats registry 404 as an unpublished version", async () => {
+  it("looks up the patch version and only treats registry 404 as unpublished", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 403, ok: false }));
     await expect(publication.registryVersion()).rejects.toThrow("publication stopped");
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ status: 404, ok: false }));
     await expect(publication.registryVersion()).resolves.toBeUndefined();
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      "https://registry.npmjs.org/rsetup/0.2.1",
+      expect.objectContaining({ signal: expect.anything() }),
+    );
   });
 
   it("waits for npm to expose a publish before verifying its identity", async () => {
-    const metadata = { name: "rsetup", version: "0.2.0" };
+    const metadata = { name: "rsetup", version: "0.2.1" };
     const lookup = vi.fn().mockResolvedValueOnce(undefined).mockResolvedValue(metadata);
     await expect(
       publication.waitForRegistryVersion({ lookup, timeoutMs: 100, intervalMs: 0 }),
@@ -180,7 +184,7 @@ describe("stable artifact and registry identity", () => {
 
   it("refuses to treat a conflicting published version as a successful retry", () => {
     const identity = { integrity: "sha512-qualified" };
-    const metadata = { name: "rsetup", version: "0.2.0", dist: { integrity: identity.integrity } };
+    const metadata = { name: "rsetup", version: "0.2.1", dist: { integrity: identity.integrity } };
     expect(() => publication.verifyRegistryIdentity(metadata, identity)).not.toThrow();
     expect(() =>
       publication.verifyRegistryIdentity(
@@ -189,7 +193,7 @@ describe("stable artifact and registry identity", () => {
       ),
     ).toThrow("never overwrite");
     expect(() =>
-      publication.verifyRegistryIdentity({ ...metadata, version: "0.2.0-alpha.1" }, identity),
+      publication.verifyRegistryIdentity({ ...metadata, version: "0.2.0" }, identity),
     ).toThrow("version");
   });
 });

@@ -1,6 +1,6 @@
 # Release checklists
 
-## Current 0.2.x patch — 2026-10-08
+## Current 0.2.1 patch — 2026-10-08
 
 The patch repairs published create regressions. Qualification links, source
 revisions and exclusions are in the [stability plan](../implementing-docs/STABILITY_0.2.x.md)
@@ -14,8 +14,9 @@ and [acceptance checklist](../implementing-docs/ACCEPTANCE_TESTS.md).
 - [x] Platform CI, controlled installation benchmarks and corrected JSON evidence writers pass.
 - [x] Source revisions, failed attempts and manual/service limitations are documented.
 - [x] Existing npm trusted publisher was configured and validated by the 0.2.0 release; this does not qualify or publish the patch.
-- [ ] Maintainer security/release review is complete.
-- [ ] Patch version and release workflow are prepared for a new version; the existing publication workflow is still specific to 0.2.0.
+- [x] Owner authorizes the release; the [bounded patch security review](../security-docs/SECURITY_REVIEW_0.2.1.md) records production audit results and the unresolved generated-tool advisory.
+- [x] Patch manifests and active publication checks target 0.2.1; exact-source qualification remains required.
+- [x] Owner requests 0.2.1 publication on October 8; [release progress](./STABLE_RELEASE_0.2.1.md) retains the remaining gates.
 - [ ] Final release source/artifact passes its required publication gates.
 - [ ] New immutable tag/version is published with matching provenance and registry integrity.
 - [ ] Fresh install-from-registry acceptance passes for the patch on all release targets.
