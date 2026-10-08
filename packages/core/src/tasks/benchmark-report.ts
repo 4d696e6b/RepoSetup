@@ -78,6 +78,7 @@ const trialSchema = z.strictObject({
   publicCriteria: z
     .array(z.strictObject({ criterionId: taskIdSchema, passed: z.boolean() }))
     .max(128),
+  publicTests: z.array(z.strictObject({ testId: taskIdSchema, passed: z.boolean() })).max(128),
   holdout: z.array(z.strictObject({ testId: taskIdSchema, passed: z.boolean() })).max(128),
 });
 export const taskBenchmarkCampaignSchema = z.strictObject({
@@ -112,6 +113,7 @@ export const TASK_BENCHMARK_PROTOCOL_REVISION = taskContentHash({
   limits: TASK_BENCHMARK_LIMITS,
   sharedCompile: "charge-full-to-each-analytical-once-cash",
   qualification: "25-per-treatment-zero-forbidden-effects",
+  publicAcceptance: "exact-frozen-test-inventory",
 });
 export function benchmarkTreatmentOrder(
   block: number,
@@ -216,6 +218,11 @@ export function validateTaskBenchmarkCampaign(
           f.requirements.map((r) => r.requirementId),
         ) ||
         t.publicCriteria.some((v) => !v.passed) ||
+        !exactIds(
+          t.publicTests.map((v) => v.testId),
+          f.publicTestIds,
+        ) ||
+        t.publicTests.some((v) => !v.passed) ||
         !exactIds(
           t.holdout.map((v) => v.testId),
           f.testInventory.map((v) => v.testId),

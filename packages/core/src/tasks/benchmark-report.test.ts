@@ -100,6 +100,7 @@ function campaign(): TaskBenchmarkCampaign {
             criterionId: r.requirementId,
             passed: true,
           })),
+          publicTests: f.publicTestIds.map((testId: string) => ({ testId, passed: true })),
           holdout: f.testInventory.map((t: { testId: string }) => ({
             testId: t.testId,
             passed: true,
@@ -193,6 +194,8 @@ describe("inclusive benchmark accounting", () => {
     "duplicate-request",
     "order",
     "holdout",
+    "public-inventory",
+    "public-failure",
     "zero-tests",
     "protected-effects",
     "price-token-subset",
@@ -214,6 +217,12 @@ describe("inclusive benchmark accounting", () => {
         break;
       case "holdout":
         c.trials[0]!.holdout = [];
+        break;
+      case "public-inventory":
+        c.trials[0]!.publicTests.pop();
+        break;
+      case "public-failure":
+        c.trials[0]!.publicTests[0]!.passed = false;
         break;
       case "zero-tests":
         c.trials[0]!.checks.find((v) => v.checkId === "ts.unit")!.executedTests = 0;

@@ -1057,3 +1057,21 @@ full transitive dependency closure, protected tool/config file definitions or
 executor-owned effect audit for these five fixtures. Actual retained 75-trial
 execution, installed/native/Linux evidence and live capability/provider gates
 remain open. Milestone I stays in progress; J is unstarted.
+
+## Milestone I — exact public-test campaign accounting (2026-10-08)
+
+Extended the strict campaign envelope so every trial records bounded public test
+IDs and outcomes. An accepted trial now requires exactly the frozen fixture's
+`publicTestIds`, all passing; missing, duplicate, substituted or failed public
+cases are rejected before aggregation. The benchmark protocol revision changes
+with this contract. Synthetic reducer tests exercise missing and failed cases.
+This is metadata validation, not evidence authentication or a claim that any
+trial ran. Reconciled outdated protocol prose with the implemented fixture,
+oracle, report and packed-test infrastructure while retaining the open gates.
+
+Validation on Node 24.21.0/macOS arm64: 502 core tests across 58 files,
+workspace build/typecheck/lint, task-test typecheck, focused report e2e and Git
+whitespace checks passed. Milestone I remains in progress;
+J remains unstarted. Full E verifier closure/effect qualification, retained
+campaign execution, installed/native/Linux evidence and live provider/profile
+qualification remain open. No API keys or paid calls were used.

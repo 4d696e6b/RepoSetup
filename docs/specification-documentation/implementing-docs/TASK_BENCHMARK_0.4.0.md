@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 — task benchmark and test protocol
 
-Contract frozen for Milestone A on 2026-10-06. Fixture source, private oracle source, runner and trial results are **not implemented or qualified**. Their implementation belongs to Milestone I; local boundary tests belong to the milestone introducing each boundary. This document authorizes no provider calls or spending.
+Contract frozen for Milestone A on 2026-10-06. Milestone I now has frozen fixture source, independent oracle source and offline qualification tests. The trial runner, retained real trial evidence and provider comparisons are still absent. This document authorizes no provider calls or spending.
 
 Read the [task compiler contract](../product-docs/TASK_COMPILER_0.4.0.md), [task domain contracts](../product-docs/TASK_CONTRACTS_0.4.0.md), [support profile](../product-docs/TASK_SUPPORT_0.4.0.md) and [provider research](./TASK_PROVIDER_RESEARCH_0.4.0.md). The [Phase 23 installation benchmark](./PHASE_23_BENCHMARK_PROTOCOL.md) remains independent. Its source baseline, installation measurements and performance targets are not task-compiler evidence.
 
@@ -31,7 +31,7 @@ Each fixture manifest must contain:
 
 Seed code must have meaningful incomplete behavior that fails the specified new acceptance criteria while passing its pre-existing compatibility tests. Freeze a qualified reference solution and deliberately incorrect solutions privately. Before measuring any model, prove the oracle passes the reference and rejects every incorrect solution. Changing a requirement, seed, oracle, scope, rule, recipe, model profile or budget creates a new benchmark revision; do not mix revisions in one aggregate.
 
-The following module paths and observable contracts are normative fixture designs. They are not claims that fixture files already exist. Milestone I must publish the concrete source/hash manifest before trials and may not weaken these requirements to fit an observed model output.
+The following module paths and observable contracts are normative fixture designs. Their concrete source and hash manifests are under `tests/tasks/fixtures/`. Milestone I may not weaken these requirements to fit an observed model output.
 
 ## `types-result-v1`
 
@@ -140,7 +140,7 @@ No minimum savings percentage is assumed. Negative savings is a valid result and
 
 ## Local fake-boundary test matrix
 
-Normal CI uses deterministic fake provider, repository, state, filesystem, clock and process ports; it requires no API key or AI allowance. Fake requests must expose call/proposal histories and fail if an unauthorized call/write/process occurs. Use injected races/failures rather than real external infrastructure. These are required test designs, not existing passing tests.
+Normal CI uses deterministic fake provider, repository, state, filesystem, clock and process ports; it requires no API key or AI allowance. Fake requests must expose call/proposal histories and fail if an unauthorized call/write/process occurs. Use injected races/failures rather than real external infrastructure. Existing task-boundary tests cover these ports; a complete offline campaign runner is still pending.
 
 Positive cases by boundary:
 
@@ -177,13 +177,13 @@ Use current tests as the baseline, preserving their meanings rather than replaci
 - previews preserve files and omit values: core/CLI preview tests; intended-doctor evidence and targeted curated repair: `packages/core/src/doctor/intended-checks.test.ts`, `packages/cli/src/doctor-intended.test.ts` and `doctor-repair.test.ts`;
 - existing command/JSON/exit meanings and packed aliases: CLI run/error/exit tests and packed maintenance/selection suites.
 
-Current root scripts include `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, `pnpm test:e2e`, `pnpm test:golden`, `pnpm test:selection:legacy`, `pnpm test:selection:packed`, `pnpm test:selection:transport` and `pnpm test:maintenance:packed`. Run only appropriate targeted/qualification checks at the introducing milestone, under Node 24+ with the frozen dependency artifact. There is no task benchmark command or task fixture runner today; add no placeholder script during Milestone A. Existing full e2e/install collectors may have real-install behavior and do not belong in the offline task trial runner.
+Current root scripts include `pnpm test:tasks:fixtures`, `pnpm typecheck:task-tests`, `pnpm fixtures:tasks:freeze` and `pnpm benchmark:tasks:report`, alongside the established build, typecheck, lint and legacy tests. The fixture suite performs offline source/oracle checks; the benchmark command summarizes a supplied campaign but does not execute trials. Run appropriate checks under Node 24+ with the frozen dependency artifact. Existing full e2e/install collectors may have real-install behavior and do not belong in the offline task trial runner.
 
 Reuse Vitest assertion/test organization, CLI dependency injection, recording ProcessRunner fakes, temporary repository helpers, clean-source/hash records and existing packed artifact harnesses. Extend them for provider usage reservations, scoped proposal application, durable task state, trusted test inventories and private evaluator isolation. Existing installation benchmark collectors measure a different workload and cannot simply be relabeled as task evaluation.
 
 ## Evidence still required
 
-Milestone A freezes this protocol only. Milestone I must implement/version manifests and oracles, prove reference/incorrect-solution discrimination, qualify fixed check recipes, provision an already-installed tool artifact, demonstrate holdout isolation, and record all local safety/compatibility results. G/H must first qualify exact provider/model/SDK versions, native effort mappings, usage/pricing/privacy behavior and the routing catalog. Live trials remain blocked until those prerequisites and an explicit provider allowance exist. No accuracy, savings, routing quality or managed support result is claimed by this document.
+Milestone I has versioned fixture manifests and oracles, reference/wrong-variant discrimination, a local fixed-recipe probe and holdout separation. Full managed verifier closure/effect qualification, an installed artifact and all platform evidence remain open. G/H offline tests cannot establish exact production provider/model capability, native effort, usage/pricing or quality. Live trials remain blocked until those prerequisites and an explicit provider allowance exist. No accuracy, savings, routing quality or managed support result is claimed by this document.
 
 ## Initial local fixture implementation (2026-10-07)
 
@@ -230,7 +230,7 @@ from product TaskPlan/config inputs. Core validates fixture/tool/revision equali
 and ceilings, exact shared compilation/plan records and disjoint request hashes.
 Partial campaigns remain visible with missing slots. Setup-blocked paired trials,
 failed compilation and terminal implementation/check failures are retained.
-Accepted metadata requires independent public/holdout inventories, all six fixed
+Accepted metadata requires exact frozen public and holdout test inventories, all six fixed
 check categories with nonzero required test counts, unchanged protected inputs,
 zero forbidden effects and referenced attempt/final evidence. Evidence hashes
 refer to retained evaluator artifacts; schema validation does not authenticate
