@@ -35,30 +35,30 @@ freeze is required.
 
 Implementation and automated regression validation: complete. Publication: pending.
 
-- Reproduce `npx rsetup@0.2.0 create my-next --framework nextjs --package-manager npm --typescript --yes` in a fresh folder.
-- Scope all generated file operations to the selected project directory; preserve generator commands that run from its parent.
-- Create the destination before Python initialization and handwritten Node scaffolds.
-- Install bare Vite dependencies; apply scaffold dependency pins and native build approval before installing.
-- Check conflicting and required lockfiles in each install command's directory.
-- Approve the known esbuild build script for bare TypeScript Express/tsx under pnpm.
-- Align printed Express/Fastify commands with default TypeScript and explicit JavaScript entries.
-- Offer only supported npm/pnpm Node managers in interactive create.
-- Qualify the Next.js 16.3.6 security patch before shipping changed generator pins.
-- Keep Node 24 as the supported CLI runtime. Node 22.12 fails dependency engine requirements; upgrading Node is required, suppressing npm warnings is not a compatibility fix.
-- Commit fixes with focused regression tests; do not replace an already published npm version.
+- [x] Reproduce `npx rsetup@0.2.0 create my-next --framework nextjs --package-manager npm --typescript --yes` in a fresh folder.
+- [x] Scope all generated file operations to the selected project directory; preserve generator commands that run from its parent.
+- [x] Create the destination before Python initialization and handwritten Node scaffolds.
+- [x] Install bare Vite dependencies; apply scaffold dependency pins and native build approval before installing.
+- [x] Check conflicting and required lockfiles in each install command's directory.
+- [x] Approve the known esbuild build script for bare TypeScript Express/tsx under pnpm.
+- [x] Align printed Express/Fastify commands with default TypeScript and explicit JavaScript entries.
+- [x] Offer only supported npm/pnpm Node managers in interactive create.
+- [x] Qualify the Next.js 16.3.6 security patch before shipping changed generator pins.
+- [x] Keep Node 24 as the supported CLI runtime. Node 22.12 fails dependency engine requirements; upgrading Node is required, suppressing npm warnings is not a compatibility fix.
+- [x] Commit fixes with focused regression tests; do not replace an already published npm version.
 
 ## 0.2.2 — Expand release qualification
 
 The automated matrix and preset sessions below are complete. Native platforms
 and live services remain open; this phase is not wholly complete.
 
-- Plan matrix: all six frameworks, npm/pnpm or uv/pip, current/named/nested directories, curated integrations with their required dependencies, JavaScript options, and incompatible runtime/manager rejection.
-- Real execution: fourteen qualified recipes in named directories, generated tests/typechecks/builds/lints and stack/doctor checks; repeat JavaScript recipes with npm and pnpm.
-- Real npx delivery: pack the patch candidate, then create the sixteen bare JavaScript framework/manager/language combinations and four isolated Python framework/manager combinations in nested directories. Check dry-run leaves no files and successful creation installs/imports/builds.
-- Presets: packaged CLI preview, create, displayed run/build/test commands, add, doctor and export. Check all five presets; Docker checks require an existing Docker executable, not automatic installation.
-- Failure coverage: invalid config/options, unsupported combinations, missing prerequisites, unwritable paths, symlink escape, existing-file protection, missing/conflicting lockfiles, interrupted/failed installs and safe add/remove repetition.
-- CI: Ubuntu x64, macOS arm64, Windows Server x64, Node 24, Python 3.12/3.13 and both JavaScript managers.
-- Native Windows 11 and live PostgreSQL/MongoDB/container connections remain separate manual qualification. Configuration generation and compilation do not prove live services.
+- [x] Plan matrix: all six frameworks, npm/pnpm or uv/pip, current/named/nested directories, curated integrations with their required dependencies, JavaScript options, and incompatible runtime/manager rejection.
+- [x] Real execution: fourteen qualified recipes in named directories, generated tests/typechecks/builds/lints and stack/doctor checks; repeat JavaScript recipes with npm and pnpm.
+- [x] Real npx delivery: pack the patch candidate, then create the sixteen bare JavaScript framework/manager/language combinations and four isolated Python framework/manager combinations in nested directories. Check dry-run leaves no files and successful creation installs/imports/builds.
+- [x] Presets: packaged CLI preview, create, displayed run/build/test commands, add, doctor and export. Check all five presets; Docker checks require an existing Docker executable, not automatic installation.
+- [x] Failure coverage: invalid config/options, unsupported combinations, missing prerequisites, unwritable paths, symlink escape, existing-file protection, missing/conflicting lockfiles, interrupted/failed installs and safe add/remove repetition.
+- [x] CI: Ubuntu x64, macOS arm64, Windows Server x64, Node 24, Python 3.12/3.13 and both JavaScript managers.
+- [ ] Native Windows 11 and live PostgreSQL/MongoDB/container connections remain separate manual qualification. Configuration generation and compilation do not prove live services.
 
 ## 0.2.3 and subsequent patches — Sustain stability
 
