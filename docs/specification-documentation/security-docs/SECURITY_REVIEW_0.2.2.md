@@ -28,3 +28,13 @@ No new P0/P1 defect was identified in this bounded review. Native desktop target
 live databases, browser journeys and all integration permutations remain outside
 qualification. Final publication and signature/provenance acceptance are tracked
 in [the release record](../release-docs/STABLE_RELEASE_0.2.2.md).
+
+## Publication acceptance
+
+Tag-bound OIDC [publication](https://github.com/4d696e6b/RepoSetup/actions/runs/37770326352) and fresh registry installs
+pass on all three release targets. Downloaded registry bytes match retained artifact
+SHA-256 and SRI; signed SLSA provenance binds `rsetup@0.2.2`, `v0.2.2`,
+source `c447e461e6e66935f077449c99d8d759e6067482` and the approved publish workflow.
+`npm audit signatures` verifies 27 registry signatures and
+20 attestations. Remaining exclusions and the generated-tool
+advisory above are unchanged.

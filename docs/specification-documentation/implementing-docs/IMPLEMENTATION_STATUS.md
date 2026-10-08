@@ -4,14 +4,15 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**0.2.2 — release preparation and exact-source qualification in progress.**
-The owner authorized publication and current-documentation updates on October 8.
-[PR #13](https://github.com/4d696e6b/RepoSetup/pull/13) merged the dependency-health
-repair; `codex/release-0.2.2` prepares the new version. Publication requires the
-new artifact's qualification; passing tests for the older version do not qualify
-new bytes. See [0.2.2 release progress](../release-docs/STABLE_RELEASE_0.2.2.md).
+**0.2.2 — published and delivery accepted.** npm latest is 0.2.2.
+PR #13/#14 deliver dependency-health repairs at immutable tag/source
+`v0.2.2` / `c447e461e6e66935f077449c99d8d759e6067482`. Three complete first-attempt release qualifications,
+the 408-case expanded matrix after one documented Windows install-timeout retry,
+117 preset checks and controlled benchmarks pass. Signed artifact-only publication
+and fresh registry acceptance pass on all three release targets. See
+[0.2.2 release evidence](../release-docs/STABLE_RELEASE_0.2.2.md).
 
-**Post-create dependency health repair — automated repair qualification complete; included in the 0.2.2 candidate.**
+**Post-create dependency health repair — automated repair qualification complete; delivered in published 0.2.2.**
 The owner reported missing FastAPI dependencies after successful creation. A pip
 manifest/detection bug and declaration-only doctor checks were confirmed.
 Implementation adds installed dependency checks, pip create manifests, active
@@ -40,7 +41,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 
 ### Stable preparation and delivery — 2026-10-07
 
-The current [stable qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md) gives the final source, failed and superseded attempts, signed provenance, and passing delivery run. The entries below also preserve the earlier preparation sequence.
+The historical [0.2.0 qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md) gives the final source, failed and superseded attempts, signed provenance, and passing delivery run. The entries below also preserve the earlier preparation sequence.
 
 - [x] Rechecked the frozen alpha source `145e167e6b60897da96942545ba6dbd40359ad4a`: qualification runs [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), and [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011) passed; the branch remains frozen. Its soak ended October 7 at 11:30:20 UTC. This qualifies the alpha source, not a newly versioned stable artifact.
 - [x] Stable preparation is isolated from that frozen branch. The public manifest now identifies `rsetup@0.2.0`; CLI version tests derive from the manifest.
@@ -62,7 +63,7 @@ The current [stable qualification record](../release-docs/STABLE_QUALIFICATION_0
 
 ### Phase 27 progress — 2026-09-29
 
-- [x] At this Phase 27 checkpoint, the CLI was `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17. The current published version is `0.2.1`; the 0.2.0 milestone is retained above.
+- [x] At this Phase 27 checkpoint, the CLI was `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17. The current published version is `0.2.2`; the 0.2.0 milestone is retained above.
 - [x] Packed-artifact tests derive the tarball and manifest version from `packages/cli/package.json`, record the SHA-256, and install the tarball in a temporary directory outside the monorepo. Both `rsetup` and `reposetup` launch through npm's actual platform launcher.
 - [x] `write-artifact-evidence.mjs` writes a source-SHA and SHA-256 identity record once for each packed candidate. `verify-packed-artifact.mjs` verifies that record before installing and launching the same artifact.
 - [x] The manually dispatched candidate workflow and the `v0.2.0` publish workflow make Node 24 platform qualification, Python 3.12/3.13 golden qualification, exact-SHA failure-path qualification, a one-time candidate pack, and cross-platform artifact acceptance blocking dependencies. The publishing path uses the downloaded qualifying tarball only after its source SHA and tag/version agree.
@@ -174,9 +175,9 @@ Phase 22 implementation gates for reproducible recipes are complete. Phase 27 co
 
 ## Current release
 
-The observed npm `latest` dist-tag is `rsetup@0.2.1`. Its registry integrity,
-`v0.2.1` source and signed provenance match the qualified artifact; fresh delivery
-passed on all three release targets. See [the current release record](../release-docs/STABLE_RELEASE_0.2.1.md).
+The observed npm `latest` dist-tag is `rsetup@0.2.2`. Its registry integrity,
+`v0.2.2` source and signed provenance match the qualified artifact; fresh delivery
+passed on all three release targets. See [the current release record](../release-docs/STABLE_RELEASE_0.2.2.md).
 Published 0.2.0 and older baseline evidence remain historical.
 
 ## Planning checkpoint — 2026-09-22
@@ -345,3 +346,11 @@ these results alone.
 - [x] Current installation/status/support/CLI documentation and user guide target 0.2.1; historical release evidence is preserved.
 - [x] Unsupported proposed create flags/import command are no longer presented as current CLI behavior.
 - [ ] Native Windows 11/Linux arm64, live database/container/DBAPI and actual browser qualification are complete (future scope, not inferred from this release).
+
+### 0.2.2 delivery closeout — 2026-10-08
+
+- [x] Dependency-health repair and release preparation merged; all exact-source gates pass.
+- [x] Retained artifact published through tag-bound OIDC; registry bytes, provenance and signatures verified.
+- [x] Fresh registry delivery passes on Linux, macOS and Windows; GitHub release and current docs identify 0.2.2.
+- [x] Initial Windows/npm install timeout and successful same-source retry are retained in release evidence.
+- [ ] Native desktop/live services/browser journeys and every integration permutation are qualified (future scope).

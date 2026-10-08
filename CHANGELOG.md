@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [0.2.2] - 2026-10-08
 
-Dependency-health stability patch; qualification and publication status are in the
+Published dependency-health stability patch; qualification and delivery evidence are in the
 [release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.2.md).
 
 ### Fixed

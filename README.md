@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is an **early-stage** open-source project with `v0.2.2` being prepared. The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is an **early-stage** open-source project with `v0.2.2` published. The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -44,9 +44,9 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 ## Install and run
 
-The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and **uv**; Python 3.12 and 3.13 were covered by the 0.2.x qualification matrix. RepoSetup does not install these system prerequisites for you.
+The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and the selected manager (**uv** or an activated **pip** environment); Python 3.12 and 3.13 were covered by the 0.2.x qualification matrix. RepoSetup does not install these system prerequisites for you.
 
-Install the 0.2.2 stability patch after publication (see the release record):
+Install the published 0.2.2 stability patch:
 
 ```bash
 npx rsetup@0.2.2 --help

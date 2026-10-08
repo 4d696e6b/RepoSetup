@@ -1,6 +1,6 @@
 # Integration support report (`0.2.2`)
 
-The 0.2.2 patch preserves the published 0.2.0 catalog classification. Publication and exact-source delivery progress are in [the patch release record](../release-docs/STABLE_RELEASE_0.2.2.md). The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
+The 0.2.2 patch preserves the published 0.2.0 catalog classification. Completed publication and exact-source delivery evidence are in [the patch release record](../release-docs/STABLE_RELEASE_0.2.2.md). The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
 
 ## 0.2.x execution qualification — 2026-10-08
 
@@ -19,8 +19,8 @@ passed twelve jobs with twenty bare solutions and fourteen recipes each.
 
 See [the stability plan](./STABILITY_0.2.x.md) for exact scopes and exclusions.
 These completed checks expand observed execution coverage on the patch branch;
-they are retained in the 0.2.2 candidate and do not promote catalog maturity.
-Final publication evidence is tracked in the release record.
+they are retained in published 0.2.2 and do not promote catalog maturity.
+Final publication, dependency-health qualification and delivery evidence are in the release record.
 
 ## Catalog classification retained in 0.2.2
 

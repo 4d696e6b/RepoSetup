@@ -3,8 +3,9 @@
 RepoSetup composes and installs a selected development stack from the terminal.
 Version 0.2.2 adds real installed-dependency health checks and pip dependency
 manifests, fixes Python environment selection, and explains FastAPI startup.
-It retains the create-path and setup repairs from 0.2.1. Publication progress is
-recorded in the linked release record; use these commands after publication.
+It retains the create-path and setup repairs from 0.2.1. Version 0.2.2 is
+published; qualification, signed provenance and three-platform registry delivery
+are recorded in the linked release record.
 
 ## Install
 
@@ -21,7 +22,7 @@ reposetup --version
 Both aliases should report 0.2.2. Without a global install, use
 `npx rsetup@0.2.2 --help` or `npx rsetup@0.2.2 create`.
 The npm package is `rsetup`; `npx reposetup` is a different project.
-Once npm's latest tag identifies 0.2.2, unversioned `npm install -g rsetup`
+npm's latest tag identifies 0.2.2, so unversioned `npm install -g rsetup`
 and `npx rsetup` also select it. A local `npm install rsetup` installs into the
 current project; use npx to launch it there.
 
