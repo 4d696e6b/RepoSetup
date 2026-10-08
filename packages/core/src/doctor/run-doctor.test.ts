@@ -44,7 +44,129 @@ const nodeProject = {
   "pnpm-lock.yaml": "lockfileVersion: '9.0'\n",
 };
 
+const docker = fakeIntegration({
+  id: "docker",
+  name: "Docker",
+  category: "infrastructure",
+  detect: async (context) => ({
+    detected:
+      (await context.files.exists("Dockerfile")) ||
+      (await context.files.exists("compose.yaml")) ||
+      (await context.files.exists("DOCKER_SETUP.md")),
+    confidence: "likely",
+    evidence: [{ kind: "file", detail: "Docker configuration or guidance exists" }],
+  }),
+});
+
+const compose = fakeIntegration({
+  id: "docker-compose",
+  name: "Docker Compose",
+  category: "infrastructure",
+  detect: async (context) => ({
+    detected: await context.files.exists("compose.yaml"),
+    confidence: "certain",
+    evidence: [{ kind: "file", detail: "Compose configuration exists" }],
+  }),
+});
+
 describe("runDoctor", () => {
+  it.each(["Dockerfile", "DOCKER_SETUP.md"])(
+    "reports a missing Docker CLI when %s documents the prerequisite",
+    async (file) => {
+      const root = await fixture({ ...nodeProject, [file]: "Docker configuration guidance\n" });
+      const result = await runDoctor({
+        startDir: root,
+        registry: lookup([docker]),
+        commandExists: async (command) => command !== "docker",
+      });
+      expect(result.ok).toBe(true);
+      if (!result.ok) return;
+      expect(failedDoctorChecks(result.result)).toEqual([
+        expect.objectContaining({
+          id: "prerequisite:docker",
+          code: "PREREQUISITE_MISSING",
+          suggestion: expect.stringContaining("https://docs.docker.com/get-docker/"),
+        }),
+      ]);
+    },
+  );
+
+  it("reports missing Docker without probing a nonexistent Compose plugin", async () => {
+    const root = await fixture({ ...nodeProject, "compose.yaml": "services: {}\n" });
+    const commands: string[] = [];
+    const result = await runDoctor({
+      startDir: root,
+      registry: lookup([docker, compose]),
+      commandExists: async (command) => command !== "docker",
+      checkCommand: async (command) => {
+        commands.push(command);
+        return false;
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(commands).toEqual([]);
+    expect(failedDoctorChecks(result.result).map((check) => check.id)).toEqual([
+      "prerequisite:docker",
+    ]);
+  });
+
+  it("reports a missing Compose plugin even when the Docker CLI exists", async () => {
+    const root = await fixture({ ...nodeProject, "compose.yaml": "services: {}\n" });
+    const result = await runDoctor({
+      startDir: root,
+      registry: lookup([docker, compose]),
+      commandExists: async () => true,
+      checkCommand: async () => false,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(failedDoctorChecks(result.result)).toEqual([
+      expect.objectContaining({
+        id: "prerequisite:docker-compose",
+        code: "PREREQUISITE_MISSING",
+        suggestion: expect.stringContaining("docker compose version"),
+      }),
+    ]);
+  });
+
+  it("does not claim Compose is installed without a command probe", async () => {
+    const root = await fixture({ ...nodeProject, "compose.yaml": "services: {}\n" });
+    const result = await runDoctor({
+      startDir: root,
+      registry: lookup([docker, compose]),
+      commandExists: async () => true,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(failedDoctorChecks(result.result)[0]?.id).toBe("prerequisite:docker-compose");
+  });
+
+  it("checks Compose availability without checking or starting the daemon", async () => {
+    const root = await fixture({ ...nodeProject, "compose.yaml": "services: {}\n" });
+    const commands: Array<{ command: string; args: readonly string[] }> = [];
+    const result = await runDoctor({
+      startDir: root,
+      registry: lookup([docker, compose]),
+      commandExists: async () => true,
+      checkCommand: async (command, args) => {
+        commands.push({ command, args });
+        return true;
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(commands).toEqual([{ command: "docker", args: ["compose", "version"] }]);
+    expect(failedDoctorChecks(result.result)).toEqual([]);
+    expect(result.result.checks).toContainEqual(
+      expect.objectContaining({
+        id: "prerequisite:docker-compose",
+        ok: true,
+        message: expect.stringContaining("daemon and running containers were not checked"),
+      }),
+    );
+  });
+
   it("returns PROJECT_NOT_FOUND outside a project", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-doctor-"));
     tempDirs.push(root);

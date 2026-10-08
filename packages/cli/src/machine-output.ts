@@ -27,6 +27,6 @@ export function renderPartialRunReport(completed: number, total: number): string
   return [
     `Execution stopped after ${completed} of ${total} operations completed.`,
     "Some changes may already be present.",
-    "Safe next step: run reposetup doctor, review the project, then rerun the command to create a fresh checked plan.",
+    "Safe next step: run reposetup doctor from the project directory and review the failed operation. Repair missing dependencies and finish any remaining setup steps. Create does not resume an interrupted installation; rerunning it over existing files will fail safely.",
   ].join("\n");
 }

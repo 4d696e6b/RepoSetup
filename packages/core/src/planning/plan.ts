@@ -120,7 +120,7 @@ function withBatchedInstalls(result: ResolutionResult): ResolutionResult {
     return invalidPlan(result, [batched.error]);
   }
 
-  const consolidated = consolidateManifestInstalls(batched.operations);
+  const consolidated = consolidateManifestInstalls(batched.operations, { includeDev: true });
   if (!consolidated.ok) {
     return invalidPlan(result, [consolidated.error]);
   }

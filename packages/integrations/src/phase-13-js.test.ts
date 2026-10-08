@@ -150,6 +150,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--allow-build=esbuild",
         "typescript@5.9.3",
         "@types/express@5.0.6",
@@ -197,6 +198,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--allow-build=esbuild",
         "typescript@5.9.3",
         "@types/node@22.20.4",
@@ -247,6 +249,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--allow-build=esbuild",
         "drizzle-kit@0.31.11",
         "tsx@4.23.15",
@@ -293,7 +296,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         "--lang=TypeScript",
         "--no-browsers",
       ],
-      ["pnpm", "add", "--save-dev", "--save-exact", "@playwright/test@1.63.0"],
+      ["pnpm", "add", "--save-dev", "--prod=false", "--save-exact", "@playwright/test@1.63.0"],
     ]);
     expect(playwrightIntegration.plan(planContext())).toEqual(
       expect.arrayContaining([
@@ -324,6 +327,7 @@ describe("Phase 13 JS ecosystem plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "eslint@9.39.5",
         "@eslint/js@9.39.5",
         "typescript-eslint@8.70.1",
@@ -344,7 +348,7 @@ describe("Phase 13 JS ecosystem plans", () => {
     expect(
       runCommands(eslintIntegration.plan(planContext({ frameworkOptions: { typescript: false } }))),
     ).toEqual([
-      ["pnpm", "add", "--save-dev", "eslint@9.39.5", "@eslint/js@9.39.5"],
+      ["pnpm", "add", "--save-dev", "--prod=false", "eslint@9.39.5", "@eslint/js@9.39.5"],
       ["pnpm", "exec", "eslint", "."],
     ]);
   });
@@ -402,7 +406,7 @@ describe("Phase 13 JS ecosystem plans", () => {
 
   it("installs Vitest only for non-Next.js frameworks", () => {
     expect(runCommands(vitestIntegration.plan(planContext({ frameworkId: "express" })))).toEqual([
-      ["pnpm", "add", "--save-dev", "--allow-build=esbuild", "vitest@5.0.1"],
+      ["pnpm", "add", "--save-dev", "--prod=false", "--allow-build=esbuild", "vitest@5.0.1"],
     ]);
   });
 });
@@ -523,7 +527,7 @@ describe("Phase 13 JS ecosystem detection and verify", () => {
       expect.objectContaining({ ok: false }),
     );
     expect(await eslintIntegration.verify?.(empty)).toEqual(expect.objectContaining({ ok: false }));
-    expect(await dockerIntegration.verify?.(empty)).toEqual({ ok: true });
+    expect(await dockerIntegration.verify?.(empty)).toEqual(expect.objectContaining({ ok: false }));
   });
 });
 
@@ -545,7 +549,7 @@ describe("Phase 13 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["pnpm", "create", "vite@8.3.0", ".", "--template", "react-ts", "--no-interactive"],
-        ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
+        ["pnpm", "install", "--no-frozen-lockfile", "--prod=false", "--prefer-offline"],
         ["pnpm", "dlx", "shadcn@4.21.0", "init", "--yes", "--defaults", "-t", "vite"],
       ]),
     );
@@ -569,7 +573,7 @@ describe("Phase 13 example stacks", () => {
     ]);
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
-        ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
+        ["pnpm", "install", "--no-frozen-lockfile", "--prod=false", "--prefer-offline"],
         [
           "pnpm",
           "exec",

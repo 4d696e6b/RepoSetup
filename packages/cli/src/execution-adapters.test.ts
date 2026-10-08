@@ -12,8 +12,29 @@ import {
   createDefaultExecutionJournal,
   createDefaultExecutableResolver,
   createDefaultProcessRunner,
+  createDefaultCommandExists,
+  createDefaultCommandVersion,
   resolveWindowsLaunch,
 } from "./execution-adapters.js";
+
+describe("bounded prerequisite inspection", () => {
+  it.each(["timedOut", "aborted", "notFound"] as const)(
+    "does not report a %s version probe as available",
+    async (failure) => {
+      const runner = vi.fn(async () => ({
+        exitCode: 0,
+        stdout: "Docker version 29.0.0",
+        stderr: "",
+        [failure]: true,
+      }));
+      expect(await createDefaultCommandExists(runner)("docker")).toBe(false);
+      expect(await createDefaultCommandVersion(runner)("docker")).toBeUndefined();
+      expect(runner).toHaveBeenCalledWith(
+        expect.objectContaining({ command: "docker", args: ["--version"], timeoutMs: 5_000 }),
+      );
+    },
+  );
+});
 
 describe("createDefaultExecutorFileSystem", () => {
   it("atomically replaces a final-component symlink without modifying its target", async () => {

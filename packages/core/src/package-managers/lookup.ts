@@ -46,6 +46,7 @@ export function toPackageManagerCommand(
     cwd: operation.cwd,
     description: operation.description,
     ...(operation.dev === true ? { dev: true as const } : {}),
+    ...(operation.includeDev === true ? { includeDev: true as const } : {}),
     ...(operation.exact === true ? { exact: true as const } : {}),
     ...(operation.allowBuild === undefined ? {} : { allowBuild: operation.allowBuild }),
   });

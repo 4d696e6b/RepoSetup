@@ -20,6 +20,23 @@ export async function handleDoctor(input: {
       const resolved = await input.deps.resolveExecutable(command);
       return resolved !== undefined && (await input.deps.commandExists(resolved));
     },
+    checkCommand: async (command, args) => {
+      const resolved = await input.deps.resolveExecutable(command);
+      if (resolved === undefined) return false;
+      const result = await input.deps.runProcess({
+        command: resolved,
+        args: [...args],
+        cwd: input.deps.cwd,
+        timeoutMs: 5_000,
+        ...(input.deps.signal === undefined ? {} : { signal: input.deps.signal }),
+      });
+      return (
+        result.exitCode === 0 &&
+        result.notFound !== true &&
+        result.timedOut !== true &&
+        result.aborted !== true
+      );
+    },
     checkInstalledDependencies: createDependencyHealthCheck(input.deps),
     ...(input.commandVersion === undefined
       ? {}

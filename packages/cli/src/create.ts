@@ -125,6 +125,10 @@ export async function handleCreate(input: {
     if (!input.globals.json) {
       writeLine(
         input.deps.io.writeErr,
+        `Project directory: ${path.resolve(input.deps.cwd, planned.config.project.path ?? ".")}`,
+      );
+      writeLine(
+        input.deps.io.writeErr,
         renderPartialRunReport(executed.executed, planned.operations.length),
       );
     }
@@ -143,6 +147,20 @@ export async function handleCreate(input: {
       input.deps.io.writeOut,
       "Installed dependency check passed. Run the following commands from the project directory:",
     );
+    const selected = new Set(planned.orderedIntegrations.map((integration) => integration.id));
+    if (selected.has("docker")) {
+      writeLine(
+        input.deps.io.writeOut,
+        "Docker is a system prerequisite, not an installed npm package. See DOCKER_SETUP.md; Docker installation and running containers have not been verified.",
+      );
+    }
+    if (selected.has("postgresql") || selected.has("mongodb")) {
+      const databaseVariable = selected.has("mongodb") ? "MONGODB_URI" : "DATABASE_URL";
+      writeLine(
+        input.deps.io.writeOut,
+        `Database configuration is prepared; no database server was installed, started, or connected. Configure your server and ${databaseVariable} before using it.`,
+      );
+    }
     for (const command of postCreateCommands(planned.config)) {
       writeLine(input.deps.io.writeOut, `Next: ${command}`);
     }

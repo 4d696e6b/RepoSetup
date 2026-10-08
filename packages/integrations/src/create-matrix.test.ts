@@ -98,6 +98,17 @@ describe("0.2.x create plan stability matrix", () => {
           ).toBe(true);
         }
         if (operation.type === "install_package") expect(operation.cwd).toBe(destination);
+        if (operation.type === "install_package" && ["npm", "pnpm"].includes(manager)) {
+          expect(operation.includeDev, JSON.stringify(operation)).toBe(true);
+        }
+        if (
+          operation.type === "run_command" &&
+          ["npm", "pnpm"].includes(manager) &&
+          operation.command === manager &&
+          operation.args[0] === "install"
+        ) {
+          expect(operation.args).toContain(manager === "npm" ? "--include=dev" : "--prod=false");
+        }
         if (
           operation.type === "run_command" &&
           operation.skipsDependencyInstall !== true &&

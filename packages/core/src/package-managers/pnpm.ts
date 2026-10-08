@@ -16,6 +16,7 @@ import { validateCwd, validatePackageSpecs } from "./validate.js";
  *
  * - add: `pnpm add <pkg>`
  * - add (dev): `--save-dev, -D, -d`
+ * - include development packages: `--prod=false` installs both dependency groups
  * - install project: `pnpm install` (alias `i`)
  * - frozen install: `pnpm install --frozen-lockfile`
  *   (https://pnpm.io/cli/install). pnpm-lock.yaml is not updated.
@@ -57,6 +58,9 @@ export const pnpmAdapter: PackageManagerAdapter = {
       request.frozen === true
         ? ["install", "--frozen-lockfile"]
         : ["install", "--no-frozen-lockfile"];
+    if (request.includeDev === true) {
+      args.push("--prod=false");
+    }
     if (request.preferOffline === true) {
       args.push("--prefer-offline");
     }

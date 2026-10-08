@@ -74,6 +74,47 @@ const nodeCases = ["nextjs", "react-vite", "express", "fastify"].flatMap((framew
 );
 
 describe("npx create supported bare solutions", () => {
+  it.each(["npm", "pnpm"])(
+    "Express TypeScript / %s / development tools survive production and omit settings",
+    async (manager) => {
+      const { cwd, env } = await create("express", manager, true, {
+        ...process.env,
+        NODE_ENV: "production",
+        npm_config_omit: "dev",
+        npm_config_production: "true",
+      });
+      await access(path.join(cwd, "node_modules", "express", "package.json"));
+      await access(path.join(cwd, "node_modules", "@types", "express", "index.d.ts"));
+      await access(path.join(cwd, "node_modules", "@types", "node", "index.d.ts"));
+      const built = await runProcess(manager, ["run", "build"], { cwd, env });
+      expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+      const doctorArgs = ["--yes", "--package", tarball, "rsetup", "--json", "doctor"];
+      const healthy = await runProcess("npx", doctorArgs, { cwd, env });
+      expect(healthy.exitCode, `${healthy.stdout}\n${healthy.stderr}`).toBe(0);
+      expect(JSON.parse(healthy.stdout).result.checks).toContainEqual(
+        expect.objectContaining({ id: "dependencies:node", ok: true }),
+      );
+
+      // A runtime package alone is insufficient for the generated TypeScript app.
+      await rm(path.join(cwd, "node_modules", "@types", "express"), {
+        recursive: true,
+        force: true,
+      });
+      const damaged = await runProcess("npx", doctorArgs, { cwd, env });
+      expect(damaged.exitCode).not.toBe(0);
+      expect(JSON.parse(damaged.stdout).result.checks).toContainEqual(
+        expect.objectContaining({
+          id: "dependencies:node",
+          ok: false,
+          message: expect.stringContaining("@types/express"),
+        }),
+      );
+      const missingTypesBuild = await runProcess(manager, ["run", "build"], { cwd, env });
+      expect(missingTypesBuild.exitCode).not.toBe(0);
+      expect(`${missingTypesBuild.stdout}\n${missingTypesBuild.stderr}`).toContain("express");
+    },
+  );
+
   it.each(nodeCases)(
     "$framework / $manager / TypeScript $typescript / nested destination",
     async ({ framework, manager, typescript }) => {

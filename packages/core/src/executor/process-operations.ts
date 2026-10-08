@@ -36,7 +36,7 @@ export async function executeCheckPrerequisite(
       message: `Unknown prerequisite "${operation.id}".`,
       details: { id: operation.id },
       suggestion:
-        "PATH checks cover node, npm, pnpm, python, uv, and pip. Do not install system software automatically.",
+        "PATH checks cover node, npm, pnpm, python, uv, pip, and docker. Do not install system software automatically.",
     });
   }
 

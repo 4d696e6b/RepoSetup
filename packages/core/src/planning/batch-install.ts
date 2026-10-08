@@ -83,6 +83,7 @@ function batchSegment(segment: readonly InstallationOperation[]): BatchInstallRe
           description: operation.description,
           requiresNetwork: true,
           ...(operation.dev === true ? { dev: true } : {}),
+          ...(operation.includeDev === true ? { includeDev: true } : {}),
           ...(operation.exact === true ? { exact: true } : {}),
         },
         specsByName: new Map(),
@@ -173,6 +174,7 @@ function installPolicyKey(operation: InstallPackageOperation): string {
     operation.packageManager,
     operation.cwd,
     operation.dev === true ? "dev" : "prod",
+    operation.includeDev === true ? "include-dev" : "default-dev-policy",
     operation.exact === true ? "exact" : "range",
   ].join("\0");
 }

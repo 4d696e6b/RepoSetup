@@ -1,4 +1,4 @@
-import { access, mkdir, readFile, readdir, realpath, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, realpath, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
@@ -98,6 +98,67 @@ async function expectHealthyCli(cwd: string, expectedIds: readonly string[]): Pr
 }
 
 describe("golden stack real execution", () => {
+  it.each(
+    ["express", "fastify"].flatMap((framework) =>
+      ["sqlite", "postgresql"].map((database) => ({ framework, database })),
+    ),
+  )(
+    "Golden L — JavaScript $framework / $database / Prisma imports the generated client with plain Node",
+    async ({ framework, database }) => {
+      const fixtureRoot = await createTempWorkspace("reposetup-javascript-prisma-");
+      tempDirs.push(fixtureRoot);
+      const configPath = path.join(fixtureRoot, "config.json");
+      await writeFile(
+        configPath,
+        JSON.stringify({
+          schemaVersion: 1,
+          project: { name: "javascript-prisma-app" },
+          runtime: { id: "node" },
+          packageManager: "pnpm",
+          framework: { id: framework, options: { typescript: false } },
+          integrations: [{ id: database }, { id: "prisma" }],
+        }),
+      );
+      const { cwd, created } = await createProject(configPath);
+      expect(created.exitCode, `${created.stdout}\n${created.stderr}`).toBe(0);
+      await access(path.join(cwd, "lib/prisma.js"));
+      const schemaPath = path.join(cwd, "prisma/schema.prisma");
+      await writeFile(
+        schemaPath,
+        `${await readFile(schemaPath, "utf8")}\n\nenum AuditRole {\n  USER\n  ADMIN\n}\n\nmodel AuditEntry {\n  id Int @id @default(autoincrement())\n  role AuditRole @default(USER)\n}\n`,
+      );
+      const generated = await runProcess(
+        process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm" ? "npx" : "pnpm",
+        process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm"
+          ? ["prisma", "generate"]
+          : ["exec", "prisma", "generate"],
+        { cwd, env: { ...process.env, npm_config_cache: path.join(fixtureRoot, "npm-cache") } },
+      );
+      expect(generated.exitCode, `${generated.stdout}\n${generated.stderr}`).toBe(0);
+      const imported = await runProcess(
+        process.execPath,
+        [
+          "--input-type=module",
+          "-e",
+          `const {prisma}=await import('./lib/prisma.js');if(prisma.auditEntry===undefined)throw new Error('Generated model is missing');${database === "sqlite" ? "await prisma.$queryRawUnsafe('SELECT 1');" : ""}await prisma.$disconnect();`,
+        ],
+        {
+          cwd,
+          env: {
+            ...process.env,
+            DATABASE_URL:
+              database === "sqlite"
+                ? "file:./audit.db"
+                : "postgresql://USER:PASSWORD@127.0.0.1:5432/DATABASE",
+          },
+        },
+      );
+      expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
+
+      await expectHealthyCli(cwd, [framework, "prisma"]);
+    },
+  );
+
   it.each(
     ["nextjs", "react-vite"].flatMap((framework) =>
       [true, false].map((typescript) => ({ framework, typescript })),
@@ -357,8 +418,56 @@ describe("golden stack real execution", () => {
       await access(path.join(cwd, "pyproject.toml"));
       await access(path.join(cwd, "alembic.ini"));
 
-      const imported = await runProcess("uv", ["run", "python", "-c", "import main"], { cwd });
+      const imported = await runProcess(
+        "uv",
+        [
+          "run",
+          "python",
+          "-c",
+          "import main; from database import create_database_engine; from psycopg import pq; engine=create_database_engine('postgresql+psycopg://USER:PASSWORD@127.0.0.1:5432/DATABASE'); assert engine.dialect.driver == 'psycopg'; assert pq.__impl__ == 'binary'; engine.dispose()",
+        ],
+        { cwd },
+      );
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
+
+      const metadataRoot = await runProcess(
+        "uv",
+        [
+          "run",
+          "--no-sync",
+          "--offline",
+          "--no-python-downloads",
+          "python",
+          "-I",
+          "-c",
+          "import sysconfig; print(sysconfig.get_path('platlib'))",
+        ],
+        { cwd },
+      );
+      expect(metadataRoot.exitCode, metadataRoot.stderr).toBe(0);
+      const sitePackages = metadataRoot.stdout.trim();
+      const binaryMetadata = (await readdir(sitePackages)).find(
+        (file) => file.startsWith("psycopg_binary-") && file.endsWith(".dist-info"),
+      );
+      expect(binaryMetadata).toBeDefined();
+      const present = path.join(sitePackages, binaryMetadata as string);
+      const hidden = `${present}.reposetup-missing`;
+      await rename(present, hidden);
+      try {
+        const damagedDoctor = await runNodeCli(monorepoBin, ["--json", "doctor"], { cwd });
+        expect(damagedDoctor.exitCode, damagedDoctor.stderr).toBe(5);
+        expect(JSON.parse(damagedDoctor.stdout).result.checks).toContainEqual(
+          expect.objectContaining({
+            id: "dependencies:python",
+            ok: false,
+            message: expect.stringContaining("psycopg-binary"),
+          }),
+        );
+        // A read-only doctor must preserve the damaged environment instead of syncing it.
+        expect(await readdir(sitePackages)).not.toContain(binaryMetadata);
+      } finally {
+        await rename(hidden, present);
+      }
 
       const pytest = await runProcess("uv", ["run", "pytest"], { cwd });
       expect(pytest.exitCode, `${pytest.stdout}\n${pytest.stderr}`).toBe(0);
@@ -380,7 +489,16 @@ describe("golden stack real execution", () => {
       await access(path.join(cwd, "pyproject.toml"));
       await access(path.join(cwd, "alembic.ini"));
 
-      const imported = await runProcess("uv", ["run", "python", "-c", "import app"], { cwd });
+      const imported = await runProcess(
+        "uv",
+        [
+          "run",
+          "python",
+          "-c",
+          "import app; from database import create_database_engine; from psycopg import pq; engine=create_database_engine('postgresql+psycopg://USER:PASSWORD@127.0.0.1:5432/DATABASE'); assert engine.dialect.driver == 'psycopg'; assert pq.__impl__ == 'binary'; engine.dispose()",
+        ],
+        { cwd },
+      );
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
 
       const pytest = await runProcess("uv", ["run", "pytest"], { cwd });

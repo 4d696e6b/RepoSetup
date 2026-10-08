@@ -1217,7 +1217,7 @@ describe("executeInstallation", () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];
     const result = await executeInstallation(
-      [{ type: "check_prerequisite", id: "docker", description: "Require Docker" }],
+      [{ type: "check_prerequisite", id: "unknown-system-tool", description: "Unknown tool" }],
       { rootDir: root, runProcess: recordingRunner(runs) },
     );
 

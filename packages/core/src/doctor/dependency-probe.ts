@@ -73,6 +73,8 @@ for spec in specs:
     # The generated FastAPI command requires standard extras, not just the distribution.
     if names[0].lower() == "fastapi" and "standard" in (match.group(2) or "").split(","):
         names.extend(["fastapi-cli", "uvicorn"])
+    if names[0].lower() == "psycopg" and "binary" in (match.group(2) or "").split(","):
+        names.append("psycopg-binary")
     for name in names:
         if name in checked or name in missing:
             continue

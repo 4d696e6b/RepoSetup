@@ -25,6 +25,13 @@ export function pythonAppReadme(context: PlanContext, title: string, command: st
       "Run `rsetup doctor` here with that environment activated to check installed dependency metadata.",
       "",
     );
+  if (hasSelectedIntegration(context, "sqlalchemy"))
+    lines.push(
+      "SQLAlchemy and the Psycopg PostgreSQL driver are installed. Set `DATABASE_URL` in your environment using a `postgresql+psycopg://` URL; `.env.example` contains a placeholder, not active credentials.",
+      "Import `create_database_engine` from `database.py` to construct an engine. A PostgreSQL server must be available before opening a connection; RepoSetup does not install or start that server.",
+      "If Alembic is selected, set `sqlalchemy.url` in `alembic.ini` to the same driver URL before running migrations.",
+      "",
+    );
   if (hasSelectedIntegration(context, "pytest"))
     lines.push(`Run the generated endpoint test with \`${prefix}pytest\`.`, "");
   return lines.join("\n");

@@ -62,6 +62,7 @@ export function ensureScaffoldDependencyInstall(
       cwd: projectRoot,
       description: "Install scaffold dependencies skipped by the generator",
       preferOffline: true,
+      includeDev: true,
     });
     if (!installed.ok) {
       return { ok: false, error: installed.error };
