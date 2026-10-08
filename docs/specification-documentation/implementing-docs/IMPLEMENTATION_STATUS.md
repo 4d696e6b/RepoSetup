@@ -4,18 +4,15 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**0.2.1 — release preparation and exact-source qualification in progress.**
-The owner authorized publication on October 8. The tested fixes are merged through
-PR #10; manifests and active release checks target 0.2.1 on `codex/release-0.2.1`.
+**0.2.1 — complete: published and delivery accepted.** npm `latest` identifies
+0.2.1. Three exact-source release runs (16 required jobs each), the twelve-job
+expanded golden matrix (408 executions), fifteen preset sessions (117 checks),
+controlled benchmarks and all three fresh registry installs passed.
+The immutable tag/source is `v0.2.1` / `c61b88a88e18ef5d9c92291131f3c938fc0b521a`.
+Signed provenance and registry integrity match the qualified tarball.
 See [the patch release record](../release-docs/STABLE_RELEASE_0.2.1.md).
-The npm release remains 0.2.0 until publication and registry acceptance finish.
-
-**0.2.x follow-up — automated create-regression qualification complete; patch
-publication pending.** The checked current acceptance items are in
-[ACCEPTANCE_TESTS.md](./ACCEPTANCE_TESTS.md#current-02x-automated-acceptance--2026-10-08);
-release preparation/delivery items remain open in the
-[patch release checklist](../release-docs/RELEASE_CHECKLIST.md#current-021-patch--2026-10-08).
-The Phase 27/28 entries below describe the already published 0.2.0 milestone.
+The broader 0.2.x roadmap still has explicitly unqualified manual/service paths;
+this release does not promote individual integration maturity.
 
 **Phase 27 — Release-candidate qualification: complete for the frozen alpha candidate.** Its closure is explicitly recorded on `codex/phase-27-closeout` at `837b20d438d92fb6bcd557cb4e5145230238ee13`.
 
@@ -47,7 +44,7 @@ The current [stable qualification record](../release-docs/STABLE_QUALIFICATION_0
 
 ### Phase 27 progress — 2026-09-29
 
-- [x] At this Phase 27 checkpoint, the CLI was `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17. The current published version is `0.2.0`, as recorded above.
+- [x] At this Phase 27 checkpoint, the CLI was `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17. The current published version is `0.2.1`; the 0.2.0 milestone is retained above.
 - [x] Packed-artifact tests derive the tarball and manifest version from `packages/cli/package.json`, record the SHA-256, and install the tarball in a temporary directory outside the monorepo. Both `rsetup` and `reposetup` launch through npm's actual platform launcher.
 - [x] `write-artifact-evidence.mjs` writes a source-SHA and SHA-256 identity record once for each packed candidate. `verify-packed-artifact.mjs` verifies that record before installing and launching the same artifact.
 - [x] The manually dispatched candidate workflow and the `v0.2.0` publish workflow make Node 24 platform qualification, Python 3.12/3.13 golden qualification, exact-SHA failure-path qualification, a one-time candidate pack, and cross-platform artifact acceptance blocking dependencies. The publishing path uses the downloaded qualifying tarball only after its source SHA and tag/version agree.
@@ -159,7 +156,10 @@ Phase 22 implementation gates for reproducible recipes are complete. Phase 27 co
 
 ## Current release
 
-The observed npm `latest` dist-tag is `rsetup@0.2.0`. Its registry integrity matches the qualified artifact, and its signed provenance names the `v0.2.0` tag at `04228d5206617355b609f640267c73669880e060`. See [the stable qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md). The older `0.1.1` baseline remains in [Phase 19 baseline](./PHASE_19_BASELINE.md).
+The observed npm `latest` dist-tag is `rsetup@0.2.1`. Its registry integrity,
+`v0.2.1` source and signed provenance match the qualified artifact; fresh delivery
+passed on all three release targets. See [the current release record](../release-docs/STABLE_RELEASE_0.2.1.md).
+Published 0.2.0 and older baseline evidence remain historical.
 
 ## Planning checkpoint — 2026-09-22
 
@@ -312,8 +312,18 @@ were separately qualified at `86352e3`; product files are unchanged.
 - [x] PR-head `8372f59` fast CI, all three platform jobs and all three controlled performance jobs passed ([CI](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942444), [platform](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942315), [performance](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942331)). Product files remain identical to `448beb4`.
 
 The stability plan and linked machine-readable record contain exact run/source
-references and the historical Windows JSON trailer issue. Patch publication,
-maintainer security review, native Windows 11/Linux arm64, live services and
-actual browser journeys remain open. Do not mark the entire 0.2.x roadmap or
+references and the historical Windows JSON trailer issue. Patch publication, bounded security review and registry delivery are now complete
+in the 0.2.1 release record. Native Windows 11/Linux arm64, live services and
+actual browser journeys remain unqualified; the generated-tool advisory has no published fix. Do not mark the entire 0.2.x roadmap or
 all integration permutations complete, and do not promote integrations from
 these results alone.
+
+### 0.2.1 delivery closeout — 2026-10-08
+
+- [x] Tested fixes and release preparation merged through PR #10 and PR #11.
+- [x] Three exact-source full release qualifications and expanded 408-execution matrix pass; all required job/step and raw case counts verified.
+- [x] All 15 presets/117 checks and three-platform controlled benchmarks pass.
+- [x] New immutable tag, exact qualified tarball, npm publication, latest, signatures, provenance and all three registry-delivery jobs pass.
+- [x] Current installation/status/support/CLI documentation and user guide target 0.2.1; historical release evidence is preserved.
+- [x] Unsupported proposed create flags/import command are no longer presented as current CLI behavior.
+- [ ] Native Windows 11/Linux arm64, live database/container/DBAPI and actual browser qualification are complete (future scope, not inferred from this release).

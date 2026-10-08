@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedAt": "2026-10-08",
-  "status": "automated-qualification-passed-unpublished",
+  "status": "repair-qualification-delivered-as-0.2.1",
   "branch": "codex/fix-create-project-paths",
   "productSourceCommit": "448beb43d945dffa81ff403553200c7e04d3cba1",
   "local": {
@@ -79,8 +79,11 @@
     "publishedPatchAvailable": false
   },
   "publication": {
-    "npmUnchanged": true,
-    "patchVersionNotPublished": true,
-    "maintainerReleaseReviewRequired": true
+    "npmUnchanged": false,
+    "patchVersionNotPublished": false,
+    "maintainerReleaseReviewRequired": false,
+    "deliveredVersion": "0.2.1",
+    "releaseRecord": "../STABLE_RELEASE_0.2.1.md",
+    "releaseSourceCommit": "c61b88a88e18ef5d9c92291131f3c938fc0b521a"
   }
 }

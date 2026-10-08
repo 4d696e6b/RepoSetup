@@ -11,9 +11,10 @@ all possible integration combinations or all operating systems were tested.
 
 ## Current qualification result — 2026-10-08
 
-The create-regression repairs and automated qualification are complete. The
-patch remains unpublished; maintainer release review and the manual/service
-gaps below remain open. Earlier attempts are retained below as history, not
+The create-regression repairs are delivered in **rsetup@0.2.1**. Exact-source
+qualification, signed publication and three-platform registry delivery passed;
+see the [release record](../release-docs/STABLE_RELEASE_0.2.1.md). The manual/service
+gaps below remain outside qualification. Earlier attempts are retained below as history, not
 as the current gate result.
 
 - Product source `448beb43d945dffa81ff403553200c7e04d3cba1` passed all twelve full matrix jobs: 34 tests per job, 408 successful executions, with no skipped golden/bare cases. Each job executes twenty packed-npx bare solutions and fourteen real recipes. [Full matrix](https://github.com/4d696e6b/RepoSetup/actions/runs/37703591131).
@@ -26,15 +27,16 @@ The [machine-readable qualification record](../release-docs/qualification/0.2.x-
 records source revisions, scopes, counts and exclusions. Native Windows 11,
 Linux arm64, live databases/containers, SQLAlchemy DBAPI connections and actual
 Playwright browser journeys are not qualified by this matrix. The documented
-unpatched development-tool advisory still requires maintainer review.
+unpatched development-tool advisory is retained in the bounded release review;
+no upstream fix or audit-clean generated stack is claimed.
 
-This completes the automated stability pass, not every possible integration
-permutation, integration promotion, or an npm patch release. No new seven-day
+This completes the automated stability pass and 0.2.1 patch delivery, not every
+possible integration permutation or integration promotion. No new seven-day
 freeze is required.
 
 ## 0.2.1 — Repair published create regressions
 
-Implementation and automated regression validation: complete. Publication: pending.
+Implementation, automated regression validation, publication and delivery: complete.
 
 - [x] Reproduce `npx rsetup@0.2.0 create my-next --framework nextjs --package-manager npm --typescript --yes` in a fresh folder.
 - [x] Scope all generated file operations to the selected project directory; preserve generator commands that run from its parent.
@@ -228,8 +230,8 @@ is explicitly labeled; it does not execute or qualify generated applications.
 ## Reproducing the stability checks
 
 Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.
-These commands test the unpublished checkout; they do not install a fixed patch
-from the public npm registry.
+These commands test the checkout. The published patch is available as
+`rsetup@0.2.1`; see the release record for npm installation and provenance.
 
 ```sh
 pnpm install --frozen-lockfile

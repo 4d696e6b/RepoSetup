@@ -1,4 +1,4 @@
-# CLI Specification
+# CLI Specification — 0.2.1
 
 ## 1. Command tree
 
@@ -7,18 +7,18 @@ reposetup
 ├── create
 ├── add
 ├── remove
+├── presets
 ├── search
 ├── info
 ├── stack
 ├── doctor
 ├── export
-├── import
 ├── registry
 │   └── validate
 └── version/help
 ```
 
-Some commands may ship after the first alpha, but v1 architecture must support them.
+The command tree and create flags above/below match the current CLI help. Recipe-record import remains a proposed workflow, not an implemented command. Older design examples do not authorize arbitrary config commands.
 
 ## 2. `reposetup create`
 
@@ -54,15 +54,16 @@ Only show choices that are valid/relevant to the selected context.
 Example:
 
 ```bash
-reposetup create my-app \
-  --framework nextjs \
-  --package-manager pnpm \
-  --typescript \
-  --tailwind \
-  --database sqlite \
-  --orm prisma \
-  --validation zod
+reposetup create my-app --preset next-sqlite --dry-run
+reposetup create my-app --preset next-sqlite --yes
 ```
+
+The five preset IDs are `next-sqlite`, `react-vite`, `express-postgres`, `fastapi`
+and `flask`; `reposetup presets` lists their contents. Supported create selection
+flags are `--framework`, `--package-manager`, `--typescript`, `--preset` and
+`--config`, plus preview/confirmation/output flags. Integration selections use
+prompts, a preset or declarative configuration. `--tailwind`, `--database`, `--orm`
+and `--validation` are not implemented create flags.
 
 ### Config
 
@@ -222,13 +223,13 @@ Do not include:
 - local absolute paths unless unavoidable;
 - arbitrary commands.
 
-## 10. `reposetup import`
+## 10. Proposed `reposetup import` (not shipped)
 
 Alias/flow for applying a known declarative config to a target context may be considered, but `create --config` is canonical for new projects.
 
 ## 11. Global flags
 
-Recommended:
+Implemented global flags:
 
 ```text
 --help
@@ -248,7 +249,7 @@ Mutating commands:
 
 ## 12. Exit codes
 
-Suggested initial contract:
+Implemented exit-code contract:
 
 ```text
 0 success
@@ -259,7 +260,7 @@ Suggested initial contract:
 5 verification failure
 ```
 
-Document before v1 stable and avoid changing casually.
+Preserve these codes across compatible releases; changes require explicit migration guidance.
 
 ## 13. Non-TTY daily workflow
 
