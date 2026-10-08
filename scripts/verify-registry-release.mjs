@@ -45,7 +45,7 @@ export async function verifyDelivery(tarball) {
       "npm",
       [
         "install",
-        tarball === undefined ? "rsetup@0.2.2" : "./package.tgz",
+        tarball === undefined ? "rsetup@0.2.3" : "./package.tgz",
         "--registry",
         "https://registry.npmjs.org",
         "--no-audit",
@@ -56,10 +56,10 @@ export async function verifyDelivery(tarball) {
     const manifest = JSON.parse(
       await readFile(path.join(directory, "node_modules/rsetup/package.json"), "utf8"),
     );
-    if (manifest.name !== "rsetup" || manifest.version !== "0.2.2")
+    if (manifest.name !== "rsetup" || manifest.version !== "0.2.3")
       throw new Error("Installed version differs from release.");
     for (const alias of ["rsetup", "reposetup"]) {
-      if ((await run("npm", ["exec", "--", alias, "--version"], directory)).trim() !== "0.2.2")
+      if ((await run("npm", ["exec", "--", alias, "--version"], directory)).trim() !== "0.2.3")
         throw new Error(`${alias} version is incorrect.`);
       if (
         !(await run("npm", ["exec", "--", alias, "--help"], directory)).includes("Usage: reposetup")
@@ -103,11 +103,11 @@ export async function verifyDelivery(tarball) {
 
 async function main() {
   const identity = await verifyArtifactIdentity("candidate", {
-    version: "0.2.2",
+    version: "0.2.3",
     sourceSha: process.env.GITHUB_SHA,
   });
   const metadata = await registryVersion();
-  if (!metadata) throw new Error("rsetup@0.2.2 is not published.");
+  if (!metadata) throw new Error("rsetup@0.2.3 is not published.");
   verifyRegistryIdentity(metadata, identity);
   const latestResponse = await globalThis.fetch("https://registry.npmjs.org/rsetup/latest", {
     signal: globalThis.AbortSignal.timeout(30_000),

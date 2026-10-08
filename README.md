@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is an **early-stage** open-source project with `v0.2.2` published. The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is an **early-stage** open-source project preparing `v0.2.3`. Publication and delivery status are recorded in the [0.2.3 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -37,7 +37,7 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 - Existing-project detection (`stack`)
 - Add supported integrations to an existing project
 - Safe `remove` where an explicit recipe exists
-- Project health checks (`doctor`)
+- Project health checks (`doctor`), including installed dependency metadata and bounded Docker/Compose prerequisite probes
 - Config export with no secrets
 - Built-in local registry (JavaScript/TypeScript and Python ecosystems)
 - argv-based process execution (`spawn` with `shell: false`)
@@ -46,14 +46,14 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and the selected manager (**uv** or an activated **pip** environment); Python 3.12 and 3.13 were covered by the 0.2.x qualification matrix. RepoSetup does not install these system prerequisites for you.
 
-Install the published 0.2.2 stability patch:
+Version 0.2.3 is the installed-stack stability patch. The commands below target that version after publication; consult the [release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md) while delivery is pending:
 
 ```bash
-npx rsetup@0.2.2 --help
-npx rsetup@0.2.2 --version
+npx rsetup@0.2.3 --help
+npx rsetup@0.2.3 --version
 ```
 
-For a global install, run `npm install -g rsetup@0.2.2`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
+For a global install, run `npm install -g rsetup@0.2.3`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
 
 ## Develop from source
 
@@ -65,7 +65,7 @@ cd RepoSetup
 pnpm install
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.2.2
+node packages/cli/dist/bin.js --version   # 0.2.3
 ```
 
 Preview a Next.js example without changing files:
@@ -167,13 +167,13 @@ reposetup registry validate
 
 There is no separate `import` command. Apply an exported file with `create --config`.
 
-`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in the 0.2.2 support contract.**
+`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. **None are `stable` in the 0.2.3 support contract.**
 
 ## Integration status
 
 Status is per ID, not “the catalog is production-ready.”
 
-| Status | Meaning in the 0.2.2 support contract |
+| Status | Meaning in the 0.2.3 support contract |
 | --- | --- |
 | **stable** | Real execute + advertised-platform evidence. **None yet.** |
 | **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |
@@ -219,7 +219,11 @@ Status is per ID, not “the catalog is production-ready.”
 
 Example configs live in `examples/`.
 
-The published 0.2.0 baseline passed [qualification and delivery](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md). The expanded 0.2.x repairs passed the [stability matrix](docs/specification-documentation/implementing-docs/STABILITY_0.2.x.md); 0.2.2 publication and three-platform registry delivery are tracked in the [patch release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.2.md). Qualification runs on Ubuntu 24.04, macOS 15, and Windows Server 2025 CI runners. The Windows CI runner is not a direct Windows 11 desktop test. Generated PostgreSQL configuration does not install or verify a database server.
+Create installs selected Node development tools even when the parent environment omits dev dependencies. PostgreSQL SQLAlchemy recipes include Psycopg's binary driver; JavaScript Prisma helpers use the generated client's supported Node 24 import paths. Docker selections write prerequisite guidance, and PostgreSQL Compose includes a loopback port and persistent storage. RepoSetup does not install system software or start those services.
+
+A failed installation is incomplete even if generated source files exist. Review the printed project directory and error before retrying; `create` does not resume over existing files. Doctor reports missing dependencies and manual recovery commands without reinstalling them. See the [0.2.3 user guide](docs/humanOnly/RepoSetup_0.2.3.md) for production settings, npm cache failures and service setup.
+
+The published 0.2.0 baseline passed [qualification and delivery](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md). The expanded 0.2.x repairs passed the [stability matrix](docs/specification-documentation/implementing-docs/STABILITY_0.2.x.md). The [installed-stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) covers the additional 0.2.3 fixes; version-specific artifact qualification and publication are tracked in the [0.2.3 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md). Qualification runs on Ubuntu 24.04, macOS 15, and Windows Server 2025 CI runners. The Windows CI runner is not a direct Windows 11 desktop test. Generated PostgreSQL configuration does not install or verify a database server.
 
 ## How it works
 

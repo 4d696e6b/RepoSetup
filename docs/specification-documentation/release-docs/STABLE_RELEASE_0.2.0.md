@@ -1,6 +1,6 @@
 # Stable 0.2.0 delivery runbook
 
-Historical 0.2.0 evidence. The current patch is [0.2.2](./STABLE_RELEASE_0.2.2.md);
+Historical 0.2.0 evidence. The current candidate is [0.2.3](./STABLE_RELEASE_0.2.3.md);
 its publication and delivery are recorded separately.
 
 Status: `rsetup@0.2.0` was published from qualified tag source `04228d5206617355b609f640267c73669880e060`, and install-from-registry acceptance passed on Ubuntu, macOS, and Windows in [run 37659541713](https://github.com/4d696e6b/RepoSetup/actions/runs/37659541713). The alpha soak completed on October 7, 2026 for `145e167e6b60897da96942545ba6dbd40359ad4a`, whose tarball reports `0.2.0-alpha.1`. On October 7 the owner removed the additional seven-day stable soak requirement.

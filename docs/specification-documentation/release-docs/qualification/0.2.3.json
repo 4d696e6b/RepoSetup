@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.3",
+  "status": "preparation",
+  "branch": "codex/release-0.2.3",
+  "ownerAuthorization": "Publish 0.2.3 after health qualification; user request 2026-10-08.",
+  "repairMerge": {
+    "pullRequest": "https://github.com/4d696e6b/RepoSetup/pull/17",
+    "commit": "7e5f815"
+  },
+  "sourceCommit": null,
+  "qualificationRuns": [],
+  "artifact": null,
+  "publication": null,
+  "registryAcceptance": null,
+  "liveServices": {
+    "status": "in-progress",
+    "scope": "Isolated local database checks and Linux Docker/Compose CI; no native Windows desktop or arbitrary permutations claimed.",
+    "local": {
+      "status": "passed",
+      "checkoutCommit": "7e5f81578c9abe950a1b64eeb9b00fe24089598e",
+      "scope": "Local live-service acceptance using copies of retained generated audit projects; not a new CLI create or Docker Compose qualification.",
+      "evidencePath": "/var/folders/p2/2g1kz9392wq51_p7kdttbgh00000gp/T/reposetup-live-db-023-73kg9ctf/results.json",
+      "casesPassed": 5,
+      "postgresql": "14.20",
+      "mongodb": "8.2.3",
+      "serverCleanup": [
+        {
+          "label": "mongodb",
+          "returnCode": 0,
+          "exited": true
+        },
+        {
+          "label": "postgres",
+          "returnCode": 0,
+          "exited": true
+        }
+      ],
+      "helperProvenance": "Copies of retained agent-owned generated projects, same helpers exercised in installed-stack audit. Their dependencies were reinstalled as isolated pinned runtime packages for this live acceptance; exact resolved versions and lockfile retained.",
+      "limits": "macOS host instances and retained generated helpers; not new CLI creation or Compose18.6 qualification."
+    }
+  },
+  "preVersionAudit": "installed-stack-audit.json",
+  "historicalVersionsPreserved": [
+    "0.2.0",
+    "0.2.1",
+    "0.2.2"
+  ],
+  "securityReview": {
+    "productionAudit": "zero-known-vulnerabilities",
+    "auditPath": "/tmp/reposetup-0.2.3-production-audit.json",
+    "generatedToolAdvisory": "GHSA-vfj7-8cjw-p6xm; no published braces patch on2026-10-08",
+    "reviewDocument": "../security-docs/SECURITY_REVIEW_0.2.3.md"
+  },
+  "localChecks": {
+    "scope": "Prepared0.2.3 working tree, before selecting the immutable release source.",
+    "unitTestsPassed": 1043,
+    "packedE2ETestsPassed": 38,
+    "packedE2ESkipped": 0,
+    "targetedPublicationGateTestsPassed": 20,
+    "build": "passed",
+    "typecheck": "passed-after-build",
+    "lint": "passed",
+    "registryIntegrationsValidated": 37,
+    "logs": {
+      "unit": "/tmp/reposetup-0.2.3-unit.log",
+      "packedE2E": "/tmp/reposetup-0.2.3-e2e.log",
+      "build": "/tmp/reposetup-0.2.3-build.log",
+      "typecheck": "/tmp/reposetup-0.2.3-typecheck-after-build.log",
+      "lint": "/tmp/reposetup-0.2.3-lint.log",
+      "registry": "/tmp/reposetup-0.2.3-registry.log"
+    },
+    "initialTypecheckAttempt": {
+      "status": "failed",
+      "log": "/tmp/reposetup-0.2.3-typecheck.log",
+      "reason": "Concurrent build replaced core declaration output while registry typecheck read it. Sequential typecheck after completed build passed with no source change."
+    }
+  }
+}

@@ -1,6 +1,23 @@
 # Release checklists
 
-## Current 0.2.2 patch — 2026-10-08
+## Current 0.2.3 patch — 2026-10-08
+
+The owner authorized publication after health checks. See [the release record](./STABLE_RELEASE_0.2.3.md).
+
+- [x] Merge installed-stack repair PR #17; its automated audit passes.
+- [x] Prepare 0.2.3 manifests, publication checks and current guides.
+- [x] Local version-bound tests, typecheck after build, lint, build and37 registry definitions pass;1,043 unit and38 packed E2E tests pass.
+- [ ] Isolated live database and Linux Docker/Compose acceptance pass; record exact scope.
+- [ ] Three full first-attempt exact-source release runs pass all required jobs and steps.
+- [ ] Candidate full matrix, preset sessions and controlled benchmarks pass.
+- [ ] Record final immutable artifact, bytes, hash, source and license review.
+- [ ] New immutable v0.2.3 tag identifies the qualified source.
+- [ ] Tag-bound publication dry-run passes.
+- [ ] Publish the qualified artifact with OIDC; verify integrity and provenance.
+- [ ] Fresh registry acceptance passes on Linux/macOS/Windows.
+- [ ] Publish GitHub release and close current documentation/status.
+
+## Historical 0.2.2 patch — 2026-10-08
 
 See [the release record](./STABLE_RELEASE_0.2.2.md) for exact source, artifact,
 completed qualification, signed publication and three-platform delivery evidence.

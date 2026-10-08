@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-10-08
+
+Installed-stack stability patch; publication and version-specific delivery are pending in the
+[release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md).
+
 ### Fixed
 
 - Fresh Node scaffolds and selected development package additions include required dev dependencies even under production/omit settings.
@@ -16,7 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Timed-out installations retain bounded, redacted installer diagnostics and still stop before later operations.
 - Doctor recovery commands restore development packages under production/omit settings and rebuild damaged pnpm package links; packed regressions follow those commands through a successful repair.
 
-See the [installed stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) for qualification and limits. These fixes are not in the immutable published 0.2.2 package.
+See the [installed stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) for qualification and limits. These fixes target 0.2.3; the immutable published 0.2.2 package is unchanged.
 
 ## [0.2.2] - 2026-10-08
 

@@ -2,7 +2,9 @@
 
 ## Delivery status
 
-These repairs are implemented on `codex/audit-installed-stack` and are **unreleased**.
+These repairs were implemented on `codex/audit-installed-stack` and merged through
+PR #17 for the **unreleased 0.2.3 candidate**. Version-specific delivery progress is
+in [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
 The public `rsetup@0.2.2` package and its immutable tag remain unchanged.
 Automated installed-stack qualification is complete. All 480 cases pass across
 twelve full-scope jobs after retrying the two failed Windows/npm jobs on unchanged

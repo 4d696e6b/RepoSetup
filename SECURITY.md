@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-RepoSetup is an **early-stage** open-source project. The current public line is **`0.1.0`**. Security fixes will land on that line (and later `0.1.x` / prereleases) until a later `1.0.0` exists.
+RepoSetup is an **early-stage** open-source project. The maintained release line is **`0.2.x`**, with `0.2.3` in preparation. See the [current release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md) for publication and delivery status. Security fixes target the newest published patch; older patches are not a separate long-term support line. Version `1.0.0` and uniformly stable integration support are not claimed.
 
 ## What RepoSetup executes
 
@@ -33,4 +33,4 @@ Do not attach `.env` files, tokens, credentials, or connection strings. Do not p
 
 ## Policy
 
-Please give maintainers a reasonable window to patch before public disclosure. Early-stage software may ship fixes in a newer `0.1.x` rather than a long backport.
+Please give maintainers a reasonable window to patch before public disclosure. Early-stage software may ship fixes in a newer patch rather than backporting them to every earlier release. Upgrade to the newest published patch and review its support limits.

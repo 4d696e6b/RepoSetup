@@ -1,7 +1,7 @@
 # Stable 0.2.1 release and delivery record
 
 Historical 0.2.1 delivery evidence. Version/latest observations below describe its
-publication checkpoint. The current published patch is [0.2.2](./STABLE_RELEASE_0.2.2.md).
+publication checkpoint. The current candidate is [0.2.3](./STABLE_RELEASE_0.2.3.md).
 
 Status — 2026-10-08: **published and delivery accepted**. npm `latest` is
 `rsetup@0.2.1`; the GitHub release is [v0.2.1](https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.1).

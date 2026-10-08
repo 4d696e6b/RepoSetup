@@ -1,4 +1,12 @@
-# 0.2.2 dependency-health acceptance
+# 0.2.3 installed-stack acceptance
+
+The owner authorized publication after health qualification. The pre-version
+[installed-stack audit](./INSTALLED_STACK_AUDIT.md) passes all 480 full-matrix cases
+after two same-source Windows/npm retries, 1,043 local unit tests and 38 packed E2E
+tests. New 0.2.3 exact-source release, live-service and registry-delivery checks
+remain pending in [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+
+## Historical 0.2.2 dependency-health acceptance
 
 The owner authorized publication. The repair passed 977 local unit tests, all
 38 packaged E2E tests and a twelve-job/408-execution full matrix before the

@@ -1,6 +1,6 @@
 # 0.2.0 release-candidate record
 
-Historical 0.2.0 evidence. The current patch is [0.2.2](./STABLE_RELEASE_0.2.2.md);
+Historical 0.2.0 evidence. The current candidate is [0.2.3](./STABLE_RELEASE_0.2.3.md);
 its publication and delivery are recorded separately.
 
 **Phase 27 status: complete for the frozen alpha candidate.** This file records its qualification and the subsequent transition. Stable 0.2.0 publication and delivery are complete in [the Phase 28 evidence record](./STABLE_QUALIFICATION_0.2.0.md). Historical `0.1.x` release documents remain historical evidence and do not qualify this release.
