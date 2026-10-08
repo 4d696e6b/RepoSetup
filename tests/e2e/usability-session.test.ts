@@ -142,9 +142,36 @@ async function runUsabilitySession(presetId: string, integrationId: string) {
   expect(added.exitCode, `${added.stdout}\n${added.stderr}`).toBe(0);
 
   const doctor = await cli(bin, ["--no-color", "--json", "doctor"], { cwd: projectDir });
-  steps.push({ name: "doctor", exitCode: doctor.exitCode });
-  expect(doctor.exitCode, `${doctor.stdout}\n${doctor.stderr}`).toBe(0);
-  expect(JSON.parse(doctor.stdout)).toMatchObject({ version: 1, kind: "doctor" });
+  const doctorReport = JSON.parse(doctor.stdout) as {
+    result: {
+      checks: Array<{ id: string; ok: boolean; code?: string; suggestion?: string }>;
+    };
+    failed: number;
+  };
+  expect(doctorReport).toMatchObject({ version: 1, kind: "doctor" });
+  const failedChecks = doctorReport.result.checks.filter((check) => !check.ok);
+  const optionalDockerUnavailable =
+    ["express-postgres", "fastapi", "flask"].includes(presetId) && failedChecks.length > 0;
+  if (optionalDockerUnavailable) {
+    // These presets write configuration; they cannot silently install system
+    // software. Missing Docker must be reported, never treated as healthy.
+    expect(doctor.exitCode).not.toBe(0);
+    for (const check of failedChecks) {
+      expect(["prerequisite:docker", "prerequisite:docker-compose"]).toContain(check.id);
+      expect(check.code).toBe("PREREQUISITE_MISSING");
+      expect(check.suggestion).toContain("https://docs.docker.com/");
+    }
+    steps.push({
+      name: "doctor reports unavailable Docker prerequisites",
+      exitCode: doctor.exitCode,
+      expectedFailure: true,
+    });
+  } else {
+    steps.push({ name: "doctor", exitCode: doctor.exitCode });
+    expect(doctor.exitCode, `${doctor.stdout}\n${doctor.stderr}`).toBe(0);
+    expect(failedChecks).toEqual([]);
+  }
+  expect(doctorReport.failed).toBe(failedChecks.length);
 
   const exported = await cli(bin, ["--no-color", "export", "--yes"], { cwd: projectDir });
   steps.push({ name: "export", exitCode: exported.exitCode });

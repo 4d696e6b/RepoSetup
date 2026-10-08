@@ -199,6 +199,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
         "prisma@7.10.0",
@@ -240,6 +241,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--save-exact",
         "--allow-build=esbuild",
         "vitest@5.0.1",
@@ -262,6 +264,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--save-exact",
         "--allow-build=esbuild",
         "vitest@5.0.1",
@@ -300,7 +303,7 @@ describe("integration plans", () => {
 
   it("installs Prettier as an exact dev dependency", () => {
     expect(runCommands(prettierIntegration.plan(planContext()))).toEqual([
-      ["pnpm", "add", "--save-dev", "--save-exact", "prettier@3.9.8"],
+      ["pnpm", "add", "--save-dev", "--prod=false", "--save-exact", "prettier@3.9.8"],
     ]);
     expect(prettierIntegration.plan(planContext({ frameworkId: "react-vite" }))).toEqual(
       expect.arrayContaining([
@@ -321,6 +324,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
         "prisma@7.10.0",

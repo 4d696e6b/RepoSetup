@@ -11,7 +11,7 @@ on:
         description: Qualification scope (only full runs qualify the complete matrix)
         type: choice
         default: full
-        options: [full, next-vitest, evidence-only]
+        options: [full, next-vitest, dependency-recovery, evidence-only]
 
 jobs:
   golden:
@@ -50,7 +50,7 @@ jobs:
       - run: pnpm build
         if: ${{ inputs.scope != 'evidence-only' }}
       - run: pnpm test:golden
-        if: ${{ inputs.scope != 'next-vitest' && inputs.scope != 'evidence-only' }}
+        if: ${{ inputs.scope != 'next-vitest' && inputs.scope != 'dependency-recovery' && inputs.scope != 'evidence-only' }}
         env:
           CI: true
           REPOSETUP_GOLDEN_PACKAGE_MANAGER: ${{ matrix.package-manager }}
@@ -59,6 +59,21 @@ jobs:
         env:
           CI: true
           REPOSETUP_GOLDEN_PACKAGE_MANAGER: ${{ matrix.package-manager }}
+          npm_config_timing: true
+          npm_config_loglevel: info
+          REPOSETUP_GOLDEN_DIAGNOSTICS_DIR: golden-npm-diagnostics
+      - run: pnpm exec vitest run --config tests/e2e/vitest.golden.config.ts tests/e2e/create-solutions.test.ts -t "production and omit"
+        if: ${{ inputs.scope == 'dependency-recovery' }}
+        env:
+          CI: true
+      - name: Retain failed Next install diagnostics
+        if: ${{ always() && inputs.scope == 'next-vitest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-npm-diagnostics-${{ matrix.runner }}-python-${{ matrix.python }}-${{ matrix.package-manager }}
+          path: golden-npm-diagnostics/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Write golden qualification evidence
         env:
           GOLDEN_PACKAGE_MANAGER: ${{ matrix.package-manager }}

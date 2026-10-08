@@ -397,8 +397,14 @@ export function createDefaultCommandExists(
       command,
       args: ["--version"],
       cwd: process.cwd(),
+      timeoutMs: 5_000,
     });
-    return result.notFound !== true && result.exitCode === 0;
+    return (
+      result.notFound !== true &&
+      result.timedOut !== true &&
+      result.aborted !== true &&
+      result.exitCode === 0
+    );
   };
 }
 
@@ -406,8 +412,19 @@ export function createDefaultCommandVersion(
   runProcess: ProcessRunner,
 ): (command: string) => Promise<string | undefined> {
   return async (command) => {
-    const result = await runProcess({ command, args: ["--version"], cwd: process.cwd() });
-    if (result.notFound === true || result.exitCode !== 0) return undefined;
+    const result = await runProcess({
+      command,
+      args: ["--version"],
+      cwd: process.cwd(),
+      timeoutMs: 5_000,
+    });
+    if (
+      result.notFound === true ||
+      result.timedOut === true ||
+      result.aborted === true ||
+      result.exitCode !== 0
+    )
+      return undefined;
     return `${result.stdout} ${result.stderr}`.trim() || undefined;
   };
 }

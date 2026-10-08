@@ -15,6 +15,7 @@ import { validateCwd, validatePackageSpecs } from "./validate.js";
  *
  * - add: `npm install [<package-spec> ...]`
  * - add (dev): `-D, --save-dev`
+ * - include development packages: `--include=dev` overrides NODE_ENV/omit=dev
  * - install project: `npm install` with no package-spec (uses package-lock.json)
  * - frozen install: `npm ci` (https://docs.npmjs.com/cli/v11/commands/npm-ci).
  *   Requires package-lock.json, refuses to update it, and exits if it disagrees
@@ -59,6 +60,7 @@ export const npmAdapter: PackageManagerAdapter = {
         command: "npm",
         args: [
           ...(request.frozen === true ? ["ci"] : ["install"]),
+          ...(request.includeDev === true ? ["--include=dev"] : []),
           ...(request.preferOffline === true ? ["--prefer-offline"] : []),
         ],
         cwd: request.cwd,

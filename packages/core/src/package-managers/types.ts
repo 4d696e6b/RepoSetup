@@ -8,6 +8,8 @@ export interface AddPackagesRequest {
   cwd: ProjectRelativePath;
   description: string;
   dev?: boolean;
+  /** Install development dependencies even when the caller's environment omits them. */
+  includeDev?: boolean;
   exact?: boolean;
   allowBuild?: readonly string[];
 }
@@ -20,6 +22,8 @@ export interface InstallProjectRequest {
   frozen?: boolean;
   /** Prefer cached metadata/packages while allowing cache misses to use the configured registry. */
   preferOffline?: boolean;
+  /** Fresh development scaffolds need their selected compilers, types, and CLIs on disk. */
+  includeDev?: boolean;
 }
 
 export interface RemovePackagesRequest {

@@ -79,7 +79,7 @@ async function probe(
   };
   const suggestion =
     runtime === "node"
-      ? "Run npm install or pnpm install with the project's selected manager, then rerun doctor."
+      ? "Run npm install --include=dev or pnpm install --prod=false --force with the project's selected manager, then rerun doctor. pnpm's force option reinstalls damaged or missing package links."
       : isUv
         ? "Run uv sync in this project, then use uv run fastapi dev (or uv run flask run). Doctor does not repair the environment."
         : "Activate the Python environment used to create this project and run python -m pip install -r requirements.txt, then rerun doctor.";

@@ -69,6 +69,8 @@ export const QUALIFIED_VERSIONS = {
   flask: "3.1.3",
   pydantic: "2.13.5",
   sqlalchemy: "2.0.54",
+  // Official binary extra is self-contained; verified PyPI wheels for Python 3.12/3.13.
+  psycopg: "3.3.6",
   alembic: "1.20.0",
   pytest: "9.1.1",
   ruff: "0.16.8",
@@ -203,7 +205,10 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
   fastapi: [`fastapi[standard]==${QUALIFIED_VERSIONS.fastapi}`],
   flask: [pypiPin("Flask", QUALIFIED_VERSIONS.flask)],
   pydantic: [pypiPin("pydantic", QUALIFIED_VERSIONS.pydantic)],
-  sqlalchemy: [pypiPin("SQLAlchemy", QUALIFIED_VERSIONS.sqlalchemy)],
+  sqlalchemy: [
+    pypiPin("SQLAlchemy", QUALIFIED_VERSIONS.sqlalchemy),
+    pypiPin("psycopg[binary]", QUALIFIED_VERSIONS.psycopg),
+  ],
   alembic: [pypiPin("alembic", QUALIFIED_VERSIONS.alembic)],
   pytest: [pypiPin("pytest", QUALIFIED_VERSIONS.pytest)],
   ruff: [pypiPin("ruff", QUALIFIED_VERSIONS.ruff)],

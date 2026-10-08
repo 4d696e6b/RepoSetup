@@ -31,6 +31,7 @@ export async function runDoctor(input: {
   registry: RegistryLookup;
   commandExists: (command: string) => Promise<boolean>;
   commandVersion?: (command: string) => Promise<string | undefined>;
+  checkCommand?: (command: string, args: readonly string[]) => Promise<boolean>;
   checkInstalledDependencies?: (context: VerificationContext) => Promise<DoctorCheck[]>;
 }): Promise<RunDoctorResult> {
   const detected = await detectProject({
@@ -45,9 +46,18 @@ export async function runDoctor(input: {
   const detection = await createDetectionContext(detected.stack.projectRoot, files);
   const checks: DoctorCheck[] = [];
   await collectPathChecks(
-    [...presentItems(detected.stack.runtimes), ...presentItems(detected.stack.packageManagers)],
+    [
+      ...presentItems(detected.stack.runtimes),
+      ...presentItems(detected.stack.packageManagers),
+      ...presentItems(detected.stack.integrations),
+    ],
     input.commandExists,
     input.commandVersion,
+    checks,
+  );
+  await collectComposePrerequisite(
+    presentItems(detected.stack.integrations),
+    input.checkCommand,
     checks,
   );
   if (input.checkInstalledDependencies !== undefined) {
@@ -69,6 +79,34 @@ export async function runDoctor(input: {
       checks,
     },
   };
+}
+
+async function collectComposePrerequisite(
+  items: readonly DetectedItem[],
+  checkCommand: ((command: string, args: readonly string[]) => Promise<boolean>) | undefined,
+  checks: DoctorCheck[],
+): Promise<void> {
+  if (!items.some((item) => item.id === "docker-compose")) return;
+  // A missing Docker CLI already has its own actionable prerequisite failure.
+  if (checks.some((check) => check.id === "prerequisite:docker" && !check.ok)) return;
+
+  const available =
+    checkCommand === undefined ? false : await checkCommand("docker", ["compose", "version"]);
+  checks.push({
+    id: "prerequisite:docker-compose",
+    name: "Docker Compose CLI",
+    ok: available,
+    message: available
+      ? "docker compose is available. The Docker daemon and running containers were not checked."
+      : "docker compose could not be verified. A Compose file does not install the Compose plugin.",
+    ...(available
+      ? {}
+      : {
+          code: "PREREQUISITE_MISSING" as const,
+          suggestion:
+            "Install Docker Compose from https://docs.docker.com/compose/install/ and confirm docker compose version succeeds. RepoSetup does not install it or start containers.",
+        }),
+  });
 }
 
 export function failedDoctorChecks(result: DoctorResult): DoctorCheck[] {
@@ -132,7 +170,10 @@ async function collectPathChecks(
       id: `prerequisite:${item.id}`,
       name: item.name,
       ok: false,
-      message: `${spec.command} was not found on PATH.`,
+      message:
+        item.id === "docker"
+          ? "docker was not found on PATH or could not run docker --version."
+          : `${spec.command} was not found on PATH.`,
       code: "PREREQUISITE_MISSING",
       suggestion: spec.hint,
     });

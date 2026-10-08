@@ -4,7 +4,7 @@ import path from "node:path";
 
 import type { IntegrationDefinition, ProcessRunRequest } from "@reposetup/core";
 import { createRegistry } from "@reposetup/registry";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { EXIT_CODES } from "./exit-codes.js";
 import { runCli } from "./run-cli.js";
@@ -13,7 +13,9 @@ import type { CliFs, CliIo } from "./types.js";
 const tempDirs: string[] = [];
 
 afterEach(async () => {
-  await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+  await Promise.all(
+    tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true, maxRetries: 3 })),
+  );
 });
 
 function captureIo(): { io: CliIo; stdout: () => string; stderr: () => string } {
@@ -250,15 +252,25 @@ describe("runCli failure qualifications", () => {
       }),
     );
     const captured = captureIo();
+    const resolveExecutable = vi.fn(async (command: string) =>
+      command === "python" ? undefined : command,
+    );
+    const runProcess = vi.fn(async () => {
+      throw new Error("A missing Python prerequisite must not run a process");
+    });
     const result = await runCli(["create", "--config", "reposetup.json", "--yes"], {
       cwd: root,
       registry: createRegistry([framework]),
       io: captured.io,
+      resolveExecutable,
+      runProcess,
       commandExists: async (command) => !["py", "python3", "python"].includes(command),
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.PREREQUISITE_MISSING);
     expect(captured.stderr()).toContain("PREREQUISITE_MISSING");
+    expect(resolveExecutable).toHaveBeenCalledWith("python");
+    expect(runProcess).not.toHaveBeenCalled();
   });
 
   it("reports a missing package manager", async () => {

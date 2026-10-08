@@ -22,7 +22,7 @@ describe("ensureScaffoldDependencyInstall", () => {
         expect.objectContaining({
           type: "run_command",
           command: "npm",
-          args: ["install", "--prefer-offline"],
+          args: ["install", "--include=dev", "--prefer-offline"],
           cwd: "app",
         }),
       ],
@@ -118,7 +118,7 @@ describe("ensureScaffoldDependencyInstall", () => {
       {
         type: "run_command",
         command: "pnpm",
-        args: ["install", "--no-frozen-lockfile", "--prefer-offline"],
+        args: ["install", "--no-frozen-lockfile", "--prod=false", "--prefer-offline"],
         cwd: ".",
         description: "Install scaffold dependencies skipped by the generator",
         requiresNetwork: true,
@@ -161,7 +161,7 @@ describe("ensureScaffoldDependencyInstall", () => {
     expect(result.operations[1]).toMatchObject({
       type: "run_command",
       command: "pnpm",
-      args: ["install", "--no-frozen-lockfile", "--prefer-offline"],
+      args: ["install", "--no-frozen-lockfile", "--prod=false", "--prefer-offline"],
     });
     expect(result.operations[2]).toMatchObject({
       args: ["exec", "prisma", "generate"],
