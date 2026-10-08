@@ -78,9 +78,14 @@ owned data/cache/dependencies were removed. User projects and services were
 unchanged. Helpers matched the current integration templates at checkout
 `7e5f815`; these were retained generated-project copies, not new CLI creations.
 
-Linux generated Compose PostgreSQL 18.6 and MongoDB 8.0.32 container acceptance remains
-pending. The permanent opt-in service suite requires actual connectivity, not
-just generated configuration or an available Docker executable.
+[Linux live-service acceptance](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567)
+passes both actual tests, with no failures or skips, on candidate `a213a6a`.
+Fresh CLI creations connect through Prisma, Drizzle, SQLAlchemy/Psycopg binary
+and authenticated Mongoose helpers. PostgreSQL 18.6 data survives restart and
+container recreation using the generated persistent volume. MongoDB 8.0.32 CRUD
+passes. Five PostgreSQL and two MongoDB checks retain exact source/version,
+image digests and successful resource cleanup in artifact `11565988004`.
+These representative cases do not qualify every service combination or migration.
 
 Local typechecking first overlapped a build that was replacing workspace declaration
 files. Repeating it after build completion passed without a code change; both
@@ -137,7 +142,7 @@ transitive dependency, editor language-server state or external service.
 Docker/Compose CLI checks do not prove daemon readiness. Local read-only probes
 found the Docker daemon unresponsive; no containers or database images were started
 to create artificial evidence. Representative local PostgreSQL/MongoDB queries passed as recorded above.
-Linux container qualification is pending. General migration workflows, native
+The separate Linux container cases passed as recorded above. General migration workflows, native
 Windows 11, Linux arm64 and actual Playwright browser journeys remain unqualified. No integration is promoted to stable.
 
 The documented generated development-tool advisory remains. A clean production

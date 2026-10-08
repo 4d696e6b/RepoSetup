@@ -30,7 +30,7 @@
   "publication": null,
   "registryAcceptance": null,
   "liveServices": {
-    "status": "in-progress",
+    "status": "passed",
     "scope": "Isolated local database checks and Linux Docker/Compose CI; no native Windows desktop or arbitrary permutations claimed.",
     "local": {
       "status": "passed",
@@ -57,8 +57,97 @@
     },
     "linux": {
       "runId": 37813979567,
-      "status": "pending",
-      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567"
+      "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+      "packageVersion": "0.2.3",
+      "runConclusion": "success",
+      "cases": [
+        {
+          "scope": "postgresql-generated-helpers",
+          "status": "passed",
+          "checks": [
+            "CLI create and doctor; generated Compose image, loopback binding and PostgreSQL 18 persistent mount",
+            "generated Prisma helper connects and creates, updates and reads data",
+            "Compose restart and container recreation preserve PostgreSQL data on the generated volume; Prisma deletes it afterward",
+            "generated Drizzle client and starter schema perform real create, read, update and delete",
+            "generated SQLAlchemy helper and installed Psycopg binary DBAPI perform real create, read, update and delete"
+          ],
+          "image": "postgres:18.6",
+          "imageDigests": [
+            "postgres@sha256:74935e72241653ca55e0414067e6d8763aceb8a810eb51b452253ec3dcfc4336"
+          ],
+          "serviceVersion": "postgres (PostgreSQL) 18.6 (Debian 18.6-1.pgdg13+2)",
+          "cleanup": true,
+          "evidenceSha256": "d820d5665f23ac3d03b3c3e981bb2ee9c78f92c3ff8c58a06ea137e68b82f772"
+        },
+        {
+          "scope": "mongodb-generated-mongoose",
+          "status": "passed",
+          "checks": [
+            "CLI create and doctor install the selected Mongoose dependency and generate its connection helper",
+            "authenticated loopback MongoDB connection; generated Mongoose helper and model perform real create, read, update and delete"
+          ],
+          "image": "mongo:8.0.32",
+          "imageDigests": [
+            "mongo@sha256:d0d926f94df099bff534b7ee5b5986458131a22489dfff8664509af0c1e2ca9c"
+          ],
+          "serviceVersion": "db version v8.0.32",
+          "cleanup": true,
+          "evidenceSha256": "f32a9e8ecffede6b787e2c08b082500d65a7597c8fc8ba8db811290ff4907c33"
+        }
+      ],
+      "artifactId": 11565988004,
+      "artifactZipSha256": "a2785d941836b65d6b3da4d64c20f5b6f344cc3e5fdd6e8d7580d4d45aeff120",
+      "checkoutLogEvidence": [
+        {
+          "log": "0_Generated PostgreSQL and MongoDB connections (Ubuntu 24.04).txt",
+          "checkoutCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+        },
+        {
+          "log": "Generated PostgreSQL and MongoDB connections (Ubuntu 24.04)/2_Run actions_checkout@v4.txt",
+          "checkoutCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+        }
+      ],
+      "testCountEvidence": [
+        {
+          "log": "0_Generated PostgreSQL and MongoDB connections (Ubuntu 24.04).txt",
+          "summary": "2026-10-08T17:10:13.6629384Z  Test Files  1 passed (1)"
+        },
+        {
+          "log": "0_Generated PostgreSQL and MongoDB connections (Ubuntu 24.04).txt",
+          "summary": "2026-10-08T17:10:13.6630862Z       Tests  2 passed (2)"
+        },
+        {
+          "log": "Generated PostgreSQL and MongoDB connections (Ubuntu 24.04)/8_Exercise the generated helpers against disposable real services.txt",
+          "summary": "2026-10-08T17:10:13.6629365Z  Test Files  1 passed (1)"
+        },
+        {
+          "log": "Generated PostgreSQL and MongoDB connections (Ubuntu 24.04)/8_Exercise the generated helpers against disposable real services.txt",
+          "summary": "2026-10-08T17:10:13.6630850Z       Tests  2 passed (2)"
+        }
+      ],
+      "logArchiveSha256": "eb9e4cb8355cbdcd4ece45521958cb71af8d93818a4123e85abf63d38d9f1196",
+      "credentialInspection": {
+        "method": "Read-only scan of full downloaded raw logs and both artifact JSON payloads; exact-width test-password hex48 and credential-bearing database URI patterns. Values intentionally not printed.",
+        "suspectedCredentialOccurrences": 0,
+        "scope": "Generated ephemeral test credentials only; pattern scan does not claim general secret detection."
+      },
+      "tests": {
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "retainedFiles": {
+        "mongodb-generated-mongoose.json": "f32a9e8ecffede6b787e2c08b082500d65a7597c8fc8ba8db811290ff4907c33",
+        "evidence.zip": "a2785d941836b65d6b3da4d64c20f5b6f344cc3e5fdd6e8d7580d4d45aeff120",
+        "logs.zip": "eb9e4cb8355cbdcd4ece45521958cb71af8d93818a4123e85abf63d38d9f1196",
+        "postgresql-generated-helpers.json": "d820d5665f23ac3d03b3c3e981bb2ee9c78f92c3ff8c58a06ea137e68b82f772",
+        "verify-evidence.py": "136a8f98dfe995680709a90a7c8bba03a29d6bb925ae3f3c9f2c4927e26b1020",
+        "run.json": "98677a773f9f2d86f10401464f3bab6012159878d423fcfbf5e1b3fa2fdcbf18",
+        "jobs.json": "a87286657895b8736afe6df588460c94cdb0adca8adee796fd8576e4fc05827c",
+        "artifacts.json": "ae1f508129df3c3e691208f65df8176bff4d6fb0f7f8e905b4aa08241d33e14f"
+      },
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567",
+      "evidencePath": "/tmp/reposetup-0.2.3-release/live-services"
     }
   },
   "preVersionAudit": "installed-stack-audit.json",
