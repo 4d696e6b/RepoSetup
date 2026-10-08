@@ -4,11 +4,17 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
+**0.2.1 — release preparation and exact-source qualification in progress.**
+The owner authorized publication on October 8. The tested fixes are merged through
+PR #10; manifests and active release checks target 0.2.1 on `codex/release-0.2.1`.
+See [the patch release record](../release-docs/STABLE_RELEASE_0.2.1.md).
+The npm release remains 0.2.0 until publication and registry acceptance finish.
+
 **0.2.x follow-up — automated create-regression qualification complete; patch
 publication pending.** The checked current acceptance items are in
 [ACCEPTANCE_TESTS.md](./ACCEPTANCE_TESTS.md#current-02x-automated-acceptance--2026-10-08);
 release preparation/delivery items remain open in the
-[patch release checklist](../release-docs/RELEASE_CHECKLIST.md#current-02x-patch--2026-10-08).
+[patch release checklist](../release-docs/RELEASE_CHECKLIST.md#current-021-patch--2026-10-08).
 The Phase 27/28 entries below describe the already published 0.2.0 milestone.
 
 **Phase 27 — Release-candidate qualification: complete for the frozen alpha candidate.** Its closure is explicitly recorded on `codex/phase-27-closeout` at `837b20d438d92fb6bcd557cb4e5145230238ee13`.

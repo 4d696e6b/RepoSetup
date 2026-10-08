@@ -20,7 +20,8 @@ describe("release publishing workflow", () => {
     expect(workflow.match(/merge-multiple: true/g)).toHaveLength(2);
     expect(workflow).toContain("verify-packed-artifact.mjs --directory candidate");
     expect(workflow).toContain("EXPECTED_SOURCE_SHA: ${{ github.sha }}");
-    expect(workflow).not.toContain("ref: v0.2.0");
+    expect(workflow).toContain('EXPECTED_PACKAGE_VERSION: "0.2.1"');
+    expect(workflow).not.toContain("ref: v0.2.1");
     expect(workflow).toContain("publish-qualified-artifact.mjs");
     expect(workflow).toContain("verify-registry-release.mjs");
     expect(workflow).not.toContain("pnpm build");

@@ -1,7 +1,8 @@
 # RepoSetup 0.2.x stability plan
 
 Created 2026-10-08, against released source `origin/main` at `1ddbdc6`.
-Work branch: `codex/fix-create-project-paths`.
+Regression branch: `codex/fix-create-project-paths` (merged through PR #10).
+Release branch: `codex/release-0.2.1`; [publication progress](../release-docs/STABLE_RELEASE_0.2.1.md).
 
 0.2.x prioritizes working supported recipes, safe failures, reproducibility and
 regression coverage. No new integrations are needed to close these regressions.
