@@ -6,7 +6,7 @@ The owner authorized publication after health checks. See [the release record](.
 
 - [x] Merge installed-stack repair PR #17; its automated audit passes.
 - [x] Prepare 0.2.3 manifests, publication checks and current guides.
-- [x] Local version-bound tests, typecheck after build, lint, build and37 registry definitions pass;1,043 unit and38 packed E2E tests pass.
+- [x] Local version-bound tests, typecheck after build, lint, build and 37 registry definitions pass; 1,043 unit and 38 packed E2E tests pass.
 - [ ] Isolated live database and Linux Docker/Compose acceptance pass; record exact scope.
 - [ ] Three full first-attempt exact-source release runs pass all required jobs and steps.
 - [ ] Candidate full matrix, preset sessions and controlled benchmarks pass.

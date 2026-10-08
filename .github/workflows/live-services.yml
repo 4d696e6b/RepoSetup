@@ -1,0 +1,73 @@
+name: Live generated services
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-services:
+    name: Generated PostgreSQL and MongoDB connections (Ubuntu 24.04)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.17"
+      - run: pnpm install --frozen-lockfile
+      - name: Exercise the generated helpers against disposable real services
+        run: pnpm test:services
+        env:
+          CI: true
+          REPOSETUP_LIVE_SERVICES: "1"
+          REPOSETUP_LIVE_EVIDENCE_DIR: live-service-evidence
+      - name: Require two completed exact-source service cases and cleanup
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFile, readdir } from 'node:fs/promises';
+          import path from 'node:path';
+          const directory = 'live-service-evidence';
+          const expected = new Map([
+            ['postgresql-generated-helpers', { image: 'postgres:18.6', checks: 5 }],
+            ['mongodb-generated-mongoose', { image: 'mongo:8.0.32', checks: 2 }],
+          ]);
+          const files = (await readdir(directory)).filter(file => file.endsWith('.json')).sort();
+          assert.deepEqual(files, [...expected.keys()].map(scope => `${scope}.json`).sort());
+          assert.match(process.env.GITHUB_SHA ?? '', /^[0-9a-f]{40}$/);
+          for (const [scope, required] of expected) {
+            const record = JSON.parse(await readFile(path.join(directory, `${scope}.json`), 'utf8'));
+            assert.equal(record.schemaVersion, 1);
+            assert.equal(record.scope, scope);
+            assert.equal(record.status, 'passed');
+            assert.equal(record.cleanup, true);
+            assert.equal(record.sourceCommit, process.env.GITHUB_SHA);
+            assert.equal(record.packageVersion, '0.2.3');
+            assert.equal(record.platform, 'linux');
+            assert.match(record.node, /^v24\./);
+            assert.equal(record.image, required.image);
+            assert.equal(record.checks.length, required.checks);
+            const digests = JSON.parse(record.imageDigests);
+            assert.ok(Array.isArray(digests) && digests.length > 0);
+            assert.ok(digests.every(digest => typeof digest === 'string' && /@sha256:[0-9a-f]{64}$/.test(digest)));
+          }
+          console.log('Both live-service cases passed for the exact source and version; owned service cleanup verified.');
+          NODE
+      - name: Retain service acceptance and cleanup evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-service-evidence-ubuntu-24.04
+          path: live-service-evidence/
+          if-no-files-found: error
+          retention-days: 30

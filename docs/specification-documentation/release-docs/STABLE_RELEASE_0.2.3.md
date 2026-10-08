@@ -78,7 +78,7 @@ owned data/cache/dependencies were removed. User projects and services were
 unchanged. Helpers matched the current integration templates at checkout
 `7e5f815`; these were retained generated-project copies, not new CLI creations.
 
-Linux generated Compose PostgreSQL 18.6 and MongoDB8.0.32 container acceptance remains
+Linux generated Compose PostgreSQL 18.6 and MongoDB 8.0.32 container acceptance remains
 pending. The permanent opt-in service suite requires actual connectivity, not
 just generated configuration or an available Docker executable.
 
@@ -87,12 +87,24 @@ files. Repeating it after build completion passed without a code change; both
 logs are retained. The dedicated opt-in service suite is separate from standard
 packed E2E and must pass two real cases with no skips and successful cleanup.
 
+To run the dedicated container acceptance on a POSIX Docker host with Node 24,
+Python 3.13 and uv available:
+
+```sh
+REPOSETUP_LIVE_SERVICES=1 pnpm test:services
+```
+
+The explicit opt-in starts only disposable test services and removes their
+containers and volumes afterward. A default opt-out or missing prerequisite
+is not live-service qualification. The CI evidence must contain two passing
+cases, no skips and successful cleanup, bound to the candidate source/version.
+
 ## Version-specific release gates
 
 - [x] Owner authorizes 0.2.3 publication after required checks.
 - [x] Installed-stack repair qualification is complete, with original failures retained.
 - [ ] Merge the repairs and release preparation; current manifests, publication checks and guides target 0.2.3.
-- [x] Prepared0.2.3 passes1,043 unit tests,38 packed E2E tests with no skips, typecheck, lint, build and37 registry definitions; production audit and bounded review pass. Final retained-artifact license review remains required.
+- [x] Prepared 0.2.3 passes 1,043 unit tests, 38 packed E2E tests with no skips, typecheck, lint, build and 37 registry definitions; production audit and bounded review pass. Final retained-artifact license review remains required.
 - [ ] Required exact-source release runs pass every required job and step.
 - [ ] Final candidate passes the full matrix, preset sessions and controlled benchmarks.
 - [ ] Retain the final artifact identity, source, byte length and hashes.

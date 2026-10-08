@@ -117,7 +117,7 @@ Doctor checks bounded Docker/Compose version probes; a passing CLI probe does no
 prove that the daemon or a container is running. Docker alone does not generate
 an application Dockerfile or a database service.
 
-For the supported PostgreSQL service configuration, select `docker-compose` with
+For the supported PostgreSQL service configuration, select both `docker` and `docker-compose` with
 PostgreSQL. Compose uses a loopback port, a persistent volume and environment
 placeholders. Set your own local password and connection settings, then follow
 the generated instructions. RepoSetup does not start containers, provision a

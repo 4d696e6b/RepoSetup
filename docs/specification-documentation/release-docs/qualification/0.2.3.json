@@ -49,11 +49,11 @@
   "securityReview": {
     "productionAudit": "zero-known-vulnerabilities",
     "auditPath": "/tmp/reposetup-0.2.3-production-audit.json",
-    "generatedToolAdvisory": "GHSA-vfj7-8cjw-p6xm; no published braces patch on2026-10-08",
+    "generatedToolAdvisory": "GHSA-vfj7-8cjw-p6xm; no published braces patch on 2026-10-08",
     "reviewDocument": "../security-docs/SECURITY_REVIEW_0.2.3.md"
   },
   "localChecks": {
-    "scope": "Prepared0.2.3 working tree, before selecting the immutable release source.",
+    "scope": "Prepared 0.2.3 working tree, before selecting the immutable release source.",
     "unitTestsPassed": 1043,
     "packedE2ETestsPassed": 38,
     "packedE2ESkipped": 0,
