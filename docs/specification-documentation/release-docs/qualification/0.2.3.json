@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "version": "0.2.3",
-  "status": "qualification-in-progress",
+  "status": "qualified-publication-pending",
   "branch": "codex/release-0.2.3",
   "ownerAuthorization": "Publish 0.2.3 after health qualification; user request 2026-10-08.",
   "repairMerge": {
@@ -12,21 +12,47 @@
   "qualificationRuns": [
     {
       "runId": 37863956517,
-      "status": "pending",
-      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517"
+      "status": "completed",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "requiredJobsPassed": 16,
+      "everyRequiredStep": "success",
+      "completedAt": "2026-10-09T00:51:57Z"
     },
     {
       "runId": 37863959982,
-      "status": "pending",
-      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982"
+      "status": "completed",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "requiredJobsPassed": 16,
+      "everyRequiredStep": "success",
+      "completedAt": "2026-10-09T00:55:27Z"
     },
     {
       "runId": 37863963775,
-      "status": "pending",
-      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775"
+      "status": "completed",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "requiredJobsPassed": 16,
+      "everyRequiredStep": "success",
+      "completedAt": "2026-10-09T00:58:36Z"
     }
   ],
-  "artifact": null,
+  "artifact": {
+    "schemaVersion": 1,
+    "package": "rsetup",
+    "version": "0.2.3",
+    "sourceSha": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+    "artifact": "rsetup-0.2.3.tgz",
+    "bytes": 115325,
+    "sha256": "f740df147bc9e8dbf4dc076322f2424d96ad2f27a0da14ef3e46c818e26edd2b",
+    "id": 11588707141,
+    "integrity": "sha512-Rhb6DravIbIe7A7/5dF5rD68ccJx9a5tDhZzWSbCpSxiVzKpY+ihz0x7XBBnQZNBLT3AncOcBmvv9zcADZ628A==",
+    "unreviewedLicenses": []
+  },
   "publication": null,
   "registryAcceptance": null,
   "liveServices": {
@@ -199,7 +225,7 @@
   "additionalQualification": {
     "fullMatrix": {
       "runId": 37813953547,
-      "status": "cancelled-first-attempt",
+      "status": "success",
       "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547",
       "firstAttempt": {
         "jobsPassed": 11,
@@ -211,7 +237,98 @@
       "retry": {
         "runAttempt": 2,
         "scope": "Only cancelled Windows/Python3.12/npm job retried on unchanged source; 11 prior successful jobs carried forward.",
-        "status": "in-progress"
+        "status": "success"
+      },
+      "finalQualification": {
+        "runId": 37813953547,
+        "runAttempt": 2,
+        "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+        "conclusion": "success",
+        "jobsPassed": 12,
+        "casesPassed": 480,
+        "skipped": 0,
+        "newlyRetestedJobs": 1,
+        "newlyRetestedCases": 40,
+        "carriedForwardJobs": 11,
+        "carriedForwardCases": 440,
+        "originalFailurePreserved": true,
+        "scope": "full",
+        "logsSha256": "f1e32a0721805071ef41503fd1baad93ab657dddda3d98b924b32ad603b55b7c",
+        "firstLogsSha256": "756bfc785191bef694f0905ee370cf894adff2b6966caccfc86e002e070502f8",
+        "jobs": [
+          {
+            "attempt": 1,
+            "log": "0_windows-2025 _ x64 _ Python 3.13 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "1_windows-2025 _ x64 _ Python 3.12 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "2_macos-15 _ arm64 _ Python 3.12 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "3_macos-15 _ arm64 _ Python 3.12 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "4_ubuntu-24.04 _ x64 _ Python 3.13 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "5_ubuntu-24.04 _ x64 _ Python 3.12 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "6_windows-2025 _ x64 _ Python 3.13 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "8_ubuntu-24.04 _ x64 _ Python 3.12 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "9_macos-15 _ arm64 _ Python 3.13 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "10_ubuntu-24.04 _ x64 _ Python 3.13 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "11_macos-15 _ arm64 _ Python 3.13 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 2,
+            "log": "0_windows-2025 _ x64 _ Python 3.12 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          }
+        ]
       }
     },
     "usability": {
@@ -1199,5 +1316,16 @@
       "failedJob": 113437793817,
       "reason": "Hosted macOS runner lost communication; job logs unavailable (404), API step 8 remained in progress."
     }
-  ]
+  ],
+  "qualificationGate": {
+    "status": "passed",
+    "proofPath": "/tmp/reposetup-0.2.3-release/qualification-proof.json",
+    "latestThreeConsecutiveFirstAttempts": true,
+    "candidateBranchUnchanged": true
+  },
+  "tag": {
+    "name": "v0.2.3",
+    "sourceSha": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+    "immutable": true
+  }
 }
