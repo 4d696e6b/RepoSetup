@@ -140,7 +140,7 @@ No minimum savings percentage is assumed. Negative savings is a valid result and
 
 ## Local fake-boundary test matrix
 
-Normal CI uses deterministic fake provider, repository, state, filesystem, clock and process ports; it requires no API key or AI allowance. Fake requests must expose call/proposal histories and fail if an unauthorized call/write/process occurs. Use injected races/failures rather than real external infrastructure. Existing task-boundary tests cover these ports; a complete offline campaign runner is still pending.
+Normal CI uses deterministic fake provider, repository, state, filesystem, clock and process ports; it requires no API key or AI allowance. Fake requests must expose call/proposal histories and fail if an unauthorized call/write/process occurs. Use injected races/failures rather than real external infrastructure. Existing task-boundary tests cover these ports. An offline serial core coordinator is tested with synthetic trial ports; a concrete campaign driver joined to actual task execution/evaluation and durable storage remains pending.
 
 Positive cases by boundary:
 
@@ -399,3 +399,52 @@ These cases are included in `test:tasks:fixtures` and `typecheck:task-tests`; no
 fixture definitions or runner freeze changes are needed. A real compiled treatment
 joined to qualified E checks, provider/routing execution and retained benchmark
 artifacts remains open. No comparison, model-quality or savings result is produced.
+
+## Offline serial coordinator (2026-10-09)
+
+Core's internal `executeTaskBenchmark` takes a validated fresh offline campaign
+and trusted host ports. It preflights all three treatment roots for a paired block,
+dispatches the 75 fixture/block/treatment slots sequentially in the frozen rotated
+order, and requests one strong decomposition at the first compiled slot. Both
+compiled consumers receive the same frozen compilation metadata object. The
+driver must retain/replay the actual validated plan corresponding to that ID;
+metadata equality alone does not prove plan execution. There is no public command,
+concrete provider/process/filesystem adapter, imported resume path or live mode.
+
+Version 1 events bind campaign identity, sequence and previous-event hash. The
+coordinator awaits host retention acknowledgement before setup, compilation or
+trial dispatch, and before advancing after a result. Setup rejection creates three
+blocked slots without requests. Reported compilation failure fails both compiled
+slots without retry; valid execution failures remain in the campaign and inclusive
+report totals. Returned trial metadata must match its dispatched slot, setup time,
+authority, ceilings and exact shared compilation. Existing campaign validation
+rejects invalid acceptance/check inventories, accounting and changed revisions.
+
+Storage failure stops before further dispatch and returns the known
+`unacknowledgedEvent` because a write may have succeeded without acknowledgement.
+Thrown/malformed host outcomes stop with retained intent and an incomplete campaign;
+they never become invented zero-usage terminal trials. Cancellation is checked
+between dispatches; a returned in-flight result is retained before stopping. Ports
+must enforce cancellation/timeouts and reservations inside their actual work.
+The coordinator prevents concurrent execution of the same campaign within this
+module; host leases and persistent duplicate-run rejection remain driver work.
+
+Acknowledgement/hash chaining is not durable storage or evidence authentication.
+No storage or trial adapter is supplied by this slice. Events contain bounded
+metadata rather than raw prompts, source, diagnostics or credentials. Failure
+categories follow the existing lowercase campaign ID contract. The campaign report
+reducer accounts terminal slots; on an interrupted prefix, known compilation
+requests can exist only in a retained/unacknowledged event. The future driver must
+join that pending work into inclusive accounting before publishing resource totals;
+a partial campaign alone cannot claim complete cost accounting. An incomplete
+coordinator result never establishes completion, resume authority or qualification.
+
+Twenty-one core tests use simulated setup/compile/trial/storage ports to check serial
+dispatch, the 250-event chain, one decomposition per block, analytical-versus-cash
+accounting, paired setup/compile failure, unknown usage, throws, every retention
+boundary, mismatched slots/compilations/checks/stages, live/imported input rejection,
+cancellation and concurrent dispatch. These are orchestration tests, not 75 model
+trials, retained authenticated artifacts or routing/savings evidence. Actual coordinator/
+retention overhead also needs measurement and inclusion by the concrete driver.
+Concrete drivers, partial-journal accounting, full managed verification/review and platform/
+live qualification remain open Milestone I work.

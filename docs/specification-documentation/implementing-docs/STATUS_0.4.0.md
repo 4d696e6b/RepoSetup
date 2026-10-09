@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 implementation status
 
-Last updated: 2026-10-08.
+Last updated: 2026-10-09.
 
 ## Current position
 
@@ -1210,3 +1210,64 @@ native-effort qualification, and separately authorized live provider/profile
 smoke. Milestone I remains in progress. J is next after those gates and remains
 unstarted. No keys, provider calls, payments, installations, version bump, merge,
 push or publication occurred.
+
+## Milestone I — core serial offline coordinator (2026-10-09)
+
+Implemented internal `executeTaskBenchmark` in the core executor with trusted
+setup/compilation/trial/retention ports. It validates a fresh offline campaign,
+preflights each paired block, rotates and dispatches all 75 slots sequentially,
+and shares one frozen strong compilation metadata object between fixed/routed
+consumers. Actual plan replay/isolation remains the concrete driver's responsibility.
+No public command, concrete provider/filesystem/process adapter, resume feature
+or live mode was introduced. Exported the existing compilation schema/type for
+reuse without changing campaign/fixture contracts, versions or manifest freezes.
+
+Before dispatch, the host must acknowledge a versioned campaign-bound intent with
+sequence and previous-event hash; it must also acknowledge results before the next
+dispatch. Paired setup failures create three blocked records without requests;
+reported compilation failure fails both compiled slots without calling them.
+Valid failed execution records and unknown usage remain in inclusive report totals.
+Wrong slot/compilation/check/stage metadata stops execution. Thrown outcomes retain
+intent and stop incomplete without invented terminal usage or automatic retry.
+Unacknowledged storage returns the known event because persistence may have
+succeeded before acknowledgement failed. Cancellation reaches work ports; returned
+in-flight results are retained before stopping. Same-campaign dispatch is serialized
+within the module, with host leases/persistent duplicate protection still pending.
+
+Twenty-one new core tests simulate all four host boundaries, including a full
+75-slot/250-event pass, serial execution, one shared decomposition per block,
+analytical/cash accounting, paired failures, unknown usage, throws, each retention
+boundary, mismatched metadata, rejected live/imported inputs, cancellation and
+concurrency. They are not model trials. Concrete durable storage/authentication,
+actual plan/task/verifier joining, budget reservations inside work ports and
+partial-journal resource accounting are still open. Known compilation requests can
+exist only in an event on interruption; the partial campaign report alone must not
+be presented as complete cost accounting. No quality/savings result is claimed.
+
+Validation on Node 24.21.0/macOS arm64 with pnpm 12.5.1: final workspace build,
+workspace/task-test typechecks and lint passed. All 523 core tests across 59 files
+passed via `pnpm --filter @reposetup/core exec vitest run`. The earlier focused
+coordinator/report run passed 35 cases before the final stage-rejection case;
+the full core run includes that case. The final ordinary offline task suite passed
+31 cases across five files in 36.26 seconds, including extracted packed aliases
+and evaluator/dependency regressions. Changed-document formatting and staged Git
+whitespace checks passed. Initial mock typing and uppercase failure-category test inputs were
+corrected to match the existing contracts. No product safety checks were weakened.
+
+The first final rebuild failed with `ENOSPC` writing registry output. A retry built
+the complete workspace and passed typechecks/lint, then pnpm could not allocate its
+next script lock due to another `ENOSPC`. Disk availability fluctuated around
+429–647 MiB; no unrelated files were deleted. Running tests through `pnpm exec`
+avoided that script-lock failure. The inherited build included the existing website
+without tracked website source changes. An interrupted offline test session lost
+its completion output and was rerun; no unobserved pass was assumed. The expensive
+reference-verifier suite was not rerun: verifier code/configs and fixture freeze
+are unchanged, and that earlier evidence retains its recorded scope/revision.
+
+Milestone I remains in progress for concrete trial/storage drivers, pending-work
+and coordinator/retention overhead accounting, candidate criterion review/qualified E joining, retained authenticated
+artifacts, installed/real legacy install and Linux/platform qualification, and
+production capability/native-effort plus separately authorized live provider/profile
+smoke. J remains the next milestone after I's gates and is unstarted. No keys,
+provider calls, payments, installations, version bump, merge, push or publication
+occurred.
