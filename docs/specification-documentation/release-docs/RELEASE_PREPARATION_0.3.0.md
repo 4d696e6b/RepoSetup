@@ -12,6 +12,11 @@ The frozen-lockfile install reused the local dependency store without downloadin
 
 Initial local checks exposed an old selection test expecting no final installed-dependency verification and doctor fixtures returning version text for every subprocess. Their expectations/mocks were updated for the shipped verification probes. No real installation or external platform qualification is claimed by those unit fixtures.
 
+The final shared version preparation and binding checks pass 106 targeted tests,
+including actual pin-check subprocesses on stable main/tag/canonical refs and
+independent CLI alpha sources. Typecheck and lint pass. These local checks do not
+replace the final release qualification below.
+
 ## Required before release qualification and delivery
 
 1. Finish the selected 0.3.0 feature work on this canonical branch. Finalize stable metadata only after that work is complete; no stable version bump is part of this preparation.
@@ -22,6 +27,6 @@ Initial local checks exposed an old selection test expecting no final installed-
 6. Complete native desktop screen-reader, physical mobile-device and local CLI handoff sessions in [the manual protocol](MANUAL_ACCESSIBILITY_DEVICE_0.3.0.md). Automated emulation and scripted beginner journeys do not close these gates.
 7. Review the qualified-artifact publisher's final version metadata and exact-source checks, then obtain explicit authorization for immutable tag/publication and website deployment. No tag, publication, deployment or external qualification workflow is initiated by this preparation.
 
-Shared release plumbing now derives its stable version/tag from validated manifests, retains the sixteen existing qualification jobs for 0.3.0, publishes the identified retained artifact without rebuilding it, and refuses prerelease or mismatched private-library metadata for stable publication. Local release-context, publication-workflow, qualification-gate and artifact-evidence tests pass; this is preparation validation, not renewed release qualification. Canonical release branches remain subject to the website artifact pin, and selection/browser push qualification includes them.
+Shared release plumbing now derives its stable version/tag from validated manifests, retains the sixteen existing qualification jobs for 0.3.0, publishes the identified retained artifact without rebuilding it, and refuses prerelease or mismatched private-library metadata for stable publication. Local release-context, publication-workflow, qualification-gate and artifact-evidence tests pass; this is preparation validation, not renewed release qualification. The release and selection pack steps now run the binding policy unconditionally. Stable releases from 0.3.0 onward require the website artifact pin on every ref, including main and tags; integrated/canonical alpha candidates also retain it. Independent CLI alpha qualification explicitly reports that website binding is not required. The publication runtime repeats the binding against retained verified bytes before any registry lookup or publication. Selection/browser push qualification includes canonical release branches.
 
 The [candidate record](RELEASE_CANDIDATE_0.3.0.md) preserves the preceding source/evidence and open Phase 9 gates. Selected publication remains Phase 10.

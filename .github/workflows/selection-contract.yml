@@ -36,7 +36,6 @@ jobs:
           pnpm --filter rsetup pack --pack-destination "$RUNNER_TEMP/selection-candidate"
           node scripts/write-artifact-evidence.mjs --tarball "$RUNNER_TEMP"/selection-candidate/rsetup-*.tgz --source-sha "$GITHUB_SHA" --output "$RUNNER_TEMP/selection-candidate/candidate-artifact.json"
       - name: Verify candidate matches the website's pinned artifact
-        if: github.ref_name == 'codex/0.3.0-candidate-integration' || github.ref_name == 'codex/release-0.3.0' || github.ref_name == 'codex/release-0.4.0'
         run: node scripts/check-candidate-artifact.mjs "$RUNNER_TEMP/selection-candidate/candidate-artifact.json"
       - uses: actions/upload-artifact@v4
         with:
