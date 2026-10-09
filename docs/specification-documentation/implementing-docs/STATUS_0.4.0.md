@@ -1438,3 +1438,48 @@ general independent candidate review/isolation and live/platform qualification c
 be replaced by schema integrity or synthetic model results. J stays unstarted. The
 source/qualified verifier/config/fixture recipe is unchanged by this pure replay module;
 no expensive verifier rerun is justified solely by the new unused benchmark helper.
+
+
+## Milestone I — authenticated compilation charges for fresh trial roots (2026-10-09)
+
+Implemented `executeTaskBenchmarkReplay` in core's executor. A newly dispatched,
+durably completed, successfully released compilation issues process-local receipt
+identity. Parsed/cloned checkpoints, read-only cached source results, unsuccessful
+calls and replay receipts cannot seed a pair. Each original receipt can bind only one
+fixed and one routed treatment, with two distinct fresh physical roots and independent
+reviews. Pure decomposition replay still validates unchanged logical scope/graph/checks.
+
+The executor checks the actual fresh baseline under its project lease, retains a private
+pending intent using the existing compilation CAS adapter, rechecks the baseline, then
+seals the completed charge. Both consumers retain the full original reservation and usage,
+plus measured local replay duration. Source request/context hashes explicitly describe
+the original request; versioned `benchmarkReplay` provenance records the source checkpoint,
+plan/root/call identity, logical decomposition, physical binding and treatment. The same
+source usage appears in both analytical charges; this is one original provider call for
+cash accounting. The metadata is diagnostic, not imported execution or acceptance authority.
+
+Existing TaskRun creation now carries replay provenance and consumes its charge through
+G's ordinary private compilation allowance. Omission is blocked; an exhausted remaining
+call allowance prevents coding dispatch. A replay slot cannot become a new decomposition
+request. Interrupted or absent attempted saves stay review-owned and are never reset or
+automatically completed. Dry-run validates data without invoking adapter ports. No new
+CLI commands, configuration fields, model tools, package versions or provider calls were
+introduced. Cached source reads deliberately cannot restart a benchmark after process loss.
+
+Validation: Node 24.21.0/macOS arm64/pnpm 12.5.1. All **13 new real private-filesystem
+cases** pass, within **49 passing targeted CLI tests across four files** (8.35 seconds),
+covering existing managed compilation, TaskRun and repair. All **562 core tests across
+62 files** pass (7.18 seconds). Workspace build, final workspace typecheck, task-test
+typecheck and lint pass. The first targeted test used a malformed host request and was
+corrected; an initial concurrent build/typecheck encountered transient missing generated
+core declarations, so workspace typecheck was rerun after build and passed. No checks
+remain failing. The qualified fixture tools/recipes are unchanged; this small executor
+bridge has not rerun or replaced the prior qualified-tool integration evidence.
+
+Milestone I remains **in progress**. The full driver/evidence/accounting join, general
+independent candidate review and hostile-code isolation, 75 actual comparative trials,
+live provider/model qualification and Linux/platform evidence remain open. A host must
+include source compilation final persistence/release and other overhead in its inclusive
+campaign measurement; this ledger's duration stops before its own final persistence tail.
+The next implementation is extraction of actual failed/uncertain run evidence without
+inventing missing measurements or promoting imported pass records. J remains unstarted.

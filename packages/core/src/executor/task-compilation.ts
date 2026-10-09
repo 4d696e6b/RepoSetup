@@ -17,6 +17,7 @@ import {
   type TaskCompilationCheckpoint,
 } from "../tasks/compilation-state.js";
 import type { TaskRunAdapter } from "./task-run-types.js";
+import { registerTaskCompilationReceipt } from "./task-compilation-receipt.js";
 
 /** One durable, explicitly allowed decomposition call. Repeated identical approval is read-only,
  * never a second request. Unknown/interrupted calls remain retained review-owned state. */
@@ -63,6 +64,7 @@ export async function executeTaskCompilation(input: {
   const lease = acquired.data;
   const start = performance.now();
   let result: Awaited<ReturnType<typeof executeTaskCompilation>>;
+  let dispatched = false;
   try {
     result = await execute();
   } catch {
@@ -72,6 +74,8 @@ export async function executeTaskCompilation(input: {
     );
   }
   const released = await lease.release();
+  if (released.success && dispatched && result.success && !result.data.dryRun)
+    registerTaskCompilationReceipt(result.data.checkpoint);
   return released.success ? result : released;
 
   async function execute(): Promise<Awaited<ReturnType<typeof executeTaskCompilation>>> {
@@ -113,6 +117,11 @@ export async function executeTaskCompilation(input: {
     if (previous.data) {
       const c = validateTaskCompilationCheckpoint(previous.data);
       if (!c.success) return c;
+      if (c.data.benchmarkReplay)
+        return taskFailure(
+          "TASK_NEEDS_REVIEW",
+          "This allowance retains a benchmark replay charge, not a new decomposition call.",
+        );
       if (
         c.data.rootInstance !== input.adapter.rootInstance ||
         c.data.reviewHash !== taskContentHash(review.data!) ||
@@ -218,6 +227,7 @@ export async function executeTaskCompilation(input: {
     let onAbort: (() => void) | undefined;
     let observed: unknown;
     try {
+      dispatched = true;
       observed = await Promise.race([
         input.provider.dispatch(prepared.data, signal),
         new Promise<never>((_resolve, reject) => {

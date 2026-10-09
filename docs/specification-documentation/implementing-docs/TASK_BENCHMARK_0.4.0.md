@@ -556,3 +556,27 @@ in trial overhead; source compilation cost/time is still charged fully to each c
 analytical treatment and once in the cash ledger. This helper does not by itself wire
 that driver or establish the 75-trial comparison. Campaign/fixture/protocol revisions
 and public task/configuration contracts are unchanged.
+
+
+### Executor-owned replay charges
+
+`executeTaskBenchmarkReplay` bridges a newly dispatched, durable G compilation to the
+two fresh compiled treatment roots. Only the original returned checkpoint object from
+the successful current-process dispatch can issue the pair. Clones, cached reads and
+replay records cannot authorize a new pair or resume after process loss. Each treatment
+binds one distinct reviewed physical root, retains a pending CAS intent, rechecks its
+baseline and seals a completed charge. Failed/uncertain retention remains review-owned.
+
+The private checkpoint's optional version 1 `benchmarkReplay` provenance distinguishes
+source compilation/checkpoint/plan/root identities from logical decomposition and fresh
+binding identities. Request/context hashes and source usage describe the original call;
+no second call occurred. Both TaskRuns reserve and consume the full source charge, with
+local replay overhead added to duration. Cash accounting deduplicates by source identity.
+A private replay slot blocks omission and new decomposition dispatch through existing G
+allowance checks. Serialized provenance grants no acceptance or model qualification.
+
+Dry-run performs pure validation and invokes no ports. This bridge has offline synthetic
+provider and real filesystem coverage, not live-provider, platform or comparative
+qualification. Inclusive host measurements must additionally cover final persistence,
+lease release and other overhead; the final ledger write cannot measure its own tail.
+The frozen protocol, fixture recipes and campaign schema are unchanged.

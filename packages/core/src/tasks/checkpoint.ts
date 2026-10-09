@@ -19,6 +19,7 @@ import {
 import { taskProviderReservationSchema } from "./provider.js";
 import { taskRepairContextSchema } from "./repair-context.js";
 import { taskRepairAction } from "./failure.js";
+import { taskBenchmarkCompilationReplaySchema } from "./compilation-state.js";
 
 export const taskRunCheckpointSchema = z.strictObject({
   kind: z.literal("task_run_checkpoint"),
@@ -34,6 +35,7 @@ export const taskRunCheckpointSchema = z.strictObject({
       compilationId: taskHashSchema,
       reservation: taskProviderReservationSchema,
       usage: taskUsageSchema,
+      benchmarkReplay: taskBenchmarkCompilationReplaySchema.optional(),
     })
     .optional(),
   providerCalls: z

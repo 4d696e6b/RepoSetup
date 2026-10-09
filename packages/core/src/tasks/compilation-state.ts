@@ -18,6 +18,19 @@ import type { TaskReview } from "./review-schema.js";
 export function taskCompilationAllowanceId(review: TaskReview): string {
   return taskContentHash({ kind: "task_compilation_allowance", schemaVersion: 1, review });
 }
+/** Diagnostic provenance for an executor-issued analytical charge, never a second call. */
+export const taskBenchmarkCompilationReplaySchema = z.strictObject({
+  kind: z.literal("task_benchmark_compilation_replay"),
+  schemaVersion: z.literal(1),
+  sourceCompilationId: taskHashSchema,
+  sourceCheckpointHash: taskHashSchema,
+  sourceRootInstance: taskHashSchema,
+  sourcePlanId: taskHashSchema,
+  decompositionId: taskHashSchema,
+  bindingId: taskHashSchema,
+  treatment: z.enum(["compiled_fixed", "compiled_routed"]),
+  sourceUsage: taskUsageSchema,
+});
 export const taskCompilationCheckpointSchema = z.strictObject({
   kind: z.literal("task_compilation_checkpoint"),
   schemaVersion: z.literal(1),
@@ -44,6 +57,7 @@ export const taskCompilationCheckpointSchema = z.strictObject({
   ]),
   usage: taskUsageSchema.nullable(),
   plan: taskPlanSchema.nullable(),
+  benchmarkReplay: taskBenchmarkCompilationReplaySchema.optional(),
 });
 export type TaskCompilationCheckpoint = z.infer<typeof taskCompilationCheckpointSchema>;
 export function sealTaskCompilationCheckpoint(
@@ -59,6 +73,31 @@ export function validateTaskCompilationCheckpoint(
     return taskFailure("TASK_RUN_STATE_INVALID", "Compilation checkpoint is malformed.");
   const c = parsed.data,
     { checkpointHash, ...payload } = c;
+  if (c.benchmarkReplay) {
+    const replay = c.benchmarkReplay;
+    const source = replay.sourceUsage;
+    const withoutDuration = (usage: typeof source) => {
+      const { durationMs: _duration, ...rest } = usage;
+      void _duration;
+      return rest;
+    };
+    if (
+      !["pending", "completed"].includes(c.status) ||
+      replay.sourceRootInstance === c.rootInstance ||
+      replay.sourceCompilationId === c.compilationId ||
+      replay.sourcePlanId === c.plan?.planId ||
+      source.durationMs >= c.limits.maxWallTimeMs ||
+      (["inputTokens", "outputTokens", "costMicrousd"] as const).some(
+        (key) =>
+          source[key].provenance === "unknown" ||
+          ("value" in source[key] && source[key].value > c.reservation[key]),
+      ) ||
+      (c.usage &&
+        (c.usage.durationMs < source.durationMs ||
+          taskContentHash(withoutDuration(c.usage)) !== taskContentHash(withoutDuration(source))))
+    )
+      return taskFailure("TASK_RUN_STATE_INVALID", "Benchmark replay provenance is invalid.");
+  }
   if (
     checkpointHash !== taskContentHash(payload) ||
     (c.status === "pending" ? c.usage !== null : c.usage === null) ||
