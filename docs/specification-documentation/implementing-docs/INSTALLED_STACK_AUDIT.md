@@ -10,7 +10,8 @@ Automated installed-stack qualification is complete. All 480 cases pass across
 twelve full-scope jobs after retrying the two failed Windows/npm jobs on unchanged
 source. The initial timeout failures remain recorded. Separate bounded live-service
 acceptance now passes for the frozen 0.2.3 candidate as recorded below. This audit
-does not qualify a newly versioned release artifact; publication remains pending.
+did not itself qualify the newly versioned artifact. Separate 0.2.3 artifact
+qualification, publication and registry delivery now pass in the release record.
 Machine-readable evidence is in [installed-stack-audit.json](../release-docs/qualification/installed-stack-audit.json).
 
 ## Reported Express project
@@ -203,7 +204,7 @@ templates. These five retained-helper cases are distinct from the two fresh CLI
 creation Linux tests and do not qualify Compose 18.6 locally.
 
 The [0.2.3 release record](../release-docs/STABLE_RELEASE_0.2.3.md) tracks the
-remaining artifact qualification and publication. These checks do not qualify
+completed artifact qualification, publication and three-platform npm delivery. These checks do not qualify
 every combination, migration, browser journey or native platform, and do not
 promote any integration maturity.
 

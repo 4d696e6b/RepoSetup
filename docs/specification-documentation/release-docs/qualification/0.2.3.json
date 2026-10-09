@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "version": "0.2.3",
-  "status": "qualified-publication-pending",
+  "status": "published-and-delivery-accepted",
   "branch": "codex/release-0.2.3",
   "ownerAuthorization": "Publish 0.2.3 after health qualification; user request 2026-10-08.",
   "repairMerge": {
@@ -53,8 +53,60 @@
     "integrity": "sha512-Rhb6DravIbIe7A7/5dF5rD68ccJx9a5tDhZzWSbCpSxiVzKpY+ihz0x7XBBnQZNBLT3AncOcBmvv9zcADZ628A==",
     "unreviewedLicenses": []
   },
-  "publication": null,
-  "registryAcceptance": null,
+  "publication": {
+    "version": "0.2.3",
+    "latest": "0.2.3",
+    "sourceSha": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+    "integrity": "sha512-Rhb6DravIbIe7A7/5dF5rD68ccJx9a5tDhZzWSbCpSxiVzKpY+ihz0x7XBBnQZNBLT3AncOcBmvv9zcADZ628A==",
+    "sha256": "f740df147bc9e8dbf4dc076322f2424d96ad2f27a0da14ef3e46c818e26edd2b",
+    "sha512": "4616fa0eb6af21b21eec0effe5d179ac3ebc71c271f5ae6d0e16735926c2a52c625732a963e8a1cf4c7b5c10674193412d3dc09dc39c066beff737000d9eb6f0",
+    "bytes": 115325,
+    "provenanceInvocation": "https://github.com/4d696e6b/RepoSetup/actions/runs/37875932749/attempts/1",
+    "transparencyLogIndex": "3155772957",
+    "dryRunId": 37875863670,
+    "publishRunId": 37875932749,
+    "npmPublished": true,
+    "githubReleasePublished": true,
+    "githubReleaseUrl": "https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.3",
+    "githubReleasePublishedAt": "2026-10-09T02:50:11Z",
+    "registryAcceptance": "success",
+    "signatureVerification": "success",
+    "verifiedSignatures": 27,
+    "verifiedAttestations": 20,
+    "githubTarballAssetSha256Verified": true
+  },
+  "registryAcceptance": {
+    "runId": 37875932749,
+    "runAttempt": 1,
+    "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+    "jobs": [
+      {
+        "name": "registry-acceptance (ubuntu-24.04)",
+        "conclusion": "success",
+        "jobId": 113645620075
+      },
+      {
+        "name": "registry-acceptance (windows-2025)",
+        "conclusion": "success",
+        "jobId": 113645620120
+      },
+      {
+        "name": "registry-acceptance (macos-15)",
+        "conclusion": "success",
+        "jobId": 113645620186
+      }
+    ],
+    "localUnversionedInstall": {
+      "version": "0.2.3",
+      "aliases": [
+        "rsetup",
+        "reposetup"
+      ],
+      "signatureAudit": "passed",
+      "verifiedSignatures": 27,
+      "verifiedAttestations": 20
+    }
+  },
   "liveServices": {
     "status": "passed",
     "scope": "Isolated local database checks and Linux Docker/Compose CI; no native Windows desktop or arbitrary permutations claimed.",
@@ -1327,5 +1379,18 @@
     "name": "v0.2.3",
     "sourceSha": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
     "immutable": true
+  },
+  "evidenceDirectory": "/tmp/reposetup-0.2.3-release",
+  "documentationCloseout": {
+    "date": "2026-10-09",
+    "typecheck": "passed",
+    "lint": "passed",
+    "diffCheck": "passed",
+    "productSourceUnchanged": true,
+    "evidenceBranch": "codex/release-0.2.3-evidence",
+    "logs": {
+      "typecheck": "/tmp/reposetup-0.2.3-release/closeout-typecheck.log",
+      "lint": "/tmp/reposetup-0.2.3-release/closeout-lint.log"
+    }
   }
 }

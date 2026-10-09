@@ -1,11 +1,11 @@
 # Stable 0.2.3 release and delivery record
 
-Status — 2026-10-08: **preparation; publication pending**. The owner authorized
-publication after the required health checks. Version-specific artifact
-qualification, publication and fresh registry delivery must pass before this
-record is marked delivered. Existing published versions and tags remain immutable.
+Status — 2026-10-09: **published and delivery accepted**. npm `latest` identifies
+`rsetup@0.2.3`. [GitHub release](https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.3).
+The owner authorized publication after health checks; no additional calendar
+soak was required. Existing published versions and tags remain immutable.
 
-## Changes prepared for delivery
+## Delivered changes
 
 [PR #17](https://github.com/4d696e6b/RepoSetup/pull/17) repairs installed-stack
 failures and misleading setup guidance:
@@ -112,37 +112,72 @@ The second run failed after its Windows Golden H application tests passed:
 Node exited with a libuv shutdown assertion. The third run lost communication
 with its hosted macOS runner; job logs were unavailable, and the API annotation
 records the runner loss. These runs do not satisfy the consecutive publication
-gate. Three new first-attempt runs on unchanged source are in progress.
+gate. The three new first-attempt runs on unchanged source passed as recorded below.
 
 The first expanded matrix passed eleven complete jobs, totaling 440 cases with
 no skips. Its Windows/Python 3.12/npm job reported a Next/SQLite recipe failure,
 then reached the 90-minute workflow deadline before a final summary. That partial
 job is not counted as a pass; its original logs and API metadata are retained.
-Diagnosis and full matrix closeout remain required.
+The single failed job was retried on unchanged source and passed all forty
+cases. The final matrix has 480 passes with no skips: 440 carried-forward
+passes and forty new passes. A separate focused Next diagnostic passed all
+twelve configurations with 204 unrelated tests deliberately excluded. It did
+not reproduce or explain the suppressed initial assertion.
 
 All fifteen candidate usability sessions pass 117 checks, with eight expected
 occupied-port or unavailable-prerequisite refusals and no unexpected failures.
 Controlled benchmarks pass all 120 command trials on the three release platforms.
 Their lower medians in this sample do not promise universal network speed.
 
+## Completed publication and delivery
+
+Immutable tag/source: `v0.2.3` / `a213a6a1edf63771aba8d5b91bfdcf44d665de22`.
+The final consecutive first-attempt release runs all pass sixteen required jobs
+and every required step:
+[37863956517](https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517),
+[37863959982](https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982),
+[37863963775](https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775).
+The candidate branch stayed unchanged through publication.
+
+The final run retains artifact `11588707141` and `rsetup-0.2.3.tgz`
+(115325 bytes), plus identified-source evidence and a clean dependency
+license review. SHA-256: `f740df147bc9e8dbf4dc076322f2424d96ad2f27a0da14ef3e46c818e26edd2b`.
+[Tag-bound dry-run](https://github.com/4d696e6b/RepoSetup/actions/runs/37875863670)
+passes before [artifact-only OIDC publication](https://github.com/4d696e6b/RepoSetup/actions/runs/37875932749).
+No release build was recreated during publication.
+
+Fresh npm acceptance passes on Ubuntu 24.04/x64, macOS 15/arm64 and Windows
+Server 2025/x64. Each checks both launchers, dry-run, actual Express creation,
+build and HTTP-response test outside the monorepo. Registry 0.2.3 and latest
+integrity match the retained archive; downloaded bytes match SHA-256/SHA-512.
+Signed SLSA provenance binds the archive, source, tag and approved publishing
+workflow/run. Transparency log index: `3155772957`.
+An isolated unversioned `npm install rsetup` resolves 0.2.3; both aliases report
+0.2.3. `npm audit signatures` verifies 27 registry signatures and twenty attestations.
+
+GitHub release assets include the exact archive, source/hash identity and license
+review. [Machine-readable evidence](./qualification/0.2.3.json) retains the
+attempts and proof; raw local evidence is in `/tmp/reposetup-0.2.3-release`, and
+GitHub logs/artifacts remain subject to their retention periods.
+
 ## Version-specific release gates
 
 - [x] Owner authorizes 0.2.3 publication after required checks.
 - [x] Installed-stack repair qualification is complete, with original failures retained.
 - [x] Merge the repairs and release preparation; current manifests, publication checks and guides target 0.2.3.
-- [x] Prepared 0.2.3 passes 1,043 unit tests, 38 packed E2E tests with no skips, typecheck, lint, build and 37 registry definitions; production audit and bounded review pass. Final retained-artifact license review remains required.
-- [ ] Required exact-source release runs pass every required job and step.
-- [ ] Final candidate passes the full matrix, preset sessions and controlled benchmarks.
-- [ ] Retain the final artifact identity, source, byte length and hashes.
-- [ ] New immutable `v0.2.3` identifies the qualified source; tag-bound publication dry-run passes.
-- [ ] Publish only the retained artifact with OIDC; verify registry integrity and signed provenance.
-- [ ] Fresh npm registry acceptance passes on Linux, macOS and Windows.
-- [ ] Publish GitHub release, verify npm `latest`, and close current documentation/status.
+- [x] Prepared 0.2.3 passes 1,043 unit tests, 38 packed E2E tests with no skips, typecheck, lint, build and 37 registry definitions; production audit and bounded review pass. Final retained-artifact license review passes.
+- [x] Required exact-source release runs pass every required job and step.
+- [x] Final candidate passes the full matrix, preset sessions and controlled benchmarks.
+- [x] Retain the final artifact identity, source, byte length and hashes.
+- [x] New immutable `v0.2.3` identifies the qualified source; tag-bound publication dry-run passes.
+- [x] Publish only the retained artifact with OIDC; verify registry integrity and signed provenance.
+- [x] Fresh npm registry acceptance passes on Linux, macOS and Windows.
+- [x] Publish GitHub release, verify npm `latest`, and close current documentation/status.
 
 The [version-specific machine record](./qualification/0.2.3.json) retains attempts
-and publication/delivery identity. Until those gates pass, the repair branch is not a delivered npm release.
+and publication/delivery identity. All delivery gates pass; historical repair evidence remains distinct from final artifact qualification.
 
-## Installation after publication
+## Installation
 
 ```sh
 npm install -g rsetup@0.2.3
@@ -152,7 +187,7 @@ npx rsetup@0.2.3 create
 
 Both `rsetup` and `reposetup` are installed aliases. The npm package is `rsetup`.
 Unversioned `npm install -g rsetup` and `npx rsetup` select the registry's `latest`
-tag; this record must confirm that tag before promising it identifies 0.2.3.
+tag, now verified as 0.2.3.
 Existing generated projects are not silently rewritten by a CLI upgrade.
 See the [0.2.3 user guide](../../humanOnly/RepoSetup_0.2.3.md) for recovery and setup.
 
@@ -160,9 +195,9 @@ See the [0.2.3 user guide](../../humanOnly/RepoSetup_0.2.3.md) for recovery and 
 
 Installed dependency metadata and configuration do not prove every import,
 transitive dependency, editor language-server state or external service.
-Docker/Compose CLI checks do not prove daemon readiness. Local read-only probes
-found the Docker daemon unresponsive; no containers or database images were started
-to create artificial evidence. Representative local PostgreSQL/MongoDB queries passed as recorded above.
+Docker/Compose CLI checks do not prove daemon readiness. Historical local
+read-only probes found an unresponsive daemon and did not pull images or start
+containers. The separate Linux tests started only their own disposable services. Representative local PostgreSQL/MongoDB queries passed as recorded above.
 The separate Linux container cases passed as recorded above. General migration workflows, native
 Windows 11, Linux arm64 and actual Playwright browser journeys remain unqualified. No integration is promoted to stable.
 

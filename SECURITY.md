@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-RepoSetup is an **early-stage** open-source project. The maintained release line is **`0.2.x`**, with `0.2.3` in preparation. See the [current release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md) for publication and delivery status. Security fixes target the newest published patch; older patches are not a separate long-term support line. Version `1.0.0` and uniformly stable integration support are not claimed.
+RepoSetup is an **early-stage** open-source project. The maintained release line is **`0.2.x`**, with published `0.2.3` as the newest patch. See the [current release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md) for publication and delivery status. Security fixes target the newest published patch; older patches are not a separate long-term support line. Version `1.0.0` and uniformly stable integration support are not claimed.
 
 ## What RepoSetup executes
 

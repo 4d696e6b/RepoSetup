@@ -9,52 +9,30 @@ regression coverage. No new integrations are needed to close these regressions.
 A passing plan is not evidence of a working generated application. Never claim
 all possible integration combinations or all operating systems were tested.
 
-## Current 0.2.3 qualification — 2026-10-09
+## Current 0.2.3 delivery — 2026-10-09
 
-Installed-stack repairs are merged through PR #17. The [automated audit](./INSTALLED_STACK_AUDIT.md)
-passes 480 full-matrix cases after two Windows/npm retries, 1,043 local unit tests,
-38 packed E2E tests and targeted recovery checks. Workspace versions and active
-publication gates now target 0.2.3. Preparation merged through
-[PR #18](https://github.com/4d696e6b/RepoSetup/pull/18); the candidate branch
-`codex/release-0.2.3` is frozen at `a213a6a1edf63771aba8d5b91bfdcf44d665de22`.
-The owner authorized publication after health qualification. Current evidence:
+**rsetup@0.2.3 is published; npm latest and three-platform delivery are verified.**
+Repairs/preparation merged through PR #17/#18. Exact tag/source `v0.2.3` /
+`a213a6a1edf63771aba8d5b91bfdcf44d665de22` passes three consecutive first-attempt
+release runs with every required job and step. The expanded matrix passes 480
+cases with no skips after retrying one Windows/npm job; its initial Next failure
+and 90-minute cancellation remain recorded. The focused Next diagnostic passes
+all twelve configurations with unrelated cases deliberately excluded.
 
-- [x] Local version-bound unit/E2E checks, build, typecheck after build, lint and
-      all 37 registry definitions pass.
-- [x] [Two Linux live-service tests](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567)
-      pass seven checks without failures or skips, verifying disposable-service
-      cleanup. Fresh JavaScript Express/Prisma, Express/Drizzle and FastAPI/uv
-      SQLAlchemy projects exercise PostgreSQL 18.6, including Compose restart and
-      recreation persistence; a fresh Express/Mongoose project performs authenticated
-      CRUD against MongoDB 8.0.32. Five retained-helper macOS cases provide separate
-      bounded evidence, not cross-platform fresh CLI service qualification.
-- [x] [Preset usability](https://github.com/4d696e6b/RepoSetup/actions/runs/37813953485)
-      passes fifteen sessions and 117 checks, including eight expected negative exits
-      and no unexpected failures.
-- [x] [Controlled benchmarks](https://github.com/4d696e6b/RepoSetup/actions/runs/37814000719)
-      pass 120 command trials. These compare separate and consolidated installation
-      strategies, not every framework download or patch-to-patch performance.
-- [ ] Full twelve-job candidate matrix passes. [Attempt 1](https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547)
-      completes eleven jobs and 440 passing cases; Windows/Python 3.12/npm records a
-      partial Next.js/SQLite failure before reaching its 90-minute job budget and
-      cancellation. Attempt 2 retries only that unsuccessful job on unchanged source;
-      its partial results cannot qualify the full matrix.
-- [ ] Three consecutive first-attempt release runs pass. Initial
-      [37813984536](https://github.com/4d696e6b/RepoSetup/actions/runs/37813984536) passes;
-      [37813990336](https://github.com/4d696e6b/RepoSetup/actions/runs/37813990336) fails a
-      Windows recipe job after a libuv crash (39/40 cases pass), and
-      [37813995872](https://github.com/4d696e6b/RepoSetup/actions/runs/37813995872) fails
-      after a macOS runner loses communication. Fresh runs
-      [37863956517](https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517),
-      [37863959982](https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982) and
-      [37863963775](https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775) are
-      queued/running; prior failures remain recorded.
-- [ ] Final artifact, tag-bound dry-run, signed publication and fresh registry
-      delivery are accepted. Publication remains pending.
+Two fresh Linux live tests/seven checks qualify representative PostgreSQL 18.6
+Prisma/Drizzle/SQLAlchemy CRUD and persistence, plus authenticated MongoDB 8.0.32
+Mongoose CRUD with cleanup verified. Five separate retained-helper macOS cases
+remain distinct. Fifteen usability sessions pass 117 checks with eight expected
+negative exits; all 120 controlled benchmark trials pass. These comparisons do
+not promise universal download speed or a patch-to-patch improvement.
 
-No integration maturity is promoted. Live services on every platform/recipe,
-migrations, native Windows 11/Linux arm64 and actual browser journeys remain
-outside this bounded evidence. See [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+Initial release qualification failures (Windows Node shutdown assertion and
+macOS runner communication loss) are preserved. The final successful sequence,
+retained archive, clean license review, tag-bound dry-run, artifact-only OIDC
+publication, integrity, signed provenance, signatures and registry delivery are
+in [the completed release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+No seven-day wait or integration maturity promotion is introduced. Native and
+untested service/browser paths remain outside this bounded qualification.
 
 ## Historical 0.2.2 delivery — 2026-10-08
 

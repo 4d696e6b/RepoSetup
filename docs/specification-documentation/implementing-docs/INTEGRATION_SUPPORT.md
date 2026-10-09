@@ -1,14 +1,14 @@
-# Integration support report (`0.2.3` preparation)
+# Integration support report (`0.2.3`)
 
-The 0.2.3 candidate preserves the published 0.2.0 catalog classification. Version-specific qualification and publication are pending in [the patch release record](../release-docs/STABLE_RELEASE_0.2.3.md). The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
+Published 0.2.3 preserves the 0.2.0 catalog classification. Version-specific qualification, publication and registry delivery pass in [the patch release record](../release-docs/STABLE_RELEASE_0.2.3.md). The guaranteed support scope is the five required recipes in [the 0.2.0 roadmap](./ROADMAP_0.2.0.md), with final platform and artifact evidence in [stable qualification](../release-docs/STABLE_QUALIFICATION_0.2.0.md). No individual integration ID was promoted to `stable`; qualification applies to the tested recipe tuples, not every possible combination.
 
 ## 0.2.3 installed-stack audit
 
 The [installed-stack audit](./INSTALLED_STACK_AUDIT.md) passes all 480 full-matrix
 cases after two same-source Windows/npm retries, plus scoped recovery checks.
 These repairs were merged through PR #17. New version-specific release and live
-service qualification are recorded separately below; artifact qualification and
-publication remain pending. No integration maturity is promoted.
+service qualification are recorded separately below; artifact qualification,
+publication and three-platform npm delivery pass. No integration maturity is promoted.
 
 ## Bounded 0.2.3 live-service acceptance
 

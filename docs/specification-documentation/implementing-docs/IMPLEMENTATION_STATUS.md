@@ -4,48 +4,20 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**0.2.3 — exact-source qualification in progress; publication pending.** The owner
-authorized publication after health qualification. Installed-stack repairs merged
-through PR #17; preparation and live-service acceptance merged through
-[PR #18](https://github.com/4d696e6b/RepoSetup/pull/18). The release branch
-`codex/release-0.2.3` remains frozen at
-`a213a6a1edf63771aba8d5b91bfdcf44d665de22`. Current progress on October 9:
+**0.2.3 — published and delivery accepted, 2026-10-09.** npm `latest` is
+`rsetup@0.2.3`; [GitHub release](https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.3).
+Repairs and preparation merged through PR #17/#18. Immutable tag/source:
+`v0.2.3` / `a213a6a1edf63771aba8d5b91bfdcf44d665de22`.
+Three consecutive first-attempt release runs pass all sixteen jobs and every
+required step. The full matrix qualifies 480 cases with no skips after one
+same-source Windows job retry; its original failure is retained. Fifteen usability
+sessions/117 checks, 120 controlled benchmark trials and two Linux live-service
+tests/seven checks pass. Five separate retained-helper macOS cases also pass.
+Qualified artifact-only OIDC publication, archive integrity, signed provenance,
+signatures and fresh npm delivery on Linux/macOS/Windows pass. No new calendar
+soak or integration maturity promotion is introduced. See [final release evidence](../release-docs/STABLE_RELEASE_0.2.3.md).
 
-- Local checks pass: 1,043 unit tests, all 38 packed E2E tests with uv, build,
-  typecheck after build, lint and all 37 registry definitions.
-- [Linux live-service acceptance](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567)
-  passes two tests with seven checks, no failures or skips and owned-service
-  cleanup verified. Its fresh CLI projects exercise JavaScript Express/Prisma,
-  Express/Drizzle and FastAPI/uv SQLAlchemy against PostgreSQL 18.6, including
-  Compose restart/recreation persistence, plus authenticated Express/Mongoose
-  CRUD against MongoDB 8.0.32. Five separate retained-helper macOS cases also pass;
-  they do not extend the fresh-creation Linux scope or catalog maturity.
-- [Preset usability](https://github.com/4d696e6b/RepoSetup/actions/runs/37813953485)
-  passes fifteen sessions and 117 checks, including eight explicit expected
-  negative exits and no unexpected failures.
-- [Controlled install benchmark](https://github.com/4d696e6b/RepoSetup/actions/runs/37814000719)
-  passes all 120 command trials on three platforms. It compares separate and
-  consolidated installation strategies, not every download or 0.2.3 versus 0.2.2.
-- [Full matrix attempt 1](https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547)
-  completes eleven successful jobs with 440 passing cases. Windows/Python 3.12/npm
-  records a partial Next.js/SQLite recipe failure and reaches its 90-minute job
-  budget before cancellation; partial results do not qualify that job. Attempt 2
-  retries only that unsuccessful job on unchanged source; full-matrix acceptance
-  remains pending.
-- Initial release qualification [37813984536](https://github.com/4d696e6b/RepoSetup/actions/runs/37813984536)
-  passes. [37813990336](https://github.com/4d696e6b/RepoSetup/actions/runs/37813990336)
-  fails a Windows recipe job after a libuv crash (39 of 40 cases pass), and
-  [37813995872](https://github.com/4d696e6b/RepoSetup/actions/runs/37813995872)
-  fails when a macOS runner loses communication. These failures remain recorded.
-  Fresh first-attempt runs [37863956517](https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517),
-  [37863959982](https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982) and
-  [37863963775](https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775) are
-  queued/running on the same source. The three-consecutive-run gate is not complete.
-
-Final artifact qualification, signed publication and registry delivery remain
-required. See [the 0.2.3 release record](../release-docs/STABLE_RELEASE_0.2.3.md).
-
-**Installed stack audit — automated qualification complete; merged for 0.2.3; publication pending.**
+**Installed stack audit — automated qualification complete; delivered in 0.2.3.**
 The reported Express project was repaired after a root-owned npm cache aborted installation.
 Additional confirmed defects were fixed in development dependency installation,
 SQLAlchemy's PostgreSQL driver, JavaScript Prisma imports, Docker prerequisite health
@@ -58,7 +30,7 @@ audit did not connect to live Docker or database services. The separate bounded
 The branch is `codex/audit-installed-stack`; published 0.2.2 is unchanged.
 See [the installed stack audit](./INSTALLED_STACK_AUDIT.md) for evidence and remaining service limits.
 
-**0.2.2 — published and delivery accepted.** At this preparation checkpoint, npm latest is 0.2.2.
+**0.2.2 — historical release: published and delivery accepted.** At its closeout, npm latest was 0.2.2.
 PR #13/#14 deliver dependency-health repairs at immutable tag/source
 `v0.2.2` / `c447e461e6e66935f077449c99d8d759e6067482`. Three complete first-attempt release qualifications,
 the 408-case expanded matrix after one documented Windows install-timeout retry,
@@ -116,7 +88,7 @@ The historical [0.2.0 qualification record](../release-docs/STABLE_QUALIFICATION
 
 ### Phase 27 progress — 2026-09-29
 
-- [x] At this Phase 27 checkpoint, the CLI was `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17. The current published version is `0.2.2`; the 0.2.0 milestone is retained above.
+- [x] At this Phase 27 checkpoint, the CLI was `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17. The current published version is `0.2.3`; the 0.2.0 milestone is retained above.
 - [x] Packed-artifact tests derive the tarball and manifest version from `packages/cli/package.json`, record the SHA-256, and install the tarball in a temporary directory outside the monorepo. Both `rsetup` and `reposetup` launch through npm's actual platform launcher.
 - [x] `write-artifact-evidence.mjs` writes a source-SHA and SHA-256 identity record once for each packed candidate. `verify-packed-artifact.mjs` verifies that record before installing and launching the same artifact.
 - [x] The manually dispatched candidate workflow and the `v0.2.0` publish workflow make Node 24 platform qualification, Python 3.12/3.13 golden qualification, exact-SHA failure-path qualification, a one-time candidate pack, and cross-platform artifact acceptance blocking dependencies. The publishing path uses the downloaded qualifying tarball only after its source SHA and tag/version agree.
@@ -228,9 +200,9 @@ Phase 22 implementation gates for reproducible recipes are complete. Phase 27 co
 
 ## Current release
 
-The observed npm `latest` dist-tag is `rsetup@0.2.2`. Its registry integrity,
-`v0.2.2` source and signed provenance match the qualified artifact; fresh delivery
-passed on all three release targets. See [the current release record](../release-docs/STABLE_RELEASE_0.2.2.md).
+The observed npm `latest` dist-tag is `rsetup@0.2.3`. Its registry integrity,
+`v0.2.3` source and signed provenance match the qualified artifact; fresh delivery
+passed on all three release targets. See [the current release record](../release-docs/STABLE_RELEASE_0.2.3.md).
 Published 0.2.0 and older baseline evidence remain historical.
 
 ## Planning checkpoint — 2026-09-22
@@ -291,7 +263,7 @@ The remaining sections preserve the earlier 0.1.0 launch record. Their publicati
 - [ ] Phase 18 — Release Hardening and Prerelease Qualification
   - [x] 18.0 Documentation and baseline
   - [x] 18.1 Golden-stack real execution tests (harness + B/C local; A/D/E blocked here)
-  - [x] 18.2 Cross-platform CI qualification (workflows added; remote run pending)
+  - [x] 18.2 Cross-platform CI qualification (workflows added at this checkpoint; later remote evidence is recorded in the current release)
   - [x] 18.3 npm package/artifact qualification
   - [x] 18.4 Failure-path and safety qualification
   - [x] 18.5 Integration maturity classification (candidates; none stable)
@@ -313,7 +285,13 @@ Public GitHub launch plus Model A npm packaging (2026-09-22): public package nam
 - GitHub tag `v0.1.0` points at pre-bundle `@reposetup/cli` source. Do not move that tag.
 - No integration is `stable`.
 
-## Golden stacks proven
+## Historical alpha scaffold checkpoint
+
+The following tables retain the original alpha planning snapshot. Current recipe,
+platform and delivery results are recorded in the current phase and release above;
+these historical pending entries do not describe 0.2.3.
+
+### Golden stacks proven at that checkpoint
 
 | Stack                     | Dry-run plan | Real execute                                |
 | ------------------------- | ------------ | ------------------------------------------- |
@@ -407,3 +385,13 @@ these results alone.
 - [x] Fresh registry delivery passes on Linux, macOS and Windows; GitHub release and current docs identify 0.2.2.
 - [x] Initial Windows/npm install timeout and successful same-source retry are retained in release evidence.
 - [ ] Native desktop/live services/browser journeys and every integration permutation are qualified (future scope).
+
+### 0.2.3 delivery closeout — 2026-10-09
+
+- [x] Installed-stack repairs and versioned preparation merged through PR #17/#18.
+- [x] Three consecutive first-attempt exact-source release qualifications and 480-case expanded matrix pass; original failures and bounded retries remain recorded.
+- [x] Two fresh Linux live-service tests/seven checks, fifteen usability sessions/117 checks and 120 controlled benchmark trials pass.
+- [x] Immutable tag and qualified archive published through approved OIDC; registry bytes, signed provenance and signatures verified.
+- [x] Fresh npm delivery passes on all three release targets; unversioned npm install and both aliases identify 0.2.3.
+- [x] GitHub release and current documentation/status identify published 0.2.3; historical source evidence remains unchanged.
+- [ ] Native Windows 11/Linux arm64, all service permutations/migrations and actual browser journeys are qualified (future scope).

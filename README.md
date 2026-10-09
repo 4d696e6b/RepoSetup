@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is an **early-stage** open-source project preparing `v0.2.3`. Publication and delivery status are recorded in the [0.2.3 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is an **early-stage** open-source project with released `v0.2.3`. Qualification and delivery evidence are recorded in the [0.2.3 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -46,7 +46,7 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and the selected manager (**uv** or an activated **pip** environment); Python 3.12 and 3.13 were covered by the 0.2.x qualification matrix. RepoSetup does not install these system prerequisites for you.
 
-Version 0.2.3 is the installed-stack stability patch. The commands below target that version after publication; consult the [release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md) while delivery is pending:
+Version 0.2.3 is the published installed-stack stability patch. npm `latest` identifies it; both pinned and unversioned installs are verified. See the [release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md) for qualification and delivery evidence:
 
 ```bash
 npx rsetup@0.2.3 --help
@@ -234,8 +234,8 @@ generated Mongoose helper using MongoDB 8.0.32. These Node projects use Express
 with JavaScript; both tests verify cleanup of their disposable services. This is
 separate from five local checks using retained generated helpers on macOS with
 PostgreSQL 14.20 and MongoDB 8.2.3. See the [installed-stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md)
-for the exact scopes. Version-specific artifact qualification and publication
-remain pending; no integration maturity is promoted.
+for the exact scopes. Artifact qualification, publication and three-platform npm
+delivery pass; no integration maturity is promoted.
 
 Create installs selected Node development tools even when the parent environment omits dev dependencies. PostgreSQL SQLAlchemy recipes include Psycopg's binary driver; JavaScript Prisma helpers use the generated client's supported Node 24 import paths. Docker selections write prerequisite guidance, and PostgreSQL Compose includes a loopback port and persistent storage. RepoSetup does not install system software or start those services.
 

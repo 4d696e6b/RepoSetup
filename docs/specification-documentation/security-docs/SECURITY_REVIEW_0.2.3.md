@@ -2,7 +2,7 @@
 
 Scope: installed-stack repairs merged through PR #17, development-dependency
 policy, generated database helpers and Compose configuration, diagnostics and
-version-bound artifact-only publication. Final publication acceptance is pending.
+version-bound artifact-only publication. Final publication acceptance passes as recorded below.
 
 - Integration definitions still produce typed operations; only the executor
   mutates generated projects or starts installation commands. Declarative configs
@@ -43,5 +43,12 @@ are recorded separately; they do not promote every integration to stable.
 
 ## Publication acceptance
 
-Pending: exact-source artifact, signature/provenance and fresh registry acceptance.
+Passed: exact-source artifact/hash and clean license review; three consecutive
+first-attempt release runs; tag-bound dry-run; approved OIDC publication of the
+retained bytes; matching registry/latest archive integrity; signed SLSA source/tag/
+workflow provenance; 27 verified registry signatures and twenty attestations;
+fresh Linux/macOS/Windows registry delivery. A fresh October 9 production audit
+again reports zero known vulnerabilities. Original qualification failures remain
+recorded; the generated development-tool advisory remains outside that clean
+production audit.
 See [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).

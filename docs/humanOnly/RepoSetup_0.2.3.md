@@ -4,13 +4,13 @@ RepoSetup composes and installs selected development stacks from the terminal.
 Version 0.2.3 repairs installation under production settings, PostgreSQL
 SQLAlchemy drivers, JavaScript Prisma imports, and Docker/Compose guidance.
 It retains the create-path and installed-dependency checks from 0.2.1/0.2.2.
-Publication and version-specific delivery are pending in the
+Publication and three-platform registry delivery pass; npm `latest` is 0.2.3. See the
 [release record](../specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md).
 
 ## Install
 
 Use Node.js 24 or later. Node 22.12 is unsupported. RepoSetup does not install
-system runtimes. These commands target 0.2.3 after publication:
+system runtimes. These commands install published 0.2.3:
 
 ```sh
 node --version
@@ -22,8 +22,7 @@ reposetup --version
 Both aliases should report 0.2.3. Without a global installation, use
 `npx rsetup@0.2.3 --help` or `npx rsetup@0.2.3 create`.
 The npm package is `rsetup`; `npx reposetup` invokes a different project.
-An unversioned install selects npm's current `latest` tag; the release record
-states when that tag and fresh registry delivery are verified. A local
+An unversioned install selects npm's verified `latest` tag, currently 0.2.3. A local
 `npm install rsetup` installs into the current project; use npx to launch it there.
 
 Upgrading the CLI does not rewrite or reinstall an existing generated project.
@@ -145,8 +144,8 @@ Separately, five local cases exercised retained generated helpers on macOS again
 PostgreSQL 14.20 and MongoDB 8.2.3. Those checks include compiled Express/Prisma
 and Fastify/Drizzle helpers, both FastAPI and Flask SQLAlchemy helpers, and
 Express/Mongoose. They are not five additional fresh CLI creation tests or
-cross-platform live-service qualification. Publication remains pending in the
-release record.
+cross-platform live-service qualification. Published CLI delivery and its exact
+artifact/provenance evidence are recorded in the release record.
 
 The automated matrix covers Ubuntu 24.04 x64, macOS 15 arm64 and Windows Server
 2025 x64. It does not qualify native Windows 11, Linux arm64, every integration
