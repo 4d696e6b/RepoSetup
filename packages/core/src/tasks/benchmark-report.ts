@@ -32,7 +32,7 @@ const requestSchema = z.strictObject({
   calculatedCostMicrousd: taskCounterSchema.nullable(),
   chargedCostMicrousd: measured,
 });
-const compilationSchema = z.strictObject({
+export const taskBenchmarkCompilationSchema = z.strictObject({
   compilationId: taskHashSchema,
   outcome: z.enum(["completed", "failed"]),
   planId: taskHashSchema.nullable(),
@@ -50,7 +50,7 @@ const trialSchema = z.strictObject({
   resourceLimitsHash: taskHashSchema,
   setupMs: taskCounterSchema,
   executionMs: taskCounterSchema,
-  compilation: compilationSchema.nullable(),
+  compilation: taskBenchmarkCompilationSchema.nullable(),
   requests: z.array(requestSchema).max(24),
   attemptEvidenceHashes: z.array(taskHashSchema).max(18),
   outcome: z.enum(["accepted", "failed", "blocked", "cancelled"]),
@@ -104,6 +104,7 @@ export const taskBenchmarkCampaignSchema = z.strictObject({
 });
 export type TaskBenchmarkCampaign = z.infer<typeof taskBenchmarkCampaignSchema>;
 export type TaskBenchmarkRequest = z.infer<typeof requestSchema>;
+export type TaskBenchmarkCompilation = z.infer<typeof taskBenchmarkCompilationSchema>;
 export type TaskBenchmarkTrial = z.infer<typeof trialSchema>;
 export const TASK_BENCHMARK_PROTOCOL_REVISION = taskContentHash({
   version: 1,
