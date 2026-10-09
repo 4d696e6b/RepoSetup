@@ -1596,3 +1596,65 @@ G/H, retained ledgers and terminal independent evaluation to the campaign/store.
 candidate review/isolation, 75 actual comparative trials, Linux/platform qualification,
 dated production model/effort evidence and separately authorized live smoke remain open.
 J is the next milestone only after I's acceptance gates and remains unstarted.
+
+## Milestone I — frozen managed failure block joined to campaign retention (2026-10-09)
+
+Added a bounded developer/test driver and simulated host for the first frozen types
+fixture. Four independent exact-seed roots use real clean Git baselines: whole,
+fixed, routed and the original source compilation. The existing test Git helper can
+skip its default extra prerequisite files for exact frozen hydration; default behavior,
+fixed options and environment remain unchanged. Whole has one host-authored phase
+task using explicit strong configuration. One actual G executor dispatch to a simulated
+provider returns a two-task DAG; executor-authenticated replay binds that unchanged
+graph to both compiled roots. H selects the synthetic offline baseline/none profile
+for routed coding while fixed uses strong/low, keeping capability and effort separate.
+
+The whole dispatch throws after durable reservation; fixed/routed return refusal.
+Repair remains enabled to prove these failures cause no hidden retries. Real G/H,
+concrete CLI project/private-state adapters, original compilation charge, fresh root
+binding, diagnostic ledger inspection/projection and the existing serial coordinator/
+private store retain all ten first-block events and all three terminal failures.
+The pending whole intent remains uncertain. Analytical ledgers include compilation
+twice; cash contains four retained intents (one source plus three coding), three
+settled intents, one uncertain intent and null actual token/cost/call measurements.
+
+Each unchanged terminal seed is independently evaluated with actual local compiler,
+public/compatibility and private runtime/type oracles exactly once. Hidden results
+never enter provider input; seed holdout acceptance fails. Project snapshots remain
+unchanged, no source is applied and no candidate is accepted. The E definition ports
+are simulated, and actual E check/review launch ports throw if reached; nine actual
+managed-process launches are fixed Git probes, not qualified E tools. This does not
+exercise the SDK/HTTP boundary, qualify general candidate code or production profiles.
+
+The first-block stop is deliberate and recorded as cancellation after three observed
+terminal slots: 72 slots remain missing, no coordinator operation is pending and
+dispatch accounting/qualification remain false. Diagnostics include real source SHA/
+dirty state, driver hashes, host/fixture identity, terminal hashes, measured coordinator
+buckets and full driver elapsed time through private journal inspection. Cleanup timing
+is explicitly excluded; evaluator records remain test-memory-only. Disposable state/
+journal roots are cleaned, so this does not close durable independent artifact retention.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: the joined test passes alone
+(5.58 seconds), then within **43 ordinary offline task tests across seven files**
+(117.76 seconds), including the prior fixture/candidate/dependency/private journal and
+packed alias checks. The packed artifact hash is unchanged from the previous slice;
+the run is a dirty `f943825` source diagnostic, not clean-source release qualification.
+**55 targeted CLI tests across five files** pass (7.90 seconds). Workspace/task-test
+typechecks and lint pass, with final formatting/whitespace validation. Runtime/core
+and tool recipes are unchanged by this test-only slice; the preceding 583-test core
+suite and workspace build retain their recorded scope. The expensive qualified E
+reference suite was not repeated. Disk headroom is about 1.5 GiB; no installation,
+keys, live or paid calls, website source edit, version bump, merge or publication occurred.
+
+Initial fixture setup lacked read authority for a declared absent write path and a
+required synthetic unit-test inventory; the existing compiler/policy guards rejected
+both before coding. The test host bindings were corrected without weakening those
+guards. Adapter literal typing was corrected before final typechecking. No final check
+remains failing. The test is automatically included by the existing ordinary CI glob.
+
+Milestone I remains **in progress**. The next implementation must join successful/
+repair/context paths and retained independent artifacts under qualified candidate
+review/isolation, then cover all five fixtures and the required 75 comparative trials.
+Installed/legacy and Linux/platform qualification, production capability/effort evidence
+and separately authorized live smoke remain open. No offline synthetic driver or
+failure fixture can satisfy those gates. J remains unstarted.

@@ -8,16 +8,22 @@ import { resolveTaskGitExecutable } from "./git-resolver.js";
  * https://git-scm.com/docs/git-commit, https://git-scm.com/docs/git.
  * Empty templates and filtered environment prevent inherited hooks/config/identity.
  */
-export async function createTaskGitFixture(projectRoot: string, parent: string) {
+export async function createTaskGitFixture(
+  projectRoot: string,
+  parent: string,
+  options: { addPrerequisites?: boolean } = {},
+) {
   const executable = await resolveTaskGitExecutable();
   if (!executable) throw new Error("Preinstalled Git is required for offline qualification.");
   const template = path.join(parent, "empty-git-template");
   await mkdir(template);
-  await writeFile(path.join(projectRoot, ".gitignore"), "node_modules/\n");
-  await writeFile(
-    path.join(projectRoot, "pnpm-lock.yaml"),
-    "lockfileVersion: '9.0'\nimporters:\n  .: {}\n",
-  );
+  if (options.addPrerequisites !== false) {
+    await writeFile(path.join(projectRoot, ".gitignore"), "node_modules/\n");
+    await writeFile(
+      path.join(projectRoot, "pnpm-lock.yaml"),
+      "lockfileVersion: '9.0'\nimporters:\n  .: {}\n",
+    );
+  }
   const runner = createDefaultProcessRunner();
   const git = async (args: string[]) => {
     const result = await runner({

@@ -638,3 +638,37 @@ Optional fields preserve compatibility with older private checkpoints and report
 The pre-release version 1 contract extensions leave fixture/protocol freezes, treatment
 order and allowances unchanged. The actual driver and independent terminal evaluator
 must still join these records with measured full host overhead and frozen fixture authority.
+
+### Frozen managed failure block (offline diagnostic)
+
+The ordinary offline suite now includes `task-managed-benchmark.test.ts`, using a bounded
+test-only driver/host. It hydrates the exact first frozen types seed into three independent
+treatment roots and a fourth compilation root, preserving all public files. Real fixed Git
+baselines/probes, concrete CLI project/private-state adapters and the core G/H executor run
+under the existing serial coordinator. One simulated decomposition dispatch supplies an
+identical two-task graph to fixed/routed analytical consumers with separate physical bindings.
+Whole uses one host-authored phase task with explicit strong configuration; routed selection
+uses an explicitly synthetic offline catalog and separates model profile from native effort.
+
+The simulated whole transport throws after its durable intent; both compiled coding requests
+return refusal. Repair is enabled to verify these failures do not trigger automatic retries.
+E definition ports are simulated and E check/reviewer launches deliberately throw if reached;
+this is not an installed managed-profile or SDK/HTTP qualification test. No candidate source
+is modified or accepted. Each terminal failed seed goes through the real independent local
+compiler/public/compatibility/private evaluator exactly once, outside provider feedback.
+
+The private campaign store retains/audits all ten first-block events and all three terminal
+failures. Full original compilation is charged once in cash and to both analytical consumers;
+the unresolved whole intent keeps call/usage totals unknown. The coordinator is deliberately
+cancelled after that observed block, leaving 72 missing slots, false qualification and no
+pending coordinator operation. Private pending-call accounting still remains unresolved.
+
+The diagnostic records actual source SHA/dirty state, driver-file identity, frozen fixture,
+host, terminal hashes and measured coordinator buckets plus full driver elapsed time through
+journal inspection. Source/setup/compilation persistence and replay/inspection/terminal
+evaluation are measured in their corresponding spans; cleanup timing is explicitly excluded.
+Independent evaluator records are test-memory-only and disposable journal/state roots are
+cleaned afterward: this does not close durable campaign-artifact retention or release gates.
+Only failure paths of one frozen block are joined. Successful/repair/context paths, all five
+fixtures/75 trials, qualified E candidate review/isolation, production profiles/live smoke
+and installed/platform qualification remain open. No model-quality or savings claim follows.
