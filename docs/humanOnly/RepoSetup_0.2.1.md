@@ -1,5 +1,8 @@
 # RepoSetup 0.2.1 user guide
 
+This is the historical guide for the pinned 0.2.1 release. See the
+[0.2.3 user guide](./RepoSetup_0.2.3.md) for the current release.
+
 RepoSetup composes and installs a selected development stack from the terminal.
 Version 0.2.1 fixes named/nested create paths, UI setup, package-manager isolation,
 server startup instructions and Windows Next.js test-root handling.
@@ -19,8 +22,9 @@ reposetup --version
 Both aliases should report 0.2.1. Without a global install, use
 `npx rsetup@0.2.1 --help` or `npx rsetup@0.2.1 create`.
 The npm package is `rsetup`; `npx reposetup` is a different project.
-Once npm's latest tag identifies 0.2.1, unversioned `npm install -g rsetup`
-and `npx rsetup` also select it. A local `npm install rsetup` installs into the
+Unversioned `npm install -g rsetup` and `npx rsetup` select npm's current
+`latest` release, now 0.2.3. Use the pinned commands above to select 0.2.1.
+A local `npm install rsetup` installs into the
 current project; use npx to launch it there.
 
 ## Preview and create

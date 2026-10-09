@@ -3,7 +3,7 @@
 ## Delivery status
 
 These repairs were implemented on `codex/audit-installed-stack` and merged through
-PR #17 for the **unreleased 0.2.3 candidate**. Version-specific delivery progress is
+PR #17 and are included in the **published 0.2.3 release**. Version-specific delivery evidence is
 in [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
 The public `rsetup@0.2.2` package and its immutable tag remain unchanged.
 Automated installed-stack qualification is complete. All 480 cases pass across

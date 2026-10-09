@@ -274,8 +274,9 @@ is explicitly labeled; it does not execute or qualify generated applications.
 ## Reproducing the stability checks
 
 Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.
-These commands test the checkout. The 0.2.3 candidate is not yet published;
-see the release record for publication and registry acceptance.
+These commands test the checkout. Version 0.2.3 is published;
+see the [release record](../release-docs/STABLE_RELEASE_0.2.3.md) for qualification,
+publication and registry acceptance.
 
 ```sh
 pnpm install --frozen-lockfile
