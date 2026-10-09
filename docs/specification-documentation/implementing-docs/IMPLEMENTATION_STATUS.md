@@ -499,5 +499,7 @@ The website handoff source `a410c1d` and its packed artifact remain historical e
 - [ ] Merge completed releases into main and publish 0.3.0/0.4.0 after their gates pass.
 
 See [the future release preparation runbook](../release-docs/RELEASE_PREPARATION.md).
-Candidate package versions remain unchanged during preparation, and published
-0.2.3 evidence remains historical and immutable.
+The public CLI candidate version is preserved. Private-library versions carry
+the merged published baseline until explicit finalization; no target stable
+version is assigned by this preparation. Published 0.2.3 evidence remains
+historical and immutable.
