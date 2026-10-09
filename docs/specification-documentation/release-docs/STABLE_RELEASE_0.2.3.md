@@ -104,11 +104,32 @@ containers and volumes afterward. A default opt-out or missing prerequisite
 is not live-service qualification. The CI evidence must contain two passing
 cases, no skips and successful cleanup, bound to the candidate source/version.
 
+## Initial version-specific qualification attempts
+
+Candidate `a213a6a` passed the first full release run
+[37813984536](https://github.com/4d696e6b/RepoSetup/actions/runs/37813984536).
+The second run failed after its Windows Golden H application tests passed:
+Node exited with a libuv shutdown assertion. The third run lost communication
+with its hosted macOS runner; job logs were unavailable, and the API annotation
+records the runner loss. These runs do not satisfy the consecutive publication
+gate. Three new first-attempt runs on unchanged source are in progress.
+
+The first expanded matrix passed eleven complete jobs, totaling 440 cases with
+no skips. Its Windows/Python 3.12/npm job reported a Next/SQLite recipe failure,
+then reached the 90-minute workflow deadline before a final summary. That partial
+job is not counted as a pass; its original logs and API metadata are retained.
+Diagnosis and full matrix closeout remain required.
+
+All fifteen candidate usability sessions pass 117 checks, with eight expected
+occupied-port or unavailable-prerequisite refusals and no unexpected failures.
+Controlled benchmarks pass all 120 command trials on the three release platforms.
+Their lower medians in this sample do not promise universal network speed.
+
 ## Version-specific release gates
 
 - [x] Owner authorizes 0.2.3 publication after required checks.
 - [x] Installed-stack repair qualification is complete, with original failures retained.
-- [ ] Merge the repairs and release preparation; current manifests, publication checks and guides target 0.2.3.
+- [x] Merge the repairs and release preparation; current manifests, publication checks and guides target 0.2.3.
 - [x] Prepared 0.2.3 passes 1,043 unit tests, 38 packed E2E tests with no skips, typecheck, lint, build and 37 registry definitions; production audit and bounded review pass. Final retained-artifact license review remains required.
 - [ ] Required exact-source release runs pass every required job and step.
 - [ ] Final candidate passes the full matrix, preset sessions and controlled benchmarks.

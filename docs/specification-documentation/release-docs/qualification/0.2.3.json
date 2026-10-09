@@ -11,19 +11,19 @@
   "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
   "qualificationRuns": [
     {
-      "runId": 37813984536,
+      "runId": 37863956517,
       "status": "pending",
-      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813984536"
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517"
     },
     {
-      "runId": 37813990336,
+      "runId": 37863959982,
       "status": "pending",
-      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813990336"
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982"
     },
     {
-      "runId": 37813995872,
+      "runId": 37863963775,
       "status": "pending",
-      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813995872"
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775"
     }
   ],
   "artifact": null,
@@ -194,18 +194,987 @@
   "additionalQualification": {
     "fullMatrix": {
       "runId": 37813953547,
-      "status": "pending",
-      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547"
+      "status": "cancelled-first-attempt",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547",
+      "firstAttempt": {
+        "jobsPassed": 11,
+        "completedCasePasses": 440,
+        "failedJob": 113437636045,
+        "scope": "Forty cases per completed job; cancelled Windows job had a Next/SQLite recipe failure and no final summary. Partial cases not counted.",
+        "evidencePath": "/tmp/reposetup-0.2.3-release/golden/run-37813953547-attempt-1"
+      }
     },
     "usability": {
+      "scope": "usability",
       "runId": 37813953485,
-      "status": "pending",
+      "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "jobsPassed": 15,
+      "checkoutEvidence": [
+        {
+          "job": "0_windows-2025 _ next-sqlite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "1_windows-2025 _ fastapi.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "2_ubuntu-24.04 _ react-vite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "3_windows-2025 _ react-vite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "4_macos-15 _ flask.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "5_ubuntu-24.04 _ flask.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "6_macos-15 _ express-postgres.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "7_windows-2025 _ express-postgres.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "8_ubuntu-24.04 _ express-postgres.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "9_macos-15 _ fastapi.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "10_macos-15 _ react-vite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "11_macos-15 _ next-sqlite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "12_ubuntu-24.04 _ fastapi.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "13_windows-2025 _ flask.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "14_ubuntu-24.04 _ next-sqlite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        }
+      ],
+      "logsSha256": "f469aec4198d45036b6e89b7ee0d72bd0399b2c13af3d89bfb0dbe3c47da6d0a",
+      "sessions": 15,
+      "stepChecks": 117,
+      "expectedFailures": [
+        {
+          "preset": "flask",
+          "platform": "win32",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "linux",
+          "name": "production start refuses an occupied port",
+          "exitCode": 1,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "win32",
+          "name": "production start refuses an occupied port",
+          "exitCode": 1,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "win32",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "darwin",
+          "name": "production start refuses an occupied port",
+          "exitCode": 1,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "darwin",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        },
+        {
+          "preset": "flask",
+          "platform": "darwin",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        },
+        {
+          "preset": "fastapi",
+          "platform": "darwin",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        }
+      ],
+      "expectedFailureCount": 8,
+      "unexpectedFailureCount": 0,
+      "artifacts": [
+        {
+          "preset": "flask",
+          "add": "pydantic",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run flask run",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "next-sqlite",
+          "add": "zod",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "next-sqlite",
+          "add": "zod",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "react-vite",
+          "add": "zod",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "react-vite",
+          "add": "zod",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "express-postgres",
+          "add": "zod",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm start",
+              "exitCode": 0
+            },
+            {
+              "name": "production start refuses an occupied port",
+              "exitCode": 1,
+              "expectedFailure": true
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "fastapi",
+          "add": "pydantic",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run fastapi dev",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "flask",
+          "add": "pydantic",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run flask run",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "express-postgres",
+          "add": "zod",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm start",
+              "exitCode": 0
+            },
+            {
+              "name": "production start refuses an occupied port",
+              "exitCode": 1,
+              "expectedFailure": true
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "fastapi",
+          "add": "pydantic",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run fastapi dev",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "express-postgres",
+          "add": "zod",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm start",
+              "exitCode": 0
+            },
+            {
+              "name": "production start refuses an occupied port",
+              "exitCode": 1,
+              "expectedFailure": true
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "react-vite",
+          "add": "zod",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "flask",
+          "add": "pydantic",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run flask run",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "next-sqlite",
+          "add": "zod",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "fastapi",
+          "add": "pydantic",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run fastapi dev",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        }
+      ],
+      "sourceBinding": "API head SHA and exact checkout logs; usability payload does not embed source SHA.",
       "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813953485"
     },
     "performance": {
+      "scope": "performance",
       "runId": 37814000719,
-      "status": "pending",
+      "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "jobsPassed": 3,
+      "checkoutEvidence": [
+        {
+          "job": "0_ubuntu-24.04 _ Node 24.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+            "a0e48a19479dc574c3f2bc3fba4a39608dc33e77"
+          ]
+        },
+        {
+          "job": "1_macos-15 _ Node 24.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+            "a0e48a19479dc574c3f2bc3fba4a39608dc33e77"
+          ]
+        },
+        {
+          "job": "2_windows-2025 _ Node 24.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+            "a0e48a19479dc574c3f2bc3fba4a39608dc33e77"
+          ]
+        }
+      ],
+      "logsSha256": "527af8fcdd1947219d3d7d9da4eaad2681ce600b5fdb5d7912e6ce0cf40a4dd2",
+      "reports": 3,
+      "trialsPerRow": 5,
+      "successfulCommandTrials": 120,
+      "comparisons": [
+        {
+          "platform": "win32",
+          "architecture": "x64",
+          "profile": "react-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 8650.9275,
+          "afterMs": 6256.3833,
+          "improvementPercent": 27.679623947836802,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "win32",
+          "architecture": "x64",
+          "profile": "react-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 3902.9281,
+          "afterMs": 2324.9259,
+          "improvementPercent": 40.431239304664615,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "win32",
+          "architecture": "x64",
+          "profile": "express-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 5204.2971,
+          "afterMs": 3417.293,
+          "improvementPercent": 34.337088480209935,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "win32",
+          "architecture": "x64",
+          "profile": "express-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 2892.5849,
+          "afterMs": 1557.7759,
+          "improvementPercent": 46.145888405902966,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "linux",
+          "architecture": "x64",
+          "profile": "react-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 1836.423263,
+          "afterMs": 529.365366,
+          "improvementPercent": 71.1741091138639,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "linux",
+          "architecture": "x64",
+          "profile": "react-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 384.798477,
+          "afterMs": 152.143582,
+          "improvementPercent": 60.461490599922506,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "linux",
+          "architecture": "x64",
+          "profile": "express-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 1697.156679,
+          "afterMs": 618.9438,
+          "improvementPercent": 63.53054448899235,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "linux",
+          "architecture": "x64",
+          "profile": "express-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 457.314299,
+          "afterMs": 140.567861,
+          "improvementPercent": 69.2623079340889,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "profile": "react-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 1792.514667,
+          "afterMs": 870.112083,
+          "improvementPercent": 51.45857944603362,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "profile": "react-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 324.464125,
+          "afterMs": 129.192208,
+          "improvementPercent": 60.18289911095719,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "profile": "express-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 1577.704,
+          "afterMs": 675.515333,
+          "improvementPercent": 57.18364579160603,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "profile": "express-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 336.163041,
+          "afterMs": 116.059916,
+          "improvementPercent": 65.47511122735233,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        }
+      ],
       "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37814000719"
     }
-  }
+  },
+  "qualificationAttempts": [
+    {
+      "runId": 37813984536,
+      "conclusion": "success",
+      "runAttempt": 1,
+      "requiredJobsPassed": 16
+    },
+    {
+      "runId": 37813990336,
+      "conclusion": "failure",
+      "runAttempt": 1,
+      "failedJob": 113437772077,
+      "reason": "Windows Golden H sample tests passed, then Node exited 3221226505 with a libuv UV_HANDLE_CLOSING assertion; overall39of40 recipe tests passed."
+    },
+    {
+      "runId": 37813995872,
+      "conclusion": "failure",
+      "runAttempt": 1,
+      "failedJob": 113437793817,
+      "reason": "Hosted macOS runner lost communication; job logs unavailable(404), APIstep8remainedinprogress."
+    }
+  ]
 }
