@@ -207,6 +207,11 @@ Status is per ID, not “the catalog is production-ready.”
 
 ## Tested stack recipes
 
+The table records the cross-platform generation and application-test scopes from
+the earlier 0.2.x qualification. Its PostgreSQL checks did not connect to a live
+server. The separate 0.2.3 live-service acceptance below adds bounded evidence;
+it does not extend every recipe's platform or integration coverage.
+
 | Recipe | Dry-run plan | Real execute |
 | --- | --- | --- |
 | Next.js + TypeScript + Tailwind + SQLite + Prisma + Zod + Vitest + Prettier | yes | passed cross-platform golden qualification |
@@ -219,11 +224,24 @@ Status is per ID, not “the catalog is production-ready.”
 
 Example configs live in `examples/`.
 
+The frozen 0.2.3 candidate `a213a6a1edf63771aba8d5b91bfdcf44d665de22` passed
+[two Linux live-service tests](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567)
+with no failures or skips. Five PostgreSQL checks cover new CLI create/doctor,
+generated Prisma, Drizzle and FastAPI/uv SQLAlchemy helpers, and data persistence
+through both a Compose restart and container recreation using PostgreSQL 18.6.
+Two MongoDB checks cover new CLI create/doctor and authenticated CRUD through the
+generated Mongoose helper using MongoDB 8.0.32. These Node projects use Express
+with JavaScript; both tests verify cleanup of their disposable services. This is
+separate from five local checks using retained generated helpers on macOS with
+PostgreSQL 14.20 and MongoDB 8.2.3. See the [installed-stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md)
+for the exact scopes. Version-specific artifact qualification and publication
+remain pending; no integration maturity is promoted.
+
 Create installs selected Node development tools even when the parent environment omits dev dependencies. PostgreSQL SQLAlchemy recipes include Psycopg's binary driver; JavaScript Prisma helpers use the generated client's supported Node 24 import paths. Docker selections write prerequisite guidance, and PostgreSQL Compose includes a loopback port and persistent storage. RepoSetup does not install system software or start those services.
 
 A failed installation is incomplete even if generated source files exist. Review the printed project directory and error before retrying; `create` does not resume over existing files. Doctor reports missing dependencies and manual recovery commands without reinstalling them. See the [0.2.3 user guide](docs/humanOnly/RepoSetup_0.2.3.md) for production settings, npm cache failures and service setup.
 
-The published 0.2.0 baseline passed [qualification and delivery](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md). The expanded 0.2.x repairs passed the [stability matrix](docs/specification-documentation/implementing-docs/STABILITY_0.2.x.md). The [installed-stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) covers the additional 0.2.3 fixes; version-specific artifact qualification and publication are tracked in the [0.2.3 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md). Qualification runs on Ubuntu 24.04, macOS 15, and Windows Server 2025 CI runners. The Windows CI runner is not a direct Windows 11 desktop test. Generated PostgreSQL configuration does not install or verify a database server.
+The published 0.2.0 baseline passed [qualification and delivery](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md). The expanded 0.2.x repairs passed the [stability matrix](docs/specification-documentation/implementing-docs/STABILITY_0.2.x.md). The [installed-stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) covers the additional 0.2.3 fixes; version-specific artifact qualification and publication are tracked in the [0.2.3 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md). Qualification runs on Ubuntu 24.04, macOS 15, and Windows Server 2025 CI runners. The Windows CI runner is not a direct Windows 11 desktop test. Normal creation prepares PostgreSQL configuration without installing, starting or connecting to a database server; the separate live-service tests explicitly start their own disposable services.
 
 ## How it works
 
@@ -283,7 +301,7 @@ See the [phased roadmap to 0.2.0](docs/specification-documentation/implementing-
 
 - Follow the [0.2.x stability plan](docs/specification-documentation/implementing-docs/STABILITY_0.2.x.md) for create regressions, real generated-app checks and patch release gates
 - Qualify each patch candidate across npm/pnpm, all six frameworks and the supported CI platforms
-- Add live database and native platform evidence before promoting the corresponding integrations to `stable`
+- Expand the bounded live database checks and add native platform evidence before promoting the corresponding integrations to `stable`
 - A website is explicitly out of scope for this architecture
 
 ## License

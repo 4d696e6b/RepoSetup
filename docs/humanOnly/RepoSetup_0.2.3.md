@@ -132,10 +132,27 @@ before application database operations can work.
 
 ## Support limits
 
+The frozen candidate `a213a6a1edf63771aba8d5b91bfdcf44d665de22` passed
+[two Linux live-service tests](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567)
+with no failures or skips. Five PostgreSQL checks cover new create/doctor,
+generated Prisma and Drizzle CRUD, FastAPI/uv SQLAlchemy with Psycopg CRUD, and
+PostgreSQL 18.6 data persistence across a Compose restart and container recreation.
+Two MongoDB checks cover new create/doctor and authenticated generated Mongoose
+CRUD against MongoDB 8.0.32. The Node projects use Express with JavaScript; both
+tests verify cleanup of their disposable services.
+
+Separately, five local cases exercised retained generated helpers on macOS against
+PostgreSQL 14.20 and MongoDB 8.2.3. Those checks include compiled Express/Prisma
+and Fastify/Drizzle helpers, both FastAPI and Flask SQLAlchemy helpers, and
+Express/Mongoose. They are not five additional fresh CLI creation tests or
+cross-platform live-service qualification. Publication remains pending in the
+release record.
+
 The automated matrix covers Ubuntu 24.04 x64, macOS 15 arm64 and Windows Server
 2025 x64. It does not qualify native Windows 11, Linux arm64, every integration
-permutation, live PostgreSQL/MongoDB/container connections, migrations or actual
-Playwright browser journeys. No integration ID is promoted to stable.
+permutation, live services on every platform or recipe, migrations or actual
+Playwright browser journeys. The bounded live checks above do not change those
+limits. No integration ID is promoted to stable.
 
 The documented generated development-tool advisory remains; this is not an
 audit-clean claim. See the [installed-stack audit](../specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md),

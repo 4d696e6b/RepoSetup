@@ -8,8 +8,9 @@ in [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
 The public `rsetup@0.2.2` package and its immutable tag remain unchanged.
 Automated installed-stack qualification is complete. All 480 cases pass across
 twelve full-scope jobs after retrying the two failed Windows/npm jobs on unchanged
-source. The initial timeout failures remain recorded. Live-service limits below
-remain unqualified; this audit does not qualify a newly versioned release artifact.
+source. The initial timeout failures remain recorded. Separate bounded live-service
+acceptance now passes for the frozen 0.2.3 candidate as recorded below. This audit
+does not qualify a newly versioned release artifact; publication remains pending.
 Machine-readable evidence is in [installed-stack-audit.json](../release-docs/qualification/installed-stack-audit.json).
 
 ## Reported Express project
@@ -67,9 +68,12 @@ database credentials were changed.
   documented forced reinstall; a plain install can report up to date without
   restoring a missing link. Doctor never performs that reinstall itself.
 
-## Local verification
+## Historical local verification of the installed-stack repair
 
 On macOS arm64, Node 24.21.0 and Python 3.13.1:
+
+The following checks describe the original repair audit. Its no-connection and
+no-daemon scopes remain unchanged by the later live-service acceptance below.
 
 - All 1,043 unit tests pass after the timeout diagnostic and fixture corrections;
   workspace build, typecheck and lint pass. Splitting six grouped fixture cases
@@ -162,6 +166,47 @@ pass for this correction, checking out merge `f4c8bdf` with parents `4db2f40` an
 `c4f5049`. Windows passes 1,042 unit tests and skips one POSIX-only case; each
 platform passes 37 packed E2E tests and skips the uv-only case when uv is absent.
 
+## Bounded 0.2.3 live-service acceptance — 2026-10-08
+
+[Run 37813979567](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567)
+passes at frozen source `a213a6a1edf63771aba8d5b91bfdcf44d665de22` and package
+version 0.2.3: two Linux tests, no failures or skips. Checkout logs and both
+artifact records identify that exact source; each record confirms owned service
+cleanup and retains the service version and official image digest.
+
+- Five PostgreSQL checks cover fresh CLI create and doctor; generated JavaScript
+  Express/Prisma CRUD; PostgreSQL data persistence across both a Compose restart
+  and container recreation on the generated named volume; generated JavaScript
+  Express/Drizzle client and starter-schema CRUD; and generated FastAPI/uv
+  SQLAlchemy/Psycopg CRUD. The service reports PostgreSQL 18.6 and uses
+  `postgres:18.6`.
+- Two MongoDB checks cover fresh JavaScript Express/Mongoose create and doctor,
+  then authenticated CRUD through the generated connection helper and a test
+  model. The service reports MongoDB 8.0.32 and uses `mongo:8.0.32`.
+
+The PostgreSQL image digest is
+`postgres@sha256:74935e72241653ca55e0414067e6d8763aceb8a810eb51b452253ec3dcfc4336`;
+the MongoDB digest is
+`mongo@sha256:d0d926f94df099bff534b7ee5b5986458131a22489dfff8664509af0c1e2ca9c`.
+The tests start only disposable services on loopback ports and verify removal of
+their own containers and PostgreSQL volume. They do not change normal creation's
+manual-service behavior.
+
+Separately, five local cases at checkout `7e5f81578c9abe950a1b64eeb9b00fe24089598e`
+use copies of retained generated helpers on macOS against temporary PostgreSQL
+14.20 and MongoDB 8.2.3 host instances. Compiled Express/Prisma and Fastify/Drizzle
+perform database queries and return HTTP 200; both FastAPI and Flask SQLAlchemy
+engine helpers query through Psycopg 3.3.6's binary implementation; and the
+Express/Mongoose helper performs CRUD and returns HTTP 200. Both servers exit
+cleanly and their owned data is removed. Helper bytes match the current integration
+templates. These five retained-helper cases are distinct from the two fresh CLI
+creation Linux tests and do not qualify Compose 18.6 locally.
+
+The [0.2.3 release record](../release-docs/STABLE_RELEASE_0.2.3.md) tracks the
+remaining artifact qualification and publication. These checks do not qualify
+every combination, migration, browser journey or native platform, and do not
+promote any integration maturity.
+
 ## Remaining boundaries
 
 Selecting Docker records a prerequisite; selecting PostgreSQL/MongoDB writes
@@ -176,10 +221,12 @@ state, Docker daemon readiness, live PostgreSQL/MongoDB connectivity, migrations
 or browser journeys. Native Windows 11 and Linux arm64 remain outside the existing
 CI targets. No integration maturity is promoted by this audit.
 
-A later read-only local readiness check found Docker's daemon unresponsive:
+Before this live acceptance, a read-only local readiness check found Docker's daemon unresponsive:
 server queries timed out after five seconds and a socket ping after three.
-Only 1.1 GiB was free at that check. Live PostgreSQL/Compose testing cannot be
-qualified from this machine now; no images were pulled or containers started.
+Only 1.1 GiB was free at that historical check; it did not qualify local Compose
+and did not pull images or start containers. The later host database and Linux
+Compose checks above provide bounded live evidence without repairing the local
+Docker daemon.
 
 ## Verified official sources
 
