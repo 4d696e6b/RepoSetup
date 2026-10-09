@@ -1348,3 +1348,46 @@ trials, complete retained/authenticated artifacts, arbitrary-candidate review/is
 installed/legacy/platform and production model/native-effort/live qualification. Docker
 read-only version inspection did not respond within two minutes and was terminated;
 no Linux/container qualification or installation is claimed. J remains unstarted.
+
+## Milestone I — vetted candidate joined to scoped execution and qualified E (2026-10-09)
+
+The corrected `task-managed-fixture.test.ts` passed in 344.70 seconds. A fresh frozen
+cross-module seed becomes the reference through the core executor's guarded
+`src/totals.ts` replacement, real CLI application adapter, private lease/CAS run state,
+and qualified E adapter. No-change/dry-run validation performs zero check launches or
+project/state changes. Fresh task verification, task refresh at finalization and final
+phase acceptance launch nine real curated TypeScript/ESLint/Vitest processes, with three
+independent reference-identity reviews. Durable task status, accepted artifact hashes,
+final receipt, protected files and empty verifier scratch are checked. The owned `src`
+parent's metadata legitimately changes during atomic replacement; all other protected
+snapshot entries remain exact. A separate terminal evaluator then passes actual public,
+compatibility and private holdout behavior without supplying private feedback to repair.
+
+This closes one concrete executor/application/state/qualified-verifier/behavior join.
+It is a vetted host-authored single-task reference case, with simulated baseline Git
+identity and requested configuration, zero provider calls and no G/H managed routing
+execution. It does not qualify arbitrary model output, a general criterion reviewer,
+hostile JavaScript isolation, all five fixtures as managed candidates, a shared compiled
+DAG replay or the full three-treatment campaign. The emitted diagnostic records source
+SHA/dirty state, fixture/closure identity, host, plan, task/phase/behavior evidence IDs,
+applied paths and tool count; `qualification` remains false. This run was from a dirty
+implementation tree, not repeated clean-source release/platform qualification.
+
+The case is included in the existing expensive serial verifier suite and excluded from
+ordinary credential-free task CI. Workspace/task-test typechecks, lint, final build and
+Git whitespace checks pass. The ordinary suite remains 42 passing cases; the final core
+suite remains 540 passing cases. Earlier link/parent-metadata test assertion failures
+are retained above; the final corrected run passed rather than weakening verifier or
+project safety checks. The preexisting seven-case full reference suite was not repeated:
+its underlying verifier/configuration/fixture freeze remains unchanged. The broader CLI
+regression result will be recorded after completion.
+
+Milestone I is still **in progress** under its documented acceptance conditions.
+Remaining work is the actual frozen three-treatment driver/campaign and inclusive
+retained execution artifacts, generic independent candidate review/isolation and complete
+resource evidence; installed/real legacy and Linux/platform qualification; dated production
+capability/native-effort evidence and separately authorized live provider/profile smoke.
+Offline simulations and the new local join cannot satisfy those live/platform gates.
+The next milestone is J only after I's gates; J remains unstarted. No API keys, live
+provider calls, paid usage, dependency/system installation, package version change,
+merge, push or publication occurred.

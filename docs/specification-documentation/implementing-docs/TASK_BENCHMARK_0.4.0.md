@@ -502,3 +502,26 @@ input exits 2, and a complete offline dispatch still has `qualification: false`.
 ordinary report subprocess tests cover legacy campaign mode and interrupted journal
 mode without credentials. The internal CLI adapter is bundled as a separate module for
 Node's built-artifact consumption; no public task command or package version changed.
+
+## Vetted candidate executor/full-verifier join (2026-10-09)
+
+The expensive serial suite now includes `task-managed-fixture.test.ts`. It hydrates a
+fresh cross-module seed with preinstalled tools, compiles a host-authored reference
+task, and applies only the guarded totals replacement through the actual core executor
+and CLI filesystem/private-state adapters. The owned parent-directory metadata changes
+with atomic replacement; other protected entries stay exact. A dry-run launches no
+checks and changes no state/project files. Task verification, final task refresh and
+phase acceptance each run the three actual curated tools and reference-identity review.
+The succeeding private checkpoint contains fresh receipts and exact accepted output
+hashes, with zero provider calls and empty verifier scratch.
+
+After managed success, a separate terminal evaluator checks frozen public/compatibility/
+private behavior and must pass. Its private results never feed a repair request. The
+corrected case passed in 344.70 seconds on Node 24.21.0/macOS arm64. This establishes a
+concrete vetted-candidate E/application/state/behavior join only. Git baseline identity
+and requested configuration are simulated; the test does not execute G/H provider/routing,
+a compiled DAG or the paired three-treatment campaign. Review accepts exact reference
+bytes, so general criterion review/hostile-candidate isolation remains unqualified.
+Diagnostic output binds source/fixture/closure/host/plan and evidence IDs with explicit
+`qualification: false`. No source-clean/platform/live qualification or quality/savings
+claim follows. No fixture recipe freezes, package versions or public commands changed.
