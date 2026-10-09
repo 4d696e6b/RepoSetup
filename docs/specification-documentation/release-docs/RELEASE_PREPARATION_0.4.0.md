@@ -9,6 +9,8 @@ authorization to publish, deploy, tag, run providers or spend money.**
 - Canonical release preparation branch: `codex/release-0.4.0`.
 - Initial implementation source: `c2cbb149be419ef385e283ae8aa672409d490856`
   from `codex/0.4.0-task-compiler`.
+- Latest integrated implementation source: `f006cd96d864ce225b7c17721b39c1f16cc72e54`,
+  including the serial offline benchmark coordinator; integrated as `8fdf5cc`.
 - Implementation baseline: `codex/0.3.0-candidate-integration` at
   `bfeab2f66806d42fa7d32ac4c144d1464bd88a48`.
 - Target release version: `0.4.0`, with experimental task support. The current CLI
@@ -26,7 +28,10 @@ Those fixes were reconciled in the 0.3.0 release baseline
 `8d49a0e8ee8654d66c699fcbd9be77c6fa32fb8a` and merged forward here as `9c809ea`.
 Shared version-derived publisher controls from `39f6785` were then carried here as
 `93974c5`. This integration does not qualify the new merged source or complete the
-0.3.0 release. Later reviewed preparation commits are recorded separately.
+0.3.0 release. Final reviewed 0.3.0 preparation `08f0dcc` was merged forward as
+`e5cbb9a`, retaining unconditional artifact policy checks and the task qualification
+matrices. Implementation can continue independently; future reviewed source commits
+need explicit integration before finalization.
 
 ## Actual implementation position
 
@@ -55,9 +60,11 @@ live evidence.
 
 ## Integration and qualification gates
 
-- [ ] Integrate the reconciled 0.3.0 release baseline and the shared current-main
+- [x] Integrate the reconciled 0.3.0 release baseline and the shared current-main
       publisher controls without losing shipped installer fixes, selection contracts,
-      website evidence or task changes. Review conflicts and repeat affected tests.
+      website evidence or task changes. Conflicts were reviewed; affected serial
+      checks and their limits are recorded in the implementation status. This
+      completes baseline preparation, not implementation or release qualification.
 - [ ] Finish I's independent candidate criterion review joined to actual E
       verification receipts, including managed cross-module predecessor/evidence
       behavior. In-memory lifecycle tests do not qualify operating-system restart.
@@ -140,16 +147,22 @@ pnpm setup were checked against current official
 and [pnpm setup v4 instructions](https://raw.githubusercontent.com/pnpm/action-setup/v4/README.md)
 on 2026-10-09. Configuration review is not a passing GitHub run.
 
-The inherited website pin check still applies on both canonical release branches.
+The artifact checker runs on every ref in the release and selection qualification
+workflows. Its shared runtime policy requires website binding for every stable
+release from 0.3.0 onward, including version tags, and for the established coupled
+alpha branches. It verifies retained package bytes before loading website state;
+the publisher independently repeats the same binding check. There is no workflow
+branch-name condition that lets a stable candidate bypass the website pin.
+
 The 0.4.0 implementation changes the CLI bytes while the website retains its old
-pin, so the current release preparation deliberately fails that consistency gate.
-Do not bypass it by changing the branch name. Before qualification, explicitly
-review either a separately qualified CLI artifact path or a newly coupled website
-pin; record that policy and its applicability in the release controls. A separately
-versioned 0.4.0 CLI must not silently inherit evidence for the old website artifact.
-Check workflow branch filters when introducing `codex/release-*` branches:
-the inherited platform push filter matches `release/**`, while PR/manual paths
-have separate triggers.
+pin, so this preparation deliberately fails that consistency gate. Before
+qualification, review and qualify a newly coupled website pin or explicitly
+approve and implement a separately versioned CLI artifact policy. The current
+controls require coupling and do not authorize an independent stable CLI path.
+Retargeting the website requires renewed joint evidence; the old website artifact
+cannot qualify a new package. Platform push qualification currently matches
+`release/**`; PR/manual paths and the explicitly updated canonical selection/
+website push filters remain separate triggers.
 
 ## Eventual immutable artifact and publication sequence
 

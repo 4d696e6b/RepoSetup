@@ -1333,3 +1333,35 @@ No full-reference, installed/platform, provider, benchmark or release qualificat
 is inferred from these local checks. Milestone I is in progress and J is unstarted.
 No versions, release tags, provider calls, payments, remote workflow dispatch,
 merge into main or publication occurred.
+
+## Release preparation — final baseline and serial follow-up (2026-10-09)
+
+Merged final reviewed 0.3.0 release preparation `08f0dcc` as `e5cbb9a`,
+then the independently reviewed implementation commit `f006cd9` as `8fdf5cc`.
+The latter adds the internal offline benchmark coordinator and its tests; its
+recorded milestone scope remains unchanged. The append-only implementation status
+conflict retains both histories in chronological order. The source implementation
+branch is independent and may advance again; the finalization helper rejects
+unmerged current implementation commits. Task release matrices, root task commands,
+shipped installer fixes and unconditional runtime artifact binding remain intact.
+The preparation integration checkbox is closed; I remains in progress and J is
+unstarted.
+
+The original broad workspace run observed a five-second managed-repair timeout
+while expensive checks overlapped. Its remaining CLI worker completed after about
+15 minutes, but the interrupted executor's final output was unavailable; no full
+workspace or full CLI pass is claimed for that run. On the integrated source, a
+retained serial rerun passes managed-repair's 12 cases in 4.23 seconds. The full core
+unit suite passes 552 cases across 61 files, including the newly integrated
+coordinator. Six targeted release/context/preparation/handoff/workflow files pass
+105 cases, and the ordinary offline task suite passes 33 cases across six files
+in 32.05 seconds. Workspace build/typecheck, task infrastructure typecheck and lint pass.
+
+The offline extracted-artifact record explicitly has `sourceDirty: true` because
+preparation documentation and the unconditional-policy workflow assertion were
+pending. It remains a local contract check with preinstalled dependency hydration,
+not an npm installation or identified release qualification. Logs are retained in
+`/private/tmp/reposetup-release-040-preparation-20261009-final/`; the separate
+serial full reference-verifier result is recorded below after its completion.
+No candidate version, tag, provider, paid campaign, workflow dispatch, main merge
+or publication is authorized or performed by these checks.

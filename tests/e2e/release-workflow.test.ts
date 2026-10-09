@@ -81,8 +81,7 @@ describe("release publishing workflow", () => {
     expect(offline).toContain("pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts");
     expect(verifier).toContain("pnpm test:tasks:verifier");
     expect(verifier).toContain("timeout-minutes: 60");
-    expect(workflow).toContain("github.ref_name == 'codex/release-0.3.0'");
-    expect(workflow).toContain("github.ref_name == 'codex/release-0.4.0'");
+    expect(workflow).toContain("run: node scripts/check-candidate-artifact.mjs");
     const defaultConfig = await readFile(
       path.join(repoRoot, "tests", "e2e", "vitest.config.ts"),
       "utf8",
