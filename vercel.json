@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "public": false,
   "installCommand": "npx --yes pnpm@12.5.1 install --frozen-lockfile --prod=false",
   "buildCommand": "node --experimental-strip-types apps/website/scripts/build-vercel.ts",
   "outputDirectory": ".vercel/output/static",

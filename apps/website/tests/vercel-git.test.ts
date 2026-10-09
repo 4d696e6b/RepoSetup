@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
+import { z } from "zod";
 import config from "../../../vercel.json";
 import { RELEASE_SOURCE } from "../scripts/generate-release.ts";
 
@@ -62,7 +63,6 @@ describe("Vercel Git deployment boundary", () => {
   it("allows only the published website branch and declares the checked static artifact", () => {
     expect(config.git.deploymentEnabled).toEqual({ "**": false, [approved]: true });
     expect(config.framework).toBeNull();
-    expect(config.public).toBe(false);
     expect(config.outputDirectory).toBe(".vercel/output/static");
     expect(config.buildCommand.length).toBeLessThanOrEqual(256);
     expect(config.installCommand.length).toBeLessThanOrEqual(256);
@@ -72,6 +72,21 @@ describe("Vercel Git deployment boundary", () => {
     expect(config.installCommand).toBe(
       `npx --yes ${workspace.packageManager} install --frozen-lockfile --prod=false`,
     );
+  });
+
+  it("uses only supported fields from the official Vercel configuration schema", () => {
+    // Restrict this app to the reviewed subset of https://openapi.vercel.sh/vercel.json.
+    const schema = z.strictObject({
+      $schema: z.literal("https://openapi.vercel.sh/vercel.json"),
+      framework: z.null(),
+      installCommand: z.string().max(256),
+      buildCommand: z.string().max(256),
+      outputDirectory: z.string().max(256),
+      ignoreCommand: z.string().max(256),
+      git: z.strictObject({ deploymentEnabled: z.record(z.string(), z.boolean()) }),
+    });
+    expect(schema.safeParse(config).success).toBe(true);
+    expect(schema.safeParse({ ...config, public: false }).success).toBe(false);
   });
 
   it("the ignored build step proceeds only for the exact approved branch", () => {
