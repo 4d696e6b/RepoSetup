@@ -18,12 +18,23 @@ const managedToolRoots = ["typescript", "eslint", "typescript-eslint", "vitest"]
   name,
   root: path.dirname(require.resolve(`${name}/package.json`)),
 }));
-export async function inventory(root: string): Promise<TaskBenchmarkFixture["seedFiles"]> {
+export async function inventory(
+  root: string,
+  options: { publishedTool?: boolean } = {},
+): Promise<TaskBenchmarkFixture["seedFiles"]> {
   const rows: TaskBenchmarkFixture["seedFiles"] = [];
   async function walk(folder: string) {
     for (const name of (await readdir(folder)).sort()) {
       const full = path.join(folder, name),
         stat = await lstat(full);
+      // pnpm generates these wrappers after installation with checkout-specific
+      // absolute paths. Fixed recipes execute published entrypoints directly;
+      // the concrete verifier still inventories the complete installed closure.
+      if (
+        options.publishedTool &&
+        path.relative(root, full).split(path.sep).join("/") === "node_modules/.bin"
+      )
+        continue;
       if (stat.isSymbolicLink()) throw new Error("Fixture links are forbidden");
       if (stat.isDirectory()) await walk(full);
       else if (stat.isFile()) {
@@ -60,7 +71,10 @@ export async function fixtureManifest(fixtureId: string): Promise<TaskBenchmarkF
     lockfileHash: taskByteHash(await readFile(path.join(workspaceRoot, "pnpm-lock.yaml"))),
     dependencyArtifactId: taskContentHash(
       await Promise.all(
-        managedToolRoots.map(async ({ name, root }) => ({ name, files: await inventory(root) })),
+        managedToolRoots.map(async ({ name, root }) => ({
+          name,
+          files: await inventory(root, { publishedTool: true }),
+        })),
       ),
     ),
     recipeRevision: taskContentHash(

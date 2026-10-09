@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 implementation status
 
-Last updated: 2026-10-08.
+Last updated: 2026-10-09.
 
 ## Current position
 
@@ -31,6 +31,10 @@ the original G gate; the final scope amendment supersedes that gate assignment.
 - Preparation inspected HEAD: `9fa2389176cb822ebae89d7edd301c0a3dbb6cb4`, then runtime source matched the integrated base. Milestone D started at `47db339` with a clean Git status; subsequent runtime extensions are recorded below.
 - CLI package version: inherited `0.3.0-alpha.1`; no release bump or tag.
 - Prior release qualification stays in its own records; this branch does not close those gates.
+- Release preparation is isolated on `codex/release-0.4.0`; see the
+  [preparation record](../release-docs/RELEASE_PREPARATION_0.4.0.md). Milestones I/J
+  remain open, and the inherited website artifact mismatch blocks release
+  qualification until a reviewed artifact/pin path is qualified.
 
 ## Preparation
 
@@ -1126,48 +1130,6 @@ remain open. Milestone I stays in progress; J is unstarted. No API keys or paid
 calls were used. No installation, version bump, website source change, merge,
 push or publication occurred.
 
-## Milestone I — actual-candidate evaluator prototype (2026-10-08)
-
-Added test-only candidate projection/evaluation helpers and 14 serial acceptance
-tests. The evaluator reads an actual supplied project through the existing bounded
-verifier readers, preserves frozen public inputs and exact write scopes, and binds
-each check to a fresh project revision. Fixed compiler/Node assertions operate on
-a private copy with scrubbed environments, bounded reports and projected/emitted
-effect audits. Public checks remain reusable after repair; private runtime/type
-holdouts run only after an explicit terminal request irreversibly closes that
-session. Detailed frozen final outcomes use a separate host recorder; final caller
-feedback contains only pass/fail, revision and evidence hash.
-
-Tests cover all five candidates with changed reference bytes, including a distinct
-UI implementation; public failure/repair and stale evidence; a candidate passing
-public examples but failing private criteria; protected-oracle, foreign/secret-path
-and escaping-link rejection before processes; emitted effects, sanitized private
-report failure and concurrent/terminal session enforcement. The new helper bytes
-are included in the runner freeze and all five manifests were regenerated; only
-recipe/fixture revisions changed. Earlier campaign revisions remain separate.
-
-Validation on Node 24.21.0/macOS arm64 with pnpm 12.5.1: workspace build/typecheck,
-task-test typecheck and lint passed. All 19 targeted core fixture/report tests and
-25 ordinary serial task e2e tests across four files passed (combined suite 34.81
-seconds). The final focused candidate suite passed all 14 tests in 9.44 seconds;
-changed-document formatting and Git whitespace checks passed. The inherited root build
-also built the existing website, with no tracked website source change. The
-16-minute full-reference verifier suite was not repeated: E adapters, protected
-tool/config definitions and fixture source/oracles are unchanged; its previous
-record applies to its recorded freeze, not new trial qualification.
-
-This prototype checks vetted local candidate behavior, not hostile-runtime
-isolation/report authenticity, generic criterion review or complete managed
-acceptance. Public examples alone are insufficient. Sessions/recording are not
-durable or authenticated campaign evidence. Remaining I work includes joining
-candidate review with E receipts, serial three-treatment orchestration and budgets,
-retained terminal failures/evidence, cross-module predecessor drift, installed
-artifact/real legacy install and Linux/platform qualification. Production capability
-and native-effort profiles plus separately authorized live provider smoke/trials
-remain unconfirmed. Milestone I stays in progress; J is the next milestone after
-those gates and is unstarted. No keys, provider calls, payments, installation,
-version bump, merge, push or publication occurred.
-
 ## Milestone I — cross-module dependency lifecycle (2026-10-08)
 
 Added a test-only three-task domain → totals → presenter plan using the frozen
@@ -1210,3 +1172,103 @@ native-effort qualification, and separately authorized live provider/profile
 smoke. Milestone I remains in progress. J is next after those gates and remains
 unstarted. No keys, provider calls, payments, installations, version bump, merge,
 push or publication occurred.
+
+## Release preparation — isolated integration and qualification wiring (2026-10-09)
+
+Created `codex/release-0.4.0` from the clean implementation source
+`c2cbb149be419ef385e283ae8aa672409d490856` in the managed worktree
+`/Volumes/Developer/zeaek_/.codex/worktrees/release-0-4-0-preparation/RepoSetup`.
+The original development branch/worktree remains at that source. The
+[preparation document](../release-docs/RELEASE_PREPARATION_0.4.0.md) records the
+target `0.4.0`, current inherited `0.3.0-alpha.1` package, required I/J evidence
+and the later immutable-tag/manual-publication sequence without authorizing it.
+
+Merged the reconciled 0.3.0/main baseline `8d49a0e` as `9c809ea`, then carried the
+shared version-derived publisher `39f6785` as `93974c5`. Three conflicts were
+resolved: the specification index retains both task and shipped patch records;
+the CLI specification retains task/intended-doctor contracts and shipped
+dependency-health behavior; the process runner preserves explicit task check
+environments while filtering inherited outer npm identity for installer commands.
+A real subprocess regression proves an explicit task environment receives no
+ambient fictional credential or outer npm identity.
+
+Added required offline and separate full reference-verifier release jobs on Linux
+x64/macOS arm64, using the existing serial scripts and frozen toolchain. Packing
+requires all four cells, and the shared stable 0.4.0 qualification validator checks
+their exact job names alongside the existing 16 jobs. Generic installer e2e routes
+task tests to those dedicated required jobs. No AI credential or provider step is
+configured. The inherited canonical 0.4.0 website hash guard remains fail-closed:
+the changed CLI cannot match the historical 0.3.0 alpha tarball. The website pin is
+unchanged; a separately reviewed and qualified artifact/pin path is still required.
+
+A fresh frozen offline install exposed a fixture reproducibility defect: the first
+ordinary task suite failed 25 of 31 cases because the managed-tool artifact hash
+included pnpm-generated package-local `node_modules/.bin` wrappers containing
+absolute checkout paths. Comparing the existing and fresh installed tool trees
+found differences only in nine generated wrappers. The lockfile was unchanged.
+The test inventory now excludes exactly that generated wrapper directory for
+published-tool identity; fixed recipes execute published entrypoints directly,
+and E's full installed closure audit still covers actual runtime files. Two
+regressions establish checkout-independent published identity, executable-byte
+tamper detection, other nested file inclusion and link rejection.
+
+Intentionally regenerated the five manifests. Only `dependencyArtifactId`,
+`recipeRevision` and derived `fixtureRevision` changed; frozen requirements,
+public/private oracle bytes, seeds, references, mutations, budgets and lockfile
+identity remain intact. Earlier recorded runs retain their earlier revision and
+do not qualify this new freeze. The corrected serial ordinary task suite passes
+33 cases across six files; the initial failure is retained here.
+
+Initial preparation validation on Node 24.21.0/macOS arm64 and pnpm 12.5.1:
+frozen offline install passed with 203 cached packages, zero downloads and disabled
+lifecycle scripts; workspace build/typecheck, task infrastructure typecheck and
+lint passed. The real process-runner suite passed 23 cases, and the shared
+release/context/qualification suite passed 63 cases. The initial workspace test
+run encountered a five-second managed-repair timeout while checks overlapped;
+serial follow-up and final-source verification are recorded below when complete.
+No full-reference, installed/platform, provider, benchmark or release qualification
+is inferred from these local checks. Milestone I is in progress and J is unstarted.
+No versions, release tags, provider calls, payments, remote workflow dispatch,
+merge into main or publication occurred.
+
+## Milestone I — actual-candidate evaluator prototype (2026-10-08)
+
+Added test-only candidate projection/evaluation helpers and 14 serial acceptance
+tests. The evaluator reads an actual supplied project through the existing bounded
+verifier readers, preserves frozen public inputs and exact write scopes, and binds
+each check to a fresh project revision. Fixed compiler/Node assertions operate on
+a private copy with scrubbed environments, bounded reports and projected/emitted
+effect audits. Public checks remain reusable after repair; private runtime/type
+holdouts run only after an explicit terminal request irreversibly closes that
+session. Detailed frozen final outcomes use a separate host recorder; final caller
+feedback contains only pass/fail, revision and evidence hash.
+
+Tests cover all five candidates with changed reference bytes, including a distinct
+UI implementation; public failure/repair and stale evidence; a candidate passing
+public examples but failing private criteria; protected-oracle, foreign/secret-path
+and escaping-link rejection before processes; emitted effects, sanitized private
+report failure and concurrent/terminal session enforcement. The new helper bytes
+are included in the runner freeze and all five manifests were regenerated; only
+recipe/fixture revisions changed. Earlier campaign revisions remain separate.
+
+Validation on Node 24.21.0/macOS arm64 with pnpm 12.5.1: workspace build/typecheck,
+task-test typecheck and lint passed. All 19 targeted core fixture/report tests and
+25 ordinary serial task e2e tests across four files passed (combined suite 34.81
+seconds). The final focused candidate suite passed all 14 tests in 9.44 seconds;
+changed-document formatting and Git whitespace checks passed. The inherited root build
+also built the existing website, with no tracked website source change. The
+16-minute full-reference verifier suite was not repeated: E adapters, protected
+tool/config definitions and fixture source/oracles are unchanged; its previous
+record applies to its recorded freeze, not new trial qualification.
+
+This prototype checks vetted local candidate behavior, not hostile-runtime
+isolation/report authenticity, generic criterion review or complete managed
+acceptance. Public examples alone are insufficient. Sessions/recording are not
+durable or authenticated campaign evidence. Remaining I work includes joining
+candidate review with E receipts, serial three-treatment orchestration and budgets,
+retained terminal failures/evidence, cross-module predecessor drift, installed
+artifact/real legacy install and Linux/platform qualification. Production capability
+and native-effort profiles plus separately authorized live provider smoke/trials
+remain unconfirmed. Milestone I stays in progress; J is the next milestone after
+those gates and is unstarted. No keys, provider calls, payments, installation,
+version bump, merge, push or publication occurred.

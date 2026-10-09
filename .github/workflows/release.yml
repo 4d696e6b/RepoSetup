@@ -101,9 +101,53 @@ jobs:
           path: usability-fault-evidence.json
           if-no-files-found: error
 
+  task-offline:
+    name: Offline task qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck:task-tests
+      - name: Check frozen fixtures, candidate evaluation, dependencies and extracted packed aliases
+        run: pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts
+
+  task-verifier:
+    name: Full task verifier qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run the separate serial reference verifier without AI credentials
+        run: pnpm test:tasks:verifier
+
   pack-candidate:
     name: Pack identified candidate
-    needs: [platform, golden, faults]
+    needs: [platform, golden, faults, task-offline, task-verifier]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:

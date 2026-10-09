@@ -55,10 +55,38 @@ describe("release publishing workflow", () => {
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).toContain("faults:");
     expect(workflow).toContain("pack-candidate:");
-    expect(workflow).toContain("needs: [platform, golden, faults]");
+    expect(workflow).toContain("needs: [platform, golden, faults, task-offline, task-verifier]");
     expect(workflow).toContain("artifact-acceptance:");
     expect(workflow).toContain('REPOSETUP_USABILITY_OCCUPY_DEV_PORT: "1"');
     expect(workflow).toContain("verify-packed-artifact.mjs --directory candidate");
     expect(workflow).not.toContain("npm publish");
+  });
+
+  it("requires every task release cell and retains the inherited artifact mismatch gate", async () => {
+    const workflow = await readFile(
+      path.join(repoRoot, ".github", "workflows", "release.yml"),
+      "utf8",
+    );
+    const offline = workflow.split("  task-offline:\n")[1]?.split("  task-verifier:\n")[0];
+    const verifier = workflow.split("  task-verifier:\n")[1]?.split("  pack-candidate:\n")[0];
+    for (const job of [offline, verifier]) {
+      expect(job).toContain("os: [ubuntu-24.04, macos-15]");
+      expect(job).toContain("node-version: 24");
+      expect(job).toContain("pnpm install --frozen-lockfile");
+      expect(job).not.toContain("secrets.");
+      expect(job).not.toContain("continue-on-error");
+      expect(job).not.toContain("if:");
+    }
+    expect(offline).toContain("pnpm typecheck:task-tests");
+    expect(offline).toContain("pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts");
+    expect(verifier).toContain("pnpm test:tasks:verifier");
+    expect(verifier).toContain("timeout-minutes: 60");
+    expect(workflow).toContain("github.ref_name == 'codex/release-0.3.0'");
+    expect(workflow).toContain("github.ref_name == 'codex/release-0.4.0'");
+    const defaultConfig = await readFile(
+      path.join(repoRoot, "tests", "e2e", "vitest.config.ts"),
+      "utf8",
+    );
+    expect(defaultConfig).toContain('"tests/e2e/task-*.test.ts"');
   });
 });

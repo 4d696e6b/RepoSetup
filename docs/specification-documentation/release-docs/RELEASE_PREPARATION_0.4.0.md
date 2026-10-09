@@ -21,10 +21,12 @@ authorization to publish, deploy, tag, run providers or spend money.**
 The starting source is 38 commits ahead of its 0.3.0 candidate baseline. It is not
 based on current `main` (`1b5b4c2de3ad20cf5ee2366136732e417e3b0603` when inspected).
 The main/implementation merge base is `145e167e6b60897da96942545ba6dbd40359ad4a`;
-current main contains shipped installer fixes and newer publication controls that
-must be retained. Reconcile them first in `codex/release-0.3.0`, then merge that
-completed release baseline forward here. Do not duplicate the initial main merge
-or treat inherited release evidence as qualification of the merged source.
+current main contains shipped installer fixes and newer publication controls.
+Those fixes were reconciled in the 0.3.0 release baseline
+`8d49a0e8ee8654d66c699fcbd9be77c6fa32fb8a` and merged forward here as `9c809ea`.
+Shared version-derived publisher controls from `39f6785` were then carried here as
+`93974c5`. This integration does not qualify the new merged source or complete the
+0.3.0 release. Later reviewed preparation commits are recorded separately.
 
 ## Actual implementation position
 
@@ -111,17 +113,41 @@ automatically retarget the website. Any newly coupled CLI/website artifact needs
 separate approval, a reviewed pin and renewed joint qualification. The inherited
 0.3.0 website/candidate qualification remains independent and open.
 
-Before using release workflows, retain current main's manual, dry-run-first
-publication path that checks three consecutive successful exact-source
-qualifications and reuses the identified retained tarball without rebuilding it.
-Remove inherited release-version hardcodes through the shared declarative release
-configuration. The starting task branch's publisher only reacts to `v0.2.0`, and
-its release workflow does not include task-specific qualification jobs; those
-settings do not qualify or publish 0.4.0.
+The integrated shared publisher retains current main's manual, dry-run-first
+publication path, checks three consecutive successful exact-source qualifications
+and reuses the identified retained tarball without rebuilding it. It derives the
+stable release version from checked-out package metadata, rejects the current
+prerelease and refuses publication unless private library versions agree with the
+stable CLI. It requires 20 successful exact job identities for stable 0.4.0 and
+later versions: the established 16 installer/recipe/fault/artifact jobs plus four
+offline/full-verifier task cells on Linux and macOS. All required jobs and steps
+must pass without skips.
 
-The 0.3.0 website pin check must continue to apply on its canonical release branch.
-It must not impose the old website tarball hash on a separately versioned 0.4.0
-CLI. Check workflow branch filters when introducing `codex/release-*` branches:
+The 0.4.0 release workflow now includes required `task-offline` and `task-verifier`
+matrices on `ubuntu-24.04` and `macos-15`; packing depends on both. They use Node 24,
+the repository-pinned pnpm and frozen dependencies. Offline qualification runs
+the standalone infrastructure typecheck and serial ordinary task suite. The
+separate serial full reference-verifier command has a 60-minute job allowance.
+Neither job receives AI credentials, runs providers or closes live/model/campaign
+gates. Generic installer e2e excludes the task suites because these dedicated jobs
+own their required execution; no full-verifier test is silently dropped.
+
+Runner labels and architecture, job dependency behavior, Node setup and pinned
+pnpm setup were checked against current official
+[GitHub runner documentation](https://docs.github.com/en/actions/reference/runners/github-hosted-runners),
+[workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax),
+[setup-node v4 instructions](https://raw.githubusercontent.com/actions/setup-node/v4/README.md)
+and [pnpm setup v4 instructions](https://raw.githubusercontent.com/pnpm/action-setup/v4/README.md)
+on 2026-10-09. Configuration review is not a passing GitHub run.
+
+The inherited website pin check still applies on both canonical release branches.
+The 0.4.0 implementation changes the CLI bytes while the website retains its old
+pin, so the current release preparation deliberately fails that consistency gate.
+Do not bypass it by changing the branch name. Before qualification, explicitly
+review either a separately qualified CLI artifact path or a newly coupled website
+pin; record that policy and its applicability in the release controls. A separately
+versioned 0.4.0 CLI must not silently inherit evidence for the old website artifact.
+Check workflow branch filters when introducing `codex/release-*` branches:
 the inherited platform push filter matches `release/**`, while PR/manual paths
 have separate triggers.
 

@@ -170,6 +170,26 @@ describe("nested npm execution environment", () => {
 });
 
 describe("createDefaultProcessRunner", () => {
+  it("keeps an explicit task environment isolated from ambient credentials and npm identity", async () => {
+    vi.stubEnv("REPOSETUP_TEST_AMBIENT_SECRET", "fictional-secret");
+    vi.stubEnv("npm_config_package", "outer-package");
+    try {
+      const result = await createDefaultProcessRunner()({
+        command: process.execPath,
+        args: [
+          "-e",
+          "console.log(JSON.stringify({ marker: process.env.REPOSETUP_TEST_TASK_MARKER, secret: process.env.REPOSETUP_TEST_AMBIENT_SECRET, package: process.env.npm_config_package }))",
+        ],
+        cwd: process.cwd(),
+        env: { REPOSETUP_TEST_TASK_MARKER: "allowed" },
+      });
+      expect(result.exitCode).toBe(0);
+      expect(JSON.parse(result.stdout)).toEqual({ marker: "allowed" });
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it("terminates a timed-out process and reports the timeout", async () => {
     const runner = createDefaultProcessRunner();
     const result = await runner({
