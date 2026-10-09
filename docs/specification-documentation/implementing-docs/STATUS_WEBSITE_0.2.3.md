@@ -43,7 +43,7 @@ generated from the pinned source. The build refuses drift from those definitions
    or in hidden tabs; route cleanup removes observers, animations, and pending
    pointer frames. No animation dependency or release behavior was added.
 
-6. **Vercel publication — prepared, public deployment pending.** The owner
+6. **Vercel publication — deployed.** The owner
    explicitly authorized Vercel publication after the final release audit.
    The static Build Output API artifact has ten public files, release-specific
    CSP/security/cache headers, and no functions or runtime environment variables.
@@ -51,14 +51,15 @@ generated from the pinned source. The build refuses drift from those definitions
    prompts stay local. The new `reposetup` project is linked in `mink2551s-projects`.
    Automatic Git deployment is disabled to protect the website's 0.2.3 scope.
 
-All five local implementation milestones are finished. Public deployment and
-production smoke checks are in progress. Compatible WebKit/Safari and manual
+All six implementation/publication milestones are finished. Public HTTP and
+browser smoke checks verify the deployed site. Compatible WebKit/Safari and manual
 assistive-technology review remain open qualification work. The website uses
 published 0.2.3 and does not wait for another CLI release.
 
 ## Working pages
 
 Local review: `http://127.0.0.1:4182/` while the preview process is running.
+Public website: [reposetup.vercel.app](https://reposetup.vercel.app/).
 
 - Home: `#/`; documentation/search: `#/docs`.
 - Getting started: `#/docs/getting-started`; all public commands: `#/docs/cli`.
@@ -68,6 +69,21 @@ Local review: `http://127.0.0.1:4182/` while the preview process is running.
 
 Worktree:
 `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.2.3-website`.
+
+## Production deployment
+
+- Project: `reposetup`, account/team: `mink2551s-projects`.
+- Source commit: `3fdb1f52984af914caf491f6d06160cad0e9df5d` on `codex/0.2.3-website`.
+- Deployment: `dpl_3SNVo8qpCaz56Dv5cyqHf1Sx4WHt`, production, `READY`.
+- Public alias: `https://reposetup.vercel.app/`.
+- Immutable deployment URL:
+  `https://reposetup-r3tjmmx7a-mink2551s-projects.vercel.app`.
+- The public alias returns HTTP 200 without authentication. CLI login protection
+  may apply to deployment-specific URLs; it does not block the public alias.
+- Automatic Git deployments are disconnected. Deployment uploaded only the
+  5.7 MB prebuilt static artifact; website runtime has no secrets or functions.
+- Production verification report stays local in ignored
+  `.vercel/production-verification.json`.
 
 ## Validation
 
@@ -105,14 +121,29 @@ Worktree:
   It has not been run remotely. The earlier WebKit launch failed on this local
   macOS 14.7.2 host; Safari/WebKit qualification remains open. Use a compatible
   runner rather than treating the Chrome/Firefox results as Safari evidence.
+- Production HTTP verification: **25 checks passed**. All ten public files match
+  local build bytes with SHA-256 comparisons; homepage access is anonymous;
+  CSP, framing/MIME/referrer headers and cache behavior match the artifact.
+  Source, local environment files, prompts, provenance notes, and missing assets
+  return 404. Live docs heading focus, keyboard search, builder commands, mobile
+  layout, and the header without the Motion toggle were checked in the browser.
+- `pnpm --filter @reposetup/website test:production`: **six browser tests passed**
+  against the public alias in Chrome, mobile Chrome emulation, and Firefox.
+  All five preset downloads were captured in each browser (15 downloads) and
+  compared exactly to the released recipe with only the chosen name/path changed.
+  Public 0.2.3 commands, confirmation, docs links, keyboard search, decoded images,
+  no toggle, and no JavaScript errors were verified. The production smoke tests
+  are included in a follow-up validation/status commit; the deployed browser
+  artifact remains the source build at `3fdb1f5`.
 
-## Remaining publication work and limits
+## Remaining qualification work and limits
 
 - Review the finished appearance and run the full compatible WebKit/Safari
   check. Automated accessibility checks supplement manual assistive-technology
   review; they do not establish complete accessibility conformance.
-- Deploy the prepared artifact to Vercel and verify the public production URL.
-  No user project upload, installer execution, or secret request is needed.
+- No deployment action remains for this publication. Future updates require
+  explicit deployment of a freshly validated artifact. No user project upload,
+  installer execution, or secret request occurred.
 - The site intentionally has a preset-only download builder. Arbitrary optional
   library selection uses the shipped CLI's interactive flow or reviewed config;
   later-release selection flags are not presented.

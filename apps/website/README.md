@@ -1,6 +1,7 @@
 # RepoSetup 0.2.3 website
 
-A local, English-first companion to the published `rsetup@0.2.3` CLI. This app
+An English-first companion to the published `rsetup@0.2.3` CLI, live at
+[reposetup.vercel.app](https://reposetup.vercel.app/). This app
 contains the landing page, documentation, local search, all 37 integration
 references, the five bundled presets, and a bounded recipe builder. This branch
 does not document future release behavior.
@@ -160,6 +161,7 @@ vercel login
 vercel link --yes --project reposetup
 vercel git disconnect --yes
 vercel deploy --prebuilt --prod
+pnpm --filter @reposetup/website test:production
 ```
 
 Run Vercel commands from the repository root, in the intended account/team.
@@ -181,6 +183,13 @@ the public URL without account authentication, direct docs/builder links, image
 decoding, search, downloads, and response headers. Record the production URL and
 commit in the implementation status. Later updates require another explicit
 deployment; this task does not connect automatic deployment of other branches.
+
+The production smoke suite uses the public URL without authentication, checks
+deep docs links and keyboard search, and verifies downloaded JSON against all
+five released presets in Chrome, mobile Chrome emulation, and Firefox. To test
+a different deployment URL, set `REPOSETUP_WEBSITE_URL` when running
+`test:production`. It reads the site and downloads configs; it never runs an
+installer. The report stays in ignored `test-results/production-report.json`.
 
 Compatible WebKit/Safari and manual accessibility/device review remain open
 qualification work, as recorded above and in the implementation status.
