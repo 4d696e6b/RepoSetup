@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 — task benchmark and test protocol
 
-Contract frozen for Milestone A on 2026-10-06. Milestone I now has frozen fixture source, independent oracle source and offline qualification tests. The trial runner, retained real trial evidence and provider comparisons are still absent. This document authorizes no provider calls or spending.
+Contract frozen for Milestone A on 2026-10-06. Milestone I now has frozen fixture source, independent oracle source and offline qualification tests. Partial offline managed trial drivers and private evidence stores are implemented. Full campaign/provider comparisons remain unqualified. This document authorizes no provider calls or spending.
 
 Read the [task compiler contract](../product-docs/TASK_COMPILER_0.4.0.md), [task domain contracts](../product-docs/TASK_CONTRACTS_0.4.0.md), [support profile](../product-docs/TASK_SUPPORT_0.4.0.md) and [provider research](./TASK_PROVIDER_RESEARCH_0.4.0.md). The [Phase 23 installation benchmark](./PHASE_23_BENCHMARK_PROTOCOL.md) remains independent. Its source baseline, installation measurements and performance targets are not task-compiler evidence.
 
@@ -714,3 +714,33 @@ coverage, rather than inventing test execution. Unit and compatibility checks st
 require positive executed test counts. Legacy rows with their existing positive
 counts remain parse-compatible. These reporting fields never authenticate imported
 reviews, weaken the executor's current task/phase review gate or qualify a campaign.
+
+## Vetted fixed-treatment success joined to the coordinator
+
+The expensive credential-free verifier suite includes one bounded types-fixture
+block joining the actual G decomposition receipt/replay, real Git and private state,
+15 actual qualified E tool launches, current task/phase reviews, diagnostic ledgers
+and independent retained terminal evaluation. The result task uses a validated
+no-change outcome for the already-correct interface and produces its accepted module
+artifact. The dependent page task receives that artifact and applies only vetted
+reference bytes to `src/page.ts`. Both task receipts are refreshed on the final
+revision before phase acceptance. The draft promises existing module outputs; its
+optional agent-test write path is not falsely promised as a produced artifact.
+
+The reviewer answers the executor's current target/plan/catalog/criterion request;
+it checks the result module for the result task and both vetted modules for page/
+phase acceptance. This reviewer qualifies frozen reference identity only. Actual
+candidate projection/compiler/public/compatibility/holdout/type checks independently
+pass after the final phase. Three terminal oracle records are privately retained and
+joined; protected project inputs remain unchanged. No hidden oracle feedback enters
+provider inputs.
+
+Whole remains a simulated uncertain dispatch and routed remains a simulated refusal
+under H's offline baseline/none selection. Exactly one source compilation is charged
+once in cash and replayed to both compiled roots. The block stops after three slots:
+one accepted and two failed, with 72 missing slots and one uncertain request intent.
+No resource comparison, production capability, HTTP/SDK execution, general candidate
+isolation or full treatment qualification is established. Tool hydration/setup,
+state/retention/verification and independent terminal evaluation remain within
+reported host/driver overhead; cleanup is separately excluded. The test uses only
+preinstalled tools and lives outside ordinary fast fixture CI.

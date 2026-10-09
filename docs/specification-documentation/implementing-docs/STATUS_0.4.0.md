@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 implementation status
 
-Last updated: 2026-10-09.
+Last updated: 2026-10-10.
 
 ## Current position
 
@@ -1744,3 +1744,59 @@ task-test typechecks, lint/formatting and Git whitespace checks pass. The new ve
 managed-success fixture is still under validation and is not claimed by this
 reporting change. Milestone I remains in progress; J is unstarted. No provider calls,
 credentials, installation, version bump, website source edit or publication occurred.
+
+## Milestone I — vetted two-task G/E success with retained independent acceptance (2026-10-10)
+
+Generalized the bounded first-block test driver without changing its existing
+failure-only behavior. Added a vetted fixed-treatment host using actual qualified
+TypeScript/ESLint/Vitest definitions, exact frozen seed hydration, a real clean Git
+baseline, private state and the actual G decomposition/replay boundary. The result
+interface is independently accepted through a no-change proposal; its module output
+is supplied to the dependent page task. Only the executor applies vetted reference
+bytes to `src/page.ts`. Two task reviews, two refreshed reviews and final phase
+review establish current target/catalog/criterion and reference-file identity.
+The optional agent-test path remains write authority but is not falsely declared a
+produced output. Final task evidence shares the final phase's checked revision.
+
+Actual terminal compiler/public/compatibility/runtime holdout/type-oracle evaluation
+passes for the fixed trial and fails for the two unchanged seed failures. All three
+independent records are fsynced and joined to terminal journal hashes/results. The
+successful trial retains actual unit-test counts and reviewer criterion counts,
+without fabricated reviewer test execution. Protected project inputs remain unchanged.
+Whole remains uncertain; H routes the third trial to the offline baseline/none profile
+and records refusal. No hidden feedback is present in provider inputs.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: the new expensive joined case
+passes (**one test**, 616.27 seconds). It reports one source compilation/four coding
+simulations, **24 actual managed process launches** (nine fixed Git probes plus
+15 qualified E tools), five independent reviews and one accepted/two failed trials.
+All three independent records are linked, with 72 campaign slots still missing.
+The cash ledger has five intents, four settled, one uncertain and null measured
+call/token/cost totals. Host execution is 599307.80 ms; full driver time is 615120 ms,
+including 15681 ms tool/host setup; cleanup is excluded. These are diagnostic dirty
+`5c67862` source observations, not a clean-source qualification or savings result.
+Driver revision is
+`sha256:0fde5cd78d7139637bffb4b39449eb0557a1607aa1e946f080b6062b28377a32`;
+verifier closure revision is
+`sha256:147ea6bc514fbe74c65638491c428721b69375a43678ce8256c5f38653f36752`.
+
+The ordinary offline suite passes **53 tests across eight files** (124.34 seconds).
+**44 CLI tests across four files** pass (6.53 seconds), then all **11 managed compile
+cases** pass (2.34 seconds). Packed aliases/reporting pass **seven targeted tests**
+(5.91 seconds); artifact hash is
+`sha256:ecf7598f0871882193703a56bc16669cde98edc6e8bb1791cc6a7d8837354fd6`.
+Workspace/task-test typechecks and lint/formatting/whitespace checks pass. The
+preceding 597-test core suite/workspace build retains its recorded scope; core/tool
+recipes are unchanged by this test-only slice. The expensive case is included by
+the existing verifier command and excluded from ordinary CI. Development probes
+were stopped while correcting helper typing/assertions and declared output inventory;
+only owned scratch roots were cleaned. The final complete case passes; no final
+check is failing.
+
+Milestone I remains in progress. This closes one vetted successful G/E/campaign join,
+not arbitrary candidate review/isolation, context/repair joins, all five fixture
+campaigns/75 comparative trials, production model/effort evidence, separately
+authorized live smoke or remaining platform/installed qualification. Per owner
+steering, unavailable prerequisites are skipped while local work continues; they
+are unverified, not passed. J remains unstarted. No API keys/live/paid calls,
+installation, website source edit, package version change, merge or publication occurred.

@@ -14,6 +14,8 @@ import {
   projectTaskBenchmarkRunRequests,
   taskByteHash,
   taskContentHash,
+  type TaskRunCheckpoint,
+  type TaskPlan,
   type TaskBenchmarkExecutionPorts,
   type TaskBenchmarkRunEvidence,
   type TaskCompilationCheckpoint,
@@ -33,12 +35,37 @@ function checked<T>(r: TaskParseResult<T>): T {
   return r.data;
 }
 const elapsed = (start: number) => Math.ceil(performance.now() - start);
-/** Diagnostic failure-path driver only. Real frozen bytes/Git/state/oracles, simulated
- * provider and E definition ports. No candidate code is changed or accepted. */
-export async function runManagedBenchmarkFailureBlock() {
+/** Bounded first-block diagnostic, never a complete comparative campaign. */
+export async function runManagedBenchmarkBlock(
+  options: {
+    createHost?: (parent: string) => Promise<
+      ReturnType<typeof createManagedBenchmarkFailureHost> & {
+        disposeHost?: () => Promise<void>;
+        onPlan?: (treatment: string, plan: TaskPlan) => void;
+      }
+    >;
+    acceptedTreatment?: "fixed";
+    maxOutputTokens?: number;
+    runnerFiles?: string[];
+    logicalVerificationRevision?: string;
+  } = {},
+) {
   const driverStarted = performance.now();
   const parent = await realpath(await mkdtemp(path.join(tmpdir(), "reposetup-i-managed-block-")));
-  const host = createManagedBenchmarkFailureHost(parent);
+  let disposeHost: (() => Promise<void>) | undefined;
+  let host: ReturnType<typeof createManagedBenchmarkFailureHost> & {
+    disposeHost?: () => Promise<void>;
+    onPlan?: (treatment: string, plan: TaskPlan) => void;
+  };
+  try {
+    host = options.createHost
+      ? await options.createHost(parent)
+      : createManagedBenchmarkFailureHost(parent);
+  } catch (error) {
+    await rm(parent, { recursive: true, force: true });
+    throw error;
+  }
+  if ("disposeHost" in host) disposeHost = host.disposeHost;
   const {
     c,
     f,
@@ -53,7 +80,8 @@ export async function runManagedBenchmarkFailureBlock() {
     inputs,
   } = host;
   const ledgerEvidence: TaskBenchmarkRunEvidence[] = [],
-    evaluations: FinalCandidateEvidence[] = [];
+    evaluations: FinalCandidateEvidence[] = [],
+    acceptedCheckpoints: TaskRunCheckpoint[] = [];
   let sourceCheckpoint: TaskCompilationCheckpoint | undefined;
   let sourceSpan = 0,
     processCalls = 0;
@@ -75,7 +103,11 @@ export async function runManagedBenchmarkFailureBlock() {
     c.sourceRevision = taskContentHash({ sourceSha, sourceDirty });
     c.runnerRevision = taskContentHash(
       await Promise.all(
-        ["managed-benchmark-failure.ts", "managed-benchmark-host.ts"].map(async (name) => ({
+        [
+          "managed-benchmark-failure.ts",
+          "managed-benchmark-host.ts",
+          ...(options.runnerFiles ?? []),
+        ].map(async (name) => ({
           name,
           hash: taskByteHash(await readFile(path.join(workspaceRoot, "tests/tasks", name))),
         })),
@@ -138,7 +170,7 @@ export async function runManagedBenchmarkFailureBlock() {
             adapter: r.adapter,
             provider: provider(strong, "compile"),
             resourceLimits: f.resourceLimits,
-            maxOutputTokens: 256,
+            maxOutputTokens: options.maxOutputTokens ?? 256,
             timeoutMs: 1000,
             expectedContextId: context.contextId,
             allowProviderUsage: true,
@@ -165,7 +197,7 @@ export async function runManagedBenchmarkFailureBlock() {
             freezeTaskBenchmarkDecomposition({
               plan: sourceCheckpoint.plan,
               policy,
-              logicalVerificationRevision: HASH,
+              logicalVerificationRevision: options.logicalVerificationRevision ?? HASH,
             }),
           );
           const replay = checked(
@@ -173,7 +205,7 @@ export async function runManagedBenchmarkFailureBlock() {
               sourceCheckpoint,
               decomposition,
               review: r.review,
-              logicalVerificationRevision: HASH,
+              logicalVerificationRevision: options.logicalVerificationRevision ?? HASH,
               treatment: slot.treatment === "fixed" ? "compiled_fixed" : "compiled_routed",
               adapter: r.adapter,
             }),
@@ -185,6 +217,7 @@ export async function runManagedBenchmarkFailureBlock() {
             roots.source!.setupMs +
             Math.max(0, sourceSpan + elapsed(started) - replay.checkpoint.usage!.durationMs);
         }
+        host.onPlan?.(slot.treatment, plan);
         const outcome = await executeManagedTaskPhase({
           plan,
           compilationPolicy: policy,
@@ -213,18 +246,21 @@ export async function runManagedBenchmarkFailureBlock() {
             },
           },
           allowProviderUsage: true,
-          maxOutputTokens: 256,
+          maxOutputTokens: options.maxOutputTokens ?? 256,
           timeoutMs: 1000,
           allowRepair: true,
         });
-        if (outcome.success || outcome.runId === null)
+        const expectedAcceptance = slot.treatment === options.acceptedTreatment;
+        if (outcome.success !== expectedAcceptance || (!outcome.success && outcome.runId === null))
           throw new Error(
             outcome.success
               ? "Unexpected managed acceptance"
               : `${outcome.error.code}: ${outcome.error.message}`,
           );
+        const runId = outcome.success ? outcome.checkpoint.run.runId : outcome.runId!;
+        if (outcome.success) acceptedCheckpoints.push(outcome.checkpoint);
         const evidence = checked(
-          await inspectTaskBenchmarkRun({ plan, policy, runId: outcome.runId, adapter: r.adapter }),
+          await inspectTaskBenchmarkRun({ plan, policy, runId, adapter: r.adapter }),
         );
         ledgerEvidence.push(evidence);
         const evaluator = checked(
@@ -255,13 +291,85 @@ export async function runManagedBenchmarkFailureBlock() {
         const final = checked(
           await evaluator.finish({
             expectedRevision: checked(await evaluator.snapshot()).revision,
-            terminalReason: "limit_reached",
+            terminalReason: expectedAcceptance ? "declared_complete" : "limit_reached",
           }),
         );
-        if (final.passed) throw new Error("Seed must fail independent acceptance");
+        if (final.passed !== expectedAcceptance)
+          throw new Error("Independent acceptance differs from the reviewed diagnostic outcome");
         const record = evaluations.at(-1)!;
-        if (checked(await r.adapter.snapshot()).revision !== r.snapshot.revision)
+        const after = checked(await r.adapter.snapshot());
+        if (!expectedAcceptance && after.revision !== r.snapshot.revision)
           throw new Error("Project changed");
+        const owned = new Set(f.write);
+        for (const file of f.write) {
+          let directory = path.posix.dirname(file);
+          while (directory !== ".") {
+            owned.add(directory);
+            directory = path.posix.dirname(directory);
+          }
+        }
+        if (
+          expectedAcceptance &&
+          taskContentHash(after.entries.filter((e) => !owned.has(e.path))) !==
+            taskContentHash(r.snapshot.entries.filter((e) => !owned.has(e.path)))
+        )
+          throw new Error("Protected project inputs changed");
+        const checks = [{ checkId: "ts.typecheck", passed: record.typecheck, executedTests: null }];
+        const acceptedChecks: {
+          checkId: string;
+          passed: boolean;
+          executedTests: number | null;
+          provenance: "executor" | "reviewer";
+          reviewedCriteria?: number;
+        }[] = [];
+        if (outcome.success) {
+          const run = outcome.checkpoint.run,
+            finalVerification = run.finalVerification!;
+          for (const check of finalVerification.checks) {
+            if (check.provenance === "model_claim") throw new Error("Unauthenticated final check");
+            acceptedChecks.push({
+              checkId: check.checkId,
+              passed: check.status === "pass",
+              executedTests: check.executedTests,
+              provenance: check.provenance,
+              ...(check.provenance === "reviewer"
+                ? {
+                    reviewedCriteria: finalVerification.criterionCoverage.filter(
+                      (r) => r.satisfied && r.checkIds.includes(check.checkId),
+                    ).length,
+                  }
+                : {}),
+            });
+          }
+          const reviewed = new Set<string>();
+          for (const task of run.tasks) {
+            const attempt = [...run.attempts].reverse().find((a) => a.taskId === task.taskId);
+            const verification = attempt?.verification;
+            if (
+              task.status !== "accepted" ||
+              !verification ||
+              verification.outcome !== "pass" ||
+              verification.checkedRevision !== finalVerification.checkedRevision ||
+              !verification.checks.some(
+                (c) =>
+                  c.checkId === "task.acceptance" &&
+                  c.status === "pass" &&
+                  c.provenance === "reviewer",
+              )
+            )
+              throw new Error("Final task review is absent or stale");
+            for (const row of verification.criterionCoverage)
+              if (row.satisfied && row.checkIds.includes("task.acceptance"))
+                reviewed.add(row.criterionId);
+          }
+          acceptedChecks.push({
+            checkId: "task.acceptance",
+            passed: true,
+            executedTests: null,
+            provenance: "reviewer",
+            reviewedCriteria: reviewed.size,
+          });
+        }
         return {
           fixtureId: f.fixtureId,
           fixtureRevision: f.fixtureRevision,
@@ -275,21 +383,29 @@ export async function runManagedBenchmarkFailureBlock() {
           compilation: slot.compilation,
           requests: checked(projectTaskBenchmarkRunRequests(evidence)),
           attemptEvidenceHashes: evidence.attempts.map((a) => a.evidenceHash),
-          outcome: "failed",
-          failureCode: outcome.error.code,
-          failureStage: "execution",
+          outcome: outcome.success ? "accepted" : "failed",
+          failureCode: outcome.success ? null : outcome.error.code,
+          failureStage: outcome.success ? null : "execution",
           finalEvidenceHash: final.evidenceHash,
           protectedInputsUnchanged: true,
           forbiddenEffects: 0,
           checks: [
-            { checkId: "ts.typecheck", passed: record.typecheck, executedTests: null },
+            ...(outcome.success ? acceptedChecks : checks),
             {
               checkId: "compatibility",
               passed: record.compatibility?.passed ?? false,
               executedTests: record.compatibility?.results.length ?? null,
             },
           ],
-          publicCriteria: [],
+          publicCriteria: outcome.success
+            ? f.requirements.map((requirement) => ({
+                criterionId: requirement.requirementId,
+                passed: outcome.checkpoint.run.finalVerification!.criterionCoverage.some(
+                  (row) =>
+                    row.criterionId === `${requirement.requirementId}-phase` && row.satisfied,
+                ),
+              }))
+            : [],
           publicTests: [
             ...(record.compatibility?.results ?? []),
             ...(record.publicAcceptance?.results ?? []),
@@ -339,15 +455,22 @@ export async function runManagedBenchmarkFailureBlock() {
       evidenceFolder: evidenceStore.folderPath,
       ledgerEvidence,
       evaluations,
+      acceptedCheckpoints,
       inputs,
       projectRoots,
       ...host.counts(),
       processCalls,
       sourceCheckpoint,
-      dispose: () => rm(parent, { recursive: true, force: true }),
+      dispose: async () => {
+        await disposeHost?.();
+        await rm(parent, { recursive: true, force: true });
+      },
     };
   } catch (error) {
+    await disposeHost?.();
     await rm(parent, { recursive: true, force: true });
     throw error;
   }
 }
+/** Real frozen bytes/Git/state/oracles, simulated provider and unreached E definitions. */
+export const runManagedBenchmarkFailureBlock = () => runManagedBenchmarkBlock();
