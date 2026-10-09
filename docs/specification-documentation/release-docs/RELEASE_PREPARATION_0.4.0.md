@@ -9,8 +9,9 @@ authorization to publish, deploy, tag, run providers or spend money.**
 - Canonical release preparation branch: `codex/release-0.4.0`.
 - Initial implementation source: `c2cbb149be419ef385e283ae8aa672409d490856`
   from `codex/0.4.0-task-compiler`.
-- Latest integrated implementation source: `f006cd96d864ce225b7c17721b39c1f16cc72e54`,
-  including the serial offline benchmark coordinator; integrated as `8fdf5cc`.
+- Latest integrated implementation source: `ceb1acf96bc885363908c71f02887508d823eaf0`,
+  including the serial offline benchmark coordinator and private journal/replay
+  auditor; integrated as `7b86977d6bdb852815b319e8cdbcfebfbac92781`.
 - Implementation baseline: `codex/0.3.0-candidate-integration` at
   `bfeab2f66806d42fa7d32ac4c144d1464bd88a48`.
 - Target release version: `0.4.0`, with experimental task support. The current CLI
@@ -33,6 +34,12 @@ Shared version-derived publisher controls from `39f6785` were then carried here 
 matrices. Implementation can continue independently; future reviewed source commits
 need explicit integration before finalization.
 
+The later 0.3.0 preparation snapshot `a3f4b31` was integrated as `fdace20`,
+including canonical branch push checks and candidate/library version guidance.
+The reviewed journal snapshot above was then integrated without changing the
+frozen reference fixtures or their verifier implementation. Uncommitted work in
+the original development worktree is outside this preparation snapshot.
+
 ## Actual implementation position
 
 The [implementation status](../implementing-docs/STATUS_0.4.0.md) records milestones
@@ -50,6 +57,20 @@ behavior only. Simulated HTTP, verifier ports or reviewers cannot qualify actual
 provider/model behavior or a completed managed treatment. Current recorded
 runtime/tool evidence is macOS arm64 with Node 24.21.0 and pnpm 12.5.1; Linux and
 installed-artifact acceptance remain open.
+
+On clean preparation source `789be77f4209986d1519c3ae2169061665e42459`, the
+serial full reference-verifier suite passed all seven cases in 812.48 seconds:
+five frozen references completed actual task/final-phase tool verification, and
+two negative cases rejected oracle/dependency drift. This is local frozen
+reference behavior, not managed trials or release acceptance. After the journal
+integration, source `7b86977` passed 561 core cases, ten real-filesystem journal
+cases and 106 release-policy cases, plus workspace build, workspace/task
+typechecks and lint. The earlier ordinary offline suite passed 33 cases on its
+recorded predecessor; the expensive reference verifier was not rerun after
+unchanged verifier/fixture inputs. The initial broad workspace attempt timed out
+in managed repair and lost its final CLI output; a serial managed-repair rerun
+passed all 12 cases, but no full workspace/full CLI pass is claimed. Exact scopes
+and retained log locations are in the implementation status.
 
 Follow the [roadmap](../implementing-docs/ROADMAP_0.4.0.md),
 [support profile](../product-docs/TASK_SUPPORT_0.4.0.md),
@@ -160,9 +181,10 @@ qualification, review and qualify a newly coupled website pin or explicitly
 approve and implement a separately versioned CLI artifact policy. The current
 controls require coupling and do not authorize an independent stable CLI path.
 Retargeting the website requires renewed joint evidence; the old website artifact
-cannot qualify a new package. Platform push qualification currently matches
-`release/**`; PR/manual paths and the explicitly updated canonical selection/
-website push filters remain separate triggers.
+cannot qualify a new package. Ordinary CI and platform push checks now explicitly
+include `codex/release-0.3.0` and `codex/release-0.4.0`; canonical selection and
+website push filters also remain configured. These automatic branch checks do
+not establish the separate repeated release-workflow qualification.
 
 ## Eventual immutable artifact and publication sequence
 

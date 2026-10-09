@@ -1401,3 +1401,53 @@ seconds, and ordinary offline task checks passed 41 cases across six files in
 95.89 seconds, including extracted packed aliases. Formatting and Git whitespace
 checks passed. No keys, provider calls, dependency/system installations, release
 changes, pushes or publication occurred.
+
+## Release preparation — completed reference check and journal snapshot (2026-10-09)
+
+The separate serial full reference-verifier suite passed seven cases in 812.48
+seconds on clean preparation source
+`789be77f4209986d1519c3ae2169061665e42459`. Five frozen references completed both
+task and final-phase verification with six actual tool process calls each; the
+protected inputs stayed unchanged. The two negative cases rejected oracle and
+dependency drift. Each retained record states `sourceDirty: false` and
+`trialQualification: false`; frozen reference file identity is the reviewer scope.
+These records do not establish model/provider behavior, managed benchmark trials,
+installed-artifact/platform acceptance or qualification of a later source commit.
+
+Recorded environment: Node 24.21.0, pnpm 12.5.1, macOS arm64. The lockfile hash is
+`sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4`.
+The audited installed closure contains 7,099 entries and 134,081,033 bytes, with
+revision `sha256:4dc60b73fc34868f1249558b00f864c9839c8d991e29a63adbdc58acf407dfd9`.
+The machine-readable records and passing summary are retained in
+`/private/tmp/reposetup-release-040-preparation-20261009-final/task-reference-verifier.log`.
+
+Integrated final 0.3.0 preparation `a3f4b31` as `fdace20`, preserving canonical
+CI/platform push filters and candidate/library version guidance. Then integrated
+the independently reviewed private journal implementation
+`ceb1acf96bc885363908c71f02887508d823eaf0` as
+`7b86977d6bdb852815b319e8cdbcfebfbac92781`. The append-only status conflict retains
+both histories. Original uncommitted development work remains independent and is
+not included. The finalization helper still requires current committed
+implementation ancestry before writing stable version fields.
+
+On clean integrated source `7b86977`, the full core suite passed 561 cases across
+62 files; the actual filesystem journal suite passed ten cases in 60.72 seconds;
+and six release preparation/context/handoff/gate/workflow suites passed 106 cases.
+Workspace build, workspace typecheck, task-test infrastructure typecheck and lint
+passed. Logs are retained beside the reference log as `journal-core-unit.log`,
+`journal-filesystem.log`, `final-release-gates.log`, `journal-build.log`,
+`journal-typecheck.log`, `journal-task-typecheck.log` and `journal-lint.log`.
+The earlier 33-case ordinary offline suite and 12-case serial managed-repair rerun
+retain their recorded predecessor scope. Verifier code/configuration and frozen
+fixtures were unchanged by these integrations, so the expensive reference suite
+was not repeated. No full workspace/full CLI pass is inferred from the interrupted
+broad run recorded above.
+
+Release branch preparation is complete for these reviewed snapshots. Milestone I
+remains in progress and J is unstarted; all benchmark/live, installed/platform,
+security/documentation and final immutable-source qualification gates remain
+open. The historical website artifact pin remains a deliberate consistency
+blocker until a new coupled artifact is reviewed and qualified. No stable version
+bump, release tag, provider call, paid campaign, remote workflow dispatch, main
+merge or publication occurred. Preparation branches can be pushed for review;
+automatic branch CI is distinct from release qualification.
