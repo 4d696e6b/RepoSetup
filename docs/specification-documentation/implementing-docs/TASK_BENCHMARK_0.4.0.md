@@ -672,3 +672,35 @@ cleaned afterward: this does not close durable campaign-artifact retention or re
 Only failure paths of one frozen block are joined. Successful/repair/context paths, all five
 fixtures/75 trials, qualified E candidate review/isolation, production profiles/live smoke
 and installed/platform qualification remain open. No model-quality or savings claim follows.
+
+## Independent terminal record retention (Milestone I)
+
+`task_benchmark_final_evidence` revision 1 binds a bounded independent evaluator
+record to the fresh campaign hash, fixture, block and treatment. Its record hash is
+exactly the terminal trial's `finalEvidenceHash`. Core validates frozen public,
+holdout and type-test inventories, duplicate IDs, executed/unexecuted type checks,
+fixture revisions, aggregate pass claims and strict metadata fields. Compiler
+failure retains null unexecuted runtime suites and false/unexecuted type results.
+No source, prompts, process output, project paths or credentials are retained.
+
+The CLI evidence store is a read-only factory over an existing canonical owned
+0700 directory. Only the executor-host terminal recorder invokes its retention
+port. It exclusively allocates a separate campaign evidence directory, writes
+immutable 0600 slot records with no-follow/exclusive creation and file/directory
+fsync, and checks ownership, permissions, hardlinks, inventory and content before
+further retention. Limits are 75 records, 256 KiB per record and 16 MiB aggregate.
+Imported records may be inspected but cannot resume writes or dispatch work.
+
+Read-only joining compares terminal hashes and public/private observations to the
+journal. Missing artifacts remain explicit; a record written before interrupted
+terminal-event retention is visible only for the currently pending slot. Unrelated
+future-slot records, duplicate records and substituted terminal records fail closed.
+Parsing and hashing establish consistency, not evaluator execution, candidate
+acceptance or qualification. All inspection results retain false acceptance and
+qualification flags. No imported record grants project effects, retries or spending.
+
+The frozen managed failure block now records all three real independent terminal
+evaluations to this private store and reads them back against retained trial events.
+Storage and joining time remain within measured driver/trial overhead. Its owned
+temporary roots are removed after tests; no long-lived campaign or live comparison
+is claimed. The evaluator and frozen fixture/tool/oracle revisions are unchanged.

@@ -48,6 +48,16 @@ it("retains one actual frozen failure block through G/H, private ledgers, termin
       ),
     ).toBe(true);
     expect(f.evaluations).toHaveLength(3);
+    expect(f.retainedEvidence).toMatchObject({
+      linkedRecords: 3,
+      missing: [],
+      unreferenced: [],
+      acceptanceAuthenticated: false,
+      qualification: false,
+    });
+    expect(f.retainedEvidence.artifacts.map((a) => a.record)).toEqual(
+      expect.arrayContaining(f.evaluations),
+    );
     expect(trials.map((t) => t.finalEvidenceHash)).toEqual(f.evaluations.map(taskContentHash));
     expect(
       f.evaluations.every(
@@ -106,7 +116,8 @@ it("retains one actual frozen failure block through G/H, private ledgers, termin
         cleanupTiming: "not_included",
         journalHash: taskContentHash(f.audit.events),
         terminalEvidenceHashes: trials.map((t) => t.finalEvidenceHash),
-        independentEvidenceRetention: "test_memory_only",
+        independentEvidenceRetention:
+          "private_immutable_slot_records_fsynced_then_read_back_before_cleanup",
       }) + "\n",
     );
   } finally {

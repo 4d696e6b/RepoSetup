@@ -1672,3 +1672,56 @@ The repeated block still has three failed trials/72 missing slots, unknown cash
 usage/call measurements and false qualification. This is clean-source macOS offline
 diagnostic evidence, not successful managed candidate, live or platform qualification.
 All owned temporary roots were cleaned and the Git worktree was clean after validation.
+
+## Milestone I — independent terminal evidence retention (2026-10-09)
+
+Added strict versioned core contracts and read-only joining for independent terminal
+evaluator records. Records bind the original campaign and exact fixture/block/
+treatment to the final evidence hash; inventory, duplicates, executed type checks,
+compiler-failure null suites and contradictory positive pass claims are validated.
+Joining rejects substitutions/future slots and exposes missing artifacts and records
+whose terminal journal event is still pending. Imported records remain explicitly
+unauthenticated and cannot grant acceptance, execution or qualification.
+
+Added a CLI private evidence adapter using the existing guarded state-file helpers:
+exclusive campaign directory allocation, immutable 0600 writes, 0700 directories,
+fsync, bounded inventory/bytes, no-follow reads and ownership/link/permission checks.
+Factories and inspection allocate nothing; only the executor-host recorder retains
+records. Existing storage cannot resume retention in a new process. No public CLI
+command, configuration input, installation behavior or model execution changes.
+
+The actual frozen managed failure block now fsyncs all three terminal independent
+observations, reads them back and joins their exact hashes/results to terminal
+journal events. Tests cover reopening for read-only inspection, interruptions,
+missing records, substitutions, duplicate slots, unsafe files and preservation after
+failure. The test cleans its own disposable evidence roots; this is durable adapter
+and local driver evidence, not a completed long-lived comparative campaign.
+
+Owner steering on 2026-10-09 permits continuing available local work while skipping
+unavailable prerequisites. Live/provider/platform gates remain unverified; no paid
+calls, credentials, installation or remote CI actions are authorized by that steering.
+The installed Docker client did not return a server response during a bounded probe;
+the probe was cancelled without starting/installing a runtime. Linux remains unrun.
+
+Validation details are recorded after final checks below. Milestone I remains in
+progress; successful qualified G/H/E trials, all-fixture trials and production/live/
+platform evidence remain open. J remains unstarted.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: **595 core tests across
+64 files** pass (8.64 seconds), including 12 new strict record/join cases. The two
+new/updated evidence-driver files pass **11 targeted task tests** (11.17 seconds).
+The full ordinary offline task suite passes **53 tests across eight files**
+(128.56 seconds), including fixture/candidate/dependency/journal/report and five
+packed alias/dry-run cases. Workspace build, workspace/task-test typechecks, lint,
+formatting and Git whitespace checks pass. An initial test-helper type error was
+fixed by validating the unknown trial port result before spreading it; no final
+check fails. Tool recipes/evaluator inputs are unchanged, so their preceding
+expensive qualification retains its recorded scope and was not repeated.
+
+The packed artifact hash is
+`sha256:b55f86f8b4fdeda2353010c9f4c6caf924e72d94813b5f8911da993463b3cd93`;
+this run used dirty `0a6abcb` source and remains diagnostic. All three independent
+records are linked, with no missing/unreferenced artifacts; the block still has
+three failed trials, 72 missing slots, one uncertain provider intent and false
+qualification. No secrets/API calls, installation, website source changes, version
+bumps, merges, publication or paid actions occurred.

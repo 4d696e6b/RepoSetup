@@ -20,6 +20,7 @@ import {
   type TaskParseResult,
 } from "../../packages/core/dist/index.js";
 import { createTaskBenchmarkStore } from "../../packages/cli/src/tasks/benchmark-store.js";
+import { createTaskBenchmarkEvidenceStore } from "../../packages/cli/src/tasks/benchmark-evidence-store.js";
 import { createDefaultProcessRunner } from "../../packages/cli/src/execution-adapters.js";
 import {
   createCandidateEvaluationSession,
@@ -94,6 +95,9 @@ export async function runManagedBenchmarkFailureBlock() {
     const stateRoot = path.join(parent, "campaign");
     await mkdir(stateRoot, { mode: 0o700 });
     const store = checked(await createTaskBenchmarkStore({ stateRoot, campaign: c }));
+    const evidenceStore = checked(
+      await createTaskBenchmarkEvidenceStore({ stateRoot, campaign: c }),
+    );
     const controller = new AbortController();
     let finished = 0;
     const ports: TaskBenchmarkExecutionPorts = {
@@ -228,6 +232,22 @@ export async function runManagedBenchmarkFailureBlock() {
             manifest: f,
             projectRoot: r.project,
             recordFinalEvidence: async (record) => {
+              const journal = checked(await store.inspect());
+              checked(
+                await evidenceStore.retain({
+                  events: journal.events,
+                  artifact: {
+                    kind: "task_benchmark_final_evidence",
+                    schemaVersion: 1,
+                    campaignId: store.campaignId,
+                    fixtureId: f.fixtureId,
+                    block: slot.block,
+                    treatment: slot.treatment,
+                    record,
+                    finalEvidenceHash: taskContentHash(record),
+                  },
+                }),
+              );
               evaluations.push(record);
             },
           }),
@@ -307,6 +327,7 @@ export async function runManagedBenchmarkFailureBlock() {
     );
     if (portFailure) throw portFailure;
     const audit = checked(await store.inspect());
+    const retainedEvidence = checked(await evidenceStore.inspect(audit.events));
     return {
       campaign: c,
       sourceSha,
@@ -314,6 +335,8 @@ export async function runManagedBenchmarkFailureBlock() {
       driverElapsedMs: elapsed(driverStarted),
       execution,
       audit,
+      retainedEvidence,
+      evidenceFolder: evidenceStore.folderPath,
       ledgerEvidence,
       evaluations,
       inputs,
