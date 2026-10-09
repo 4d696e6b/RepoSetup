@@ -40,7 +40,7 @@ export const taskBenchmarkCompilationSchema = z.strictObject({
   elapsedMs: taskCounterSchema,
   requests: z.array(requestSchema).min(1).max(24),
 });
-const trialSchema = z.strictObject({
+export const taskBenchmarkTrialSchema = z.strictObject({
   fixtureId: z.enum(TASK_BENCHMARK_FIXTURE_IDS),
   fixtureRevision: taskHashSchema,
   block: z.number().int().min(0).max(4),
@@ -100,12 +100,12 @@ export const taskBenchmarkCampaignSchema = z.strictObject({
   productionQualificationEvidence: taskHashSchema.nullable(),
   strongConfiguration: taskConfigurationSchema,
   fixtures: z.array(taskBenchmarkFixtureSchema).length(5),
-  trials: z.array(trialSchema).max(75),
+  trials: z.array(taskBenchmarkTrialSchema).max(75),
 });
 export type TaskBenchmarkCampaign = z.infer<typeof taskBenchmarkCampaignSchema>;
 export type TaskBenchmarkRequest = z.infer<typeof requestSchema>;
 export type TaskBenchmarkCompilation = z.infer<typeof taskBenchmarkCompilationSchema>;
-export type TaskBenchmarkTrial = z.infer<typeof trialSchema>;
+export type TaskBenchmarkTrial = z.infer<typeof taskBenchmarkTrialSchema>;
 export const TASK_BENCHMARK_PROTOCOL_REVISION = taskContentHash({
   version: 1,
   fixtures: TASK_BENCHMARK_FIXTURE_IDS,
@@ -343,7 +343,7 @@ function calculatedTotal(requests: readonly TaskBenchmarkRequest[]): number | nu
   }
   return total;
 }
-function resources(requests: readonly TaskBenchmarkRequest[]) {
+export function summarizeTaskBenchmarkRequests(requests: readonly TaskBenchmarkRequest[]) {
   return {
     providerCalls: requests.length,
     contextBytes: requests.reduce((n, r) => n + r.contextBytes, 0),
@@ -385,7 +385,7 @@ export function summarizeTaskBenchmark(value: unknown) {
     const trials = c.trials.filter((t) => t.treatment === treatment),
       accepted = trials.filter((t) => t.outcome === "accepted").length;
     const requests = trials.flatMap((t) => [...(t.compilation?.requests ?? []), ...t.requests]);
-    const totals = resources(requests);
+    const totals = summarizeTaskBenchmarkRequests(requests);
     return {
       treatment,
       expectedTrials: 25,
@@ -438,7 +438,7 @@ export function summarizeTaskBenchmark(value: unknown) {
     complete,
     missing,
     treatments,
-    cashLedger: resources([...actual.values()]),
+    cashLedger: summarizeTaskBenchmarkRequests([...actual.values()]),
     comparisonQualified: treatments.every(
       (t) =>
         t.qualified &&

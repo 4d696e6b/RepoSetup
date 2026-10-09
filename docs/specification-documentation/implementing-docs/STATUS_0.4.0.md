@@ -1365,3 +1365,39 @@ not an npm installation or identified release qualification. Logs are retained i
 serial full reference-verifier result is recorded below after its completion.
 No candidate version, tag, provider, paid campaign, workflow dispatch, main merge
 or publication is authorized or performed by these checks.
+
+## Milestone I — private offline journal and interrupted request accounting (2026-10-09)
+
+Added strict versioned event parsing and a read-only core replay auditor. It validates
+campaign/hash/sequence identity and actual prepare/compile/trial ordering, slot and
+shared compilation consistency, and every retained terminal trial against the existing
+campaign contract. Reports include known compilation requests not yet assigned to a
+terminal trial. Pending operations retain unknown usage; `dispatchAccountingComplete`
+only describes terminal dispatch coverage, not complete measured costs or evidence
+qualification. Hashes and schema validity do not authenticate actual execution.
+
+Added a concrete CLI private filesystem retention adapter using the existing owned
+0700 directories, exclusive 0600 regular files, no-follow/link checks, bounded reads,
+fsync and identity guards. The factory and inspection are read-only. Only the core
+executor invokes the mutating retention port. An exclusively allocated campaign
+folder prevents a second process/store from adopting or overwriting the same run.
+Changed, foreign, linked, unsafe or partial records stop further writes. Preserved
+records are diagnostic evidence, never automatic retry, recovery or resume authority.
+
+Nine new core audit cases and ten real-filesystem cases cover the complete synthetic
+75-slot/250-event chain, interrupted compilation accounting, rehashed invalid ordering,
+duplicate dispatch, truncation/tampering, file/root permissions, links and inventory
+changes. Shared synthetic campaign construction was extracted into a test helper;
+it still represents simulated requests/checks, not model trials or managed acceptance.
+No campaign/fixture revision or release version changed. Concrete trial joining,
+budget/authentic artifact authority, coordinator/retention timing and live/platform
+qualification remain open. Milestone I remains in progress; J remains unstarted.
+
+Validation: Node 24.21.0, pnpm 12.5.1, macOS arm64. Focused core audit/coordinator
+checks passed 30 cases; private filesystem suite passed ten cases in 60.22 seconds.
+Workspace and task-test typechecks and full lint passed after correcting test-only
+readonly/unused import errors. Final workspace build passed; all 532 core tests across 60 files passed in five
+seconds, and ordinary offline task checks passed 41 cases across six files in
+95.89 seconds, including extracted packed aliases. Formatting and Git whitespace
+checks passed. No keys, provider calls, dependency/system installations, release
+changes, pushes or publication occurred.

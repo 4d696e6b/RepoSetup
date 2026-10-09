@@ -22,6 +22,12 @@ const uuid = (v: string) => taskRunIdSchema.safeParse(v).success;
 const missing = (e: unknown) => e instanceof Error && "code" in e && e.code === "ENOENT";
 const uid = () => process.getuid?.();
 export const TASK_STATE_MAX_BYTES = 1048576;
+// Trusted adapter reuse only; callers must keep all mutations executor-invoked.
+export {
+  privateDirectory as capturePrivateTaskStateDirectory,
+  readPrivate as readPrivateTaskStateFile,
+  writePrivate as writePrivateTaskStateFile,
+};
 export async function syncTaskDirectory(directory: string): Promise<void> {
   const handle = await open(directory, constants.O_RDONLY | constants.O_NOFOLLOW);
   try {

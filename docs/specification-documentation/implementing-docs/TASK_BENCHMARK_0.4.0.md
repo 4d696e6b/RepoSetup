@@ -448,3 +448,30 @@ trials, retained authenticated artifacts or routing/savings evidence. Actual coo
 retention overhead also needs measurement and inclusion by the concrete driver.
 Concrete drivers, partial-journal accounting, full managed verification/review and platform/
 live qualification remain open Milestone I work.
+
+## Private journal audit and interrupted accounting (2026-10-09)
+
+`validateTaskBenchmarkJournal` audits a fresh offline campaign and strict version 1
+retained event prefix. Hash-chain continuity alone is insufficient: prepare intent/
+result, compilation intent/result, exact rotated slot, terminal records and shared
+compilation metadata must agree with the coordinator grammar and campaign validator.
+It returns pending intent and known compilation records not assigned to a terminal
+trial. `summarizeTaskBenchmarkJournal` includes those known requests once in the
+actual cash ledger, while leaving unreported interrupted usage unknown. Its
+`dispatchAccountingComplete` flag describes finished dispatch coverage only. It
+never qualifies comparison results, authenticates tool execution or permits resume.
+
+The CLI's `createTaskBenchmarkStore` is a read-only factory/inspector over an owned
+canonical private state root. Its executor-invoked retention port exclusively allocates
+a campaign-derived 0700 folder and writes bounded immutable 0600 event records with
+fsync. A second store cannot adopt an existing folder. Every subsequent write checks
+the earlier records against the acknowledged prefix; invalid inventory, corruption,
+links, changed identity/permissions and partial persistence stop dispatch. Nothing is
+deleted, overwritten or recovered automatically. Inspection does not execute work.
+The chain protects against accidental corruption and conflicting dispatch; a trusted
+host can still forge a consistent chain, so it is not evidence authentication.
+
+Nine core cases and ten ordinary real-filesystem cases exercise these boundaries,
+including a full simulated 75-slot journal. No actual provider or trial driver was
+added. Coordinator timing, concrete plan/task/verifier joining, scoped budgets,
+authenticated artifacts and platform/live qualification remain required work.
