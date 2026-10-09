@@ -2,12 +2,20 @@ import { artwork, codeBlock, el, eyebrow, link, tag } from "./dom.js";
 import { INSTALL, release, RELEASE_URL, REPOSITORY } from "./release.js";
 
 export function home(main: HTMLElement) {
+  main.classList.add("home-page");
   const hero = el("section", undefined, "hero");
   const copy = el("div", undefined, "hero-copy");
   const announcement = link("0.2.3 is here  ↗", "#/release", "release-pill");
   announcement.prepend(el("span", "", "status-dot"));
   const title = el("h1");
-  title.append("Your stack.", el("br"), el("span", "Ready to build.", "muted-title"));
+  for (const [text, className] of [
+    ["Your stack.", ""],
+    ["Ready to build.", "muted-title"],
+  ]) {
+    const line = el("span", undefined, "hero-title-line");
+    line.append(el("span", text, `hero-title-word ${className}`));
+    title.append(line);
+  }
   copy.append(
     announcement,
     title,
@@ -28,18 +36,39 @@ export function home(main: HTMLElement) {
     el("p", "Node.js 24+ · Open source · Runs in your terminal", "hint"),
   );
   const visual = el("div", undefined, "hero-visual");
-  visual.append(artwork("hero-stack.png", "", "hero-art"));
+  for (const className of [
+    "hero-orbit orbit-one",
+    "hero-orbit orbit-two",
+    "hero-beacon beacon-one",
+    "hero-beacon beacon-two",
+    "hero-beacon beacon-three",
+  ]) {
+    const decoration = el("span", undefined, className);
+    decoration.setAttribute("aria-hidden", "true");
+    visual.append(decoration);
+  }
+  const art = el("div", undefined, "hero-art-wrap");
+  art.append(artwork("hero-stack.png", "", "hero-art"));
+  visual.append(art);
+  const console = el("span", "compose → preview → create", "hero-console");
+  console.setAttribute("aria-hidden", "true");
+  visual.append(console);
   const visualLabel = el("div", undefined, "visual-label");
   visualLabel.append(el("span", "01 / COMPOSE WITH CLARITY"), el("span", ">_"));
   visual.append(visualLabel);
   hero.append(copy, visual);
   main.append(hero);
+  const scrollCue = el("div", undefined, "scroll-cue");
+  scrollCue.append(link("Explore the workflow", "#/#workflow"));
+  main.append(scrollCue);
   const strip = el("div", undefined, "ecosystem-strip");
   strip.append(el("p", "A considered toolkit.\nOne coherent workflow."));
   for (const name of ["Next.js", "React + Vite", "Express", "FastAPI", "Flask"])
     strip.append(el("span", name));
   main.append(strip);
   const features = el("section", undefined, "section features");
+  features.id = "workflow";
+  features.tabIndex = -1;
   const heading = el("div", undefined, "section-heading");
   heading.append(
     eyebrow("THE WORKFLOW"),

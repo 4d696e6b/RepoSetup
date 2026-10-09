@@ -1,4 +1,6 @@
 import "./style.css";
+import "./motion.css";
+import { createMotionControl, mountMotion } from "./motion.js";
 import { artwork, codeBlock, el, eyebrow, link, pageIntro } from "./dom.js";
 import { home } from "./home.js";
 import { integrations, integrationDetail, presets } from "./catalog.js";
@@ -65,6 +67,7 @@ function header(page: string) {
   search.addEventListener("click", showSearch);
   actions.append(
     search,
+    createMotionControl(),
     link("GitHub  ↗", REPOSITORY, "github-link"),
     link("Get started  ↗", "#/docs/getting-started", "button primary header-cta"),
   );
@@ -179,6 +182,16 @@ function render(focus = false) {
     main.focus();
     window.scrollTo(0, 0);
   }
+  if (page === "home" && anchor === "workflow") {
+    // Set focus after native fragment navigation has finished, as docs anchors do.
+    requestAnimationFrame(() => {
+      if (!main.isConnected) return;
+      const target = main.querySelector<HTMLElement>("#workflow");
+      target?.scrollIntoView({ block: "start" });
+      target?.focus({ preventScroll: true });
+    });
+  }
+  mountMotion(main, page, Boolean(anchor));
 }
 document.querySelector<HTMLAnchorElement>(".skip-link")!.addEventListener("click", (event) => {
   event.preventDefault();

@@ -46,6 +46,22 @@ server, not a production server. See the official
 [pnpm installation guide](https://pnpm.io/installation) and
 [Vite local preview documentation](https://vite.dev/guide/static-deploy.html#testing-the-app-locally).
 
+## Motion and accessibility
+
+The home page uses sequenced headline entrances, floating supplied artwork,
+pointer-responsive depth, orbit rings, scroll reveals, and illustration hover
+effects. Documentation reading text stays static. Text retains full opacity and
+contrast during entrance and modal motion. Buttons, links, and form controls
+remain in fixed positions while surrounding text and artwork animate.
+
+Use the header's Motion button to pause or resume animations. The choice is
+remembered locally in the browser. System reduced-motion preferences always take
+precedence, including changes while the page is open. Keyboard focus finishes
+an element's entrance immediately. Decorative loops pause when the hero is
+offscreen or the tab is hidden; route changes remove observers and pending
+pointer frames. Touch devices do not get pointer tilt. No animation dependency
+or browser installation capability was added.
+
 ## Intentional recipe handoff
 
 The builder offers exactly the five released bundled presets and a validated

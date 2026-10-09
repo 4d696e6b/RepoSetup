@@ -33,8 +33,16 @@ generated from the pinned source. The build refuses drift from those definitions
 4. **Local validation and review — complete.** Unit, Chrome/mobile/Firefox browser,
    published npm handoff, workspace checks, and visual inspection passed. A full
    WebKit run and manual publication review remain in the release-readiness work.
+5. **Motion renovation — implemented.** Sequenced headline entrances, floating
+   supplied artwork, pointer-responsive depth on desktop, rotating orbit rings,
+   decorative beacons, scroll reveals, illustration hover effects, and brief
+   search-dialog motion. Click targets stay fixed and text retains full contrast.
+   Docs reading text stays static. A persistent Motion control and live system
+   reduced-motion handling stop the effects. Decorative loops pause offscreen
+   or in hidden tabs; route cleanup removes observers, animations, and pending
+   pointer frames. No animation dependency or release behavior was added.
 
-All four implementation milestones are finished locally. One publication-readiness
+All five implementation milestones are finished locally. One publication-readiness
 milestone remains: complete WebKit/manual review and choose, smoke-test, and publish
 on a static host. The task's local implementation does not wait for another CLI
 release; it uses the published 0.2.3 package.
@@ -60,7 +68,7 @@ Worktree:
   confirmation abort, and invalid/unshipped inputs were checked. No project
   installation ran.
 - `pnpm test`: 1,062 tests passed (including 19 website unit/integrity checks).
-- `pnpm --filter @reposetup/website test:browser:local`: 30 tests passed in
+- `pnpm --filter @reposetup/website test:browser:local`: 48 tests passed in
   desktop Chrome, mobile Chrome emulation, and Firefox. There were zero reported
   WCAG A/AA violations in 63 automated Axe page/viewport scans.
 - `pnpm build`, `pnpm typecheck`, `pnpm lint`, and `git diff --check`: passed.
@@ -72,6 +80,15 @@ Worktree:
   search and keyboard navigation, heading/history links, copy feedback, hostile
   text, connection-blocking CSP, and the no-JavaScript guide link. Axe checks
   seven representative pages at 390, 768, and 1440px.
+- Motion coverage adds 18 browser cases across the same three profiles: initial
+  and live reduced-motion preferences, pause persistence through navigation and
+  reload, keyboard use, early pointer exits, workflow-anchor focus, 320/390/768/
+  1440px overflow checks, route cleanup, direct docs entry, search, and preset
+  downloads. The motion follow-up also reruns the 19 website unit checks and
+  46 published-package handoff checks. The supplied artwork bytes remain intact.
+  Early-click regression testing caught moving link containers; entrance motion
+  now targets surrounding text and artwork while interactive targets stay fixed.
+  Desktop and mobile visuals were inspected in the local browser after the fix.
 - A validation-only macOS 15 workflow includes Chromium, Firefox, and WebKit.
   It has not been run remotely. The earlier WebKit launch failed on this local
   macOS 14.7.2 host; Safari/WebKit qualification remains open. Use a compatible
