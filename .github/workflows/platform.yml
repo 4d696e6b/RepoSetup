@@ -2,7 +2,7 @@ name: Platform
 
 on:
   push:
-    branches: [main, dev, "release/**"]
+    branches: [main, dev, "release/**", codex/release-0.3.0, codex/release-0.4.0]
   pull_request:
   schedule:
     - cron: "0 6 * * 1"
