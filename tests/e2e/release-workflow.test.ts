@@ -20,14 +20,31 @@ describe("release publishing workflow", () => {
     expect(workflow.match(/merge-multiple: true/g)).toHaveLength(2);
     expect(workflow).toContain("verify-packed-artifact.mjs --directory candidate");
     expect(workflow).toContain("EXPECTED_SOURCE_SHA: ${{ github.sha }}");
-    expect(workflow).toContain('EXPECTED_PACKAGE_VERSION: "0.2.3"');
-    expect(workflow).not.toContain("ref: v0.2.3");
+    expect(workflow).toContain(
+      "EXPECTED_PACKAGE_VERSION: ${{ steps.qualification.outputs.package_version }}",
+    );
+    expect(workflow).toContain("group: publish-rsetup\n");
+    expect(workflow).toContain("cancel-in-progress: false");
+    expect(workflow).not.toContain("0.2.3");
+    expect(workflow).not.toMatch(/ref: v\d/);
     expect(workflow).toContain("publish-qualified-artifact.mjs");
     expect(workflow).toContain("verify-registry-release.mjs");
     expect(workflow).not.toContain("pnpm build");
     expect(workflow).not.toContain("pnpm --filter rsetup pack");
     expect(workflow).not.toContain("push:");
     expect(workflow).not.toContain("continue-on-error");
+  });
+
+  it("binds live-service evidence to the checked-out candidate version", async () => {
+    const workflow = await readFile(
+      path.join(repoRoot, ".github", "workflows", "live-services.yml"),
+      "utf8",
+    );
+    expect(workflow).toContain("readReleaseContext");
+    expect(workflow).toContain("assert.equal(record.packageVersion, release.version)");
+    expect(workflow).toContain("assert.equal(record.sourceCommit, process.env.GITHUB_SHA)");
+    expect(workflow).toContain("assert.equal(record.cleanup, true)");
+    expect(workflow).not.toContain("0.2.3");
   });
 
   it("can qualify a candidate artifact without a release tag or publication", async () => {

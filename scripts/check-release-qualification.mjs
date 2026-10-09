@@ -1,9 +1,16 @@
-import { appendFile, readFile } from "node:fs/promises";
+import { appendFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
-const REPOSITORY = "4d696e6b/RepoSetup";
+import {
+  assertStableReleaseSource,
+  readReleaseContext,
+  releaseRepository,
+  validateReleaseVersion,
+} from "./release-context.mjs";
+
+const REPOSITORY = releaseRepository;
 const SHA = /^[0-9a-f]{40}$/;
 const OS = ["ubuntu-24.04", "macos-15", "windows-2025"];
 export const requiredJobs = [
@@ -16,6 +23,23 @@ export const requiredJobs = [
   ...OS.map((os) => `Packed artifact acceptance (${os})`),
 ];
 
+export function requiredQualificationJobs(version) {
+  validateReleaseVersion(version, { stableOnly: true });
+  const [major, minor] = version.split(".").map(Number);
+  // The task compiler release introduces these mandatory gates. Retain them for
+  // later versions so a new minor or major cannot silently bypass task acceptance.
+  const tasksRequired = major > 0 || minor >= 4;
+  return [
+    ...requiredJobs,
+    ...(tasksRequired
+      ? ["ubuntu-24.04", "macos-15"].flatMap((os) => [
+          `Offline task qualification (${os})`,
+          `Full task verifier qualification (${os})`,
+        ])
+      : []),
+  ];
+}
+
 export function parseRunIds(value) {
   const ids = typeof value === "string" ? value.split(",").map((id) => id.trim()) : [];
   if (ids.length !== 3 || ids.some((id) => !/^[1-9][0-9]*$/.test(id)) || new Set(ids).size !== 3) {
@@ -24,7 +48,16 @@ export function parseRunIds(value) {
   return ids;
 }
 
-export function validateQualification({ runs, jobs, latestRuns, artifact, sourceSha, branchSha }) {
+export function validateQualification({
+  runs,
+  jobs,
+  latestRuns,
+  artifact,
+  sourceSha,
+  branchSha,
+  version = "0.2.3",
+}) {
+  const required = requiredQualificationJobs(version);
   if (!SHA.test(sourceSha) || branchSha !== sourceSha) {
     throw new Error("Candidate branch and release source must agree.");
   }
@@ -54,11 +87,11 @@ export function validateQualification({ runs, jobs, latestRuns, artifact, source
     if (!Number.isFinite(updated)) throw new Error("Qualification completion time is missing.");
     const currentJobs = jobs[index];
     if (
-      currentJobs.length !== requiredJobs.length ||
-      requiredJobs.some((name) => currentJobs.filter((job) => job.name === name).length !== 1)
+      currentJobs.length !== required.length ||
+      required.some((name) => currentJobs.filter((job) => job.name === name).length !== 1)
     ) {
       throw new Error(
-        "Qualification is missing a required platform, recipe, fault, pack, or artifact job.",
+        "Qualification is missing a required platform, recipe, fault, pack, artifact, or task job.",
       );
     }
     for (const job of currentJobs) {
@@ -96,18 +129,8 @@ export function validateQualification({ runs, jobs, latestRuns, artifact, source
 }
 
 async function main() {
-  if (
-    process.env.GITHUB_REPOSITORY !== REPOSITORY ||
-    process.env.GITHUB_REF !== "refs/tags/v0.2.3"
-  ) {
-    throw new Error(
-      "Stable publication must be dispatched against the existing v0.2.3 tag in the official repository.",
-    );
-  }
-  const manifest = JSON.parse(await readFile("packages/cli/package.json", "utf8"));
-  if (manifest.name !== "rsetup" || manifest.version !== "0.2.3") {
-    throw new Error("Stable tag requires rsetup@0.2.3.");
-  }
+  const release = await readReleaseContext({ stableOnly: true });
+  assertStableReleaseSource(release, process.env);
   const ids = parseRunIds(process.env.QUALIFICATION_RUN_IDS);
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error("An actions:read GitHub token is required.");
@@ -153,10 +176,11 @@ async function main() {
     artifact: candidates[0],
     sourceSha: process.env.GITHUB_SHA,
     branchSha: ref.object?.sha,
+    version: release.version,
   });
   await appendFile(
     process.env.GITHUB_OUTPUT,
-    `artifact_id=${result.artifactId}\nrun_id=${ids[2]}\n`,
+    `artifact_id=${result.artifactId}\nrun_id=${ids[2]}\npackage_version=${release.version}\n`,
   );
   process.stdout.write(
     `Qualified source ${process.env.GITHUB_SHA}; all three exact-source release runs passed.\n`,

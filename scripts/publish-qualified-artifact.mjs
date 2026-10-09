@@ -6,11 +6,18 @@ import { setTimeout as delay } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 
 import { verifyArtifactIdentity } from "./artifact-identity.mjs";
+import {
+  assertStableReleaseSource,
+  readReleaseContext,
+  validateReleaseVersion,
+} from "./release-context.mjs";
 
-export function verifyRegistryIdentity(metadata, identity) {
+export function verifyRegistryIdentity(metadata, identity, expectedVersion) {
+  const version = validateReleaseVersion(expectedVersion, { stableOnly: true });
   if (
-    metadata.name !== "rsetup" ||
-    metadata.version !== "0.2.3" ||
+    metadata?.name !== "rsetup" ||
+    metadata.version !== version ||
+    identity.record?.version !== version ||
     metadata.dist?.integrity !== identity.integrity
   ) {
     throw new Error(
@@ -19,8 +26,9 @@ export function verifyRegistryIdentity(metadata, identity) {
   }
 }
 
-export async function registryVersion() {
-  const response = await globalThis.fetch("https://registry.npmjs.org/rsetup/0.2.3", {
+export async function registryVersion(expectedVersion) {
+  const version = validateReleaseVersion(expectedVersion, { stableOnly: true });
+  const response = await globalThis.fetch(`https://registry.npmjs.org/rsetup/${version}`, {
     signal: globalThis.AbortSignal.timeout(30_000),
   });
   if (response.status === 404) return undefined;
@@ -30,9 +38,10 @@ export async function registryVersion() {
 }
 
 export async function waitForRegistryVersion({
+  version,
   timeoutMs = 20 * 60_000,
   intervalMs = 15_000,
-  lookup = registryVersion,
+  lookup = () => registryVersion(version),
 } = {}) {
   const deadline = performance.now() + timeoutMs;
   while (true) {
@@ -49,21 +58,17 @@ export async function waitForRegistryVersion({
 }
 
 async function main() {
-  if (
-    process.env.GITHUB_REF !== "refs/tags/v0.2.3" ||
-    !/^[0-9a-f]{40}$/.test(process.env.GITHUB_SHA ?? "")
-  ) {
-    throw new Error("Publication requires the exact v0.2.3 tag source.");
-  }
+  const release = await readReleaseContext({ stableOnly: true });
+  assertStableReleaseSource(release, process.env);
   const identity = await verifyArtifactIdentity("candidate", {
-    version: "0.2.3",
+    version: release.version,
     sourceSha: process.env.GITHUB_SHA,
   });
-  const existing = await registryVersion();
+  const existing = await registryVersion(release.version);
   if (existing) {
-    verifyRegistryIdentity(existing, identity);
+    verifyRegistryIdentity(existing, identity, release.version);
     process.stdout.write(
-      "rsetup@0.2.3 already exists with the qualified bytes; publication skipped.\n",
+      `rsetup@${release.version} already exists with the qualified bytes; publication skipped.\n`,
     );
     return;
   }
@@ -91,9 +96,11 @@ async function main() {
     process.stdout.write("Dry-run complete; no package was published.\n");
     return;
   }
-  const metadata = await waitForRegistryVersion();
-  verifyRegistryIdentity(metadata, identity);
-  process.stdout.write(`Published rsetup@0.2.3 with qualified integrity ${identity.integrity}.\n`);
+  const metadata = await waitForRegistryVersion({ version: release.version });
+  verifyRegistryIdentity(metadata, identity, release.version);
+  process.stdout.write(
+    `Published rsetup@${release.version} with qualified integrity ${identity.integrity}.\n`,
+  );
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {

@@ -7,6 +7,7 @@ import { pathToFileURL } from "node:url";
 
 import { verifyArtifactIdentity } from "./artifact-identity.mjs";
 import { registryVersion, verifyRegistryIdentity } from "./publish-qualified-artifact.mjs";
+import { assertStableReleaseSource, readReleaseContext } from "./release-context.mjs";
 
 function run(command, args, cwd) {
   const windowsNpm = process.platform === "win32" && command === "npm";
@@ -34,6 +35,7 @@ function run(command, args, cwd) {
 }
 
 export async function verifyDelivery(tarball) {
+  const release = await readReleaseContext({ stableOnly: tarball === undefined });
   const directory = await mkdtemp(path.join(os.tmpdir(), "reposetup-registry-release-"));
   try {
     await writeFile(
@@ -45,7 +47,7 @@ export async function verifyDelivery(tarball) {
       "npm",
       [
         "install",
-        tarball === undefined ? "rsetup@0.2.3" : "./package.tgz",
+        tarball === undefined ? `rsetup@${release.version}` : "./package.tgz",
         "--registry",
         "https://registry.npmjs.org",
         "--no-audit",
@@ -56,10 +58,12 @@ export async function verifyDelivery(tarball) {
     const manifest = JSON.parse(
       await readFile(path.join(directory, "node_modules/rsetup/package.json"), "utf8"),
     );
-    if (manifest.name !== "rsetup" || manifest.version !== "0.2.3")
+    if (manifest.name !== "rsetup" || manifest.version !== release.version)
       throw new Error("Installed version differs from release.");
     for (const alias of ["rsetup", "reposetup"]) {
-      if ((await run("npm", ["exec", "--", alias, "--version"], directory)).trim() !== "0.2.3")
+      if (
+        (await run("npm", ["exec", "--", alias, "--version"], directory)).trim() !== release.version
+      )
         throw new Error(`${alias} version is incorrect.`);
       if (
         !(await run("npm", ["exec", "--", alias, "--help"], directory)).includes("Usage: reposetup")
@@ -102,19 +106,21 @@ export async function verifyDelivery(tarball) {
 }
 
 async function main() {
+  const release = await readReleaseContext({ stableOnly: true });
+  assertStableReleaseSource(release, process.env);
   const identity = await verifyArtifactIdentity("candidate", {
-    version: "0.2.3",
+    version: release.version,
     sourceSha: process.env.GITHUB_SHA,
   });
-  const metadata = await registryVersion();
-  if (!metadata) throw new Error("rsetup@0.2.3 is not published.");
-  verifyRegistryIdentity(metadata, identity);
+  const metadata = await registryVersion(release.version);
+  if (!metadata) throw new Error(`rsetup@${release.version} is not published.`);
+  verifyRegistryIdentity(metadata, identity, release.version);
   const latestResponse = await globalThis.fetch("https://registry.npmjs.org/rsetup/latest", {
     signal: globalThis.AbortSignal.timeout(30_000),
   });
   if (!latestResponse.ok)
     throw new Error(`Stable dist-tag lookup failed (${latestResponse.status}).`);
-  verifyRegistryIdentity(await latestResponse.json(), identity);
+  verifyRegistryIdentity(await latestResponse.json(), identity, release.version);
   await verifyDelivery();
 }
 
