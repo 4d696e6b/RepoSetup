@@ -2,8 +2,11 @@ pnpm-lock.yaml
 **/dist
 **/node_modules
 coverage
-docs
+/docs
 examples
 schemas
 *.md
 PACK_MANIFEST.json
+apps/website/.published-cli
+apps/website/test-results
+apps/website/playwright-report

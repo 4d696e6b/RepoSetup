@@ -20,7 +20,9 @@ Correctness, safety, reproducibility, and maintainability are more important tha
 - Integrations must generate typed operations.
 - Only the executor may execute processes or mutate project files.
 - `@reposetup/core` must not depend on Commander, Inquirer, Ink, React, Firebase, or terminal rendering.
-- Do not implement a website in v1.
+- The original v1 scope excluded a website. The owner has authorized the separate
+  `apps/website` companion site on `codex/0.2.3-website`, scoped to published CLI
+  0.2.3. Follow `apps/website/AGENTS.md` for that application.
 
 ## Safety rules
 
@@ -70,7 +72,7 @@ Do not claim a task is complete if tests/typecheck are failing.
 ## Version 1 non-goals
 
 Do not implement:
-- website;
+- website outside the explicitly authorized companion application;
 - Firebase;
 - user accounts;
 - payments;

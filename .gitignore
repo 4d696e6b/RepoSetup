@@ -20,3 +20,6 @@ service-account*.json
 tmp/
 temp/
 logs/
+apps/website/test-results/
+apps/website/playwright-report/
+apps/website/.published-cli/

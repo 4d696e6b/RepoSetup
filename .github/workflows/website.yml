@@ -1,0 +1,47 @@
+name: Published 0.2.3 website
+
+on:
+  push:
+    branches: ["codex/0.2.3-website"]
+  pull_request:
+    paths:
+      - "apps/website/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/website.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  website:
+    name: Website and published-package handoff
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm --filter @reposetup/website exec playwright install chromium firefox webkit
+      - run: pnpm --filter @reposetup/website test:browser
+      - run: pnpm --filter @reposetup/website test:handoff
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: website-0.2.3-validation
+          path: |
+            apps/website/test-results/browser-report.json
+            apps/website/.published-cli/report.json
+          if-no-files-found: warn
+
+# This workflow validates the static application. It never deploys it.

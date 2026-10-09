@@ -1,0 +1,32 @@
+{
+  "name": "@reposetup/website",
+  "version": "0.2.3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "catalog": "node --experimental-strip-types scripts/generate-release.ts",
+    "dev": "pnpm catalog && vite --host 127.0.0.1",
+    "build": "pnpm catalog && vitest run && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:browser": "playwright test",
+    "test:browser:local": "playwright test --project=chromium --project=mobile --project=firefox",
+    "test:handoff": "node scripts/verify-published.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "1.63.0",
+    "@reposetup/core": "workspace:*",
+    "@reposetup/integrations": "workspace:*",
+    "@reposetup/registry": "workspace:*",
+    "@types/node": "^22.20.4",
+    "@types/validate-npm-package-name": "4.0.2",
+    "rsetup": "workspace:*",
+    "typescript": "^5.9.3",
+    "validate-npm-package-name": "8.0.0",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1",
+    "zod": "^4.6.5"
+  }
+}
