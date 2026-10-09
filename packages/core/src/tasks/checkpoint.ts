@@ -61,6 +61,7 @@ export const taskRunCheckpointSchema = z.strictObject({
         ]),
         usage: taskUsageSchema.nullable(),
         requestFootprint: taskRequestFootprintSchema.optional(),
+        purpose: z.enum(["implementation", "repair", "context"]).optional(),
       }),
     )
     .max(10000)

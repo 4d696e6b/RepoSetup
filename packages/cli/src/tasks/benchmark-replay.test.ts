@@ -6,6 +6,9 @@ import {
   executeTaskCompilation,
   executeTaskRun,
   inspectTaskBenchmarkRun,
+  projectTaskBenchmarkRunRequests,
+  projectTaskBenchmarkCompilation,
+  summarizeTaskBenchmarkRequests,
   collectTaskBenchmarkRunEvidence,
   taskBenchmarkRunEvidenceSchema,
   validateTaskBenchmarkRunEvidence,
@@ -101,7 +104,9 @@ async function source() {
       expectedContextId: context.contextId,
       allowProviderUsage: true,
     });
+  const started = performance.now();
   const result = data(await compile());
+  const compilationElapsedMs = Math.ceil(performance.now() - started);
   if (result.dryRun) throw new Error("unexpected dry run");
   const checkpoint = result.checkpoint;
   const decomposition = data(
@@ -124,7 +129,16 @@ async function source() {
       adapter: target.adapter,
       ...overrides,
     });
-  return { ...f, checkpoint, decomposition, compile, provider, prepared, replay };
+  return {
+    ...f,
+    checkpoint,
+    decomposition,
+    compile,
+    compilationElapsedMs,
+    provider,
+    prepared,
+    replay,
+  };
 }
 async function privateRecords(f: Awaited<ReturnType<typeof fresh>>) {
   const directory = path.join(f.stateRoot, taskByteHash(f.root).slice(7));
@@ -226,6 +240,33 @@ describe("actual failed and uncertain benchmark run evidence", () => {
       });
       expect(record.codingRequests).toHaveLength(1);
       const call = record.codingRequests[0]!;
+      const requests = data(projectTaskBenchmarkRunRequests(record));
+      expect(requests).toHaveLength(1);
+      expect(requests[0]).toMatchObject({
+        purpose: "implementation",
+        sourceCheckpointHash: record.checkpointHash,
+        reservation: call.reservation,
+        ledgerUsage: call.usage,
+        inputTokens: { provenance: "unknown" },
+        calculatedCostMicrousd: null,
+        chargedCostMicrousd: { provenance: "unknown" },
+        estimatedInputTokens: null,
+      });
+      expect(requests[0]!.contextBytes).toBe(call.requestFootprint!.inputDocumentBytes);
+      const projectedCompilation = data(
+        projectTaskBenchmarkCompilation({
+          checkpoint: f.s.checkpoint,
+          elapsedMs: f.s.compilationElapsedMs,
+        }),
+      );
+      expect(projectedCompilation.requests[0]!.requestHash).toBe(f.s.checkpoint.requestHash);
+      expect(
+        projectTaskBenchmarkCompilation({ checkpoint: f.c, elapsedMs: f.s.compilationElapsedMs }),
+      ).toMatchObject({ success: false });
+      const totals = summarizeTaskBenchmarkRequests([
+        ...projectedCompilation.requests,
+        ...requests,
+      ]);
       const document = f.s.prepared.mock.calls.at(-1)![0].document;
       expect(call.requestFootprint).toEqual({
         kind: "task_request_footprint",
@@ -245,16 +286,30 @@ describe("actual failed and uncertain benchmark run evidence", () => {
           requestFootprint: call.requestFootprint,
         });
         expect(call).toMatchObject({ status: "pending", usage: null });
+        expect(totals).toMatchObject({
+          providerCalls: null,
+          retainedRequestIntents: 2,
+          settledRequestIntents: 1,
+          uncertainProviderCalls: 1,
+          requestDurationMs: null,
+        });
         expect(record.resourceLedger.consumed.inputTokens).toEqual({ provenance: "unknown" });
       } else {
         expect(call).toMatchObject({
           status: "completed",
           usage: { inputTokens: { provenance: "host_reported", value: 10 } },
         });
+        expect(totals).toMatchObject({
+          providerCalls: 2,
+          retainedRequestIntents: 2,
+          uncertainProviderCalls: 0,
+          inputTokens: null,
+        });
         expect(record.resourceLedger.consumed.inputTokens).toMatchObject({ value: 20 });
         expect(record.attempts[0]!.failureCode).toBe("TASK_PROVIDER_OUTPUT_INVALID");
         const legacy = JSON.parse(before);
         delete legacy.providerCalls[0].requestFootprint;
+        delete legacy.providerCalls[0].purpose;
         const { checkpointHash: _old, ...payload } = legacy;
         void _old;
         const legacyEvidence = data(
@@ -265,6 +320,10 @@ describe("actual failed and uncertain benchmark run evidence", () => {
           }),
         );
         expect(legacyEvidence.codingRequests[0]!.requestFootprint).toBeUndefined();
+        expect(data(projectTaskBenchmarkRunRequests(legacyEvidence))[0]).toMatchObject({
+          purpose: "unknown",
+          contextBytes: null,
+        });
       }
       expect(record.attempts[0]!.evidenceHash).toBe(
         taskContentHash(JSON.parse(before).run.attempts[0]),

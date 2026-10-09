@@ -37,3 +37,4 @@ export * from "./benchmark-journal.js";
 export * from "./benchmark-decomposition.js";
 export * from "./request-footprint.js";
 export * from "./benchmark-run-evidence.js";
+export * from "./benchmark-ledger-projection.js";

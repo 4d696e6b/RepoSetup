@@ -323,6 +323,7 @@ export async function requestTaskRunProposal(input: {
       status: "pending",
       usage: null,
       requestFootprint: taskRequestFootprint(inputDocument, prepared.data),
+      purpose: binding().repair ? "repair" : "implementation",
     });
     state().status = "requesting";
     state().usage = aggregateUsage(
@@ -418,6 +419,10 @@ export async function requestTaskRunProposal(input: {
       return stop("TASK_PROVIDER_OUTPUT_INVALID");
     const reply = document.data.reply;
     if (reply.type === "context_request") {
+      // save() reseals/replaces checkpoint members; use the current durable call.
+      c.providerCalls!.find((current) => current.callId === callId)!.purpose = "context";
+      const classified = await save("request", task.taskId);
+      if (!classified.success) return classified;
       if (round === 3) return stop("TASK_CONTEXT_LIMIT_EXCEEDED");
       for (const reference of reply.references) requests.push(reference.source);
       if (

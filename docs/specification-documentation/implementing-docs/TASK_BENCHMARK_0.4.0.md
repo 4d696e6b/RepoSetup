@@ -605,3 +605,36 @@ ports are explicit charge-only evidence; unavailable/corrupt private state stops
 The actual campaign driver must still join these records with terminal evaluator results,
 inclusive host timings and measured/calculated/unknown request fields. Neither footprint
 sizes nor reservations should be relabelled as measured token usage or paid provider cost.
+
+### Actual ledger projection and uncertain request accounting
+
+Core's pure `projectTaskBenchmarkCompilation` and `projectTaskBenchmarkRunRequests`
+project original private compilation and diagnostic run records into campaign request
+rows. Original compilation identity is retained once for cash accounting; analytical
+fresh-root replay checkpoints are rejected as additional compilation calls. Every coding
+intent is included, even after refusal, invalid output, cancellation or transport failure.
+The projection carries raw reservation/usage and source checkpoint identity. It provides
+integrity/privacy validation, never acceptance, execution or production qualification.
+
+Request duration, input-document bytes and pricing revision can now be null when absent.
+Pending intents have null usage/duration and unknown measured tokens/cost; missing legacy
+footprints or purpose remain unknown. `retainedRequestIntents`, `settledRequestIntents`
+and `uncertainProviderCalls` distinguish held intents from settled dispatch accounting;
+the aggregate `providerCalls` is null when an intent remains pending. Settled dispatch
+accounting does not prove an HTTP response or billed provider usage. The journal cannot
+declare dispatch accounting complete while a retained request remains pending, even if
+all 75 trial slots have terminal records. Pending requests cannot accompany acceptance.
+
+Token fields become measured only from raw `reported` usage. Host-reported/estimated token
+values remain in the raw ledger and project as unknown measurements. Estimated cost and
+reported charged cost stay separate; reservation ceilings never become token estimates.
+Unknown request metadata blocks quantitative comparison. Observed compilation preflight
+failures can retain zero intents; completed compilations still require a source request.
+Existing lowercase failure labels and actual task executor error codes are both accepted.
+
+New coding intents retain implementation/repair purpose before dispatch. A validated
+context-request reply durably classifies that exact call as context before expansion.
+Optional fields preserve compatibility with older private checkpoints and report inputs.
+The pre-release version 1 contract extensions leave fixture/protocol freezes, treatment
+order and allowances unchanged. The actual driver and independent terminal evaluator
+must still join these records with measured full host overhead and frozen fixture authority.

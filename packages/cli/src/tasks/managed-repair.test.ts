@@ -255,6 +255,12 @@ describe("serial managed repair and trusted routing (offline SDK transport)", ()
       ]);
       expect(r.checkpoint.bindings.every((b) => Boolean(b.routing))).toBe(true);
       expect(r.checkpoint.run.resourceLedger.reservations).toHaveLength(4);
+      expect(r.checkpoint.providerCalls!.map((call) => call.purpose)).toEqual([
+        "implementation",
+        "repair",
+        "repair",
+        "implementation",
+      ]);
       expect(r.checkpoint.run.attempts[2]!.effectiveConfiguration).toMatchObject({
         provenance: "provider_reported",
         configuration: { modelProfileId: "gpt-6.1-sol", nativeEffortId: "low" },

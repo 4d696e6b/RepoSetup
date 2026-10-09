@@ -1,7 +1,13 @@
 import * as z from "zod";
 import { freezeTaskValue, taskContentHash } from "./canonical.js";
 import { taskFailure, type TaskParseResult } from "./parse.js";
-import { taskConfigurationSchema, taskEffectiveConfigurationSchema } from "./evidence-schema.js";
+import {
+  taskConfigurationSchema,
+  taskEffectiveConfigurationSchema,
+  taskErrorCodeSchema,
+  taskUsageSchema,
+} from "./evidence-schema.js";
+import { taskProviderReservationSchema } from "./provider.js";
 import { taskCounterSchema, taskHashSchema, taskIdSchema } from "./primitives.js";
 import {
   TASK_BENCHMARK_FIXTURE_IDS,
@@ -15,30 +21,98 @@ const measured = z.discriminatedUnion("provenance", [
   z.strictObject({ provenance: z.literal("unknown") }),
   z.strictObject({ provenance: z.literal("reported"), value: taskCounterSchema }),
 ]);
-const requestSchema = z.strictObject({
-  requestHash: taskHashSchema,
-  purpose: z.enum(["compile", "context", "implementation", "repair"]),
-  requested: taskConfigurationSchema,
-  effective: taskEffectiveConfigurationSchema,
-  outcome: z.enum(["completed", "failed", "refused", "cancelled", "incomplete", "invalid"]),
-  durationMs: taskCounterSchema,
-  priceRevision: taskHashSchema,
-  contextBytes: taskCounterSchema,
-  estimatedInputTokens: taskCounterSchema.nullable(),
-  inputTokens: measured,
-  outputTokens: measured,
-  cachedInputTokens: measured,
-  reasoningTokens: measured,
-  calculatedCostMicrousd: taskCounterSchema.nullable(),
-  chargedCostMicrousd: measured,
-});
+export const taskBenchmarkRequestSchema = z
+  .strictObject({
+    requestHash: taskHashSchema,
+    purpose: z.enum(["compile", "context", "implementation", "repair", "unknown"]),
+    requested: taskConfigurationSchema,
+    effective: taskEffectiveConfigurationSchema,
+    outcome: z.enum([
+      "completed",
+      "failed",
+      "refused",
+      "cancelled",
+      "incomplete",
+      "invalid",
+      "pending",
+      "needs_review",
+    ]),
+    durationMs: taskCounterSchema.nullable(),
+    priceRevision: taskHashSchema.nullable(),
+    contextBytes: taskCounterSchema.nullable(),
+    estimatedInputTokens: taskCounterSchema.nullable(),
+    inputTokens: measured,
+    outputTokens: measured,
+    cachedInputTokens: measured,
+    reasoningTokens: measured,
+    calculatedCostMicrousd: taskCounterSchema.nullable(),
+    chargedCostMicrousd: measured,
+    /** Optional actual ledger facts; reservations are not measured tokens or paid cost. */
+    reservation: taskProviderReservationSchema.optional(),
+    ledgerUsage: taskUsageSchema.nullable().optional(),
+    sourceCheckpointHash: taskHashSchema.optional(),
+  })
+  .superRefine((r, ctx) => {
+    const fail = () =>
+      ctx.addIssue({ code: "custom", message: "Request accounting facts disagree." });
+    if (
+      r.outcome === "pending" &&
+      (r.durationMs !== null ||
+        r.calculatedCostMicrousd !== null ||
+        [
+          r.inputTokens,
+          r.outputTokens,
+          r.cachedInputTokens,
+          r.reasoningTokens,
+          r.chargedCostMicrousd,
+        ].some((v) => v.provenance !== "unknown"))
+    )
+      fail();
+    if (r.ledgerUsage === undefined) return; // Existing report artifacts stay compatible.
+    const usage = r.ledgerUsage;
+    if (
+      (r.outcome === "pending") !== (usage === null) ||
+      r.durationMs !== (usage?.durationMs ?? null)
+    )
+      fail();
+    for (const key of [
+      "inputTokens",
+      "outputTokens",
+      "cachedInputTokens",
+      "reasoningTokens",
+    ] as const) {
+      const value = usage?.[key],
+        measurement = r[key];
+      if (
+        value?.provenance === "reported"
+          ? measurement.provenance !== "reported" || measurement.value !== value.value
+          : measurement.provenance !== "unknown"
+      )
+        fail();
+    }
+    const cost = usage?.costMicrousd;
+    if (
+      cost?.provenance === "reported"
+        ? r.chargedCostMicrousd.provenance !== "reported" ||
+          r.chargedCostMicrousd.value !== cost.value
+        : r.chargedCostMicrousd.provenance !== "unknown"
+    )
+      fail();
+    if (
+      r.calculatedCostMicrousd !== (cost?.provenance === "estimated" ? cost.value : null) ||
+      (usage?.priceCatalogRevision !== null &&
+        usage?.priceCatalogRevision !== undefined &&
+        r.priceRevision !== usage.priceCatalogRevision)
+    )
+      fail();
+  });
 export const taskBenchmarkCompilationSchema = z.strictObject({
   compilationId: taskHashSchema,
   outcome: z.enum(["completed", "failed"]),
   planId: taskHashSchema.nullable(),
   taskCount: taskCounterSchema.max(6),
   elapsedMs: taskCounterSchema,
-  requests: z.array(requestSchema).min(1).max(24),
+  requests: z.array(taskBenchmarkRequestSchema).max(24),
 });
 export const taskBenchmarkTrialSchema = z.strictObject({
   fixtureId: z.enum(TASK_BENCHMARK_FIXTURE_IDS),
@@ -51,10 +125,10 @@ export const taskBenchmarkTrialSchema = z.strictObject({
   setupMs: taskCounterSchema,
   executionMs: taskCounterSchema,
   compilation: taskBenchmarkCompilationSchema.nullable(),
-  requests: z.array(requestSchema).max(24),
+  requests: z.array(taskBenchmarkRequestSchema).max(24),
   attemptEvidenceHashes: z.array(taskHashSchema).max(18),
   outcome: z.enum(["accepted", "failed", "blocked", "cancelled"]),
-  failureCode: taskIdSchema.nullable(),
+  failureCode: z.union([taskIdSchema, taskErrorCodeSchema]).nullable(),
   failureStage: z.enum(["setup", "compile", "execution"]).nullable(),
   finalEvidenceHash: taskHashSchema.nullable(),
   protectedInputsUnchanged: z.boolean(),
@@ -103,7 +177,7 @@ export const taskBenchmarkCampaignSchema = z.strictObject({
   trials: z.array(taskBenchmarkTrialSchema).max(75),
 });
 export type TaskBenchmarkCampaign = z.infer<typeof taskBenchmarkCampaignSchema>;
-export type TaskBenchmarkRequest = z.infer<typeof requestSchema>;
+export type TaskBenchmarkRequest = z.infer<typeof taskBenchmarkRequestSchema>;
 export type TaskBenchmarkCompilation = z.infer<typeof taskBenchmarkCompilationSchema>;
 export type TaskBenchmarkTrial = z.infer<typeof taskBenchmarkTrialSchema>;
 export const TASK_BENCHMARK_PROTOCOL_REVISION = taskContentHash({
@@ -238,13 +312,14 @@ export function validateTaskBenchmarkCampaign(
       const comp = t.compilation,
         sharedKey = `${t.fixtureId}/${t.block}`;
       if (
+        (comp.outcome === "completed" && comp.requests.length === 0) ||
         t.treatment === "whole" ||
         comp.requests.some(
           (r) =>
             r.purpose !== "compile" ||
             taskContentHash(r.requested) !== taskContentHash(c.strongConfiguration),
         ) ||
-        comp.elapsedMs < comp.requests.reduce((n, r) => n + r.durationMs, 0)
+        comp.elapsedMs < comp.requests.reduce((n, r) => n + (r.durationMs ?? 0), 0)
       )
         return invalid();
       if (
@@ -285,7 +360,7 @@ export function validateTaskBenchmarkCampaign(
     if (
       all.some(
         (r) =>
-          r.priceRevision !== c.pricingRevision ||
+          (r.priceRevision !== null && r.priceRevision !== c.pricingRevision) ||
           (r.inputTokens.provenance === "reported" &&
             r.cachedInputTokens.provenance === "reported" &&
             r.cachedInputTokens.value > r.inputTokens.value) ||
@@ -293,7 +368,8 @@ export function validateTaskBenchmarkCampaign(
             r.reasoningTokens.provenance === "reported" &&
             r.reasoningTokens.value > r.outputTokens.value),
       ) ||
-      t.executionMs < t.requests.reduce((n, r) => n + r.durationMs, 0)
+      t.executionMs < t.requests.reduce((n, r) => n + (r.durationMs ?? 0), 0) ||
+      (t.outcome === "accepted" && all.some((r) => r.outcome === "pending"))
     )
       return invalid();
     // A run exceeding a ceiling is retained as a failure, never retrospectively accepted.
@@ -344,12 +420,24 @@ function calculatedTotal(requests: readonly TaskBenchmarkRequest[]): number | nu
   return total;
 }
 export function summarizeTaskBenchmarkRequests(requests: readonly TaskBenchmarkRequest[]) {
+  const sum = (field: "contextBytes" | "estimatedInputTokens" | "durationMs") => {
+    let total = 0;
+    for (const r of requests) {
+      if (r[field] === null) return null;
+      total += r[field];
+      if (!Number.isSafeInteger(total)) return null;
+    }
+    return total;
+  };
+  const pending = requests.filter((r) => r.outcome === "pending").length;
   return {
-    providerCalls: requests.length,
-    contextBytes: requests.reduce((n, r) => n + r.contextBytes, 0),
-    estimatedInputTokens: requests.some((r) => r.estimatedInputTokens === null)
-      ? null
-      : requests.reduce((n, r) => n + r.estimatedInputTokens!, 0),
+    providerCalls: pending ? null : requests.length,
+    retainedRequestIntents: requests.length,
+    settledRequestIntents: requests.length - pending,
+    uncertainProviderCalls: pending,
+    contextBytes: sum("contextBytes"),
+    requestDurationMs: sum("durationMs"),
+    estimatedInputTokens: sum("estimatedInputTokens"),
     inputTokens: knownTotal(requests, "inputTokens"),
     outputTokens: knownTotal(requests, "outputTokens"),
     reasoningTokens: knownTotal(requests, "reasoningTokens"),
@@ -401,6 +489,14 @@ export function summarizeTaskBenchmark(value: unknown) {
         accepted === 25 &&
         trials.every((t) => t.forbiddenEffects === 0),
       attributionComplete: requests.every((r) => r.effective.provenance !== "unknown"),
+      requestMetadataComplete: requests.every(
+        (r) =>
+          r.outcome !== "pending" &&
+          r.durationMs !== null &&
+          r.contextBytes !== null &&
+          r.priceRevision !== null &&
+          r.purpose !== "unknown",
+      ),
       forbiddenEffects: trials.reduce((n, t) => n + t.forbiddenEffects, 0),
       attempts: trials.reduce((n, t) => n + t.attemptEvidenceHashes.length, 0),
       perFixture: TASK_BENCHMARK_FIXTURE_IDS.map((fixtureId) => ({
@@ -443,6 +539,7 @@ export function summarizeTaskBenchmark(value: unknown) {
       (t) =>
         t.qualified &&
         t.attributionComplete &&
+        t.requestMetadataComplete &&
         t.resources.inputTokens !== null &&
         t.resources.outputTokens !== null &&
         t.resources.calculatedCostMicrousd !== null,

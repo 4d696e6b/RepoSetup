@@ -2,6 +2,7 @@ import * as z from "zod";
 import { freezeTaskValue, taskContentHash } from "./canonical.js";
 import { taskFailure } from "./parse.js";
 import { taskCounterSchema, taskHashSchema, taskIdSchema } from "./primitives.js";
+import { taskErrorCodeSchema } from "./evidence-schema.js";
 import { TASK_BENCHMARK_FIXTURE_IDS } from "./benchmark-fixture.js";
 import {
   benchmarkTreatmentOrder,
@@ -21,7 +22,7 @@ export const taskBenchmarkSetupSchema = z.strictObject({
     fixed: taskCounterSchema,
     routed: taskCounterSchema,
   }),
-  failureCode: taskIdSchema.nullable(),
+  failureCode: z.union([taskIdSchema, taskErrorCodeSchema]).nullable(),
 });
 const identity = {
   fixtureId: z.enum(TASK_BENCHMARK_FIXTURE_IDS),
@@ -233,7 +234,8 @@ export function summarizeTaskBenchmarkJournal(
       dispatchAccountingComplete:
         journal.data.pending === null &&
         journal.data.unassignedCompilations.length === 0 &&
-        terminal.data.complete,
+        terminal.data.complete &&
+        terminal.data.cashLedger.uncertainProviderCalls === 0,
       qualification: false as const,
     }),
   };

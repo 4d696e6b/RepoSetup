@@ -187,6 +187,7 @@ describe("durable managed SDK dispatch", () => {
       const c = await f.requireRun(request(runId), { provider: p.adapter });
       expect(c.run.attempts).toHaveLength(1);
       expect(c.providerCalls).toHaveLength(2);
+      expect(c.providerCalls!.map((call) => call.purpose)).toEqual(["context", "implementation"]);
       expect(c.providerCalls![0]!.inputRevision).not.toBe(c.providerCalls![1]!.inputRevision);
       expect(c.run.attempts[0]!.inputRevision).toBe(c.providerCalls![1]!.inputRevision);
       expect(c.run.attempts[0]!.usage.totalTokens).toMatchObject({ value: 60 });

@@ -1545,3 +1545,54 @@ and unchanged lockfile hash
 `sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4`.
 This uses preinstalled dependency hydration, no installation, and remains explicitly
 offline/non-qualifying evidence. Its separately owned temporary files were cleaned.
+
+## Milestone I — actual ledger projection and uncertain campaign accounting (2026-10-09)
+
+Added pure core projection from original compilation checkpoints and diagnostic private
+run evidence into campaign request rows. Every coding intent is retained, including
+pending/null usage and invalid/refused/cancelled/failed observations. Raw reservations,
+usage and checkpoint identity stay available; host/estimated tokens do not become
+provider-reported measurements, allowance ceilings do not become token estimates and
+estimated versus reported charged cost remain separate. Original source compilation
+projects once for cash accounting; valid analytical replay checkpoints are rejected
+as additional compilation calls. Integrity/privacy checks grant no imported acceptance.
+
+Extended the pre-release version 1 diagnostic contracts compatibly: missing duration,
+document bytes/pricing and legacy purpose can remain unknown, pending intents are
+explicit and actual task error codes coexist with older lowercase failure labels.
+Observed compilation preflight failures can retain zero intents; successful compilation
+still requires a source request. New coding intents persist implementation/repair purpose
+before dispatch; validated context replies classify the current durable call before
+expansion. The context classification adds one acknowledged private save, with no new
+dispatch. Existing optional checkpoint fields and old report inputs remain compatible.
+
+Reports distinguish retained/settled intents from uncertain dispatch accounting. Aggregate
+provider-call count stays null while any intent is pending; settled accounting does not
+prove an HTTP response or billed usage. Unknown metadata prevents quantitative comparison,
+pending requests prevent acceptance and a fully terminal 75-slot journal cannot close
+dispatch accounting with a pending private request. Fixture/protocol freezes, treatment
+order, limits, legacy CLI/config/selection inputs and package versions are unchanged.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: all **583 core tests across 63 files**
+pass (7.46 seconds), including 18 projection cases and pending/preflight/journal cases.
+All **76 targeted CLI tests across five files** pass (7.90 seconds), including actual
+private-filesystem projection of invalid/uncertain calls, valid replay rejection,
+legacy unknown metadata and context/repair purpose retention. Workspace build,
+workspace/task-test typechecks, lint and Git whitespace checks pass. The ordinary
+offline task suite passes **42 tests across six files** (116.82 seconds), including
+fixture/oracle discrimination, candidate/dependency tests, private journal/reporting
+and five packed Node/native POSIX alias/dry-run checks. That packed artifact came from
+a dirty `ed02e41` tree and is diagnostic, not clean-source/platform qualification.
+
+Initial new tests exposed rejection of actual uppercase executor error codes and a
+stale object reference after checkpoint resealing; both were corrected. One test run
+used stale generated exports after a reporting field rename; rebuilding and the final
+targeted run passed. No final check is failing. The expensive qualified E reference
+suite was not rerun: its tool/profile/recipe inputs are unchanged. No API keys, live or
+paid calls, installation, website source edits, version bump, merge or publication occurred.
+
+Milestone I remains **in progress**. Next work joins actual frozen fixture trial execution,
+G/H, retained ledgers and terminal independent evaluation to the campaign/store. General
+candidate review/isolation, 75 actual comparative trials, Linux/platform qualification,
+dated production model/effort evidence and separately authorized live smoke remain open.
+J is the next milestone only after I's acceptance gates and remains unstarted.

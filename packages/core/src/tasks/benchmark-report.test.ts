@@ -114,6 +114,69 @@ function report(c: TaskBenchmarkCampaign) {
   return result.data;
 }
 describe("inclusive benchmark accounting", () => {
+  it("retains uncertain terminal trials with null request measurements and unknown dispatch count", () => {
+    const c = campaign(),
+      t = c.trials[0]!;
+    t.outcome = "failed";
+    t.failureCode = "TASK_PROVIDER_FAILED";
+    t.failureStage = "execution";
+    const r = t.requests[0]!;
+    Object.assign(r, {
+      outcome: "pending",
+      durationMs: null,
+      priceRevision: null,
+      contextBytes: null,
+      purpose: "unknown",
+      ledgerUsage: null,
+      calculatedCostMicrousd: null,
+      inputTokens: { provenance: "unknown" },
+      outputTokens: { provenance: "unknown" },
+      cachedInputTokens: { provenance: "unknown" },
+      reasoningTokens: { provenance: "unknown" },
+      chargedCostMicrousd: { provenance: "unknown" },
+    });
+    const result = report(c);
+    expect(result.complete).toBe(true);
+    expect(result.cashLedger).toMatchObject({
+      providerCalls: null,
+      retainedRequestIntents: 100,
+      settledRequestIntents: 99,
+      uncertainProviderCalls: 1,
+      contextBytes: null,
+      requestDurationMs: null,
+      inputTokens: null,
+      calculatedCostMicrousd: null,
+    });
+    expect(result.treatments[0]!.requestMetadataComplete).toBe(false);
+    expect(result.comparisonQualified).toBe(false);
+    t.outcome = "accepted";
+    t.failureCode = null;
+    t.failureStage = null;
+    expect(validateTaskBenchmarkCampaign(c).success).toBe(false);
+  });
+  it("retains an observed compilation preflight failure with zero intents, without inventing a source call", () => {
+    const c = campaign();
+    for (const t of c.trials.filter(
+      (t) => t.fixtureId === c.fixtures[0]!.fixtureId && t.block === 0 && t.treatment !== "whole",
+    )) {
+      Object.assign(t.compilation!, {
+        outcome: "failed",
+        taskCount: 0,
+        planId: null,
+        requests: [],
+      });
+      Object.assign(t, {
+        outcome: "failed",
+        failureCode: "TASK_PREREQUISITE_MISSING",
+        failureStage: "compile",
+        requests: [],
+        attemptEvidenceHashes: [],
+      });
+    }
+    expect(report(c).cashLedger.retainedRequestIntents).toBe(97);
+    c.trials[1]!.compilation!.outcome = "completed";
+    expect(validateTaskBenchmarkCampaign(c).success).toBe(false);
+  });
   it("rotates 75 trials and charges shared compilation twice analytically, once in cash", () => {
     const r = report(campaign());
     expect(r.complete).toBe(true);
