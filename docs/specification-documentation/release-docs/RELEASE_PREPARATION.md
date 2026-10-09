@@ -14,6 +14,11 @@ qualified by this preparation work.
   Both release branches receive that tooling. Existing implementation checkouts
   remain available for continued work.
 
+Ordinary CI and platform push checks cover both canonical release branches, in
+addition to existing PR paths. Future feature branches still need explicit
+integration into these branches. A push check is distinct from the manual
+exact-source release qualification and does not approve publication.
+
 The release branches reconcile the published 0.2.1–0.2.3 installer fixes with
 ongoing features. The 0.4.0 branch also inherits the reconciled 0.3.0 baseline.
 Continue to merge new implementation commits into the matching release branch;

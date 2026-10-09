@@ -6,6 +6,15 @@ import { describe, expect, it } from "vitest";
 import { repoRoot } from "./harness.js";
 
 describe("release publishing workflow", () => {
+  it("runs ordinary CI and platform checks on both canonical release branches", async () => {
+    for (const file of ["ci.yml", "platform.yml"]) {
+      const workflow = await readFile(path.join(repoRoot, ".github", "workflows", file), "utf8");
+      const push = workflow.split("  push:\n")[1]?.split("  pull_request:")[0];
+      expect(push).toContain("codex/release-0.3.0");
+      expect(push).toContain("codex/release-0.4.0");
+    }
+  });
+
   it("requires exact-source platform, recipe, and packed-artifact gates before publication", async () => {
     const workflow = await readFile(
       path.join(repoRoot, ".github", "workflows", "publish-npm.yml"),
