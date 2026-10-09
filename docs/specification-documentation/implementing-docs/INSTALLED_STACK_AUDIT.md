@@ -226,7 +226,8 @@ dependencies). No database query or migration was performed by this reproduction
 
 The initial separate attempt hit `ENOSPC`; only about 98 MiB remained afterward.
 Removing disposable dependencies/caches from this agent's temporary tests allowed
-the fresh retry to pass. Original failure logs, source and successful check logs
+the fresh retry to pass. Reported terminal output, the initial reproduction
+failure log, read-only cache permission evidence, source and successful check logs
 are retained in the `reposetup-prisma-cache-20261009-jho2q7dx` temporary evidence
 folder with `verified-results.json`. Disposable test dependencies/cache were
 removed after validation to recover space. No global cache ownership or npm
