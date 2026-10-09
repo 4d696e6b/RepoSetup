@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { browserCsp } from "./src/security.js";
 export default defineConfig({
   base: "./",
   plugins: [
@@ -14,7 +15,7 @@ export default defineConfig({
         if (!context.bundle) return html;
         return html.replace(
           "<head>",
-          `<head><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">`,
+          `<head><meta http-equiv="Content-Security-Policy" content="${browserCsp}">`,
         );
       },
     },

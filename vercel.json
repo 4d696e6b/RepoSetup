@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "public": false,
+  "installCommand": "npx --yes pnpm@12.5.1 install --frozen-lockfile --prod=false",
+  "buildCommand": "node -e \"if (process.env.VERCEL_GIT_COMMIT_REF !== 'codex/0.2.3-website') throw new Error('Refusing website build from an unapproved branch')\" && (git cat-file -e a213a6a1edf63771aba8d5b91bfdcf44d665de22^{commit} || git fetch --depth=1 origin a213a6a1edf63771aba8d5b91bfdcf44d665de22) && npx --yes pnpm@12.5.1 --filter @reposetup/website... --recursive --if-present build && npx --yes pnpm@12.5.1 --filter @reposetup/website vercel:prepare",
+  "outputDirectory": ".vercel/output/static",
+  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"codex/0.2.3-website\" ]; then exit 1; else exit 0; fi",
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "codex/0.2.3-website": true
+    }
+  }
+}

@@ -445,6 +445,25 @@ export const authoredPages: DocPage[] = [
         ],
       },
       {
+        id: "website-privacy",
+        title: "Website privacy",
+        paragraphs: [
+          "Search, project names, recipe choices, and downloaded configuration stay in your browser. The website does not upload projects, collect secrets, or execute installation commands.",
+          "On the public website, Vercel Web Analytics counts visits to known documentation and catalog pages, and Speed Insights measures page performance. Builder visits use a generic /builder label. URL queries, raw fragments, project names, configuration, and search text are excluded from the events this app sends. Local development and preview hosts do not initialize these SDKs.",
+          "Vercel processes these requests and reports aggregate traffic, device, referral, and performance information. See its documentation for the provider's collection and retention details.",
+        ],
+        links: [
+          {
+            label: "Vercel Web Analytics privacy",
+            href: "https://vercel.com/docs/analytics/privacy-policy",
+          },
+          {
+            label: "Vercel Speed Insights privacy",
+            href: "https://vercel.com/docs/speed-insights/privacy-policy",
+          },
+        ],
+      },
+      {
         id: "maturity",
         title: "Read the label for each integration",
         paragraphs: [

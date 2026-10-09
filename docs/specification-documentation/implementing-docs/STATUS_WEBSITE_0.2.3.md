@@ -51,7 +51,20 @@ generated from the pinned source. The build refuses drift from those definitions
    prompts stay local. The new `reposetup` project is linked in `mink2551s-projects`.
    Automatic Git deployment is disabled to protect the website's 0.2.3 scope.
 
-All six implementation/publication milestones are finished. Public HTTP and
+7. **Custom domain and production checklist — in progress.** The owner added
+   `reposetupcli.com` and requested all Vercel checklist items. Apex and `www`
+   are attached to the project; `www` redirects to the apex with HTTP 308.
+   Hostinger DNS still points at its parking service, awaiting browser sign-in.
+   Web Analytics is enabled in the project. App-only SDKs count canonical public
+   pages and performance, excluding project/config/search data; local and unknown
+   preview hosts do not initialize them. Git build configuration and the
+   project-level ignored-build gate reject all branches except
+   `codex/0.2.3-website`. Git connection, preview publication and production
+   verification are the next actions. Dashboard access is needed to select the
+   production branch. Standard Speed Insights is free; Plus requires Pro and
+   a separately approved subscription. No paid upgrade has been performed.
+
+The original six implementation/publication milestones are finished. Public HTTP and
 browser smoke checks verify the deployed site. Compatible WebKit/Safari and manual
 assistive-technology review remain open qualification work. The website uses
 published 0.2.3 and does not wait for another CLI release.
@@ -141,8 +154,8 @@ Worktree:
 - Review the finished appearance and run the full compatible WebKit/Safari
   check. Automated accessibility checks supplement manual assistive-technology
   review; they do not establish complete accessibility conformance.
-- No deployment action remains for this publication. Future updates require
-  explicit deployment of a freshly validated artifact. No user project upload,
+- The added production-checklist milestone is still in progress, including DNS,
+  production branch selection and review of the paid Plus upgrade. No user project upload,
   installer execution, or secret request occurred.
 - The site intentionally has a preset-only download builder. Arbitrary optional
   library selection uses the shipped CLI's interactive flow or reviewed config;
@@ -153,3 +166,19 @@ Worktree:
 - Hash routes need JavaScript; a version-pinned GitHub user guide is available
   when JavaScript is disabled. No server search, accounts, or browser installer
   is needed.
+
+## Production checklist follow-up checks
+
+- Website tests: **36 passed**, including exact branch gates, shallow-history
+  baseline recovery, bounded analytics routes, URL redaction, suppressed custom
+  events and local/preview host exclusion.
+- Local browser matrix: **48 passed** after the analytics/privacy changes;
+  desktop Chrome, mobile Chrome and Firefox retain working docs and builder.
+- Workspace typecheck, lint, build and the exact declared Vercel build command
+  passed. An empty manifest and truncated executable in the local npx pnpm cache
+  initially prevented that command; the cache was repaired using the existing
+  working pinned pnpm executable. Generated handoff sandboxes were cleared to
+  recover disk space, preserving the verification report.
+- Public live analytics collection and custom-domain HTTPS will be verified
+  after the follow-up deployment and Hostinger DNS change. Earlier production
+  checks above describe the original deployment, not this pending update.

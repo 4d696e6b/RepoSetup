@@ -93,8 +93,13 @@ download the version-pinned CLI. See
 
 The browser does not install packages, execute commands, upload projects, request
 secrets, or provision database services. Search and configuration creation are
-local. The production content security policy prevents network connections from
-the app; outgoing documentation links navigate to the selected site.
+local. The public site uses Vercel Web Analytics for known public page views and
+standard Speed Insights for performance. Builder routes collapse to `/builder`;
+queries, raw fragments, project names, config contents and search text are not
+included in app events. Custom events are disabled. Localhost, development and
+unknown preview hosts do not initialize the SDKs. The CSP permits collection only
+at the production domains' Vercel observability paths. The footer links to the
+website privacy explanation and Vercel's collection documentation.
 
 ## Checks
 
@@ -159,14 +164,18 @@ pnpm --filter @reposetup/website test:handoff
 pnpm --filter @reposetup/website vercel:prepare
 vercel login
 vercel link --yes --project reposetup
-vercel git disconnect --yes
 vercel deploy --prebuilt --prod
 pnpm --filter @reposetup/website test:production
 ```
 
 Run Vercel commands from the repository root, in the intended account/team.
-Linking may connect the Git remote automatically; disconnect it before deploying
-so pushes to CLI or candidate branches cannot replace this release-specific site.
+The checked-in `vercel.json` declares the frozen pnpm install, dependency build,
+release baseline check, and artifact preparation. It rejects every Git branch
+except `codex/0.2.3-website`. Before connecting Git, configure the project's
+production branch as `codex/0.2.3-website` in Environments → Production → Branch
+Tracking. Also set the project-level Ignored Build Step to the same exact branch
+gate shown in `vercel.json`; candidate branches do not contain this config, so
+the project setting protects them too. Repository root and Node 24 are required.
 The
 preparation script writes `.vercel/output/config.json` and `.vercel/output/static`
 using the official [Build Output API](https://vercel.com/docs/build-output-api/configuration).
@@ -181,8 +190,17 @@ links use the same base page. No catch-all rewrite conceals missing assets.
 After [deploying the prebuilt artifact](https://vercel.com/docs/cli/deploy), check
 the public URL without account authentication, direct docs/builder links, image
 decoding, search, downloads, and response headers. Record the production URL and
-commit in the implementation status. Later updates require another explicit
-deployment; this task does not connect automatic deployment of other branches.
+commit in the implementation status. Git deployments are restricted to the
+website branch; changes to the CLI or candidate branches must not replace the
+published 0.2.3 site. Keep preview deployment authentication enabled.
+
+Web Analytics must be enabled in the Vercel project before redeployment. Standard
+Speed Insights is free and starts collecting through the SDK after deployment;
+the Plus upgrade is separate and requires Pro/Enterprise. No paid upgrade is
+part of the build configuration. These APIs and prices were verified against
+[Web Analytics setup](https://vercel.com/docs/analytics/quickstart),
+[Speed Insights setup](https://vercel.com/docs/speed-insights/quickstart), and
+[Speed Insights pricing](https://vercel.com/docs/speed-insights/limits-and-pricing).
 
 The production smoke suite uses the public URL without authentication, checks
 deep docs links and keyboard search, and verifies downloaded JSON against all

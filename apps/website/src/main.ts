@@ -7,8 +7,10 @@ import { integrations, integrationDetail, presets } from "./catalog.js";
 import { builder } from "./builder.js";
 import { docs, searchResults } from "./docs/render.js";
 import { INSTALL, REPOSITORY, RELEASE_URL } from "./release.js";
+import { initializeObservability } from "./observability.js";
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
+const recordPublicPage = initializeObservability();
 let searchDialog: HTMLDialogElement;
 function showSearch() {
   searchDialog.showModal();
@@ -133,6 +135,7 @@ function footer() {
   links.append(
     link("Documentation", "#/docs"),
     link("Integrations", "#/integrations"),
+    link("Website privacy", "#/docs/safety#website-privacy"),
     link("npm package ↗", "https://www.npmjs.com/package/rsetup/v/0.2.3"),
     link("Report an issue ↗", `${REPOSITORY}/issues`),
   );
@@ -191,6 +194,7 @@ function render(focus = false) {
     });
   }
   mountMotion(main, page, Boolean(anchor));
+  recordPublicPage();
 }
 document.querySelector<HTMLAnchorElement>(".skip-link")!.addEventListener("click", (event) => {
   event.preventDefault();

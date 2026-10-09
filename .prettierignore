@@ -1,6 +1,7 @@
 pnpm-lock.yaml
 **/dist
 **/node_modules
+**/.vercel
 coverage
 /docs
 examples

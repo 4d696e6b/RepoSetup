@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { BUNDLED_PRESETS } from "../../../../packages/cli/src/presets.js";
+import { productionOrigins } from "../../src/security.js";
 
 test("public home, direct documentation entry, and keyboard search work without a motion toggle", async ({
   page,
@@ -36,6 +37,66 @@ test("public home, direct documentation entry, and keyboard search work without 
   await expect(dialog).not.toBeVisible();
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   expect(errors).toEqual([]);
+});
+
+test("public analytics scripts load and page views contain only bounded public routes", async ({
+  page,
+  baseURL,
+}) => {
+  test.skip(
+    !productionOrigins.includes(new URL(baseURL!).origin),
+    "Preview hosts keep analytics disabled.",
+  );
+  const pageViews: string[] = [];
+  const failures: string[] = [];
+  page.on("request", (request) => {
+    if (request.method() === "POST" && request.url().includes("/_vercel/insights/view"))
+      pageViews.push(request.postData() ?? "");
+  });
+  page.on("console", (message) => {
+    if (/Content Security Policy|Failed to load script/.test(message.text()))
+      failures.push(message.text());
+  });
+  const analyticsScript = page.waitForResponse((response) =>
+    response.url().endsWith("/_vercel/insights/script.js"),
+  );
+  const speedScript = page.waitForResponse((response) =>
+    response.url().endsWith("/_vercel/speed-insights/script.js"),
+  );
+  const pageView = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" && response.url().includes("/_vercel/insights/view"),
+  );
+  await page.goto("/?private-canary=do-not-collect#/docs/create#confirmation");
+  expect((await analyticsScript).ok()).toBe(true);
+  expect((await speedScript).ok()).toBe(true);
+  expect((await pageView).ok()).toBe(true);
+  await expect(page.locator('script[src="/_vercel/insights/script.js"]')).toHaveAttribute(
+    "data-disable-auto-track",
+    "1",
+  );
+  await expect.poll(() => pageViews.length).toBe(1);
+  expect(pageViews[0]).toContain("/docs/create");
+  expect(pageViews[0]).not.toMatch(/private-canary|do-not-collect|confirmation|#/);
+
+  const builderView = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" && response.url().includes("/_vercel/insights/view"),
+  );
+  await page.getByRole("link", { name: "Presets", exact: true }).first().click();
+  expect((await builderView).ok()).toBe(true);
+  await page.goto("/#/builder/react-vite");
+  await expect
+    .poll(() =>
+      pageViews.some((payload) => payload.includes('"/builder"') || payload.includes('/builder"')),
+    )
+    .toBe(true);
+  await page.getByLabel("Project name", { exact: true }).fill("private-project-canary");
+  await page.keyboard.press("Control+k");
+  await page.getByRole("searchbox").fill("private-search-canary");
+  for (const payload of pageViews)
+    expect(payload).not.toMatch(/private-project-canary|private-search-canary|react-vite/);
+  expect(failures).toEqual([]);
 });
 
 test("public builder downloads all five exact released recipes and retains preview and confirmation", async ({

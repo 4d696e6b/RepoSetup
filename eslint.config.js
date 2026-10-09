@@ -8,6 +8,7 @@ export default defineConfig(
     ignores: [
       "**/dist/**",
       "**/node_modules/**",
+      "**/.vercel/**",
       "coverage/**",
       "apps/website/.published-cli/**",
       "apps/website/test-results/**",
