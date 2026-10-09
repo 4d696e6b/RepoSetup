@@ -1,9 +1,9 @@
 # npm trusted publishing setup
 
-Status — 2026-10-08: the owner configured and authorized the `rsetup` GitHub
+Status — 2026-10-09: the owner configured and authorized the `rsetup` GitHub
 trusted publisher, and the 0.2.0 publish validated it. See
 [stable qualification](./specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md).
-The 0.2.1 and 0.2.2 publishes also succeeded through that approved publisher. No bootstrap/login setup is outstanding for current delivery.
+The 0.2.1, 0.2.2 and 0.2.3 publishes also succeeded through that approved publisher. No bootstrap/login setup is outstanding for current delivery.
 
 Changing publisher settings is a **manual npmjs.com** step; it is not performed
 by editing the repository. The setup instructions below remain a reference.

@@ -1,6 +1,6 @@
 # Stable 0.2.2 release and delivery record
 
-Status — 2026-10-08: **published and delivery accepted**. npm `latest` identifies
+Historical status — 2026-10-08: **published and delivery accepted**. At that closeout, npm `latest` identified
 `rsetup@0.2.2`. [GitHub release](https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.2). The owner authorized
 publication and documentation updates; no additional calendar soak was required.
 Existing published versions and tags were preserved.
@@ -45,7 +45,7 @@ rsetup --version
 npx rsetup@0.2.2 create
 ```
 
-Verified npm latest is 0.2.2, so `npm install -g rsetup` and `npx rsetup` also
+At this historical checkpoint npm latest was 0.2.2, so `npm install -g rsetup` and `npx rsetup` also
 select it. Both `rsetup` and `reposetup` are installed command aliases; the npm
 package is `rsetup`. For uv FastAPI projects run `uv run fastapi dev` from the
 project directory. For pip projects activate their Python environment first.
@@ -61,6 +61,8 @@ live PostgreSQL/MongoDB/container connections, SQLAlchemy DBAPI connectivity and
 actual Playwright browser journeys remain unqualified. No integration is promoted
 to stable. The documented generated development-tool braces advisory remains;
 zero production workspace audit findings do not make every generated stack audit-clean.
+
+Current delivery: [0.2.3](./STABLE_RELEASE_0.2.3.md).
 
 Historical delivery records: [0.2.1](./STABLE_RELEASE_0.2.1.md) and
 [0.2.0](./STABLE_QUALIFICATION_0.2.0.md).

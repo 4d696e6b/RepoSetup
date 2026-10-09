@@ -1,6 +1,6 @@
 # RepoSetup Implementation Plan for Cursor
 
-This is the historical Phase 0–18 plan. Phases 19–28 and published 0.2.0 evidence are recorded in [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) and [implementation status](./IMPLEMENTATION_STATUS.md). Current work follows the [0.2.x stability plan](./STABILITY_0.2.x.md); its automated create-regression qualification is complete, with patch release and explicit manual/service gaps still open. Historical Phase 18 boxes retain their checkpoint results.
+This is the historical Phase 0–18 plan. Phases 19–28 and published 0.2.0 evidence are recorded in [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) and [implementation status](./IMPLEMENTATION_STATUS.md). The [0.2.x stability plan](./STABILITY_0.2.x.md) records the completed 0.2.3 repairs, qualification and patch delivery, together with explicit remaining manual and support gaps. Historical Phase 18 boxes retain their checkpoint results.
 
 Implement sequentially.
 

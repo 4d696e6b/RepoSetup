@@ -1,27 +1,27 @@
 # Release checklists
 
-## Current 0.2.3 patch — 2026-10-08
+## Current 0.2.3 patch — 2026-10-09
 
-The owner authorized publication after health checks. See [the release record](./STABLE_RELEASE_0.2.3.md).
+Published and delivery accepted; npm `latest` is 0.2.3.
+[Final source, attempts, artifact and signed delivery evidence](./STABLE_RELEASE_0.2.3.md).
 
-- [x] Merge installed-stack repair PR #17; its automated audit passes.
-- [x] Prepare 0.2.3 manifests, publication checks and current guides.
-- [x] Local version-bound tests, typecheck after build, lint, build and 37 registry definitions pass; 1,043 unit and 38 packed E2E tests pass.
-- [ ] Isolated live database and Linux Docker/Compose acceptance pass; record exact scope.
-- [ ] Three full first-attempt exact-source release runs pass all required jobs and steps.
-- [ ] Candidate full matrix, preset sessions and controlled benchmarks pass.
-- [ ] Record final immutable artifact, bytes, hash, source and license review.
-- [ ] New immutable v0.2.3 tag identifies the qualified source.
-- [ ] Tag-bound publication dry-run passes.
-- [ ] Publish the qualified artifact with OIDC; verify integrity and provenance.
-- [ ] Fresh registry acceptance passes on Linux/macOS/Windows.
-- [ ] Publish GitHub release and close current documentation/status.
+- [x] Merge repair/preparation PR #17/#18; all workspace versions and current guides target 0.2.3.
+- [x] Local 1,043 unit/38 packed E2E tests, build, typecheck, lint and 37 registry definitions pass; production audit has zero known vulnerabilities.
+- [x] Bounded live acceptance passes five retained-helper macOS cases and two fresh Linux service tests/seven checks with cleanup verified.
+- [x] Fifteen preset sessions/117 checks and 120 controlled benchmark trials pass.
+- [x] Three consecutive first-attempt release runs pass all sixteen required jobs and every required step on unchanged source.
+- [x] Full matrix passes all 480 cases with no skips after one Windows job retry; initial failures, cancellation and filtered diagnostic scope remain recorded.
+- [x] Retain exact artifact ID, byte count, hash, source and clean license review.
+- [x] New immutable v0.2.3 identifies the qualified source; tag-bound dry-run passes.
+- [x] Publish only retained bytes with approved OIDC; verify registry archive integrity and signed provenance.
+- [x] Fresh registry acceptance passes on Linux/macOS/Windows; unversioned npm install, both aliases and signature verification pass.
+- [x] GitHub release is public and current documentation/status records final delivery.
 
 ## Historical 0.2.2 patch — 2026-10-08
 
 See [the release record](./STABLE_RELEASE_0.2.2.md) for exact source, artifact,
 completed qualification, signed publication and three-platform delivery evidence.
-The owner authorized publication; npm latest and the GitHub release are 0.2.2.
+At its closeout, npm latest and the GitHub release were 0.2.2.
 
 - [x] Merge dependency-health repair PR #13; its 408-case matrix passes.
 - [x] Prepare 0.2.2 manifests, publication checks and current guides.
@@ -33,7 +33,6 @@ The owner authorized publication; npm latest and the GitHub release are 0.2.2.
 - [x] Publish the qualified artifact with OIDC; verify integrity and provenance.
 - [x] Fresh registry acceptance passes on Linux/macOS/Windows.
 - [x] Publish GitHub release and close current documentation/status.
-
 
 ## Historical 0.2.1 patch — 2026-10-08
 

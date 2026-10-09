@@ -3,8 +3,9 @@
 The owner authorized publication after health qualification. The pre-version
 [installed-stack audit](./INSTALLED_STACK_AUDIT.md) passes all 480 full-matrix cases
 after two same-source Windows/npm retries, 1,043 local unit tests and 38 packed E2E
-tests. New 0.2.3 exact-source release, live-service and registry-delivery checks
-remain pending in [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+tests. Final 0.2.3 passes three consecutive first-attempt release runs (16 required
+jobs each), the 480-case matrix after one documented Windows retry, two live
+service tests/seven checks, publication and three-platform registry delivery in [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
 
 ## Historical 0.2.2 dependency-health acceptance
 

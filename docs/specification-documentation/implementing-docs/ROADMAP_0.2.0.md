@@ -209,4 +209,4 @@ Plan in ten gated milestones, not a fixed release date. For one experienced main
 
 The critical path is 19 → 20 → 21 → 22 → 23 → 24 → 25 → 26 → 27 → 28. Research/docs can overlap, but implementation acceptance follows the gates. Cut stretch integrations before safety, platform evidence, real tests, or performance validation. Do not reduce qualification to meet a date.
 
-The original next-step instruction was Phase 20 after Phase 19. Phases 19–28 are now complete for the published 0.2.0 milestone. Current regression repair and outstanding patch release work follow [the 0.2.x stability plan](./STABILITY_0.2.x.md). This historical roadmap authorizes no new external publication, system installation, or runtime-support claim by itself.
+The original next-step instruction was Phase 20 after Phase 19. Phases 19–28 are now complete for the published 0.2.0 milestone. The completed 0.2.3 regression repairs and patch delivery, together with remaining support gaps, are recorded in [the 0.2.x stability plan](./STABILITY_0.2.x.md). This historical roadmap authorizes no new external publication, system installation, or runtime-support claim by itself.

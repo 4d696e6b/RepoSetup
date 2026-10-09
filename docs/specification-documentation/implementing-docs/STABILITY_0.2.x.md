@@ -9,14 +9,30 @@ regression coverage. No new integrations are needed to close these regressions.
 A passing plan is not evidence of a working generated application. Never claim
 all possible integration combinations or all operating systems were tested.
 
-## Current 0.2.3 preparation — 2026-10-08
+## Current 0.2.3 delivery — 2026-10-09
 
-Installed-stack repairs are merged through PR #17. The [automated audit](./INSTALLED_STACK_AUDIT.md)
-passes 480 full-matrix cases after two Windows/npm retries, 1,043 local unit tests,
-38 packed E2E tests and targeted recovery checks. Workspace versions and active
-publication gates now target 0.2.3. The owner authorized publication after health
-qualification; exact-source artifact, service, publication and registry-delivery
-checks are pending. See [the release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+**rsetup@0.2.3 is published; npm latest and three-platform delivery are verified.**
+Repairs/preparation merged through PR #17/#18. Exact tag/source `v0.2.3` /
+`a213a6a1edf63771aba8d5b91bfdcf44d665de22` passes three consecutive first-attempt
+release runs with every required job and step. The expanded matrix passes 480
+cases with no skips after retrying one Windows/npm job; its initial Next failure
+and 90-minute cancellation remain recorded. The focused Next diagnostic passes
+all twelve configurations with unrelated cases deliberately excluded.
+
+Two fresh Linux live tests/seven checks qualify representative PostgreSQL 18.6
+Prisma/Drizzle/SQLAlchemy CRUD and persistence, plus authenticated MongoDB 8.0.32
+Mongoose CRUD with cleanup verified. Five separate retained-helper macOS cases
+remain distinct. Fifteen usability sessions pass 117 checks with eight expected
+negative exits; all 120 controlled benchmark trials pass. These comparisons do
+not promise universal download speed or a patch-to-patch improvement.
+
+Initial release qualification failures (Windows Node shutdown assertion and
+macOS runner communication loss) are preserved. The final successful sequence,
+retained archive, clean license review, tag-bound dry-run, artifact-only OIDC
+publication, integrity, signed provenance, signatures and registry delivery are
+in [the completed release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+No seven-day wait or integration maturity promotion is introduced. Native and
+untested service/browser paths remain outside this bounded qualification.
 
 ## Historical 0.2.2 delivery — 2026-10-08
 
@@ -24,8 +40,8 @@ checks are pending. See [the release record](../release-docs/STABLE_RELEASE_0.2.
 Dependency-health repairs pass exact-source qualification, including 408 successful
 full-matrix executions after a documented Windows install-timeout retry. Signed
 provenance and registry bytes match the retained candidate. See the
-[0.2.2 release record](../release-docs/STABLE_RELEASE_0.2.2.md). Manual/service
-gaps remain open.
+[0.2.2 release record](../release-docs/STABLE_RELEASE_0.2.2.md). Its manual/service
+gaps describe that historical scope; current bounded live evidence is recorded above.
 
 ## Historical create-regression qualification — 2026-10-08
 
@@ -44,7 +60,8 @@ as the current gate result.
 The [machine-readable qualification record](../release-docs/qualification/0.2.x-create-stability.json)
 records source revisions, scopes, counts and exclusions. Native Windows 11,
 Linux arm64, live databases/containers, SQLAlchemy DBAPI connections and actual
-Playwright browser journeys are not qualified by this matrix. The documented
+Playwright browser journeys are not qualified by this historical matrix. The
+separate current live evidence does not expand that run's scope. The documented
 unpatched development-tool advisory is retained in the bounded release review;
 no upstream fix or audit-clean generated stack is claimed.
 
@@ -78,9 +95,9 @@ creation/recipe executions, with no skipped test cases, in
 [run 37743848281](https://github.com/4d696e6b/RepoSetup/actions/runs/37743848281).
 The repair is delivered in published 0.2.2; its new version/artifact qualification and registry delivery are complete in the release record.
 
-
-The automated matrix and preset sessions below are complete. Native platforms
-and live services remain open; this phase is not wholly complete.
+The automated matrix and preset sessions below are complete for historical 0.2.2.
+Native platforms and live services were outside that qualification; these
+historical checks do not include the separate bounded 0.2.3 acceptance above.
 
 - [x] Plan matrix: all six frameworks, npm/pnpm or uv/pip, current/named/nested directories, curated integrations with their required dependencies, JavaScript options, and incompatible runtime/manager rejection.
 - [x] Real execution: fourteen qualified recipes in named directories, generated tests/typechecks/builds/lints and stack/doctor checks; repeat JavaScript recipes with npm and pnpm.
@@ -88,7 +105,7 @@ and live services remain open; this phase is not wholly complete.
 - [x] Presets: packaged CLI preview, create, displayed run/build/test commands, add, doctor and export. Check all five presets; Docker checks require an existing Docker executable, not automatic installation.
 - [x] Failure coverage: invalid config/options, unsupported combinations, missing prerequisites, unwritable paths, symlink escape, existing-file protection, missing/conflicting lockfiles, interrupted/failed installs and safe add/remove repetition.
 - [x] CI: Ubuntu x64, macOS arm64, Windows Server x64, Node 24, Python 3.12/3.13 and both JavaScript managers.
-- [ ] Native Windows 11 and live PostgreSQL/MongoDB/container connections remain separate manual qualification. Configuration generation and compilation do not prove live services.
+- [ ] Historical 0.2.2 scope: native Windows 11 and live PostgreSQL/MongoDB/container connections were not qualified. Configuration generation and compilation do not prove live services; bounded 0.2.3 service checks are recorded separately above.
 
 ## 0.2.3 and subsequent patches — Sustain stability
 
@@ -97,7 +114,7 @@ and live services remain open; this phase is not wholly complete.
 - Capture actionable errors, remediation and reproducible reports; add a regression for every confirmed create failure.
 - Measure peak disk use of real generated stacks and improve prerequisite guidance. The existing 512 MiB preflight is a minimum guard, not a guarantee that a Next.js dependency install will fit.
 - Measure warm/cold installs after correctness gates. Do not trade isolation, integrity or reproducibility for speed.
-- Add automated live PostgreSQL/MongoDB and ORM connection checks against disposable services before promoting those integrations to stable; keep SQLAlchemy's separately required DBAPI explicit.
+- Expand the bounded automated live PostgreSQL/MongoDB and ORM connection checks against disposable services before promoting those integrations to stable; keep SQLAlchemy's separately required DBAPI explicit.
 - Extend qualification to native Windows 11 and Linux arm64 when those environments are available; do not infer these results from Windows Server or Linux x64.
 - Expand only combinations that pass real creation and execution; keep unsupported contexts explicit.
 
@@ -257,8 +274,9 @@ is explicitly labeled; it does not execute or qualify generated applications.
 ## Reproducing the stability checks
 
 Use Node 24, the workspace's pinned pnpm and an available Python/uv toolchain.
-These commands test the checkout. The 0.2.3 candidate is not yet published;
-see the release record for publication and registry acceptance.
+These commands test the checkout. Version 0.2.3 is published;
+see the [release record](../release-docs/STABLE_RELEASE_0.2.3.md) for qualification,
+publication and registry acceptance.
 
 ```sh
 pnpm install --frozen-lockfile

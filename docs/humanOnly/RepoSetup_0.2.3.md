@@ -4,13 +4,13 @@ RepoSetup composes and installs selected development stacks from the terminal.
 Version 0.2.3 repairs installation under production settings, PostgreSQL
 SQLAlchemy drivers, JavaScript Prisma imports, and Docker/Compose guidance.
 It retains the create-path and installed-dependency checks from 0.2.1/0.2.2.
-Publication and version-specific delivery are pending in the
+Publication and three-platform registry delivery pass; npm `latest` is 0.2.3. See the
 [release record](../specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md).
 
 ## Install
 
 Use Node.js 24 or later. Node 22.12 is unsupported. RepoSetup does not install
-system runtimes. These commands target 0.2.3 after publication:
+system runtimes. These commands install published 0.2.3:
 
 ```sh
 node --version
@@ -22,8 +22,7 @@ reposetup --version
 Both aliases should report 0.2.3. Without a global installation, use
 `npx rsetup@0.2.3 --help` or `npx rsetup@0.2.3 create`.
 The npm package is `rsetup`; `npx reposetup` invokes a different project.
-An unversioned install selects npm's current `latest` tag; the release record
-states when that tag and fresh registry delivery are verified. A local
+An unversioned install selects npm's verified `latest` tag, currently 0.2.3. A local
 `npm install rsetup` installs into the current project; use npx to launch it there.
 
 Upgrading the CLI does not rewrite or reinstall an existing generated project.
@@ -132,10 +131,27 @@ before application database operations can work.
 
 ## Support limits
 
+The frozen candidate `a213a6a1edf63771aba8d5b91bfdcf44d665de22` passed
+[two Linux live-service tests](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567)
+with no failures or skips. Five PostgreSQL checks cover new create/doctor,
+generated Prisma and Drizzle CRUD, FastAPI/uv SQLAlchemy with Psycopg CRUD, and
+PostgreSQL 18.6 data persistence across a Compose restart and container recreation.
+Two MongoDB checks cover new create/doctor and authenticated generated Mongoose
+CRUD against MongoDB 8.0.32. The Node projects use Express with JavaScript; both
+tests verify cleanup of their disposable services.
+
+Separately, five local cases exercised retained generated helpers on macOS against
+PostgreSQL 14.20 and MongoDB 8.2.3. Those checks include compiled Express/Prisma
+and Fastify/Drizzle helpers, both FastAPI and Flask SQLAlchemy helpers, and
+Express/Mongoose. They are not five additional fresh CLI creation tests or
+cross-platform live-service qualification. Published CLI delivery and its exact
+artifact/provenance evidence are recorded in the release record.
+
 The automated matrix covers Ubuntu 24.04 x64, macOS 15 arm64 and Windows Server
 2025 x64. It does not qualify native Windows 11, Linux arm64, every integration
-permutation, live PostgreSQL/MongoDB/container connections, migrations or actual
-Playwright browser journeys. No integration ID is promoted to stable.
+permutation, live services on every platform or recipe, migrations or actual
+Playwright browser journeys. The bounded live checks above do not change those
+limits. No integration ID is promoted to stable.
 
 The documented generated development-tool advisory remains; this is not an
 audit-clean claim. See the [installed-stack audit](../specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md),
