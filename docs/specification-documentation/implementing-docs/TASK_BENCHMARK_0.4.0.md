@@ -120,7 +120,7 @@ Fixture hydration and preinstalled-tool validation happen before timed execution
 1. Qualify fixtures/oracles locally, confirm Node 24+ and pinned tool versions, preinstalled dependencies, clean Git baseline and no secrets. Record runner/source/artifact, host/OS/architecture, runtime, dependency/lockfile, recipe, support, model catalog and routing-policy hashes. No system or dependency installation occurs in the runner.
 2. Freeze the qualified strong profile and native effort, all routed candidate profiles/efforts and dated prices. Use exact provider snapshot IDs where available; record requested/effective IDs and effort. If effective configuration is unreported, mark it unknown and limit attribution. Do not choose the strong profile retrospectively from successful runs.
 3. Run five paired trial blocks for each of the five fixtures, with a fresh clean fixture checkout and fresh run state for each treatment: 25 trials per treatment, 75 total. Execute sequentially on one host with no worker parallelism. Rotate treatment order deterministically by block (`whole`, `fixed`, `routed`; then `fixed`, `routed`, `whole`; then `routed`, `whole`, `fixed`, repeating). Record order and provider request identities.
-4. For each paired block, generate one decomposition using the frozen strong compiler configuration, validate/freeze its plan and use that exact plan for both compiled treatments. Do not regenerate a routed plan to favor routing. Charge the full measured compilation usage/time to **each** compiled treatment in analytical totals, identifying the replay and shared source request; also report actual billed calls separately so the reused call is not billed twice in the cash ledger. A failed compilation fails both paired compiled trials and remains included.
+4. For each paired block, generate one decomposition using the frozen strong compiler configuration, validate/freeze its exact logical task graph and acceptance contents for both compiled treatments. Preserve the source plan and decomposition identity; separately revalidate the same draft against each treatment's independently reviewed physical baseline and qualified check bindings. Do not copy or rewrite the source plan's root/baseline hashes, or regenerate a routed decomposition to favor routing. Charge the full measured compilation usage/time to **each** compiled treatment in analytical totals, identifying the replay and shared source request; also report actual billed calls separately so the reused call is not billed twice in the cash ledger. A failed compilation fails both paired compiled trials and remains included.
 5. Provide no hidden manual assistance. A fixture-level setup failure before any provider request blocks its full paired block; retain the record and qualify the environment before a new explicitly identified block. Once a request starts, timeout, provider failure, missing context, budget exhaustion and product defects are included trial outcomes. Never discard or silently restart them.
 6. Run independent holdout evaluation at completion/limit. Store all attempts and terminal outcomes with their source/proposal/output revisions, context provenance, verification and failure classification. Do not mark a claimed completion accepted until the evidence agrees.
 
@@ -525,3 +525,34 @@ bytes, so general criterion review/hostile-candidate isolation remains unqualifi
 Diagnostic output binds source/fixture/closure/host/plan and evidence IDs with explicit
 `qualification: false`. No source-clean/platform/live qualification or quality/savings
 claim follows. No fixture recipe freezes, package versions or public commands changed.
+
+## Exact decomposition with fresh physical plan bindings (2026-10-09)
+
+“Exact shared plan” means the same frozen task graph, scope, requirements, criteria,
+capability facts and outputs. An executable TaskPlan also binds a physical root,
+baseline inventory and qualified check catalog, so it cannot be copied into another
+fresh treatment checkout or have its hashes overwritten. Core now provides pure
+`freezeTaskBenchmarkDecomposition`/`replayTaskBenchmarkDecomposition` helpers: retain
+one validated source plan/policy and logical verifier identity, then revalidate that
+same draft against each independently reviewed physical baseline/catalog. No new
+model decomposition request occurs; derived plan IDs differ while logical identity
+and coverage remain identical.
+
+Version 1 decomposition/binding schemas retain full record, logical decomposition,
+source plan, fresh review and derived plan identities. Reconstructed bindings must
+match the independently supplied review exactly. Replay rejects changed public phase,
+authority, profile, path semantics, checks or logical runtime/tool/config/oracle revision;
+only physical project/catalog binding differs. Artifacts are bounded and screened for
+private material, with at most six tasks. These pure functions do not read files,
+execute processes, acquire leases, dispatch a provider, import acceptance, bypass
+checks or grant artifact execution authority. A hash cannot authenticate a host's
+claimed logical verification identity; actual qualified checks remain required.
+
+The existing campaign's shared compilation metadata continues to identify the source
+compilation. A future concrete driver must retain source/decomposition and derived-plan
+bindings as actual trial evidence and bridge G's root-bound durable compilation usage
+without resetting or importing budget/acceptance authority. Revalidation time belongs
+in trial overhead; source compilation cost/time is still charged fully to each compiled
+analytical treatment and once in the cash ledger. This helper does not by itself wire
+that driver or establish the 75-trial comparison. Campaign/fixture/protocol revisions
+and public task/configuration contracts are unchanged.

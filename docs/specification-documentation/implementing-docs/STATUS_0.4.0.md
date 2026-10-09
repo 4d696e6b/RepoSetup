@@ -1354,7 +1354,7 @@ no Linux/container qualification or installation is claimed. J remains unstarted
 The corrected `task-managed-fixture.test.ts` passed in 344.70 seconds. A fresh frozen
 cross-module seed becomes the reference through the core executor's guarded
 `src/totals.ts` replacement, real CLI application adapter, private lease/CAS run state,
-and qualified E adapter. No-change/dry-run validation performs zero check launches or
+and qualified E adapter. Dry-run validation performs zero check launches or
 project/state changes. Fresh task verification, task refresh at finalization and final
 phase acceptance launch nine real curated TypeScript/ESLint/Vitest processes, with three
 independent reference-identity reviews. Durable task status, accepted artifact hashes,
@@ -1391,3 +1391,50 @@ Offline simulations and the new local join cannot satisfy those live/platform ga
 The next milestone is J only after I's gates; J remains unstarted. No API keys, live
 provider calls, paid usage, dependency/system installation, package version change,
 merge, push or publication occurred.
+
+## Milestone I — frozen logical decomposition and fresh physical bindings (2026-10-09)
+
+Added pure version 1 benchmark decomposition/binding contracts and freeze/replay/
+validation helpers in core, reusing `validateTaskPlan`, `compileTaskPlan`, reviewed
+phase/policy schemas, canonical hashing and privacy screening. Copying a source
+TaskPlan into another checkout is invalid: its root, baseline inventory and qualified
+check catalog are physical bindings. The new helper retains the validated source plan
+and policy, freezes an identical logical phase/task graph/criteria/coverage/scope/profile
+and host-frozen logical verifier revision, then recompiles that exact draft against a
+fresh independent review. Actual root-bound plan IDs differ; the decomposition identity
+stays equal. The source is never rewritten and no model is called again.
+
+Strict decomposition and binding records distinguish full record/binding hashes from
+logical identity. Reconstructed bindings must match their fresh review. Changed phase,
+requirements, authority (including narrowing), profile/path rules, required checks or
+logical runtime/tool/config/oracle identity reject replay. Physical check-catalog binding
+may change only alongside unchanged logical policy/verifier identity. The benchmark's
+six-task limit, bounded document bytes and secret screening apply to the new artifact.
+These hashes are diagnostic integrity, not authenticated host/model evidence, provider
+usage, acceptance, or automatic imported-plan execution authority. The host must actually
+qualify the logical verifier identity and fresh baseline before executor use.
+
+Clarified the benchmark's “exact shared plan” requirement as identical frozen decomposition
+contents with separately validated physical bindings. Existing task/config/selection and
+campaign contracts, protocol/fixture freezes and package versions are unchanged. The
+source compilation remains charged to both analytical treatments and once to cash;
+local revalidation belongs in each trial's measured overhead. The helper is not yet
+wired to the three-treatment driver or G's root-bound durable compilation allowance.
+That join must retain both source/decomposition and derived plan identities plus actual
+usage; parsed artifacts must never grant imported acceptance or reset budgets.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: all 22 new replay/privacy/size
+cases pass within the final **562 passing core tests across 62 files** (4.58 seconds).
+Final workspace build, workspace/task-test typechecks and lint pass. The rebuilt packed
+artifact passed its five extracted Node/native POSIX alias/dry-run cases in 3.44 seconds;
+formatting and Git whitespace checks pass. Separately, the complete preexisting
+CLI suite passed **261 tests across 32 files in 1009.92 seconds**, including the real
+managed compile/repair/routing/Git/tool integration with simulated HTTP responses. There
+were no live provider calls. The previously recorded 344.70-second vetted-fixture join
+and 42 ordinary offline task cases remain passing evidence within their recorded scope.
+
+Milestone I stays in progress: the remaining actual campaign/budget/artifact join,
+general independent candidate review/isolation and live/platform qualification cannot
+be replaced by schema integrity or synthetic model results. J stays unstarted. The
+source/qualified verifier/config/fixture recipe is unchanged by this pure replay module;
+no expensive verifier rerun is justified solely by the new unused benchmark helper.
