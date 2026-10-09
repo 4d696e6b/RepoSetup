@@ -475,3 +475,30 @@ Nine core cases and ten ordinary real-filesystem cases exercise these boundaries
 including a full simulated 75-slot journal. No actual provider or trial driver was
 added. Coordinator timing, concrete plan/task/verifier joining, scoped budgets,
 authenticated artifacts and platform/live qualification remain required work.
+
+## Host timing and diagnostic journal reports (2026-10-09)
+
+The offline coordinator optionally uses a trusted monotonic `now` port. Its returned
+`hostTiming` accounts one invocation's preparation, compilation, trial calls, all
+retention calls and residual coordinator time; thrown ports remain included. The
+measured categories add to the elapsed interval, without double-counting the shared
+compilation. Missing/invalid clock evidence yields `provenance: unknown`; a bad clock
+stops further work while preserving known outcomes. The CLI store supplies the concrete
+performance clock. These durations are volatile host diagnostics, exclude final return/
+report serialization, and do not replace the campaign's per-treatment analytical timing,
+request usage or durable authenticated artifacts. Do not claim a full resource comparison
+from them. Eight core cases exercise full, interrupted, missing and invalid timing.
+
+The developer report tool supports:
+
+```sh
+pnpm benchmark:tasks:report --journal /absolute/fresh-offline-campaign.json /absolute/private-state-root
+```
+
+This mode reads the existing campaign-derived journal and computes the inclusive known
+request ledger and pending intent. It neither allocates a folder nor invokes retention,
+setup, compilation, execution or recovery. A partial dispatch exits 3, malformed/unsafe
+input exits 2, and a complete offline dispatch still has `qualification: false`. Two
+ordinary report subprocess tests cover legacy campaign mode and interrupted journal
+mode without credentials. The internal CLI adapter is bundled as a separate module for
+Node's built-artifact consumption; no public task command or package version changed.

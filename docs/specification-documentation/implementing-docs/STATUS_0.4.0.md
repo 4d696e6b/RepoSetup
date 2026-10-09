@@ -1307,3 +1307,44 @@ seconds, and ordinary offline task checks passed 41 cases across six files in
 95.89 seconds, including extracted packed aliases. Formatting and Git whitespace
 checks passed. No keys, provider calls, dependency/system installations, release
 changes, pushes or publication occurred.
+
+## Milestone I — inclusive host timing and read-only journal reporting (2026-10-09)
+
+The core coordinator now accepts an optional trusted monotonic clock and returns
+measured elapsed, retention, paired preparation, shared compilation, trial-port and
+residual coordinator durations. Compilation and retention are counted once in the
+host invocation ledger; existing per-treatment analytical compilation charging stays
+unchanged. Thrown work remains timed. Missing or invalid clocks produce unknown timing;
+invalid observations stop subsequent dispatch. A known result is preserved if its
+trailing clock observation fails. Timing is invocation-local diagnostic data and is
+not durable request evidence, charged provider usage, a treatment comparison, or an
+acceptance authority. Final return/report serialization lies outside that interval.
+The CLI journal store supplies the concrete performance clock.
+
+The existing developer report command also accepts `--journal <fresh offline campaign
+JSON> <private state root>`. It inspects and audits retained records without allocating,
+writing, recovering or executing a trial, then reports known unassigned compilation
+requests and pending/unknown dispatch. Input reads are bounded, regular and no-follow/
+nonblocking. The CLI adapter has a built internal module entry so Node 24 can run the
+report from built JavaScript; the report script builds workspace prerequisites. Public
+CLI commands, aliases, selection/config compatibility and package versions are unchanged.
+Private inspection additionally rechecks folder identity, mode and inventory at the end.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: eight timing tests pass, including
+clock failure before effects and after a known terminal result; focused coordinator/
+audit/timing tests pass 38 cases. Both developer report cases pass. Final workspace
+build, workspace/task-test typechecks and lint pass. All 540 core tests across 61 files
+pass in 5.06 seconds; ordinary offline task tests pass 42 cases across six files in
+94.61 seconds, including built/extracted packed aliases and private journal reporting.
+The broader CLI regression suite is running separately; its pass is not assumed.
+
+A new vetted-candidate executor/full-verifier join is being qualified separately.
+It is not yet accepted: test expectations were corrected for the explicit dependency
+symlink and the owned parent-directory metadata changed by atomic replacement. The
+latter run reached successful fresh task/final receipts and nine real tool launches,
+but failed its own later directory-metadata assertion before holdout evaluation. No
+failing run is counted as completion. Milestone I remains open for actual three-treatment
+trials, complete retained/authenticated artifacts, arbitrary-candidate review/isolation,
+installed/legacy/platform and production model/native-effort/live qualification. Docker
+read-only version inspection did not respond within two minutes and was terminated;
+no Linux/container qualification or installation is claimed. J remains unstarted.

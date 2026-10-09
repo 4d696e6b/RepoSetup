@@ -68,3 +68,55 @@ it("developer report command retains incomplete trials and rejects duplicate/exe
     await rm(root, { recursive: true, force: true });
   }
 });
+
+it("developer journal reporting includes interrupted compilation requests without redispatch or writes", async () => {
+  const { realpath, chmod, readdir } = await import("node:fs/promises");
+  const { fixture } = await import("../../packages/core/src/tasks/benchmark.test-helper.js");
+  const { executeTaskBenchmark } = await import("../../packages/core/dist/index.js");
+  const { createTaskBenchmarkStore } =
+    await import("../../packages/cli/src/tasks/benchmark-store.js");
+  const root = await realpath(await mkdtemp(path.join(tmpdir(), "reposetup-i-journal-report-")));
+  try {
+    await chmod(root, 0o700);
+    const f = fixture();
+    const store = await createTaskBenchmarkStore({ stateRoot: root, campaign: f.campaign });
+    if (!store.success) throw new Error(store.error.code);
+    const result = await executeTaskBenchmark({ campaign: f.campaign, ports: f.ports });
+    if (!result.success) throw new Error(result.error.code);
+    for (const event of result.data.retainedEvents.slice(0, 6)) {
+      const saved = await store.data.retain(event);
+      if (!saved.success) throw new Error(saved.error.code);
+    }
+    const campaignPath = path.join(root, "campaign.json");
+    await writeFile(campaignPath, JSON.stringify(f.campaign));
+    const names = await readdir(store.data.folderPath);
+    const retainedBytes = await Promise.all(
+      names.map((name) => readFile(path.join(store.data.folderPath, name))),
+    );
+    const observed = await createDefaultProcessRunner()({
+      command: process.execPath,
+      args: [
+        path.join(workspaceRoot, "scripts/summarize-task-benchmark.ts"),
+        "--journal",
+        campaignPath,
+        root,
+      ],
+      cwd: root,
+      env: { PATH: "", LANG: "C" },
+      timeoutMs: 10000,
+    });
+    expect(observed.exitCode).toBe(3);
+    const report = JSON.parse(observed.stdout);
+    expect(report.terminalReport.cashLedger.providerCalls).toBe(1);
+    expect(report.inclusiveKnownCashLedger.providerCalls).toBe(2);
+    expect(report.dispatchAccountingComplete).toBe(false);
+    expect(report.qualification).toBe(false);
+    expect(await readdir(store.data.folderPath)).toEqual(names);
+    expect(
+      await Promise.all(names.map((name) => readFile(path.join(store.data.folderPath, name)))),
+    ).toEqual(retainedBytes);
+    expect(f.ports.prepareBlock).toHaveBeenCalledTimes(25); // Only the original simulated construction.
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
