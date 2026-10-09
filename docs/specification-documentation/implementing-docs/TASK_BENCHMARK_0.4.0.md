@@ -580,3 +580,28 @@ provider and real filesystem coverage, not live-provider, platform or comparativ
 qualification. Inclusive host measurements must additionally cover final persistence,
 lease release and other overhead; the final ledger write cannot measure its own tail.
 The frozen protocol, fixture recipes and campaign schema are unchanged.
+
+### Private request/run evidence for failed trials
+
+Compilation and coding intents now retain an optional version 1 `requestFootprint` before
+dispatch. `inputDocumentBytes` measures the exact JSON document handed to provider
+preparation (including repair metadata); `preparedPayloadBytes` measures the complete
+adapter payload. These byte counts, document hash and prepared pricing revision contain
+no bodies. They are separate from reservation token bounds, observed tokens and costs.
+Legacy missing footprints remain unknown rather than reconstructed or replaced with zero.
+
+`collectTaskBenchmarkRunEvidence` validates plan/private checkpoint bindings and creates
+a bounded version 1 diagnostic record. `inspectTaskBenchmarkRun` obtains that record
+through the existing executor-owned lease, including private compilation metadata where
+available and current project drift. It retains pending/null usage, original provenance,
+all coding reservations, compilation charges, attempt hashes/failures/effects and final
+verification identity. It never reconciles or dispatches verification, writes a checkpoint,
+retries a call or mutates the project. Lease metadata follows the existing adapter lifecycle.
+
+These records keep `acceptanceAuthenticated` and `qualificationEligible` false. A stored
+pass, succeeded run, checksum or synthetic host token report cannot replace independently
+observed acceptance or production/provider qualification. Missing private compilation
+ports are explicit charge-only evidence; unavailable/corrupt private state stops inspection.
+The actual campaign driver must still join these records with terminal evaluator results,
+inclusive host timings and measured/calculated/unknown request fields. Neither footprint
+sizes nor reservations should be relabelled as measured token usage or paid provider cost.

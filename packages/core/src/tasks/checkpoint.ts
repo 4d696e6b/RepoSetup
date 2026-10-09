@@ -20,6 +20,7 @@ import { taskProviderReservationSchema } from "./provider.js";
 import { taskRepairContextSchema } from "./repair-context.js";
 import { taskRepairAction } from "./failure.js";
 import { taskBenchmarkCompilationReplaySchema } from "./compilation-state.js";
+import { taskRequestFootprintSchema } from "./request-footprint.js";
 
 export const taskRunCheckpointSchema = z.strictObject({
   kind: z.literal("task_run_checkpoint"),
@@ -59,6 +60,7 @@ export const taskRunCheckpointSchema = z.strictObject({
           "cancelled",
         ]),
         usage: taskUsageSchema.nullable(),
+        requestFootprint: taskRequestFootprintSchema.optional(),
       }),
     )
     .max(10000)

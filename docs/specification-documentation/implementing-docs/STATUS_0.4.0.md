@@ -1483,3 +1483,56 @@ include source compilation final persistence/release and other overhead in its i
 campaign measurement; this ledger's duration stops before its own final persistence tail.
 The next implementation is extraction of actual failed/uncertain run evidence without
 inventing missing measurements or promoting imported pass records. J remains unstarted.
+
+## Milestone I — actual request footprints and private run evidence (2026-10-09)
+
+Added version 1 request footprints to compilation and coding intents before dispatch:
+the exact input document hash/UTF-8 bytes, prepared payload bytes and prepared pricing
+catalogue revision. No input/payload bodies or secrets are retained. These are byte
+measurements, not measured token usage or charged cost. Coding input includes identity,
+task/requirements, materialized context and any repair metadata; payload size additionally
+includes the concrete adapter's transport/schema/instruction framing. Existing reservation
+token bounds and usage provenance keep their original meanings. Footprints are optional
+for compatibility with existing private checkpoints; absent older measurements stay absent.
+Fresh-root replay carries the source footprint, explicitly describing the original call.
+
+Added pure `collectTaskBenchmarkRunEvidence` and bounded strict version 1 evidence records,
+with integrity/privacy validation. They retain private resource limits/reservations/usage,
+all coding intents (including pending calls with null usage), compilation charge and optional
+original receipt metadata, attempt hashes/failures/application effects, task states and
+final verification identity. Compilation and coding records stay separate, preserving source
+call identity for analytical versus cash accounting. Unknown usage is not zero; estimates,
+reported values and synthetic host reports are not relabelled as charged provider cost.
+
+The executor's `inspectTaskBenchmarkRun` reads under the existing private lease, validates
+plan/policy/root and compilation bindings, and reports current project revision/drift. It
+does not reconcile, execute checks/providers, rewrite checkpoints or mutate project files.
+The adapter can create/remove ordinary lease metadata. Missing compilation ports yield
+explicit charge-only evidence; missing/corrupt state or mismatched authority fails closed.
+Imported/retained verification IDs are diagnostic: every evidence record requires
+`acceptanceAuthenticated: false` and `qualificationEligible: false`, including succeeded
+private runs. This API does not grant resume, verification or benchmark acceptance authority.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: **21 benchmark replay/evidence cases**
+pass within **79 targeted CLI tests across six files** (7.87 seconds), including managed
+compilation/run/repair and durable TaskRun behavior. All **562 core tests across 62 files**
+pass (5.86 seconds). Workspace build/typecheck, task-test typecheck and lint pass; whitespace
+checks pass. Initial build caught a duplicate local variable, corrected before validation.
+Two test assertions were corrected to existing semantics: a completed provider response
+can fail proposal validation, and a successful phase state is `succeeded`.
+
+Several initial test/typecheck attempts encountered real ENOSPC or unavailable temporary
+transform files; they are not passing evidence. A bounded, separately owned temporary
+directory outside the Git worktree on the Developer volume allowed final successful runs.
+Only this turn's own temporary test files were cleaned; unrelated files were preserved.
+Disk headroom remains limited (about 323 MiB at the final code checks), so the expensive
+qualified fixture/campaign runs were not attempted. Prior full CLI/qualified-tool evidence
+retains its recorded scope; the new targeted cases use synthetic provider/verification
+ports and real private project/state adapters, never live calls or paid model allowance.
+
+Milestone I remains **in progress**. The next local work is joining the actual fixture
+driver, G/H execution, these private evidence records and independent terminal evaluation
+to campaign retention/reporting, with complete host overhead accounting and general
+candidate review/isolation. Full 75-trial comparative evidence, provider/model qualification
+and Linux/platform qualification remain open; J remains unstarted. No package versions,
+CLI commands, configuration/selection inputs or website source files changed.

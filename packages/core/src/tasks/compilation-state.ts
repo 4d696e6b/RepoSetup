@@ -14,6 +14,7 @@ import { taskPlanSchema } from "./plan-schema.js";
 import { taskContentHash, freezeTaskValue } from "./canonical.js";
 import { taskFailure, type TaskParseResult } from "./parse.js";
 import type { TaskReview } from "./review-schema.js";
+import { taskRequestFootprintSchema } from "./request-footprint.js";
 /** One allowance slot per independently reviewed phase. Changing call options cannot reset it. */
 export function taskCompilationAllowanceId(review: TaskReview): string {
   return taskContentHash({ kind: "task_compilation_allowance", schemaVersion: 1, review });
@@ -58,6 +59,7 @@ export const taskCompilationCheckpointSchema = z.strictObject({
   usage: taskUsageSchema.nullable(),
   plan: taskPlanSchema.nullable(),
   benchmarkReplay: taskBenchmarkCompilationReplaySchema.optional(),
+  requestFootprint: taskRequestFootprintSchema.optional(),
 });
 export type TaskCompilationCheckpoint = z.infer<typeof taskCompilationCheckpointSchema>;
 export function sealTaskCompilationCheckpoint(

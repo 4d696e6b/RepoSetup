@@ -18,6 +18,7 @@ import {
 } from "../tasks/compilation-state.js";
 import type { TaskRunAdapter } from "./task-run-types.js";
 import { registerTaskCompilationReceipt } from "./task-compilation-receipt.js";
+import { taskRequestFootprint } from "../tasks/request-footprint.js";
 
 /** One durable, explicitly allowed decomposition call. Repeated identical approval is read-only,
  * never a second request. Unknown/interrupted calls remain retained review-owned state. */
@@ -94,9 +95,10 @@ export async function executeTaskCompilation(input: {
         "TASK_CONTEXT_STALE",
         "Compilation context differs from the approved preview.",
       );
+    const document = { review: review.data!, context: packet.data };
     const prepared = input.provider.prepare({
       purpose: "decomposition",
-      document: { review: review.data!, context: packet.data },
+      document,
       maxOutputTokens: input.maxOutputTokens,
       timeoutMs: Math.min(input.timeoutMs, limits.data!.maxWallTimeMs),
     });
@@ -198,6 +200,7 @@ export async function executeTaskCompilation(input: {
       status: "pending",
       usage: null,
       plan: null,
+      requestFootprint: taskRequestFootprint(document, prepared.data),
     });
     const stored = await lease.saveCompilation(c, null);
     if (!stored.success) return stored;

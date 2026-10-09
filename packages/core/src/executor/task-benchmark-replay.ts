@@ -147,6 +147,8 @@ export async function executeTaskBenchmarkReplay(input: {
         taskContentHash(c.reservation) !== taskContentHash(s.reservation) ||
         c.contextId !== s.contextId ||
         c.requestHash !== s.requestHash ||
+        taskContentHash(c.requestFootprint ?? null) !==
+          taskContentHash(s.requestFootprint ?? null) ||
         taskContentHash(c.requestedConfiguration) !== taskContentHash(s.requestedConfiguration) ||
         taskContentHash(c.effectiveConfiguration) !== taskContentHash(s.effectiveConfiguration)
       )
@@ -188,6 +190,7 @@ export async function executeTaskBenchmarkReplay(input: {
       usage: null,
       plan: null,
       benchmarkReplay,
+      ...(s.requestFootprint ? { requestFootprint: s.requestFootprint } : {}),
     });
     claim.attempted = true;
     const intent = await lease.saveCompilation(pending, null);

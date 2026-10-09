@@ -5,6 +5,10 @@ import {
   executeTaskBenchmarkReplay,
   executeTaskCompilation,
   executeTaskRun,
+  inspectTaskBenchmarkRun,
+  collectTaskBenchmarkRunEvidence,
+  taskBenchmarkRunEvidenceSchema,
+  validateTaskBenchmarkRunEvidence,
   freezeTaskBenchmarkDecomposition,
   prepareTaskCompilationContext,
   sealTaskCompilationCheckpoint,
@@ -85,6 +89,7 @@ async function source() {
   const context = data(
     await prepareTaskCompilationContext({ review: f.review, repository: f.adapter.repository }),
   );
+  const prepared = vi.spyOn(provider, "prepare");
   const compile = () =>
     executeTaskCompilation({
       review: f.review,
@@ -119,7 +124,7 @@ async function source() {
       adapter: target.adapter,
       ...overrides,
     });
-  return { ...f, checkpoint, decomposition, compile, provider, replay };
+  return { ...f, checkpoint, decomposition, compile, provider, prepared, replay };
 }
 async function privateRecords(f: Awaited<ReturnType<typeof fresh>>) {
   const directory = path.join(f.stateRoot, taskByteHash(f.root).slice(7));
@@ -137,6 +142,298 @@ async function privateRecords(f: Awaited<ReturnType<typeof fresh>>) {
 }
 afterEach(async () => {
   await Promise.all(fixtures.splice(0).map((f) => f.cleanup()));
+});
+
+async function openedTrial() {
+  const s = await source(),
+    t = await fresh();
+  const replay = data(await s.replay(t));
+  if (replay.dryRun) throw new Error("dry run");
+  const c = replay.checkpoint;
+  const execute = (operation: Parameters<typeof executeTaskRun>[0]["operation"]) =>
+    executeTaskRun({
+      plan: c.plan,
+      compilationPolicy: t.policy,
+      adapter: t.adapter,
+      provider: s.provider,
+      operation,
+      verification: {
+        policy: t.verificationPolicy,
+        adapter: t.verifier,
+        runProcess: async () => ({ exitCode: 0, stdout: "", stderr: "" }),
+      },
+    });
+  const created = data(
+    await execute({
+      type: "create",
+      resourceLimits: LIMITS,
+      managedCompilationId: c.compilationId,
+      expectedBaselineTreeHash: t.review.project.baselineTreeHash,
+    }),
+  );
+  if (created.dryRun) throw new Error("dry run");
+  const runId = created.checkpoint.run.runId;
+  const inspect = (overrides: Partial<Parameters<typeof inspectTaskBenchmarkRun>[0]> = {}) =>
+    inspectTaskBenchmarkRun({
+      plan: c.plan,
+      policy: t.policy,
+      runId,
+      adapter: t.adapter,
+      ...overrides,
+    });
+  const stateFile = path.join(t.stateRoot, taskByteHash(t.root).slice(7), `${runId}.json`);
+  return { s, t, c, execute, runId, inspect, stateFile, created: created.checkpoint };
+}
+describe("actual failed and uncertain benchmark run evidence", () => {
+  it.each(["invalid", "uncertain"])(
+    "retains %s coding intent, exact pre-dispatch byte metadata and honest usage provenance",
+    async (kind) => {
+      const f = await openedTrial();
+      data(
+        await f.execute({
+          type: "begin",
+          runId: f.runId,
+          taskId: "producer",
+          requestedConfiguration: CONFIGURATION,
+          routingId: HASH,
+        }),
+      );
+      let preDispatch: unknown;
+      if (kind === "uncertain")
+        vi.mocked(f.s.provider.dispatch).mockImplementationOnce(async () => {
+          preDispatch = JSON.parse(await readFile(f.stateFile, "utf8")).providerCalls[0];
+          throw new Error("synthetic transport failure");
+        });
+      const result = await f.execute({
+        type: "request",
+        runId: f.runId,
+        allowProviderUsage: true,
+        maxOutputTokens: 256,
+        timeoutMs: 1000,
+      });
+      expect(result.success).toBe(false);
+      const before = await readFile(f.stateFile, "utf8"),
+        baseline = data(await f.t.adapter.snapshot());
+      const record = data(await f.inspect());
+      expect(taskBenchmarkRunEvidenceSchema.safeParse(record).success).toBe(true);
+      expect(record).toMatchObject({
+        kind: "task_benchmark_run_evidence",
+        schemaVersion: 1,
+        qualificationEligible: false,
+        acceptanceAuthenticated: false,
+        projectMatchesCheckpoint: true,
+        finalVerificationId: null,
+      });
+      expect(record.codingRequests).toHaveLength(1);
+      const call = record.codingRequests[0]!;
+      const document = f.s.prepared.mock.calls.at(-1)![0].document;
+      expect(call.requestFootprint).toEqual({
+        kind: "task_request_footprint",
+        schemaVersion: 1,
+        inputDocumentHash: taskContentHash(document),
+        inputDocumentBytes: Buffer.byteLength(JSON.stringify(document)),
+        preparedPayloadBytes: Buffer.byteLength("synthetic"),
+        priceCatalogRevision: HASH,
+      });
+      expect(record.compilationReceipt?.requestFootprint).toEqual(f.s.checkpoint.requestFootprint);
+      expect(record.compilationCharge?.benchmarkReplay?.sourceUsage).toEqual(f.s.checkpoint.usage);
+      expect(record.resourceLedger.reservations).toHaveLength(2);
+      if (kind === "uncertain") {
+        expect(preDispatch).toMatchObject({
+          status: "pending",
+          usage: null,
+          requestFootprint: call.requestFootprint,
+        });
+        expect(call).toMatchObject({ status: "pending", usage: null });
+        expect(record.resourceLedger.consumed.inputTokens).toEqual({ provenance: "unknown" });
+      } else {
+        expect(call).toMatchObject({
+          status: "completed",
+          usage: { inputTokens: { provenance: "host_reported", value: 10 } },
+        });
+        expect(record.resourceLedger.consumed.inputTokens).toMatchObject({ value: 20 });
+        expect(record.attempts[0]!.failureCode).toBe("TASK_PROVIDER_OUTPUT_INVALID");
+        const legacy = JSON.parse(before);
+        delete legacy.providerCalls[0].requestFootprint;
+        const { checkpointHash: _old, ...payload } = legacy;
+        void _old;
+        const legacyEvidence = data(
+          collectTaskBenchmarkRunEvidence({
+            plan: f.c.plan,
+            policy: f.t.policy,
+            checkpoint: { ...payload, checkpointHash: taskContentHash(payload) },
+          }),
+        );
+        expect(legacyEvidence.codingRequests[0]!.requestFootprint).toBeUndefined();
+      }
+      expect(record.attempts[0]!.evidenceHash).toBe(
+        taskContentHash(JSON.parse(before).run.attempts[0]),
+      );
+      expect(JSON.stringify(record)).not.toContain("export const a");
+      expect(JSON.stringify(record)).not.toContain("Requirements.");
+      expect(await readFile(f.stateFile, "utf8")).toBe(before);
+      expect(data(await f.t.adapter.snapshot())).toEqual(baseline);
+      expect(f.s.provider.dispatch).toHaveBeenCalledTimes(2);
+    },
+  );
+  it("reports project drift without reconciliation or checkpoint rewrites", async () => {
+    const f = await openedTrial();
+    const before = await readFile(f.stateFile, "utf8");
+    await writeFile(path.join(f.t.root, "src/a.ts"), "export const a = 99;\n");
+    const record = data(await f.inspect());
+    expect(record.projectMatchesCheckpoint).toBe(false);
+    expect(record.currentProjectRevision).not.toBe(f.created.run.project.latestProjectRevision);
+    expect(record.codingRequests).toEqual([]);
+    expect(await readFile(f.stateFile, "utf8")).toBe(before);
+  });
+  it("keeps absent legacy request footprints and missing private compilation ports explicitly unavailable", async () => {
+    const f = await openedTrial();
+    const stripped = { ...f.created };
+    const partial = data(
+      collectTaskBenchmarkRunEvidence({ plan: f.c.plan, policy: f.t.policy, checkpoint: stripped }),
+    );
+    expect(partial.compilationCharge).not.toBeNull();
+    expect(partial.compilationReceipt).toBeNull();
+    expect(partial.currentProjectRevision).toBeNull();
+    expect(partial.projectMatchesCheckpoint).toBeNull();
+    const adapter = {
+      ...f.t.adapter,
+      acquire: async () => {
+        const lease = data(await f.t.adapter.acquire());
+        const { loadCompilation: _optional, ...ports } = lease;
+        void _optional;
+        return { success: true as const, data: ports };
+      },
+    };
+    expect(data(await f.inspect({ adapter })).compilationReceipt).toBeNull();
+  });
+  it("rejects incorrect roots, policies, compilation receipts and corrupt or absent private state", async () => {
+    const f = await openedTrial();
+    expect(
+      collectTaskBenchmarkRunEvidence({
+        plan: f.c.plan,
+        policy: f.t.policy,
+        checkpoint: f.created,
+        compilationCheckpoint: f.s.checkpoint,
+      }),
+    ).toMatchObject({ success: false });
+    expect(
+      await f.inspect({
+        policy: { ...f.t.policy, checkCatalogRevision: taskContentHash("different") },
+      }),
+    ).toMatchObject({ success: false });
+    expect(await f.inspect({ adapter: { ...f.t.adapter, rootInstance: HASH } })).toMatchObject({
+      success: false,
+    });
+    expect(await f.inspect({ runId: "123e4567-e89b-42d3-a456-426614174000" })).toMatchObject({
+      success: false,
+    });
+    await writeFile(f.stateFile, '{"kind":"corrupt"}');
+    expect(await f.inspect()).toMatchObject({ success: false });
+  });
+  it("takes no lease for invalid identities or pre-aborted inspection", async () => {
+    const f = await openedTrial(),
+      acquire = vi.spyOn(f.t.adapter, "acquire");
+    expect(await f.inspect({ runId: "invalid" })).toMatchObject({ success: false });
+    expect(await f.inspect({ signal: AbortSignal.abort() })).toMatchObject({ success: false });
+    expect(acquire).not.toHaveBeenCalled();
+  });
+  it("rejects corrupt evidence hashes, secret material and acceptance promotion", async () => {
+    const f = await openedTrial(),
+      record = data(await f.inspect());
+    expect(validateTaskBenchmarkRunEvidence(record).success).toBe(true);
+    expect(validateTaskBenchmarkRunEvidence({ ...record, recordHash: HASH })).toMatchObject({
+      success: false,
+    });
+    expect(
+      validateTaskBenchmarkRunEvidence({ ...record, qualificationEligible: true }),
+    ).toMatchObject({ success: false });
+    expect(
+      validateTaskBenchmarkRunEvidence({ ...record, acceptanceAuthenticated: true }),
+    ).toMatchObject({ success: false });
+    expect(validateTaskBenchmarkRunEvidence({ ...record, secret: "PRIVATE_MARKER" })).toMatchObject(
+      { success: false },
+    );
+  });
+  it("exports accepted private run evidence without importing acceptance authority", async () => {
+    const f = await openedTrial();
+    vi.mocked(f.s.provider.dispatch).mockImplementation(async () => {
+      const document = f.s.prepared.mock.calls.at(-1)![0].document as {
+        identity: { taskId: string };
+      };
+      const identity = document.identity;
+      const wire = {
+        kind: "task_provider_reply",
+        schemaVersion: 1,
+        ...identity,
+        reply: {
+          type: "change_set",
+          changeSet: {
+            kind: "change_set",
+            schemaVersion: 1,
+            ...identity,
+            changes:
+              identity.taskId === "producer"
+                ? f.t.producerChanges
+                : [
+                    {
+                      type: "create_text",
+                      path: "src/c.ts",
+                      expectedState: "absent",
+                      content: "export const c = 2;\n",
+                    },
+                  ],
+          },
+        },
+      };
+      return {
+        outcome: "completed",
+        document: {
+          ...wire,
+          reply: {
+            ...wire.reply,
+            changeSet: {
+              ...wire.reply.changeSet,
+              changeSetId: taskContentHash(wire.reply.changeSet),
+            },
+          },
+        },
+        httpStatus: 200,
+        effectiveConfiguration: { provenance: "host_reported", configuration: CONFIGURATION },
+        usage: f.s.checkpoint.usage!,
+      };
+    });
+    for (const taskId of ["producer", "consumer"]) {
+      data(
+        await f.execute({
+          type: "begin",
+          runId: f.runId,
+          taskId,
+          requestedConfiguration: CONFIGURATION,
+          routingId: HASH,
+        }),
+      );
+      data(
+        await f.execute({
+          type: "request",
+          runId: f.runId,
+          allowProviderUsage: true,
+          maxOutputTokens: 256,
+          timeoutMs: 1000,
+        }),
+      );
+      data(await f.execute({ type: "verify", runId: f.runId, taskId }));
+    }
+    const final = data(await f.execute({ type: "finalize", runId: f.runId }));
+    if (final.dryRun) throw new Error("dry run");
+    const record = data(await f.inspect());
+    expect(record.status).toBe("succeeded");
+    expect(record.finalVerificationId).toBe(final.checkpoint.run.finalVerification!.verificationId);
+    expect(record.attempts.map((a) => a.status)).toEqual(["accepted", "accepted"]);
+    expect(record.qualificationEligible).toBe(false);
+    expect(record.acceptanceAuthenticated).toBe(false);
+    expect(record.compilationCharge?.usage).toEqual(f.c.usage);
+  });
 });
 describe("executor-authenticated benchmark compilation charges across fresh roots", () => {
   it("charges the full original compilation to both treatments, persists provenance and blocks omission and exhausted coding allowance", async () => {

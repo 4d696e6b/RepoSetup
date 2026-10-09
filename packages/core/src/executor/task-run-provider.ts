@@ -18,6 +18,7 @@ import { classifyTaskFailure, taskRepairAction } from "../tasks/failure.js";
 import { buildTaskRepairContext } from "../tasks/repair-context.js";
 import { taskOwnedWriteRevisions } from "../tasks/application.js";
 import { invalidateTaskConsumers } from "../tasks/invalidation.js";
+import { taskRequestFootprint } from "../tasks/request-footprint.js";
 
 async function dispatchUntilAbort(
   provider: TaskProviderAdapter,
@@ -245,22 +246,21 @@ export async function requestTaskRunProposal(input: {
       )
         return stop("TASK_PROVIDER_CONFIGURATION_UNSUPPORTED");
     }
+    const inputDocument = {
+      identity: {
+        planId: plan.planId,
+        taskId: task.taskId,
+        attemptId,
+        inputRevision: state().inputRevision,
+      },
+      task,
+      requirements: plan.requirements.filter((r) => task.requirementIds.includes(r.requirementId)),
+      context: packet,
+      ...(binding().repair ? { repair: binding().repair } : {}),
+    };
     const prepared = provider.prepare({
       purpose: "coding",
-      document: {
-        identity: {
-          planId: plan.planId,
-          taskId: task.taskId,
-          attemptId,
-          inputRevision: state().inputRevision,
-        },
-        task,
-        requirements: plan.requirements.filter((r) =>
-          task.requirementIds.includes(r.requirementId),
-        ),
-        context: packet,
-        ...(binding().repair ? { repair: binding().repair } : {}),
-      },
+      document: inputDocument,
       maxOutputTokens: input.op.maxOutputTokens,
       timeoutMs: Math.min(
         input.op.timeoutMs,
@@ -322,6 +322,7 @@ export async function requestTaskRunProposal(input: {
       reservation: r,
       status: "pending",
       usage: null,
+      requestFootprint: taskRequestFootprint(inputDocument, prepared.data),
     });
     state().status = "requesting";
     state().usage = aggregateUsage(

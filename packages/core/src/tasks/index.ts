@@ -35,3 +35,5 @@ export * from "./benchmark-fixture.js";
 export * from "./benchmark-report.js";
 export * from "./benchmark-journal.js";
 export * from "./benchmark-decomposition.js";
+export * from "./request-footprint.js";
+export * from "./benchmark-run-evidence.js";
