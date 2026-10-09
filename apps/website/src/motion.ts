@@ -1,41 +1,14 @@
-import { el } from "./dom.js";
-
-const STORAGE_KEY = "reposetup-motion";
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 const ease = "cubic-bezier(.16, 1, .3, 1)";
-let paused = readPaused();
-let control: HTMLButtonElement | undefined;
 let current: { main: HTMLElement; page: string; anchored: boolean } | undefined;
 let dispose = () => {};
 
-function readPaused() {
-  try {
-    return localStorage.getItem(STORAGE_KEY) === "paused";
-  } catch {
-    return false;
-  }
-}
-
-const enabled = () => !paused && !reduced.matches;
+const enabled = () => !reduced.matches;
 
 function updateState() {
   document.body.classList.toggle("motion-enabled", enabled());
-  document.body.classList.toggle("motion-paused", paused);
   document.body.classList.toggle("motion-reduced", reduced.matches);
-  if (control) {
-    control.disabled = reduced.matches;
-    control.setAttribute("aria-pressed", String(paused || reduced.matches));
-    control.setAttribute(
-      "aria-label",
-      reduced.matches ? "Motion reduced" : paused ? "Resume animations" : "Pause animations",
-    );
-    control.title = reduced.matches
-      ? "Animations follow your system’s reduced-motion preference"
-      : paused
-        ? "Resume animations"
-        : "Pause animations";
-  }
 }
 
 function refreshMotion() {
@@ -43,27 +16,6 @@ function refreshMotion() {
   dispose = () => {};
   updateState();
   if (current && enabled()) dispose = animatePage(current.main, current.page, current.anchored);
-}
-
-export function createMotionControl() {
-  control = el("button", undefined, "motion-control");
-  control.type = "button";
-  const indicator = el("span", undefined, "motion-indicator");
-  indicator.setAttribute("aria-hidden", "true");
-  control.append(indicator, el("span", "Motion", "motion-label"));
-  control.addEventListener("click", () => {
-    if (reduced.matches) return;
-    paused = !paused;
-    try {
-      if (paused) localStorage.setItem(STORAGE_KEY, "paused");
-      else localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // The in-memory preference still works when browser storage is unavailable.
-    }
-    refreshMotion();
-  });
-  updateState();
-  return control;
 }
 
 export function mountMotion(main: HTMLElement, page: string, anchored = false) {
@@ -259,10 +211,4 @@ function animatePage(main: HTMLElement, page: string, anchored: boolean) {
 
 reduced.addEventListener("change", refreshMotion);
 finePointer.addEventListener("change", refreshMotion);
-window.addEventListener("storage", (event) => {
-  if (event.key === STORAGE_KEY || event.key === null) {
-    paused = readPaused();
-    refreshMotion();
-  }
-});
 updateState();

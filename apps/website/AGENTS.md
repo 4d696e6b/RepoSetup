@@ -14,7 +14,10 @@ exception supersedes the original website exclusion for this application only.
   provenance in `public/brand/README.md`.
 - Hand off declarative configuration and exact version-pinned terminal commands.
   Require local preview and retain CLI confirmation; never execute installers,
-  upload projects, request secrets, or publish as part of local implementation.
+  upload user projects, or request secrets. The owner has explicitly authorized
+  public Vercel deployment of this website's checked static artifact. Keep
+  repository source, planning documents, credentials, and CLI execution out of
+  the public deployment artifact.
 - Keep maturity labels and qualification limits visible. Schema acceptance does
   not prove an arbitrary combination is qualified.
 - Test catalog generation, docs links and examples, invalid choices, downloads,

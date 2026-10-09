@@ -7,6 +7,7 @@
     "catalog": "node --experimental-strip-types scripts/generate-release.ts",
     "dev": "pnpm catalog && vite --host 127.0.0.1",
     "build": "pnpm catalog && vitest run && vite build",
+    "vercel:prepare": "node --experimental-strip-types scripts/prepare-vercel.ts",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

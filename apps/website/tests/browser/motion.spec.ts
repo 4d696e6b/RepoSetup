@@ -19,11 +19,9 @@ async function fullyVisible(target: Locator) {
 test.describe("system reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
 
-  test("starts with static, readable content and a clearly disabled motion control", async ({
-    page,
-  }) => {
+  test("starts with static, readable content and no motion control", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("button", { name: "Motion reduced", exact: true })).toBeDisabled();
+    await expect(page.getByRole("button", { name: /Motion|animations/i })).toHaveCount(0);
     await expect.poll(() => runningAnimations(page)).toBe(0);
     const title = page.getByRole("heading", { level: 1 });
     expect(await fullyVisible(title)).toBe(true);
@@ -42,40 +40,36 @@ test("changing the system preference stops live motion without hiding content", 
 }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
-  await expect(page.getByRole("button", { name: "Pause animations", exact: true })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /Motion|animations/i })).toHaveCount(0);
   await expect.poll(() => runningAnimations(page)).toBeGreaterThan(0);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(page.getByRole("button", { name: "Motion reduced", exact: true })).toBeDisabled();
   await expect.poll(() => runningAnimations(page)).toBe(0);
   expect(await fullyVisible(page.getByRole("heading", { level: 1 }))).toBe(true);
   for (const card of await page.locator(".feature-card").all()) {
     expect(await fullyVisible(card)).toBe(true);
   }
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect(page.getByRole("button", { name: "Pause animations", exact: true })).toBeEnabled();
   await expect.poll(() => runningAnimations(page)).toBeGreaterThan(0);
 });
 
-test("the pause choice survives navigation and reload, then resumes on request", async ({
+test("motion stays enabled across navigation and reload despite an old saved pause choice", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.addInitScript(() => localStorage.setItem("reposetup-motion", "paused"));
   await page.goto("/");
-  await page.getByRole("button", { name: "Pause animations", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Resume animations", exact: true })).toBeEnabled();
-  await expect.poll(() => runningAnimations(page)).toBe(0);
+  await expect(page.getByRole("button", { name: /Motion|animations/i })).toHaveCount(0);
+  await expect.poll(() => runningAnimations(page)).toBeGreaterThan(0);
   for (const card of await page.locator(".feature-card").all()) {
     expect(await fullyVisible(card)).toBe(true);
   }
   await page.getByRole("link", { name: "Docs", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Find your next step.");
-  await expect(page.getByRole("button", { name: "Resume animations", exact: true })).toBeEnabled();
   await page.reload();
-  await expect(page.getByRole("button", { name: "Resume animations", exact: true })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /Motion|animations/i })).toHaveCount(0);
   await page.getByRole("link", { name: "RepoSetup home", exact: true }).click();
-  await expect.poll(() => runningAnimations(page)).toBe(0);
-  await page.getByRole("button", { name: "Resume animations", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Pause animations", exact: true })).toBeEnabled();
+  await expect.poll(() => runningAnimations(page)).toBeGreaterThan(0);
+  await page.reload();
   await expect.poll(() => runningAnimations(page)).toBeGreaterThan(0);
 });
 

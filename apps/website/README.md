@@ -54,13 +54,16 @@ effects. Documentation reading text stays static. Text retains full opacity and
 contrast during entrance and modal motion. Buttons, links, and form controls
 remain in fixed positions while surrounding text and artwork animate.
 
-Use the header's Motion button to pause or resume animations. The choice is
-remembered locally in the browser. System reduced-motion preferences always take
-precedence, including changes while the page is open. Keyboard focus finishes
-an element's entrance immediately. Decorative loops pause when the hero is
-offscreen or the tab is hidden; route changes remove observers and pending
+Animations run by default without a website motion toggle or saved pause setting.
+System reduced-motion preferences take precedence, including changes while the
+page is open. Keyboard focus finishes an element's entrance immediately.
+Decorative loops pause when the hero is offscreen or the tab is hidden;
+route changes remove observers and pending
 pointer frames. Touch devices do not get pointer tilt. No animation dependency
 or browser installation capability was added.
+
+These checks verify motion preferences, readable content, keyboard use, and
+automated accessibility rules; they do not establish complete WCAG conformance.
 
 ## Intentional recipe handoff
 
@@ -143,9 +146,44 @@ root or subdirectory. Serve the complete `dist` contents through an HTTP(S)
 static host; review that host's security headers, caching, and direct-entry
 behavior before a release.
 
-No deployment or publication was performed for this implementation. Hosting
-selection, a compatible full browser run, manual accessibility/device review,
-and owner review remain separate release work.
+## Vercel publication
+
+The owner authorized publication of the checked 0.2.3 website on Vercel. Build
+and test the workspace, then create the static deployment artifact:
+
+```sh
+pnpm build
+pnpm --filter @reposetup/website test:browser:local
+pnpm --filter @reposetup/website test:handoff
+pnpm --filter @reposetup/website vercel:prepare
+vercel login
+vercel link --yes --project reposetup
+vercel git disconnect --yes
+vercel deploy --prebuilt --prod
+```
+
+Run Vercel commands from the repository root, in the intended account/team.
+Linking may connect the Git remote automatically; disconnect it before deploying
+so pushes to CLI or candidate branches cannot replace this release-specific site.
+The
+preparation script writes `.vercel/output/config.json` and `.vercel/output/static`
+using the official [Build Output API](https://vercel.com/docs/build-output-api/configuration).
+It preserves the local project link and copies only production HTML, bundled
+CSS/JavaScript, and PNG artwork. Source maps, unexpected files, and symbolic
+links are refused; provenance notes and asset prompts remain local. The artifact
+has no server functions or environment variables. Keep `.vercel` ignored.
+
+Response headers preserve the application's CSP, prevent framing and MIME
+sniffing, revalidate the homepage, and cache hashed assets. Hash-based direct
+links use the same base page. No catch-all rewrite conceals missing assets.
+After [deploying the prebuilt artifact](https://vercel.com/docs/cli/deploy), check
+the public URL without account authentication, direct docs/builder links, image
+decoding, search, downloads, and response headers. Record the production URL and
+commit in the implementation status. Later updates require another explicit
+deployment; this task does not connect automatic deployment of other branches.
+
+Compatible WebKit/Safari and manual accessibility/device review remain open
+qualification work, as recorded above and in the implementation status.
 
 ## Artwork
 

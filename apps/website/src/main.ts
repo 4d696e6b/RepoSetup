@@ -1,6 +1,6 @@
 import "./style.css";
 import "./motion.css";
-import { createMotionControl, mountMotion } from "./motion.js";
+import { mountMotion } from "./motion.js";
 import { artwork, codeBlock, el, eyebrow, link, pageIntro } from "./dom.js";
 import { home } from "./home.js";
 import { integrations, integrationDetail, presets } from "./catalog.js";
@@ -67,7 +67,6 @@ function header(page: string) {
   search.addEventListener("click", showSearch);
   actions.append(
     search,
-    createMotionControl(),
     link("GitHub  ↗", REPOSITORY, "github-link"),
     link("Get started  ↗", "#/docs/getting-started", "button primary header-cta"),
   );
