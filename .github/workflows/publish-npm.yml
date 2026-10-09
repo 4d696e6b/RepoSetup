@@ -17,7 +17,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: publish-rsetup-0.2.3
+  group: publish-rsetup
   cancel-in-progress: false
 
 jobs:
@@ -53,7 +53,7 @@ jobs:
         run: node scripts/verify-packed-artifact.mjs --directory candidate
         env:
           EXPECTED_SOURCE_SHA: ${{ github.sha }}
-          EXPECTED_PACKAGE_VERSION: "0.2.3"
+          EXPECTED_PACKAGE_VERSION: ${{ steps.qualification.outputs.package_version }}
       - name: Ensure npm CLI supports trusted publishing
         run: npm install -g npm@^11.5.1
       - name: Publish or dry-run the previously qualified artifact
