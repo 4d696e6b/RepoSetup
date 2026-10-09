@@ -73,6 +73,11 @@ export const reactViteIntegration = defineIntegration<ReactViteOptions>({
     const hasReact = pkg !== undefined && hasPackageDependency(pkg, "react");
     const config = await firstExistingPath(context.files, VITE_CONFIG_PATHS);
 
+    // Next.js can depend on Vite only for Vitest; that does not make it a Vite app.
+    if (pkg !== undefined && hasPackageDependency(pkg, "next") && config === undefined) {
+      return notDetected();
+    }
+
     if (!hasReact || (!hasVite && config === undefined)) {
       return notDetected();
     }

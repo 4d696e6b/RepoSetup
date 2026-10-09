@@ -65,13 +65,91 @@ Remaining 0.3.0 work: packed Node 24 cross-platform create/add execution for min
 
 ## Historical 0.2.0 phase record
 
-**Phase 27 — Release-candidate qualification: in progress.** Phase 24's five observed manual usability sessions, the candidate soak, repeated exact-SHA qualification, and release evidence remain blocking gates. Phase 20 through Phase 26 implementation gates are complete.
+**0.2.3 — published and delivery accepted, 2026-10-09.** npm `latest` is
+`rsetup@0.2.3`; [GitHub release](https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.3).
+Repairs and preparation merged through PR #17/#18. Immutable tag/source:
+`v0.2.3` / `a213a6a1edf63771aba8d5b91bfdcf44d665de22`.
+Three consecutive first-attempt release runs pass all sixteen jobs and every
+required step. The full matrix qualifies 480 cases with no skips after one
+same-source Windows job retry; its original failure is retained. Fifteen usability
+sessions/117 checks, 120 controlled benchmark trials and two Linux live-service
+tests/seven checks pass. Five separate retained-helper macOS cases also pass.
+Qualified artifact-only OIDC publication, archive integrity, signed provenance,
+signatures and fresh npm delivery on Linux/macOS/Windows pass. No new calendar
+soak or integration maturity promotion is introduced. See [final release evidence](../release-docs/STABLE_RELEASE_0.2.3.md).
+
+**Installed stack audit — automated qualification complete; delivered in 0.2.3.**
+The reported Express project was repaired after a root-owned npm cache aborted installation.
+Additional confirmed defects were fixed in development dependency installation,
+SQLAlchemy's PostgreSQL driver, JavaScript Prisma imports, Docker prerequisite health
+and PostgreSQL Compose configuration. All 1,043 unit tests and 38 packed E2E tests
+pass, as do build/typecheck/lint and targeted real-install regressions. The twelve-job
+full matrix now passes all 480 cases with no skips after two unchanged-source
+Windows/npm retries; initial timeout failures remain recorded. That historical
+audit did not connect to live Docker or database services. The separate bounded
+0.2.3 live-service evidence above does not retroactively expand its scope.
+The branch is `codex/audit-installed-stack`; published 0.2.2 is unchanged.
+See [the installed stack audit](./INSTALLED_STACK_AUDIT.md) for evidence and remaining service limits.
+
+**0.2.2 — historical release: published and delivery accepted.** At its closeout, npm latest was 0.2.2.
+PR #13/#14 deliver dependency-health repairs at immutable tag/source
+`v0.2.2` / `c447e461e6e66935f077449c99d8d759e6067482`. Three complete first-attempt release qualifications,
+the 408-case expanded matrix after one documented Windows install-timeout retry,
+117 preset checks and controlled benchmarks pass. Signed artifact-only publication
+and fresh registry acceptance pass on all three release targets. See
+[0.2.2 release evidence](../release-docs/STABLE_RELEASE_0.2.2.md).
+
+**Post-create dependency health repair — automated repair qualification complete; delivered in published 0.2.2.**
+The owner reported missing FastAPI dependencies after successful creation. A pip
+manifest/detection bug and declaration-only doctor checks were confirmed.
+Implementation adds installed dependency checks, pip create manifests, active
+Python environment resolution and damaged-environment regressions.
+977 local unit tests and all 38 packed E2E tests pass; the full twelve-job
+matrix passed 408 creation/recipe executions with no skipped cases. Fast CI,
+three-platform checks and controlled installation benchmarks passed. Documentation
+records the platform suite's conditional skips and remaining manual/service gaps.
+See [the repair and validation record](./POST_CREATE_DEPENDENCY_HEALTH.md).
+
+**0.2.1 — historical release: published and delivery accepted.** At its closeout, npm `latest` identified 0.2.1. Three exact-source release runs (16 required jobs each), the twelve-job
+expanded golden matrix (408 executions), fifteen preset sessions (117 checks),
+controlled benchmarks and all three fresh registry installs passed.
+The immutable tag/source is `v0.2.1` / `c61b88a88e18ef5d9c92291131f3c938fc0b521a`.
+Signed provenance and registry integrity match the qualified tarball.
+See [the patch release record](../release-docs/STABLE_RELEASE_0.2.1.md).
+The broader 0.2.x roadmap still has explicitly unqualified manual/service paths;
+this release does not promote individual integration maturity.
+
+**Phase 27 — Release-candidate qualification: complete for the frozen alpha candidate.** Its closure is explicitly recorded on `codex/phase-27-closeout` at `837b20d438d92fb6bcd557cb4e5145230238ee13`.
+
+**Phase 28 — Stable release and delivery verification: complete.** `rsetup@0.2.0` is published with a signed attestation from qualified tag source `04228d5206617355b609f640267c73669880e060`. The registry's `latest` tag and tarball integrity match the retained candidate. [Install-from-registry acceptance 37659541713](https://github.com/4d696e6b/RepoSetup/actions/runs/37659541713) passed on Ubuntu 24.04, macOS 15, and Windows 2025. On October 7 the owner removed the additional stable seven-day wait. Phase 19 through Phase 28 gates are complete.
 
 See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the Phase 19 baseline](./PHASE_19_BASELINE.md) for the frozen scope and blockers, and [the Phase 23 benchmark protocol](./PHASE_23_BENCHMARK_PROTOCOL.md) for the required performance evidence.
 
+### Stable preparation and delivery — 2026-10-07
+
+The historical [0.2.0 qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md) gives the final source, failed and superseded attempts, signed provenance, and passing delivery run. The entries below also preserve the earlier preparation sequence.
+
+- [x] Rechecked the frozen alpha source `145e167e6b60897da96942545ba6dbd40359ad4a`: qualification runs [36704254757](https://github.com/4d696e6b/RepoSetup/actions/runs/36704254757), [36705418155](https://github.com/4d696e6b/RepoSetup/actions/runs/36705418155), and [36708257011](https://github.com/4d696e6b/RepoSetup/actions/runs/36708257011) passed; the branch remains frozen. Its soak ended October 7 at 11:30:20 UTC. This qualifies the alpha source, not a newly versioned stable artifact.
+- [x] Stable preparation is isolated from that frozen branch. The public manifest now identifies `rsetup@0.2.0`; CLI version tests derive from the manifest.
+- [x] Publication is manually dispatched, defaults to a dry-run, requires the existing `v0.2.0` tag, and downloads the immutable artifact ID from a previous qualification run. Publication never builds or packs another artifact.
+- [x] The publication gate checks three consecutive successful first-attempt full runs from the exact source, all 16 required jobs and their steps without skips, an unchanged candidate branch, and one unexpired artifact. Missing API data fails closed. The owner removed the additional stable seven-day wait on October 7; prior exact-source evidence remains recorded but cannot qualify a changed release source.
+- [x] Artifact size, SHA-256, source, version and installed launcher checks block publication. Registry errors other than 404 block publication. A retry accepts an existing version only when its integrity equals the qualified tarball; published bytes are never replaced.
+- [x] Delivery automation checks exact registry integrity and the stable dist-tag, installs outside the monorepo on Ubuntu/macOS/Windows, checks both aliases, and exercises dry-run plus a real TypeScript Express build and HTTP-response test. The same delivery routine is exercised locally using the packed stable artifact.
+- [x] Local verification on temporary Node 24.21.0: all 438 unit tests, typecheck, lint and build pass; 36 e2e tests pass. One local Python add test skips because uv is unavailable on this host; required CI installs uv and must pass it. The release validator also accepts the three actual completed alpha API responses at the recorded deadline.
+- [x] Initial stable [benchmark 37647160928](https://github.com/4d696e6b/RepoSetup/actions/runs/37647160928), full qualification [37647145314](https://github.com/4d696e6b/RepoSetup/actions/runs/37647145314) and [usability checks 37647167901](https://github.com/4d696e6b/RepoSetup/actions/runs/37647167901) passed at preparation source `3821519511acd79b3263f42f1be14a752149cd4f`. [Run 37647155958](https://github.com/4d696e6b/RepoSetup/actions/runs/37647155958) failed a Windows local-file locked-install fixture's 30-second deadline, so no stable soak was started and the failed run remains recorded.
+- [x] Corrected that test fixture to use a second local-file dependency for manifest drift and npm offline mode; it no longer performs an accidental public-registry lookup. Its four real npm subprocesses retain a bounded 90-second test budget for slower Windows runners. Production code and package dependencies are unchanged. The corrected fixture passes locally on Node 24.21.0; typecheck and lint also pass.
+- [x] Initial stable source `4a6f49ca139cbd4f0915a3556497f48ae7543ae6` passed full qualification runs [37648824809](https://github.com/4d696e6b/RepoSetup/actions/runs/37648824809), [37648831078](https://github.com/4d696e6b/RepoSetup/actions/runs/37648831078), and [37648836155](https://github.com/4d696e6b/RepoSetup/actions/runs/37648836155), plus exact-source benchmark [37648841040](https://github.com/4d696e6b/RepoSetup/actions/runs/37648841040) and usability checks [37648846715](https://github.com/4d696e6b/RepoSetup/actions/runs/37648846715). Its tarball was 106623 bytes, SHA-256 `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`. The release-gate change creates a new source requiring new runs.
+- [x] The earlier source `ee93373c59615a197d0e724353738fd3e695a1a2` passed three full cross-platform qualifications. The final corrected source `04228d5206617355b609f640267c73669880e060` passed [37657135210](https://github.com/4d696e6b/RepoSetup/actions/runs/37657135210), [37657140756](https://github.com/4d696e6b/RepoSetup/actions/runs/37657140756), and [37657146191](https://github.com/4d696e6b/RepoSetup/actions/runs/37657146191), with all 16 required jobs and steps on each run; final artifact ID `11498793067` retains the 106623-byte tarball with SHA-256 `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`.
+- [x] Qualification progress is committed on `codex/phase-28-release-evidence` so documentation updates do not move the selected release source. See [the stable qualification record](../release-docs/STABLE_QUALIFICATION_0.2.0.md).
+- [x] The owner approved npm's GitHub OIDC trusted publisher for `4d696e6b/RepoSetup` and `publish-npm.yml` with direct `npm publish`; npm reports it as valid after the accepted publish. The owner's October 7 instruction authorized proceeding without the additional calendar wait.
+- [x] The former candidate `ee93373c59615a197d0e724353738fd3e695a1a2` passed all three full qualifications [37653362998](https://github.com/4d696e6b/RepoSetup/actions/runs/37653362998), [37653376658](https://github.com/4d696e6b/RepoSetup/actions/runs/37653376658), and [37653392242](https://github.com/4d696e6b/RepoSetup/actions/runs/37653392242), plus benchmark [37653407874](https://github.com/4d696e6b/RepoSetup/actions/runs/37653407874) and usability checks [37653421554](https://github.com/4d696e6b/RepoSetup/actions/runs/37653421554). Artifact ID `11497374204` retained the same 106623-byte tarball with SHA-256 `3ac07e71812f90b95b60802900bf1fa862e0b9129ed32b13232dd2c1eee8cde8`. The tag initially pointed to this source, then the owner authorized replacing it before publication after fresh qualification of the workflow correction.
+- [x] Initial publication dry-run [37655329425](https://github.com/4d696e6b/RepoSetup/actions/runs/37655329425) passed the exact-source gate and fetched the retained archive but stopped at a nested download path before npm execution. A default-branch workaround subsequently failed npm provenance (`E422`); the tag-bound correction and fresh qualification are recorded above.
+- [x] Tag-bound [dry run 37658608341](https://github.com/4d696e6b/RepoSetup/actions/runs/37658608341) passed. [Publish run 37658713089](https://github.com/4d696e6b/RepoSetup/actions/runs/37658713089) uploaded the exact qualified tarball and signed [Sigstore entry 3133834168](https://search.sigstore.dev/?logIndex=3133834168); its immediate metadata check failed while npm scanned the package. At that delivery checkpoint, the package became visible with matching integrity and `latest: 0.2.0`.
+- [x] [Safe delivery retry 37659541713](https://github.com/4d696e6b/RepoSetup/actions/runs/37659541713) passed its integrity-preserving skip-publish step and registry acceptance on Ubuntu 24.04, macOS 15, and Windows 2025. Every step of all four jobs succeeded; no required step was skipped.
+
 ### Phase 27 progress — 2026-09-29
 
-- [x] The public CLI is now `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17.
+- [x] At this Phase 27 checkpoint, the CLI was `0.2.0-alpha.1`. Its package manifest, workspace engine metadata, and executor prerequisite preflight require Node 24 or later. Python recipe prerequisite checks require Python 3.12 or later; qualification remains restricted to 3.12 and 3.13 with uv 0.12.17. The current published version is `0.2.3`; the 0.2.0 milestone is retained above.
 - [x] Packed-artifact tests derive the tarball and manifest version from `packages/cli/package.json`, record the SHA-256, and install the tarball in a temporary directory outside the monorepo. Both `rsetup` and `reposetup` launch through npm's actual platform launcher.
 - [x] `write-artifact-evidence.mjs` writes a source-SHA and SHA-256 identity record once for each packed candidate. `verify-packed-artifact.mjs` verifies that record before installing and launching the same artifact.
 - [x] The manually dispatched candidate workflow and the `v0.2.0` publish workflow make Node 24 platform qualification, Python 3.12/3.13 golden qualification, exact-SHA failure-path qualification, a one-time candidate pack, and cross-platform artifact acceptance blocking dependencies. The publishing path uses the downloaded qualifying tarball only after its source SHA and tag/version agree.
@@ -82,7 +160,7 @@ See [Roadmap to 0.2.0](./ROADMAP_0.2.0.md) for the Phase 19–28 sequence, [the 
 - [x] The candidate benchmark report records its exact `GITHUB_SHA` when run in Actions, in addition to the existing platform/runtime and per-trial results. This makes final benchmark evidence auditable against the frozen candidate source.
 - [x] [Candidate benchmark run 36569048133](https://github.com/4d696e6b/RepoSetup/actions/runs/36569048133) completed five cold and five warm trials for fixed React and Express package profiles on Ubuntu, macOS, and Windows with Node 24. All measurements passed; consolidated installs use one subprocess versus five baseline passes.
 - [x] Candidate failure qualification is implemented at `33354279088970dd3d1dfcf8e5cfbc73a741c20c`: each supported OS runs the real timeout/interruption, permission, existing-user-file, invalid-input, cleanup, and packed usability checks. The React/Vite usability command is additionally exercised while its default Vite port is deliberately occupied; the temporary listener is always closed. The fault job blocks both packing and publication and retains its per-OS usability evidence. Cache-miss behavior is separately measured by the candidate benchmark's fresh, benchmark-owned caches.
-- [ ] Exact-SHA CI evidence, three consecutive full candidate passes, seven-day soak, and observed failure-path evidence remain release blockers. See [the candidate record](../release-docs/RELEASE_CANDIDATE_0.2.0.md).
+- [x] These alpha gates subsequently passed at `145e167e6b60897da96942545ba6dbd40359ad4a`; see the October 7 transition record above. Stable source qualification remains separate.
 
 ### Phase 25 progress — 2026-09-24
 
@@ -179,11 +257,14 @@ Researched versions are the registry releases observed on this date. Direct spec
 - [x] Experimental catalog IDs that still installed unversioned packages (`fastify`, `mongoose`, `drizzle`) now pin researched direct versions so they cannot quietly float while remaining experimental.
 - [x] Phase 27 moves the public CLI and all workspace package engine metadata to Node 24 or later, matching the 0.2.0 candidate support contract.
 
-Phase 22 implementation gates for reproducible recipes are complete. Phase 27 closes the deferred Node 24 product-metadata change; its release qualification gates remain open.
+Phase 22 implementation gates for reproducible recipes are complete. Phase 27 completed the deferred Node 24 product-metadata change and frozen alpha qualification. Stable publication and registry delivery acceptance are complete in Phase 28, as recorded above.
 
 ## Current release
 
-The observed npm dist-tag is `rsetup@0.1.1`; the source, tag, integrity, and remaining unobserved GitHub evidence are recorded in [Phase 19 baseline](./PHASE_19_BASELINE.md).
+The observed npm `latest` dist-tag is `rsetup@0.2.3`. Its registry integrity,
+`v0.2.3` source and signed provenance match the qualified artifact; fresh delivery
+passed on all three release targets. See [the current release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+Published 0.2.0 and older baseline evidence remain historical.
 
 ## Planning checkpoint — 2026-09-22
 
@@ -198,7 +279,7 @@ Inspected baseline: `a0e48a1` on `main`, macOS, Node 22.12.0, pnpm 12.5.1.
 - [x] `node packages/cli/dist/bin.js registry validate`: passed, 33 integrations.
 - [x] `pnpm test:e2e`: 12 passed, including isolated packed CLI installation.
 - [x] Sequential golden baseline: 2 passed, 3 conditionally skipped; details in Phase 19 baseline.
-- [ ] Linux/Windows execution and remote workflow results: unobserved; Phase 21/27 release blockers.
+- [ ] At this September 22 checkpoint, Linux/Windows execution and remote workflow results were unobserved. Superseded by the checked Phase 21/27/28 and current 0.2.x matrix evidence; retained as history.
 - [x] Planning/process-count baseline recorded; no speed improvement claimed.
 
 Phase 19 changed planning and evidence documentation only. No product code, package versions, integration maturity labels, releases, or external publication changed.
@@ -213,8 +294,8 @@ Phase 19 changed planning and evidence documentation only. No product code, pack
 - [x] Phase 24 — Daily CLI usability and recovery guidance
 - [x] Phase 25 — Existing integration qualification
 - [x] Phase 26 — Important new integrations
-- [ ] Phase 27 — Release-candidate qualification
-- [ ] Phase 28 — 0.2.0 publication and delivery verification
+- [x] Phase 27 — Release-candidate qualification (frozen alpha candidate)
+- [x] Phase 28 — 0.2.0 publication and delivery verification
 
 ## Historical Phase 18 checkpoint
 
@@ -243,7 +324,7 @@ The remaining sections preserve the earlier 0.1.0 launch record. Their publicati
 - [ ] Phase 18 — Release Hardening and Prerelease Qualification
   - [x] 18.0 Documentation and baseline
   - [x] 18.1 Golden-stack real execution tests (harness + B/C local; A/D/E blocked here)
-  - [x] 18.2 Cross-platform CI qualification (workflows added; remote run pending)
+  - [x] 18.2 Cross-platform CI qualification (workflows added at this checkpoint; later remote evidence is recorded in the current release)
   - [x] 18.3 npm package/artifact qualification
   - [x] 18.4 Failure-path and safety qualification
   - [x] 18.5 Integration maturity classification (candidates; none stable)
@@ -265,23 +346,29 @@ Public GitHub launch plus Model A npm packaging (2026-09-22): public package nam
 - GitHub tag `v0.1.0` points at pre-bundle `@reposetup/cli` source. Do not move that tag.
 - No integration is `stable`.
 
-## Golden stacks proven
+## Historical alpha scaffold checkpoint
 
-| Stack | Dry-run plan | Real execute |
-| --- | --- | --- |
-| Next.js / SQLite | yes | pending CI / `REPOSETUP_GOLDEN_NEXT=1` |
-| React + Vite | yes | yes (local `pnpm test:golden`) |
-| Express / Postgres config | yes | yes generation + `tsc --noEmit`; no live DB |
-| FastAPI | yes | pending `uv` |
-| Flask | yes | pending `uv` |
+The following tables retain the original alpha planning snapshot. Current recipe,
+platform and delivery results are recorded in the current phase and release above;
+these historical pending entries do not describe 0.2.3.
+
+### Golden stacks proven at that checkpoint
+
+| Stack                     | Dry-run plan | Real execute                                |
+| ------------------------- | ------------ | ------------------------------------------- |
+| Next.js / SQLite          | yes          | pending CI / `REPOSETUP_GOLDEN_NEXT=1`      |
+| React + Vite              | yes          | yes (local `pnpm test:golden`)              |
+| Express / Postgres config | yes          | yes generation + `tsc --noEmit`; no live DB |
+| FastAPI                   | yes          | pending `uv`                                |
+| Flask                     | yes          | pending `uv`                                |
 
 ## OS environments proven
 
-| OS | Local | GitHub Actions |
-| --- | --- | --- |
-| macOS | unit/lint/build/e2e/golden B+C | platform workflow on `main`/`dev` |
-| Linux | not run here | ci + platform + golden workflows |
-| Windows | not run here | platform workflow |
+| OS      | Local                          | GitHub Actions                    |
+| ------- | ------------------------------ | --------------------------------- |
+| macOS   | unit/lint/build/e2e/golden B+C | platform workflow on `main`/`dev` |
+| Linux   | not run here                   | ci + platform + golden workflows  |
+| Windows | not run here                   | platform workflow                 |
 
 ## Integrations promoted to stable
 
@@ -289,20 +376,20 @@ None.
 
 ## npm publishing status
 
-| Item | Status |
-| --- | --- |
-| GitHub source release | complete (`v0.1.0` tag remains at `78ef16c`; do not move it) |
-| Public package name | `rsetup` (unscoped `reposetup` / `reposetup-cli` blocked by similarity) |
-| Model | A — single bundled CLI |
-| Local quality suite | passed (`lint`, `typecheck`, `test`, `build`, `registry:validate`, `test:e2e`, `test:golden` with A/D/E skipped) |
-| Tarball | `rsetup-0.1.0.tgz`; isolated install covered by `pnpm test:e2e` |
-| Packed golden | React + Vite create + `stack` + `doctor` + `tsc -b` passed from an earlier tarball; re-verify after rename |
-| npm v0.1.0 | not published |
-| npx verification | not run against the registry |
-| global install verification | not run against the registry |
-| Trusted publishing workflow | prepared (`.github/workflows/publish-npm.yml`) |
-| OIDC / provenance | workflow requests `id-token: write`; provenance not disabled |
-| Trusted publisher on npmjs.com | requires manual settings after first publish |
+| Item                           | Status                                                                                                           |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| GitHub source release          | complete (`v0.1.0` tag remains at `78ef16c`; do not move it)                                                     |
+| Public package name            | `rsetup` (unscoped `reposetup` / `reposetup-cli` blocked by similarity)                                          |
+| Model                          | A — single bundled CLI                                                                                           |
+| Local quality suite            | passed (`lint`, `typecheck`, `test`, `build`, `registry:validate`, `test:e2e`, `test:golden` with A/D/E skipped) |
+| Tarball                        | `rsetup-0.1.0.tgz`; isolated install covered by `pnpm test:e2e`                                                  |
+| Packed golden                  | React + Vite create + `stack` + `doctor` + `tsc -b` passed from an earlier tarball; re-verify after rename       |
+| npm v0.1.0                     | not published                                                                                                    |
+| npx verification               | not run against the registry                                                                                     |
+| global install verification    | not run against the registry                                                                                     |
+| Trusted publishing workflow    | prepared (`.github/workflows/publish-npm.yml`)                                                                   |
+| OIDC / provenance              | workflow requests `id-token: write`; provenance not disabled                                                     |
+| Trusted publisher on npmjs.com | requires manual settings after first publish                                                                     |
 
 See `docs/NPM_TRUSTED_PUBLISHING_SETUP.md`.
 
@@ -335,3 +422,69 @@ The CLI track committed local 24/24 real-create qualification and shared recipe/
 ## 0.3.0 website Phase 8 follow-up — 2026-10-04
 
 The current catalog is `0.3.0-cli.3`, and the website's exact packed handoff targets committed CLI `84168ce`. Its selection definitions are unchanged from the previous target, while the newer CLI includes a repair symlink-safety fix. The how-to page now gives local artifact preparation commands directly, with a browser check tied to that target. The project audit also found stale Phase 2 qualification wording in the shared curated catalog and an older website-status gate list; the gate list is corrected, while the curated wording awaits an upstream CLI definition correction and requalification. Seven release phases are implemented locally, Phase 8 is partial, and three phases remain. See [combined progress](./STATUS_0.3.0.md) and [website evidence](./STATUS_WEBSITE_0.3.0.md).
+## 0.2.x stability follow-up (2026-10-08)
+
+The sections above preserve earlier milestone evidence. Current create-regression
+work is tracked in [STABILITY_0.2.x.md](STABILITY_0.2.x.md), on
+`codex/fix-create-project-paths`, based on released 0.2.0 source.
+Named-folder Next.js failure is reproduced; planner scoping, destination creation,
+bare Vite installation, install ordering, destination lockfile checks and printed
+Node server commands have regression coverage. The 495-check plan matrix passes.
+Automated qualification is complete on product source `448beb4`: all twelve
+full matrix jobs passed 34 tests each (408 successful executions), covering
+twenty packed-npx bare solutions and fourteen recipes per job. All fifteen
+packaged preset sessions passed 117 checks. Local 959 unit tests, typecheck,
+lint, build, 37 registry definitions and 37 packaged E2E tests passed; one
+external release-artifact E2E check was skipped. Workflow-only evidence fixes
+were separately qualified at `86352e3`; product files are unchanged.
+
+### Documentation reconciliation — 2026-10-08
+
+- [x] Reviewed all specification/product/security/release documentation and their unchecked status entries.
+- [x] Checked completed current Next.js/Python/platform, bare-solution, expanded recipe and preset execution gates in the acceptance and support documents.
+- [x] Added a current patch release checklist; published 0.2.0 and historical 0.1.x records remain separate.
+- [x] Corrected stale roadmap/implementation-plan next-step guidance and linked the current stability work from the documentation index.
+- [x] Recorded the completed npm trusted-publisher setup and corrected guidance to match the manually dispatched, artifact-only publication workflow.
+- [x] PR-head `8372f59` fast CI, all three platform jobs and all three controlled performance jobs passed ([CI](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942444), [platform](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942315), [performance](https://github.com/4d696e6b/RepoSetup/actions/runs/37718942331)). Product files remain identical to `448beb4`.
+
+The stability plan and linked machine-readable record contain exact run/source
+references and the historical Windows JSON trailer issue. Patch publication, bounded security review and registry delivery are now complete
+in the 0.2.1 release record. Native Windows 11/Linux arm64, live services and
+actual browser journeys remain unqualified; the generated-tool advisory has no published fix. Do not mark the entire 0.2.x roadmap or
+all integration permutations complete, and do not promote integrations from
+these results alone.
+
+### 0.2.1 delivery closeout — 2026-10-08
+
+- [x] Tested fixes and release preparation merged through PR #10 and PR #11.
+- [x] Three exact-source full release qualifications and expanded 408-execution matrix pass; all required job/step and raw case counts verified.
+- [x] All 15 presets/117 checks and three-platform controlled benchmarks pass.
+- [x] New immutable tag, exact qualified tarball, npm publication, latest, signatures, provenance and all three registry-delivery jobs pass.
+- [x] Current installation/status/support/CLI documentation and user guide target 0.2.1; historical release evidence is preserved.
+- [x] Unsupported proposed create flags/import command are no longer presented as current CLI behavior.
+- [ ] Native Windows 11/Linux arm64, live database/container/DBAPI and actual browser qualification are complete (future scope, not inferred from this release).
+
+### 0.2.2 delivery closeout — 2026-10-08
+
+- [x] Dependency-health repair and release preparation merged; all exact-source gates pass.
+- [x] Retained artifact published through tag-bound OIDC; registry bytes, provenance and signatures verified.
+- [x] Fresh registry delivery passes on Linux, macOS and Windows; GitHub release and current docs identify 0.2.2.
+- [x] Initial Windows/npm install timeout and successful same-source retry are retained in release evidence.
+- [ ] Native desktop/live services/browser journeys and every integration permutation are qualified (future scope).
+
+### 0.2.3 delivery closeout — 2026-10-09
+
+- [x] Installed-stack repairs and versioned preparation merged through PR #17/#18.
+- [x] Three consecutive first-attempt exact-source release qualifications and 480-case expanded matrix pass; original failures and bounded retries remain recorded.
+- [x] Two fresh Linux live-service tests/seven checks, fifteen usability sessions/117 checks and 120 controlled benchmark trials pass.
+- [x] Immutable tag and qualified archive published through approved OIDC; registry bytes, signed provenance and signatures verified.
+- [x] Fresh npm delivery passes on all three release targets; unversioned npm install and both aliases identify 0.2.3.
+- [x] GitHub release and current documentation/status identify published 0.2.3; historical source evidence remains unchanged.
+- [ ] Native Windows 11/Linux arm64, all service permutations/migrations and actual browser journeys are qualified (future scope).
+
+
+## 0.3.0 release branch preparation — 2026-10-09
+
+Status: **preparing; not qualified or frozen.** The isolated `codex/release-0.3.0` branch reconciles integrated feature source `bfeab2f66806d42fa7d32ac4c144d1464bd88a48` with published-fix baseline `1b5b4c2de3ad20cf5ee2366136732e417e3b0603`. It preserves the 0.3.0 selection/preview/intended-doctor/repair/website scope and all shipped 0.2.1–0.2.3 fixes. Existing candidate and development branches are unchanged. The development package version remains `0.3.0-alpha.1`; no stable version bump, tag, publication or deployment is performed.
+
+The website handoff source `a410c1d` and its packed artifact remain historical evidence. They do not identify the newly merged CLI. Before finalization, repin a reviewed artifact from the new source, regenerate and review the affected catalog/matrix, and obtain renewed CLI/website qualification. The selection and website workflows now cover canonical 0.3.0/0.4.0 release branches and retain the artifact pin guard there. Local merge validation passes: 1,159 workspace unit tests; 17 built-CLI dry-run, selection handoff and failure checks; typecheck; lint; build. Initial fixture/expectation failures are recorded and corrected in [release preparation](../release-docs/RELEASE_PREPARATION_0.3.0.md). The open freeze, full matrix, three repetitions/seven-day soak, blocker/security audit and native accessibility/device gates in [the candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) remain required.

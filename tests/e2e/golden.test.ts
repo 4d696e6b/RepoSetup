@@ -1,7 +1,21 @@
-import { access, mkdir, readFile } from "node:fs/promises";
+import {
+  access,
+  mkdir,
+  open,
+  readFile,
+  readdir,
+  realpath,
+  rename,
+  writeFile,
+} from "node:fs/promises";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
+
+import {
+  redactProcessOutput,
+  summarizeFailedProcessOutput,
+} from "../../packages/core/src/executor/output-snippet.js";
 
 import {
   cleanupWorkspace,
@@ -34,16 +48,89 @@ async function commandAvailable(command: string): Promise<boolean> {
 const runNextGolden = process.env.CI === "true" || process.env.REPOSETUP_GOLDEN_NEXT === "1";
 const hasUv = await commandAvailable("uv");
 
-async function createProject(configPath: string): Promise<{ cwd: string; created: CliRunResult }> {
+async function retainNpmDiagnostics(parent: string): Promise<void> {
+  const destination = process.env.REPOSETUP_GOLDEN_DIAGNOSTICS_DIR;
+  if (destination === undefined || destination.trim() === "") return;
+  const logsDir = path.join(parent, "npm-cache", "_logs");
+  const maxBytes = 128 * 1024;
+  try {
+    const files = (await readdir(logsDir, { withFileTypes: true })).filter(
+      (entry) => entry.isFile() && /(?:-debug-\d+\.log|-timing\.json)$/.test(entry.name),
+    );
+    if (files.length === 0) return;
+    await mkdir(destination, { recursive: true });
+    for (const entry of files) {
+      try {
+        const file = await open(path.join(logsDir, entry.name), "r");
+        try {
+          const { size } = await file.stat();
+          const length = Math.min(size, maxBytes);
+          const buffer = Buffer.alloc(length);
+          const { bytesRead } = await file.read(buffer, 0, length, size - length);
+          const redacted = Buffer.from(
+            redactProcessOutput(buffer.subarray(0, bytesRead).toString("utf8")),
+          );
+          await writeFile(
+            path.join(destination, `${path.basename(parent)}-${entry.name}`),
+            redacted.subarray(Math.max(0, redacted.length - maxBytes)),
+            { flag: "wx" },
+          );
+        } finally {
+          await file.close();
+        }
+      } catch {
+        // Optional diagnostic retention must not hide the original create failure.
+      }
+    }
+  } catch {
+    // npm may not have created logs; retain the actual create result in that case.
+  }
+}
+
+async function createProject(
+  configPath: string,
+  typescript?: boolean,
+): Promise<{ cwd: string; created: CliRunResult }> {
   // Framework generators validate the final directory name. mkdtemp's random
   // suffix can contain uppercase letters, which Next.js rejects.
   const parent = await createTempWorkspace("reposetup-golden-");
   tempDirs.push(parent);
-  const cwd = path.join(parent, "project");
-  await mkdir(cwd);
-  const created = await runNodeCli(monorepoBin, ["create", "--config", configPath, "--yes"], {
-    cwd,
+  const startingDir = path.join(parent, "project");
+  await mkdir(startingDir);
+  const config = JSON.parse(await readFile(configPath, "utf8"));
+  config.project.path = "app";
+  if (typescript !== undefined) config.framework.options = { typescript };
+  if (config.runtime.id === "node" && process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm")
+    config.packageManager = "npm";
+  const namedConfig = path.join(parent, "named-project.json");
+  await writeFile(namedConfig, JSON.stringify(config));
+  const created = await runNodeCli(monorepoBin, ["create", "--config", namedConfig, "--yes"], {
+    cwd: startingDir,
+    env: { ...process.env, npm_config_cache: path.join(parent, "npm-cache") },
   });
+  const cwd = path.join(startingDir, "app");
+  if (created.exitCode !== 0) {
+    await retainNpmDiagnostics(parent);
+    const stdoutSnippet = summarizeFailedProcessOutput(created.stdout, "");
+    if (stdoutSnippet !== undefined) {
+      created.stderr += `\nCaptured create stdout (redacted tail):\n${stdoutSnippet}\n`;
+    }
+  }
+  if (created.exitCode !== 0 && config.runtime.id === "node") {
+    const versions: Record<string, string> = {};
+    for (const name of ["vite", "vitest", "vite-tsconfig-paths", "@types/node"]) {
+      try {
+        const pkg = JSON.parse(
+          await readFile(path.join(cwd, "node_modules", name, "package.json"), "utf8"),
+        );
+        versions[name] = pkg.version;
+      } catch {
+        versions[name] = "unavailable";
+      }
+    }
+    created.stderr += `\nInstalled test tooling: ${JSON.stringify(versions)}\n`;
+  }
+  expect(await readdir(startingDir), created.stderr).toEqual(["app"]);
   return { cwd, created };
 }
 
@@ -51,14 +138,128 @@ async function expectHealthyCli(cwd: string, expectedIds: readonly string[]): Pr
   const stack = await runNodeCli(monorepoBin, ["stack"], { cwd });
   expect(stack.exitCode, stack.stderr).toBe(0);
   for (const id of expectedIds) {
-    expect(stack.stdout.toLowerCase()).toContain(id.toLowerCase());
+    expect(stack.stdout.toLowerCase()).toContain(
+      id === "pnpm" && process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm"
+        ? "npm"
+        : id.toLowerCase(),
+    );
   }
 
-  const doctor = await runNodeCli(monorepoBin, ["doctor"], { cwd });
+  const doctor = await runNodeCli(monorepoBin, ["--json", "doctor"], { cwd });
   expect(doctor.exitCode, `${doctor.stdout}\n${doctor.stderr}`).toBe(0);
+  const report = JSON.parse(doctor.stdout);
+  expect(await realpath(report.result.projectRoot)).toBe(await realpath(cwd));
+  expect(report.result.checks).toContainEqual(
+    expect.objectContaining({
+      id: expectedIds.includes("uv") ? "dependencies:python" : "dependencies:node",
+      ok: true,
+    }),
+  );
 }
 
 describe("golden stack real execution", () => {
+  it.each(
+    ["express", "fastify"].flatMap((framework) =>
+      ["sqlite", "postgresql"].map((database) => ({ framework, database })),
+    ),
+  )(
+    "Golden L — JavaScript $framework / $database / Prisma imports the generated client with plain Node",
+    async ({ framework, database }) => {
+      const fixtureRoot = await createTempWorkspace("reposetup-javascript-prisma-");
+      tempDirs.push(fixtureRoot);
+      const configPath = path.join(fixtureRoot, "config.json");
+      await writeFile(
+        configPath,
+        JSON.stringify({
+          schemaVersion: 1,
+          project: { name: "javascript-prisma-app" },
+          runtime: { id: "node" },
+          packageManager: "pnpm",
+          framework: { id: framework, options: { typescript: false } },
+          integrations: [{ id: database }, { id: "prisma" }],
+        }),
+      );
+      const { cwd, created } = await createProject(configPath);
+      expect(created.exitCode, `${created.stdout}\n${created.stderr}`).toBe(0);
+      await access(path.join(cwd, "lib/prisma.js"));
+      const schemaPath = path.join(cwd, "prisma/schema.prisma");
+      await writeFile(
+        schemaPath,
+        `${await readFile(schemaPath, "utf8")}\n\nenum AuditRole {\n  USER\n  ADMIN\n}\n\nmodel AuditEntry {\n  id Int @id @default(autoincrement())\n  role AuditRole @default(USER)\n}\n`,
+      );
+      const generated = await runProcess(
+        process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm" ? "npx" : "pnpm",
+        process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm"
+          ? ["prisma", "generate"]
+          : ["exec", "prisma", "generate"],
+        { cwd, env: { ...process.env, npm_config_cache: path.join(fixtureRoot, "npm-cache") } },
+      );
+      expect(generated.exitCode, `${generated.stdout}\n${generated.stderr}`).toBe(0);
+      const imported = await runProcess(
+        process.execPath,
+        [
+          "--input-type=module",
+          "-e",
+          `const {prisma}=await import('./lib/prisma.js');if(prisma.auditEntry===undefined)throw new Error('Generated model is missing');${database === "sqlite" ? "await prisma.$queryRawUnsafe('SELECT 1');" : ""}await prisma.$disconnect();`,
+        ],
+        {
+          cwd,
+          env: {
+            ...process.env,
+            DATABASE_URL:
+              database === "sqlite"
+                ? "file:./audit.db"
+                : "postgresql://USER:PASSWORD@127.0.0.1:5432/DATABASE",
+          },
+        },
+      );
+      expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
+
+      await expectHealthyCli(cwd, [framework, "prisma"]);
+    },
+  );
+
+  it.each(
+    ["nextjs", "react-vite"].flatMap((framework) =>
+      [true, false].map((typescript) => ({ framework, typescript })),
+    ),
+  )(
+    "Golden J — $framework / TypeScript $typescript / Tailwind / shadcn initializes and builds in a named directory",
+    async ({ framework, typescript }) => {
+      const { cwd, created } = await createProject(
+        fixturePath(`golden-${framework}-shadcn.json`),
+        typescript,
+      );
+      expect(created.exitCode, `${created.stdout}\n${created.stderr}`).toBe(0);
+      const components = JSON.parse(await readFile(path.join(cwd, "components.json"), "utf8"));
+      expect(components.tsx).toBe(typescript);
+      expect(components.tailwind.css.length).toBeGreaterThan(0);
+      await access(path.join(cwd, components.tailwind.css));
+      const built = await runProcess("pnpm", ["run", "build"], { cwd });
+      expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+      await expectHealthyCli(cwd, [framework === "nextjs" ? "next" : "vite", "shadcn", "tailwind"]);
+    },
+  );
+
+  it("Golden K — Express / MongoDB / Mongoose builds and rejects a missing URI (no live database)", async () => {
+    const { cwd, created } = await createProject(fixturePath("golden-express-mongoose.json"));
+    expect(created.exitCode, `${created.stdout}\n${created.stderr}`).toBe(0);
+    const built = await runProcess("pnpm", ["run", "build"], { cwd });
+    expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+    const guarded = await runProcess(
+      process.execPath,
+      [
+        "--input-type=module",
+        "-e",
+        "import assert from 'node:assert/strict'; delete process.env.MONGODB_URI; const {connectMongo}=await import('./src/mongoose.js'); await assert.rejects(connectMongo, /MONGODB_URI is not set/);",
+      ],
+      { cwd },
+    );
+    expect(guarded.exitCode, `${guarded.stdout}\n${guarded.stderr}`).toBe(0);
+    expect(await readFile(path.join(cwd, ".env.example"), "utf8")).toContain("MONGODB_URI=");
+    await expectHealthyCli(cwd, ["express", "mongodb", "mongoose"]);
+  });
+
   it.skipIf(!runNextGolden)(
     "Golden A — Next.js / SQLite create, Prisma generate, typecheck/build, stack, doctor",
     async () => {
@@ -67,6 +268,14 @@ describe("golden stack real execution", () => {
       );
       expect(created.exitCode, created.stderr).toBe(0);
       expect(created.stdout).toContain("Executed ");
+      expect(created.stdout).not.toContain("Installing skills");
+      const files = await readdir(cwd);
+      const pkg = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8"));
+      expect(pkg.devDependencies.vite).toBe("8.3.0");
+      expect(pkg.devDependencies.vitest).toBe("5.0.1");
+      for (const agentDir of [".agents", ".claude", ".cursor", ".windsurf"]) {
+        expect(files).not.toContain(agentDir);
+      }
 
       await access(path.join(cwd, "package.json"));
       await access(path.join(cwd, "lib/prisma.ts"));
@@ -141,6 +350,8 @@ describe("golden stack real execution", () => {
 
     const built = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+    const manifest = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8"));
+    await access(path.join(cwd, manifest.scripts.start.split(" ")[1]));
 
     const vitest = await runProcess("pnpm", ["exec", "vitest", "run"], { cwd });
     expect(vitest.exitCode, `${vitest.stdout}\n${vitest.stderr}`).toBe(0);
@@ -166,18 +377,24 @@ describe("golden stack real execution", () => {
     await access(path.join(cwd, "drizzle.config.ts"));
     await access(path.join(cwd, ".env.example"));
     const workflow = await readFile(path.join(cwd, ".github", "workflows", "node.js.yml"), "utf8");
-    expect(workflow).toContain('version: "12.5.1"');
-    expect(workflow).toContain('node-version: "24"');
-    expect(workflow).toContain("pnpm install --frozen-lockfile");
-    expect(workflow).toContain("pnpm run lint");
-    expect(workflow).toContain("pnpm test");
-    expect(workflow).toContain("pnpm run build");
+    if (process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm")
+      expect(workflow).toContain("npm ci");
+    else {
+      expect(workflow).toContain('version: "12.5.1"');
+      expect(workflow).toContain('node-version: "24"');
+      expect(workflow).toContain("pnpm install --frozen-lockfile");
+      expect(workflow).toContain("pnpm run lint");
+      expect(workflow).toContain("pnpm test");
+      expect(workflow).toContain("pnpm run build");
+    }
 
     const typecheck = await runProcess("pnpm", ["exec", "tsc", "--noEmit"], { cwd });
     expect(typecheck.exitCode, `${typecheck.stdout}\n${typecheck.stderr}`).toBe(0);
 
     const built = await runProcess("pnpm", ["run", "build"], { cwd });
     expect(built.exitCode, `${built.stdout}\n${built.stderr}`).toBe(0);
+    const manifest = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8"));
+    await access(path.join(cwd, manifest.scripts.start.split(" ")[1]));
 
     const lint = await runProcess("pnpm", ["run", "lint"], { cwd });
     expect(lint.exitCode, `${lint.stdout}\n${lint.stderr}`).toBe(0);
@@ -194,6 +411,14 @@ describe("golden stack real execution", () => {
 
     await access(path.join(cwd, "playwright.config.ts"));
     await access(path.join(cwd, "tests", "example.spec.ts"));
+    const files = await readdir(cwd);
+    if (process.env.REPOSETUP_GOLDEN_PACKAGE_MANAGER === "npm") {
+      expect(files).toContain("package-lock.json");
+      expect(files).not.toContain("pnpm-lock.yaml");
+    } else {
+      expect(files).toContain("pnpm-lock.yaml");
+      expect(files).not.toContain("package-lock.json");
+    }
     const pkg = JSON.parse(await readFile(path.join(cwd, "package.json"), "utf8")) as {
       devDependencies?: Record<string, string>;
     };
@@ -253,8 +478,56 @@ describe("golden stack real execution", () => {
       await access(path.join(cwd, "pyproject.toml"));
       await access(path.join(cwd, "alembic.ini"));
 
-      const imported = await runProcess("uv", ["run", "python", "-c", "import main"], { cwd });
+      const imported = await runProcess(
+        "uv",
+        [
+          "run",
+          "python",
+          "-c",
+          "import main; from database import create_database_engine; from psycopg import pq; engine=create_database_engine('postgresql+psycopg://USER:PASSWORD@127.0.0.1:5432/DATABASE'); assert engine.dialect.driver == 'psycopg'; assert pq.__impl__ == 'binary'; engine.dispose()",
+        ],
+        { cwd },
+      );
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
+
+      const metadataRoot = await runProcess(
+        "uv",
+        [
+          "run",
+          "--no-sync",
+          "--offline",
+          "--no-python-downloads",
+          "python",
+          "-I",
+          "-c",
+          "import sysconfig; print(sysconfig.get_path('platlib'))",
+        ],
+        { cwd },
+      );
+      expect(metadataRoot.exitCode, metadataRoot.stderr).toBe(0);
+      const sitePackages = metadataRoot.stdout.trim();
+      const binaryMetadata = (await readdir(sitePackages)).find(
+        (file) => file.startsWith("psycopg_binary-") && file.endsWith(".dist-info"),
+      );
+      expect(binaryMetadata).toBeDefined();
+      const present = path.join(sitePackages, binaryMetadata as string);
+      const hidden = `${present}.reposetup-missing`;
+      await rename(present, hidden);
+      try {
+        const damagedDoctor = await runNodeCli(monorepoBin, ["--json", "doctor"], { cwd });
+        expect(damagedDoctor.exitCode, damagedDoctor.stderr).toBe(5);
+        expect(JSON.parse(damagedDoctor.stdout).result.checks).toContainEqual(
+          expect.objectContaining({
+            id: "dependencies:python",
+            ok: false,
+            message: expect.stringContaining("psycopg-binary"),
+          }),
+        );
+        // A read-only doctor must preserve the damaged environment instead of syncing it.
+        expect(await readdir(sitePackages)).not.toContain(binaryMetadata);
+      } finally {
+        await rename(hidden, present);
+      }
 
       const pytest = await runProcess("uv", ["run", "pytest"], { cwd });
       expect(pytest.exitCode, `${pytest.stdout}\n${pytest.stderr}`).toBe(0);
@@ -276,7 +549,16 @@ describe("golden stack real execution", () => {
       await access(path.join(cwd, "pyproject.toml"));
       await access(path.join(cwd, "alembic.ini"));
 
-      const imported = await runProcess("uv", ["run", "python", "-c", "import app"], { cwd });
+      const imported = await runProcess(
+        "uv",
+        [
+          "run",
+          "python",
+          "-c",
+          "import app; from database import create_database_engine; from psycopg import pq; engine=create_database_engine('postgresql+psycopg://USER:PASSWORD@127.0.0.1:5432/DATABASE'); assert engine.dialect.driver == 'psycopg'; assert pq.__impl__ == 'binary'; engine.dispose()",
+        ],
+        { cwd },
+      );
       expect(imported.exitCode, `${imported.stdout}\n${imported.stderr}`).toBe(0);
 
       const pytest = await runProcess("uv", ["run", "pytest"], { cwd });

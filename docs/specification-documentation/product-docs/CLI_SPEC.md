@@ -1,4 +1,4 @@
-# CLI Specification
+# CLI Specification — current development source
 
 ## 1. Current command tree
 
@@ -18,7 +18,7 @@ reposetup
 └── version/help
 ```
 
-This tree reflects the inspected `0.3.0-alpha.1` source in [runCli](../../../packages/cli/src/run-cli.ts). `import` remains a proposal, as described below. The experimental task command group is implemented as described at the end of this document; live provider qualification remains open.
+This tree reflects the inspected `0.3.0-alpha.1` source in [runCli](../../../packages/cli/src/run-cli.ts). `import` remains a proposal, as described below. The experimental task command group is implemented as described at the end of this document; live provider qualification remains open. The command tree and create flags above/below match the current CLI help. Recipe-record import remains a proposed workflow, not an implemented command. Older design examples do not authorize arbitrary config commands.
 
 ## 2. `reposetup create`
 
@@ -54,13 +54,18 @@ Only show choices that are valid/relevant to the selected context.
 Example:
 
 ```bash
-reposetup create my-app \
-  --framework nextjs \
-  --package-manager pnpm \
-  --typescript
+reposetup create my-app --preset next-sqlite --dry-run
+reposetup create my-app --preset next-sqlite --yes
 ```
 
-The current parser supports `--config`, `--preset`, `--selection`, `--selection-file`, `--framework`, `--package-manager`, `--typescript`, `--diff`, `--dry-run` and `--yes`. Use a validated config/preset for additional integrations; category-specific flags are not implemented. Selection v1 retains its existing mutually exclusive inputs and interactive confirmation policy; it cannot be combined with `--yes`. See [selection v1](./SELECTION_V1.md).
+The five preset IDs are `next-sqlite`, `react-vite`, `express-postgres`, `fastapi`
+and `flask`; `reposetup presets` lists their contents. Supported create selection
+flags are `--framework`, `--package-manager`, `--typescript`, `--preset` and
+`--config`, plus preview/confirmation/output flags. Integration selections use
+prompts, a preset or declarative configuration. `--tailwind`, `--database`, `--orm`
+and `--validation` are not implemented create flags.
+
+The current parser also supports `--selection` and `--selection-file`, with mutually exclusive inputs and interactive confirmation; selection cannot be combined with `--yes`. See [selection v1](./SELECTION_V1.md).
 
 ### Config
 
@@ -210,6 +215,25 @@ Exit codes should distinguish healthy vs issues.
 
 The inspected source implements `doctor --config <path>` for an intended schemaVersion 1 stack and `doctor --fix --config <path>` for narrow, reviewed reconstruction of absent known recipe files. `--dry-run` and `--yes` require `--fix`; `--fix` requires `--config`. Existing user files are preserved, dependencies are not installed, and findings outside the allowlist receive manual guidance. Default doctor and repair dry-run can perform runtime version probes; neither constitutes coding-task acceptance. See [handleDoctor](../../../packages/cli/src/doctor.ts) and [planDoctorRepair](../../../packages/core/src/doctor/plan-repair.ts).
 
+Doctor checks installed dependency metadata in
+addition to configuration. Node checks required runtime and development packages;
+Python checks project requirements and the default development group. FastAPI's
+standard extras require the CLI and Uvicorn. For uv, doctor reads the existing
+project environment without syncing or creating one; for pip, it uses the active
+Python interpreter. Missing packages fail the health check and include remediation.
+Configuration health alone does not prove application imports or live services.
+See [post-create dependency health](../implementing-docs/POST_CREATE_DEPENDENCY_HEALTH.md)
+for the implementation, qualification and boundaries.
+
+0.2.3 installed-stack behavior: Docker selection writes discoverable
+prerequisite guidance. Doctor checks that Docker and, when detected, Docker Compose
+can run bounded version probes, without starting or connecting to the daemon.
+SQLAlchemy PostgreSQL recipes declare the Psycopg binary driver; its binary metadata
+is included in installed dependency checks. Create includes development tools under
+production/omit settings and explains manual service setup after completion.
+Interrupted creation prints the target directory and does not imply resumable create.
+See [the audit record](../implementing-docs/INSTALLED_STACK_AUDIT.md).
+
 ## 9. `reposetup export`
 
 Creates `reposetup.json` in the detected project root.
@@ -226,13 +250,13 @@ Do not include:
 - local absolute paths unless unavoidable;
 - arbitrary commands.
 
-## 10. `reposetup import`
+## 10. Proposed `reposetup import` (not shipped)
 
 Alias/flow for applying a known declarative config to a target context may be considered, but `create --config` is canonical for new projects.
 
 ## 11. Global flags
 
-Recommended:
+Implemented global flags:
 
 ```text
 --help
@@ -252,7 +276,7 @@ Mutating commands:
 
 ## 12. Exit codes
 
-Suggested initial contract:
+Implemented exit-code contract:
 
 ```text
 0 success
@@ -263,7 +287,7 @@ Suggested initial contract:
 5 verification failure
 ```
 
-Document before v1 stable and avoid changing casually.
+Preserve these codes across compatible releases; changes require explicit migration guidance.
 
 ## 13. Non-TTY daily workflow
 

@@ -5,6 +5,7 @@ import {
   notDetected,
   type DetectionContext,
   type DetectionResult,
+  type InstallationOperation,
   type PlanContext,
   type VerificationContext,
   type VerificationResult,
@@ -14,6 +15,7 @@ import { ORM_CONFLICTS } from "./conflicts.js";
 import { defineIntegration, VERIFIED_AT } from "./define.js";
 import { addPackages, execLocalBin, hasSelectedIntegration } from "./operations.js";
 import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
+import { usesTypescript } from "./scaffold.js";
 import { failVerify, mergeVerify, missingAnyFile, missingEnvKeys } from "./verify.js";
 
 const PRISMA_SQLITE_CLIENT = `import "dotenv/config";
@@ -169,22 +171,18 @@ function sqlitePlan(context: PlanContext) {
     execLocalBin(
       context,
       "prisma",
-      ["init", "--datasource-provider", "sqlite", "--output", "../generated/prisma"],
+      // Verified Prisma 7.10.0 CLI flag: avoid fetching unrelated agent instructions.
+      ["init", "--datasource-provider", "sqlite", "--output", "../generated/prisma", "--no-skills"],
       { description: "Initialize Prisma with the SQLite provider" },
     ),
+    ...configureJavascriptClient(context),
     {
       type: "add_env_example" as const,
       path: ".env.example",
       entries: [{ key: "DATABASE_URL", placeholder: "file:./dev.db" }],
       description: "Document the SQLite DATABASE_URL placeholder",
     },
-    {
-      type: "create_file" as const,
-      path: "lib/prisma.ts",
-      content: PRISMA_SQLITE_CLIENT,
-      behavior: "fail_if_exists" as const,
-      description: "Add a Prisma Client helper that uses the SQLite adapter",
-    },
+    prismaClientHelper(context, PRISMA_SQLITE_CLIENT, "SQLite"),
     execLocalBin(context, "prisma", ["generate"], {
       description: "Generate Prisma Client into generated/prisma",
     }),
@@ -221,9 +219,17 @@ function postgresPlan(context: PlanContext) {
     execLocalBin(
       context,
       "prisma",
-      ["init", "--datasource-provider", "postgresql", "--output", "../generated/prisma"],
+      [
+        "init",
+        "--datasource-provider",
+        "postgresql",
+        "--output",
+        "../generated/prisma",
+        "--no-skills",
+      ],
       { description: "Initialize Prisma with the PostgreSQL provider" },
     ),
+    ...configureJavascriptClient(context),
     {
       type: "add_env_example" as const,
       path: ".env.example",
@@ -235,15 +241,41 @@ function postgresPlan(context: PlanContext) {
       ],
       description: "Document the Prisma PostgreSQL DATABASE_URL placeholder",
     },
-    {
-      type: "create_file" as const,
-      path: "lib/prisma.ts",
-      content: PRISMA_POSTGRES_CLIENT,
-      behavior: "fail_if_exists" as const,
-      description: "Add a Prisma Client helper that uses the PostgreSQL adapter",
-    },
+    prismaClientHelper(context, PRISMA_POSTGRES_CLIENT, "PostgreSQL"),
     execLocalBin(context, "prisma", ["generate"], {
       description: "Generate Prisma Client into generated/prisma",
     }),
   ];
+}
+
+/** Node 24 can run the generated erasable TypeScript; its imports must name real files. */
+function configureJavascriptClient(context: PlanContext): InstallationOperation[] {
+  if (usesTypescript(context)) return [];
+  return [
+    {
+      type: "modify_text",
+      path: "prisma/schema.prisma",
+      // Exact generator output verified for the pinned Prisma 7.10.0 init command.
+      oldText: '  output   = "../generated/prisma"',
+      newText: '  output   = "../generated/prisma"\n  importFileExtension = "ts"',
+      description: "Use real TypeScript import paths in the generated Prisma client for Node 24",
+    },
+  ];
+}
+
+function prismaClientHelper(
+  context: PlanContext,
+  content: string,
+  provider: string,
+): InstallationOperation {
+  const typescript = usesTypescript(context);
+  return {
+    type: "create_file",
+    path: typescript ? "lib/prisma.ts" : "lib/prisma.js",
+    content: typescript
+      ? content
+      : content.replace("../generated/prisma/client.js", "../generated/prisma/client.ts"),
+    behavior: "fail_if_exists",
+    description: `Add a Prisma Client helper that uses the ${provider} adapter`,
+  };
 }

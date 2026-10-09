@@ -75,6 +75,25 @@ describe("integration verify", () => {
     );
   });
 
+  it.each([
+    { css: undefined, ok: false },
+    { css: ":root { color: black; }", ok: false },
+    { css: '@import "tailwindcss";\n:root { color: black; }', ok: true },
+  ])(
+    "checks Vite Tailwind CSS instead of package installation alone: $ok / $css",
+    async ({ css, ok }) => {
+      const result = await tailwindIntegration.verify?.(
+        await contextOf({
+          "package.json": JSON.stringify({
+            dependencies: { tailwindcss: "4.3.3", "@tailwindcss/vite": "4.3.3" },
+          }),
+          ...(css === undefined ? {} : { "src/index.css": css }),
+        }),
+      );
+      expect(result).toEqual(expect.objectContaining({ ok }));
+    },
+  );
+
   it("fails Prisma when DATABASE_URL is missing from .env.example", async () => {
     const result = await prismaIntegration.verify?.(
       await contextOf({

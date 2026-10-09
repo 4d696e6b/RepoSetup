@@ -31,7 +31,7 @@ describe("toPackageManagerCommand", () => {
       operation: {
         type: "run_command",
         command: "pnpm",
-        args: ["add", "--save-dev", "zod"],
+        args: ["add", "--save-dev", "--prod=false", "zod"],
         cwd: ".",
         description: "Install Zod",
         requiresNetwork: true,
@@ -59,6 +59,7 @@ describe("toPackageManagerCommand", () => {
         args: [
           "add",
           "--save-dev",
+          "--prod=false",
           "--save-exact",
           "--allow-build=prisma",
           "--allow-build=@prisma/engines",
@@ -85,5 +86,20 @@ describe("toPackageManagerCommand", () => {
       return;
     }
     expect(result.error.code).toBe("UNSUPPORTED_CONTEXT");
+  });
+
+  it("forwards a fresh scaffold's development policy for a runtime-only package add", () => {
+    const result = toPackageManagerCommand({
+      type: "install_package",
+      packageManager: "npm",
+      packages: ["express"],
+      cwd: "app",
+      description: "Install scaffold dependencies",
+      includeDev: true,
+    });
+    expect(result).toMatchObject({
+      ok: true,
+      operation: { args: ["install", "--include=dev", "express"], cwd: "app" },
+    });
   });
 });

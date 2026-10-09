@@ -73,7 +73,7 @@ describe("consolidateManifestInstalls", () => {
       {
         type: "run_command",
         command: "pnpm",
-        args: ["install", "--no-frozen-lockfile", "--prefer-offline"],
+        args: ["install", "--no-frozen-lockfile", "--prod=false", "--prefer-offline"],
         cwd: ".",
         description: "Install assembled package.json dependencies",
         requiresNetwork: true,
@@ -86,6 +86,26 @@ describe("consolidateManifestInstalls", () => {
     expect(consolidateManifestInstalls(operations)).toEqual({
       ok: true,
       operations,
+    });
+  });
+
+  it("preserves scaffold development dependencies when only a runtime add covers its install", () => {
+    const operation = install(["zod@4.6.5"]);
+    expect(consolidateManifestInstalls([operation], { includeDev: true })).toEqual({
+      ok: true,
+      operations: [{ ...operation, includeDev: true }],
+    });
+  });
+
+  it("leaves a runtime-only add's project install policy unchanged", () => {
+    const result = consolidateManifestInstalls([
+      install(["zod@4.6.5"]),
+      install(["express@5.2.1"]),
+    ]);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.operations.at(-1)).toMatchObject({
+      args: ["install", "--no-frozen-lockfile", "--prefer-offline"],
     });
   });
 

@@ -2,7 +2,12 @@ import { mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { planInstallationSubset, type RepoSetupConfig } from "@reposetup/core";
+import {
+  NODE_DEPENDENCY_PROBE,
+  PYTHON_DEPENDENCY_PROBE,
+  planInstallationSubset,
+  type RepoSetupConfig,
+} from "@reposetup/core";
 import { createDefaultRegistry } from "./default-registry.js";
 import { runCli } from "./run-cli.js";
 
@@ -60,6 +65,7 @@ async function invoke(
   flags: string[],
   confirmCreate?: () => Promise<boolean>,
   signal?: AbortSignal,
+  dependenciesHealthy: () => boolean = () => true,
 ) {
   const capture = captured();
   const result = await runCli(
@@ -69,7 +75,24 @@ async function invoke(
       io: capture.io,
       commandExists: async () => true,
       resolveExecutable: async (command) => command,
-      runProcess: async () => ({ exitCode: 0, stdout: "v24.21.0", stderr: "" }),
+      runProcess: async (request) => {
+        const probe =
+          request.args.includes(NODE_DEPENDENCY_PROBE) ||
+          request.args.includes(PYTHON_DEPENDENCY_PROBE);
+        const healthy = dependenciesHealthy();
+        return {
+          exitCode: probe && !healthy ? 1 : 0,
+          stdout: probe
+            ? JSON.stringify({
+                missing: healthy ? [] : ["prettier"],
+                checked: [],
+                errors: [],
+                environment: request.cwd,
+              })
+            : "v24.21.0",
+          stderr: "",
+        };
+      },
       ...(confirmCreate === undefined ? {} : { confirmCreate }),
       ...(signal === undefined ? {} : { signal }),
     },
@@ -100,6 +123,24 @@ describe("doctor --fix", () => {
     expect(repeated.result.exitCode).toBe(0);
     expect(JSON.parse(repeated.out()).repair).toMatchObject({ planned: 0, executed: 0 });
     expect(await readFile(path.join(root, ".prettierrc"), "utf8")).toBe(content);
+  });
+
+  it("refuses a repair when installed dependencies change after confirmation", async () => {
+    const root = await fixture();
+    let healthy = true;
+    const run = await invoke(
+      root,
+      [],
+      async () => {
+        healthy = false;
+        return true;
+      },
+      undefined,
+      () => healthy,
+    );
+    expect(run.result.exitCode).not.toBe(0);
+    expect(await readdir(root)).not.toContain(".prettierrc");
+    expect(JSON.parse(run.err().trim().split("\n").at(-1)!).error.code).toBe("PLAN_INVALID");
   });
 
   it("uses the Express recipe's dedicated config template", async () => {

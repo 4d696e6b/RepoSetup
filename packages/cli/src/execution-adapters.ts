@@ -179,6 +179,20 @@ export function createDefaultExecutorFileSystem(): ExecutorFileSystem {
   };
 }
 
+/** Outer package-manager identity and exec options do not describe child generators. */
+export function childProcessEnvironment(environment: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const outerLaunchKeys = new Set([
+    "npm_config_package",
+    "npm_config_call",
+    "npm_config_user_agent",
+    "npm_execpath",
+    "npm_node_execpath",
+  ]);
+  return Object.fromEntries(
+    Object.entries(environment).filter(([key]) => !outerLaunchKeys.has(key.toLowerCase())),
+  );
+}
+
 export function createDefaultProcessRunner(): ProcessRunner {
   return (request) => {
     if (request.signal?.aborted === true) {
@@ -201,7 +215,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
     return new Promise((resolve) => {
       const child = spawn(launch.command, [...launch.args], {
         cwd: request.cwd,
-        env: request.env ?? process.env,
+        env: request.env ?? childProcessEnvironment(process.env),
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,
@@ -410,8 +424,14 @@ export function createDefaultCommandExists(
       command,
       args: ["--version"],
       cwd: process.cwd(),
+      timeoutMs: 5_000,
     });
-    return result.notFound !== true && result.exitCode === 0;
+    return (
+      result.notFound !== true &&
+      result.timedOut !== true &&
+      result.aborted !== true &&
+      result.exitCode === 0
+    );
   };
 }
 
@@ -419,8 +439,19 @@ export function createDefaultCommandVersion(
   runProcess: ProcessRunner,
 ): (command: string) => Promise<string | undefined> {
   return async (command) => {
-    const result = await runProcess({ command, args: ["--version"], cwd: process.cwd() });
-    if (result.notFound === true || result.exitCode !== 0) return undefined;
+    const result = await runProcess({
+      command,
+      args: ["--version"],
+      cwd: process.cwd(),
+      timeoutMs: 5_000,
+    });
+    if (
+      result.notFound === true ||
+      result.timedOut === true ||
+      result.aborted === true ||
+      result.exitCode !== 0
+    )
+      return undefined;
     return `${result.stdout} ${result.stderr}`.trim() || undefined;
   };
 }
@@ -455,6 +486,7 @@ export function createDefaultExecutableResolver(runProcess: ProcessRunner): Exec
 }
 
 function pythonCandidates(): readonly string[] {
+  if (process.env.VIRTUAL_ENV !== undefined) return ["python", "python3", "py"];
   return process.platform === "win32" ? ["py", "python", "python3"] : ["python3", "python"];
 }
 

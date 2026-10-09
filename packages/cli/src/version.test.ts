@@ -13,6 +13,5 @@ const packageJson = JSON.parse(
 describe("cliVersion", () => {
   it("matches packages/cli/package.json", () => {
     expect(cliVersion()).toBe(packageJson.version);
-    expect(cliVersion()).toBe("0.3.0-alpha.1");
   });
 });

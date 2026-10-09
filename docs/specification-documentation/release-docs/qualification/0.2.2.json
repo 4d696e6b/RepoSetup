@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-08",
+  "version": "0.2.2",
+  "status": "published-delivery-accepted",
+  "sourceBranch": "codex/release-0.2.2",
+  "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+  "tag": "v0.2.2",
+  "ownerAuthorizedPublication": true,
+  "repairPullRequest": "https://github.com/4d696e6b/RepoSetup/pull/13",
+  "repairQualificationRun": 37743848281,
+  "artifact": {
+    "schemaVersion": 1,
+    "package": "rsetup",
+    "version": "0.2.2",
+    "sourceSha": "c447e461e6e66935f077449c99d8d759e6067482",
+    "artifact": "rsetup-0.2.2.tgz",
+    "bytes": 111924,
+    "sha256": "5a16e3f9ba26a619c8aa42193d3be820cc2ab95a6a77036a746ccc17566b9495",
+    "id": 11541295559,
+    "integrity": "sha512-IJpbsvAdWqnM0+4tSBlhq7pH3Hrvb5IQda+ICfy4O+KAEYWvSar11HRem20czAMmPsH60KRuRFS7VUnaqti1Jw=="
+  },
+  "qualificationRuns": [
+    {
+      "id": 37753011583,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37753011583",
+      "requiredJobsPassed": 16,
+      "requiredStepsSkipped": 0,
+      "attempt": 1
+    },
+    {
+      "id": 37753017211,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37753017211",
+      "requiredJobsPassed": 16,
+      "requiredStepsSkipped": 0,
+      "attempt": 1
+    },
+    {
+      "id": 37753022845,
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37753022845",
+      "requiredJobsPassed": 16,
+      "requiredStepsSkipped": 0,
+      "attempt": 1
+    }
+  ],
+  "publication": {
+    "npmPublished": true,
+    "githubReleasePublished": true,
+    "version": "0.2.2",
+    "latest": "0.2.2",
+    "sourceSha": "c447e461e6e66935f077449c99d8d759e6067482",
+    "integrity": "sha512-IJpbsvAdWqnM0+4tSBlhq7pH3Hrvb5IQda+ICfy4O+KAEYWvSar11HRem20czAMmPsH60KRuRFS7VUnaqti1Jw==",
+    "sha256": "5a16e3f9ba26a619c8aa42193d3be820cc2ab95a6a77036a746ccc17566b9495",
+    "sha512": "209a5bb2f01d5aa9ccd3ee2d481961abba47dc7aef6f921075af8809fcb83be2801185af49aaf5d4745e9b6d1ccc03263ec1fad0a46e4454bb5549daaad8b527",
+    "bytes": 111924,
+    "provenanceInvocation": "https://github.com/4d696e6b/RepoSetup/actions/runs/37770326352/attempts/1",
+    "transparencyLogIndex": "3147229139",
+    "dryRunId": 37770098836,
+    "publishRunId": 37770326352,
+    "githubReleaseUrl": "https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.2",
+    "githubReleasePublishedAt": "2026-10-08T11:33:06Z",
+    "registryAcceptance": "success",
+    "signatureVerification": "success",
+    "verifiedSignatures": 27,
+    "verifiedAttestations": 20
+  },
+  "notQualified": [
+    "Every integration permutation",
+    "Native Windows 11",
+    "Linux arm64",
+    "Live PostgreSQL/MongoDB/container connections",
+    "SQLAlchemy DBAPI connectivity",
+    "Playwright browser execution"
+  ],
+  "local": {
+    "unitTestsPassed": 977,
+    "packagedE2ETestsPassed": 38,
+    "packagedE2ETestsSkipped": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "registryDefinitionsValidated": 37,
+    "productionAuditVulnerabilities": 0
+  },
+  "preparationPullRequest": "https://github.com/4d696e6b/RepoSetup/pull/14",
+  "redundantMergeRunsCanceled": [
+    {
+      "id": 37770051875,
+      "workflow": "Golden stacks"
+    },
+    {
+      "id": 37770051948,
+      "workflow": "Usability sessions"
+    }
+  ],
+  "redundantMergeRunNote": "Automatic merge runs were canceled to free publication capacity; their merge tree equals the fully qualified candidate tree. They are not qualification passes.",
+  "expandedGolden": {
+    "runId": 37753026671,
+    "sourceSha": "c447e461e6e66935f077449c99d8d759e6067482",
+    "attempt": 2,
+    "successfulConfigurations": 12,
+    "passedExecutions": 408,
+    "skippedCases": 0,
+    "initialFailedJob": 113230644169,
+    "recoveredJob": 113262619227,
+    "initialFailure": "Next.js/SQLite npm install exceeded the 300-second operation deadline; initial job had 33 passed and one failed case. Only that job was rerun on unchanged source.",
+    "jobs": [
+      {
+        "id": 113230643833,
+        "name": "ubuntu-24.04 / x64 / Python 3.12 / npm",
+        "passed": 34
+      },
+      {
+        "id": 113230644046,
+        "name": "macos-15 / arm64 / Python 3.13 / npm",
+        "passed": 34
+      },
+      {
+        "id": 113230644100,
+        "name": "macos-15 / arm64 / Python 3.12 / npm",
+        "passed": 34
+      },
+      {
+        "id": 113230644104,
+        "name": "macos-15 / arm64 / Python 3.13 / pnpm",
+        "passed": 34
+      },
+      {
+        "id": 113230644132,
+        "name": "ubuntu-24.04 / x64 / Python 3.12 / pnpm",
+        "passed": 34
+      },
+      {
+        "id": 113230644156,
+        "name": "windows-2025 / x64 / Python 3.13 / npm",
+        "passed": 34
+      },
+      {
+        "id": 113230644172,
+        "name": "macos-15 / arm64 / Python 3.12 / pnpm",
+        "passed": 34
+      },
+      {
+        "id": 113230644214,
+        "name": "ubuntu-24.04 / x64 / Python 3.13 / pnpm",
+        "passed": 34
+      },
+      {
+        "id": 113230644358,
+        "name": "windows-2025 / x64 / Python 3.13 / pnpm",
+        "passed": 34
+      },
+      {
+        "id": 113230644369,
+        "name": "ubuntu-24.04 / x64 / Python 3.13 / npm",
+        "passed": 34
+      },
+      {
+        "id": 113230644398,
+        "name": "windows-2025 / x64 / Python 3.12 / pnpm",
+        "passed": 34
+      },
+      {
+        "id": 113262619227,
+        "name": "windows-2025 / x64 / Python 3.12 / npm",
+        "passed": 34
+      }
+    ],
+    "evidence": [
+      {
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "npm",
+        "python": "Python 3.12.10",
+        "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 aarch64-apple-darwin)"
+      },
+      {
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "pnpm",
+        "python": "Python 3.12.10",
+        "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 aarch64-apple-darwin)"
+      },
+      {
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "npm",
+        "python": "Python 3.13.15",
+        "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 aarch64-apple-darwin)"
+      },
+      {
+        "platform": "darwin",
+        "architecture": "arm64",
+        "node": "v24.20.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "pnpm",
+        "python": "Python 3.13.15",
+        "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 aarch64-apple-darwin)"
+      },
+      {
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "npm",
+        "python": "Python 3.12.15",
+        "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)"
+      },
+      {
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "pnpm",
+        "python": "Python 3.12.14",
+        "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)"
+      },
+      {
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "npm",
+        "python": "Python 3.13.16",
+        "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)"
+      },
+      {
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "pnpm",
+        "python": "Python 3.13.15",
+        "uv": "uv 0.12.23 (x86_64-unknown-linux-gnu)"
+      },
+      {
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "npm",
+        "python": "Python 3.12.10",
+        "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+      },
+      {
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "pnpm",
+        "python": "Python 3.12.10",
+        "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+      },
+      {
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "npm",
+        "python": "Python 3.13.15",
+        "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+      },
+      {
+        "platform": "win32",
+        "architecture": "x64",
+        "node": "v24.21.0",
+        "sourceCommit": "c447e461e6e66935f077449c99d8d759e6067482",
+        "scope": "full",
+        "packageManager": "pnpm",
+        "python": "Python 3.13.15",
+        "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-pc-windows-msvc)"
+      }
+    ]
+  },
+  "presetSessions": {
+    "runId": 37753078760,
+    "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37753078760",
+    "sessionsPassed": 15,
+    "checks": 117,
+    "expectedOccupiedPortRefusals": 3
+  },
+  "controlledPerformance": {
+    "runId": 37753083035,
+    "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37753083035",
+    "jobsPassed": 3,
+    "scope": "Controlled installation-pass fixture; not universal generator speed"
+  },
+  "supplementalCI": {
+    "ci": 37753095771,
+    "platform": 37753095235,
+    "prMergeCommit": "b8bfe39f15e7e5cea9a4a40c578b8ec2bd6cdf4c",
+    "treeEqualsCandidate": true,
+    "conditionalSkips": [
+      "Windows unprivileged symlink test",
+      "One uv add check per platform job without uv; local full E2E and golden Python paths cover uv"
+    ]
+  }
+}

@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { IntegrationDefinition, ProcessRunRequest, RepoSetupConfig } from "@reposetup/core";
+import { createBuiltInRegistry } from "@reposetup/integrations";
 import { createRegistry } from "@reposetup/registry";
 import { afterEach, describe, expect, it } from "vitest";
 
@@ -481,7 +482,7 @@ describe("runCli", () => {
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
-    expect(captured.stdout()).toContain("Executed 3 operations.");
+    expect(captured.stdout()).toContain("Executed 4 operations.");
     expect(captured.stdout()).toContain(`Project directory: ${path.resolve(root)}`);
     expect(captured.stderr()).toBe("");
     expect(await readdir(root)).toEqual(
@@ -491,12 +492,125 @@ describe("runCli", () => {
     expect(runs).toEqual([
       {
         command: "pnpm",
-        args: ["add", "fake-orm"],
+        args: ["add", "--prod=false", "fake-orm"],
         cwd: path.resolve(root),
         timeoutMs: 300_000,
       },
+      expect.objectContaining({
+        command: "node",
+        args: ["-e", expect.any(String)],
+        cwd: path.resolve(root),
+      }),
     ]);
   });
+
+  it("does not report create success when a package install exits zero but verification finds missing packages", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-create-incomplete-"));
+    tempDirs.push(root);
+    await writeFile(path.join(root, "reposetup.json"), JSON.stringify(sampleConfig()));
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--yes"], {
+      cwd: root,
+      registry: testRegistry(),
+      io: captured.io,
+      runProcess: async (request) =>
+        request.args[0] === "-e"
+          ? {
+              exitCode: 1,
+              stdout: JSON.stringify({
+                missing: ["fake-orm"],
+                checked: [],
+                errors: [],
+                environment: root,
+              }),
+              stderr: "",
+            }
+          : { exitCode: 0, stdout: "", stderr: "" },
+    });
+    expect(result.exitCode).toBe(EXIT_CODES.VERIFICATION_FAILURE);
+    expect(captured.stderr()).toContain("VERIFICATION_FAILED");
+    expect(captured.stderr()).toContain("fake-orm");
+    expect(captured.stderr()).toContain(`Project directory: ${path.resolve(root)}`);
+    expect(captured.stderr()).toContain("Create does not resume an interrupted installation");
+    expect(captured.stdout()).not.toContain("Executed 4 operations.");
+  });
+
+  it("reports the nested project and safe recovery when its cache prevents installation", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-create-cache-"));
+    tempDirs.push(root);
+    const config = { ...sampleConfig(), project: { name: "child", path: "child" } };
+    await writeFile(path.join(root, "reposetup.json"), JSON.stringify(config));
+    const captured = captureIo();
+    const result = await runCli(["create", "--config", "reposetup.json", "--yes"], {
+      cwd: root,
+      registry: testRegistry(),
+      io: captured.io,
+      runProcess: async () => ({
+        exitCode: 1,
+        stdout: "",
+        stderr:
+          "npm error EEXIST EACCES: permission denied, mkdir '/user/.npm/_cacache/content-v2'",
+      }),
+    });
+    expect(result.exitCode).toBe(EXIT_CODES.GENERAL_FAILURE);
+    expect(captured.stderr()).toContain(`Project directory: ${path.join(root, "child")}`);
+    expect(captured.stderr()).toContain(
+      "npm install --include=dev --cache <writable-cache-directory>",
+    );
+    expect(captured.stderr()).toContain("Create does not resume an interrupted installation");
+    expect(captured.stdout()).not.toContain("Installed dependency check passed");
+    expect(await readdir(path.join(root, "child"))).toContain("src");
+  });
+
+  it.each([
+    ["postgresql", "DATABASE_URL"],
+    ["mongodb", "MONGODB_URI"],
+  ])(
+    "explains the remaining %s and Docker prerequisites after creation",
+    async (databaseId, variable) => {
+      const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-create-system-"));
+      tempDirs.push(root);
+      const captured = captureIo();
+      const runs: ProcessRunRequest[] = [];
+      await writeFile(
+        path.join(root, "reposetup.json"),
+        JSON.stringify({
+          schemaVersion: 1,
+          project: { name: "app", path: "app" },
+          runtime: { id: "node" },
+          packageManager: "npm",
+          framework: { id: "express", options: { typescript: true } },
+          integrations: [{ id: databaseId }, { id: "docker" }],
+        }),
+      );
+      const result = await runCli(["create", "--config", "reposetup.json", "--yes"], {
+        cwd: root,
+        registry: createBuiltInRegistry(),
+        io: captured.io,
+        commandExists: async () => true,
+        runProcess: async (request) => {
+          runs.push(request);
+          return {
+            exitCode: 0,
+            stdout: request.args[0] === "--version" ? "v24.21.0" : "",
+            stderr: "",
+          };
+        },
+      });
+      expect(result.exitCode, captured.stderr()).toBe(EXIT_CODES.SUCCESS);
+      expect(captured.stdout()).toContain(
+        "no database server was installed, started, or connected",
+      );
+      expect(captured.stdout()).toContain(`Configure your server and ${variable}`);
+      expect(captured.stdout()).toContain(
+        "Docker installation and running containers have not been verified",
+      );
+      expect(runs.some((request) => request.command === "docker")).toBe(false);
+      expect(await readFile(path.join(root, "app", "DOCKER_SETUP.md"), "utf8")).toContain(
+        "docker --version",
+      );
+    },
+  );
 
   it("returns invalid input for a malformed config file", async () => {
     const captured = captureIo();
@@ -628,12 +742,14 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("nextjs");
     expect(captured.stdout()).toContain("prisma");
     expect(captured.stdout()).toContain(
-      "pnpm create next-app@16.3.5 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
+      "pnpm create next-app@16.3.6 . --ts --eslint --app --no-src-dir --no-tailwind --import-alias @/* --use-pnpm --skip-install --yes",
     );
     expect(captured.stdout()).toContain(
       "modify_json  Assemble package.json dependencies before a consolidated install",
     );
-    expect(captured.stdout()).toContain("pnpm install --no-frozen-lockfile --prefer-offline");
+    expect(captured.stdout()).toContain(
+      "pnpm install --no-frozen-lockfile --prod=false --prefer-offline",
+    );
     expect(captured.stdout()).toContain("pnpm exec prisma generate");
     expect(captured.stdout()).toContain("pnpm exec vitest run");
     expect(captured.stdout()).toContain("No files or commands were executed.");
@@ -663,7 +779,7 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain(
       "pnpm create vite@8.3.0 . --template react-ts --no-interactive",
     );
-    expect(captured.stdout()).toContain("pnpm dlx shadcn@4.21.0 init --yes -t vite");
+    expect(captured.stdout()).toContain("pnpm dlx shadcn@4.21.0 init --yes --defaults -t vite");
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
   });
@@ -718,10 +834,10 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("fastapi");
     expect(captured.stdout()).toContain("uv init . --bare --name example-fastapi-app");
     expect(captured.stdout()).toContain(
-      "install_package  Install fastapi[standard]==0.141.1, pydantic==2.13.5, SQLAlchemy==2.0.54, alembic==1.20.0",
+      "install_package  Install fastapi[standard]==0.141.1, pydantic==2.13.5, SQLAlchemy==2.0.54, psycopg[binary]==3.3.6, alembic==1.20.0",
     );
     expect(captured.stdout()).toContain(
-      "packages  fastapi[standard]==0.141.1, pydantic==2.13.5, SQLAlchemy==2.0.54, alembic==1.20.0",
+      "packages  fastapi[standard]==0.141.1, pydantic==2.13.5, SQLAlchemy==2.0.54, psycopg[binary]==3.3.6, alembic==1.20.0",
     );
     expect(captured.stdout()).toContain("uv run alembic init alembic");
     expect(captured.stdout()).toContain("No files or commands were executed.");
@@ -749,10 +865,10 @@ describe("runCli", () => {
     expect(captured.stdout()).toContain("Dry-run for example-flask-app");
     expect(captured.stdout()).toContain("flask");
     expect(captured.stdout()).toContain(
-      "install_package  Install Flask==3.1.3, SQLAlchemy==2.0.54, alembic==1.20.0",
+      "install_package  Install Flask==3.1.3, SQLAlchemy==2.0.54, psycopg[binary]==3.3.6, alembic==1.20.0",
     );
     expect(captured.stdout()).toContain(
-      "packages  Flask==3.1.3, SQLAlchemy==2.0.54, alembic==1.20.0",
+      "packages  Flask==3.1.3, SQLAlchemy==2.0.54, psycopg[binary]==3.3.6, alembic==1.20.0",
     );
     expect(captured.stdout()).toContain("No files or commands were executed.");
     expect(await snapshotTree(root)).toEqual(before);
@@ -1136,7 +1252,14 @@ describe("runCli", () => {
       cwd: root,
       io: captured.io,
       commandExists: async () => true,
-      runProcess: async () => ({ exitCode: 0, stdout: "v24.0.0\n", stderr: "" }),
+      runProcess: async (request) => ({
+        exitCode: 0,
+        stdout:
+          request.args[0] === "-e"
+            ? JSON.stringify({ checked: ["next"], missing: [], errors: [], environment: root })
+            : "v24.0.0\n",
+        stderr: "",
+      }),
     });
 
     expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);

@@ -45,6 +45,8 @@ export async function runDoctor(input: {
   commandVersion?: (command: string) => Promise<string | undefined>;
   resolveExecutable?: ExecutableResolver;
   expectedConfig?: RepoSetupConfig;
+  checkCommand?: (command: string, args: readonly string[]) => Promise<boolean>;
+  checkInstalledDependencies?: (context: VerificationContext) => Promise<DoctorCheck[]>;
 }): Promise<RunDoctorResult> {
   const parsedExpected =
     input.expectedConfig === undefined ? undefined : parseRepoSetupConfig(input.expectedConfig);
@@ -76,12 +78,24 @@ export async function runDoctor(input: {
   const detection = await createDetectionContext(detected.stack.projectRoot, files);
   const checks: DoctorCheck[] = [];
   await collectPathChecks(
-    [...presentItems(detected.stack.runtimes), ...presentItems(detected.stack.packageManagers)],
+    [
+      ...presentItems(detected.stack.runtimes),
+      ...presentItems(detected.stack.packageManagers),
+      ...presentItems(detected.stack.integrations),
+    ],
     input.commandExists,
     input.commandVersion,
     input.resolveExecutable,
     checks,
   );
+  await collectComposePrerequisite(
+    presentItems(detected.stack.integrations),
+    input.checkCommand,
+    checks,
+  );
+  if (input.checkInstalledDependencies !== undefined) {
+    checks.push(...(await input.checkInstalledDependencies(detection)));
+  }
   await collectLockfileConflicts(files, checks);
   await collectEnvironmentGuidance(files, checks);
   if (expectedConfig === undefined) {
@@ -191,6 +205,34 @@ function expectedOnlyPrerequisites(config: RepoSetupConfig, stack: DetectedStack
   ].filter((item) => !detectedIds.has(item.id));
 }
 
+async function collectComposePrerequisite(
+  items: readonly DetectedItem[],
+  checkCommand: ((command: string, args: readonly string[]) => Promise<boolean>) | undefined,
+  checks: DoctorCheck[],
+): Promise<void> {
+  if (!items.some((item) => item.id === "docker-compose")) return;
+  // A missing Docker CLI already has its own actionable prerequisite failure.
+  if (checks.some((check) => check.id === "prerequisite:docker" && !check.ok)) return;
+
+  const available =
+    checkCommand === undefined ? false : await checkCommand("docker", ["compose", "version"]);
+  checks.push({
+    id: "prerequisite:docker-compose",
+    name: "Docker Compose CLI",
+    ok: available,
+    message: available
+      ? "docker compose is available. The Docker daemon and running containers were not checked."
+      : "docker compose could not be verified. A Compose file does not install the Compose plugin.",
+    ...(available
+      ? {}
+      : {
+          code: "PREREQUISITE_MISSING" as const,
+          suggestion:
+            "Install Docker Compose from https://docs.docker.com/compose/install/ and confirm docker compose version succeeds. RepoSetup does not install it or start containers.",
+        }),
+  });
+}
+
 export function failedDoctorChecks(result: DoctorResult): DoctorCheck[] {
   return result.checks.filter((check) => !check.ok);
 }
@@ -253,7 +295,10 @@ async function collectPathChecks(
       id: `prerequisite:${item.id}`,
       name: item.name,
       ok: false,
-      message: `${spec.command} was not found on PATH.`,
+      message:
+        item.id === "docker"
+          ? "docker was not found on PATH or could not run docker --version."
+          : `${spec.command} was not found on PATH.`,
       code: "PREREQUISITE_MISSING",
       suggestion: spec.hint,
     });
@@ -325,7 +370,7 @@ async function collectVerifyChecks(
         id: item.id,
         name: item.name,
         ok: true,
-        message: result.message ?? `${item.name} looks healthy.`,
+        message: result.message ?? `${item.name} configuration looks healthy.`,
       });
       continue;
     }

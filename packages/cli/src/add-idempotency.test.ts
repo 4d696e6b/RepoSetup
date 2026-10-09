@@ -13,7 +13,9 @@ const tempDirs: string[] = [];
 const registry = createBuiltInRegistry();
 
 afterEach(async () => {
-  await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+  await Promise.all(
+    tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true, maxRetries: 3 })),
+  );
 });
 
 function captureIo(): { io: CliIo; stdout: () => string; stderr: () => string } {
@@ -56,118 +58,121 @@ async function pythonApp(root: string, packages: readonly string[]): Promise<voi
 }
 
 describe("add idempotency (built-in catalog)", () => {
-  it("is a no-op the second time for each addable Node integration", async () => {
-    const cases: Array<{ id: string; setup: (root: string) => Promise<void> }> = [
-      {
-        id: "zod",
-        setup: (root) => nodeApp(root, { zod: "4.0.0" }),
+  const nodeCases: Array<{ id: string; setup: (root: string) => Promise<void> }> = [
+    {
+      id: "zod",
+      setup: (root) => nodeApp(root, { zod: "4.0.0" }),
+    },
+    {
+      id: "prettier",
+      setup: async (root) => {
+        await nodeApp(root, { prettier: "3.0.0" });
+        await writeFile(path.join(root, ".prettierrc"), "{}\n");
+        await writeFile(
+          path.join(root, ".prettierignore"),
+          "# Ignore artifacts:\nbuild\ncoverage\n",
+        );
       },
-      {
-        id: "prettier",
-        setup: async (root) => {
-          await nodeApp(root, { prettier: "3.0.0" });
-          await writeFile(path.join(root, ".prettierrc"), "{}\n");
-          await writeFile(
-            path.join(root, ".prettierignore"),
-            "# Ignore artifacts:\nbuild\ncoverage\n",
-          );
-        },
+    },
+    {
+      id: "vitest",
+      setup: async (root) => {
+        await writeFile(
+          path.join(root, "package.json"),
+          JSON.stringify({
+            name: "idempotency-app",
+            scripts: { test: "vitest" },
+            dependencies: { next: "16.0.0" },
+            devDependencies: {
+              vitest: "3.0.0",
+              vite: "8.3.0",
+              "@vitejs/plugin-react": "5.0.0",
+              jsdom: "26.0.0",
+              "@testing-library/react": "16.0.0",
+              "@testing-library/dom": "10.0.0",
+              "vite-tsconfig-paths": "5.0.0",
+              "@types/node": "22.20.4",
+            },
+          }),
+        );
+        await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+        await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
+        await writeFile(path.join(root, "vitest.config.mts"), "export default {}\n");
+        await mkdir(path.join(root, "app", "api", "health"), { recursive: true });
+        await writeFile(
+          path.join(root, "app", "api", "health", "route.ts"),
+          "export function GET() { return Response.json({ ok: true }); }\n",
+        );
+        await writeFile(path.join(root, "health.test.ts"), "export {};\n");
       },
-      {
-        id: "vitest",
-        setup: async (root) => {
-          await writeFile(
-            path.join(root, "package.json"),
-            JSON.stringify({
-              name: "idempotency-app",
-              scripts: { test: "vitest" },
-              dependencies: { next: "16.0.0" },
-              devDependencies: {
-                vitest: "3.0.0",
-                "@vitejs/plugin-react": "5.0.0",
-                jsdom: "26.0.0",
-                "@testing-library/react": "16.0.0",
-                "@testing-library/dom": "10.0.0",
-                "vite-tsconfig-paths": "5.0.0",
-              },
-            }),
-          );
-          await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
-          await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
-          await writeFile(path.join(root, "vitest.config.mts"), "export default {}\n");
-          await mkdir(path.join(root, "app", "api", "health"), { recursive: true });
-          await writeFile(
-            path.join(root, "app", "api", "health", "route.ts"),
-            "export function GET() { return Response.json({ ok: true }); }\n",
-          );
-          await writeFile(path.join(root, "health.test.ts"), "export {};\n");
-        },
+    },
+    {
+      id: "prisma",
+      setup: async (root) => {
+        await nodeApp(root, {
+          prisma: "7.0.0",
+          "@prisma/client": "7.0.0",
+          "@prisma/adapter-better-sqlite3": "7.0.0",
+          dotenv: "16.0.0",
+          "@types/better-sqlite3": "7.0.0",
+        });
+        await mkdir(path.join(root, "prisma"));
+        await mkdir(path.join(root, "lib"));
+        await mkdir(path.join(root, "generated", "prisma"), { recursive: true });
+        await writeFile(
+          path.join(root, "prisma/schema.prisma"),
+          'datasource db { provider = "sqlite" url = env("DATABASE_URL") }\n',
+        );
+        await writeFile(path.join(root, ".env.example"), "DATABASE_URL=file:./dev.db\n");
+        await writeFile(path.join(root, "lib/prisma.ts"), "export {}\n");
       },
-      {
-        id: "prisma",
-        setup: async (root) => {
-          await nodeApp(root, {
-            prisma: "7.0.0",
-            "@prisma/client": "7.0.0",
-            "@prisma/adapter-better-sqlite3": "7.0.0",
-            dotenv: "16.0.0",
-            "@types/better-sqlite3": "7.0.0",
-          });
-          await mkdir(path.join(root, "prisma"));
-          await mkdir(path.join(root, "lib"));
-          await mkdir(path.join(root, "generated", "prisma"), { recursive: true });
-          await writeFile(
-            path.join(root, "prisma/schema.prisma"),
-            'datasource db { provider = "sqlite" url = env("DATABASE_URL") }\n',
-          );
-          await writeFile(path.join(root, ".env.example"), "DATABASE_URL=file:./dev.db\n");
-          await writeFile(path.join(root, "lib/prisma.ts"), "export {}\n");
-        },
+    },
+    {
+      id: "drizzle",
+      setup: async (root) => {
+        await writeFile(
+          path.join(root, "package.json"),
+          JSON.stringify({
+            name: "idempotency-app",
+            dependencies: {
+              next: "16.0.0",
+              "drizzle-orm": "0.44.0",
+              pg: "8.0.0",
+              dotenv: "16.0.0",
+            },
+            devDependencies: {
+              "drizzle-kit": "0.31.0",
+              tsx: "4.0.0",
+              "@types/pg": "8.0.0",
+            },
+          }),
+        );
+        await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+        await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
+        await writeFile(
+          path.join(root, ".env.example"),
+          "DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/DATABASE\n",
+        );
+        await mkdir(path.join(root, "src/db"), { recursive: true });
+        await writeFile(path.join(root, "drizzle.config.ts"), "export default {}\n");
+        await writeFile(path.join(root, "src/db/schema.ts"), "export {}\n");
+        await writeFile(path.join(root, "src/db/index.ts"), "export {}\n");
       },
-      {
-        id: "drizzle",
-        setup: async (root) => {
-          await writeFile(
-            path.join(root, "package.json"),
-            JSON.stringify({
-              name: "idempotency-app",
-              dependencies: {
-                next: "16.0.0",
-                "drizzle-orm": "0.44.0",
-                pg: "8.0.0",
-                dotenv: "16.0.0",
-              },
-              devDependencies: {
-                "drizzle-kit": "0.31.0",
-                tsx: "4.0.0",
-                "@types/pg": "8.0.0",
-              },
-            }),
-          );
-          await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
-          await writeFile(path.join(root, "next.config.mjs"), "export default {};\n");
-          await writeFile(
-            path.join(root, ".env.example"),
-            "DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/DATABASE\n",
-          );
-          await mkdir(path.join(root, "src/db"), { recursive: true });
-          await writeFile(path.join(root, "drizzle.config.ts"), "export default {}\n");
-          await writeFile(path.join(root, "src/db/schema.ts"), "export {}\n");
-          await writeFile(path.join(root, "src/db/index.ts"), "export {}\n");
-        },
+    },
+    {
+      id: "mongoose",
+      setup: async (root) => {
+        await nodeApp(root, { mongoose: "8.0.0" });
+        await writeFile(path.join(root, ".env.example"), "MONGODB_URI=mongodb://localhost/app\n");
+        await mkdir(path.join(root, "src"));
+        await writeFile(path.join(root, "src/mongoose.js"), "export {}\n");
       },
-      {
-        id: "mongoose",
-        setup: async (root) => {
-          await nodeApp(root, { mongoose: "8.0.0" });
-          await writeFile(path.join(root, ".env.example"), "MONGODB_URI=mongodb://localhost/app\n");
-          await mkdir(path.join(root, "src"));
-          await writeFile(path.join(root, "src/mongoose.js"), "export {}\n");
-        },
-      },
-    ];
+    },
+  ];
 
-    for (const item of cases) {
+  it.each(nodeCases)(
+    "is a no-op the second time for the addable Node integration $id",
+    async (item) => {
       const root = await mkdtemp(path.join(os.tmpdir(), `reposetup-idem-${item.id}-`));
       tempDirs.push(root);
       await item.setup(root);
@@ -196,8 +201,8 @@ describe("add idempotency (built-in catalog)", () => {
       });
       expect(secondResult.exitCode, second.stderr()).toBe(EXIT_CODES.SUCCESS);
       expect(second.stdout()).toContain(`No changes. Integration "${item.id}" is already present.`);
-    }
-  });
+    },
+  );
 
   it("is a no-op the second time for each addable Python integration", async () => {
     const cases = [

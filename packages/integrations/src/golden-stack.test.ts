@@ -43,7 +43,7 @@ describe("golden Next.js/SQLite stack", () => {
       [
         "pnpm",
         "create",
-        "next-app@16.3.5",
+        "next-app@16.3.6",
         ".",
         "--ts",
         "--eslint",
@@ -56,7 +56,7 @@ describe("golden Next.js/SQLite stack", () => {
         "--skip-install",
         "--yes",
       ],
-      ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
+      ["pnpm", "install", "--no-frozen-lockfile", "--prod=false", "--prefer-offline"],
       [
         "pnpm",
         "exec",
@@ -66,11 +66,12 @@ describe("golden Next.js/SQLite stack", () => {
         "sqlite",
         "--output",
         "../generated/prisma",
+        "--no-skills",
       ],
       ["pnpm", "exec", "prisma", "generate"],
-      ["pnpm", "install", "--no-frozen-lockfile", "--prefer-offline"],
+      ["pnpm", "install", "--no-frozen-lockfile", "--prod=false", "--prefer-offline"],
       ["pnpm", "exec", "vitest", "run"],
-      ["pnpm", "add", "zod@4.6.5"],
+      ["pnpm", "add", "--prod=false", "zod@4.6.5"],
     ]);
 
     expect(result.operations).toEqual(
