@@ -101,6 +101,11 @@ and invalidates the exact-source publication gate.
    It downloads the retained qualified archive and publishes through the existing
    npm trusted publisher. It does not rebuild or repack. A package-wide concurrency
    group serializes publications so simultaneous versions do not race `latest`.
+   From stable 0.3.0 onward, the publisher also checks the retained archive against
+   the website's reviewed version/digest pin before any registry lookup or publish.
+   This applies on every ref. Integrated/canonical alpha branches require the same
+   binding during qualification; independent CLI alpha work remains separately
+   qualifiable. The workflow step always runs and records that runtime decision.
 4. Verify exact npm version, `latest`, archive integrity, provenance/signatures
    and fresh registry delivery on Linux, macOS and Windows. The workflow derives
    the expected version from the tagged manifests. If an identical version is
