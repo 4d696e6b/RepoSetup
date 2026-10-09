@@ -784,3 +784,25 @@ each of 25 original compilations once, plus 75 coding intents; analytical treatm
 ledgers include source compilation for both compiled treatments. Simulated usage
 does not establish provider calls, tokens, billing or cost per accepted task. All
 qualification flags remain false; production/live/platform gates remain open.
+
+### Vetted context expansion and retained-edit repair
+
+An additional expensive local fixed-treatment case requests unchanged compiler
+settings while working on the Result interface. The executor retains the context
+call, expands only the declared reference, updates the input revision and reuses
+the same attempt. Its dependent page task first proposes an independently authored
+safe variant that returns success for invalid input. Actual public unit checks must
+fail before any automatic implementation repair is eligible. Those failed checks
+skip acceptance review; only passing tools permit the current frozen-reference
+review. The reviewer does not supply hidden oracle feedback or fabricate executable
+check results.
+
+The second page attempt receives the existing bounded repair metadata and retained
+failed edit. Its exact preimage/hash is the failed variant, and the executor replaces
+that variant with the frozen reference without rollback. Real task checks, refreshed
+reviews and final phase checks precede independent terminal evaluation and private
+record retention. Every context/implementation/repair intent and actual verification
+launch remains in the diagnostic ledger and host overhead. The private holdout is
+used only once at each treatment's terminal state. This fixed reference exercise
+still does not establish general candidate isolation, model quality, production
+routing or full comparative qualification.

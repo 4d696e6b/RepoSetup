@@ -18,10 +18,14 @@ import {
   createQualifiedReferenceFixture,
 } from "./qualified-fixture.js";
 
-/** Test-only one successful fixed trial. All proposed bytes are independently vetted
- * frozen reference bytes; whole/routed remain failures with simulated definition ports.
+/** Test-only one successful fixed trial. Proposed code is independently vetted:
+ * frozen reference bytes or an optional safe faulty variant derived from them.
+ * Whole/routed remain failures with simulated definition ports.
  * This is neither arbitrary candidate isolation nor a three-treatment qualification. */
-export async function createManagedBenchmarkVettedHost(parent: string) {
+export async function createManagedBenchmarkVettedHost(
+  parent: string,
+  options: { contextAndRepair?: true } = {},
+) {
   const started = performance.now();
   const base = createManagedBenchmarkFailureHost(parent);
   const tools = await createQualifiedFixtureHost();
@@ -122,6 +126,16 @@ export async function createManagedBenchmarkVettedHost(parent: string) {
         path.join(fixtureRoot, base.f.fixtureId, "reference/src/page.ts"),
         "utf8",
       );
+    // Independently authored, safe failure injection: return success for invalid
+    // items. Real public unit checks must reject it before the repair is requested.
+    const faultyText = newText.replace(
+      "  issues.sort((a, b) =>",
+      "  if (issues.length) return { ok: true, value: { items, nextCursor: null } };\n  issues.sort((a, b) =>",
+    );
+    if (faultyText === newText) throw new Error("Vetted failure injection anchor changed");
+    const configHash = taskByteHash(await readFile(path.join(fixture.project, "tsconfig.json")));
+    let requestedContext = false,
+      injectedFailure = false;
     const taskDraft: typeof base.taskDraft = (review, whole) => {
       const draft = base.taskDraft(review, whole);
       // The optional agent-test path is writable authority, not an output promised
@@ -158,6 +172,7 @@ export async function createManagedBenchmarkVettedHost(parent: string) {
           const observed = await original.dispatch(prepared); // Count/retain simulated intent, not a network call.
           const input = JSON.parse(prepared.payload) as {
             identity: { planId: string; taskId: string; attemptId: string; inputRevision: string };
+            repair?: { action: string; retainedEffects: { path: string; afterHash: string }[] };
           };
           if (
             !fixedPlan ||
@@ -165,13 +180,54 @@ export async function createManagedBenchmarkVettedHost(parent: string) {
             !["result", "page"].includes(input.identity.taskId)
           )
             throw new Error("Vetted provider input changed");
+          if (options.contextAndRepair && input.identity.taskId === "result" && !requestedContext) {
+            requestedContext = true;
+            return {
+              ...observed,
+              outcome: "completed",
+              document: {
+                kind: "task_provider_reply",
+                schemaVersion: 1,
+                ...input.identity,
+                reply: {
+                  type: "context_request",
+                  references: [
+                    {
+                      source: { path: "tsconfig.json", fileHash: configHash },
+                      reason: "Inspect the unchanged compiler settings for the Result interface.",
+                    },
+                  ],
+                },
+              },
+            };
+          }
+          let before = oldText,
+            after = newText;
+          if (options.contextAndRepair && input.identity.taskId === "page") {
+            if (!injectedFailure) {
+              if (input.repair)
+                throw new Error("Initial vetted proposal unexpectedly has repair evidence");
+              injectedFailure = true;
+              after = faultyText;
+            } else {
+              if (
+                input.repair?.action !== "repair_implementation" ||
+                !input.repair.retainedEffects.some(
+                  (effect) =>
+                    effect.path === "src/page.ts" && effect.afterHash === taskByteHash(faultyText),
+                )
+              )
+                throw new Error("Repair is not bound to the retained vetted failed edit");
+              before = faultyText;
+            }
+          }
           const changes = [
             {
               type: "replace_text",
               path: "src/page.ts",
-              expectedFileHash: taskByteHash(oldText),
-              oldText,
-              newText,
+              expectedFileHash: taskByteHash(before),
+              oldText: before,
+              newText: after,
             },
           ];
           return {
@@ -239,6 +295,8 @@ export async function createManagedBenchmarkVettedHost(parent: string) {
       closureRevision: tools.closure.revision,
       reviews: () => reviews,
       sharedHostSetupMs: fixed.setupMs,
+      diagnosticVariant: options.contextAndRepair ? "context_and_repair" : "reference_only",
+      faultyPageHash: taskByteHash(faultyText),
     };
   } catch (error) {
     await tools.dispose();

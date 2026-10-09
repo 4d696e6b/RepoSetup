@@ -24,6 +24,15 @@ and tested. Production capability profiles remain unconfirmed; live routing fail
 closed until I/J qualification. Milestone I is now in progress (qualification/evaluation). Historical records below retain
 the original G gate; the final scope amendment supersedes that gate assignment.
 
+I now has five frozen independently discriminating fixtures, a complete 75-slot
+failure-path diagnostic, vetted G/E success and context/repair joins with privately
+retained terminal observations, and extracted packed task/legacy dry-run coverage.
+These establish local boundaries and accounting, not model quality or savings.
+The required qualified comparative trials, production model/effort evidence,
+separately authorized live smoke and remaining installed/Linux qualification stay
+open. Per owner steering, unavailable prerequisites are skipped as unverified.
+J remains unstarted.
+
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
 - Base branch: `codex/0.3.0-candidate-integration`.
@@ -1912,3 +1921,64 @@ Linux/platform qualification. Milestone I remains in progress; J is unstarted.
 Unavailable provider/platform gates remain unverified under owner steering. No
 keys, API/paid calls, installation, website source change, version bump, merge or
 publication occurred. Disposable packed/project roots were cleaned.
+
+## Milestone I — vetted context and repair joined to terminal acceptance (2026-10-10)
+
+Added an opt-in test-only variant of the vetted fixed-treatment host. It requests the
+unchanged compiler settings for the Result task, then uses the existing same-attempt
+context expansion boundary. The page task first proposes independently authored
+safe code that incorrectly accepts invalid input. Actual qualified unit checks must
+reject that applied edit and skip acceptance review. Only then may the existing
+implementation-repair policy open a second page attempt.
+
+The repair requires the exact retained faulty preimage/hash and replaces it with
+vetted frozen reference bytes through the executor. No rollback or hidden-oracle
+feedback is used. The new expensive joined case checks purpose/attempt/revision
+attribution, retained edit chaining, refreshed task/phase review, terminal independent
+acceptance, private evidence joining and inclusive failed-attempt/context accounting.
+The original reference-only variant and bounded failure driver remain available.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: the complete joined case passes
+(one test, **725.15 seconds**). It retains one accepted fixed trial and two failed
+whole/routed trials, with all three independent records linked and 72 slots missing.
+One source compilation and six coding simulations include the fixed treatment's
+context/implementation/implementation/repair requests. The fixed ledger retains
+the source reservation and all four requests. Two page effects chain the retained
+faulty postimage to the repaired preimage; the failed attempt remains in history.
+The nonzero unit exit/output hash justifies implementation repair; its executed-test
+count remains null. Successful task/phase checks retain their actual unit counts.
+
+The run makes **27 managed process launches** (nine fixed Git probes plus 18
+qualified E tools), and five current task/phase reviews; failed tools skip review.
+Final independent public/compatibility/holdout/type acceptance passes only for the
+fixed candidate, with no hidden feedback in provider inputs. Cash has seven intents,
+six settled and one uncertain, with null measured calls/tokens/cost. Analytical
+whole/fixed/routed ledgers have 1/5/2 intents. No comparison is qualified.
+
+Measured host time is 708242.32 ms; full driver time is 724024 ms, including 15651 ms
+shared host/tool setup and final private read-back. Cleanup is excluded. The run used
+dirty `d3d800a` source, driver revision
+`sha256:e785e502961a73dcfec71e947abb2d632c82ada4402a9cce2b4097db738a5dbf`
+and actual verifier closure revision
+`sha256:27e43832957cf5053823b5e6c884923bd456c12db4707e9849e3e964d8bf2e99`.
+All **61 ordinary offline tests across nine files** pass (133.08 seconds), including
+eight packed cases with unchanged artifact/lockfile hashes from the preceding slice.
+Workspace/task-test typechecks, lint/formatting and whitespace checks pass. Runtime/
+curated tool recipes are unchanged, so preceding build/core qualification retains
+its scope; this case directly executes the new qualified closure. No final check fails.
+
+Development probes were
+stopped while correcting assertions on retained effect metadata, null test counts
+for failed process observations and fixed-plan input filtering. The assertions now
+retain the existing sequence/change-index fields, require the actual nonzero unit
+exit/output hash and exclude the separate routed root from fixed-attempt inputs.
+The first complete run reached final acceptance with 27 managed processes but failed
+an assertion that expected six reviews; failed tools correctly skip review, giving
+five. That assertion and the documentation were corrected before rerunning.
+The final complete run passes. Complete diagnostics are printed before assertions
+so a future assertion failure does not discard the completed observation.
+Only those probes' owned private scratch directories were removed after checking
+identity and process termination. No runtime/tool recipes or public CLI behavior
+changed. Milestone I remains in progress; J remains unstarted. Unavailable provider/
+platform gates remain unverified under owner steering, and no keys/API/paid calls,
+installation, website source change, version bump, merge or publication occurred.

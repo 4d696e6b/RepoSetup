@@ -7,6 +7,7 @@ export default defineConfig({
       "tests/e2e/task-managed-fixture.test.ts",
       "tests/e2e/task-managed-success.test.ts",
       "tests/e2e/task-managed-campaign.test.ts",
+      "tests/e2e/task-managed-repair.test.ts",
     ],
     fileParallelism: false,
     maxWorkers: 1,
