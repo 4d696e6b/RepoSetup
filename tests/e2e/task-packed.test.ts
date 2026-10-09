@@ -16,7 +16,13 @@ import { taskByteHash, DEFAULT_HANDOFF_PREFERENCES } from "../../packages/core/d
 import { createDefaultProcessRunner } from "../../packages/cli/src/execution-adapters.js";
 import { inventory, workspaceRoot } from "../tasks/fixture-tools.js";
 import { portableFixture } from "../tasks/portable-fixture.js";
-import { matrix, selectionFor, tokenFor } from "./selection-matrix.js";
+import {
+  matrix,
+  selectionFor,
+  tokenFor,
+  writeExistingContext,
+  PRIVATE_MARKER,
+} from "./selection-matrix.js";
 
 let root: string;
 let bin: string;
@@ -26,6 +32,7 @@ let sourceSha: string;
 let sourceDirty: boolean;
 let packedPassed = false;
 let passedCases = 0;
+const expectedCases = 5 + matrix.contexts.length;
 const runner = createDefaultProcessRunner();
 const env = { PATH: process.env.PATH ?? "", LANG: "C", LC_ALL: "C", TZ: "UTC", CI: "1" };
 const execute = async (command: string, args: string[], cwd: string, emptyPath = false) => {
@@ -97,7 +104,7 @@ beforeAll(async () => {
 });
 afterEach((context) => {
   if (context.task.result?.state === "pass") passedCases++;
-  packedPassed = passedCases === 5;
+  packedPassed = passedCases === expectedCases;
 });
 afterAll(async () => {
   if (packedPassed)
@@ -107,10 +114,13 @@ afterAll(async () => {
         schemaVersion: 1,
         qualification: false,
         scope:
-          "Extracted tarball with preinstalled dependency hydration; Node-invoked and native POSIX aliases with zero-effect dry-run. No package installation.",
+          "Extracted tarball with preinstalled dependency hydration; Node/native POSIX aliases, task boundaries and all legacy presets/context create/add dry-runs. No package installation.",
         sourceSha,
         sourceDirty,
         artifactHash,
+        passedCases,
+        expectedCases,
+        selectionMatrixRevision: matrix.revision,
         lockfileHash: taskByteHash(await readFile(path.join(workspaceRoot, "pnpm-lock.yaml"))),
         host: { platform: process.platform, architecture: process.arch, node: process.version },
       }) + "\n",
@@ -253,31 +263,72 @@ describe("offline extracted packed task and legacy contracts", () => {
     }
     expect(await inventory(f.project)).toEqual(before);
   });
-  it("preserves preset, stack-config and selection-token/file create dry-runs", async () => {
-    const cwd = path.join(root, "legacy");
+  it.each(matrix.contexts)(
+    "preserves $id config/selection create and positional/selection add dry-runs",
+    async (context) => {
+      const cwd = path.join(root, `legacy ${context.id} space ไทย`);
+      await mkdir(cwd);
+      const selection = selectionFor(context, context.optionalIds, "create");
+      if (selection.mode !== "create") throw new Error("create fixture");
+      const configFile = path.join(cwd, "stack.json"),
+        selectionFile = path.join(cwd, "selection.json");
+      await writeFile(configFile, JSON.stringify(selection.config));
+      await writeFile(selectionFile, JSON.stringify(selection));
+      const before = await inventory(cwd);
+      for (const route of [
+        ["--preset", context.presetId],
+        ["--config", configFile],
+        ["--selection", tokenFor(selection)],
+        ["--selection-file", selectionFile],
+      ]) {
+        const result = await cli(["--json", "create", ...route, "--dry-run"], cwd);
+        expect(result.exitCode, result.stdout + result.stderr).toBe(0);
+        expect(JSON.parse(result.stdout)).toMatchObject({
+          kind: "plan",
+          dryRun: true,
+          plan: { valid: true, errors: [] },
+        });
+      }
+      expect(await inventory(cwd)).toEqual(before);
+      const project = path.join(cwd, "existing project ไทย");
+      await mkdir(project);
+      await writeExistingContext(project, context);
+      const add = selectionFor(context, context.optionalIds, "add");
+      const addFile = path.join(cwd, "add-selection.json");
+      await writeFile(addFile, JSON.stringify(add));
+      const existing = await inventory(cwd);
+      for (const route of [
+        ...context.optionalIds.map((id) => [id]),
+        ["--selection", tokenFor(add)],
+        ["--config", addFile],
+      ]) {
+        const result = await cli(["--json", "add", ...route, "--dry-run"], project);
+        expect(result.exitCode, result.stdout + result.stderr).toBe(0);
+        expect(JSON.parse(result.stdout)).toMatchObject({
+          version: 1,
+          kind: "plan",
+          dryRun: true,
+          plan: { valid: true, errors: [] },
+        });
+        expect(result.stdout + result.stderr).not.toContain(PRIVATE_MARKER);
+        expect(await inventory(cwd)).toEqual(existing);
+      }
+    },
+  );
+  it("preserves every legacy preset dry-run with no project tools available", async () => {
+    const cwd = path.join(root, "legacy presets");
     await mkdir(cwd);
-    const context = matrix.contexts.find((c) => c.context.frameworkId === "react-vite")!,
-      selection = selectionFor(context, [], "create");
-    if (selection.mode !== "create") throw new Error("create fixture");
-    const configFile = path.join(cwd, "stack.json"),
-      selectionFile = path.join(cwd, "selection.json");
-    await writeFile(configFile, JSON.stringify(selection.config));
-    await writeFile(selectionFile, JSON.stringify(selection));
     const before = await inventory(cwd);
-    for (const route of [
-      ["--preset", "react-vite"],
-      ["--config", configFile],
-      ["--selection", tokenFor(selection)],
-      ["--selection-file", selectionFile],
-    ]) {
-      const result = await cli(["--json", "create", ...route, "--dry-run"], cwd);
+    for (const id of ["next-sqlite", "react-vite", "express-postgres", "fastapi", "flask"]) {
+      const result = await cli(["--json", "create", "--preset", id, "--dry-run"], cwd);
       expect(result.exitCode, result.stdout + result.stderr).toBe(0);
       expect(JSON.parse(result.stdout)).toMatchObject({
+        version: 1,
         kind: "plan",
         dryRun: true,
-        plan: { valid: true, errors: [] },
+        plan: { valid: true, errors: [], config: { schemaVersion: 1 } },
       });
+      expect(await inventory(cwd)).toEqual(before);
     }
-    expect(await inventory(cwd)).toEqual(before);
   });
 });

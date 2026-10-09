@@ -1883,3 +1883,32 @@ live smoke remain unverified. J is unstarted. Per owner steering, unavailable
 prerequisites are skipped while available local implementation continues.
 No keys/API/paid calls, installation, website source changes, package version change,
 merge or publication occurred.
+
+## Milestone I — broader extracted packed legacy dry-run coverage (2026-10-10)
+
+Expanded the existing no-install packed contract test across all three frozen
+selection contexts (React/Vite, Express and FastAPI), including legacy stack config,
+selection token/file create, positional add and additive selection token/file inputs.
+Paths contain spaces and Thai characters. Existing detection-only projects retain
+user scripts, source, config and a synthetic private marker; previews preserve every
+file and do not expose that marker. All five existing legacy presets also retain
+valid schemaVersion 1 create previews with no project tools available. Both declared
+aliases, native POSIX shebang execution and existing task boundaries remain covered.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: all **eight packed cases** pass
+(9.35 seconds), with unchanged artifact hash
+`sha256:ecf7598f0871882193703a56bc16669cde98edc6e8bb1791cc6a7d8837354fd6`
+and frozen lockfile hash
+`sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4`.
+Workspace/task-test typechecks, lint/formatting and whitespace checks pass. The first
+run exposed an incorrect test assumption about the additive file flag; it now uses
+the existing `add --config` contract. CLI behavior/flags were not changed. No final
+check fails. Runtime/tool recipes are unchanged, so the preceding build/core/E
+validation retains its scope and was not repeated.
+
+This is dirty `25dcec6` source, extracted tarball/preinstalled dependency hydration
+and dry-run evidence, not installed-package lifecycle, real installer execution or
+Linux/platform qualification. Milestone I remains in progress; J is unstarted.
+Unavailable provider/platform gates remain unverified under owner steering. No
+keys, API/paid calls, installation, website source change, version bump, merge or
+publication occurred. Disposable packed/project roots were cleaned.
