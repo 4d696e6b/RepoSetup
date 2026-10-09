@@ -48,10 +48,22 @@ test("public analytics scripts load and page views contain only bounded public r
     "Preview hosts keep analytics disabled.",
   );
   const pageViews: string[] = [];
+  const performanceEvents: string[] = [];
   const failures: string[] = [];
+  // Vercel intentionally ignores automated browsers. Exercise its real script
+  // as a regular browser, but intercept collection so tests never inflate stats.
+  await page.addInitScript(() => {
+    const agent = navigator.userAgent.replace("HeadlessChrome", "Chrome");
+    Object.defineProperty(navigator, "webdriver", { get: () => false });
+    Object.defineProperty(navigator, "userAgent", { get: () => agent });
+  });
+  await page.route("**/_vercel/insights/view", (route) => route.fulfill({ status: 204 }));
+  await page.route("**/_vercel/speed-insights/vitals", (route) => route.fulfill({ status: 204 }));
   page.on("request", (request) => {
     if (request.method() === "POST" && request.url().includes("/_vercel/insights/view"))
       pageViews.push(request.postData() ?? "");
+    if (request.method() === "POST" && request.url().includes("/_vercel/speed-insights/vitals"))
+      performanceEvents.push(request.postData() ?? "");
   });
   page.on("console", (message) => {
     if (/Content Security Policy|Failed to load script/.test(message.text()))
@@ -96,6 +108,20 @@ test("public analytics scripts load and page views contain only bounded public r
   await page.getByRole("searchbox").fill("private-search-canary");
   for (const payload of pageViews)
     expect(payload).not.toMatch(/private-project-canary|private-search-canary|react-vite/);
+  await page.evaluate(() => window.dispatchEvent(new Event("pagehide")));
+  await expect.poll(() => performanceEvents.length).toBeGreaterThan(0);
+  for (const payload of performanceEvents) {
+    expect(payload).not.toMatch(
+      /private-canary|do-not-collect|private-project-canary|private-search-canary|react-vite/,
+    );
+    const { metrics } = JSON.parse(payload) as { metrics: { href: string; route: string }[] };
+    for (const metric of metrics) {
+      const url = new URL(metric.href);
+      expect(url.search).toBe("");
+      expect(url.hash).toBe("");
+      expect(metric.route).toMatch(/^\/(?:docs\/create|presets|builder)$/);
+    }
+  }
   expect(failures).toEqual([]);
 });
 

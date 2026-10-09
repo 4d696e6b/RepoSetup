@@ -61,8 +61,8 @@ generated from the pinned source. The build refuses drift from those definitions
    preview hosts do not initialize them. Git build configuration and the
    project-level ignored-build gate reject all branches except
    `codex/0.2.3-website`. GitHub is now connected to `4d696e6b/RepoSetup` and
-   that branch is pushed. Preview publication and production verification are
-   the next actions. Dashboard access is needed to select the
+   that branch is pushed. The Git preview passed its cloud build and was promoted
+   to production; public HTTP and browser checks passed. Dashboard access is needed to select the
    production branch. Standard Speed Insights is free; Plus requires Pro and
    a separately approved subscription. No paid upgrade has been performed.
 
@@ -88,15 +88,22 @@ Worktree:
 ## Production deployment
 
 - Project: `reposetup`, account/team: `mink2551s-projects`.
-- Source commit: `3fdb1f52984af914caf491f6d06160cad0e9df5d` on `codex/0.2.3-website`.
-- Deployment: `dpl_3SNVo8qpCaz56Dv5cyqHf1Sx4WHt`, production, `READY`.
+- Current source commit: `56317054e2897c02eb651b8c8b9578b7ac8dbae9` on `codex/0.2.3-website`.
+- Current deployment: `dpl_5ofxVpQpuu7Sp1q1gBQwi7xZWtGd`, production, `READY`.
 - Public alias: `https://reposetup.vercel.app/`.
 - Immutable deployment URL:
-  `https://reposetup-r3tjmmx7a-mink2551s-projects.vercel.app`.
+  `https://reposetup-o1piu56rn-mink2551s-projects.vercel.app`.
 - The public alias returns HTTP 200 without authentication. CLI login protection
   may apply to deployment-specific URLs; it does not block the public alias.
-- Automatic Git deployments are disconnected. Deployment uploaded only the
-  5.7 MB prebuilt static artifact; website runtime has no secrets or functions.
+- GitHub is connected. Project and checked-in guards allow builds only from
+  `codex/0.2.3-website`. Production branch tracking still reads `main`; the ignored
+  build gate refuses that branch. Until dashboard access sets the website branch,
+  its pushes create previews and promotion is explicit. The website artifact has
+  ten static files and no app functions or runtime secrets; Vercel provides the
+  observability collection endpoints.
+- Original production deployment: `dpl_3SNVo8qpCaz56Dv5cyqHf1Sx4WHt`, source
+  `3fdb1f52984af914caf491f6d06160cad0e9df5d`. Earlier checks below describe that
+  deployment; the follow-up checks describe the current update.
 - Production verification report stays local in ignored
   `.vercel/production-verification.json`.
 
@@ -171,7 +178,7 @@ Worktree:
 
 ## Production checklist follow-up checks
 
-- Website tests: **36 passed**, including exact branch gates, shallow-history
+- Website tests: **37 passed**, including exact branch gates, shallow-history
   baseline recovery, bounded analytics routes, URL redaction, suppressed custom
   events and local/preview host exclusion.
 - Local browser matrix: **48 passed** after the analytics/privacy changes;
@@ -187,6 +194,48 @@ Worktree:
   command passed a real local build and artifact preparation.
 - Published-package handoff: **46 checks passed** again after the follow-up,
   with no installer execution or changes to user projects.
-- Public live analytics collection and custom-domain HTTPS will be verified
-  after the follow-up deployment and Hostinger DNS change. Earlier production
-  checks above describe the original deployment, not this pending update.
+- A Git preview of `5631705` reached READY, with all 37 tests passing in Vercel's
+  cloud build. A preceding preview failed schema validation because `public` is
+  not a supported `vercel.json` field; it was removed and a schema-subset check
+  added. The corrected preview was promoted to the current production deployment.
+- Current public HTTP checks: **25 passed**. All ten static files match local
+  bytes, security/cache headers match, private/source/missing files return 404,
+  and both Vercel SDK scripts return 200. Report:
+  `.vercel/checklist-verification.json` (ignored).
+- Current production browser suite: **nine passed** across Chrome, mobile Chrome
+  and Firefox. It checks docs/search, all 15 preset downloads, real hosted SDK
+  scripts, canonical page-view and performance payloads, and absence of private
+  URL/config/project/search values. Vercel's scripts skip automated browsers by
+  design. The SDK test emulates a regular browser and intercepts collection so
+  it does not inflate production statistics. This verifies payload construction
+  and CSP, not the dashboard's reception of actual visitor data. Initial timeout
+  and CSS-selector assertions were corrected before the passing suite.
+- Native in-app browser review verified the published footer privacy link and
+  heading focus. Screenshot: `.vercel/checklist-privacy.jpg` (ignored).
+
+## Remaining account actions
+
+- **Custom domain:** Hostinger sign-in is required to replace parking DNS. Vercel
+  currently recommends apex A records `216.198.79.1` and `64.29.17.1`, and
+  `www` CNAME `3a0fe97223ab7ad2.vercel-dns-017.com`. Existing apex A is
+  `2.57.91.91`, apex AAAA is `2620:101:9000:53::55`, and `www` points back to
+  the parked apex. Recheck Vercel recommendations before changing records;
+  remove the parking-only AAAA and preserve unrelated DNS records. Then verify
+  DNS, apex HTTPS and the configured `www` → apex 308 redirect. Ownership is
+  verified in Vercel, but both domains remain DNS-misconfigured.
+- **Production branch:** Vercel browser sign-in reached its authenticator screen.
+  Complete sign-in there, then select `codex/0.2.3-website` in Environments →
+  Production → Branch Tracking. Keep the exact project-level ignore gate.
+- **Speed Insights Plus:** No paid upgrade was made. Current team is Hobby.
+  Standard Speed Insights SDK is deployed and free. Official pricing currently
+  requires the $20/month Pro platform plan, plus $10/project/month for Plus and
+  $0.65 per 10,000 Plus events, before other usage/taxes. Review the account's
+  checkout and obtain explicit spending approval before purchase; Pro also
+  changes Web Analytics to usage billing. Sources:
+  [Pro plan](https://vercel.com/docs/plans/pro-plan),
+  [Speed Insights pricing](https://vercel.com/docs/speed-insights/limits-and-pricing),
+  [Web Analytics pricing](https://vercel.com/docs/analytics/limits-and-pricing).
+
+Three of the five requested checklist actions are completed: Git connection,
+preview deployment, and Web Analytics. Custom-domain DNS and the paid Plus
+upgrade remain. No newer CLI contract is required for these account actions.
