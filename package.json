@@ -32,7 +32,8 @@
     "benchmark:plans": "pnpm build && node scripts/benchmark-plans.mjs",
     "benchmark:real-installs": "pnpm build && node scripts/benchmark-real-installs.mjs",
     "benchmark:install-passes": "pnpm build && node scripts/benchmark-install-passes.mjs",
-    "review:licenses": "node scripts/check-dependency-licenses.mjs"
+    "review:licenses": "node scripts/check-dependency-licenses.mjs",
+    "release:prepare": "node scripts/prepare-release-version.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

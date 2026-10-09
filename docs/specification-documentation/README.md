@@ -10,3 +10,5 @@
 Dependency-health repair delivered in published 0.2.2: [post-create dependency health](./implementing-docs/POST_CREATE_DEPENDENCY_HEALTH.md).
 
 Current installed-stack patch: [0.2.3 release status](./release-docs/STABLE_RELEASE_0.2.3.md) and [installed-stack audit](./implementing-docs/INSTALLED_STACK_AUDIT.md). Historical delivery records remain unchanged.
+
+Future 0.3.0/0.4.0 branches and version-aware publication: [release preparation](./release-docs/RELEASE_PREPARATION.md). These releases remain in development; branch preparation does not mark their feature or qualification gates complete.

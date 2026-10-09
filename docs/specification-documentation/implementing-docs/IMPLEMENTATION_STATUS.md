@@ -395,3 +395,16 @@ these results alone.
 - [x] Fresh npm delivery passes on all three release targets; unversioned npm install and both aliases identify 0.2.3.
 - [x] GitHub release and current documentation/status identify published 0.2.3; historical source evidence remains unchanged.
 - [ ] Native Windows 11/Linux arm64, all service permutations/migrations and actual browser journeys are qualified (future scope).
+
+### Future version branch preparation — 2026-10-09
+
+- [x] Inspect ongoing 0.3.0 and 0.4.0 implementation branches and identify their missing published 0.2.x baseline fixes and remaining release gates.
+- [x] Isolate reconciliation on `codex/release-0.3.0` and `codex/release-0.4.0`, preserving the implementation branches.
+- [x] Make shared artifact publication and registry delivery derive the version from manifests, reject unfinished alpha versions for stable publication, and require all private library versions to match the final CLI version.
+- [x] Add a read-only version preview and guarded explicit finalization command for these two release branches, with tests for preservation, wrong branches, dirty trees, missing baseline commits and linked manifests.
+- [ ] Complete version-specific feature/manual gates and final exact-source release qualification; preparation checks are not publication approval.
+- [ ] Merge completed releases into main and publish 0.3.0/0.4.0 after their gates pass.
+
+See [the future release preparation runbook](../release-docs/RELEASE_PREPARATION.md).
+Candidate package versions remain unchanged during preparation, and published
+0.2.3 evidence remains historical and immutable.
