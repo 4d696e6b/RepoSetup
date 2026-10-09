@@ -758,3 +758,29 @@ Cross-module/security tasks require strong capability; their selected low effort
 recorded separately. Other ready frontiers select baseline/none. Offline catalogs
 are rejected for live use in every fixture. These tests prove compilation/replay/
 routing boundaries, not coding, acceptance, model quality or comparative results.
+
+### Complete frozen failure-path campaign
+
+The optional expensive credential-free verifier suite also runs all five actual
+frozen seeds through five blocks and the three rotated treatments. Each block uses
+four fresh roots and one actual G dispatch to a simulated provider. Original-receipt
+replay binds that graph and source charge to two distinct compiled roots. One
+synthetic offline catalog, including its qualification dates, is frozen across the
+entire campaign. Whole/fixed use explicit strong/low; routed uses H's actual ready
+frontier and capability floor independently of effort.
+
+Whole records transport uncertainty and fixed/routed record refusal. Each terminal
+seed receives actual independent compiler/public/compatibility/holdout/type checks,
+with an immutable private observation retained before its terminal journal event.
+All 250 serial events and 75 observations are read back and joined before disposable
+cleanup. Compilation, replay, setup, state, routing, verification preflight, terminal
+oracles and retention remain in measured host/driver overhead; cleanup is excluded.
+
+A complete slot inventory is not a qualified comparison. These 75 trials all fail;
+no candidate is accepted or changed. E definition checks are simulated and E launch/
+review ports remain unreachable. Actual managed processes are fixed Git probes.
+The 25 uncertain whole intents keep dispatch accounting incomplete. Cash counts
+each of 25 original compilations once, plus 75 coding intents; analytical treatment
+ledgers include source compilation for both compiled treatments. Simulated usage
+does not establish provider calls, tokens, billing or cost per accepted task. All
+qualification flags remain false; production/live/platform gates remain open.

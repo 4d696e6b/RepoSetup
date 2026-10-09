@@ -1837,3 +1837,49 @@ comparative trials or general model/candidate qualification. Successful context/
 joins and remaining campaign/platform/live evidence remain open; unavailable gates
 stay unverified under owner steering. J is unstarted. No keys, API/paid calls,
 installation, website source changes, version bump, merge or publication occurred.
+
+## Milestone I — complete frozen failure-path campaign (2026-10-10)
+
+Extended the existing bounded diagnostic driver with an optional complete
+failure-only mode, preserving its three-slot stop and vetted fixed-success behavior.
+The complete mode uses all five real frozen fixture seeds and five blocks each,
+with the existing rotated treatment order. Every block gets four fresh real Git/
+private-state roots and one original G compilation receipt, replayed to both compiled
+roots. One synthetic offline catalog/date authority is frozen for all blocks; source,
+driver, support policies, host and fixture identity remain bound to diagnostics.
+
+All terminal seeds receive actual independent local compiler/public/compatibility/
+holdout/type evaluation. The driver fsyncs independent slot records before terminal
+journal events, reads all records back and joins their results and hashes. Whole
+simulates transport uncertainty, while fixed/routed simulate refusal. E definitions
+remain simulated/unreached; candidates are unchanged and none are accepted. The
+full case lives in the existing expensive verifier suite, outside ordinary fast CI.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: the complete case passes
+(one test, 209.87 seconds), with **250 acknowledged events, 75 linked independent
+records and zero missing slots**. It reports 25 source compilation and 75 coding
+simulations, 100 distinct project roots and 225 managed process launches, all fixed
+Git probes. There are zero accepted trials; all protected project snapshots remain
+unchanged. The cash ledger retains 100 intents, 75 settled and 25 uncertain, with
+null measured provider calls/tokens/cost. Analytical ledgers retain 25/50/50 intents.
+Dispatch accounting and comparison qualification remain false.
+
+Measured host time is 207634.59 ms, including 68186.79 ms journal retention,
+13374.71 ms preparation, 3706.92 ms compilation and 121877.26 ms trial work.
+Full driver time is 208667 ms, including source identity/preparation and final
+read-back; cleanup is excluded. This run used dirty `ec69377` source. Driver revision
+is `sha256:abd48db9947468ba974b6a173179f57a650bbc8ce57a900fb0c0f3b28a36ff44`.
+The existing bounded failure block and all five compilation/replay cases still pass
+(six tests across two files, 9.67 seconds). Workspace and task-test typechecks,
+lint/formatting and whitespace checks pass. Runtime/tool recipes are unchanged;
+their preceding build/core/E validation retains its recorded scope and was not
+repeated. No final check fails, and owned disposable roots were cleaned.
+
+This is a complete failure-path diagnostic, not the required 75 qualified comparative
+trials. Milestone I remains in
+progress; context/repair joins, general candidate review/isolation, remaining installed/
+platform qualification, production model/effort evidence and separately authorized
+live smoke remain unverified. J is unstarted. Per owner steering, unavailable
+prerequisites are skipped while available local implementation continues.
+No keys/API/paid calls, installation, website source changes, package version change,
+merge or publication occurred.

@@ -35,7 +35,7 @@ function checked<T>(r: TaskParseResult<T>): T {
   return r.data;
 }
 const elapsed = (start: number) => Math.ceil(performance.now() - start);
-/** Bounded first-block diagnostic, never a complete comparative campaign. */
+/** Simulated-provider diagnostics, never qualified comparative campaigns. */
 export async function runManagedBenchmarkBlock(
   options: {
     createHost?: (parent: string) => Promise<
@@ -48,9 +48,13 @@ export async function runManagedBenchmarkBlock(
     maxOutputTokens?: number;
     runnerFiles?: string[];
     logicalVerificationRevision?: string;
+    /** Exercise every frozen failure slot; does not authorize live providers. */
+    completeFailureCampaign?: true;
   } = {},
 ) {
   const driverStarted = performance.now();
+  if (options.completeFailureCampaign && (options.createHost || options.acceptedTreatment))
+    throw new Error("The complete diagnostic permits only the frozen failure host");
   const parent = await realpath(await mkdtemp(path.join(tmpdir(), "reposetup-i-managed-block-")));
   let disposeHost: (() => Promise<void>) | undefined;
   let host: ReturnType<typeof createManagedBenchmarkFailureHost> & {
@@ -66,8 +70,23 @@ export async function runManagedBenchmarkBlock(
     throw error;
   }
   if ("disposeHost" in host) disposeHost = host.disposeHost;
-  const {
-    c,
+  const { c } = host;
+  const blockHosts = options.completeFailureCampaign
+    ? c.fixtures.flatMap((fixture) =>
+        Array.from({ length: 5 }, (_, block) => ({
+          fixtureId: fixture.fixtureId,
+          block,
+          parent: path.join(parent, `${fixture.fixtureId}-${block}`),
+          host: createManagedBenchmarkFailureHost(
+            path.join(parent, `${fixture.fixtureId}-${block}`),
+            fixture.fixtureId,
+          ),
+        })),
+      )
+    : [];
+  // One catalog authority is frozen for the entire diagnostic, including its dates.
+  for (const item of blockHosts) item.host.routing.catalog = host.routing.catalog;
+  let {
     f,
     roots,
     policy,
@@ -114,7 +133,13 @@ export async function runManagedBenchmarkBlock(
         })),
       ),
     );
-    c.supportRevision = taskContentHash(policy);
+    c.supportRevision = options.completeFailureCampaign
+      ? taskContentHash(
+          blockHosts
+            .filter((item) => item.block === 0)
+            .map((item) => ({ fixtureId: item.fixtureId, policy: item.host.policy })),
+        )
+      : taskContentHash(policy);
     if (!["darwin", "linux"].includes(process.platform) || !["arm64", "x64"].includes(process.arch))
       throw new Error("Unsupported diagnostic host");
     c.host = {
@@ -137,12 +162,40 @@ export async function runManagedBenchmarkBlock(
       now: store.now,
       retain: async (event) => {
         const saved = await store.retain(event);
-        if (saved.success && event.event.type === "trial_finished" && ++finished === 3)
+        if (
+          saved.success &&
+          event.event.type === "trial_finished" &&
+          ++finished === 3 &&
+          !options.completeFailureCampaign
+        )
           controller.abort();
         return saved;
       },
       prepareBlock: async ({ fixture, block }) => {
-        if (fixture.fixtureId !== f.fixtureId || block !== 0)
+        if (options.completeFailureCampaign) {
+          const next = blockHosts.find(
+            (item) => item.fixtureId === fixture.fixtureId && item.block === block,
+          );
+          if (!next) throw new Error("Unknown frozen diagnostic block");
+          await mkdir(next.parent, { mode: 0o700 });
+          host = next.host;
+          ({
+            f,
+            roots,
+            policy,
+            verificationPolicy,
+            taskDraft,
+            fresh,
+            provider,
+            routing,
+            projectRoots,
+            inputs,
+          } = host);
+          sourceCheckpoint = undefined;
+          sourceSpan = 0;
+          if (taskContentHash(await fixtureManifest(f.fixtureId)) !== taskContentHash(f))
+            throw new Error("Freeze changed");
+        } else if (fixture.fixtureId !== f.fixtureId || block !== 0)
           throw new Error("Only first diagnostic block");
         for (const name of ["whole", "fixed", "routed", "source"] as const)
           roots[name] = await fresh(name);
@@ -457,9 +510,22 @@ export async function runManagedBenchmarkBlock(
       ledgerEvidence,
       evaluations,
       acceptedCheckpoints,
-      inputs,
-      projectRoots,
-      ...host.counts(),
+      inputs: options.completeFailureCampaign
+        ? blockHosts.flatMap((item) => item.host.inputs)
+        : inputs,
+      projectRoots: options.completeFailureCampaign
+        ? blockHosts.flatMap((item) => item.host.projectRoots)
+        : projectRoots,
+      ...(options.completeFailureCampaign
+        ? blockHosts.reduce(
+            (counts, item) => ({
+              compilationDispatches:
+                counts.compilationDispatches + item.host.counts().compilationDispatches,
+              codingDispatches: counts.codingDispatches + item.host.counts().codingDispatches,
+            }),
+            { compilationDispatches: 0, codingDispatches: 0 },
+          )
+        : host.counts()),
       processCalls,
       sourceCheckpoint,
       dispose: async () => {
@@ -475,3 +541,6 @@ export async function runManagedBenchmarkBlock(
 }
 /** Real frozen bytes/Git/state/oracles, simulated provider and unreached E definitions. */
 export const runManagedBenchmarkFailureBlock = () => runManagedBenchmarkBlock();
+/** All 75 terminal slots with real state/oracles, but simulated, failing model calls. */
+export const runManagedBenchmarkFailureCampaign = () =>
+  runManagedBenchmarkBlock({ completeFailureCampaign: true });
