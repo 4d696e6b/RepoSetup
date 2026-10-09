@@ -160,7 +160,12 @@
     "productionAudit": "zero-known-vulnerabilities",
     "auditPath": "/tmp/reposetup-0.2.3-production-audit.json",
     "generatedToolAdvisory": "GHSA-vfj7-8cjw-p6xm; no published braces patch on 2026-10-08",
-    "reviewDocument": "../security-docs/SECURITY_REVIEW_0.2.3.md"
+    "reviewDocument": "../../security-docs/SECURITY_REVIEW_0.2.3.md",
+    "recheckedProductionAudit": {
+      "date": "2026-10-09",
+      "status": "zero-known-vulnerabilities",
+      "path": "/tmp/reposetup-0.2.3-release/production-audit-20261009.json"
+    }
   },
   "localChecks": {
     "scope": "Prepared 0.2.3 working tree, before selecting the immutable release source.",
@@ -202,6 +207,11 @@
         "failedJob": 113437636045,
         "scope": "Forty cases per completed job; cancelled Windows job had a Next/SQLite recipe failure and no final summary. Partial cases not counted.",
         "evidencePath": "/tmp/reposetup-0.2.3-release/golden/run-37813953547-attempt-1"
+      },
+      "retry": {
+        "runAttempt": 2,
+        "scope": "Only cancelled Windows/Python3.12/npm job retried on unchanged source; 11 prior successful jobs carried forward.",
+        "status": "in-progress"
       }
     },
     "usability": {
@@ -1153,6 +1163,13 @@
         }
       ],
       "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37814000719"
+    },
+    "nextDiagnostic": {
+      "runId": 37864064134,
+      "scope": "next-vitest",
+      "status": "in-progress",
+      "qualifiesFullMatrix": false,
+      "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
     }
   },
   "qualificationAttempts": [
