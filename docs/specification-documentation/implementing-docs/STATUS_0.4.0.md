@@ -1536,3 +1536,12 @@ to campaign retention/reporting, with complete host overhead accounting and gene
 candidate review/isolation. Full 75-trial comparative evidence, provider/model qualification
 and Linux/platform qualification remain open; J remains unstarted. No package versions,
 CLI commands, configuration/selection inputs or website source files changed.
+
+Post-commit packed verification at clean source `fb8729c6cd8a1f38aa8fc8e2a985ce9a619f23a7`:
+all **five extracted-tarball Node/native POSIX alias and zero-effect dry-run cases** pass
+(3.47 seconds), with artifact hash
+`sha256:974694485fa1a6b00b1670c9859076b94ff2bcd41defdd88c9b18de6f5782bff`
+and unchanged lockfile hash
+`sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4`.
+This uses preinstalled dependency hydration, no installation, and remains explicitly
+offline/non-qualifying evidence. Its separately owned temporary files were cleaned.
