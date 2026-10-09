@@ -98,7 +98,19 @@ its source. The new diagnostics make this failure and its recovery clearer; they
 do not change global cache ownership or silently repair an interrupted generator.
 
 If npm cannot write its configured cache, select a separate writable cache in
-your terminal. For an existing npm project whose package manifest is complete:
+your terminal. For a fresh creation on macOS/Linux, this override applies to
+both npx and the npm commands RepoSetup starts:
+
+```sh
+npm_config_cache="$HOME/.npm-reposetup" npx rsetup@0.2.3 create
+```
+
+Choose a new project name if an earlier creation left partial files. The cache
+directory must be writable by your user. This command changes the cache only
+for that invocation, using npm's documented [environment configuration](https://docs.npmjs.com/cli/v11/using-npm/config/#environment-variables).
+Upgrading RepoSetup does not change ownership of an existing npm cache.
+
+For an existing npm project whose package manifest is complete:
 
 ```sh
 npm install --include=dev --cache ./npm-cache-recovery
@@ -108,6 +120,11 @@ Keep this task-specific directory out of version control. If a framework generat
 itself failed, inspect its output first; installing dependencies alone does not
 complete the missing generated files. Preserve the error and selected options for
 a bug report, and never share real secrets.
+
+`ENOSPC` means the filesystem ran out of space. A writable cache still needs
+space for downloaded archives, extracted packages and generated files. Free
+several GB before another installation; passing the initial free-space check
+does not guarantee that every selected stack will fit.
 
 ## Docker, databases and Prisma
 

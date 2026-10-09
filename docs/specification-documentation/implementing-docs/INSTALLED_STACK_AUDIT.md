@@ -208,6 +208,31 @@ completed artifact qualification, publication and three-platform npm delivery. T
 every combination, migration, browser journey or native platform, and do not
 promote any integration maturity.
 
+## Post-release Prisma cache reproduction — 2026-10-09
+
+A reported published 0.2.3 Express/TypeScript/PostgreSQL/Prisma create stopped
+at its dependency installation, before Prisma initialization. npm reported
+`EEXIST`/`EACCES` under its shared cache; the parent cache directory was owned by
+root and was not writable by the user. The owner had subsequently recreated
+`test/js` with only Express, so that project was preserved and testing used a
+separate folder.
+
+Published `npx rsetup@0.2.3` with the same selections and a process-local writable
+cache completed all eighteen operations, including Prisma initialization,
+helper creation, Client generation and installed-dependency verification.
+The resulting project passed build, TypeScript checking, compiled Prisma helper
+import/disconnect, Express HTTP 200 and all six doctor checks (eleven installed
+dependencies). No database query or migration was performed by this reproduction.
+
+The initial separate attempt hit `ENOSPC`; only about 98 MiB remained afterward.
+Removing disposable dependencies/caches from this agent's temporary tests allowed
+the fresh retry to pass. Original failure logs, source and successful check logs
+are retained in the `reposetup-prisma-cache-20261009-jho2q7dx` temporary evidence
+folder with `verified-results.json`. Disposable test dependencies/cache were
+removed after validation to recover space. No global cache ownership or npm
+configuration was changed. This case establishes an environment failure, without
+requiring a new Prisma product fix or rewriting the published release.
+
 ## Remaining boundaries
 
 Selecting Docker records a prerequisite; selecting PostgreSQL/MongoDB writes
