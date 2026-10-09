@@ -90,3 +90,30 @@ describe("release publishing workflow", () => {
     expect(defaultConfig).toContain('"tests/e2e/task-*.test.ts"');
   });
 });
+
+describe("0.3.0 release staging artifact protection", () => {
+  it.each(["release.yml", "selection-create.yml", "selection-contract.yml"])(
+    "keeps the website artifact pin active on canonical release branches in %s",
+    async (file) => {
+      const workflow = await readFile(path.join(repoRoot, ".github", "workflows", file), "utf8");
+      const guard = workflow.match(
+        /if: ([^\n]+)\n\s+run: node scripts\/check-candidate-artifact\.mjs/,
+      );
+      expect(guard).not.toBeNull();
+      expect(guard![1]).toBe(
+        "github.ref_name == 'codex/0.3.0-candidate-integration' || github.ref_name == 'codex/release-0.3.0' || github.ref_name == 'codex/release-0.4.0'",
+      );
+    },
+  );
+
+  it.each(["selection-create.yml", "selection-contract.yml", "website-qualification.yml"])(
+    "includes canonical release branches in the %s push qualification",
+    async (file) => {
+      const workflow = await readFile(path.join(repoRoot, ".github", "workflows", file), "utf8");
+      const push = workflow.split("  push:\n")[1]?.split("  workflow_dispatch:")[0];
+      expect(push).toBeDefined();
+      expect(push).toContain("codex/release-0.3.0");
+      expect(push).toContain("codex/release-0.4.0");
+    },
+  );
+});

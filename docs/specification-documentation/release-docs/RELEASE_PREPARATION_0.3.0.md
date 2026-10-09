@@ -22,4 +22,6 @@ Initial local checks exposed an old selection test expecting no final installed-
 6. Complete native desktop screen-reader, physical mobile-device and local CLI handoff sessions in [the manual protocol](MANUAL_ACCESSIBILITY_DEVICE_0.3.0.md). Automated emulation and scripted beginner journeys do not close these gates.
 7. Review the qualified-artifact publisher's final version metadata and exact-source checks, then obtain explicit authorization for immutable tag/publication and website deployment. No tag, publication, deployment or external qualification workflow is initiated by this preparation.
 
+Shared release plumbing now derives its stable version/tag from validated manifests, retains the sixteen existing qualification jobs for 0.3.0, publishes the identified retained artifact without rebuilding it, and refuses prerelease or mismatched private-library metadata for stable publication. Local release-context, publication-workflow, qualification-gate and artifact-evidence tests pass; this is preparation validation, not renewed release qualification. Canonical release branches remain subject to the website artifact pin, and selection/browser push qualification includes them.
+
 The [candidate record](RELEASE_CANDIDATE_0.3.0.md) preserves the preceding source/evidence and open Phase 9 gates. Selected publication remains Phase 10.
