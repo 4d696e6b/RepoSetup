@@ -1,21 +1,39 @@
 # Release checklists
 
-## Current 0.2.3 patch — 2026-10-08
+## Current 0.2.3 patch — 2026-10-09
 
-The owner authorized publication after health checks. See [the release record](./STABLE_RELEASE_0.2.3.md).
+The owner authorized publication after health checks. Preparation merged through
+[PR #18](https://github.com/4d696e6b/RepoSetup/pull/18). Candidate branch
+`codex/release-0.2.3` remains frozen at
+`a213a6a1edf63771aba8d5b91bfdcf44d665de22`; publication is pending.
+See [the release record](./STABLE_RELEASE_0.2.3.md).
 
 - [x] Merge installed-stack repair PR #17; its automated audit passes.
 - [x] Prepare 0.2.3 manifests, publication checks and current guides.
 - [x] Local version-bound tests, typecheck after build, lint, build and 37 registry definitions pass; 1,043 unit and 38 packed E2E tests pass.
-- [ ] Isolated live database and Linux Docker/Compose acceptance pass; record exact scope.
+- [x] Isolated macOS database acceptance passes five retained-helper cases. [Linux Docker/Compose acceptance](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567) passes two fresh CLI service tests/seven checks with no failures/skips and owned-service cleanup verified. PostgreSQL 18.6 covers generated Prisma/Drizzle/FastAPI-uv SQLAlchemy and restart/recreation persistence; MongoDB 8.0.32 covers authenticated generated Mongoose CRUD. This is bounded service evidence, not every recipe/platform or a maturity promotion.
+- [x] [Preset usability](https://github.com/4d696e6b/RepoSetup/actions/runs/37813953485) passes fifteen sessions/117 checks, with eight expected negative exits and no unexpected failures.
+- [x] [Controlled benchmarks](https://github.com/4d696e6b/RepoSetup/actions/runs/37814000719) pass 120 command trials on three platforms, comparing separate and consolidated installation strategies; no universal or patch-to-patch speed claim.
 - [ ] Three full first-attempt exact-source release runs pass all required jobs and steps.
-- [ ] Candidate full matrix, preset sessions and controlled benchmarks pass.
+- [ ] Candidate full twelve-job matrix passes. [Attempt 1](https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547) completes eleven jobs/440 passing cases; Windows/Python 3.12/npm records a partial Next.js/SQLite recipe failure before its 90-minute job budget and cancellation. Attempt 2 retries only the unsuccessful job on unchanged source; partial results do not qualify it.
 - [ ] Record final immutable artifact, bytes, hash, source and license review.
 - [ ] New immutable v0.2.3 tag identifies the qualified source.
 - [ ] Tag-bound publication dry-run passes.
 - [ ] Publish the qualified artifact with OIDC; verify integrity and provenance.
 - [ ] Fresh registry acceptance passes on Linux/macOS/Windows.
 - [ ] Publish GitHub release and close current documentation/status.
+
+The initial release sequence has one successful run
+[37813984536](https://github.com/4d696e6b/RepoSetup/actions/runs/37813984536), one
+Windows recipe failure after a libuv crash (39/40 cases pass) in
+[37813990336](https://github.com/4d696e6b/RepoSetup/actions/runs/37813990336), and a
+macOS runner communication failure in
+[37813995872](https://github.com/4d696e6b/RepoSetup/actions/runs/37813995872). It does
+not satisfy the consecutive-run gate. Fresh first-attempt runs
+[37863956517](https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517),
+[37863959982](https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982) and
+[37863963775](https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775) are
+queued/running on unchanged source; initial failures remain retained.
 
 ## Historical 0.2.2 patch — 2026-10-08
 
@@ -33,7 +51,6 @@ The owner authorized publication; npm latest and the GitHub release are 0.2.2.
 - [x] Publish the qualified artifact with OIDC; verify integrity and provenance.
 - [x] Fresh registry acceptance passes on Linux/macOS/Windows.
 - [x] Publish GitHub release and close current documentation/status.
-
 
 ## Historical 0.2.1 patch — 2026-10-08
 

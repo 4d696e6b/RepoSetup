@@ -4,12 +4,46 @@ Cursor/maintainers should update this file as phases are completed.
 
 ## Current phase
 
-**0.2.3 — release preparation; publication pending.** The owner authorized
-publication after health qualification. Installed-stack repairs were merged
-through PR #17. Workspace manifests and active publication checks target 0.2.3;
-new exact-source qualification, signed publication and registry delivery remain
-required. Additional isolated live database and Linux Compose acceptance are in
-progress. See [the 0.2.3 release record](../release-docs/STABLE_RELEASE_0.2.3.md).
+**0.2.3 — exact-source qualification in progress; publication pending.** The owner
+authorized publication after health qualification. Installed-stack repairs merged
+through PR #17; preparation and live-service acceptance merged through
+[PR #18](https://github.com/4d696e6b/RepoSetup/pull/18). The release branch
+`codex/release-0.2.3` remains frozen at
+`a213a6a1edf63771aba8d5b91bfdcf44d665de22`. Current progress on October 9:
+
+- Local checks pass: 1,043 unit tests, all 38 packed E2E tests with uv, build,
+  typecheck after build, lint and all 37 registry definitions.
+- [Linux live-service acceptance](https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567)
+  passes two tests with seven checks, no failures or skips and owned-service
+  cleanup verified. Its fresh CLI projects exercise JavaScript Express/Prisma,
+  Express/Drizzle and FastAPI/uv SQLAlchemy against PostgreSQL 18.6, including
+  Compose restart/recreation persistence, plus authenticated Express/Mongoose
+  CRUD against MongoDB 8.0.32. Five separate retained-helper macOS cases also pass;
+  they do not extend the fresh-creation Linux scope or catalog maturity.
+- [Preset usability](https://github.com/4d696e6b/RepoSetup/actions/runs/37813953485)
+  passes fifteen sessions and 117 checks, including eight explicit expected
+  negative exits and no unexpected failures.
+- [Controlled install benchmark](https://github.com/4d696e6b/RepoSetup/actions/runs/37814000719)
+  passes all 120 command trials on three platforms. It compares separate and
+  consolidated installation strategies, not every download or 0.2.3 versus 0.2.2.
+- [Full matrix attempt 1](https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547)
+  completes eleven successful jobs with 440 passing cases. Windows/Python 3.12/npm
+  records a partial Next.js/SQLite recipe failure and reaches its 90-minute job
+  budget before cancellation; partial results do not qualify that job. Attempt 2
+  retries only that unsuccessful job on unchanged source; full-matrix acceptance
+  remains pending.
+- Initial release qualification [37813984536](https://github.com/4d696e6b/RepoSetup/actions/runs/37813984536)
+  passes. [37813990336](https://github.com/4d696e6b/RepoSetup/actions/runs/37813990336)
+  fails a Windows recipe job after a libuv crash (39 of 40 cases pass), and
+  [37813995872](https://github.com/4d696e6b/RepoSetup/actions/runs/37813995872)
+  fails when a macOS runner loses communication. These failures remain recorded.
+  Fresh first-attempt runs [37863956517](https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517),
+  [37863959982](https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982) and
+  [37863963775](https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775) are
+  queued/running on the same source. The three-consecutive-run gate is not complete.
+
+Final artifact qualification, signed publication and registry delivery remain
+required. See [the 0.2.3 release record](../release-docs/STABLE_RELEASE_0.2.3.md).
 
 **Installed stack audit — automated qualification complete; merged for 0.2.3; publication pending.**
 The reported Express project was repaired after a root-owned npm cache aborted installation.
@@ -18,8 +52,9 @@ SQLAlchemy's PostgreSQL driver, JavaScript Prisma imports, Docker prerequisite h
 and PostgreSQL Compose configuration. All 1,043 unit tests and 38 packed E2E tests
 pass, as do build/typecheck/lint and targeted real-install regressions. The twelve-job
 full matrix now passes all 480 cases with no skips after two unchanged-source
-Windows/npm retries; initial timeout failures remain recorded. Live Docker and
-database connectivity remain unqualified.
+Windows/npm retries; initial timeout failures remain recorded. That historical
+audit did not connect to live Docker or database services. The separate bounded
+0.2.3 live-service evidence above does not retroactively expand its scope.
 The branch is `codex/audit-installed-stack`; published 0.2.2 is unchanged.
 See [the installed stack audit](./INSTALLED_STACK_AUDIT.md) for evidence and remaining service limits.
 
@@ -41,7 +76,6 @@ matrix passed 408 creation/recipe executions with no skipped cases. Fast CI,
 three-platform checks and controlled installation benchmarks passed. Documentation
 records the platform suite's conditional skips and remaining manual/service gaps.
 See [the repair and validation record](./POST_CREATE_DEPENDENCY_HEALTH.md).
-
 
 **0.2.1 — historical release: published and delivery accepted.** At its closeout, npm `latest` identified 0.2.1. Three exact-source release runs (16 required jobs each), the twelve-job
 expanded golden matrix (408 executions), fifteen preset sessions (117 checks),
@@ -281,21 +315,21 @@ Public GitHub launch plus Model A npm packaging (2026-09-22): public package nam
 
 ## Golden stacks proven
 
-| Stack | Dry-run plan | Real execute |
-| --- | --- | --- |
-| Next.js / SQLite | yes | pending CI / `REPOSETUP_GOLDEN_NEXT=1` |
-| React + Vite | yes | yes (local `pnpm test:golden`) |
-| Express / Postgres config | yes | yes generation + `tsc --noEmit`; no live DB |
-| FastAPI | yes | pending `uv` |
-| Flask | yes | pending `uv` |
+| Stack                     | Dry-run plan | Real execute                                |
+| ------------------------- | ------------ | ------------------------------------------- |
+| Next.js / SQLite          | yes          | pending CI / `REPOSETUP_GOLDEN_NEXT=1`      |
+| React + Vite              | yes          | yes (local `pnpm test:golden`)              |
+| Express / Postgres config | yes          | yes generation + `tsc --noEmit`; no live DB |
+| FastAPI                   | yes          | pending `uv`                                |
+| Flask                     | yes          | pending `uv`                                |
 
 ## OS environments proven
 
-| OS | Local | GitHub Actions |
-| --- | --- | --- |
-| macOS | unit/lint/build/e2e/golden B+C | platform workflow on `main`/`dev` |
-| Linux | not run here | ci + platform + golden workflows |
-| Windows | not run here | platform workflow |
+| OS      | Local                          | GitHub Actions                    |
+| ------- | ------------------------------ | --------------------------------- |
+| macOS   | unit/lint/build/e2e/golden B+C | platform workflow on `main`/`dev` |
+| Linux   | not run here                   | ci + platform + golden workflows  |
+| Windows | not run here                   | platform workflow                 |
 
 ## Integrations promoted to stable
 
@@ -303,20 +337,20 @@ None.
 
 ## npm publishing status
 
-| Item | Status |
-| --- | --- |
-| GitHub source release | complete (`v0.1.0` tag remains at `78ef16c`; do not move it) |
-| Public package name | `rsetup` (unscoped `reposetup` / `reposetup-cli` blocked by similarity) |
-| Model | A — single bundled CLI |
-| Local quality suite | passed (`lint`, `typecheck`, `test`, `build`, `registry:validate`, `test:e2e`, `test:golden` with A/D/E skipped) |
-| Tarball | `rsetup-0.1.0.tgz`; isolated install covered by `pnpm test:e2e` |
-| Packed golden | React + Vite create + `stack` + `doctor` + `tsc -b` passed from an earlier tarball; re-verify after rename |
-| npm v0.1.0 | not published |
-| npx verification | not run against the registry |
-| global install verification | not run against the registry |
-| Trusted publishing workflow | prepared (`.github/workflows/publish-npm.yml`) |
-| OIDC / provenance | workflow requests `id-token: write`; provenance not disabled |
-| Trusted publisher on npmjs.com | requires manual settings after first publish |
+| Item                           | Status                                                                                                           |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| GitHub source release          | complete (`v0.1.0` tag remains at `78ef16c`; do not move it)                                                     |
+| Public package name            | `rsetup` (unscoped `reposetup` / `reposetup-cli` blocked by similarity)                                          |
+| Model                          | A — single bundled CLI                                                                                           |
+| Local quality suite            | passed (`lint`, `typecheck`, `test`, `build`, `registry:validate`, `test:e2e`, `test:golden` with A/D/E skipped) |
+| Tarball                        | `rsetup-0.1.0.tgz`; isolated install covered by `pnpm test:e2e`                                                  |
+| Packed golden                  | React + Vite create + `stack` + `doctor` + `tsc -b` passed from an earlier tarball; re-verify after rename       |
+| npm v0.1.0                     | not published                                                                                                    |
+| npx verification               | not run against the registry                                                                                     |
+| global install verification    | not run against the registry                                                                                     |
+| Trusted publishing workflow    | prepared (`.github/workflows/publish-npm.yml`)                                                                   |
+| OIDC / provenance              | workflow requests `id-token: write`; provenance not disabled                                                     |
+| Trusted publisher on npmjs.com | requires manual settings after first publish                                                                     |
 
 See `docs/NPM_TRUSTED_PUBLISHING_SETUP.md`.
 
