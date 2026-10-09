@@ -744,3 +744,17 @@ isolation or full treatment qualification is established. Tool hydration/setup,
 state/retention/verification and independent terminal evaluation remain within
 reported host/driver overhead; cleanup is separately excluded. The test uses only
 preinstalled tools and lives outside ordinary fast fixture CI.
+
+### Frozen fixture compilation and ready-frontier routing
+
+Credential-free compilation tests now use all five actual frozen seeds, real Git,
+private G state and executor-authenticated replay to two fresh roots each. Independently
+authored drafts preserve four-requirement coverage and promise module artifacts rather
+than optional agent-test files. API declares query → handler; cross-module declares
+both domain → totals/presenter and totals → presenter; security declares path → context.
+UI remains one task for its single-module contract. The first dependency-free task is
+materialized from actual seed bytes and routed through H's synthetic offline catalog.
+Cross-module/security tasks require strong capability; their selected low effort is
+recorded separately. Other ready frontiers select baseline/none. Offline catalogs
+are rejected for live use in every fixture. These tests prove compilation/replay/
+routing boundaries, not coding, acceptance, model quality or comparative results.

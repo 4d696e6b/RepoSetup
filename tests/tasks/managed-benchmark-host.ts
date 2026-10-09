@@ -10,6 +10,7 @@ import {
   TASK_ROUTING_POLICY_REVISION,
   type Task,
   type TaskBenchmarkCampaign,
+  type TaskBenchmarkFixture,
   type TaskParseResult,
   type TaskPlanDraft,
   type TaskProviderAdapter,
@@ -22,6 +23,7 @@ import { campaign } from "../../packages/core/src/tasks/benchmark.test-helper.js
 import { createTaskRunAdapter } from "../../packages/cli/src/tasks/application-adapter.js";
 import { createTaskGitFixture } from "../../packages/cli/src/tasks/git-fixture.test-helper.js";
 import { fixtureRoot, inventory } from "./fixture-tools.js";
+import { managedBenchmarkFixtureDraft } from "./managed-benchmark-blueprints.js";
 export const HASH = taskContentHash("offline-managed-benchmark-failure");
 export const strong = {
   adapterId: "openai-responses-v1" as const,
@@ -36,7 +38,10 @@ function checked<T>(r: TaskParseResult<T>): T {
 }
 const elapsed = (start: number) => Math.ceil(performance.now() - start);
 /** Test-only frozen hydration, real disposable Git baselines and simulated provider/definition ports. */
-export function createManagedBenchmarkFailureHost(parent: string) {
+export function createManagedBenchmarkFailureHost(
+  parent: string,
+  fixtureId: TaskBenchmarkFixture["fixtureId"] = "types-result-v1",
+) {
   const projectRoots: string[] = [],
     inputs: unknown[] = [];
   let compilationDispatches = 0,
@@ -49,7 +54,7 @@ export function createManagedBenchmarkFailureHost(parent: string) {
     modelCatalogRevision: HASH,
     routingPolicyRevision: TASK_ROUTING_POLICY_REVISION,
   };
-  const f = c.fixtures[0]!;
+  const f = c.fixtures.find((f) => f.fixtureId === fixtureId)!;
   const definitions: TaskVerificationPolicy["definitions"] = TASK_CHECK_IDS.map((checkId) => ({
     checkId,
     definitionRevision: taskContentHash({ simulated: true, checkId }),
@@ -107,43 +112,24 @@ export function createManagedBenchmarkFailureHost(parent: string) {
       },
     ],
     capabilityRequirements: {
-      features: ["local_logic"],
-      minimumCapabilityClass: "baseline",
+      features:
+        f.fixtureId === "security-path-policy-v1" ||
+        (f.fixtureId === "api-offline-v1" && taskId === "handler")
+          ? ["local_logic", "security_sensitive"]
+          : f.fixtureId === "cross-module-order-v1"
+            ? ["interface_change", "cross_module"]
+            : ["local_logic"],
+      minimumCapabilityClass:
+        f.fixtureId === "security-path-policy-v1" ||
+        f.fixtureId === "cross-module-order-v1" ||
+        (f.fixtureId === "api-offline-v1" && taskId === "handler")
+          ? "strong"
+          : "baseline",
       evidenceRefs: ids.map((requirementId) => ({ type: "requirement", requirementId })),
     },
   });
-  const taskDraft = (review: TaskReview, whole: boolean): TaskPlanDraft => ({
-    kind: "task_plan_draft",
-    schemaVersion: 1,
-    phaseId: review.phase.phaseId,
-    selectionHash: review.phase.selectionHash,
-    tasks: whole
-      ? [
-          makeTask(
-            "whole",
-            f.requirements.map((r) => r.requirementId),
-            f.write,
-          ),
-        ]
-      : [
-          makeTask("result", ["type-1"], ["src/result.ts"]),
-          makeTask(
-            "page",
-            ["type-2", "type-3", "type-4"],
-            ["src/page.ts", "test/agent/page.test.ts"],
-          ),
-        ],
-    dependencies: whole
-      ? []
-      : [
-          {
-            predecessorTaskId: "result",
-            consumerTaskId: "page",
-            requiredArtifactIds: ["result-output"],
-          },
-        ],
-    unresolvedQuestions: [],
-  });
+  const taskDraft = (review: TaskReview, whole: boolean): TaskPlanDraft =>
+    managedBenchmarkFixtureDraft({ fixture: f, review, whole, makeTask });
   const fresh = async (name: string) => {
     const started = performance.now(),
       outer = path.join(parent, name),
@@ -279,7 +265,10 @@ export function createManagedBenchmarkFailureHost(parent: string) {
           scope: "offline",
           evidenceHash: HASH,
           capabilityClass: configuration === baseline ? "baseline" : "strong",
-          features: ["local_logic"],
+          features:
+            configuration === baseline
+              ? ["local_logic"]
+              : ["local_logic", "interface_change", "cross_module", "security_sensitive"],
         },
         efforts: [{ nativeEffortId: configuration.nativeEffortId, minimumOutputTokens: 256 }],
         maxContextTokens: 1050000,

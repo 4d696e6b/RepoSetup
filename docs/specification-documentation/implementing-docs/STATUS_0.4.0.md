@@ -1800,3 +1800,40 @@ authorized live smoke or remaining platform/installed qualification. Per owner
 steering, unavailable prerequisites are skipped while local work continues; they
 are unverified, not passed. J remains unstarted. No API keys/live/paid calls,
 installation, website source edit, package version change, merge or publication occurred.
+
+## Milestone I — all frozen seeds through G/replay/ready-frontier H (2026-10-10)
+
+Added independently authored simulated-provider drafts for all five frozen fixture
+phases. Module output declarations exclude optional agent-test write paths. API,
+cross-module and security graphs declare their actual interface dependencies;
+cross-module presentation depends on both domain and totals outputs. Capability
+floors/features are independent of native effort: cross-module/security use strong
+floors, while baseline-ready frontiers remain eligible for baseline/none. The catalog
+is explicitly synthetic/offline and all five live-routing attempts fail closed.
+
+Each new case hydrates three exact seeds, makes real clean Git baselines, dispatches
+one simulated G compilation, retains its private checkpoint, and authenticates
+unchanged graph/charge replay to distinct fixed/routed roots. Source token/cost/
+reservation facts are unchanged; replay host duration includes its actual overhead.
+Only the dependency-free frontier is routed, with no invented accepted predecessor.
+No coding or E launch occurs; no candidate is accepted. The existing failure block
+still retains all three failures and independent records after the helper extension.
+Driver hashes now include the new blueprint source.
+
+Validation on Node 24.21.0/macOS arm64/pnpm 12.5.1: **six targeted tests across two
+files** pass (10.16 seconds), including all five real-seed compilation/replay cases.
+The full ordinary offline suite passes **58 tests across nine files** (124.96 seconds),
+including five packed cases with unchanged artifact hash
+`sha256:ecf7598f0871882193703a56bc16669cde98edc6e8bb1791cc6a7d8837354fd6`.
+Workspace/task-test typechecks, lint/formatting and whitespace checks pass. An initial
+assertion incorrectly compared replay duration to source-only duration; it was fixed
+to assert original usage facts and inclusive host overhead. No final check fails.
+Runtime/curated tool recipes are unchanged; their previously recorded build/core/E
+validation retains its scope and was not repeated. The owned package-runner cache
+left in the prior validation parent was removed after verifying that parent's identity.
+
+Milestone I remains in progress: these are no-key boundary tests, not 75 qualified
+comparative trials or general model/candidate qualification. Successful context/repair
+joins and remaining campaign/platform/live evidence remain open; unavailable gates
+stay unverified under owner steering. J is unstarted. No keys, API/paid calls,
+installation, website source changes, version bump, merge or publication occurred.

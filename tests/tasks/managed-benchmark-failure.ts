@@ -106,6 +106,7 @@ export async function runManagedBenchmarkBlock(
         [
           "managed-benchmark-failure.ts",
           "managed-benchmark-host.ts",
+          "managed-benchmark-blueprints.ts",
           ...(options.runnerFiles ?? []),
         ].map(async (name) => ({
           name,
