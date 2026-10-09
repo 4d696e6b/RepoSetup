@@ -93,16 +93,14 @@ describe("release publishing workflow", () => {
 
 describe("0.3.0 release staging artifact protection", () => {
   it.each(["release.yml", "selection-create.yml", "selection-contract.yml"])(
-    "keeps the website artifact pin active on canonical release branches in %s",
+    "runs the runtime website artifact binding policy on every ref in %s",
     async (file) => {
       const workflow = await readFile(path.join(repoRoot, ".github", "workflows", file), "utf8");
-      const guard = workflow.match(
-        /if: ([^\n]+)\n\s+run: node scripts\/check-candidate-artifact\.mjs/,
-      );
-      expect(guard).not.toBeNull();
-      expect(guard![1]).toBe(
-        "github.ref_name == 'codex/0.3.0-candidate-integration' || github.ref_name == 'codex/release-0.3.0' || github.ref_name == 'codex/release-0.4.0'",
-      );
+      const step = workflow
+        .split(/(?=^ {6}- )/m)
+        .find((entry) => entry.includes("run: node scripts/check-candidate-artifact.mjs"));
+      expect(step).toBeDefined();
+      expect(step).not.toContain("if:");
     },
   );
 
@@ -116,4 +114,20 @@ describe("0.3.0 release staging artifact protection", () => {
       expect(push).toContain("codex/release-0.4.0");
     },
   );
+});
+
+it("checks candidate bytes before binding and loads website state through the shared runtime policy", async () => {
+  const script = await readFile(
+    path.join(repoRoot, "scripts", "check-candidate-artifact.mjs"),
+    "utf8",
+  );
+  expect(script).toContain("requiresWebsiteBinding(release.version, refName)");
+  expect(script).toContain("verifyArtifactIdentity(dirname(evidencePath)");
+  expect(script).toContain(
+    "await verifyReleaseHandoff({ identity, version: release.version, refName })",
+  );
+  expect(script.indexOf("await verifyArtifactIdentity")).toBeLessThan(
+    script.indexOf("await verifyReleaseHandoff"),
+  );
+  expect(script).not.toContain('from "../apps/website');
 });

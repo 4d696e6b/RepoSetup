@@ -11,6 +11,7 @@ import {
   readReleaseContext,
   validateReleaseVersion,
 } from "./release-context.mjs";
+import { verifyReleaseHandoff } from "./release-handoff.mjs";
 
 export function verifyRegistryIdentity(metadata, identity, expectedVersion) {
   const version = validateReleaseVersion(expectedVersion, { stableOnly: true });
@@ -64,6 +65,7 @@ async function main() {
     version: release.version,
     sourceSha: process.env.GITHUB_SHA,
   });
+  await verifyReleaseHandoff({ identity, version: release.version });
   const existing = await registryVersion(release.version);
   if (existing) {
     verifyRegistryIdentity(existing, identity, release.version);
