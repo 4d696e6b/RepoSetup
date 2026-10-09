@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import config from "../../../vercel.json";
 import { RELEASE_SOURCE } from "../scripts/generate-release.ts";
@@ -27,6 +28,7 @@ function run(command: string, branch: string, env: NodeJS.ProcessEnv = {}) {
     shell: false,
     encoding: "utf8",
     timeout: 5000,
+    cwd: fileURLToPath(new URL("../../../", import.meta.url)),
     env: { ...process.env, ...env, VERCEL_GIT_COMMIT_REF: branch },
   });
 }
@@ -62,6 +64,8 @@ describe("Vercel Git deployment boundary", () => {
     expect(config.framework).toBeNull();
     expect(config.public).toBe(false);
     expect(config.outputDirectory).toBe(".vercel/output/static");
+    expect(config.buildCommand.length).toBeLessThanOrEqual(256);
+    expect(config.installCommand.length).toBeLessThanOrEqual(256);
     const workspace = JSON.parse(
       readFileSync(new URL("../../../package.json", import.meta.url), "utf8"),
     ) as { packageManager: string };

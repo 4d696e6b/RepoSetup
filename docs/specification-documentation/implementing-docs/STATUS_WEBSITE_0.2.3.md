@@ -49,7 +49,8 @@ generated from the pinned source. The build refuses drift from those definitions
    CSP/security/cache headers, and no functions or runtime environment variables.
    Preparation rejects unexpected files and symbolic links; asset provenance and
    prompts stay local. The new `reposetup` project is linked in `mink2551s-projects`.
-   Automatic Git deployment is disabled to protect the website's 0.2.3 scope.
+   The original publication disconnected Git; the follow-up below reconnects it
+   with exact branch and build guards to protect the website's 0.2.3 scope.
 
 7. **Custom domain and production checklist — in progress.** The owner added
    `reposetupcli.com` and requested all Vercel checklist items. Apex and `www`
@@ -59,8 +60,9 @@ generated from the pinned source. The build refuses drift from those definitions
    pages and performance, excluding project/config/search data; local and unknown
    preview hosts do not initialize them. Git build configuration and the
    project-level ignored-build gate reject all branches except
-   `codex/0.2.3-website`. Git connection, preview publication and production
-   verification are the next actions. Dashboard access is needed to select the
+   `codex/0.2.3-website`. GitHub is now connected to `4d696e6b/RepoSetup` and
+   that branch is pushed. Preview publication and production verification are
+   the next actions. Dashboard access is needed to select the
    production branch. Standard Speed Insights is free; Plus requires Pro and
    a separately approved subscription. No paid upgrade has been performed.
 
@@ -179,6 +181,12 @@ Worktree:
   initially prevented that command; the cache was repaired using the existing
   working pinned pnpm executable. Generated handoff sandboxes were cleared to
   recover disk space, preserving the verification report.
+- The project API rejected an overlong inline build command. Build logic now
+  lives in `scripts/build-vercel.ts`; the short command and pinned install were
+  accepted in project settings. Length checks prevent regression. The updated
+  command passed a real local build and artifact preparation.
+- Published-package handoff: **46 checks passed** again after the follow-up,
+  with no installer execution or changes to user projects.
 - Public live analytics collection and custom-domain HTTPS will be verified
   after the follow-up deployment and Hostinger DNS change. Earlier production
   checks above describe the original deployment, not this pending update.
