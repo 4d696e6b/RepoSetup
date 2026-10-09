@@ -146,6 +146,8 @@ export const taskBenchmarkTrialSchema = z.strictObject({
         ]),
         passed: z.boolean(),
         executedTests: taskCounterSchema.nullable(),
+        provenance: z.enum(["executor", "reviewer"]).optional(),
+        reviewedCriteria: taskCounterSchema.max(128).optional(),
       }),
     )
     .max(6),
@@ -283,10 +285,15 @@ export function validateTaskBenchmarkCampaign(
         t.checks.some(
           (v) =>
             !v.passed ||
-            (["ts.unit", "task.acceptance", "phase.acceptance", "compatibility"].includes(
-              v.checkId,
-            ) &&
-              (v.executedTests === null || v.executedTests === 0)),
+            (["ts.unit", "compatibility"].includes(v.checkId) &&
+              (v.executedTests === null || v.executedTests === 0)) ||
+            (["task.acceptance", "phase.acceptance"].includes(v.checkId) &&
+              (v.executedTests === null || v.executedTests === 0) &&
+              !(
+                v.executedTests === null &&
+                v.provenance === "reviewer" &&
+                (v.reviewedCriteria ?? 0) > 0
+              )),
         ) ||
         !exactIds(
           t.publicCriteria.map((v) => v.criterionId),

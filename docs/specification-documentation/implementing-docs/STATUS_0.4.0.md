@@ -1725,3 +1725,22 @@ records are linked, with no missing/unreferenced artifacts; the block still has
 three failed trials, 72 missing slots, one uncertain provider intent and false
 qualification. No secrets/API calls, installation, website source changes, version
 bumps, merges, publication or paid actions occurred.
+
+## Milestone I — retain reviewer coverage without fabricated test counts (2026-10-10)
+
+Preparing the successful managed fixture join exposed a report mismatch: real
+independent task/phase reviewer checks have no executable test inventory, while
+benchmark acceptance previously required a positive executed-test count for those
+checks. Added optional reviewer/executor provenance and reviewed-criterion counts.
+Null test counts now require explicit reviewer provenance and positive coverage;
+unit and compatibility checks still require real positive executed counts. Existing
+report rows remain compatible. Parsed records still grant no execution/acceptance
+or qualification authority.
+
+Validation on Node 24.21.0/macOS arm64: **49 targeted core tests across three files**
+pass (2.15 seconds), including reviewer coverage and zero-unit-test cases; all
+**597 core tests across 64 files** pass (8.24 seconds). Workspace build, core and
+task-test typechecks, lint/formatting and Git whitespace checks pass. The new vetted
+managed-success fixture is still under validation and is not claimed by this
+reporting change. Milestone I remains in progress; J is unstarted. No provider calls,
+credentials, installation, version bump, website source edit or publication occurred.

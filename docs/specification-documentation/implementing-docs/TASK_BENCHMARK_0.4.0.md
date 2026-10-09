@@ -704,3 +704,13 @@ evaluations to this private store and reads them back against retained trial eve
 Storage and joining time remain within measured driver/trial overhead. Its owned
 temporary roots are removed after tests; no long-lived campaign or live comparison
 is claimed. The evaluator and frozen fixture/tool/oracle revisions are unchanged.
+
+### Reviewer coverage and executable test counts
+
+Benchmark check rows may retain explicit executor/reviewer provenance and a count
+of reviewed criteria. Reviewer acceptance has no executed test inventory: retain
+`executedTests: null` with reviewer provenance and positive observed criterion
+coverage, rather than inventing test execution. Unit and compatibility checks still
+require positive executed test counts. Legacy rows with their existing positive
+counts remain parse-compatible. These reporting fields never authenticate imported
+reviews, weaken the executor's current task/phase review gate or qualify a campaign.

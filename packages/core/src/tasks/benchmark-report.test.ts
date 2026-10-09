@@ -114,6 +114,33 @@ function report(c: TaskBenchmarkCampaign) {
   return result.data;
 }
 describe("inclusive benchmark accounting", () => {
+  it("retains independent reviewer coverage without inventing executable test counts", () => {
+    const c = campaign();
+    for (const t of c.trials)
+      for (const check of t.checks) {
+        if (["task.acceptance", "phase.acceptance"].includes(check.checkId)) {
+          check.executedTests = null;
+          check.provenance = "reviewer";
+          check.reviewedCriteria = 4;
+        }
+      }
+    expect(validateTaskBenchmarkCampaign(c).success).toBe(true);
+    expect(report(c).comparisonQualified).toBe(false);
+    const review = c.trials[0]!.checks.find((c) => c.checkId === "task.acceptance")!;
+    review.reviewedCriteria = 0;
+    expect(validateTaskBenchmarkCampaign(c).success).toBe(false);
+    review.reviewedCriteria = 4;
+    review.provenance = "executor";
+    expect(validateTaskBenchmarkCampaign(c).success).toBe(false);
+    delete review.provenance;
+    expect(validateTaskBenchmarkCampaign(c).success).toBe(false);
+  });
+  it("does not replace zero or missing executed unit tests with reviewer coverage", () => {
+    const c = campaign();
+    const unit = c.trials[0]!.checks.find((c) => c.checkId === "ts.unit")!;
+    Object.assign(unit, { executedTests: null, provenance: "reviewer", reviewedCriteria: 4 });
+    expect(validateTaskBenchmarkCampaign(c).success).toBe(false);
+  });
   it("retains uncertain terminal trials with null request measurements and unknown dispatch count", () => {
     const c = campaign(),
       t = c.trials[0]!;
