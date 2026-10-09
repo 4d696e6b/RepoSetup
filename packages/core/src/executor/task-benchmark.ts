@@ -1,7 +1,11 @@
-import * as z from "zod";
+import {
+  taskBenchmarkSetupSchema,
+  type TaskBenchmarkEvent,
+  type TaskBenchmarkEventPayload,
+} from "../tasks/benchmark-journal.js";
+export type { TaskBenchmarkEvent } from "../tasks/benchmark-journal.js";
 import { freezeTaskValue, taskContentHash } from "../tasks/canonical.js";
 import { taskFailure, type TaskParseResult } from "../tasks/parse.js";
-import { taskCounterSchema, taskIdSchema } from "../tasks/primitives.js";
 import {
   TASK_BENCHMARK_FIXTURE_IDS,
   type TaskBenchmarkFixture,
@@ -15,15 +19,6 @@ import {
   type TaskBenchmarkTrial,
 } from "../tasks/benchmark-report.js";
 
-const setupSchema = z.strictObject({
-  ready: z.boolean(),
-  setupMs: z.strictObject({
-    whole: taskCounterSchema,
-    fixed: taskCounterSchema,
-    routed: taskCounterSchema,
-  }),
-  failureCode: taskIdSchema.nullable(),
-});
 type Block = Readonly<{ fixture: TaskBenchmarkFixture; block: number }>;
 type Slot = Block &
   Readonly<{
@@ -31,37 +26,6 @@ type Slot = Block &
     order: number;
     compilation: TaskBenchmarkCompilation | null;
   }>;
-type EventPayload =
-  | { type: "prepare_started"; fixtureId: TaskBenchmarkFixture["fixtureId"]; block: number }
-  | {
-      type: "prepare_finished";
-      fixtureId: TaskBenchmarkFixture["fixtureId"];
-      block: number;
-      result: z.infer<typeof setupSchema>;
-    }
-  | { type: "compile_started"; fixtureId: TaskBenchmarkFixture["fixtureId"]; block: number }
-  | {
-      type: "compile_finished";
-      fixtureId: TaskBenchmarkFixture["fixtureId"];
-      block: number;
-      compilation: TaskBenchmarkCompilation;
-    }
-  | {
-      type: "trial_started";
-      fixtureId: TaskBenchmarkFixture["fixtureId"];
-      block: number;
-      treatment: TaskBenchmarkTrial["treatment"];
-      order: number;
-    }
-  | { type: "trial_finished"; trial: TaskBenchmarkTrial };
-export type TaskBenchmarkEvent = Readonly<{
-  schemaVersion: 1;
-  campaignId: string;
-  sequence: number;
-  previousEventHash: string | null;
-  event: EventPayload;
-  eventHash: string;
-}>;
 /** Trusted host ports only. Implementations own isolation, allowances and actual evidence. */
 export interface TaskBenchmarkExecutionPorts {
   /** Retain before acknowledging. Never dispatch work from an artifact or event. */
@@ -119,7 +83,7 @@ export async function executeTaskBenchmark(input: {
     if (input.signal?.aborted && stopCode === null) stopCode = "TASK_EXECUTION_ABORTED";
     return stopCode !== null;
   };
-  const retain = async (event: EventPayload): Promise<boolean> => {
+  const retain = async (event: TaskBenchmarkEventPayload): Promise<boolean> => {
     const payload = {
       schemaVersion: 1 as const,
       campaignId,
@@ -166,7 +130,7 @@ export async function executeTaskBenchmark(input: {
           stopped()
         )
           break blocks;
-        const setup = setupSchema.safeParse(
+        const setup = taskBenchmarkSetupSchema.safeParse(
           await input.ports.prepareBlock(descriptor, input.signal),
         );
         if (!setup.success || setup.data.ready !== (setup.data.failureCode === null)) {
