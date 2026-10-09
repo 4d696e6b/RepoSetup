@@ -1982,3 +1982,15 @@ identity and process termination. No runtime/tool recipes or public CLI behavior
 changed. Milestone I remains in progress; J remains unstarted. Unavailable provider/
 platform gates remain unverified under owner steering, and no keys/API/paid calls,
 installation, website source change, version bump, merge or publication occurred.
+
+Post-commit clean-source verification at
+`16c941ad6323ba7f9dbd95bc1bd3ff5e6110abc7`: all **14 targeted tests across three
+files** pass (18.41 seconds), covering eight extracted packed cases, the original
+bounded failure block and all five frozen compilation/replay/frontier cases.
+Packed and failure-block diagnostics report `sourceDirty: false`, with unchanged
+artifact/lockfile hashes and failure-driver revision
+`sha256:abd48db9947468ba974b6a173179f57a650bbc8ce57a900fb0c0f3b28a36ff44`.
+This repeat establishes clean-source macOS offline contract evidence; it does not
+upgrade the separate dirty-source context/repair observation or close live/model/
+installed/Linux qualification. Disposable roots were cleaned and the worktree was
+clean after these checks. Milestone I remains in progress; J remains unstarted.
