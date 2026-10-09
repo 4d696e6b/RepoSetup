@@ -488,3 +488,16 @@ these results alone.
 Status: **preparing; not qualified or frozen.** The isolated `codex/release-0.3.0` branch reconciles integrated feature source `bfeab2f66806d42fa7d32ac4c144d1464bd88a48` with published-fix baseline `1b5b4c2de3ad20cf5ee2366136732e417e3b0603`. It preserves the 0.3.0 selection/preview/intended-doctor/repair/website scope and all shipped 0.2.1–0.2.3 fixes. Existing candidate and development branches are unchanged. The development package version remains `0.3.0-alpha.1`; no stable version bump, tag, publication or deployment is performed.
 
 The website handoff source `a410c1d` and its packed artifact remain historical evidence. They do not identify the newly merged CLI. Before finalization, repin a reviewed artifact from the new source, regenerate and review the affected catalog/matrix, and obtain renewed CLI/website qualification. The selection and website workflows now cover canonical 0.3.0/0.4.0 release branches and retain the artifact pin guard there. Local merge validation passes: 1,159 workspace unit tests; 17 built-CLI dry-run, selection handoff and failure checks; typecheck; lint; build. Initial fixture/expectation failures are recorded and corrected in [release preparation](../release-docs/RELEASE_PREPARATION_0.3.0.md). The open freeze, full matrix, three repetitions/seven-day soak, blocker/security audit and native accessibility/device gates in [the candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) remain required.
+
+### Future version branch preparation — 2026-10-09
+
+- [x] Inspect ongoing 0.3.0 and 0.4.0 implementation branches and identify their missing published 0.2.x baseline fixes and remaining release gates.
+- [x] Isolate reconciliation on `codex/release-0.3.0` and `codex/release-0.4.0`, preserving the implementation branches.
+- [x] Make shared artifact publication and registry delivery derive the version from manifests, reject unfinished alpha versions for stable publication, and require all private library versions to match the final CLI version.
+- [x] Add a read-only version preview and guarded explicit finalization command for these two release branches, with tests for preservation, wrong branches, dirty trees, missing baseline commits and linked manifests.
+- [ ] Complete version-specific feature/manual gates and final exact-source release qualification; preparation checks are not publication approval.
+- [ ] Merge completed releases into main and publish 0.3.0/0.4.0 after their gates pass.
+
+See [the future release preparation runbook](../release-docs/RELEASE_PREPARATION.md).
+Candidate package versions remain unchanged during preparation, and published
+0.2.3 evidence remains historical and immutable.
