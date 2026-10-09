@@ -1658,3 +1658,17 @@ review/isolation, then cover all five fixtures and the required 75 comparative t
 Installed/legacy and Linux/platform qualification, production capability/effort evidence
 and separately authorized live smoke remain open. No offline synthetic driver or
 failure fixture can satisfy those gates. J remains unstarted.
+
+Post-commit verification at clean source `4daa44068b5f9c50337ec2825ea8a5ba18c8ed1d`:
+the frozen managed failure block plus five extracted packed alias/dry-run cases pass
+(**six tests across two files**, 9.73 seconds). Both diagnostics report
+`sourceDirty: false`; driver revision remains
+`sha256:7e6d55904e4b5412c75380e37d86754b4cc309a14d4be5b31a3be41dd09fed77`.
+Packed artifact hash is
+`sha256:b9355d4e6228cea5aa33253f10b5fb218f6f7274d8ab6a991979ef66011279f0`,
+with unchanged lockfile hash
+`sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4`.
+The repeated block still has three failed trials/72 missing slots, unknown cash
+usage/call measurements and false qualification. This is clean-source macOS offline
+diagnostic evidence, not successful managed candidate, live or platform qualification.
+All owned temporary roots were cleaned and the Git worktree was clean after validation.
