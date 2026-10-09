@@ -10,23 +10,12 @@ import {
 
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
-import {
-  addPackages,
-  afterPythonPackageInstall,
-  hasSelectedIntegration,
-  initPythonProject,
-} from "./operations.js";
+import { addPackages, afterPythonPackageInstall, initPythonProject } from "./operations.js";
 import { QUALIFIED_VERSIONS } from "./qualified-versions.js";
 import { detectPythonPackage } from "./python-detect.js";
+import { pythonAppReadme } from "./python-readme.js";
 import { supportsPythonUvPip } from "./python-support.js";
 import { mergeVerify, missingAnyFile, missingPythonPackage } from "./verify.js";
-
-const FASTAPI_README = `# FastAPI app
-
-From this directory, start the development server with:
-
-\`uv run fastapi dev\`
-`;
 
 const FASTAPI_MAIN = `from fastapi import FastAPI
 
@@ -83,11 +72,7 @@ export const fastapiIntegration = defineIntegration({
       {
         type: "create_file",
         path: "README.md",
-        content:
-          FASTAPI_README +
-          (hasSelectedIntegration(context, "pytest")
-            ? "\nRun the generated endpoint test with `uv run pytest`.\n"
-            : ""),
+        content: pythonAppReadme(context, "FastAPI", "fastapi dev"),
         behavior: "fail_if_exists",
         description: "Add FastAPI run instructions",
       },

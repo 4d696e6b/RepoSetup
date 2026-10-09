@@ -1,6 +1,12 @@
 # RepoSetup 0.3.0 candidate qualification record
 
-Status: **Phase 9 in progress; not frozen or release-qualified.** No tag, npm publication, or website deployment is authorized by this record.
+Status: **release branch preparing; Phase 9 remains open, not frozen or release-qualified.** No tag, npm publication, or website deployment is authorized by this record.
+
+## Release staging checkpoint — 2026-10-09
+
+Canonical release preparation branch: `codex/release-0.3.0`. Feature input is integrated candidate `bfeab2f66806d42fa7d32ac4c144d1464bd88a48`; published-fix baseline is `main` at `1b5b4c2de3ad20cf5ee2366136732e417e3b0603`, including the delivered 0.2.1–0.2.3 fixes and the qualified-artifact publisher. These sources are being reconciled in a separate managed worktree. Original feature/candidate branches and their retained evidence are preserved.
+
+The source/artifact identities below are historical predecessor evidence. The merged staging CLI retains development version `0.3.0-alpha.1`; its changed implementation is not represented by the website's old artifact pin. Repinning the new CLI artifact, reviewing regenerated catalog/matrix expectations and renewed applicable qualification are required before freezing or promoting a stable version. No tag, npm publish, website deployment or qualification workflow is initiated by this preparation.
 
 ## Candidate pair and scope
 

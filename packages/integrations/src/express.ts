@@ -13,7 +13,7 @@ import {
 
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
-import { addPackages } from "./operations.js";
+import { addPackages, hasSelectedIntegration } from "./operations.js";
 import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { createNodePackageJson, usesTypescript } from "./scaffold.js";
@@ -27,8 +27,8 @@ type ExpressOptions = z.infer<typeof expressOptionsSchema>;
 
 const EXPRESS_TSCONFIG = `{
   "compilerOptions": {
-    "rootDir": ".",
     "target": "esnext",
+    "rootDir": ".",
     "module": "nodenext",
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
@@ -49,17 +49,53 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 if (process.env.REPOSETUP_NO_LISTEN !== "1") {
-  app.listen(Number(process.env.PORT ?? "3000"));
+  const server = app.listen(
+    Number(process.env.PORT ?? "3000"),
+    (error?: Error) => {
+      if (error !== undefined) {
+        console.error(error);
+        process.exitCode = 1;
+        return;
+      }
+      const address = server.address();
+      if (address !== null && typeof address !== "string") {
+        console.log("http://localhost:" + address.port);
+      }
+    },
+  );
 }
 `;
 
-const EXPRESS_README = `# Express app
+const EXPRESS_ENDPOINT_TEST = `import type { Server } from "node:http";
 
-Run the JavaScript entry with:
+import { afterAll, beforeAll, expect, it } from "vitest";
 
-\`node app.js\`
+let server: Server;
+let origin: string;
 
-For the TypeScript entry, use \`npm run dev\` while developing, then run \`npm run build\` and \`npm start\`.
+beforeAll(async () => {
+  process.env.REPOSETUP_NO_LISTEN = "1";
+  const { app } = await import("../src/app.js");
+  await new Promise<void>((resolve, reject) => {
+    server = app.listen(0, "127.0.0.1", (error?: Error) => {
+      if (error !== undefined) reject(error);
+      else resolve();
+    });
+  });
+  const address = server.address();
+  if (address === null || typeof address === "string")
+    throw new Error("Server did not bind TCP");
+  origin = \`http://127.0.0.1:\${address.port}\`;
+});
+
+afterAll(() => server.close());
+
+it("returns the Hello World response", async () => {
+  const response = await fetch(origin);
+
+  expect(response.status).toBe(200);
+  expect(await response.text()).toBe("Hello World!");
+});
 `;
 
 const EXPRESS_APP_JS = `import express from "express";
@@ -70,7 +106,17 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(3000);
+const server = app.listen(3000, (error) => {
+  if (error !== undefined) {
+    console.error(error);
+    process.exitCode = 1;
+    return;
+  }
+  const address = server.address();
+  if (address !== null && typeof address !== "string") {
+    console.log("http://localhost:" + address.port);
+  }
+});
 `;
 
 export const expressIntegration = defineIntegration<ExpressOptions>({
@@ -161,6 +207,15 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
           description: "Add Express development, build, and start scripts",
         },
       );
+      if (hasSelectedIntegration(context, "vitest")) {
+        operations.push({
+          type: "create_file",
+          path: "src/app.test.ts",
+          content: EXPRESS_ENDPOINT_TEST,
+          behavior: "fail_if_exists",
+          description: "Add an Express endpoint response test",
+        });
+      }
     } else {
       operations.push({
         type: "create_file",
@@ -174,7 +229,22 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
     operations.push({
       type: "create_file",
       path: "README.md",
-      content: EXPRESS_README,
+      content: [
+        "# Express app",
+        "",
+        "From this directory:",
+        "",
+        typescript
+          ? "Develop with `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " dev`, then build with `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " build` and run `" +
+            (context.config.packageManager === "npm" ? "npm run" : "pnpm") +
+            " start`."
+          : "Run the JavaScript entry with `node app.js`.",
+        "",
+      ].join("\n"),
       behavior: "fail_if_exists",
       description: "Add Express run instructions",
     });

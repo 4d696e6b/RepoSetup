@@ -122,7 +122,12 @@ function operationDetails(operation: InstallationOperation, verbose: boolean): s
       if (operation.command === undefined) {
         return [`cwd  ${operation.cwd}`];
       }
-      const command = [operation.command, ...(operation.args ?? [])].join(" ");
+      const command = [
+        operation.command,
+        ...(operation.args ?? []).map((arg) =>
+          !verbose && /[\n\r]/.test(arg) ? "<built-in read-only dependency check>" : arg,
+        ),
+      ].join(" ");
       return [`command  ${command}`, `cwd  ${operation.cwd}`];
     }
     default: {

@@ -41,7 +41,7 @@ jobs:
   golden:
     name: Recipe qualification (${{ matrix.os }}, Python ${{ matrix.python }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
@@ -120,7 +120,7 @@ jobs:
       - name: Record artifact identity
         run: node scripts/write-artifact-evidence.mjs --tarball candidate/rsetup-*.tgz --source-sha "$GITHUB_SHA" --output candidate/candidate-artifact.json
       - name: Match the website's pinned CLI artifact
-        if: github.ref_name == 'codex/0.3.0-candidate-integration'
+        if: github.ref_name == 'codex/0.3.0-candidate-integration' || github.ref_name == 'codex/release-0.3.0' || github.ref_name == 'codex/release-0.4.0'
         run: node scripts/check-candidate-artifact.mjs candidate/candidate-artifact.json
       - uses: actions/upload-artifact@v4
         with:

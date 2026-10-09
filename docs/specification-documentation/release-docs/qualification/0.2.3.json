@@ -1,0 +1,1396 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.3",
+  "status": "published-and-delivery-accepted",
+  "branch": "codex/release-0.2.3",
+  "ownerAuthorization": "Publish 0.2.3 after health qualification; user request 2026-10-08.",
+  "repairMerge": {
+    "pullRequest": "https://github.com/4d696e6b/RepoSetup/pull/17",
+    "commit": "7e5f815"
+  },
+  "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+  "qualificationRuns": [
+    {
+      "runId": 37863956517,
+      "status": "completed",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863956517",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "requiredJobsPassed": 16,
+      "everyRequiredStep": "success",
+      "completedAt": "2026-10-09T00:51:57Z"
+    },
+    {
+      "runId": 37863959982,
+      "status": "completed",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863959982",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "requiredJobsPassed": 16,
+      "everyRequiredStep": "success",
+      "completedAt": "2026-10-09T00:55:27Z"
+    },
+    {
+      "runId": 37863963775,
+      "status": "completed",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37863963775",
+      "conclusion": "success",
+      "runAttempt": 1,
+      "requiredJobsPassed": 16,
+      "everyRequiredStep": "success",
+      "completedAt": "2026-10-09T00:58:36Z"
+    }
+  ],
+  "artifact": {
+    "schemaVersion": 1,
+    "package": "rsetup",
+    "version": "0.2.3",
+    "sourceSha": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+    "artifact": "rsetup-0.2.3.tgz",
+    "bytes": 115325,
+    "sha256": "f740df147bc9e8dbf4dc076322f2424d96ad2f27a0da14ef3e46c818e26edd2b",
+    "id": 11588707141,
+    "integrity": "sha512-Rhb6DravIbIe7A7/5dF5rD68ccJx9a5tDhZzWSbCpSxiVzKpY+ihz0x7XBBnQZNBLT3AncOcBmvv9zcADZ628A==",
+    "unreviewedLicenses": []
+  },
+  "publication": {
+    "version": "0.2.3",
+    "latest": "0.2.3",
+    "sourceSha": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+    "integrity": "sha512-Rhb6DravIbIe7A7/5dF5rD68ccJx9a5tDhZzWSbCpSxiVzKpY+ihz0x7XBBnQZNBLT3AncOcBmvv9zcADZ628A==",
+    "sha256": "f740df147bc9e8dbf4dc076322f2424d96ad2f27a0da14ef3e46c818e26edd2b",
+    "sha512": "4616fa0eb6af21b21eec0effe5d179ac3ebc71c271f5ae6d0e16735926c2a52c625732a963e8a1cf4c7b5c10674193412d3dc09dc39c066beff737000d9eb6f0",
+    "bytes": 115325,
+    "provenanceInvocation": "https://github.com/4d696e6b/RepoSetup/actions/runs/37875932749/attempts/1",
+    "transparencyLogIndex": "3155772957",
+    "dryRunId": 37875863670,
+    "publishRunId": 37875932749,
+    "npmPublished": true,
+    "githubReleasePublished": true,
+    "githubReleaseUrl": "https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.3",
+    "githubReleasePublishedAt": "2026-10-09T02:50:11Z",
+    "registryAcceptance": "success",
+    "signatureVerification": "success",
+    "verifiedSignatures": 27,
+    "verifiedAttestations": 20,
+    "githubTarballAssetSha256Verified": true
+  },
+  "registryAcceptance": {
+    "runId": 37875932749,
+    "runAttempt": 1,
+    "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+    "jobs": [
+      {
+        "name": "registry-acceptance (ubuntu-24.04)",
+        "conclusion": "success",
+        "jobId": 113645620075
+      },
+      {
+        "name": "registry-acceptance (windows-2025)",
+        "conclusion": "success",
+        "jobId": 113645620120
+      },
+      {
+        "name": "registry-acceptance (macos-15)",
+        "conclusion": "success",
+        "jobId": 113645620186
+      }
+    ],
+    "localUnversionedInstall": {
+      "version": "0.2.3",
+      "aliases": [
+        "rsetup",
+        "reposetup"
+      ],
+      "signatureAudit": "passed",
+      "verifiedSignatures": 27,
+      "verifiedAttestations": 20
+    }
+  },
+  "liveServices": {
+    "status": "passed",
+    "scope": "Isolated local database checks and Linux Docker/Compose CI; no native Windows desktop or arbitrary permutations claimed.",
+    "local": {
+      "status": "passed",
+      "checkoutCommit": "7e5f81578c9abe950a1b64eeb9b00fe24089598e",
+      "scope": "Local live-service acceptance using copies of retained generated audit projects; not a new CLI create or Docker Compose qualification.",
+      "evidencePath": "/var/folders/p2/2g1kz9392wq51_p7kdttbgh00000gp/T/reposetup-live-db-023-73kg9ctf/results.json",
+      "casesPassed": 5,
+      "postgresql": "14.20",
+      "mongodb": "8.2.3",
+      "serverCleanup": [
+        {
+          "label": "mongodb",
+          "returnCode": 0,
+          "exited": true
+        },
+        {
+          "label": "postgres",
+          "returnCode": 0,
+          "exited": true
+        }
+      ],
+      "helperProvenance": "Copies of retained agent-owned generated projects, same helpers exercised in installed-stack audit. Their dependencies were reinstalled as isolated pinned runtime packages for this live acceptance; exact resolved versions and lockfile retained.",
+      "limits": "macOS host instances and retained generated helpers; not new CLI creation or Compose 18.6 qualification."
+    },
+    "linux": {
+      "runId": 37813979567,
+      "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+      "packageVersion": "0.2.3",
+      "runConclusion": "success",
+      "cases": [
+        {
+          "scope": "postgresql-generated-helpers",
+          "status": "passed",
+          "checks": [
+            "CLI create and doctor; generated Compose image, loopback binding and PostgreSQL 18 persistent mount",
+            "generated Prisma helper connects and creates, updates and reads data",
+            "Compose restart and container recreation preserve PostgreSQL data on the generated volume; Prisma deletes it afterward",
+            "generated Drizzle client and starter schema perform real create, read, update and delete",
+            "generated SQLAlchemy helper and installed Psycopg binary DBAPI perform real create, read, update and delete"
+          ],
+          "image": "postgres:18.6",
+          "imageDigests": [
+            "postgres@sha256:74935e72241653ca55e0414067e6d8763aceb8a810eb51b452253ec3dcfc4336"
+          ],
+          "serviceVersion": "postgres (PostgreSQL) 18.6 (Debian 18.6-1.pgdg13+2)",
+          "cleanup": true,
+          "evidenceSha256": "d820d5665f23ac3d03b3c3e981bb2ee9c78f92c3ff8c58a06ea137e68b82f772"
+        },
+        {
+          "scope": "mongodb-generated-mongoose",
+          "status": "passed",
+          "checks": [
+            "CLI create and doctor install the selected Mongoose dependency and generate its connection helper",
+            "authenticated loopback MongoDB connection; generated Mongoose helper and model perform real create, read, update and delete"
+          ],
+          "image": "mongo:8.0.32",
+          "imageDigests": [
+            "mongo@sha256:d0d926f94df099bff534b7ee5b5986458131a22489dfff8664509af0c1e2ca9c"
+          ],
+          "serviceVersion": "db version v8.0.32",
+          "cleanup": true,
+          "evidenceSha256": "f32a9e8ecffede6b787e2c08b082500d65a7597c8fc8ba8db811290ff4907c33"
+        }
+      ],
+      "artifactId": 11565988004,
+      "artifactZipSha256": "a2785d941836b65d6b3da4d64c20f5b6f344cc3e5fdd6e8d7580d4d45aeff120",
+      "checkoutLogEvidence": [
+        {
+          "log": "0_Generated PostgreSQL and MongoDB connections (Ubuntu 24.04).txt",
+          "checkoutCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+        },
+        {
+          "log": "Generated PostgreSQL and MongoDB connections (Ubuntu 24.04)/2_Run actions_checkout@v4.txt",
+          "checkoutCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+        }
+      ],
+      "testCountEvidence": [
+        {
+          "log": "0_Generated PostgreSQL and MongoDB connections (Ubuntu 24.04).txt",
+          "summary": "2026-10-08T17:10:13.6629384Z  Test Files  1 passed (1)"
+        },
+        {
+          "log": "0_Generated PostgreSQL and MongoDB connections (Ubuntu 24.04).txt",
+          "summary": "2026-10-08T17:10:13.6630862Z       Tests  2 passed (2)"
+        },
+        {
+          "log": "Generated PostgreSQL and MongoDB connections (Ubuntu 24.04)/8_Exercise the generated helpers against disposable real services.txt",
+          "summary": "2026-10-08T17:10:13.6629365Z  Test Files  1 passed (1)"
+        },
+        {
+          "log": "Generated PostgreSQL and MongoDB connections (Ubuntu 24.04)/8_Exercise the generated helpers against disposable real services.txt",
+          "summary": "2026-10-08T17:10:13.6630850Z       Tests  2 passed (2)"
+        }
+      ],
+      "logArchiveSha256": "eb9e4cb8355cbdcd4ece45521958cb71af8d93818a4123e85abf63d38d9f1196",
+      "credentialInspection": {
+        "method": "Read-only scan of full downloaded raw logs and both artifact JSON payloads; exact-width test-password hex48 and credential-bearing database URI patterns. Values intentionally not printed.",
+        "suspectedCredentialOccurrences": 0,
+        "scope": "Generated ephemeral test credentials only; pattern scan does not claim general secret detection."
+      },
+      "tests": {
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "retainedFiles": {
+        "mongodb-generated-mongoose.json": "f32a9e8ecffede6b787e2c08b082500d65a7597c8fc8ba8db811290ff4907c33",
+        "evidence.zip": "a2785d941836b65d6b3da4d64c20f5b6f344cc3e5fdd6e8d7580d4d45aeff120",
+        "logs.zip": "eb9e4cb8355cbdcd4ece45521958cb71af8d93818a4123e85abf63d38d9f1196",
+        "postgresql-generated-helpers.json": "d820d5665f23ac3d03b3c3e981bb2ee9c78f92c3ff8c58a06ea137e68b82f772",
+        "verify-evidence.py": "136a8f98dfe995680709a90a7c8bba03a29d6bb925ae3f3c9f2c4927e26b1020",
+        "run.json": "98677a773f9f2d86f10401464f3bab6012159878d423fcfbf5e1b3fa2fdcbf18",
+        "jobs.json": "a87286657895b8736afe6df588460c94cdb0adca8adee796fd8576e4fc05827c",
+        "artifacts.json": "ae1f508129df3c3e691208f65df8176bff4d6fb0f7f8e905b4aa08241d33e14f"
+      },
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813979567",
+      "evidencePath": "/tmp/reposetup-0.2.3-release/live-services"
+    }
+  },
+  "preVersionAudit": "installed-stack-audit.json",
+  "historicalVersionsPreserved": [
+    "0.2.0",
+    "0.2.1",
+    "0.2.2"
+  ],
+  "securityReview": {
+    "productionAudit": "zero-known-vulnerabilities",
+    "auditPath": "/tmp/reposetup-0.2.3-production-audit.json",
+    "generatedToolAdvisory": "GHSA-vfj7-8cjw-p6xm; no published braces patch on 2026-10-08",
+    "reviewDocument": "../../security-docs/SECURITY_REVIEW_0.2.3.md",
+    "recheckedProductionAudit": {
+      "date": "2026-10-09",
+      "status": "zero-known-vulnerabilities",
+      "path": "/tmp/reposetup-0.2.3-release/production-audit-20261009.json"
+    }
+  },
+  "localChecks": {
+    "scope": "Prepared 0.2.3 working tree, before selecting the immutable release source.",
+    "unitTestsPassed": 1043,
+    "packedE2ETestsPassed": 38,
+    "packedE2ESkipped": 0,
+    "targetedPublicationGateTestsPassed": 20,
+    "build": "passed",
+    "typecheck": "passed-after-build",
+    "lint": "passed",
+    "registryIntegrationsValidated": 37,
+    "logs": {
+      "unit": "/tmp/reposetup-0.2.3-unit.log",
+      "packedE2E": "/tmp/reposetup-0.2.3-e2e.log",
+      "build": "/tmp/reposetup-0.2.3-build.log",
+      "typecheck": "/tmp/reposetup-0.2.3-typecheck-after-build.log",
+      "lint": "/tmp/reposetup-0.2.3-lint.log",
+      "registry": "/tmp/reposetup-0.2.3-registry.log",
+      "finalLint": "/tmp/reposetup-0.2.3-lint-final-prep.log"
+    },
+    "initialTypecheckAttempt": {
+      "status": "failed",
+      "log": "/tmp/reposetup-0.2.3-typecheck.log",
+      "reason": "Concurrent build replaced core declaration output while registry typecheck read it. Sequential typecheck after completed build passed with no source change."
+    }
+  },
+  "preparationMerge": {
+    "pullRequest": "https://github.com/4d696e6b/RepoSetup/pull/18",
+    "commit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+  },
+  "additionalQualification": {
+    "fullMatrix": {
+      "runId": 37813953547,
+      "status": "success",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813953547",
+      "firstAttempt": {
+        "jobsPassed": 11,
+        "completedCasePasses": 440,
+        "failedJob": 113437636045,
+        "scope": "Forty cases per completed job; cancelled Windows job had a Next/SQLite recipe failure and no final summary. Partial cases not counted.",
+        "evidencePath": "/tmp/reposetup-0.2.3-release/golden/run-37813953547-attempt-1"
+      },
+      "retry": {
+        "runAttempt": 2,
+        "scope": "Only cancelled Windows/Python3.12/npm job retried on unchanged source; 11 prior successful jobs carried forward.",
+        "status": "success"
+      },
+      "finalQualification": {
+        "runId": 37813953547,
+        "runAttempt": 2,
+        "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+        "conclusion": "success",
+        "jobsPassed": 12,
+        "casesPassed": 480,
+        "skipped": 0,
+        "newlyRetestedJobs": 1,
+        "newlyRetestedCases": 40,
+        "carriedForwardJobs": 11,
+        "carriedForwardCases": 440,
+        "originalFailurePreserved": true,
+        "scope": "full",
+        "logsSha256": "f1e32a0721805071ef41503fd1baad93ab657dddda3d98b924b32ad603b55b7c",
+        "firstLogsSha256": "756bfc785191bef694f0905ee370cf894adff2b6966caccfc86e002e070502f8",
+        "jobs": [
+          {
+            "attempt": 1,
+            "log": "0_windows-2025 _ x64 _ Python 3.13 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "1_windows-2025 _ x64 _ Python 3.12 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "2_macos-15 _ arm64 _ Python 3.12 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "3_macos-15 _ arm64 _ Python 3.12 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "4_ubuntu-24.04 _ x64 _ Python 3.13 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "5_ubuntu-24.04 _ x64 _ Python 3.12 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "6_windows-2025 _ x64 _ Python 3.13 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "8_ubuntu-24.04 _ x64 _ Python 3.12 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "9_macos-15 _ arm64 _ Python 3.13 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "10_ubuntu-24.04 _ x64 _ Python 3.13 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 1,
+            "log": "11_macos-15 _ arm64 _ Python 3.13 _ pnpm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          },
+          {
+            "attempt": 2,
+            "log": "0_windows-2025 _ x64 _ Python 3.12 _ npm.txt",
+            "casesPassed": 40,
+            "skipped": 0
+          }
+        ]
+      }
+    },
+    "usability": {
+      "scope": "usability",
+      "runId": 37813953485,
+      "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "jobsPassed": 15,
+      "checkoutEvidence": [
+        {
+          "job": "0_windows-2025 _ next-sqlite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "1_windows-2025 _ fastapi.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "2_ubuntu-24.04 _ react-vite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "3_windows-2025 _ react-vite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "4_macos-15 _ flask.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "5_ubuntu-24.04 _ flask.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "6_macos-15 _ express-postgres.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "7_windows-2025 _ express-postgres.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "8_ubuntu-24.04 _ express-postgres.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "9_macos-15 _ fastapi.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "10_macos-15 _ react-vite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "11_macos-15 _ next-sqlite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "12_ubuntu-24.04 _ fastapi.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "13_windows-2025 _ flask.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        },
+        {
+          "job": "14_ubuntu-24.04 _ next-sqlite.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22"
+          ]
+        }
+      ],
+      "logsSha256": "f469aec4198d45036b6e89b7ee0d72bd0399b2c13af3d89bfb0dbe3c47da6d0a",
+      "sessions": 15,
+      "stepChecks": 117,
+      "expectedFailures": [
+        {
+          "preset": "flask",
+          "platform": "win32",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "linux",
+          "name": "production start refuses an occupied port",
+          "exitCode": 1,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "win32",
+          "name": "production start refuses an occupied port",
+          "exitCode": 1,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "win32",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "darwin",
+          "name": "production start refuses an occupied port",
+          "exitCode": 1,
+          "expectedFailure": true
+        },
+        {
+          "preset": "express-postgres",
+          "platform": "darwin",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        },
+        {
+          "preset": "flask",
+          "platform": "darwin",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        },
+        {
+          "preset": "fastapi",
+          "platform": "darwin",
+          "name": "doctor reports unavailable Docker prerequisites",
+          "exitCode": 4,
+          "expectedFailure": true
+        }
+      ],
+      "expectedFailureCount": 8,
+      "unexpectedFailureCount": 0,
+      "artifacts": [
+        {
+          "preset": "flask",
+          "add": "pydantic",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run flask run",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "next-sqlite",
+          "add": "zod",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "next-sqlite",
+          "add": "zod",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "react-vite",
+          "add": "zod",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "react-vite",
+          "add": "zod",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "express-postgres",
+          "add": "zod",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm start",
+              "exitCode": 0
+            },
+            {
+              "name": "production start refuses an occupied port",
+              "exitCode": 1,
+              "expectedFailure": true
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "fastapi",
+          "add": "pydantic",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run fastapi dev",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "flask",
+          "add": "pydantic",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run flask run",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "express-postgres",
+          "add": "zod",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm start",
+              "exitCode": 0
+            },
+            {
+              "name": "production start refuses an occupied port",
+              "exitCode": 1,
+              "expectedFailure": true
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "fastapi",
+          "add": "pydantic",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run fastapi dev",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "express-postgres",
+          "add": "zod",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm start",
+              "exitCode": 0
+            },
+            {
+              "name": "production start refuses an occupied port",
+              "exitCode": 1,
+              "expectedFailure": true
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "react-vite",
+          "add": "zod",
+          "platform": "linux",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "flask",
+          "add": "pydantic",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run flask run",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "next-sqlite",
+          "add": "zod",
+          "platform": "win32",
+          "arch": "x64",
+          "node": "v24.21.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm dev",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm build",
+              "exitCode": 0
+            },
+            {
+              "name": "pnpm exec vitest run",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor",
+              "exitCode": 0
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        },
+        {
+          "preset": "fastapi",
+          "add": "pydantic",
+          "platform": "darwin",
+          "arch": "arm64",
+          "node": "v24.20.0",
+          "steps": [
+            {
+              "name": "preview",
+              "exitCode": 0
+            },
+            {
+              "name": "create",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run fastapi dev",
+              "exitCode": 0
+            },
+            {
+              "name": "uv run pytest",
+              "exitCode": 0
+            },
+            {
+              "name": "add",
+              "exitCode": 0
+            },
+            {
+              "name": "doctor reports unavailable Docker prerequisites",
+              "exitCode": 4,
+              "expectedFailure": true
+            },
+            {
+              "name": "export",
+              "exitCode": 0
+            }
+          ]
+        }
+      ],
+      "sourceBinding": "API head SHA and exact checkout logs; usability payload does not embed source SHA.",
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37813953485"
+    },
+    "performance": {
+      "scope": "performance",
+      "runId": 37814000719,
+      "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "jobsPassed": 3,
+      "checkoutEvidence": [
+        {
+          "job": "0_ubuntu-24.04 _ Node 24.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+            "a0e48a19479dc574c3f2bc3fba4a39608dc33e77"
+          ]
+        },
+        {
+          "job": "1_macos-15 _ Node 24.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+            "a0e48a19479dc574c3f2bc3fba4a39608dc33e77"
+          ]
+        },
+        {
+          "job": "2_windows-2025 _ Node 24.txt",
+          "checkoutCommits": [
+            "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+            "a0e48a19479dc574c3f2bc3fba4a39608dc33e77"
+          ]
+        }
+      ],
+      "logsSha256": "527af8fcdd1947219d3d7d9da4eaad2681ce600b5fdb5d7912e6ce0cf40a4dd2",
+      "reports": 3,
+      "trialsPerRow": 5,
+      "successfulCommandTrials": 120,
+      "comparisons": [
+        {
+          "platform": "win32",
+          "architecture": "x64",
+          "profile": "react-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 8650.9275,
+          "afterMs": 6256.3833,
+          "improvementPercent": 27.679623947836802,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "win32",
+          "architecture": "x64",
+          "profile": "react-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 3902.9281,
+          "afterMs": 2324.9259,
+          "improvementPercent": 40.431239304664615,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "win32",
+          "architecture": "x64",
+          "profile": "express-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 5204.2971,
+          "afterMs": 3417.293,
+          "improvementPercent": 34.337088480209935,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "win32",
+          "architecture": "x64",
+          "profile": "express-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 2892.5849,
+          "afterMs": 1557.7759,
+          "improvementPercent": 46.145888405902966,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "linux",
+          "architecture": "x64",
+          "profile": "react-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 1836.423263,
+          "afterMs": 529.365366,
+          "improvementPercent": 71.1741091138639,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "linux",
+          "architecture": "x64",
+          "profile": "react-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 384.798477,
+          "afterMs": 152.143582,
+          "improvementPercent": 60.461490599922506,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "linux",
+          "architecture": "x64",
+          "profile": "express-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 1697.156679,
+          "afterMs": 618.9438,
+          "improvementPercent": 63.53054448899235,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "linux",
+          "architecture": "x64",
+          "profile": "express-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 457.314299,
+          "afterMs": 140.567861,
+          "improvementPercent": 69.2623079340889,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "profile": "react-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 1792.514667,
+          "afterMs": 870.112083,
+          "improvementPercent": 51.45857944603362,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "profile": "react-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 324.464125,
+          "afterMs": 129.192208,
+          "improvementPercent": 60.18289911095719,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "profile": "express-toolchain",
+          "cacheMode": "cold",
+          "beforeMs": 1577.704,
+          "afterMs": 675.515333,
+          "improvementPercent": 57.18364579160603,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        },
+        {
+          "platform": "darwin",
+          "architecture": "arm64",
+          "profile": "express-toolchain",
+          "cacheMode": "warm",
+          "beforeMs": 336.163041,
+          "afterMs": 116.059916,
+          "improvementPercent": 65.47511122735233,
+          "beforeSubprocesses": 5,
+          "afterSubprocesses": 1
+        }
+      ],
+      "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37814000719"
+    },
+    "nextDiagnostic": {
+      "runId": 37864064134,
+      "scope": "next-vitest; one Golden A test per job, unrelated cases deliberately filtered",
+      "status": "success",
+      "qualifiesFullMatrix": false,
+      "sourceCommit": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+      "runAttempt": 1,
+      "jobsPassed": 12,
+      "testsPassed": 12,
+      "intentionallyExcludedTests": 204,
+      "evidencePath": "/tmp/reposetup-0.2.3-release/failures/windows/next-vitest-37864064134/verified-diagnostic.json",
+      "originalFailureReproduced": false
+    }
+  },
+  "qualificationAttempts": [
+    {
+      "runId": 37813984536,
+      "conclusion": "success",
+      "runAttempt": 1,
+      "requiredJobsPassed": 16
+    },
+    {
+      "runId": 37813990336,
+      "conclusion": "failure",
+      "runAttempt": 1,
+      "failedJob": 113437772077,
+      "reason": "Windows Golden H sample tests passed, then Node exited 3221226505 with a libuv UV_HANDLE_CLOSING assertion; overall 39 of 40 recipe tests passed."
+    },
+    {
+      "runId": 37813995872,
+      "conclusion": "failure",
+      "runAttempt": 1,
+      "failedJob": 113437793817,
+      "reason": "Hosted macOS runner lost communication; job logs unavailable (404), API step 8 remained in progress."
+    }
+  ],
+  "qualificationGate": {
+    "status": "passed",
+    "proofPath": "/tmp/reposetup-0.2.3-release/qualification-proof.json",
+    "latestThreeConsecutiveFirstAttempts": true,
+    "candidateBranchUnchanged": true
+  },
+  "tag": {
+    "name": "v0.2.3",
+    "sourceSha": "a213a6a1edf63771aba8d5b91bfdcf44d665de22",
+    "immutable": true
+  },
+  "evidenceDirectory": "/tmp/reposetup-0.2.3-release",
+  "documentationCloseout": {
+    "date": "2026-10-09",
+    "typecheck": "passed",
+    "lint": "passed",
+    "diffCheck": "passed",
+    "productSourceUnchanged": true,
+    "evidenceBranch": "codex/release-0.2.3-evidence",
+    "logs": {
+      "typecheck": "/tmp/reposetup-0.2.3-release/closeout-typecheck.log",
+      "lint": "/tmp/reposetup-0.2.3-release/closeout-lint.log"
+    }
+  }
+}

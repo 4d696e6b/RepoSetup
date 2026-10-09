@@ -79,7 +79,15 @@ async function checkRequiredLockfile(
       continue;
     }
 
-    if (await context.fs.exists(`${context.rootDir}/${operation.requiresLockfile}`)) {
+    const directory = resolveInsideRoot(context.rootDir, operation.cwd);
+    if (!directory.ok) return directory.error;
+    const realPath = await assertRealPathInsideRoot(
+      context.rootDir,
+      directory.absolutePath,
+      context.fs,
+    );
+    if (!realPath.ok) return realPath.error;
+    if (await context.fs.exists(`${directory.absolutePath}/${operation.requiresLockfile}`)) {
       continue;
     }
 
@@ -95,51 +103,66 @@ async function checkRequiredLockfile(
   return undefined;
 }
 
-function packageManagersInPlan(operations: readonly InstallationOperation[]): Set<string> {
-  const managers = new Set<string>();
+function packageManagersInPlan(
+  operations: readonly InstallationOperation[],
+): Map<string, Set<string>> {
+  const directories = new Map<string, Set<string>>();
   for (const operation of operations) {
+    let manager: string | undefined;
     if (operation.type === "install_package") {
-      managers.add(operation.packageManager);
-      continue;
+      manager = operation.packageManager;
+    } else if (operation.type === "run_command") {
+      // A scaffold that defers installation runs from the parent directory.
+      // Its eventual install checks the actual destination instead.
+      if (operation.skipsDependencyInstall === true || operation.args.includes("--skip-install"))
+        continue;
+      if (operation.command === "npm" || operation.command === "npx") manager = "npm";
+      else if (operation.command === "pnpm") manager = "pnpm";
+      else if (operation.command === "uv") manager = "uv";
     }
-    if (operation.type !== "run_command") {
-      continue;
-    }
-    if (operation.command === "npm" || operation.command === "npx") {
-      managers.add("npm");
-    } else if (operation.command === "pnpm") {
-      managers.add("pnpm");
-    } else if (operation.command === "uv") {
-      managers.add("uv");
+    if (manager !== undefined && "cwd" in operation) {
+      const managers = directories.get(operation.cwd) ?? new Set<string>();
+      managers.add(manager);
+      directories.set(operation.cwd, managers);
     }
   }
-  return managers;
+  return directories;
 }
 
 async function checkLockfileCompatibility(
   operations: readonly InstallationOperation[],
   context: ExecutionContext,
 ): Promise<RepoSetupError | undefined> {
-  const managers = packageManagersInPlan(operations);
+  const directories = packageManagersInPlan(operations);
   const lockfiles = [
     { manager: "npm", file: "package-lock.json" },
     { manager: "pnpm", file: "pnpm-lock.yaml" },
     { manager: "bun", file: "bun.lock" },
     { manager: "uv", file: "uv.lock" },
   ] as const;
-  for (const lockfile of lockfiles) {
-    if (
-      managers.size > 0 &&
-      !managers.has(lockfile.manager) &&
-      (await context.fs.exists(`${context.rootDir}/${lockfile.file}`))
-    )
-      return createRepoSetupError({
-        code: "LOCKFILE_CONFLICT",
-        message: `Found ${lockfile.file}, which conflicts with this plan's package manager.`,
-        details: { lockfile: lockfile.file, managers: [...managers] },
-        suggestion:
-          "Use the package manager recorded by the existing lockfile or remove the conflicting lockfile deliberately.",
-      });
+  for (const [cwd, managers] of directories) {
+    const directory = resolveInsideRoot(context.rootDir, cwd);
+    if (!directory.ok) return directory.error;
+    const realPath = await assertRealPathInsideRoot(
+      context.rootDir,
+      directory.absolutePath,
+      context.fs,
+    );
+    if (!realPath.ok) return realPath.error;
+    for (const lockfile of lockfiles) {
+      if (
+        managers.size > 0 &&
+        !managers.has(lockfile.manager) &&
+        (await context.fs.exists(`${directory.absolutePath}/${lockfile.file}`))
+      )
+        return createRepoSetupError({
+          code: "LOCKFILE_CONFLICT",
+          message: `Found ${lockfile.file}, which conflicts with this plan's package manager.`,
+          details: { lockfile: lockfile.file, cwd, managers: [...managers] },
+          suggestion:
+            "Use the package manager recorded by the existing lockfile or remove the conflicting lockfile deliberately.",
+        });
+    }
   }
   return undefined;
 }

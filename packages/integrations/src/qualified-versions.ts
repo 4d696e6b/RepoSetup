@@ -22,11 +22,11 @@
  *   still installs prisma@prev and @prisma/client@7; on this date those tags
  *   resolve to 7.10.0. https://www.prisma.io/docs/getting-started/prisma-orm/quickstart/sqlite
  */
-export const REGISTRY_REVISION = "2026-09-23";
+export const REGISTRY_REVISION = "2026-10-08";
 
 export const QUALIFIED_VERSIONS = {
-  createNextApp: "16.3.5",
-  eslintConfigNext: "16.3.5",
+  createNextApp: "16.3.6",
+  eslintConfigNext: "16.3.6",
   vite: "8.3.0",
   eslint: "9.39.5",
   eslintJs: "9.39.5",
@@ -69,6 +69,8 @@ export const QUALIFIED_VERSIONS = {
   flask: "3.1.3",
   pydantic: "2.13.5",
   sqlalchemy: "2.0.54",
+  // Official binary extra is self-contained; verified PyPI wheels for Python 3.12/3.13.
+  psycopg: "3.3.6",
   alembic: "1.20.0",
   pytest: "9.1.1",
   ruff: "0.16.8",
@@ -92,6 +94,11 @@ export const QUALIFIED_PEERS = [
     package: "@tailwindcss/vite@4.3.3",
     peers: "vite ^5.2.0 || ^6 || ^7 || ^8",
     satisfiedBy: "vite@8.3.0",
+  },
+  {
+    package: "vitest@5.0.1",
+    peers: "@types/node ^22.0.0 || >=24.0.0 (optional)",
+    satisfiedBy: "@types/node@22.20.4",
   },
   {
     package: "@vitejs/plugin-react@6.1.1",
@@ -157,11 +164,13 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
   zod: [npmPin("zod", QUALIFIED_VERSIONS.zod)],
   vitest: [
     npmPin("vitest", QUALIFIED_VERSIONS.vitest),
+    npmPin("vite", QUALIFIED_VERSIONS.vite),
     npmPin("@vitejs/plugin-react", QUALIFIED_VERSIONS.vitePluginReact),
     npmPin("jsdom", QUALIFIED_VERSIONS.jsdom),
     npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
     npmPin("@testing-library/dom", QUALIFIED_VERSIONS.testingLibraryDom),
     npmPin("vite-tsconfig-paths", QUALIFIED_VERSIONS.viteTsconfigPaths),
+    npmPin("@types/node", QUALIFIED_VERSIONS.typesNode),
   ],
   "testing-library": [
     npmPin("@testing-library/react", QUALIFIED_VERSIONS.testingLibraryReact),
@@ -196,7 +205,10 @@ const DIRECT_VERSIONS: Record<string, readonly string[]> = {
   fastapi: [`fastapi[standard]==${QUALIFIED_VERSIONS.fastapi}`],
   flask: [pypiPin("Flask", QUALIFIED_VERSIONS.flask)],
   pydantic: [pypiPin("pydantic", QUALIFIED_VERSIONS.pydantic)],
-  sqlalchemy: [pypiPin("SQLAlchemy", QUALIFIED_VERSIONS.sqlalchemy)],
+  sqlalchemy: [
+    pypiPin("SQLAlchemy", QUALIFIED_VERSIONS.sqlalchemy),
+    pypiPin("psycopg[binary]", QUALIFIED_VERSIONS.psycopg),
+  ],
   alembic: [pypiPin("alembic", QUALIFIED_VERSIONS.alembic)],
   pytest: [pypiPin("pytest", QUALIFIED_VERSIONS.pytest)],
   ruff: [pypiPin("ruff", QUALIFIED_VERSIONS.ruff)],

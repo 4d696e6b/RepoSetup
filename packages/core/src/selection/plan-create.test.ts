@@ -53,6 +53,7 @@ it("scopes every file/process target into the reserved project directory", () =>
     { type: "create_directory", path: "projects/app", behavior: "fail_if_exists" },
     { type: "create_file", path: "projects/app/package.json" },
     { type: "run_command", cwd: "projects/app" },
+    { type: "verify", cwd: "projects/app" },
   ]);
 });
 

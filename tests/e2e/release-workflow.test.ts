@@ -12,19 +12,21 @@ describe("release publishing workflow", () => {
       "utf8",
     );
     expect(workflow).toContain("node-version: 24");
-    expect(workflow).toContain("needs: [platform, golden, faults]");
-    expect(workflow).toContain("faults:");
-    expect(workflow).toContain("needs: pack-candidate");
-    expect(workflow).toContain(
-      "needs: [platform, golden, faults, pack-candidate, artifact-acceptance]",
-    );
-    expect(workflow).toContain('REPOSETUP_USABILITY_OCCUPY_DEV_PORT: "1"');
-    expect(workflow).toContain("pnpm test:e2e");
-    expect(workflow).toContain("pnpm test:golden");
-    expect(workflow).toContain("write-artifact-evidence.mjs");
+    expect(workflow).toContain("workflow_dispatch:");
+    expect(workflow).toContain("default: false");
+    expect(workflow).toContain("check-release-qualification.mjs");
+    expect(workflow).toContain("artifact-ids: ${{ steps.qualification.outputs.artifact_id }}");
+    expect(workflow).toContain("run-id: ${{ steps.qualification.outputs.run_id }}");
+    expect(workflow.match(/merge-multiple: true/g)).toHaveLength(2);
     expect(workflow).toContain("verify-packed-artifact.mjs --directory candidate");
-    expect(workflow).toContain('test "$SOURCE_SHA" = "$GITHUB_SHA"');
-    expect(workflow).toContain('npm publish "$TARBALL" --access public');
+    expect(workflow).toContain("EXPECTED_SOURCE_SHA: ${{ github.sha }}");
+    expect(workflow).toContain('EXPECTED_PACKAGE_VERSION: "0.2.3"');
+    expect(workflow).not.toContain("ref: v0.2.3");
+    expect(workflow).toContain("publish-qualified-artifact.mjs");
+    expect(workflow).toContain("verify-registry-release.mjs");
+    expect(workflow).not.toContain("pnpm build");
+    expect(workflow).not.toContain("pnpm --filter rsetup pack");
+    expect(workflow).not.toContain("push:");
     expect(workflow).not.toContain("continue-on-error");
   });
 

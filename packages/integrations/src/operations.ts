@@ -179,7 +179,7 @@ export function afterPythonPackageInstall(
   return [
     {
       type: "show_message",
-      message: `pip installed ${packageLabel} into the active environment only. Record it in requirements.txt yourself. RepoSetup will not rewrite pip requirement files.`,
+      message: `pip installed ${packageLabel} into the active environment only. Create records selected packages in requirements.txt. When adding to an existing project, update its requirements file yourself.`,
       description: "Explain that pip does not update a lockfile",
     },
   ];

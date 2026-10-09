@@ -72,7 +72,7 @@ describe("integration plans", () => {
       [
         "pnpm",
         "create",
-        "next-app@16.3.5",
+        "next-app@16.3.6",
         ".",
         "--ts",
         "--eslint",
@@ -101,7 +101,7 @@ describe("integration plans", () => {
       [
         "npx",
         "--yes",
-        "create-next-app@16.3.5",
+        "create-next-app@16.3.6",
         "app",
         "--js",
         "--eslint",
@@ -123,7 +123,7 @@ describe("integration plans", () => {
         expect.objectContaining({
           type: "modify_json",
           path: "package.json",
-          merge: { devDependencies: { "eslint-config-next": "16.3.5" } },
+          merge: { devDependencies: { "eslint-config-next": "16.3.6" } },
         }),
       ]),
     );
@@ -159,7 +159,18 @@ describe("integration plans", () => {
       ["pnpm", "add", "tailwindcss@4.3.3", "@tailwindcss/vite@4.3.3"],
     ]);
     expect(plan).toEqual(
-      expect.arrayContaining([expect.objectContaining({ type: "show_message" })]),
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "modify_text",
+          path: "vite.config.ts",
+          newText: expect.stringContaining("tailwindcss()"),
+        }),
+        expect.objectContaining({
+          type: "modify_text",
+          path: "src/index.css",
+          newText: expect.stringContaining("@import 'tailwindcss';"),
+        }),
+      ]),
     );
   });
 
@@ -188,6 +199,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
         "prisma@7.10.0",
@@ -211,6 +223,7 @@ describe("integration plans", () => {
         "sqlite",
         "--output",
         "../generated/prisma",
+        "--no-skills",
       ],
       ["pnpm", "exec", "prisma", "generate"],
     ]);
@@ -228,13 +241,17 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
+        "--save-exact",
         "--allow-build=esbuild",
         "vitest@5.0.1",
+        "vite@8.3.0",
         "@vitejs/plugin-react@6.1.1",
         "jsdom@28.1.0",
         "@testing-library/react@16.3.3",
         "@testing-library/dom@10.4.2",
         "vite-tsconfig-paths@6.1.1",
+        "@types/node@22.20.4",
       ],
       ["pnpm", "exec", "vitest", "run"],
     ]);
@@ -247,8 +264,11 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
+        "--save-exact",
         "--allow-build=esbuild",
         "vitest@5.0.1",
+        "vite@8.3.0",
         "@vitejs/plugin-react@6.1.1",
         "jsdom@28.1.0",
         "@testing-library/react@16.3.3",
@@ -283,7 +303,7 @@ describe("integration plans", () => {
 
   it("installs Prettier as an exact dev dependency", () => {
     expect(runCommands(prettierIntegration.plan(planContext()))).toEqual([
-      ["pnpm", "add", "--save-dev", "--save-exact", "prettier@3.9.8"],
+      ["pnpm", "add", "--save-dev", "--prod=false", "--save-exact", "prettier@3.9.8"],
     ]);
     expect(prettierIntegration.plan(planContext({ frameworkId: "react-vite" }))).toEqual(
       expect.arrayContaining([
@@ -304,6 +324,7 @@ describe("integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "--allow-build=prisma",
         "--allow-build=@prisma/engines",
         "prisma@7.10.0",
@@ -327,6 +348,7 @@ describe("integration plans", () => {
         "postgresql",
         "--output",
         "../generated/prisma",
+        "--no-skills",
       ],
       ["pnpm", "exec", "prisma", "generate"],
     ]);

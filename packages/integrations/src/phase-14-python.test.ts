@@ -134,7 +134,7 @@ describe("Phase 14 Python ecosystem plans", () => {
       runCommands(
         sqlalchemyIntegration.plan(planContext({ integrations: [{ id: "postgresql" }] })),
       ),
-    ).toEqual([["uv", "add", "SQLAlchemy==2.0.54"]]);
+    ).toEqual([["uv", "add", "SQLAlchemy==2.0.54", "psycopg[binary]==3.3.6"]]);
     expect(runCommands(pytestIntegration.plan(planContext()))).toEqual([
       ["uv", "add", "--dev", "pytest==9.1.1"],
     ]);
@@ -152,7 +152,7 @@ describe("Phase 14 Python ecosystem plans", () => {
     ]);
   });
 
-  it("does not install PostgreSQL, Docker, or a DBAPI", () => {
+  it("does not install PostgreSQL or Docker system software", () => {
     expect(runCommands(postgresqlIntegration.plan(planContext()))).toEqual([]);
     expect(runCommands(dockerIntegration.plan(planContext()))).toEqual([]);
     expect(
@@ -243,7 +243,7 @@ describe("Phase 14 Python ecosystem detection and verify", () => {
     );
     expect(await pytestIntegration.verify?.(empty)).toEqual(expect.objectContaining({ ok: false }));
     expect(await ruffIntegration.verify?.(empty)).toEqual(expect.objectContaining({ ok: false }));
-    expect(await dockerIntegration.verify?.(empty)).toEqual({ ok: true });
+    expect(await dockerIntegration.verify?.(empty)).toEqual(expect.objectContaining({ ok: false }));
   });
 });
 
@@ -274,6 +274,7 @@ describe("Phase 14 example stacks", () => {
           "fastapi[standard]==0.141.1",
           "pydantic==2.13.5",
           "SQLAlchemy==2.0.54",
+          "psycopg[binary]==3.3.6",
           "alembic==1.20.0",
         ],
         ["uv", "add", "--dev", "pytest==9.1.1", "ruff==0.16.8"],
@@ -308,7 +309,14 @@ describe("Phase 14 example stacks", () => {
     expect(runCommands(result.operations)).toEqual(
       expect.arrayContaining([
         ["uv", "init", ".", "--bare", "--name", "example-flask-app"],
-        ["uv", "add", "Flask==3.1.3", "SQLAlchemy==2.0.54", "alembic==1.20.0"],
+        [
+          "uv",
+          "add",
+          "Flask==3.1.3",
+          "SQLAlchemy==2.0.54",
+          "psycopg[binary]==3.3.6",
+          "alembic==1.20.0",
+        ],
         ["uv", "add", "--dev", "pytest==9.1.1", "ruff==0.16.8"],
         ["uv", "run", "alembic", "init", "alembic"],
       ]),

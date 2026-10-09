@@ -14,11 +14,11 @@ export const nodeIntegration = defineIntegration({
   category: "runtime",
   description: "Detects the Node.js runtime before project setup.",
   status: "candidate",
-  documentationUrl: "https://nextjs.org/docs/app/getting-started/installation",
+  documentationUrl: "https://nodejs.org/en/download",
   keywords: ["nodejs", "javascript", "runtime"],
   verification: {
     verifiedAt: VERIFIED_AT,
-    runtimeRange: ">=20.9",
+    runtimeRange: ">=24",
   },
   supports(context) {
     if (context.runtimeId !== "node") {
@@ -39,7 +39,7 @@ export const nodeIntegration = defineIntegration({
       {
         type: "check_prerequisite",
         id: "node",
-        description: "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        description: "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
       },
     ];
   },

@@ -2,17 +2,39 @@ import { mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:
 import os from "node:os";
 import path from "node:path";
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   MAX_CAPTURED_OUTPUT_BYTES,
+  childProcessEnvironment,
   createDefaultExecutorFileSystem,
   createDefaultExecutionLock,
   createDefaultExecutionJournal,
   createDefaultExecutableResolver,
   createDefaultProcessRunner,
+  createDefaultCommandExists,
+  createDefaultCommandVersion,
   resolveWindowsLaunch,
 } from "./execution-adapters.js";
+
+describe("bounded prerequisite inspection", () => {
+  it.each(["timedOut", "aborted", "notFound"] as const)(
+    "does not report a %s version probe as available",
+    async (failure) => {
+      const runner = vi.fn(async () => ({
+        exitCode: 0,
+        stdout: "Docker version 29.0.0",
+        stderr: "",
+        [failure]: true,
+      }));
+      expect(await createDefaultCommandExists(runner)("docker")).toBe(false);
+      expect(await createDefaultCommandVersion(runner)("docker")).toBeUndefined();
+      expect(runner).toHaveBeenCalledWith(
+        expect.objectContaining({ command: "docker", args: ["--version"], timeoutMs: 5_000 }),
+      );
+    },
+  );
+});
 
 describe("createDefaultExecutorFileSystem", () => {
   it("atomically replaces a final-component symlink without modifying its target", async () => {
@@ -123,6 +145,27 @@ describe("createDefaultExecutionJournal", () => {
         rm(projectRoot, { recursive: true, force: true }),
       ]);
     }
+  });
+});
+
+describe("nested npm execution environment", () => {
+  it("drops outer exec options and preserves install configuration without mutating the parent", () => {
+    const original = {
+      npm_config_package: "rsetup.tgz",
+      NPM_CONFIG_CALL: "outer command",
+      npm_config_user_agent: "pnpm/12.5.1 npm/? node/v24.21.0",
+      NPM_EXECPATH: "outer/pnpm.cjs",
+      npm_node_execpath: "outer/node",
+      npm_config_cache: "cache",
+      npm_config_registry: "https://registry.npmjs.org",
+      PATH: "tools",
+    };
+    expect(childProcessEnvironment(original)).toEqual({
+      npm_config_cache: "cache",
+      npm_config_registry: "https://registry.npmjs.org",
+      PATH: "tools",
+    });
+    expect(original.npm_config_package).toBe("rsetup.tgz");
   });
 });
 
@@ -323,6 +366,21 @@ describe("resolveWindowsLaunch", () => {
 });
 
 describe("createDefaultExecutableResolver", () => {
+  it("prefers the activated environment's python ahead of the platform launcher", async () => {
+    vi.stubEnv("VIRTUAL_ENV", "/example/environment");
+    try {
+      const runs: string[] = [];
+      const resolver = createDefaultExecutableResolver(async (request) => {
+        runs.push(request.command);
+        return { exitCode: 0, stdout: "Python 3.13.0", stderr: "" };
+      });
+      expect(await resolver("python")).toBe("python");
+      expect(runs).toEqual(["python"]);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it("selects and caches the first platform Python candidate", async () => {
     const runs: string[] = [];
     const expected = process.platform === "win32" ? "python" : "python3";
