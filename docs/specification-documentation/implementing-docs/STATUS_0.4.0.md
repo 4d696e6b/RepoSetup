@@ -2827,3 +2827,13 @@ No overwrite is used. This affects future workflow evidence only; running older
 jobs retain their original definitions and their actual outcomes must be recorded.
 The source safety provenance recheck is committed, confirming unchanged production
 core/CLI source between reviewed `536a090` and tested `5565463`.
+
+Benchmark protocol and user guide now link the offline scope explicitly. The
+empirical benchmark protocol and report qualification rules remain unchanged.
+At `5565463`, all three platform jobs, ordinary CI and installation performance
+passed. Clean-source packed receipts identify tested PR merge source
+`967b1d6a79afef5a23cbce958ca67339dd54612d` and lockfile
+`sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c`;
+installed artifact smoke matches the recorded `7a4942e2...` CLI bytes on all hosts.
+Linux/Windows used Node 24.21.0; macOS used 24.20.0. All receipts retain
+`qualification: false`, distinguishing development checks from final release.

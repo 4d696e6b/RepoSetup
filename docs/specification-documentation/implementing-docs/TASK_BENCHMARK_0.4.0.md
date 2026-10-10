@@ -2,6 +2,14 @@
 
 Contract frozen for Milestone A on 2026-10-06. Milestone I now has frozen fixture source, independent oracle source and offline qualification tests. Partial offline managed trial drivers and private evidence stores are implemented. Full campaign/provider comparisons remain unqualified. This document authorizes no provider calls or spending.
 
+**Offline-only amendment, 2026-10-10:** I/J completion now follows
+[offline acceptance](./OFFLINE_ACCEPTANCE_0.4.0.md). Diagnostic simulated trials
+validate functional paths and accounting only. The original empirical protocol
+below is unchanged and remains a deferred prerequisite for comparative model,
+quality or savings claims. Offline milestone completion cannot change a report's
+`qualification: false` into a qualified comparison.
+
+
 Read the [task compiler contract](../product-docs/TASK_COMPILER_0.4.0.md), [task domain contracts](../product-docs/TASK_CONTRACTS_0.4.0.md), [support profile](../product-docs/TASK_SUPPORT_0.4.0.md) and [provider research](./TASK_PROVIDER_RESEARCH_0.4.0.md). The [Phase 23 installation benchmark](./PHASE_23_BENCHMARK_PROTOCOL.md) remains independent. Its source baseline, installation measurements and performance targets are not task-compiler evidence.
 
 ## Questions and treatments

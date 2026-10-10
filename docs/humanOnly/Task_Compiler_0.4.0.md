@@ -103,3 +103,13 @@ Task artifacts have independent versions. Keep private state outside the project
 do not automatically adopt old or manually edited task evidence. See the
 [support boundary](../specification-documentation/product-docs/TASK_SUPPORT_0.4.0.md)
 and [candidate preparation/open gates](../specification-documentation/release-docs/RELEASE_CANDIDATE_0.4.0.md).
+
+## Offline development completion and release status
+
+The owner selected offline-only I/J scope on 2026-10-10. The
+[acceptance record](../specification-documentation/implementing-docs/OFFLINE_ACCEPTANCE_0.4.0.md)
+defines functional verification and delivery preparation without paid model calls.
+Completion under that scope does not release version 0.4.0 or qualify production
+models. Existing package versions remain unchanged; production routing stays
+unconfirmed. Live comparisons and versioned-candidate stability gates remain
+separate prerequisites before those release claims.
