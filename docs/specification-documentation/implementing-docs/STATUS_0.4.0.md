@@ -2243,3 +2243,33 @@ The original direct-provider unknown reservation and stop rule remain intact;
 comparative trials, production routing evidence and platform acceptance remain
 open. Resource creation does not establish keyless data-plane access or actual
 model-usage credit coverage.
+
+### I: offline platform qualification workflow (2026-10-10)
+
+The owner requested deferring the Azure quota blocker and implementing the
+remaining available work. Added `.github/workflows/task-qualification.yml` for
+pull requests touching task implementation and manual dispatch. It runs the
+existing frozen/packed contract suite and expensive real-tool verification,
+managed success, repair and 75-slot failure-accounting suite on Linux x64 and
+macOS arm64 with Node 24, serial matrix scheduling and a finite 120-minute job
+deadline. Provider credentials are empty; the suites inject simulated transport.
+Read-only workflow permissions, source SHA/clean-tree/runtime/lockfile identity,
+pipefail-preserved test failures, tracked-source drift checks and always-uploaded
+diagnostic logs prevent a green job from silently dropping evidence or claiming
+live qualification. Evidence explicitly says simulated provider and no live
+qualification. No remote workflow was dispatched or result claimed.
+
+Local validation on Node **24.21.0**: workspace build, workspace and task-test
+typechecks, lint, workflow formatting and **61 ordinary offline tests / nine
+files** pass, including all eight extracted packed alias/legacy dry-run cases.
+The full expensive suite rerun was stopped with SIGINT (exit 130), since this
+workflow-only change does not alter verifier/runtime behavior; a targeted actual
+types fixture task/final-phase check is running separately. That cancelled run
+is not a pass. The dependency license review passes with no unreviewed licenses.
+No runtime source, dependency, version, website or provider call changed.
+
+Azure quota/live capability/usage, genuine comparative quality/cost evidence,
+installed legacy qualification and actual hosted Linux/platform results remain
+deferred and unverified. Milestone I stays in progress; proceed with J's available
+documentation/review preparation without qualifying, versioning or publishing a
+candidate. The new workflow is executable infrastructure, not platform evidence.
