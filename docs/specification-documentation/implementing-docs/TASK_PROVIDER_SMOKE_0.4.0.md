@@ -18,7 +18,7 @@ The test rejects default `fetch` and asserts that it was never invoked. On Node
 24+ with the existing installed development dependencies, run:
 
 ```sh
-pnpm --filter rsetup test src/tasks/verification-adapter.test.ts -t 'completes no-key'
+pnpm --filter rsetup exec vitest run --config vitest.verification.config.ts -t 'completes no-key'
 ```
 
 The fixture starts with subtraction, freezes positive/negative/zero addition tests

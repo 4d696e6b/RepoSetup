@@ -2784,3 +2784,29 @@ Installation performance also passed on all three platforms at `d2f9d4c`.
 These are development checks and separately identified platform results, not a
 frozen release qualification or production benchmark. The corrected hosted task
 run is the next pending check; no provider credential or paid call was used.
+
+### I/J gate reconciliation and usable no-key test instructions (2026-10-10)
+
+Reinspected the original roadmap and candidate gates after the request to finish
+I/J. Node 24.21.0 is available and the starting working tree was clean at `5565463`.
+Correct the smoke protocol's offline test invocation to use the dedicated serial
+verifier configuration: ordinary CLI test configuration now intentionally excludes
+that expensive file. Update roadmap/candidate preparation language that still
+claimed no hosted dispatch or platform results, linking the actual passing checks
+at `d2f9d4c` and retaining separate source identities for the Linux full-fixture pass.
+No acceptance checkbox, candidate version or release gate is changed.
+
+The original managed scope still requires actual provider/profile smoke and 75
+comparative model trials. Neither simulated responses nor official model mappings
+supply those observations. A scope clarification is pending for an offline-only
+candidate versus original managed qualification; until answered, the existing
+live gates remain open. No additional live call or spending is authorized by this
+work. The seven-calendar-day stability gate cannot be compressed into one session;
+its frozen candidate prerequisite and clock have not started.
+
+Documentation formatting, whitespace checks, workspace typecheck and lint passed
+for this reconciliation. No feature code changed, so no additional build or
+feature test was required. Hosted corrected qualification at `5565463` passed the
+62-contract stage on Linux and reached concrete verification; macOS is queued.
+The same-source macOS full-fixture retry remains in progress. Until a different
+scope is explicitly selected, original I/J acceptance conditions remain binding.

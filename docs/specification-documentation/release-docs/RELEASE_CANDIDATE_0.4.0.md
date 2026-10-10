@@ -11,7 +11,9 @@ by this preparation. Package versions remain `0.3.0-alpha.1`.
 Milestones A–H implement separate strict task contracts, safe bounded context,
 portable compile/next/status, executor-owned scoped changes/private state,
 independent verification, managed compilation/coding and bounded routing/repair.
-The reviewed tool/state host is macOS arm64 / Node 24.21.0. Local orchestration
+Development platform checks passed on Linux x64, macOS arm64 and Windows x64
+with Node 24. Windows explicitly rejects the unsupported task execution profile.
+The original reviewed tool/state host is macOS arm64 / Node 24.21.0. Local orchestration
 tests use the pinned provider SDK with simulated HTTP. They do not qualify remote
 models or production routing. The initial managed project profile is one trusted
 TypeScript/Node package with preinstalled dependencies and fixed named checks.
@@ -58,8 +60,19 @@ The [offline workflow](../../../.github/workflows/task-qualification.yml) runs
 contract and expensive real-tool suites on Linux x64 and macOS arm64 / Node 24.
 It uses read-only permissions, empty provider credentials, serial matrix jobs,
 finite deadlines, exact-source/runtime/lockfile identity and retained failure logs.
-Its provider mode is explicitly simulated. Adding the workflow is not a passing
-hosted run; no remote dispatch or platform result has been claimed.
+Its provider mode is explicitly simulated. Hosted checks were authorized and
+run through [draft PR #20](https://github.com/4d696e6b/RepoSetup/pull/20).
+[Platform](https://github.com/4d696e6b/RepoSetup/actions/runs/38031566182),
+[ordinary CI](https://github.com/4d696e6b/RepoSetup/actions/runs/38031566207) and
+[installation performance](https://github.com/4d696e6b/RepoSetup/actions/runs/38031566184)
+passed at branch source `d2f9d4c`. The installed CLI hash above matched across all
+three hosts. These are identified development results, not a frozen candidate.
+
+The Linux full fixture suite passed 11/11 cases at branch source `1d2638e`, tested
+PR merge source `7326a1a749bf1dcc7a2b5d395e9e8ae4f47de598`. Its same-source macOS
+retry and the corrected complete concrete/full qualification at `5565463` remain
+pending. Earlier failures and cancelled superseded runs remain recorded in status;
+results from different sources must not be combined into one candidate repeat.
 
 Dependency-license review on the installed frozen lockfile passed on 2026-10-10:
 197 packages across seven allowed license families, no unreviewed licenses.

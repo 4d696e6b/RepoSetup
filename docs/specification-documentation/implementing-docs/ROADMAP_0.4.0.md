@@ -175,7 +175,9 @@ quota/live prerequisite is deferred. The [candidate preparation record](../relea
 and user guide describe implemented commands and open gates. This advances
 documentation only; it does not waive I, qualify a candidate or authorize a
 version bump/publication. Hosted offline platform infrastructure is present;
-actual runner results remain unverified.
+ordinary CI, installed aliases, legacy and platform checks have passed on all
+three advertised hosts as recorded in status. Complete concrete/full task
+qualification and same frozen candidate results remain pending.
 
 ## Checks and status discipline
 
