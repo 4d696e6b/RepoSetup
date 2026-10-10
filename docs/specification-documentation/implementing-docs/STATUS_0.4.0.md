@@ -2054,3 +2054,50 @@ Preparing that initial dispatch after correcting the missing environment does
 not renew an allowance or retry a sent provider request. No credential was read
 or logged. Live smoke and Milestone I remain unqualified; all later gates remain
 open. Documentation-only validation: formatting and whitespace checks passed.
+
+
+### I: first authorized live dispatch stopped; no retry (2026-10-10)
+
+After a second missing-credential preflight (zero reservations), the owner
+explicitly authorized use of the supplied credential. Preserved that second
+preflight result separately. The credential entered a non-echoing process input
+and existed only in its environment, not a command argument, configuration,
+project file or task artifact; the process unset it and exited after the attempt.
+It was not read from the browser or printed. The owner must revoke the key shared
+in chat after this test; this record contains no key.
+
+Executed the existing credential-backed CLI and official SDK **7.28.0**, fixed
+**gpt-6.1-sol / low**, on Node **24.21.0**, macOS arm64, with the exact previously
+reviewed approval and original two-call/$1 estimated ceilings. The clean-source
+fixture was prepared at `165121a8297b1b6e814372997c203dd6dc3ae030` and its Git
+baseline is `59738896e41c0d6f47fe56022c3f8df0e75423f4`. One decomposition dispatch
+was attempted. CLI exit **5**, `TASK_NEEDS_REVIEW`; its durable compilation status
+is **needs_review**, `plan: null`. No coding call, process verification,
+independent acceptance, generated-code change, dependency install or retry
+followed. Disposable fixture Git status remains clean and the subtraction seed
+is unchanged.
+
+The retained reservation is **1 call / 13269 input tokens / 4096 output tokens /
+81546 micro-USD estimated cost**. These are reserved ceilings, **not measured
+usage or a bill**. Reported input/output/reasoning/cache/total tokens and actual
+cost are all **unknown**; provider call ID is null and effective configuration
+is unknown. Recorded dispatch duration is **1264ms**. The private checkpoint does
+not establish an HTTP status or the cause; account/model/schema/transport issues
+remain unresolved. Do not infer zero charge or release the unknown reservation.
+No second call is authorized by failure recovery under this smoke's stop rule.
+
+Retained identities:
+
+- Oracle: `sha256:06880c8ae90506866b48f52f5667a4e713072f33638da1896d88fd980f89a33d`.
+- Review: `sha256:010967f6ec20502936f51a53379106ddc78a4e15bc067274d348230bfe754668`.
+- Bundled preparation runner: `sha256:e32715b2f9dc06556d26654df87bfd4a18d1994c07c8a3cc4819f5cd85917205`.
+- Context: `sha256:798e7a593674f70d77f48d33993be3a29587854da4eda1b618cbcb929d9bb302`.
+- Request: `sha256:4ff08e908915cd7df5351f4991964269d6a1cbe481e7a73c5ff3cf99d87ab4dc`.
+- Checkpoint: `sha256:7be82c0ea7b4e09bc30ad97c22f60f6f634b3a21418b12999ca5d15aed9c9c20`.
+
+The private parent, decoded result and executor checkpoint remain outside the
+repository for manual review. Source/runtime/tool validation from the preparation
+slice remains passing; this actual provider failure does **not** pass the live
+smoke gate. Documentation formatting and whitespace checks pass. Milestone I
+remains in progress; production capability/effort evidence, 75 comparative trials,
+installed/Linux/platform and live-success gates remain open, with J unstarted.

@@ -1,6 +1,6 @@
 # Live provider smoke protocol — Milestone I / J release gate
 
-Status: **bounded smoke authorized; not run**. On 2026-10-10 the owner explicitly authorized up to two live API calls within a $1 estimated ceiling. This authorizes only the concrete smoke below; benchmark/routing campaigns and further calls remain unauthorized. All existing transport evidence uses fake HTTP.
+Status: **bounded smoke attempted; failed; live qualification remains open**. On 2026-10-10 the owner explicitly authorized up to two live API calls within a $1 estimated ceiling. This authorizes only the concrete smoke below; benchmark/routing campaigns and further calls remain unauthorized. Earlier transport tests used fake HTTP. The first actual bounded decomposition dispatch on 2026-10-10 stopped in `needs_review`, with no plan and unknown usage/effective configuration. No second call or retry was made.
 This is a finite qualification procedure, not a benchmark, routing qualification
 or release endorsement. The owner expressly prohibited paid calls in the initial
 request. On 2026-10-07 the owner requested completion of G without API access.
