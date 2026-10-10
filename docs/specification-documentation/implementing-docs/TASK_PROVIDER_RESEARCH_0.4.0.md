@@ -233,3 +233,13 @@ fake HTTP cannot prove RepoSetup task quality or account access. Core's trusted-
 catalog supports separately bound offline/live qualification evidence and rejects
 offline evidence for live routing. I must record actual capability fixture evidence
 before J can claim managed routed support. No model invocation or paid research occurred.
+
+## Owner-requested Azure investigation (2026-10-10)
+
+After the bounded direct-provider attempt failed, the owner requested Azure
+keyless testing using Azure for Students credits. The [Azure qualification
+prerequisites](./TASK_AZURE_QUALIFICATION_0.4.0.md) record current Microsoft sources,
+actual portal access observations, required transport/provenance extension,
+credit/quota/authentication limits and unresolved account prerequisites. This is
+an investigated alternative, not implemented or qualified Azure support. The
+single-provider runtime and existing direct-provider artifacts remain unchanged.

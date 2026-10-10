@@ -2101,3 +2101,34 @@ slice remains passing; this actual provider failure does **not** pass the live
 smoke gate. Documentation formatting and whitespace checks pass. Milestone I
 remains in progress; production capability/effort evidence, 75 comparative trials,
 installed/Linux/platform and live-success gates remain open, with J unstarted.
+
+### I: owner-requested Azure for Students keyless investigation (2026-10-10)
+
+The owner requested Azure testing and confirmed the credit offer is **Azure for
+Students**. Inspected the already authenticated Azure portal read-only: current
+subscription inventory **0 of 0**, all role/status filters selected; All
+Directories shows only the default directory. This session therefore exposes no
+credited subscription or model deployment to qualify. It does not prove credits
+are absent in a different account or inactive offer. No personal account or tenant
+identifiers are persisted in documentation. No Azure CLI is on this host PATH;
+Node **24.21.0** was checked. No login credentials/tokens were requested or read,
+model call made, subscription/resource/deployment created, role granted, offer
+upgraded, dependency installed or system software installed.
+
+Added [Azure keyless qualification prerequisites](./TASK_AZURE_QUALIFICATION_0.4.0.md)
+with current official Microsoft Responses/Entra/Students/credit/quota sources,
+verified deployment-versus-model identity and account-specific allowance limits,
+required CLI adapter/core provenance compatibility work, bounded offline tests
+and a separate future Azure smoke. Students credits do not establish unrestricted
+model access or cover Marketplace offers. The original direct-provider unknown
+reservation and no-retry stop rule remain intact. Existing runtime provider
+support is unchanged; no placeholder flag, command or feature was added.
+
+Documentation-only validation: formatting and whitespace checks pass. Milestone
+I remains in progress and J unstarted. The immediate blocker is exposing the
+credited Students subscription in the portal by signing into its associated
+account or activating/restoring the offer. Then inspect actual balance/expiry,
+billing eligibility, model deployment, region, quota and keyless access before
+implementation/qualification or a separately reviewed finite Azure call. This
+investigation does not close the failed live gate or the remaining comparative,
+production capability/effort and platform gates.
