@@ -2686,3 +2686,28 @@ qualification. Its larger outer timers enabled completion; no runtime or benchma
 limit changed. Both hosted offline workflows remain in progress at their separately
 recorded source identities. Full hosted verifier results, production model evidence,
 release freeze and soak are still open.
+
+### Completed no-key platform acceptance at `52a90b4` (2026-10-10)
+
+[Platform](https://github.com/4d696e6b/RepoSetup/actions/runs/38027603494),
+[ordinary CI](https://github.com/4d696e6b/RepoSetup/actions/runs/38027603523) and
+[installation performance](https://github.com/4d696e6b/RepoSetup/actions/runs/38027603492)
+all passed. Linux x64 and macOS arm64 each passed 1,030 ordinary workspace tests;
+Windows x64 passed 911, with 119 explicitly POSIX-only skips. On every platform,
+legacy end-to-end tests passed 29 cases with one existing skip and dedicated packed
+selection passed 105/105: the complete previous 134-pass legacy coverage is retained.
+Both POSIX platform jobs also passed all 62 ordinary task contracts.
+
+Every platform's installed CLI smoke independently retained the same artifact hash
+`sha256:7a4942e2e93d21cde4325be6b6aeb9e532307f3da50fc05c2b5e51e0fcbbf735`.
+Linux/Windows used Node 24.21.0; macOS used 24.20.0. Portable compilation passed
+on both POSIX hosts. Windows correctly reported unsupported task profile and
+preserved project files; no Windows managed-task support is claimed.
+
+These are completed development/platform checks at the stated source. They do not
+waive the separately running eight concrete verifier cases and full offline task
+suite, production model/cost/routing evidence, candidate freeze or repeat/soak gates.
+Earlier failed attempts and cancelled duplicate/superseded runs remain failures or
+cancellations. The duplicate offline run triggered by the legacy-only `52a90b4`
+change was cancelled; the unchanged task suites continue at `9af48a8` and the earlier
+full fixture suite at `1d2638e`, with separate source identities.
