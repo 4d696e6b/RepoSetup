@@ -2711,3 +2711,17 @@ Earlier failed attempts and cancelled duplicate/superseded runs remain failures 
 cancellations. The duplicate offline run triggered by the legacy-only `52a90b4`
 change was cancelled; the unchanged task suites continue at `9af48a8` and the earlier
 full fixture suite at `1d2638e`, with separate source identities.
+
+The Linux concrete suite at `9af48a8` completed with six passes and two remaining
+180-second outer test timeouts, for portable and managed SDK replacement/acceptance.
+The previously failing managed repair case passed in 816.408s and paired task/phase
+verification passed in 306.716s. This run remains failed; its following full fixture
+step was not executed. Evidence artifact `11661131802` records runner source
+`cefe505d4cc502d3bd709d2cd55419520607bcbf` (the tested PR merge source).
+
+Give the two replacement/acceptance cases the same 600-second outer verification
+allowance. Assertions, per-process deadlines and product/benchmark budgets remain
+unchanged. Both focused cases passed locally (229.35s total; six other cases
+intentionally deselected). Workspace typecheck, lint/format and whitespace checks
+passed. The complete local eight-case result was already passing, but the hosted
+Linux suite needs requalification with these last outer timer corrections.

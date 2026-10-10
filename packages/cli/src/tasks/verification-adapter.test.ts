@@ -704,7 +704,7 @@ describe("concrete trusted verification qualification", () => {
         await f.dispose();
       }
     },
-    180000,
+    600000,
   );
   it("retains and reports an actual exit-zero verifier write, without calling review", async () => {
     const f = await fixture(true);
