@@ -139,3 +139,15 @@ open. Publication is a separate action after all applicable gates pass.
 Actual changes and check results are recorded in
 [implementation status](../implementing-docs/STATUS_0.4.0.md), with the
 [roadmap](../implementing-docs/ROADMAP_0.4.0.md) defining acceptance.
+
+## Offline milestone closure — 2026-10-10
+
+Amended offline I/J are complete. The
+[full hosted qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/38047204562)
+passed 62 contracts, eight concrete verification cases and 11 full fixture cases
+on each of Linux x64 / Node 24.21.0 and macOS arm64 / Node 24.20.0 at branch
+source `69a2467`, clean PR merge source `14bd3ab5bb6d2c831ed6d47ca7e55a494aa03f2f`.
+Ordinary CI, all platform jobs and installation performance passed at that source.
+The identified diagnostic artifact is unchanged. The original candidate gates above
+remain deferred release prerequisites, not failed offline milestone conditions.
+No candidate version/freeze, repeat gate, stability clock or publication is claimed.

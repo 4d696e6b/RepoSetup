@@ -1,6 +1,10 @@
 # 0.4.0 offline-only milestone acceptance
 
-Owner-selected scope: **offline-only**, 2026-10-10. This amendment governs the
+Owner-selected scope: **offline-only**, 2026-10-10.
+
+**Acceptance: I/J complete**, supported by the passing complete run at branch
+source `69a2467`; exact host/source/artifact evidence is recorded in
+[implementation status](./STATUS_0.4.0.md#final-offline-ij-acceptance--complete-2026-10-10). This amendment governs the
 completion of Milestones I and J. It changes milestone scope, not historical
 results, executor authority, model qualification or release status.
 

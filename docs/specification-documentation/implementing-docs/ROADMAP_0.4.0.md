@@ -159,13 +159,13 @@ versioned release conditions remain deferred, unverified release prerequisites.
 - [x] Qualify ordinary compatibility/platform and installed packed alias/profile
       boundaries on Linux, macOS and Windows, with identical diagnostic CLI bytes.
 - [x] Keep production profiles unconfirmed and production routing closed.
-- [ ] Complete concrete and full frozen-fixture real-tool qualification on both
+- [x] Complete concrete and full frozen-fixture real-tool qualification on both
       supported POSIX hosts; retain actual runner outcomes and source identities.
 
 **Done:** reproducible offline functional evidence with limited claims. Simulated
 reports retain `qualification: false`; no live provider or model-quality conclusion
-follows. Ordinary CI needs no AI credential. I remains pending the last hosted
-concrete/full results; empirical comparisons are outside the amended milestone.
+follows. Ordinary CI needs no AI credential. I is complete: both supported hosts passed the complete run at `69a2467`,
+as recorded in status. Empirical comparisons are outside the amended milestone.
 
 ## Milestone J — offline delivery preparation
 
@@ -175,10 +175,11 @@ concrete/full results; empirical comparisons are outside the amended milestone.
 - [x] Review source safety, dependency licenses/advisories, provider boundary and support.
 - [x] Identify installed diagnostic artifact and packed/platform development provenance;
       package version remains `0.3.0-alpha.1`.
-- [ ] Close I's offline evidence and record passing applicable checks and retained limits.
+- [x] Close I's offline evidence and record passing applicable checks and retained limits.
 
 **Done:** committed reviewable offline implementation, exact support/evidence and
-clear deferred release prerequisites. No candidate version, merge or publication.
+clear deferred release prerequisites. J is complete under the offline amendment.
+No candidate version, merge or publication.
 
 ## Deferred managed/versioned release gates
 

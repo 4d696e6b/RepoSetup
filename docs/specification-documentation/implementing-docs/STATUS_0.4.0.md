@@ -10,20 +10,20 @@ The [offline acceptance amendment](./OFFLINE_ACCEPTANCE_0.4.0.md) now defines th
 active conditions. Historical live/candidate gates below remain retained evidence;
 they are deferred managed/versioned release prerequisites, not passed conditions.
 
-I's frozen fixtures, complete 75-slot simulated failure diagnostic, vetted real
-successful/repair acceptance, ordinary platform checks and installed packed aliases
-are implemented and verified. Concrete/full real-tool hosted qualification remains
-in progress on the supported POSIX hosts. Production capability profiles remain
-unconfirmed; live routing fails closed. Simulated reports retain `qualification: false`
-and cannot establish model quality, remote support or comparative savings.
+**Milestones I and J are complete under the owner-approved offline-only scope.**
+The complete Linux x64 and macOS arm64 qualification passed at branch source
+`69a2467`, tested clean PR merge source `14bd3ab5bb6d2c831ed6d47ca7e55a494aa03f2f`.
+Each host passed 62 contracts, eight concrete verification cases and 11 full
+fixture cases. Ordinary CI, all three platforms and installation performance passed.
+See the final acceptance evidence at the end of this record.
 
-J's offline documentation/review/delivery preparation is implemented, pending I's
-final offline evidence. The diagnostic installed CLI has unchanged package version
-`0.3.0-alpha.1`; no versioned candidate, merge, tag or publication is authorized.
-Live smoke, 75 actual model trials, production profile evidence, an intentionally
-versioned/frozen candidate, three same-candidate full repeats and seven calendar
-days of stability remain outside the amended milestones and open before the
-corresponding release claims. The stability clock has not started.
+Production capability profiles remain unconfirmed and routing closed. Simulated
+reports retain `qualification: false`; offline completion establishes implemented
+behavior and delivery preparation, not remote support, quality or comparative savings.
+Package version remains `0.3.0-alpha.1`. Live smoke, 75 actual model trials,
+production profile evidence, candidate version/freeze, three same-candidate full
+repeats and seven calendar days of stability remain deferred release prerequisites.
+No merge, tag, publication or stability-clock start is implied.
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -54,8 +54,8 @@ corresponding release claims. The stability clock has not started.
 - [x] F — Private CAS state, project leases, scoped text/parent effects, original-input/postimage acceptance and honest interruption recovery.
 - [x] G — Single managed provider adapter, complete for offline implementation and no-key integration; live qualification transferred to I/J by the owner.
 - [x] H — Model/effort routing and targeted escalation, complete for the reviewed offline scope.
-- [ ] I — Offline functional qualification; final concrete/full hosted results pending.
-- [ ] J — Offline delivery preparation implemented; pending I closure. Managed/versioned release remains deferred.
+- [x] I — Offline functional qualification complete under the owner-approved amendment.
+- [x] J — Offline delivery preparation complete. Managed/versioned release remains deferred.
 
 ## Verification record
 
@@ -2912,3 +2912,42 @@ All 10 journal tests passed locally after the finite outer allowance correction
 (72.36s), including all 250 records and duplicate dispatch prevention. Workspace
 and task-test typechecks, lint/format and whitespace checks passed. The corrected
 success case assertions are unchanged; complete hosted requalification is required.
+
+### Final offline I/J acceptance — complete (2026-10-10)
+
+[Complete qualification run 38047204562](https://github.com/4d696e6b/RepoSetup/actions/runs/38047204562)
+passed on both supported POSIX hosts at branch source `69a2467`, clean tested PR
+merge source `14bd3ab5bb6d2c831ed6d47ca7e55a494aa03f2f`, attempt 1.
+Linux x64 / Node 24.21.0 passed 62 contracts (202.77s), eight concrete cases
+(1933.60s) and 11 full fixture cases (4733.31s). macOS arm64 / Node 24.20.0 passed
+62 contracts (196.95s), eight concrete cases (1878.60s) and 11 full fixture cases
+(5042.76s). Build, workspace/task typechecks, lint, license review, production and
+workspace advisory audits, unchanged-source checks and evidence upload passed.
+Retained artifacts: Linux `11670223670`, macOS `11674080157`, each named with
+source and attempt to preserve failed historical runs.
+
+[Ordinary CI](https://github.com/4d696e6b/RepoSetup/actions/runs/38047204577),
+[Platform](https://github.com/4d696e6b/RepoSetup/actions/runs/38047204609) and
+[Installation performance](https://github.com/4d696e6b/RepoSetup/actions/runs/38047204584)
+also passed. Installed diagnostic CLI bytes remain
+`sha256:7a4942e2e93d21cde4325be6b6aeb9e532307f3da50fc05c2b5e51e0fcbbf735`,
+lockfile `sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c`.
+Windows retains the tested unsupported task-profile boundary, not managed support.
+
+The full suites retain five independent frozen verifiers, actual scoped durable
+acceptance, vetted context/repair and fixed success, and the 75-slot simulated
+failure diagnostic. Reports continue to expose missing empirical trials and unknown
+provider usage/cost with `qualification: false`. Earlier failed/cancelled attempts
+remain failed/cancelled; no historical result was relabelled.
+
+All acceptance conditions in OFFLINE_ACCEPTANCE_0.4.0.md are satisfied. Mark I/J
+complete for that scope only. No paid provider calls, package version changes,
+merge, release, website changes or system installation occurred. Next work, only
+if separately requested, is managed/versioned release qualification under the
+retained live/empirical/candidate repeat/seven-day prerequisites. Offline implementation
+has no remaining milestone work. Validate the final documentation reconciliation
+before committing this closure record.
+
+Final documentation closure validation passed: workspace typecheck, lint/format
+and whitespace checks. No runtime files changed, so the passing hosted build/tests
+remain the implementation evidence; no feature test was invented for this record.
