@@ -1,0 +1,100 @@
+name: Offline task qualification
+
+on:
+  pull_request:
+    paths:
+      - "packages/**"
+      - "tests/tasks/**"
+      - "tests/e2e/task-*.test.ts"
+      - "tests/e2e/vitest.task*.config.ts"
+      - "tests/e2e/tsconfig.tasks.json"
+      - "tests/e2e/selection-matrix.js"
+      - "scripts/*task*.ts"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "tsconfig.base.json"
+      - ".gitignore"
+      - ".github/workflows/task-qualification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    name: Offline tasks / ${{ matrix.runner }} / ${{ matrix.architecture }}
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            architecture: x64
+          - runner: macos-15
+            architecture: arm64
+    runs-on: ${{ matrix.runner }}
+    # Serial concrete checks and full fixtures have independently bounded trials.
+    timeout-minutes: 180
+    env:
+      # Tests use injected fake transport. Never inherit a live provider credential.
+      OPENAI_API_KEY: ""
+      AZURE_OPENAI_API_KEY: ""
+      CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          architecture: ${{ matrix.architecture }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm typecheck:task-tests
+      - run: pnpm lint
+      - name: Identify source and runtime before qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          mkdir -p task-qualification-evidence
+          node -e 'const fs = require("node:fs"); const crypto = require("node:crypto"); fs.writeFileSync("task-qualification-evidence/identity.json", JSON.stringify({schemaVersion: 1, sourceSha: process.env.GITHUB_SHA, workflowRunId: process.env.GITHUB_RUN_ID, workflowAttempt: Number(process.env.GITHUB_RUN_ATTEMPT), platform: process.platform, architecture: process.arch, node: process.version, lockfileHash: crypto.createHash("sha256").update(fs.readFileSync("pnpm-lock.yaml")).digest("hex"), providerMode: "simulated", liveQualification: false}, null, 2) + "\n")'
+      - name: Review dependency licenses and all advisories without fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm review:licenses 2>&1 | tee task-qualification-evidence/licenses.log
+          pnpm audit --prod --json 2>&1 | tee task-qualification-evidence/production-audit.json
+          pnpm audit --json 2>&1 | tee task-qualification-evidence/workspace-audit.json
+      - name: Frozen fixtures and extracted packed task and legacy contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts 2>&1 | tee task-qualification-evidence/contracts.log
+      - name: Concrete CLI verification and routed repair qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter rsetup exec vitest run --config vitest.verification.config.ts 2>&1 | tee task-qualification-evidence/cli-verification.log
+      - name: Real tools, scoped writes, durable acceptance and failure accounting
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm exec vitest run --config tests/e2e/vitest.task-verifier.config.ts 2>&1 | tee task-qualification-evidence/verifier.log
+      - name: Ensure qualification did not change tracked source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code
+          git diff --cached --exit-code
+      - name: Retain qualification evidence, including failed checks
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-task-evidence-${{ matrix.runner }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: task-qualification-evidence/
+          if-no-files-found: warn
+          retention-days: 14

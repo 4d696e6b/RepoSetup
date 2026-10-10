@@ -1,0 +1,166 @@
+{
+  "kind": "task_benchmark_fixture",
+  "schemaVersion": 1,
+  "fixtureRevision": "sha256:6b6dfd736829e53b3809e360b0d6127d7ad56d31fbeadc2fcd97af94a2308880",
+  "fixtureId": "api-offline-v1",
+  "fixtureVersion": 1,
+  "phaseId": "offline-pagination-handler",
+  "requirements": [
+    {
+      "requirementId": "api-1",
+      "text": "`handleRequest(request, repository)` accepts `{ method: string, path: string, query: Record<string, string | readonly string[] | undefined> }` and returns `{ status, body }`. Only `GET /items` is supported. Unsupported paths return 404 with `{ error: \"not_found\" }` and unsupported methods on `/items` return 405 with `{ error: \"method_not_allowed\" }` without calling the repository."
+    },
+    {
+      "requirementId": "api-2",
+      "text": "`limit` defaults to 20 and accepts decimal integers 1–100. Reject signs, decimals, exponent notation, whitespace, repeated values and unknown query keys with status 400. `cursor` is absent or one nonempty opaque string; do not decode it as a command or filesystem path."
+    },
+    {
+      "requirementId": "api-3",
+      "text": "valid requests call the injected repository exactly once with normalized `{ limit, cursor: string | null }`; return status 200 with `{ items, nextCursor }`. Invalid query returns 400 with `{ error: \"invalid_query\" }`; the repository's typed invalid-cursor failure returns 400 with `{ error: \"invalid_cursor\" }`. Other repository failures return 500 with `{ error: \"internal_error\" }`, without exception text or data leakage."
+    },
+    {
+      "requirementId": "api-4",
+      "text": "preserve baseline response shape and input immutability. Public tests cover a default request, an explicit limit and one invalid query."
+    }
+  ],
+  "seedRevision": "sha256:58ece0a2d13110f2061725156b4b8dbba29478b7b2d9f9de5c94c4df7dc776e5",
+  "seedFiles": [
+    {
+      "path": "AGENTS.md",
+      "fileHash": "sha256:05d848ede6437e5fbaf14d95a71d41536187b21202bc59b45ac01943650e9ad2",
+      "bytes": 172
+    },
+    {
+      "path": "docs/phase.md",
+      "fileHash": "sha256:4a6b2f2214d07e7eff98e008ccb452e8aec1b7a047a8d7e8dc02fa5c20a2633f",
+      "bytes": 1278
+    },
+    {
+      "path": "eslint.config.mjs",
+      "fileHash": "sha256:c3595c37081c32d66f8b8a543e0c9f00b2978c2c850174a8872242afa6675a42",
+      "bytes": 291
+    },
+    {
+      "path": "package.json",
+      "fileHash": "sha256:3769fbb440678f307bcb688ecd4c53c6987f6a3b99b4d06814f75fe2e710e198",
+      "bytes": 109
+    },
+    {
+      "path": "src/handler.ts",
+      "fileHash": "sha256:a1acfbb7f5422a9640f3745526be2bf4964ab43e65ae0b3d6cf6fbb7855fd2c7",
+      "bytes": 960
+    },
+    {
+      "path": "src/query.ts",
+      "fileHash": "sha256:90c876e1f6bae712d83eb3ec004b142a260f1ca1b3c58e4a09143c804531cfac",
+      "bytes": 599
+    },
+    {
+      "path": "src/repository.ts",
+      "fileHash": "sha256:e9cf8b030c3b7f7c317dee65d00f3ff5ec3c170f01b97ed60b2f14bda254cbca",
+      "bytes": 345
+    },
+    {
+      "path": "test/public/acceptance.mjs",
+      "fileHash": "sha256:6b0723fda63fe1ea76b4e367b198ac888b800f529dfcf005bb3c0ab54575c5ee",
+      "bytes": 1012
+    },
+    {
+      "path": "test/public/compat.mjs",
+      "fileHash": "sha256:8cf1f7d99adce373793ec8022b051f9f3fac8ad4149ca2e6ffdf8292b3a67915",
+      "bytes": 428
+    },
+    {
+      "path": "test/public/managed.test.mjs",
+      "fileHash": "sha256:dc93e69d62fe9ae6b4862b7ecca95150731e2cfdbab9c643f64ac7779c8f1f1d",
+      "bytes": 232
+    },
+    {
+      "path": "tsconfig.json",
+      "fileHash": "sha256:7ecb67310174039455aae94e4b21d346fd6fe8d4030886e33ff3b9502f90eccc",
+      "bytes": 360
+    },
+    {
+      "path": "vitest.config.mjs",
+      "fileHash": "sha256:4919f43c68ba6a6808b38515fc18be7997c28b6cf771a88e814d8109612b1622",
+      "bytes": 278
+    }
+  ],
+  "phaseDocumentHash": "sha256:4a6b2f2214d07e7eff98e008ccb452e8aec1b7a047a8d7e8dc02fa5c20a2633f",
+  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
+  "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
+  "supportProfileId": "managed-ts-node-v1",
+  "write": ["src/query.ts", "src/handler.ts", "test/agent/handler.test.ts"],
+  "entrypoints": ["decodeQuery", "handleRequest"],
+  "publicTestIds": ["compat-default", "public-example", "public-limit", "public-invalid-limit"],
+  "referenceFiles": [
+    {
+      "path": "src/handler.ts",
+      "fileHash": "sha256:a1acfbb7f5422a9640f3745526be2bf4964ab43e65ae0b3d6cf6fbb7855fd2c7",
+      "bytes": 960
+    },
+    {
+      "path": "src/query.ts",
+      "fileHash": "sha256:1e588eb7dab7029c87442d2a1ede8d1fad29eb0282222b5c768dee1783315344",
+      "bytes": 683
+    }
+  ],
+  "incorrectVariants": [
+    {
+      "variantId": "partial_numeric",
+      "files": [
+        {
+          "path": "src/query.ts",
+          "fileHash": "sha256:58155d94895055cc9ddd6214b91c5692a4ec47e51e1f745fd1850950378f48d0",
+          "bytes": 657
+        }
+      ]
+    },
+    {
+      "variantId": "leaked_exception",
+      "files": [
+        {
+          "path": "src/handler.ts",
+          "fileHash": "sha256:b2fac2dded31d13432df53b1610da335333e08942ed0fff4537335b60fbe12ba",
+          "bytes": 965
+        }
+      ]
+    },
+    {
+      "variantId": "double_repository_call",
+      "files": [
+        {
+          "path": "src/handler.ts",
+          "fileHash": "sha256:078227a1a2bdde674833a50ebbf13fa2d1d0f644df78cf4e725dea60f90b67c3",
+          "bytes": 994
+        }
+      ]
+    }
+  ],
+  "oracleFiles": [
+    {
+      "path": "holdout.mjs",
+      "fileHash": "sha256:37af579a93345ce47beaa17bc3612ea003ee176a48643cd83e34baa6441143e6",
+      "bytes": 2719
+    }
+  ],
+  "oracleRevision": "sha256:0216d6e7064c0a438d1a86dcc9198b8589fa10d4f90d04072620c206f8d5ddae",
+  "testInventory": [
+    { "testId": "api-default", "criterionIds": ["api-1", "api-3", "api-4"], "kind": "runtime" },
+    { "testId": "api-route", "criterionIds": ["api-1"], "kind": "runtime" },
+    { "testId": "api-numbers", "criterionIds": ["api-2"], "kind": "runtime" },
+    { "testId": "api-cursor", "criterionIds": ["api-2"], "kind": "runtime" },
+    { "testId": "api-exact-call", "criterionIds": ["api-3"], "kind": "runtime" },
+    { "testId": "api-errors", "criterionIds": ["api-3"], "kind": "runtime" },
+    { "testId": "api-frozen", "criterionIds": ["api-4"], "kind": "runtime" }
+  ],
+  "resourceLimits": {
+    "maxImplementationAttemptsPerTask": 3,
+    "maxProviderCalls": 24,
+    "maxInputTokens": 240000,
+    "maxOutputTokens": 48000,
+    "maxWallTimeMs": 1800000,
+    "maxCostMicrousd": 10000000
+  }
+}

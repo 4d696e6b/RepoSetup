@@ -1,0 +1,175 @@
+{
+  "kind": "task_benchmark_fixture",
+  "schemaVersion": 1,
+  "fixtureRevision": "sha256:48ef690bd3f52c6365e7a7e947f112ef22bbd6d2d4a821673c2fdceefe61ccaf",
+  "fixtureId": "types-result-v1",
+  "fixtureVersion": 1,
+  "phaseId": "typed-input-boundary",
+  "requirements": [
+    {
+      "requirementId": "type-1",
+      "text": "export a discriminated `Result<T, E>` with `ok: true, value: T` or `ok: false, error: E`; `mapResult` preserves the failure and maps only the success. Success/failure branches narrow without `any`."
+    },
+    {
+      "requirementId": "type-2",
+      "text": "`decodePage(value: unknown)` returns `Result<Page, readonly InputIssue[]>`; `Page` contains readonly items `{ id: string; label: string }` and `nextCursor: string | null`. Reject unknown object fields, missing keys, non-array items, empty IDs/labels, duplicate IDs and cursors other than null or nonempty strings."
+    },
+    {
+      "requirementId": "type-3",
+      "text": "report all invalid fields as stable `{ path: string; code: \"type\" | \"missing\" | \"unknown\" | \"empty\" | \"duplicate\" }` issues sorted by path, then code. Use `$` for the root and dot paths such as `items.0.id`; report a duplicate on the later item's ID. A wrong parent type reports one `type` issue without inventing child errors. Return errors rather than throwing for invalid data; preserve the input object and arrays."
+    },
+    {
+      "requirementId": "type-4",
+      "text": "preserve the existing exported names and the valid-input behavior exercised by baseline tests. Public examples cover one success, one invalid item and mapping a failure."
+    }
+  ],
+  "seedRevision": "sha256:52f8b10a6ce619239bb47408f2f60c331accc75c0622f1d4d4d1dc0500c63ec1",
+  "seedFiles": [
+    {
+      "path": "AGENTS.md",
+      "fileHash": "sha256:05d848ede6437e5fbaf14d95a71d41536187b21202bc59b45ac01943650e9ad2",
+      "bytes": 172
+    },
+    {
+      "path": "docs/phase.md",
+      "fileHash": "sha256:fb85ba9e2941b10c510b019fd58c5228677028e02813eadb86d3ad0e59948714",
+      "bytes": 1160
+    },
+    {
+      "path": "eslint.config.mjs",
+      "fileHash": "sha256:c3595c37081c32d66f8b8a543e0c9f00b2978c2c850174a8872242afa6675a42",
+      "bytes": 291
+    },
+    {
+      "path": "package.json",
+      "fileHash": "sha256:091b8e77e63bc1d8627935468da00977627d5db7720c11431f13d72e0bfab0fe",
+      "bytes": 110
+    },
+    {
+      "path": "src/page.ts",
+      "fileHash": "sha256:693c332e5a088e639a706415472edea247533d23a03ffcd301206e8faeea1b2f",
+      "bytes": 2464
+    },
+    {
+      "path": "src/result.ts",
+      "fileHash": "sha256:d305c4c5895fab638de79cf41cb8a19b8bf371f988f5727eebcb7183ef95e732",
+      "bytes": 282
+    },
+    {
+      "path": "test/public/acceptance.mjs",
+      "fileHash": "sha256:f605f5f62fdc0d2ebdf49f692f31a934ea7cc01a188f4911f4df690502bc0dac",
+      "bytes": 1042
+    },
+    {
+      "path": "test/public/compat.mjs",
+      "fileHash": "sha256:49f1c6c8885abd5ae193d411cbbd1253b8246bd4d3eccd46e064f5451e306eeb",
+      "bytes": 236
+    },
+    {
+      "path": "test/public/managed.test.mjs",
+      "fileHash": "sha256:dc93e69d62fe9ae6b4862b7ecca95150731e2cfdbab9c643f64ac7779c8f1f1d",
+      "bytes": 232
+    },
+    {
+      "path": "tsconfig.json",
+      "fileHash": "sha256:7ecb67310174039455aae94e4b21d346fd6fe8d4030886e33ff3b9502f90eccc",
+      "bytes": 360
+    },
+    {
+      "path": "vitest.config.mjs",
+      "fileHash": "sha256:4919f43c68ba6a6808b38515fc18be7997c28b6cf771a88e814d8109612b1622",
+      "bytes": 278
+    }
+  ],
+  "phaseDocumentHash": "sha256:fb85ba9e2941b10c510b019fd58c5228677028e02813eadb86d3ad0e59948714",
+  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
+  "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
+  "supportProfileId": "managed-ts-node-v1",
+  "write": ["src/result.ts", "src/page.ts", "test/agent/page.test.ts"],
+  "entrypoints": ["mapResult", "decodePage"],
+  "publicTestIds": [
+    "compat-valid-page",
+    "public-example",
+    "public-valid-page",
+    "public-invalid-item",
+    "public-map-failure"
+  ],
+  "referenceFiles": [
+    {
+      "path": "src/page.ts",
+      "fileHash": "sha256:963d12c52a7c7e2ee4315ae70d5ef2268b39676d4fdeb69111ed8971c05fafd9",
+      "bytes": 2530
+    },
+    {
+      "path": "src/result.ts",
+      "fileHash": "sha256:d305c4c5895fab638de79cf41cb8a19b8bf371f988f5727eebcb7183ef95e732",
+      "bytes": 282
+    }
+  ],
+  "incorrectVariants": [
+    {
+      "variantId": "ignores_duplicates",
+      "files": [
+        {
+          "path": "src/page.ts",
+          "fileHash": "sha256:693c332e5a088e639a706415472edea247533d23a03ffcd301206e8faeea1b2f",
+          "bytes": 2464
+        }
+      ]
+    },
+    {
+      "variantId": "success_only_map",
+      "files": [
+        {
+          "path": "src/result.ts",
+          "fileHash": "sha256:cfdbec57a31c90bc9751cbcc83120107d5a24fbb5104fa87beefb866e29cd526",
+          "bytes": 332
+        }
+      ]
+    },
+    {
+      "variantId": "optional_discriminant",
+      "files": [
+        {
+          "path": "src/result.ts",
+          "fileHash": "sha256:98e72e57ece2bb2e617a6cf7f71ef354c5687265c8a77bb1e9b43406f56c493c",
+          "bytes": 283
+        }
+      ]
+    }
+  ],
+  "oracleFiles": [
+    {
+      "path": "holdout.mjs",
+      "fileHash": "sha256:aaeccb7a3a0f40f4992a3315e741b720a2519ca79432d947b6eb276147810ec7",
+      "bytes": 2744
+    },
+    {
+      "path": "type-oracle.ts",
+      "fileHash": "sha256:63651a95f7a69fe75f36358c45d40ccd64039c7eca626d8b576bdb5bdfbb03b2",
+      "bytes": 679
+    }
+  ],
+  "oracleRevision": "sha256:ea4aa78a0351c6df1cb4d4a0c87870d14d98e43fea2793abbdaf89d93bd8b4de",
+  "testInventory": [
+    { "testId": "page-unknown", "criterionIds": ["type-2", "type-3"], "kind": "runtime" },
+    { "testId": "page-valid", "criterionIds": ["type-2", "type-4"], "kind": "runtime" },
+    { "testId": "page-duplicates", "criterionIds": ["type-2", "type-3"], "kind": "runtime" },
+    { "testId": "page-root-types", "criterionIds": ["type-2", "type-3"], "kind": "runtime" },
+    { "testId": "page-parent-type", "criterionIds": ["type-3"], "kind": "runtime" },
+    { "testId": "page-issues-sorted", "criterionIds": ["type-2", "type-3"], "kind": "runtime" },
+    { "testId": "page-missing-types", "criterionIds": ["type-2", "type-3"], "kind": "runtime" },
+    { "testId": "page-frozen", "criterionIds": ["type-2", "type-4"], "kind": "runtime" },
+    { "testId": "map-failure", "criterionIds": ["type-1", "type-4"], "kind": "runtime" },
+    { "testId": "types-contract", "criterionIds": ["type-1", "type-2"], "kind": "type" }
+  ],
+  "resourceLimits": {
+    "maxImplementationAttemptsPerTask": 3,
+    "maxProviderCalls": 24,
+    "maxInputTokens": 240000,
+    "maxOutputTokens": 48000,
+    "maxWallTimeMs": 1800000,
+    "maxCostMicrousd": 10000000
+  }
+}

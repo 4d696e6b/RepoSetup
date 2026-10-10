@@ -25,6 +25,10 @@ import { handleRemove } from "./remove.js";
 import { handleSearch } from "./search.js";
 import { handleStack } from "./stack.js";
 import { cliVersion } from "./version.js";
+import { registerTaskCommands } from "./tasks/register.js";
+import { createTaskRepositoryReader } from "./tasks/repository-reader.js";
+import { createDefaultManagedTaskHost } from "./tasks/managed-command.js";
+import { createDefaultTaskCompilationHost } from "./tasks/managed-compile.js";
 import type {
   CliDeps,
   CliResult,
@@ -254,6 +258,10 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
       },
     );
 
+  registerTaskCommands(program, resolved, readGlobals, (code) => {
+    exitCode = code;
+  });
+
   const registryCommand = program.command("registry").description("Registry maintenance commands");
 
   registryCommand.action(() => {
@@ -288,6 +296,10 @@ export async function runCli(argv: string[], deps: CliDeps = {}): Promise<CliRes
 function resolveDeps(deps: CliDeps): ResolvedCliDeps {
   const runProcess = deps.runProcess ?? createDefaultProcessRunner();
   const resolved: ResolvedCliDeps = {
+    ...(deps.taskRoutingCatalog ? { taskRoutingCatalog: deps.taskRoutingCatalog } : {}),
+    createTaskManagedHost: deps.createTaskManagedHost ?? createDefaultManagedTaskHost,
+    createTaskCompilationHost: deps.createTaskCompilationHost ?? createDefaultTaskCompilationHost,
+    createTaskRepository: deps.createTaskRepository ?? createTaskRepositoryReader,
     registry: deps.registry ?? createDefaultRegistry(),
     io: deps.io ?? createDefaultIo(),
     fs: deps.fs ?? createDefaultFs(),
@@ -315,10 +327,10 @@ function readGlobals(command: Command): GlobalCliOptions {
     quiet?: boolean;
     json?: boolean;
   };
-  const local = command.opts() as { verbose?: boolean; quiet?: boolean };
+  const local = command.opts() as { verbose?: boolean; quiet?: boolean; json?: boolean };
   return {
     verbose: local.verbose === true || combined.verbose === true,
     quiet: local.quiet === true || combined.quiet === true,
-    json: combined.json === true,
+    json: local.json === true || combined.json === true,
   };
 }

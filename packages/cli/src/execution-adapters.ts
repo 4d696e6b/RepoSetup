@@ -187,7 +187,12 @@ export function createDefaultProcessRunner(): ProcessRunner {
 
     const launch =
       process.platform === "win32"
-        ? resolveWindowsLaunch(request.command, request.args, process.env, existsSync)
+        ? resolveWindowsLaunch(
+            request.command,
+            request.args,
+            request.env ?? process.env,
+            existsSync,
+          )
         : { command: request.command, args: request.args };
     if ("error" in launch) {
       return Promise.resolve({ exitCode: 1, stdout: "", stderr: launch.error });
@@ -196,7 +201,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
     return new Promise((resolve) => {
       const child = spawn(launch.command, [...launch.args], {
         cwd: request.cwd,
-        env: process.env,
+        env: request.env ?? process.env,
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,
@@ -210,6 +215,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
       let timedOut = false;
       let settled = false;
       let timer: NodeJS.Timeout | undefined;
+      let killTimer: NodeJS.Timeout | undefined;
       const stdoutOutput = createOutputEmitter("stdout", request.onOutput);
       const stderrOutput = createOutputEmitter("stderr", request.onOutput);
 
@@ -226,6 +232,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
         if (timer !== undefined) {
           clearTimeout(timer);
         }
+        if (killTimer !== undefined) clearTimeout(killTimer);
         request.signal?.removeEventListener("abort", abort);
         stdoutOutput.flush();
         stderrOutput.flush();
@@ -244,6 +251,17 @@ export function createDefaultProcessRunner(): ProcessRunner {
           timedOut = true;
         }
         terminateProcessTree(child);
+        if (
+          killTimer === undefined &&
+          request.terminationGraceMs !== undefined &&
+          Number.isSafeInteger(request.terminationGraceMs) &&
+          request.terminationGraceMs >= 0
+        ) {
+          killTimer = setTimeout(
+            () => terminateProcessTree(child, "SIGKILL"),
+            request.terminationGraceMs,
+          );
+        }
       };
       const abort = () => terminate("abort");
 
@@ -368,17 +386,20 @@ function isSafeWindowsShimToken(value: string): boolean {
   return !value.includes("\0") && !/[\r\n"&|<>^%]/.test(value);
 }
 
-function terminateProcessTree(child: ReturnType<typeof spawn>): void {
+function terminateProcessTree(
+  child: ReturnType<typeof spawn>,
+  signal: NodeJS.Signals = "SIGTERM",
+): void {
   if (process.platform !== "win32" && child.pid !== undefined) {
     try {
-      process.kill(-child.pid, "SIGTERM");
+      process.kill(-child.pid, signal);
       return;
     } catch {
       // The process may have exited before its process group was signalled.
     }
   }
 
-  child.kill("SIGTERM");
+  child.kill(signal);
 }
 
 export function createDefaultCommandExists(

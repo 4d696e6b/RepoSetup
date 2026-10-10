@@ -1,3 +1,5 @@
+import { TASK_ERROR_CODES } from "../tasks/errors.js";
+
 export const ERROR_CODES = [
   "CONFIG_INVALID",
   "SELECTION_INVALID",
@@ -24,6 +26,7 @@ export const ERROR_CODES = [
   "INTENDED_CONTEXT_MISMATCH",
   "INTENDED_DEPENDENCY_MISSING",
   "INTENDED_VERIFICATION_FAILED",
+  ...TASK_ERROR_CODES,
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

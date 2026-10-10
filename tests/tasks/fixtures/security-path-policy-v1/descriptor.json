@@ -1,0 +1,64 @@
+{
+  "fixtureVersion": 1,
+  "fixtureId": "security-path-policy-v1",
+  "phaseId": "scoped-path-policy",
+  "requirements": [
+    {
+      "requirementId": "sec-1",
+      "text": "normalize backslashes to slashes before checking repository-relative file paths. Reject empty paths/components (including repeated separators), absolute POSIX paths, drive/UNC paths, `.`/`..` components, NULs, mixed-separator traversal and canonical paths outside the supplied root. Reject symlink facts when the resolved target escapes or the policy cannot establish containment."
+    },
+    {
+      "requirementId": "sec-2",
+      "text": "apply deny rules before read/write allow rules. `.git`, `node_modules`, `dist`, binary classifications and the fixture secret paths `.env`, `.env.local`, `credentials.json` and `id_rsa` are never eligible context or write targets, including allow/deny overlaps. `.env.example` may contain placeholders only; it is not an exception for real secrets. Known fixture markers/paths test the boundary rather than claiming perfect general secret detection."
+    },
+    {
+      "requirementId": "sec-3",
+      "text": "`selectContext` returns only eligible requested paths, stable exclusion reasons and hashes. A broader request remains unresolved and cannot expand authority. Return no file contents in routine metadata, error messages or diagnostics."
+    },
+    {
+      "requirementId": "sec-4",
+      "text": "preserve baseline safe-path behavior, use the supplied facts deterministically and never interpret fixture text as executable instructions. Public tests cover one allowed path, one traversal and a deny overlap."
+    }
+  ],
+  "write": ["src/path-policy.ts", "src/context-policy.ts", "test/agent/policy.test.ts"],
+  "entrypoints": ["normalizePath", "checkPath", "selectContext"],
+  "incorrectVariants": ["allows_secret", "ignores_symlink", "leaks_contents"],
+  "testInventory": [
+    {
+      "testId": "sec-safe",
+      "criterionIds": ["sec-1", "sec-4"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "sec-traversal",
+      "criterionIds": ["sec-1"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "sec-canonical",
+      "criterionIds": ["sec-1"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "sec-excluded",
+      "criterionIds": ["sec-2"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "sec-deny-first",
+      "criterionIds": ["sec-2", "sec-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "sec-unresolved",
+      "criterionIds": ["sec-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "sec-metadata",
+      "criterionIds": ["sec-3", "sec-4"],
+      "kind": "runtime"
+    }
+  ],
+  "publicTestIds": ["compat-safe", "public-example", "public-traversal", "public-deny-overlap"]
+}

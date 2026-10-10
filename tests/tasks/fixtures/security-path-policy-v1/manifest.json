@@ -1,0 +1,166 @@
+{
+  "kind": "task_benchmark_fixture",
+  "schemaVersion": 1,
+  "fixtureRevision": "sha256:0d5b837758f19b98910387bfcb2945cb62c603b91263c2e03d07de869cfb3f89",
+  "fixtureId": "security-path-policy-v1",
+  "fixtureVersion": 1,
+  "phaseId": "scoped-path-policy",
+  "requirements": [
+    {
+      "requirementId": "sec-1",
+      "text": "normalize backslashes to slashes before checking repository-relative file paths. Reject empty paths/components (including repeated separators), absolute POSIX paths, drive/UNC paths, `.`/`..` components, NULs, mixed-separator traversal and canonical paths outside the supplied root. Reject symlink facts when the resolved target escapes or the policy cannot establish containment."
+    },
+    {
+      "requirementId": "sec-2",
+      "text": "apply deny rules before read/write allow rules. `.git`, `node_modules`, `dist`, binary classifications and the fixture secret paths `.env`, `.env.local`, `credentials.json` and `id_rsa` are never eligible context or write targets, including allow/deny overlaps. `.env.example` may contain placeholders only; it is not an exception for real secrets. Known fixture markers/paths test the boundary rather than claiming perfect general secret detection."
+    },
+    {
+      "requirementId": "sec-3",
+      "text": "`selectContext` returns only eligible requested paths, stable exclusion reasons and hashes. A broader request remains unresolved and cannot expand authority. Return no file contents in routine metadata, error messages or diagnostics."
+    },
+    {
+      "requirementId": "sec-4",
+      "text": "preserve baseline safe-path behavior, use the supplied facts deterministically and never interpret fixture text as executable instructions. Public tests cover one allowed path, one traversal and a deny overlap."
+    }
+  ],
+  "seedRevision": "sha256:e96189895c04cc0a9dbd74cb27c9207a3681ac1cf46f2d483be82816374c54af",
+  "seedFiles": [
+    {
+      "path": "AGENTS.md",
+      "fileHash": "sha256:05d848ede6437e5fbaf14d95a71d41536187b21202bc59b45ac01943650e9ad2",
+      "bytes": 172
+    },
+    {
+      "path": "README.md",
+      "fileHash": "sha256:28d3dd7a8c0a87bfc8ab4fc32107ffbf5d63c5dee3d810c3a5edebb9fee45823",
+      "bytes": 130
+    },
+    {
+      "path": "docs/phase.md",
+      "fileHash": "sha256:006d4faa22473a05f315f79654200de8e041d1e64d35e85c1c6d733d0707f23e",
+      "bytes": 1329
+    },
+    {
+      "path": "eslint.config.mjs",
+      "fileHash": "sha256:c3595c37081c32d66f8b8a543e0c9f00b2978c2c850174a8872242afa6675a42",
+      "bytes": 291
+    },
+    {
+      "path": "package.json",
+      "fileHash": "sha256:44d0ba4b99d88ece90b15392decd858f01938aa6d0bc93872b3a17af50c0d5b0",
+      "bytes": 118
+    },
+    {
+      "path": "src/context-policy.ts",
+      "fileHash": "sha256:454d0ea2f9948228bd657a2817b5e8580083759be6033b1f6a741f338a015b59",
+      "bytes": 918
+    },
+    {
+      "path": "src/path-policy.ts",
+      "fileHash": "sha256:1a2239c49ddefcba512b32054991d89135a0b5bbe4370eae95bcda1b1f0fb185",
+      "bytes": 1174
+    },
+    {
+      "path": "test/public/acceptance.mjs",
+      "fileHash": "sha256:08feb4f13418a0d9ed3d8f1e151938fae5caababa8f4b6f4582c85b2deff157d",
+      "bytes": 984
+    },
+    {
+      "path": "test/public/compat.mjs",
+      "fileHash": "sha256:aa3d8a5590200295d3a1cb72948ea6d02d401bbd85b626c85b17209e0d4e8b5e",
+      "bytes": 392
+    },
+    {
+      "path": "test/public/managed.test.mjs",
+      "fileHash": "sha256:dc93e69d62fe9ae6b4862b7ecca95150731e2cfdbab9c643f64ac7779c8f1f1d",
+      "bytes": 232
+    },
+    {
+      "path": "tsconfig.json",
+      "fileHash": "sha256:7ecb67310174039455aae94e4b21d346fd6fe8d4030886e33ff3b9502f90eccc",
+      "bytes": 360
+    },
+    {
+      "path": "vitest.config.mjs",
+      "fileHash": "sha256:4919f43c68ba6a6808b38515fc18be7997c28b6cf771a88e814d8109612b1622",
+      "bytes": 278
+    }
+  ],
+  "phaseDocumentHash": "sha256:006d4faa22473a05f315f79654200de8e041d1e64d35e85c1c6d733d0707f23e",
+  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
+  "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
+  "supportProfileId": "managed-ts-node-v1",
+  "write": ["src/path-policy.ts", "src/context-policy.ts", "test/agent/policy.test.ts"],
+  "entrypoints": ["normalizePath", "checkPath", "selectContext"],
+  "publicTestIds": ["compat-safe", "public-example", "public-traversal", "public-deny-overlap"],
+  "referenceFiles": [
+    {
+      "path": "src/context-policy.ts",
+      "fileHash": "sha256:325f750e11d75af7e65f553a5065fd8300704673e3f2ecc87ffec97dab652b4a",
+      "bytes": 1029
+    },
+    {
+      "path": "src/path-policy.ts",
+      "fileHash": "sha256:1a2239c49ddefcba512b32054991d89135a0b5bbe4370eae95bcda1b1f0fb185",
+      "bytes": 1174
+    }
+  ],
+  "incorrectVariants": [
+    {
+      "variantId": "allows_secret",
+      "files": [
+        {
+          "path": "src/path-policy.ts",
+          "fileHash": "sha256:cb692c23173d1e57fb3e0ab9413cc919287f2caaa9e9f59534ea6ea356290e33",
+          "bytes": 1112
+        }
+      ]
+    },
+    {
+      "variantId": "ignores_symlink",
+      "files": [
+        {
+          "path": "src/path-policy.ts",
+          "fileHash": "sha256:7a836e3296558bbbcf409e27be2da90f148e6b505d6ab19ca5e47b4c1f768f09",
+          "bytes": 1082
+        }
+      ]
+    },
+    {
+      "variantId": "leaks_contents",
+      "files": [
+        {
+          "path": "src/context-policy.ts",
+          "fileHash": "sha256:f5ce803da81aff60379563df4cb7cd37e3f053a9125e75e90a166622138e7772",
+          "bytes": 1043
+        }
+      ]
+    }
+  ],
+  "oracleFiles": [
+    {
+      "path": "holdout.mjs",
+      "fileHash": "sha256:d07633f03583d71da3586aa357516505ed9c44a565addb3a5f47d27054aaa2c1",
+      "bytes": 2784
+    }
+  ],
+  "oracleRevision": "sha256:e43869b8ee2691c69d919850f65bd4c67a37e5d1249c78246a38b7ad5386e917",
+  "testInventory": [
+    { "testId": "sec-safe", "criterionIds": ["sec-1", "sec-4"], "kind": "runtime" },
+    { "testId": "sec-traversal", "criterionIds": ["sec-1"], "kind": "runtime" },
+    { "testId": "sec-canonical", "criterionIds": ["sec-1"], "kind": "runtime" },
+    { "testId": "sec-excluded", "criterionIds": ["sec-2"], "kind": "runtime" },
+    { "testId": "sec-deny-first", "criterionIds": ["sec-2", "sec-3"], "kind": "runtime" },
+    { "testId": "sec-unresolved", "criterionIds": ["sec-3"], "kind": "runtime" },
+    { "testId": "sec-metadata", "criterionIds": ["sec-3", "sec-4"], "kind": "runtime" }
+  ],
+  "resourceLimits": {
+    "maxImplementationAttemptsPerTask": 3,
+    "maxProviderCalls": 24,
+    "maxInputTokens": 240000,
+    "maxOutputTokens": 48000,
+    "maxWallTimeMs": 1800000,
+    "maxCostMicrousd": 10000000
+  }
+}

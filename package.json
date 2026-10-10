@@ -40,7 +40,12 @@
     "test:selection:legacy": "pnpm build && vitest run --config tests/e2e/vitest.selection-legacy.config.ts",
     "test:maintenance:packed": "pnpm build && vitest run --config tests/e2e/vitest.maintenance.config.ts",
     "website:dev": "pnpm --filter @reposetup/core --filter @reposetup/registry --filter @reposetup/integrations build && pnpm --filter @reposetup/website dev",
-    "website:test": "pnpm --filter @reposetup/website test"
+    "website:test": "pnpm --filter @reposetup/website test",
+    "fixtures:tasks:freeze": "pnpm --filter @reposetup/core build && node scripts/freeze-task-fixtures.ts",
+    "test:tasks:fixtures": "pnpm build && vitest run --config tests/e2e/vitest.tasks.config.ts",
+    "test:tasks:verifier": "pnpm build && vitest run --config tests/e2e/vitest.task-verifier.config.ts",
+    "typecheck:task-tests": "tsc --project tests/e2e/tsconfig.tasks.json",
+    "benchmark:tasks:report": "pnpm build && node scripts/summarize-task-benchmark.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

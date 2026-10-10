@@ -1,0 +1,64 @@
+{
+  "fixtureVersion": 1,
+  "fixtureId": "cross-module-order-v1",
+  "phaseId": "dependency-output-contract",
+  "requirements": [
+    {
+      "requirementId": "cross-1",
+      "text": "add readonly order lines `{ sku, quantity, unitCents }` and validate nonempty SKU, integer quantity 1\u2013999 and nonnegative safe-integer unit price. Invalid input returns a typed issue; no floating-point currency calculation."
+    },
+    {
+      "requirementId": "cross-2",
+      "text": "`calculateTotal(lines, discountBasisPoints)` accepts an integer discount 0\u201310000, validates multiplication/aggregation for safe-integer overflow, then applies the discount once to the aggregate with rounding down in cents. Empty lines total zero."
+    },
+    {
+      "requirementId": "cross-3",
+      "text": "`presentOrder` consumes the calculation result and returns either an error view or `{ totalCents, formattedTotal }`, formatting cents with exactly two decimal digits without locale-dependent output."
+    },
+    {
+      "requirementId": "cross-4",
+      "text": "preserve legacy exported APIs/caller compilation. Public acceptance traces domain \u2192 total \u2192 presentation. The compiled plan must declare predecessor output artifacts for dependent tasks; execute and accept predecessors before consumers."
+    }
+  ],
+  "write": ["src/domain.ts", "src/totals.ts", "src/presenter.ts", "test/agent/order.test.ts"],
+  "entrypoints": ["validateLine", "calculateTotal", "presentOrder", "legacyTotal"],
+  "incorrectVariants": ["rounds_up", "no_overflow_guard", "incompatible_export"],
+  "testInventory": [
+    {
+      "testId": "cross-default",
+      "criterionIds": ["cross-4"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "cross-invalid-line",
+      "criterionIds": ["cross-1"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "cross-discount",
+      "criterionIds": ["cross-2"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "cross-aggregate-rounding",
+      "criterionIds": ["cross-2"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "cross-overflow",
+      "criterionIds": ["cross-2"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "cross-view",
+      "criterionIds": ["cross-3"],
+      "kind": "runtime"
+    },
+    {
+      "testId": "cross-frozen",
+      "criterionIds": ["cross-4"],
+      "kind": "runtime"
+    }
+  ],
+  "publicTestIds": ["compat-legacy", "public-example", "public-discount"]
+}

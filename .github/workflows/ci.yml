@@ -9,9 +9,13 @@ jobs:
   fast:
     name: Fast checks
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Full workspace task adapter checks include real pinned tools.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Existing catalog provenance tests read a pinned ancestor commit.
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -22,4 +26,8 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test
+      - name: Typecheck offline task qualification infrastructure
+        run: pnpm typecheck:task-tests
+      - name: Check frozen task fixtures and extracted packed contracts without AI credentials
+        run: pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts
       - run: pnpm registry:validate

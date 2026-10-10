@@ -139,6 +139,29 @@ describe("createDefaultProcessRunner", () => {
     expect(result.timedOut).toBe(true);
   });
 
+  it.skipIf(process.platform === "win32")(
+    "escalates cancellation for a task check ignoring SIGTERM",
+    async () => {
+      const controller = new AbortController();
+      const result = await createDefaultProcessRunner()({
+        command: process.execPath,
+        args: [
+          "-e",
+          "process.on('SIGTERM', () => {}); console.log('ready'); setInterval(() => {}, 1000)",
+        ],
+        cwd: process.cwd(),
+        signal: controller.signal,
+        timeoutMs: 5000,
+        terminationGraceMs: 20,
+        onOutput(event) {
+          if (event.text.includes("ready")) controller.abort();
+        },
+      });
+      expect(result.aborted).toBe(true);
+      expect(result.timedOut).not.toBe(true);
+    },
+  );
+
   it("terminates an aborted process and reports cancellation", async () => {
     const runner = createDefaultProcessRunner();
     const controller = new AbortController();

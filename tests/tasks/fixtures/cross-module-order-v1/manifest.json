@@ -1,0 +1,176 @@
+{
+  "kind": "task_benchmark_fixture",
+  "schemaVersion": 1,
+  "fixtureRevision": "sha256:c5209828814051915d28c10668a0a67a9b99ad883df0747b274a7e52ea4dc58b",
+  "fixtureId": "cross-module-order-v1",
+  "fixtureVersion": 1,
+  "phaseId": "dependency-output-contract",
+  "requirements": [
+    {
+      "requirementId": "cross-1",
+      "text": "add readonly order lines `{ sku, quantity, unitCents }` and validate nonempty SKU, integer quantity 1–999 and nonnegative safe-integer unit price. Invalid input returns a typed issue; no floating-point currency calculation."
+    },
+    {
+      "requirementId": "cross-2",
+      "text": "`calculateTotal(lines, discountBasisPoints)` accepts an integer discount 0–10000, validates multiplication/aggregation for safe-integer overflow, then applies the discount once to the aggregate with rounding down in cents. Empty lines total zero."
+    },
+    {
+      "requirementId": "cross-3",
+      "text": "`presentOrder` consumes the calculation result and returns either an error view or `{ totalCents, formattedTotal }`, formatting cents with exactly two decimal digits without locale-dependent output."
+    },
+    {
+      "requirementId": "cross-4",
+      "text": "preserve legacy exported APIs/caller compilation. Public acceptance traces domain → total → presentation. The compiled plan must declare predecessor output artifacts for dependent tasks; execute and accept predecessors before consumers."
+    }
+  ],
+  "seedRevision": "sha256:371af3f89aa9039d3696ea0166f6d85fd510b1e93a1c9aa2a5d32a5fc2995212",
+  "seedFiles": [
+    {
+      "path": "AGENTS.md",
+      "fileHash": "sha256:05d848ede6437e5fbaf14d95a71d41536187b21202bc59b45ac01943650e9ad2",
+      "bytes": 172
+    },
+    {
+      "path": "docs/phase.md",
+      "fileHash": "sha256:14b6fb8d62e1a4635fbd4573b26a048c972aee47721a96bc3a8d9e92138dfb6c",
+      "bytes": 984
+    },
+    {
+      "path": "eslint.config.mjs",
+      "fileHash": "sha256:c3595c37081c32d66f8b8a543e0c9f00b2978c2c850174a8872242afa6675a42",
+      "bytes": 291
+    },
+    {
+      "path": "package.json",
+      "fileHash": "sha256:46a0ec28339887e63f0bd78f7d304b5b8923c81856c88ca8b173b02e26ac1423",
+      "bytes": 116
+    },
+    {
+      "path": "src/domain.ts",
+      "fileHash": "sha256:7e460dd79ac80388c90b624434bea8176c9d38a5d964120be895819c100e0daa",
+      "bytes": 623
+    },
+    {
+      "path": "src/legacy-consumer.ts",
+      "fileHash": "sha256:1fe9a26553d50e2405c38eeab573b6cf0566a945d5b0fa4c38da52772f75ab7f",
+      "bytes": 145
+    },
+    {
+      "path": "src/presenter.ts",
+      "fileHash": "sha256:5e2e2920ead995bdd9101a9b3e9dfe87ac10d664d7a70a8f841c5ad52406c69d",
+      "bytes": 467
+    },
+    {
+      "path": "src/totals.ts",
+      "fileHash": "sha256:8425ba94eb501b8598a610aff5bcf613df7aad8f677c7ae4948fa6bf3c91856b",
+      "bytes": 891
+    },
+    {
+      "path": "test/public/acceptance.mjs",
+      "fileHash": "sha256:e90de2510369b4e2aa0cb38c8c2049f20215f189549db1b8df96de4674be5372",
+      "bytes": 691
+    },
+    {
+      "path": "test/public/compat.mjs",
+      "fileHash": "sha256:da6222746bfa755541964dbc4dec25f062911f463c4234de7b26793124005041",
+      "bytes": 224
+    },
+    {
+      "path": "test/public/managed.test.mjs",
+      "fileHash": "sha256:dc93e69d62fe9ae6b4862b7ecca95150731e2cfdbab9c643f64ac7779c8f1f1d",
+      "bytes": 232
+    },
+    {
+      "path": "tsconfig.json",
+      "fileHash": "sha256:7ecb67310174039455aae94e4b21d346fd6fe8d4030886e33ff3b9502f90eccc",
+      "bytes": 360
+    },
+    {
+      "path": "vitest.config.mjs",
+      "fileHash": "sha256:4919f43c68ba6a6808b38515fc18be7997c28b6cf771a88e814d8109612b1622",
+      "bytes": 278
+    }
+  ],
+  "phaseDocumentHash": "sha256:14b6fb8d62e1a4635fbd4573b26a048c972aee47721a96bc3a8d9e92138dfb6c",
+  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
+  "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
+  "supportProfileId": "managed-ts-node-v1",
+  "write": ["src/domain.ts", "src/totals.ts", "src/presenter.ts", "test/agent/order.test.ts"],
+  "entrypoints": ["validateLine", "calculateTotal", "presentOrder", "legacyTotal"],
+  "publicTestIds": ["compat-legacy", "public-example", "public-discount"],
+  "referenceFiles": [
+    {
+      "path": "src/domain.ts",
+      "fileHash": "sha256:7e460dd79ac80388c90b624434bea8176c9d38a5d964120be895819c100e0daa",
+      "bytes": 623
+    },
+    {
+      "path": "src/presenter.ts",
+      "fileHash": "sha256:5e2e2920ead995bdd9101a9b3e9dfe87ac10d664d7a70a8f841c5ad52406c69d",
+      "bytes": 467
+    },
+    {
+      "path": "src/totals.ts",
+      "fileHash": "sha256:f5146e94f9a3b7025b49361ee7fb0e5ceea4bb5535b2cb67843745bfac738a8b",
+      "bytes": 913
+    }
+  ],
+  "incorrectVariants": [
+    {
+      "variantId": "rounds_up",
+      "files": [
+        {
+          "path": "src/totals.ts",
+          "fileHash": "sha256:3c0069c82038a9dd6ed9aa3e8795abd83049923bbad88c0f9c82a760bf329c94",
+          "bytes": 921
+        }
+      ]
+    },
+    {
+      "variantId": "no_overflow_guard",
+      "files": [
+        {
+          "path": "src/totals.ts",
+          "fileHash": "sha256:006ab8ee2901726c74d7946d606a71a9fc1f2bd2b1cfb225711f3c1cf8b35ff2",
+          "bytes": 774
+        }
+      ]
+    },
+    {
+      "variantId": "incompatible_export",
+      "files": [
+        {
+          "path": "src/totals.ts",
+          "fileHash": "sha256:8c3ff43aa93230b2263c84730b4e3c5db394464bbb4118670bfe767573ec3356",
+          "bytes": 918
+        }
+      ]
+    }
+  ],
+  "oracleFiles": [
+    {
+      "path": "holdout.mjs",
+      "fileHash": "sha256:99c482ecb937378d6759403a47f53ab14d405f99e98fb4ac58b0cf8efe7bcb7f",
+      "bytes": 2446
+    }
+  ],
+  "oracleRevision": "sha256:e50d47c36d1010165286293b48514fdf70c5be4aa3e5ef6e4851c377f59f6ec3",
+  "testInventory": [
+    { "testId": "cross-default", "criterionIds": ["cross-4"], "kind": "runtime" },
+    { "testId": "cross-invalid-line", "criterionIds": ["cross-1"], "kind": "runtime" },
+    { "testId": "cross-discount", "criterionIds": ["cross-2"], "kind": "runtime" },
+    { "testId": "cross-aggregate-rounding", "criterionIds": ["cross-2"], "kind": "runtime" },
+    { "testId": "cross-overflow", "criterionIds": ["cross-2"], "kind": "runtime" },
+    { "testId": "cross-view", "criterionIds": ["cross-3"], "kind": "runtime" },
+    { "testId": "cross-frozen", "criterionIds": ["cross-4"], "kind": "runtime" }
+  ],
+  "resourceLimits": {
+    "maxImplementationAttemptsPerTask": 3,
+    "maxProviderCalls": 24,
+    "maxInputTokens": 240000,
+    "maxOutputTokens": 48000,
+    "maxWallTimeMs": 1800000,
+    "maxCostMicrousd": 10000000
+  }
+}

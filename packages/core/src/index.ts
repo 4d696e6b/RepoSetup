@@ -176,3 +176,17 @@ export type {
 export { beginnerCatalogSchema } from "./selection/catalog.js";
 export type { BeginnerCatalog } from "./selection/catalog.js";
 export { planSelectionCreate } from "./selection/plan-create.js";
+
+// Coding tasks remain separate from curated installation operations.
+export * from "./tasks/index.js";
+
+export * from "./executor/task-verification.js";
+export * from "./executor/task-run-types.js";
+export * from "./executor/task-run.js";
+export * from "./executor/task-managed.js";
+export * from "./tasks/compilation-context.js";
+export * from "./tasks/compilation-state.js";
+export * from "./executor/task-compilation.js";
+export * from "./executor/task-benchmark.js";
+export * from "./executor/task-benchmark-replay.js";
+export * from "./executor/task-benchmark-evidence.js";
