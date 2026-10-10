@@ -160,118 +160,121 @@ describe("read-only task repository adapter", () => {
   });
 });
 
-it("prepares a compiled plan through the real reader while preserving project files", async () => {
-  const { root } = await fixture();
-  await mkdir(path.join(root, "docs"));
-  await writeFile(path.join(root, "docs/phase.md"), "Preserve the public contract.\n");
-  await writeFile(path.join(root, "AGENTS.md"), "Keep changes small.\n");
-  const core = await import("@reposetup/core");
-  const readScope: TaskSelector[] = [...authority.read, { type: "subtree", path: "docs" }];
-  const readerResult = await createTaskRepositoryReader(root, { read: readScope, deny: [] });
-  if (!readerResult.success) throw readerResult.error;
-  const reader = readerResult.data;
-  const phaseBytes = await readFile(path.join(root, "docs/phase.md"));
-  const phaseHash = taskByteHash(phaseBytes);
-  const hash = taskByteHash("reviewed-catalog");
-  const policy = {
-    supportProfileId: "managed-ts-node-v1",
-    supportProfileRevision: 1,
-    checkCatalogRevision: hash,
-    checkIds: [...core.TASK_CHECK_IDS],
-    requiredCheckIds: [...core.TASK_REQUIRED_CHECK_IDS],
-    authority: { read: readScope, write: ["src/source.ts"], deny: [] },
-    caseSensitivePaths: true,
-  };
-  const phase = {
-    phaseId: "phase-one",
-    sourcePath: "docs/phase.md",
-    sourceFileHash: phaseHash,
-    lineRange: { start: 1, end: 1 },
-    selectionHash: phaseHash,
-    requirements: [
-      {
-        requirementId: "req-one",
-        text: "Preserve the public contract.",
-        sourceRefs: [{ path: "docs/phase.md", fileHash: phaseHash }],
-        phaseCriterionIds: ["phase-criterion"],
-      },
-    ],
-    phaseCriteria: [
-      {
-        criterionId: "phase-criterion",
-        statement: "Independent acceptance passes.",
-        evidenceKind: "trusted_check",
-        checkId: "phase.acceptance",
-      },
-    ],
-  };
-  const task = {
-    taskId: "edit",
-    objective: "Preserve exported types.",
-    requirementIds: ["req-one"],
-    kind: "implementation",
-    constraints: [],
-    scope: { read: readScope, write: ["src/source.ts"], deny: [] },
-    criteria: [
-      {
-        criterionId: "task-criterion",
-        statement: "Public types remain compatible.",
-        requirementIds: ["req-one"],
-        evidenceKind: "trusted_check",
-        checkIds: ["task.acceptance"],
-      },
-    ],
-    requiredCheckIds: [...core.TASK_REQUIRED_CHECK_IDS],
-    outputs: [
-      {
-        artifactId: "source-output",
-        kind: "file_snapshot",
-        paths: ["src/source.ts"],
-        criterionIds: ["task-criterion"],
-      },
-    ],
-    capabilityRequirements: {
-      features: ["local_logic"],
-      minimumCapabilityClass: "baseline",
-      evidenceRefs: [{ type: "requirement", requirementId: "req-one" }],
-    },
-  };
-  const compiled = core.compileTaskPlan({
-    phase,
-    policy,
-    project: {
-      rootIdentity: reader.rootIdentity,
-      baselineCommit: "b".repeat(40),
-      baselineTreeHash: hash,
-    },
-    draft: {
-      kind: "task_plan_draft",
-      schemaVersion: 1,
+it.skipIf(process.platform === "win32")(
+  "prepares a compiled plan through the real reader while preserving project files",
+  async () => {
+    const { root } = await fixture();
+    await mkdir(path.join(root, "docs"));
+    await writeFile(path.join(root, "docs/phase.md"), "Preserve the public contract.\n");
+    await writeFile(path.join(root, "AGENTS.md"), "Keep changes small.\n");
+    const core = await import("@reposetup/core");
+    const readScope: TaskSelector[] = [...authority.read, { type: "subtree", path: "docs" }];
+    const readerResult = await createTaskRepositoryReader(root, { read: readScope, deny: [] });
+    if (!readerResult.success) throw readerResult.error;
+    const reader = readerResult.data;
+    const phaseBytes = await readFile(path.join(root, "docs/phase.md"));
+    const phaseHash = taskByteHash(phaseBytes);
+    const hash = taskByteHash("reviewed-catalog");
+    const policy = {
+      supportProfileId: "managed-ts-node-v1",
+      supportProfileRevision: 1,
+      checkCatalogRevision: hash,
+      checkIds: [...core.TASK_CHECK_IDS],
+      requiredCheckIds: [...core.TASK_REQUIRED_CHECK_IDS],
+      authority: { read: readScope, write: ["src/source.ts"], deny: [] },
+      caseSensitivePaths: true,
+    };
+    const phase = {
       phaseId: "phase-one",
+      sourcePath: "docs/phase.md",
+      sourceFileHash: phaseHash,
+      lineRange: { start: 1, end: 1 },
       selectionHash: phaseHash,
-      tasks: [task],
-      dependencies: [],
-      unresolvedQuestions: [],
-    },
-  });
-  if (!compiled.success) throw compiled.error;
-  const before = await readFile(path.join(root, "src/source.ts"));
-  const result = await core.prepareTaskContext({
-    plan: compiled.data,
-    policy,
-    taskId: "edit",
-    repository: reader,
-  });
-  expect(result.success, result.success ? undefined : result.error.message).toBe(true);
-  if (result.success) {
-    expect(result.data.files.map((file) => file.path)).toEqual([
-      "AGENTS.md",
-      "docs/phase.md",
-      "src/source.ts",
-    ]);
-    expect(result.data.context.size.bytes).toBe(Buffer.byteLength(JSON.stringify(result.data)));
-    expect(core.parseTaskDocument(result.data.context).success).toBe(true);
-    expect(result.data.context.rules.some((rule) => rule.path === "AGENTS.md")).toBe(true);
-  }
-  expect(await readFile(path.join(root, "src/source.ts"))).toEqual(before);
-});
+      requirements: [
+        {
+          requirementId: "req-one",
+          text: "Preserve the public contract.",
+          sourceRefs: [{ path: "docs/phase.md", fileHash: phaseHash }],
+          phaseCriterionIds: ["phase-criterion"],
+        },
+      ],
+      phaseCriteria: [
+        {
+          criterionId: "phase-criterion",
+          statement: "Independent acceptance passes.",
+          evidenceKind: "trusted_check",
+          checkId: "phase.acceptance",
+        },
+      ],
+    };
+    const task = {
+      taskId: "edit",
+      objective: "Preserve exported types.",
+      requirementIds: ["req-one"],
+      kind: "implementation",
+      constraints: [],
+      scope: { read: readScope, write: ["src/source.ts"], deny: [] },
+      criteria: [
+        {
+          criterionId: "task-criterion",
+          statement: "Public types remain compatible.",
+          requirementIds: ["req-one"],
+          evidenceKind: "trusted_check",
+          checkIds: ["task.acceptance"],
+        },
+      ],
+      requiredCheckIds: [...core.TASK_REQUIRED_CHECK_IDS],
+      outputs: [
+        {
+          artifactId: "source-output",
+          kind: "file_snapshot",
+          paths: ["src/source.ts"],
+          criterionIds: ["task-criterion"],
+        },
+      ],
+      capabilityRequirements: {
+        features: ["local_logic"],
+        minimumCapabilityClass: "baseline",
+        evidenceRefs: [{ type: "requirement", requirementId: "req-one" }],
+      },
+    };
+    const compiled = core.compileTaskPlan({
+      phase,
+      policy,
+      project: {
+        rootIdentity: reader.rootIdentity,
+        baselineCommit: "b".repeat(40),
+        baselineTreeHash: hash,
+      },
+      draft: {
+        kind: "task_plan_draft",
+        schemaVersion: 1,
+        phaseId: "phase-one",
+        selectionHash: phaseHash,
+        tasks: [task],
+        dependencies: [],
+        unresolvedQuestions: [],
+      },
+    });
+    if (!compiled.success) throw compiled.error;
+    const before = await readFile(path.join(root, "src/source.ts"));
+    const result = await core.prepareTaskContext({
+      plan: compiled.data,
+      policy,
+      taskId: "edit",
+      repository: reader,
+    });
+    expect(result.success, result.success ? undefined : result.error.message).toBe(true);
+    if (result.success) {
+      expect(result.data.files.map((file) => file.path)).toEqual([
+        "AGENTS.md",
+        "docs/phase.md",
+        "src/source.ts",
+      ]);
+      expect(result.data.context.size.bytes).toBe(Buffer.byteLength(JSON.stringify(result.data)));
+      expect(core.parseTaskDocument(result.data.context).success).toBe(true);
+      expect(result.data.context.rules.some((rule) => rule.path === "AGENTS.md")).toBe(true);
+    }
+    expect(await readFile(path.join(root, "src/source.ts"))).toEqual(before);
+  },
+);

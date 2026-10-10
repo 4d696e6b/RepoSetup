@@ -2604,3 +2604,13 @@ explicit task environment tests passed 3/3. Workspace typecheck, task-test
 typecheck, lint/format and whitespace checks passed. Core rebuild during fixture
 freeze passed; runtime/package source is unchanged. These local development
 receipts have `sourceDirty: true` and do not count as clean candidate qualification.
+
+At `e26cbe9`, the local legacy end-to-end suite passed 134 tests, with one existing
+skip, in 13 files (63.20s); the affected build passed. Installed tarball smoke
+retained the unchanged artifact hash
+`sha256:7a4942e2e93d21cde4325be6b6aeb9e532307f3da50fc05c2b5e51e0fcbbf735`.
+The Windows rerun identified two additional top-level POSIX filesystem tests
+outside their gated suites. Added the same explicit Windows skip to those two
+cases; both cases pass locally (2 passed, 17 deselected). Workspace typecheck and
+lint passed. Earlier CI/platform runs were cancelled as superseded; those
+cancellations are not qualification successes. Clean hosted results remain pending.

@@ -407,115 +407,118 @@ describe("portable task CLI", () => {
   });
 });
 
-it("reports caller snapshots as unverified and cannot unlock dependent work", async () => {
-  const f = await fixture();
-  const first = f.draft.tasks[0]!;
-  f.review.policy.authority.write.push("src/other.ts");
-  const second = {
-    ...first,
-    taskId: "consumer",
-    scope: { ...first.scope, write: ["src/other.ts"] },
-    criteria: [{ ...first.criteria[0]!, criterionId: "consumer-criterion" }],
-    outputs: [
-      {
-        artifactId: "consumer-output",
-        kind: "file_snapshot",
-        paths: ["src/other.ts"],
-        criterionIds: ["consumer-criterion"],
-      },
-    ],
-  };
-  const draft = {
-    ...f.draft,
-    tasks: [first, second],
-    dependencies: [
-      {
-        predecessorTaskId: "edit",
-        consumerTaskId: "consumer",
-        requiredArtifactIds: ["source-output"],
-      },
-    ],
-  };
-  await writeFile(f.reviewPath, JSON.stringify(f.review));
-  await writeFile(f.draftPath, JSON.stringify(draft));
-  const compiled = await f.compile();
-  const hash = taskByteHash("reported-verification");
-  const unknown = { provenance: "unknown" };
-  const usage = {
-    inputTokens: unknown,
-    outputTokens: unknown,
-    reasoningTokens: unknown,
-    cachedInputTokens: unknown,
-    totalTokens: unknown,
-    costMicrousd: unknown,
-    providerCallId: null,
-    durationMs: 0,
-    priceCatalogRevision: null,
-    reserved: { calls: 0, inputTokens: 0, outputTokens: 0, costMicrousd: 0 },
-  };
-  const state = {
-    kind: "phase_run",
-    schemaVersion: 1,
-    runId: RUN,
-    stateRevision: 1,
-    planId: compiled.plan.planId,
-    project: { ...f.review.project, latestProjectRevision: hash, lastReconciledRevision: hash },
-    executionMode: "handoff",
-    supportQualification: { status: "unconfirmed", reasons: [], profileRevision: 1 },
-    status: "succeeded",
-    tasks: [
-      {
-        taskId: "edit",
-        status: "accepted",
-        attemptIds: [],
-        reasonCode: null,
-        acceptedVerificationId: hash,
-      },
-      {
-        taskId: "consumer",
-        status: "queued",
-        attemptIds: [],
-        reasonCode: null,
-        acceptedVerificationId: null,
-      },
-    ],
-    attempts: [],
-    resourceLimits: DEFAULT_HANDOFF_PREFERENCES.resourceLimits,
-    resourceLedger: { reservations: [], consumed: usage },
-    acceptedArtifacts: [],
-    activeAttemptId: null,
-    finalVerification: null,
-    events: [],
-  };
-  const statePath = path.join(f.base, "state.json");
-  await writeFile(statePath, JSON.stringify(state));
-  const status = await f.call([
-    "task",
-    "status",
-    ...f.common,
-    "--plan",
-    f.planPath,
-    "--state",
-    statePath,
-    "--json",
-  ]);
-  expect(status.exitCode).toBe(0);
-  const output = JSON.parse(status.stdout);
-  expect(output.stateAuthority).toBe("caller_supplied_unverified");
-  expect(output.reportedSnapshot.reportedStatus).toBe("succeeded");
-  expect(output.verification).toBe("not_checked");
-  const next = await f.call([
-    "task",
-    "next",
-    ...f.common,
-    "--plan",
-    f.planPath,
-    "--task",
-    "consumer",
-    "--dry-run",
-    "--json",
-  ]);
-  expect(next.exitCode).toBe(4);
-  expect(JSON.parse(next.stdout).error.code).toBe("TASK_CHECK_BLOCKED");
-  expect(f.effect).not.toHaveBeenCalled();
-});
+it.skipIf(process.platform === "win32")(
+  "reports caller snapshots as unverified and cannot unlock dependent work",
+  async () => {
+    const f = await fixture();
+    const first = f.draft.tasks[0]!;
+    f.review.policy.authority.write.push("src/other.ts");
+    const second = {
+      ...first,
+      taskId: "consumer",
+      scope: { ...first.scope, write: ["src/other.ts"] },
+      criteria: [{ ...first.criteria[0]!, criterionId: "consumer-criterion" }],
+      outputs: [
+        {
+          artifactId: "consumer-output",
+          kind: "file_snapshot",
+          paths: ["src/other.ts"],
+          criterionIds: ["consumer-criterion"],
+        },
+      ],
+    };
+    const draft = {
+      ...f.draft,
+      tasks: [first, second],
+      dependencies: [
+        {
+          predecessorTaskId: "edit",
+          consumerTaskId: "consumer",
+          requiredArtifactIds: ["source-output"],
+        },
+      ],
+    };
+    await writeFile(f.reviewPath, JSON.stringify(f.review));
+    await writeFile(f.draftPath, JSON.stringify(draft));
+    const compiled = await f.compile();
+    const hash = taskByteHash("reported-verification");
+    const unknown = { provenance: "unknown" };
+    const usage = {
+      inputTokens: unknown,
+      outputTokens: unknown,
+      reasoningTokens: unknown,
+      cachedInputTokens: unknown,
+      totalTokens: unknown,
+      costMicrousd: unknown,
+      providerCallId: null,
+      durationMs: 0,
+      priceCatalogRevision: null,
+      reserved: { calls: 0, inputTokens: 0, outputTokens: 0, costMicrousd: 0 },
+    };
+    const state = {
+      kind: "phase_run",
+      schemaVersion: 1,
+      runId: RUN,
+      stateRevision: 1,
+      planId: compiled.plan.planId,
+      project: { ...f.review.project, latestProjectRevision: hash, lastReconciledRevision: hash },
+      executionMode: "handoff",
+      supportQualification: { status: "unconfirmed", reasons: [], profileRevision: 1 },
+      status: "succeeded",
+      tasks: [
+        {
+          taskId: "edit",
+          status: "accepted",
+          attemptIds: [],
+          reasonCode: null,
+          acceptedVerificationId: hash,
+        },
+        {
+          taskId: "consumer",
+          status: "queued",
+          attemptIds: [],
+          reasonCode: null,
+          acceptedVerificationId: null,
+        },
+      ],
+      attempts: [],
+      resourceLimits: DEFAULT_HANDOFF_PREFERENCES.resourceLimits,
+      resourceLedger: { reservations: [], consumed: usage },
+      acceptedArtifacts: [],
+      activeAttemptId: null,
+      finalVerification: null,
+      events: [],
+    };
+    const statePath = path.join(f.base, "state.json");
+    await writeFile(statePath, JSON.stringify(state));
+    const status = await f.call([
+      "task",
+      "status",
+      ...f.common,
+      "--plan",
+      f.planPath,
+      "--state",
+      statePath,
+      "--json",
+    ]);
+    expect(status.exitCode).toBe(0);
+    const output = JSON.parse(status.stdout);
+    expect(output.stateAuthority).toBe("caller_supplied_unverified");
+    expect(output.reportedSnapshot.reportedStatus).toBe("succeeded");
+    expect(output.verification).toBe("not_checked");
+    const next = await f.call([
+      "task",
+      "next",
+      ...f.common,
+      "--plan",
+      f.planPath,
+      "--task",
+      "consumer",
+      "--dry-run",
+      "--json",
+    ]);
+    expect(next.exitCode).toBe(4);
+    expect(JSON.parse(next.stdout).error.code).toBe("TASK_CHECK_BLOCKED");
+    expect(f.effect).not.toHaveBeenCalled();
+  },
+);
