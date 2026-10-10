@@ -34,7 +34,8 @@ jobs:
           - runner: macos-15
             architecture: arm64
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 120
+    # Serial concrete checks and full fixtures have independently bounded trials.
+    timeout-minutes: 180
     env:
       # Tests use injected fake transport. Never inherit a live provider credential.
       OPENAI_API_KEY: ""

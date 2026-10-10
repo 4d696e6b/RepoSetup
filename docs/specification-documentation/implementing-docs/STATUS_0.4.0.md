@@ -2837,3 +2837,25 @@ passed. Clean-source packed receipts identify tested PR merge source
 installed artifact smoke matches the recorded `7a4942e2...` CLI bytes on all hosts.
 Linux/Windows used Node 24.21.0; macOS used 24.20.0. All receipts retain
 `qualification: false`, distinguishing development checks from final release.
+
+### Final offline hosted timer correction (2026-10-10)
+
+At `5565463`, Linux passed all eight concrete verifier cases and reached the full
+fixture suite. The same-source macOS retry at `1d2638e` passed all 62 contracts and
+10/11 full fixture cases, including five real reference verifiers, actual scoped
+acceptance, the 75-slot failure diagnostic and vetted fixed success. Its repair
+case hit the 1,200,000ms outer test timer; the run remains failed. Preserve its
+log and original source identity, not an aggregated full-suite pass.
+
+Give that outer driver 1,800,000ms, the documented bounded benchmark wall-time
+ceiling, covering setup/retention around trial execution. Increase only the serial
+workflow job allowance from 120 to 180 minutes so concrete verification followed
+by all full fixtures is not cut off by the aggregate job timer. No product trial,
+provider/process/token/cost limit, assertion or acceptance criterion changes.
+There are no parallel task workers. Requalify the affected repair case locally and
+complete supported-host workflow results before closing amended offline I/J.
+
+Workspace typecheck, task-test typecheck, lint/format and whitespace checks passed
+for the outer-timer/workflow correction. The affected repair recheck is running;
+no pass is claimed yet. Commit the reviewable timer change before its hosted
+requalification. I/J remain pending the actual full supported-host results.

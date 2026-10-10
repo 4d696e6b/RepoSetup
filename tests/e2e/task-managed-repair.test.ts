@@ -168,4 +168,5 @@ it("retains actual context expansion and vetted failed-edit repair overhead befo
   } finally {
     await block.dispose();
   }
-}, 1200000);
+  // Outer driver includes setup/retention around the bounded benchmark trial.
+}, 1800000);
