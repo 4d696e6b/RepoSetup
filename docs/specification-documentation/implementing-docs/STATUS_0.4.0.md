@@ -2501,3 +2501,33 @@ provider tests separately validate the final wire correction; the full run began
 before that correction. Final source checks and fixture/installed/verifier passes
 are recorded above, but this unresolved regression currently blocks completion
 claims for the slice.
+
+### J: final isolated regression result and handoff (2026-10-10)
+
+The timed-out verification case **passes in isolation**, exit 0, **175.47 seconds**,
+one case / one file with seven deliberately deselected cases. The original
+180,000 ms test limit, runtime check deadlines, closure integrity checks and
+assertions are unchanged. This supports contention as a possible cause, without
+proving it. The complete concurrent workspace run remains **exit 1**, 1,037 pass
+and one timeout; it is not relabeled a full pass or same-source repeated candidate
+qualification. Every failed case was rechecked, and no assertion failure remains
+unresolved. Future full qualifications should serialize expensive validation jobs;
+this test's narrow time margin is explicit diagnostic evidence.
+
+Final available changes are committed: patched development tools and refreshed
+fixture environment identities; guarded provider wire unions and recursive
+regression checks; combined source safety/provider/support review; enforced full
+workspace audit evidence; npm-installed local task/alias/legacy smoke; accurate
+candidate and status records. All applicable build/typechecks/lint, formatting,
+links/whitespace, license/full/production audits, 61 ordinary fixture tests, 30
+final provider tests, installed smoke, real task/phase verifier and isolated timeout
+recheck pass. The aggregate regression failure is retained above. No new source
+logic changed after those checks; no live provider credit was consumed.
+
+I/J remain open for real comparative/profile/provider evidence, exact frozen
+candidate/platform/legacy qualification, intentional version selection and the
+three-pass/seven-calendar-day soak. The soak clock has not started. Azure quota
+remains deferred. The next milestone work is **I qualification when its external
+prerequisites are available**, followed by J candidate freeze/qualification; no
+placeholder functionality, package-version bump, system software, website source,
+rollback, branch merge or publication was introduced.
