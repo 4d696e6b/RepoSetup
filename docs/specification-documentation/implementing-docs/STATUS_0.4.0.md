@@ -1994,3 +1994,47 @@ This repeat establishes clean-source macOS offline contract evidence; it does no
 upgrade the separate dirty-source context/repair observation or close live/model/
 installed/Linux qualification. Disposable roots were cleaned and the worktree was
 clean after these checks. Milestone I remains in progress; J remains unstarted.
+
+
+### I: bounded live-smoke authorization and offline preparation (2026-10-10)
+
+The owner explicitly authorized at most **two live API calls within a $1 estimated
+ceiling**, limited to the documented addition smoke. This does not authorize the
+75-trial campaign, routing/model qualification calls, additional failure probes,
+allowance renewal, installation, or remote CI. Credentials remain only in the
+owner's separate terminal environment; none were read, persisted, or used by this
+preparation. Live smoke status remains **not run**, rather than qualified.
+
+Extracted the existing concrete addition verifier fixture into a shared developer
+helper with caller-supplied acceptance review. The existing tests retain their
+mock reviewer; offline live preparation uses a rejecting reviewer. Hydrated tools,
+fixed check recipes, frozen oracle identities and reviewed closure semantics are
+unchanged. Project and scratch directories are explicitly private. Added
+`scripts/prepare-task-provider-smoke.ts`, an offline-only preparation tool using
+existing preinstalled bytes, fixed baseline Git setup and exact CLI dry-run guards.
+It creates no provider, reads no credential and exposes no new public/package
+command. It retains 0600 review/preferences/authority/preview and metadata inside
+a fresh private parent, with two-call/100000-input/8192-output/900000ms/$1 ceilings,
+4096 per-call output and 120000ms timeout, source/runtime/SDK/runner/oracle hashes
+and full receipt destination. Failure retains only the disposable fixture for
+inspection; there is no rollback or retry. Documentation now describes this
+preparation and the separate human acceptance and paid CLI execution steps.
+
+Validation: preinstalled Node **24.21.0** checked; workspace and task-test
+typechecks, lint/format and CLI build pass. The extracted real pinned
+TypeScript/ESLint/Vitest task/final-phase verification regression passed **1 test
+(7 skipped), 172.07 seconds**, with no project effects. Initial extraction missed
+one retained hash import and left one unused process-runner import; both were
+corrected before final checks. Actual bundled offline preparation completed on
+macOS arm64 with zero provider calls, a fresh Git baseline, valid managed
+compilation dry-run and empty private state. Its first observation records the
+uncommitted source accurately; no live result or new capability evidence is
+claimed. No system/dependency installation, model-generated commit, publication,
+website edit, version bump or paid call occurred.
+
+Next: hand the exact reviewed first-call command to the owner's key-holding
+terminal; inspect the real receipt and scope/coverage before the second-call
+preview. Stop on any failure/unknown usage. Independently review current source
+and frozen evidence before task/final-phase acceptance. Milestone I remains in
+progress: live success, production capability/effort evidence, 75 qualified
+comparative trials and installed/Linux/platform gates remain open; J is unstarted.
