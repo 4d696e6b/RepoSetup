@@ -2423,3 +2423,24 @@ remote schema/account/model/usage behavior. No live API call occurred.
 After the wire change, CLI build/typecheck and workspace lint pass. Workspace and
 task-test typechecks already passed after dependency remediation; core/domain
 source did not change. The full regression/fixture runs remain in progress.
+
+### J: combined available source review (2026-10-10)
+
+Recorded the combined task compiler source safety review against **536a090**:
+core/CLI authority, deterministic installation separation, preview/dry-run,
+context/privacy, guarded text changes, durable state/recovery, unknown usage,
+fixed-tool verification, provider transport, dependency/license results and exact
+support scope. The two development findings and tagged wire union issue are
+corrected. The review explicitly retains filesystem race and hostile code/network
+host-isolation limitations and unconfirmed remote profile behavior; it is not an
+external certification or candidate qualification. J's review preparation item is
+checked, with affected re-review required after future candidate changes.
+
+Both audits pass and the workflow now retains/enforces **whole-workspace** audit
+as well as production audit and license review. The ordinary fixture/packed suite
+passes **61 tests / nine files** (112.26 seconds), including all eight extracted
+packed cases. Packed source identity was dirty 78ec4c9 and remains diagnostic;
+this does not certify a frozen installed candidate. Full workspace CLI tests are
+still running. Version selection/freeze and three full same-candidate passes plus
+seven calendar days of established soak cannot be completed ahead of I's deferred
+empirical/platform evidence. No milestone completion is inferred from preparation.

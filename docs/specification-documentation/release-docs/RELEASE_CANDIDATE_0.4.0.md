@@ -61,27 +61,23 @@ This is license metadata review, not a dependency vulnerability audit or legal
 sign-off. Current CLI source keeps environment credentials transient, disables
 SDK retries/provider tools/background execution, uses fixed provider transport,
 and leaves process/project effects to the executor. Core stays independent of
-provider SDK and terminal UI. The final combined safety review remains a gate.
+provider SDK and terminal UI. The [combined source safety review](../security-docs/SECURITY_REVIEW_0.4.0.md) is recorded for source 536a090; exact candidate qualification remains a gate.
 
-The current [pnpm audit](https://pnpm.io/cli/audit) was checked on 2026-10-10
-without fix/ignore options. **Production audit passes** (exit 0, zero advisories).
-**Whole-workspace audit fails** (exit 1) with two development-tool findings:
+On 2026-10-10, version-specific workspace overrides updated the two affected
+development tools to `source-map-js@1.2.2` and `esbuild@0.28.1`, with a frozen
+lockfile refresh and lifecycle scripts disabled. **Production and whole-workspace
+audits now pass**, exit 0, zero known advisories, without suppressions. Historical
+failed audits remain recorded in status. Fixture revisions were regenerated for
+the new lockfile/tool environment; earlier qualification is not transferred.
+Package versions and runtime dependency declarations are unchanged.
 
-- `source-map-js@1.2.1`, high severity
-  [GHSA-68fv-2mgg-jv7q](https://github.com/advisories/GHSA-68fv-2mgg-jv7q):
-  indexed source-map offsets can block the event loop; the advisory names 1.2.2
-  as patched. The installed dependency graph reaches it through PostCSS in
-  tsup/Vite/Vitest development paths.
-- `esbuild@0.27.7`, low severity
-  [GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr):
-  the Windows development-server file-read advisory; the advisory names 0.28.1
-  as patched. It is in tsup/Vite/Vitest development paths. RepoSetup's task
-  executor does not use esbuild's development-server mode.
-
-No dependency was installed, updated or suppressed. These remain dependency
-maintenance/safety review items, not a clean workspace audit or evidence that
-arbitrary model-authored code is safe. Qualification uses trusted frozen tools
-and inputs with finite processes and explicit host isolation limitations.
+The source review covers core/CLI authority, dry-run, scopes, text changes,
+private state, interruption/reservations, fixed checks, provider behavior, license
+metadata and initial support limits. It identified and corrected unsupported
+wire `oneOf` unions using guarded tagged `anyOf`; local domain validation remains
+strict. It is an in-repository review, not external certification or a sandbox.
+Live provider/capability, isolated-host and candidate platform/artifact evidence
+remain distinct gates.
 
 ## Gates before candidate qualification
 
@@ -90,7 +86,7 @@ and inputs with finite processes and explicit host isolation limitations.
 - [x] Prepare credential-free platform qualification infrastructure and identify
       retained source/runtime/lockfile and diagnostic evidence.
 - [x] Run current installed dependency-license review without dependency changes.
-- [ ] Complete independent combined safety/dependency/provider/support review.
+- [x] Record combined source safety/dependency/provider/support review; repeat affected review after candidate changes.
 - [ ] Obtain actual hosted Linux/macOS results, installed packed-artifact and
       applicable legacy/platform qualification for the same frozen source/artifact.
 - [ ] Qualify the live provider/profile smoke, including strict-schema acceptance,

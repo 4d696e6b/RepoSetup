@@ -163,7 +163,7 @@ completion cannot certify model quality, account availability or savings.
 **Objective:** prepare a qualified 0.4.0 artifact without claiming unshipped support.
 
 - [x] Update help, README, changelog, migration/no-migration notes and experimental limitations.
-- [ ] Review safety, dependency licenses, provider research and exact support scope.
+- [x] Review safety, dependency licenses, provider research and exact support scope. Source review at 536a090 is recorded in [security review](../security-docs/SECURITY_REVIEW_0.4.0.md); empirical and candidate qualifications remain separate gates.
 - [ ] Intentionally version a candidate only after implementation; test the same identified packed artifact.
 - [ ] Complete required repeated-source/platform qualification and established soak gates.
 - [ ] Require I's live provider/profile smoke evidence before qualifying the managed candidate; offline G completion cannot substitute for that evidence or authorize spending.
