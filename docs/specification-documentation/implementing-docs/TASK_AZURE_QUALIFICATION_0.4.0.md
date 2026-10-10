@@ -61,6 +61,27 @@ enrollment was performed. The next account step is to resolve/activate the actua
 student benefit or obtain confirmation of its credit coverage through Microsoft's
 education/billing interface or support before submitting the resource draft.
 
+### Broadened available-credit preparation (2026-10-10)
+
+The owner subsequently authorized using whatever available option can advance
+the project. Inspected **Azure subscription 1**: active, Owner access, a current
+free-credit balance, and a portal notice that the credit expires in **16 days**.
+This is evidence of an available trial credit, not a Students sponsorship or
+model entitlement. No subscription upgrade or spending-limit change was made.
+
+Prepared and ran the portal's final validation for the following unsubmitted
+resource proposal on that subscription: dedicated new group
+`reposetup-task-qualification-rg`, resource
+`reposetup-task-qualification-20261010`, **East US**, **Standard S0**, default
+authenticated internet endpoint, no additional virtual network/subnet/private
+endpoint. The final **Create** button became enabled. Resource validation does
+not qualify model deployment, model/effort/schema support or tokens-per-minute
+capacity. Final creation requires action-time review of its access/credential
+effects; no resource or model deployment has been submitted. The owner's
+earlier finite direct-OpenAI allowance does not authorize an unbounded Azure
+campaign. An explicit Azure contract/adapter and bounded reviewed smoke still
+precede any RepoSetup Azure model calls.
+
 ## Verified Microsoft documentation
 
 The [Azure for Students offer](https://azure.microsoft.com/en-us/free/students)

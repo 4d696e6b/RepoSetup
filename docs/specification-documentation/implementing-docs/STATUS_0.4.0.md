@@ -2174,3 +2174,41 @@ blocker; resolve the student benefit through the Microsoft education/billing
 interface or support before resource submission. Milestone I stays in progress.
 
 Documentation formatting and whitespace checks pass; runtime source is unchanged.
+
+### I: safe failed-call diagnostics and available-credit resource review (2026-10-10)
+
+The failed direct-provider smoke exposed a diagnostic gap: the adapter's numeric
+HTTP status and outcome were discarded from the private compilation checkpoint
+when usage stayed unknown. Added optional version 1 `providerResult` containing
+only parsed outcome and nullable numeric HTTP status. The executor saves it only
+after an observed call; pending records forbid it and completed records require
+a completed provider outcome when present. Existing checkpoints remain valid
+without the new field. Unknown usage still needs review and retains the allowance;
+HTTP status never releases a reservation or permits retries. Raw provider errors,
+messages, headers, prompts, responses and credentials remain unpersisted. The
+earlier live attempt's missing status cannot be reconstructed; no new call was
+made to obtain it.
+
+Regression tests inject HTTP 401/403/429/500 through the real SDK with fake
+transport and verify safe private diagnostics, legacy checkpoint compatibility,
+rejection of extra message fields/pending results, retained unknown allowance and
+no second dispatch. Node **24.21.0**; targeted provider/compilation tests **30 pass**,
+core **597 tests / 64 files pass**, workspace typecheck, task-test typecheck,
+full lint/formatting and workspace build pass. No dependencies or package versions
+changed; no website source changed.
+
+The owner broadened the available Azure option. **Azure subscription 1** exposes
+an active free-credit balance expiring in **16 days**. Prepared a dedicated East
+US Standard S0 Azure OpenAI resource draft, with the default authenticated public
+endpoint and no additional network resources. Final portal validation completed
+and **Create** became enabled; creation remains unsubmitted for action-time review
+of resource/access/credential effects. The trial credit is not a Students
+sponsorship and resource validation is not model/quota qualification. No
+subscription upgrade, spending-limit change or model call occurred. Personal IDs,
+credit amounts and unrelated costs are not retained in repository documents.
+
+Milestone I remains in progress; J is unstarted. Next: review the concrete Azure
+resource proposal, qualify deployment/region/quota/identity and actual credit
+coverage, implement the explicit provider/provenance amendment, then use a
+separately finite Azure smoke. Comparative trials, production routing evidence
+and platform qualification remain open; local tests cannot replace these gates.

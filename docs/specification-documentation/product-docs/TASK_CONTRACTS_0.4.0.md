@@ -490,6 +490,14 @@ pending records cannot be retried automatically. Context/complete baseline check
 run before dispatch and again before accepting the compiled result. Compilation is
 not project acceptance and never executes a process or mutates project files.
 
+The optional additive `providerResult` records only the parsed provider outcome
+and nullable numeric HTTP status for a revision 2 observation. It is forbidden
+on pending records; completed records require a completed provider outcome when
+present. Existing version 1 checkpoints without it remain valid. Unknown usage
+still retains the reservation and needs manual review, even when the HTTP status
+is known. No provider error text, body, headers or credentials are retained, and
+historical omitted status cannot be reconstructed or inferred.
+
 The additive managed compilation receipt field `managedCompilationId` binds a
 subsequent managed run to the completed private ledger. The initial reservation
 uses `attemptId: null` and `reservationId: compilation`. All coding reservations

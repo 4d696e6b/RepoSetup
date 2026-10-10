@@ -9,7 +9,7 @@ import {
   taskEffectiveConfigurationSchema,
   taskUsageSchema,
 } from "./evidence-schema.js";
-import { taskProviderReservationSchema } from "./provider.js";
+import { taskProviderObservationSchema, taskProviderReservationSchema } from "./provider.js";
 import { taskPlanSchema } from "./plan-schema.js";
 import { taskContentHash, freezeTaskValue } from "./canonical.js";
 import { taskFailure, type TaskParseResult } from "./parse.js";
@@ -60,6 +60,10 @@ export const taskCompilationCheckpointSchema = z.strictObject({
   plan: taskPlanSchema.nullable(),
   benchmarkReplay: taskBenchmarkCompilationReplaySchema.optional(),
   requestFootprint: taskRequestFootprintSchema.optional(),
+  // Optional for existing receipts. Never retain provider bodies, headers or error messages.
+  providerResult: taskProviderObservationSchema
+    .pick({ outcome: true, httpStatus: true })
+    .optional(),
 });
 export type TaskCompilationCheckpoint = z.infer<typeof taskCompilationCheckpointSchema>;
 export function sealTaskCompilationCheckpoint(
@@ -102,6 +106,10 @@ export function validateTaskCompilationCheckpoint(
   }
   if (
     checkpointHash !== taskContentHash(payload) ||
+    (c.status === "pending" && c.providerResult !== undefined) ||
+    (c.status === "completed" &&
+      c.providerResult !== undefined &&
+      c.providerResult.outcome !== "completed") ||
     (c.status === "pending" ? c.usage !== null : c.usage === null) ||
     (c.stateRevision === 1) !== (c.status === "pending") ||
     (c.status === "completed") !== (c.plan !== null) ||

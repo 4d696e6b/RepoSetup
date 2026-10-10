@@ -334,6 +334,10 @@ export async function executeTaskCompilation(input: {
       status,
       usage,
       effectiveConfiguration: observation.data.effectiveConfiguration,
+      providerResult: {
+        outcome: observation.data.outcome,
+        httpStatus: observation.data.httpStatus,
+      },
       plan,
     });
     const saved = await lease.saveCompilation(c, 1);
