@@ -2951,3 +2951,24 @@ before committing this closure record.
 Final documentation closure validation passed: workspace typecheck, lint/format
 and whitespace checks. No runtime files changed, so the passing hosted build/tests
 remain the implementation evidence; no feature test was invented for this record.
+
+### Prepare integration after 0.3.0 publication (2026-10-10)
+
+Owner requested preparation now, while 0.3.0 remains in implementation. Starting
+worktree was clean, Node 24.21.0 available. Fetched remote main and candidate base;
+`origin/codex/0.3.0-candidate-integration` remains at the original `bfeab2f...`
+baseline with no intervening base diff. PR #20 is open, draft and currently
+mergeable. GitHub release listing shows latest `v0.2.3`; no 0.3.0 publication was
+observed. These are point-in-time checks, not qualification of the final 0.3.0 tree.
+
+Added the post-publication integration record: verify actual release/package
+publication identities, reconcile the final baseline, select/retarget the proper
+integration branch, review overlapping changes and rerun affected full checks on
+the new tree before presenting the concrete PR for merge approval. Keep the
+current draft unmerged; no version, release, API call or website change made.
+Offline milestones remain complete, with managed/versioned release prerequisites
+deferred. Next integration work waits for actual 0.3.0 publication.
+
+Integration preparation validation: workspace typecheck, lint/format and whitespace
+checks passed. Documentation-only changes require no feature tests/build; no
+production or candidate branch state was merged or altered.

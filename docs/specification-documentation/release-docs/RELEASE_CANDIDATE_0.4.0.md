@@ -151,3 +151,12 @@ Ordinary CI, all platform jobs and installation performance passed at that sourc
 The identified diagnostic artifact is unchanged. The original candidate gates above
 remain deferred release prerequisites, not failed offline milestone conditions.
 No candidate version/freeze, repeat gate, stability clock or publication is claimed.
+
+## Integration sequencing after 0.3.0
+
+The owner requested preparing integration while 0.3.0 is still being implemented,
+with merge preparation resumed after 0.3.0 publication. The
+[post-publication integration record](./POST_0.3.0_INTEGRATION_0.4.0.md) captures
+baseline, publication evidence, reconciliation, retargeting and revalidation steps.
+PR #20 remains draft and unmerged. Publication does not automatically authorize
+merge, a 0.4.0 version bump or release.
