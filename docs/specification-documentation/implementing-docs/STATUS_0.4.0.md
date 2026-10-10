@@ -2469,3 +2469,17 @@ real legacy project installation or cross-platform qualification. Standalone str
 TypeScript checking of the pack test and workspace lint pass; 34 affected local
 document links and whitespace checks pass. Real verifier and full workspace
 regression results are pending and will be recorded separately.
+
+### J: refreshed real-tool verifier result (2026-10-10)
+
+The targeted frozen types reference now **passes** under the patched dependency
+closure: one case / one file, six other cases deliberately deselected, 214.43
+seconds. It exercises task and distinct final-phase acceptance, five reviewed
+public tests, six actual fixed check launches and unchanged protected inputs.
+Source was clean **58cc93f**, macOS arm64 / Node **24.21.0**; fixture revision
+`sha256:ffd6316a5ff61ff4148af5d9f0fda473c55489c226a368eead70f0f057578d52`,
+closure revision
+`sha256:ba24420c30e80758a105e69fc2fef7e9bb9d9ddafcea847a5dcabe2448375549`.
+This is frozen-reference verifier evidence, not a live comparative trial or full
+expensive campaign pass. Full workspace regression remains pending. No source
+logic changed after this applicable verifier result.
