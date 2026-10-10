@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:b17c5df8b9e7c7279bbc15d3d75b73caf69a8db63f91ab8054bff72457eca292",
+  "fixtureRevision": "sha256:1856be2bbcaf170402bc1ab2b95f2cbc8f7b077521ed46fd4ca9b8b37f34d2a4",
   "fixtureId": "security-path-policy-v1",
   "fixtureVersion": 1,
   "phaseId": "scoped-path-policy",
@@ -87,8 +87,8 @@
     }
   ],
   "phaseDocumentHash": "sha256:006d4faa22473a05f315f79654200de8e041d1e64d35e85c1c6d733d0707f23e",
-  "lockfileHash": "sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4",
-  "dependencyArtifactId": "sha256:119bc8c433206f233f9c2fd689fe1f9f35554956fa08d3c0f5bcae7d21f30138",
+  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "dependencyArtifactId": "sha256:2a5002e20ca2c6949ffa721467ec4af8553bf443416cb138d551f849350ef0f2",
   "recipeRevision": "sha256:327aa47ff89085f5044eebc1d26d4088a8ed037abb49f8659d366fc27060af33",
   "supportProfileId": "managed-ts-node-v1",
   "write": ["src/path-policy.ts", "src/context-policy.ts", "test/agent/policy.test.ts"],

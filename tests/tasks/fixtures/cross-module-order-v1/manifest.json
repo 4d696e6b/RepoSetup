@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:c273d66ff7ac254d38ccf190fcaf856197fbe4a30a7d4af538c2e75f280b2aeb",
+  "fixtureRevision": "sha256:8318a7c506424ce1b866c7b789859a8840e347972811278d2a3819cf624bdfe6",
   "fixtureId": "cross-module-order-v1",
   "fixtureVersion": 1,
   "phaseId": "dependency-output-contract",
@@ -92,8 +92,8 @@
     }
   ],
   "phaseDocumentHash": "sha256:14b6fb8d62e1a4635fbd4573b26a048c972aee47721a96bc3a8d9e92138dfb6c",
-  "lockfileHash": "sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4",
-  "dependencyArtifactId": "sha256:119bc8c433206f233f9c2fd689fe1f9f35554956fa08d3c0f5bcae7d21f30138",
+  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "dependencyArtifactId": "sha256:2a5002e20ca2c6949ffa721467ec4af8553bf443416cb138d551f849350ef0f2",
   "recipeRevision": "sha256:327aa47ff89085f5044eebc1d26d4088a8ed037abb49f8659d366fc27060af33",
   "supportProfileId": "managed-ts-node-v1",
   "write": ["src/domain.ts", "src/totals.ts", "src/presenter.ts", "test/agent/order.test.ts"],

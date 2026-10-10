@@ -4,3 +4,8 @@ packages:
 
 allowBuilds:
   esbuild: true
+
+# Reviewed development-tool security updates; keep unaffected versions unchanged.
+overrides:
+  "source-map-js@1.2.1": "1.2.2"
+  "esbuild@0.27.7": "0.28.1"

@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:17a88c7a25bf510f385c1513b96d01b1bb6606df7bee602d4dc00308cace042f",
+  "fixtureRevision": "sha256:bc97424fcb63457caa509aed4f079132942f1897ad0b66c46479942eecad0015",
   "fixtureId": "ui-view-model-v1",
   "fixtureVersion": 1,
   "phaseId": "list-view-state",
@@ -82,8 +82,8 @@
     }
   ],
   "phaseDocumentHash": "sha256:f9fb999164a5e2518add95751ac71240f08c1049fdc2f436434be371df446943",
-  "lockfileHash": "sha256:0109073e327bd45bf138ded5803571ce0aac044af73f0d21a07b45af515c6bd4",
-  "dependencyArtifactId": "sha256:119bc8c433206f233f9c2fd689fe1f9f35554956fa08d3c0f5bcae7d21f30138",
+  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "dependencyArtifactId": "sha256:2a5002e20ca2c6949ffa721467ec4af8553bf443416cb138d551f849350ef0f2",
   "recipeRevision": "sha256:327aa47ff89085f5044eebc1d26d4088a8ed037abb49f8659d366fc27060af33",
   "supportProfileId": "managed-ts-node-v1",
   "write": ["src/view-model.ts", "test/agent/view-model.test.ts"],

@@ -2381,3 +2381,28 @@ live/comparative/platform/installed evidence, combined safety/dependency resolut
 intentional version/artifact freeze and repeat/soak gates remain open. Azure quota
 is deferred as requested. No new model calls, API keys, dependency installation,
 package-version bump, website source change, merge or publication occurred.
+
+### J: development dependency remediation (2026-10-10)
+
+Owner requested completing the remaining available local work after the two
+recorded dependency findings. Added version-specific workspace overrides for
+`source-map-js@1.2.1` to **1.2.2** and `esbuild@0.27.7` to **0.28.1**, verified
+against the current advisory records and registry metadata. Resolved the lockfile
+and refreshed worktree dependencies with lifecycle scripts disabled. No system
+software, project dependency auto-install feature, package version or website
+source changed. Unaffected dependency versions remain frozen.
+
+Re-froze all five fixture manifests to the new dependency environment. Only their
+fixture revision, dependency artifact and lockfile hashes changed; seed,
+reference, oracle, criteria, recipes and resource allowances are unchanged.
+New lockfile identity is
+`sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c`.
+Earlier results remain historical evidence for their original revisions and
+cannot be reused as qualification of these refreshed fixtures.
+
+Node **24.21.0**: workspace build, workspace/task-test typechecks, lint and license
+review pass. Both complete-workspace and production audits now **pass**, exit 0,
+zero known advisories, with no suppression. Full workspace regression and the
+ordinary frozen fixture/packed suite are running; final results will follow.
+The dependency findings are remediated, but I/J's empirical, platform,
+version/artifact and repeat/soak gates remain open. No live call or publication.
