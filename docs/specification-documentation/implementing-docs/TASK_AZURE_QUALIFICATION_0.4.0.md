@@ -23,6 +23,32 @@ No Azure CLI is available on the current host PATH. Node 24.21.0 is available.
 No system software, SDK dependency, subscription, role, resource or deployment
 was installed or created. The portal is retained for the owner's account step.
 
+### Follow-up in the owner's Chrome account (2026-10-10)
+
+The owner authorized using their connected Chrome browser. That session exposes
+two active subscriptions; the subscription named **Azure for Students** shows
+Owner access. This supersedes the earlier session's access blocker. Its resource
+inventory contains eight existing infrastructure resources and no Azure OpenAI
+or Foundry resource. Existing resources were not changed.
+
+The subscription name does not establish the billing offer: its billing details
+show **Usage based**, **Microsoft Azure Plan**, and monthly invoicing. A remaining
+credit notification refers to the other subscription, **Azure subscription 1**.
+Do not attribute that credit to the Students-named subscription or infer that
+its usage is covered. Credit balance, expiration, eligible subscription, spending
+protection and model quota still require qualification. Personal identities,
+account/tenant/subscription identifiers and unrelated costs are omitted here.
+
+Opened the official Microsoft Azure OpenAI creation form and prepared draft
+resource names in a dedicated test group. No final submission was made. The form
+reports missing Cognitive Services provider registration and offers Standard S0;
+availability of a creation form does not prove deployable model capacity.
+The selected-networks draft also proposes a new virtual network and subnet;
+these are not approved infrastructure and must not be submitted implicitly.
+Resolve the credited subscription and review the complete resource/network
+proposal before creation. No resource group, network, resource, deployment,
+credential or role was deliberately created, and no model invocation was made.
+
 ## Verified Microsoft documentation
 
 The [Azure for Students offer](https://azure.microsoft.com/en-us/free/students)

@@ -2132,3 +2132,29 @@ billing eligibility, model deployment, region, quota and keyless access before
 implementation/qualification or a separately reviewed finite Azure call. This
 investigation does not close the failed live gate or the remaining comparative,
 production capability/effort and platform gates.
+
+### I: Chrome Azure access and billing qualification follow-up (2026-10-10)
+
+The owner authorized their connected Chrome browser. Its signed-in account
+exposes two active subscriptions, including **Azure for Students** with Owner
+access, superseding the previous in-app account's no-subscription blocker. The
+Students-named subscription has eight existing infrastructure resources and no
+Azure OpenAI/Foundry resource. Its actual billing view says **Usage based**,
+**Microsoft Azure Plan**, monthly invoicing; a remaining-credit notice belongs
+to **Azure subscription 1**. Credit coverage must be verified per subscription,
+not inferred from its name. Asked the owner which subscription to prepare.
+Account identifiers and unrelated billing amounts are not stored in the repo.
+
+Prepared only draft Azure OpenAI resource names in the official creation form.
+The form reports missing Cognitive Services registration and offers Standard S0;
+the selected-network draft proposes additional network resources, which must
+be reviewed before submission. No final creation, role grant, subscription
+upgrade, credential entry or model call was performed. Recorded the findings
+in the Azure qualification prerequisite document. No runtime code changed.
+
+Node **24.21.0** is available. Documentation formatting and whitespace checks
+pass; runtime tests/typecheck/build were not repeated for this documentation-only
+slice. Milestone I remains in progress and J unstarted. Next: resolve the credited
+subscription, qualify balance/expiry/spending protection and model quota, then
+prepare the explicit Azure adapter and a separately bounded qualification run.
+The original failed direct-provider reservation and stop rule remain intact.
