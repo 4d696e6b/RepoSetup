@@ -2889,3 +2889,26 @@ Latest pushed source is `797b576`; ordinary and full offline hosted qualificatio
 are in progress at [run 38037017568](https://github.com/4d696e6b/RepoSetup/actions/runs/38037017568).
 Original `5565463` Linux full qualification also remains in progress. All changes
 are committed; amended I/J remain pending final supported-host outcomes.
+
+### Completed hosted run at `797b576`: remaining outer test timeouts (2026-10-10)
+
+[Run 38037017568](https://github.com/4d696e6b/RepoSetup/actions/runs/38037017568)
+completed failed. Linux passed all 62 contracts and eight concrete verification
+cases (2485.49s), then 10/11 full fixture cases; the vetted two-task success hit
+its old 1,200,000ms outer timer. The corrected context/repair fixture passed with
+retained actual acceptance; the 75-slot diagnostic and all five reference verifiers
+also passed. macOS passed 61/62 ordinary contracts; the 250-record journal case
+hit the 120,000ms default timer, preventing later steps. Retain both failed jobs.
+Ordinary CI, Platform and Installation performance at this source all passed.
+
+Align the success driver outer timer with the existing 1,800,000ms repair driver
+and benchmark ceiling. Give only the fsync-heavy 250-record journal case a finite
+300,000ms outer allowance. No product/process/trial limit, fixture criterion,
+record count, dispatch prevention or acceptance assertion changes. Recheck the
+affected journal locally and rerun complete hosted qualification. Offline I/J
+remain open until the supported-host results actually pass.
+
+All 10 journal tests passed locally after the finite outer allowance correction
+(72.36s), including all 250 records and duplicate dispatch prevention. Workspace
+and task-test typechecks, lint/format and whitespace checks passed. The corrected
+success case assertions are unchanged; complete hosted requalification is required.

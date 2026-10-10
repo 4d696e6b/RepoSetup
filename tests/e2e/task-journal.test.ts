@@ -77,7 +77,8 @@ describe("private offline campaign retention through the executor port", () => {
     });
     expect(f.ports.prepareBlock).toHaveBeenCalledTimes(25);
     expect(await readFile(path.join(f.store.folderPath, "000.json"))).toEqual(bytes);
-  });
+  }, 300000);
+
   it("reads an interrupted compilation without fabricating a trial or repeating any work", async () => {
     const f = await setup();
     const events = await prefix(f);

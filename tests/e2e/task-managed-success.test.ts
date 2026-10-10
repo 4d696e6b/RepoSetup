@@ -129,4 +129,4 @@ it("joins a vetted two-task G/E success, failed whole/routed paths and independe
   } finally {
     await block.dispose();
   }
-}, 1200000);
+}, 1800000);
