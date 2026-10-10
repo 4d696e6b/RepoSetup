@@ -2320,3 +2320,36 @@ qualification remains open. Unavailable Azure/live, real comparative and hosted
 platform gates are deferred; installed legacy checks, combined safety review,
 intentional candidate version/freeze and repeat/soak remain required. No new
 provider call, credential, installation, automatic rollback, merge or publication.
+
+### J: dependency audit and local safety review follow-up (2026-10-10)
+
+Verified current pnpm audit flags against the installed CLI help and
+[official documentation](https://pnpm.io/cli/audit). Ran read-only production and
+whole-workspace audits without fix or ignore options. Production audit **passes**
+(exit 0, zero advisories, 45 reported production/optional dependencies).
+Whole-workspace audit **fails** (exit 1, one high and one low advisory across 292
+reported dependency entries): `source-map-js@1.2.1`
+[GHSA-68fv-2mgg-jv7q](https://github.com/advisories/GHSA-68fv-2mgg-jv7q), high,
+and `esbuild@0.27.7`
+[GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr), low.
+The current advisories name patched versions 1.2.2 and 0.28.1 respectively.
+Installed graph inspection traces both through tsup/Vite/Vitest development
+tools; the frozen lockfile already contains these versions. No dependency update,
+installation, suppression or claim of a clean workspace audit was made. Candidate
+preparation records both as open dependency maintenance/safety review items.
+
+The focused current-source review inspected fixed-origin/no-redirect bounded
+provider transport, disabled SDK retries/tools/background/logging, private-input
+screening, executor-owned reserved dispatch, filtered check environments, fixed
+check recipes and owner-private/no-follow state ports. Core runtime has no provider
+SDK/UI/process/filesystem dependency introduced by the task implementation; tests
+may use filesystem fixtures. This confirms the inspected boundaries, not a full
+security sign-off or hostile-code sandbox. Combined candidate safety remains open.
+
+Added license review and production audit to the offline workflow with retained
+reports and failure-preserving pipelines. Workspace policy and shared packed
+selection fixture changes now trigger it. Workflow/document formatting and Git
+whitespace checks pass. The full local workspace regression run is still in
+progress; core **597**, registry **15**, integrations **126** and website **14**
+tests have passed, with CLI results pending. I/J qualification gates remain open;
+the audit failure is explicit and does not certify candidate readiness.

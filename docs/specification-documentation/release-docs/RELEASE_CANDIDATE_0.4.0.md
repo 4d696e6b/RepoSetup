@@ -63,6 +63,26 @@ SDK retries/provider tools/background execution, uses fixed provider transport,
 and leaves process/project effects to the executor. Core stays independent of
 provider SDK and terminal UI. The final combined safety review remains a gate.
 
+The current [pnpm audit](https://pnpm.io/cli/audit) was checked on 2026-10-10
+without fix/ignore options. **Production audit passes** (exit 0, zero advisories).
+**Whole-workspace audit fails** (exit 1) with two development-tool findings:
+
+- `source-map-js@1.2.1`, high severity
+  [GHSA-68fv-2mgg-jv7q](https://github.com/advisories/GHSA-68fv-2mgg-jv7q):
+  indexed source-map offsets can block the event loop; the advisory names 1.2.2
+  as patched. The installed dependency graph reaches it through PostCSS in
+  tsup/Vite/Vitest development paths.
+- `esbuild@0.27.7`, low severity
+  [GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr):
+  the Windows development-server file-read advisory; the advisory names 0.28.1
+  as patched. It is in tsup/Vite/Vitest development paths. RepoSetup's task
+  executor does not use esbuild's development-server mode.
+
+No dependency was installed, updated or suppressed. These remain dependency
+maintenance/safety review items, not a clean workspace audit or evidence that
+arbitrary model-authored code is safe. Qualification uses trusted frozen tools
+and inputs with finite processes and explicit host isolation limitations.
+
 ## Gates before candidate qualification
 
 - [x] Describe implemented commands, compatibility/no-migration and experimental
