@@ -2038,3 +2038,19 @@ preview. Stop on any failure/unknown usage. Independently review current source
 and frozen evidence before task/final-phase acceptance. Milestone I remains in
 progress: live success, production capability/effort evidence, 75 qualified
 comparative trials and installed/Linux/platform gates remain open; J is unstarted.
+
+### I: live smoke credential preflight blocked (2026-10-10)
+
+The owner ran the exact first-call command against the clean-source disposable
+fixture prepared at `165121a8297b1b6e814372997c203dd6dc3ae030`. The retained decoded
+result is `TASK_PROVIDER_CREDENTIAL_MISSING`; the private state directory remains
+empty. Provider construction failed before executor dispatch or allowance
+reservation: **zero live calls occurred**, and neither authorized call was spent.
+Preserved this preflight result as `credential-error.json` outside the project
+instead of overwriting it. The original baseline, source packet, limits and exact
+approval remain unchanged. The key must be exported in the same terminal process
+that launches the CLI; setting it elsewhere does not supply child-process access.
+Preparing that initial dispatch after correcting the missing environment does
+not renew an allowance or retry a sent provider request. No credential was read
+or logged. Live smoke and Milestone I remain unqualified; all later gates remain
+open. Documentation-only validation: formatting and whitespace checks passed.
