@@ -2212,3 +2212,34 @@ resource proposal, qualify deployment/region/quota/identity and actual credit
 coverage, implement the explicit provider/provenance amendment, then use a
 separately finite Azure smoke. Comparative trials, production routing evidence
 and platform qualification remain open; local tests cannot replace these gates.
+
+### I: approved Azure resource created; compiler deployment quota blocked (2026-10-10)
+
+After the owner's action-time approval, created the dedicated Azure OpenAI
+resource `reposetup-task-qualification-20261010` in
+`reposetup-task-qualification-rg`, **Azure subscription 1**, **East US**,
+**Standard S0**, using the reviewed authenticated public endpoint. Azure reported
+successful completed deployment; the resource overview shows **Active** and API
+kind **OpenAI**. No extra network resources, subscription upgrade, spending-limit
+change or role grant was performed. Keys were not revealed, copied or persisted.
+
+Cancelled the new Foundry interface's proposed separate project/resource with
+automatic App Insights. The classic Azure OpenAI interface recognizes the
+approved resource and shows no model deployments. Its quota page, with the
+credited subscription selected and all quota shown, displays zero for
+`gpt-6.1-sol` GlobalStandard / Global and DataZoneStandard / APAC, EUR, US.
+The model's version **2026-09-29** deployment draft confirms **Insufficient quota**,
+with no eligible location for both Global Standard and Data Zone Standard; the
+deployment button is disabled. Cancelled the draft. No model deployment, quota
+request, provisioned-throughput purchase or model call was submitted.
+
+Node **24.21.0** is available. Documentation formatting and whitespace checks
+pass. Runtime source is unchanged, so runtime tests/typecheck/build were not
+repeated for this documentation-only slice. Milestone I remains in progress;
+J is unstarted. Next: obtain usable compiler model quota (or independently
+qualify an alternative), then implement the explicit Azure provider/provenance
+amendment and keyless authentication before a separately bounded live smoke.
+The original direct-provider unknown reservation and stop rule remain intact;
+comparative trials, production routing evidence and platform acceptance remain
+open. Resource creation does not establish keyless data-plane access or actual
+model-usage credit coverage.

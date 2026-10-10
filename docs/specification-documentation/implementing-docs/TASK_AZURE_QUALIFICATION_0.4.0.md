@@ -82,6 +82,43 @@ earlier finite direct-OpenAI allowance does not authorize an unbounded Azure
 campaign. An explicit Azure contract/adapter and bounded reviewed smoke still
 precede any RepoSetup Azure model calls.
 
+### Approved resource creation (2026-10-10)
+
+The owner approved the exact resource proposal at action time. Submitted
+**Create** once; Azure reported **Deployment succeeded** and **Your deployment
+is complete**. The resource overview confirms **Active**, API kind **OpenAI**,
+**East US**, **Standard S0**, in the dedicated group named above, on **Azure
+subscription 1**. No additional network resources, subscription upgrade,
+spending-limit change, role grant or model invocation was performed. Keys were
+not revealed, copied or persisted. Resource creation does not establish model
+capacity, keyless data-plane access or billable model-use credit coverage.
+
+The new Foundry portal could not automatically set up a project and offered a
+separate resource/project with automatically provisioned App Insights. Cancelled
+that draft without submitting it. The classic Azure OpenAI portal recognizes the
+approved resource and exposes its existing deployment and quota management;
+use that surface without upgrading the resource or adding project infrastructure.
+No model deployment or Azure adapter is enabled yet. The original direct-provider
+stop rule and retained unknown reservation remain unchanged.
+
+The classic quota page, explicitly scoped to **Azure subscription 1**, with
+**Show all quota** enabled and search `gpt-6.1-sol`, displays **0** quota allocation
+for **GlobalStandard / Global** and **DataZoneStandard / APAC, EUR, US**. Each
+scope offers **Request quota**. Its column help identifies ordinary model quota
+as thousands of tokens per minute. These are portal observations, not measured
+usage or proof that every model/region is unavailable. No quota request was
+submitted; usable compiler deployment capacity remains unqualified.
+
+The base-model picker lists `gpt-6.1-sol` for chat-completion/Responses, but its
+deployment draft for version **2026-09-29** reports **Insufficient quota for
+selected options** and **no locations with enough quota**, for both **Data Zone
+Standard** and **Global Standard**. The final deployment action is disabled.
+Cancelled this draft; no model was deployed. Model catalog listing and resource
+creation therefore do not remove the live qualification blocker. Quota approval
+or another independently qualified model/subscription is required before a live
+run. No provisioned-throughput reservation, quota request or paid invocation was
+submitted.
+
 ## Verified Microsoft documentation
 
 The [Azure for Students offer](https://azure.microsoft.com/en-us/free/students)
