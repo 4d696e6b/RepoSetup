@@ -121,3 +121,19 @@ remediation and the wire correction. The explicit host isolation, empirical live
 provider/routing, exact installed/platform artifact and repeated qualification/soak
 limits remain release blockers. Do not infer independent external security
 certification, a penetration test or completion of I/J from this source review.
+
+## Offline acceptance provenance recheck — 2026-10-10
+
+For the owner-selected offline I/J scope, compared production core/CLI source at
+reviewed `536a090` against tested `5565463`, excluding test modules and fixture
+helpers: no production source differences. Compared `1d2638e` and `5565463` likewise;
+no production source differences. Later portability/deadline fixes are in test,
+fixture, workflow or documentation files. Installed diagnostic CLI bytes match
+across Linux/macOS/Windows at
+`sha256:7a4942e2e93d21cde4325be6b6aeb9e532307f3da50fc05c2b5e51e0fcbbf735`.
+
+The catalog regression passed again, retaining unconfirmed production capability
+profiles. Existing environment credentials, process/write ownership, strict
+proposal validation and scope limits are unchanged. This provenance check is not
+an external security audit, hostile-host isolation claim or release freeze.
+See the [offline acceptance amendment](../implementing-docs/OFFLINE_ACCEPTANCE_0.4.0.md).
