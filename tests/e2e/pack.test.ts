@@ -134,8 +134,16 @@ describe("npm pack artifact", () => {
       ["--json", "task", "compile", "--review", fixture.reviewPath, "--draft", fixture.draftPath],
       { cwd: fixture.project },
     );
-    expect(compiled.exitCode, compiled.stdout + compiled.stderr).toBe(0);
-    expect(JSON.parse(compiled.stdout)).toMatchObject({ kind: "task_compilation" });
+    if (process.platform === "win32") {
+      expect(compiled.exitCode, compiled.stdout + compiled.stderr).toBe(3);
+      expect(JSON.parse(compiled.stdout)).toMatchObject({
+        kind: "error",
+        error: { code: "TASK_PROFILE_UNSUPPORTED" },
+      });
+    } else {
+      expect(compiled.exitCode, compiled.stdout + compiled.stderr).toBe(0);
+      expect(JSON.parse(compiled.stdout)).toMatchObject({ kind: "task_compilation" });
+    }
     expect(compiled.stdout).not.toContain("PRIVATE_DENIED_MARKER");
     expect(await inventory(fixture.project)).toEqual(before);
 
@@ -163,11 +171,12 @@ describe("npm pack artifact", () => {
         qualification: false,
         artifactHash: `sha256:${sha256}`,
         packageVersion: cliPackageVersion(),
+        taskCompilation: process.platform === "win32" ? "unsupported_profile_rejected" : "passed",
         platform: process.platform,
         architecture: process.arch,
         node: process.version,
         scope:
-          "Temporary npm installation, aliases, local task compilation and legacy dry-run; no live provider or final candidate qualification.",
+          "Temporary npm installation, aliases, task profile boundary and legacy dry-run; no live provider or final candidate qualification.",
       })}\n`,
     );
   });

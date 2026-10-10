@@ -2614,3 +2614,16 @@ outside their gated suites. Added the same explicit Windows skip to those two
 cases; both cases pass locally (2 passed, 17 deselected). Workspace typecheck and
 lint passed. Earlier CI/platform runs were cancelled as superseded; those
 cancellations are not qualification successes. Clean hosted results remain pending.
+
+At `1d2638e`, hosted Windows passed 911 workspace tests with 127 explicitly POSIX
+fixture skips. Its legacy end-to-end run passed 133 tests with one existing skip,
+but failed the installed task-compilation smoke: that added test incorrectly
+required success on Windows. Preserve the installed artifact, alias and legacy
+checks on every platform, and require `TASK_PROFILE_UNSUPPORTED`/exit 3 for Windows
+task compilation instead. Both branches still check denied-marker exclusion and
+unchanged project inventory. The installed receipt now records the task profile
+outcome. Local installed smoke passed (12.29s); task-test typecheck, lint/format and
+whitespace checks passed. Hosted Windows must establish the negative branch.
+Linux offline contracts passed with the portable fingerprints and have reached
+the full real-tool suite. Keep that in-progress run's source identity separate
+from this installed-smoke-only correction; no runtime artifact bytes changed.
