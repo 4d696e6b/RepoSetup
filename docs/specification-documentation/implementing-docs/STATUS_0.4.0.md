@@ -2859,3 +2859,21 @@ Workspace typecheck, task-test typecheck, lint/format and whitespace checks pass
 for the outer-timer/workflow correction. The affected repair recheck is running;
 no pass is claimed yet. Commit the reviewable timer change before its hosted
 requalification. I/J remain pending the actual full supported-host results.
+
+Latest ordinary CI at `f6b245c` failed one initial types fixture snapshot with
+`TASK_CHECK_BLOCKED` (61/62 contracts passed). The same generic inventory failure
+previously occurred on macOS, so retain it as unresolved rather than a pass.
+Disposable Git setup now disables automatic maintenance and garbage collection
+per command (`maintenance.auto=false`, `gc.auto=0`), preventing optional post-command
+Git housekeeping during immutable snapshots. Official
+[Git config](https://git-scm.com/docs/git-config) documents automatic maintenance
+and detached housekeeping. This removes an uncontrolled fixture activity; the
+original failure cause has not been proven. No production verifier guard is relaxed.
+Re-run all five frozen compile/replay fixtures and hosted CI; record further
+failures if the housekeeping correction does not resolve the issue.
+
+All five focused frozen compile/replay fixtures passed locally (4.70s). Workspace
+and task-test typechecks, lint/format and whitespace checks passed. This supports
+fixture setup but is not proof of the original intermittent failure's cause.
+Production code and privacy/drift checks remain unchanged; hosted requalification
+and the focused real-tool repair check remain pending.
