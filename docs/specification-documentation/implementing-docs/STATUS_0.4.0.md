@@ -2531,3 +2531,29 @@ remains deferred. The next milestone work is **I qualification when its external
 prerequisites are available**, followed by J candidate freeze/qualification; no
 placeholder functionality, package-version bump, system software, website source,
 rollback, branch merge or publication was introduced.
+
+### I: no-key hosted qualification started; checkout prerequisite fixed (2026-10-10)
+
+Owner authorized uploading the development branch and a draft PR for real hosted
+platform checks. [Draft PR #20](https://github.com/4d696e6b/RepoSetup/pull/20) targets
+the existing `codex/0.3.0-candidate-integration` baseline; no merge or release.
+The initial source **83a370b** started no-key task qualification
+[38024137945](https://github.com/4d696e6b/RepoSetup/actions/runs/38024137945),
+plus existing CI/platform/performance jobs. Task Linux build/typecheck/lint/audits
+passed and its fixture suite is running; no completed platform result is inferred.
+The full expensive local task suite is also running with both provider credentials
+explicitly empty and serial tests. Results remain pending.
+
+Local Docker client exists, but bounded read-only server/image queries timed out.
+Stopped only the queries created for this task; existing Docker services/processes
+were not modified. No software or image was installed. GitHub's public standard
+runner alternative is documented in [official runner documentation](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
+No model API credit or live provider call is required for these checks.
+
+Initial general CI and all three platform jobs failed an existing catalog
+provenance test because the default shallow checkout omitted its pinned ancestor
+`a410c1d39179d41ed14aae2740470a7267a25282`. The commit/file exists in this branch's
+history and the test passes locally. Added `fetch-depth: 0` to only the affected
+CI/platform checkout steps, using [official checkout documentation](https://github.com/actions/checkout).
+The test/assertion and website source are unchanged. Failed initial runs are
+retained; reruns must establish the fix and later platform results separately.
