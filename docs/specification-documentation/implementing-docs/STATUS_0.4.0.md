@@ -2158,3 +2158,19 @@ slice. Milestone I remains in progress and J unstarted. Next: resolve the credit
 subscription, qualify balance/expiry/spending protection and model quota, then
 prepare the explicit Azure adapter and a separately bounded qualification run.
 The original failed direct-provider reservation and stop rule remain intact.
+
+### I: selected Students credit balance remains unverified (2026-10-10)
+
+The owner selected **Azure for Students (verify student credit first)**. Followed
+the current Education FAQ's official Azure Sponsorships balance link and used
+the same university account that owns the subscription. The authenticated Balance
+page reports **"This account does not have an active Sponsorship."** No Students
+balance or expiration was established, and no other account's credit was used.
+The FAQ also clarifies that Students can receive monthly usage invoices covered
+by credit; invoicing alone is not proof of payable charges. No resource draft
+was submitted, model called, credential created, subscription upgraded or
+student offer activated. Account credit coverage is the remaining immediate
+blocker; resolve the student benefit through the Microsoft education/billing
+interface or support before resource submission. Milestone I stays in progress.
+
+Documentation formatting and whitespace checks pass; runtime source is unchanged.

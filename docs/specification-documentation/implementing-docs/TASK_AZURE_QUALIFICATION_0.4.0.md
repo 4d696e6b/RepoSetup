@@ -49,6 +49,18 @@ Resolve the credited subscription and review the complete resource/network
 proposal before creation. No resource group, network, resource, deployment,
 credential or role was deliberately created, and no model invocation was made.
 
+The owner selected **Azure for Students (verify student credit first)** rather
+than the other subscription. Followed the Education FAQ's official Sponsorships
+balance portal and signed in with the same university account as the subscription.
+Its Balance page says **"This account does not have an active Sponsorship."**
+This does not establish student credit coverage or an available balance; it also
+does not prove all possible billing benefits are absent. The FAQ notes that
+Students users can receive monthly usage invoices covered by credits, so monthly
+invoicing alone is not proof of pay-as-you-go charges. No upgrade or new offer
+enrollment was performed. The next account step is to resolve/activate the actual
+student benefit or obtain confirmation of its credit coverage through Microsoft's
+education/billing interface or support before submitting the resource draft.
+
 ## Verified Microsoft documentation
 
 The [Azure for Students offer](https://azure.microsoft.com/en-us/free/students)
