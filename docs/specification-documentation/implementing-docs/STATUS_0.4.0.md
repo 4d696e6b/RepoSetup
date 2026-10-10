@@ -2627,3 +2627,38 @@ whitespace checks passed. Hosted Windows must establish the negative branch.
 Linux offline contracts passed with the portable fingerprints and have reached
 the full real-tool suite. Keep that in-progress run's source identity separate
 from this installed-smoke-only correction; no runtime artifact bytes changed.
+
+### Hosted results and explicit expensive-test partition (2026-10-10)
+
+At `127d220`, [Windows platform job](https://github.com/4d696e6b/RepoSetup/actions/runs/38025645061)
+passed: 911 workspace tests, 127 POSIX skips, then 134 legacy end-to-end tests and
+one existing skip. Installed task compilation correctly rejected the unsupported
+profile without project effects. Its installed tarball hash matches the local
+macOS artifact (`7a4942e2e93d21cde4325be6b6aeb9e532307f3da50fc05c2b5e51e0fcbbf735`).
+[Installation performance](https://github.com/4d696e6b/RepoSetup/actions/runs/38025645048)
+passed on all three platforms again.
+
+The [Linux CI run at `1d2638e`](https://github.com/4d696e6b/RepoSetup/actions/runs/38025138771)
+and both POSIX platform jobs failed concrete verification qualification. Linux CI
+retained 1,036 passes and two outer test timeouts (600s managed compilation/repair;
+180s task-plus-phase verification). Other CLI files finished in approximately
+22 seconds; sustained contention is not established as the cause. This is failed
+qualification, not a successful production run.
+
+Separate the eight existing concrete verifier cases from ordinary CLI tests with
+explicit Vitest configurations. The credential-free POSIX qualification workflow
+now runs them serially and retains their log before running the full task fixture
+suite. No test or assertion is deleted. The outer managed qualification timer is
+now 30 minutes and the paired task/phase timer 10 minutes, covering multiple full
+inventories, setup and independently bounded executions. Existing per-process,
+provider, task resource and benchmark trial allowances remain unchanged. These
+outer timer increases are explicit test-harness changes, not evidence of better
+performance or a waiver of product acceptance. The complete concrete suite is
+being rerun locally; hosted requalification is still required.
+
+Ordinary workspace regression passed 1,030/1,030 with the explicit partition
+(CLI 278); the excluded eight cases are pending, not counted as passes. Workspace
+and task-test typechecks, lint/format and whitespace checks passed. The earlier
+full offline Linux run continues against its own frozen `1d2638e` source identity;
+its reports must not be combined with another source as one candidate qualification.
+No provider key, model call, package-version change or runtime feature was added.

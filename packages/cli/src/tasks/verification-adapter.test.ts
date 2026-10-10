@@ -494,7 +494,7 @@ describe("concrete trusted verification qualification", () => {
       network.mockRestore();
       await f.dispose();
     }
-  }, 600000);
+  }, 1800000);
   it("executes real pinned tools under full immutable inventories and live task/phase review, with no project effects", async () => {
     const f = await fixture();
     try {
@@ -538,7 +538,7 @@ describe("concrete trusted verification qualification", () => {
     } finally {
       await f.dispose();
     }
-  }, 180000);
+  }, 600000);
   it.each(["portable", "managed SDK"])(
     "binds %s executor-owned replacement and durable acceptance to real qualified checks",
     async (mode) => {

@@ -73,6 +73,11 @@ jobs:
         run: |
           set -euo pipefail
           pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts 2>&1 | tee task-qualification-evidence/contracts.log
+      - name: Concrete CLI verification and routed repair qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter rsetup exec vitest run --config vitest.verification.config.ts 2>&1 | tee task-qualification-evidence/cli-verification.log
       - name: Real tools, scoped writes, durable acceptance and failure accounting
         shell: bash
         run: |
