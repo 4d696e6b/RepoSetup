@@ -2353,3 +2353,31 @@ whitespace checks pass. The full local workspace regression run is still in
 progress; core **597**, registry **15**, integrations **126** and website **14**
 tests have passed, with CLI results pending. I/J qualification gates remain open;
 the audit failure is explicit and does not certify candidate readiness.
+
+### J: final available local regression result (2026-10-10)
+
+The full `pnpm test` run completed with **exit 0** on macOS arm64 / Node
+**24.21.0**: **1,038 tests across 121 files pass** — core 597/64, registry 15/4,
+integrations 126/18, CLI 286/33 and existing website 14/2. The CLI suite took
+918.90 seconds, including its actual no-key managed/tool/filesystem qualification.
+Website tests emitted tar locale warnings but passed; website source is unchanged.
+This supersedes the pending CLI result in the preceding entry. The earlier
+cancelled full expensive e2e verifier rerun remains exit 130, not a pass.
+
+Available local validation is complete for these changes: workspace build,
+workspace and task-test typechecks, lint, 61 ordinary offline task tests, nine
+targeted CLI command tests, eight rebuilt extracted packed checks, one targeted
+real task/final-phase verifier fixture, changed-document/workflow formatting,
+repository-local links, whitespace, dependency licenses and production audit pass.
+No source logic or dependency changed after those applicable checks. The full
+workspace dependency audit still fails with the two recorded development-tool
+advisories; it is not waived or disguised as passing validation.
+
+All available work in this slice is committed: offline POSIX CI with identity,
+diagnostic retention and license/production-audit checks; accurate help and user
+guide; README/changelog/contract status and no-migration notes; candidate
+preparation and explicit review results. I and J remain unqualified because real
+live/comparative/platform/installed evidence, combined safety/dependency resolution,
+intentional version/artifact freeze and repeat/soak gates remain open. Azure quota
+is deferred as requested. No new model calls, API keys, dependency installation,
+package-version bump, website source change, merge or publication occurred.
