@@ -2483,3 +2483,21 @@ closure revision
 This is frozen-reference verifier evidence, not a live comparative trial or full
 expensive campaign pass. Full workspace regression remains pending. No source
 logic changed after this applicable verifier result.
+
+### J: complete regression timeout and isolated recheck (2026-10-10)
+
+The complete workspace regression finished **exit 1**: core 597, registry 15,
+integrations 126 and existing website 14 pass; CLI **285 pass / one fails**
+across 33 files (978.69 seconds). The single failure is the concrete real pinned
+verification task/phase test's **180,000 ms timeout**, not an assertion failure.
+Concurrent ordinary fixture and targeted verifier runs overlapped this suite, but
+contention is a hypothesis, not an established cause. The website's existing tar
+locale warnings did not fail its tests. This run is not claimed passing.
+
+An isolated rerun of only that timed-out case is in progress with the same
+180,000 ms limit and no competing validation jobs. No assertion, process deadline,
+closure check or test timeout was weakened to hide the failure. The 30 targeted
+provider tests separately validate the final wire correction; the full run began
+before that correction. Final source checks and fixture/installed/verifier passes
+are recorded above, but this unresolved regression currently blocks completion
+claims for the slice.
