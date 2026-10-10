@@ -31,6 +31,11 @@ These establish local boundaries and accounting, not model quality or savings.
 The required qualified comparative trials, production model/effort evidence,
 separately authorized live smoke and remaining installed/Linux qualification stay
 open. Per owner steering, unavailable prerequisites are skipped as unverified.
+The current development lockfile has both advisory fixes, clean full/production
+audits, re-frozen fixture environment identities and a recorded combined source
+safety review. The installed npm artifact smoke now covers local portable task
+compilation and both aliases on macOS; exact candidate and other-platform
+qualification remain open.
 J now has owner-approved documentation/review preparation while blocked I
 prerequisites are deferred. Its candidate qualification remains open: no version
 bump, release artifact freeze, tag or publication has occurred. The

@@ -47,6 +47,12 @@ holdouts. Journals retain compilation/context/repair failures and overhead;
 unknown usage is explicit. Existing extracted tarball tests cover eight task,
 alias and legacy preset/context dry-run cases without installing dependencies.
 They do not establish an installed-artifact or real installer qualification.
+The extended npm-install smoke also passes on macOS arm64 / Node 24.21.0:
+both aliases, installed portable compilation with unchanged project/private-context
+guards, registry/version checks and legacy dry-run. Its diagnostic tarball is
+`sha256:7a4942e2e93d21cde4325be6b6aeb9e532307f3da50fc05c2b5e51e0fcbbf735`.
+This narrows the installed-development evidence gap, but is not a frozen candidate
+or real legacy installation/platform qualification.
 
 The [offline workflow](../../../.github/workflows/task-qualification.yml) runs
 contract and expensive real-tool suites on Linux x64 and macOS arm64 / Node 24.
@@ -85,7 +91,7 @@ remain distinct gates.
       limitations in help, README, changelog and user guide.
 - [x] Prepare credential-free platform qualification infrastructure and identify
       retained source/runtime/lockfile and diagnostic evidence.
-- [x] Run current installed dependency-license review without dependency changes.
+- [x] Run current installed dependency-license review for the reviewed lockfile.
 - [x] Record combined source safety/dependency/provider/support review; repeat affected review after candidate changes.
 - [ ] Obtain actual hosted Linux/macOS results, installed packed-artifact and
       applicable legacy/platform qualification for the same frozen source/artifact.
@@ -97,7 +103,11 @@ remain distinct gates.
 - [ ] Intentionally select a candidate version only after prerequisites, then
       record and test the same identified packed artifact.
 - [ ] Complete required repeated-source/platform qualifications and established
-      soak gates; review remaining release blockers.
+      soak gates; review remaining release blockers. The inherited gate requires
+      three consecutive full qualifications of the same frozen candidate and seven
+      calendar days without an open P0/P1, data-loss or security defect. The
+      [prior candidate protocol](./RELEASE_CANDIDATE_0.3.0.md) defines this gate;
+      no 0.4.0 soak clock has started.
 
 The first direct-provider attempt stopped with unknown usage and no accepted plan;
 its reservation and no-retry rule remain intact. Azure resource creation succeeded,
