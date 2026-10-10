@@ -2877,3 +2877,15 @@ and task-test typechecks, lint/format and whitespace checks passed. This support
 fixture setup but is not proof of the original intermittent failure's cause.
 Production code and privacy/drift checks remain unchanged; hosted requalification
 and the focused real-tool repair check remain pending.
+
+The corrected focused repair test passed locally: one test, 687.26s, Node 24.21.0
+macOS arm64. Its diagnostic retained three observed simulated trials, one accepted
+actual implementation, 72 missing comparative trials, six coding dispatches,
+27 managed process calls, five reviewer calls and three private terminal records.
+The context/implementation/repair request purposes were retained. The receipt keeps
+`qualification: false` and unknown provider usage/cost; source was dirty during
+this development check, so it is not a clean hosted or frozen candidate result.
+Latest pushed source is `797b576`; ordinary and full offline hosted qualification
+are in progress at [run 38037017568](https://github.com/4d696e6b/RepoSetup/actions/runs/38037017568).
+Original `5565463` Linux full qualification also remains in progress. All changes
+are committed; amended I/J remain pending final supported-host outcomes.
