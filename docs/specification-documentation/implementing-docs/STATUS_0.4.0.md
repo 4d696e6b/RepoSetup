@@ -2662,3 +2662,27 @@ and task-test typechecks, lint/format and whitespace checks passed. The earlier
 full offline Linux run continues against its own frozen `1d2638e` source identity;
 its reports must not be combined with another source as one candidate qualification.
 No provider key, model call, package-version change or runtime feature was added.
+
+At `9af48a8`, ordinary CI and Linux/macOS platform checks passed. macOS retained
+1,030 ordinary workspace passes, 134 legacy end-to-end passes (one existing skip)
+and 62 ordinary task-contract passes; its Node runtime was 24.20.0, while the local
+and previously observed Windows runtimes were 24.21.0. Keep exact runtime identities
+in evidence; this is not a frozen candidate qualification across identical runtimes.
+
+Windows failed a cold selection artifact setup hook at 60 seconds twice, including
+a same-commit targeted job retry. It is not an acceptance assertion failure, and
+57 packed cases were not exercised. The existing dedicated selection configuration
+already permits 180 seconds for setup. Remove its two test files from the generic
+end-to-end configuration and explicitly run that unchanged dedicated configuration
+on every platform job. All existing selection cases remain in platform coverage;
+no selection/product assertions or configured suite allowances change. Local
+selection qualification passed 105/105 (19.55s). Workspace and selection-test
+typechecks, lint/format and whitespace checks passed.
+
+The local serial concrete CLI verifier suite completed 8/8 tests (956.10s), including
+actual trusted tools, scoped replacement, simulated compilation/repair and fresh
+task/phase acceptance. It started during development and is not a clean candidate
+qualification. Its larger outer timers enabled completion; no runtime or benchmark
+limit changed. Both hosted offline workflows remain in progress at their separately
+recorded source identities. Full hosted verifier results, production model evidence,
+release freeze and soak are still open.

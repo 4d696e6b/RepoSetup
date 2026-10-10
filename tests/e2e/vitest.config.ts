@@ -6,6 +6,9 @@ export default defineConfig({
     exclude: [
       // The POSIX task profile has dedicated ordinary and long-running suites.
       "tests/e2e/task-*.test.ts",
+      // Packed selection has its own cold-install setup allowance.
+      "tests/e2e/selection-matrix.test.ts",
+      "tests/e2e/selection-packed.test.ts",
       "tests/e2e/golden.test.ts",
       "tests/e2e/usability-session.test.ts",
       "tests/e2e/selection-create.test.ts",

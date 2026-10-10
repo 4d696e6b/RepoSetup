@@ -42,6 +42,8 @@ jobs:
       - run: pnpm build
       - run: pnpm test
       - run: pnpm test:e2e
+      - name: Check packed selection contracts with their existing setup allowance
+        run: pnpm exec vitest run --config tests/e2e/vitest.selection.config.ts
       - name: Typecheck offline task qualification infrastructure
         if: runner.os != 'Windows'
         run: pnpm typecheck:task-tests
