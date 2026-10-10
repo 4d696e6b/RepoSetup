@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe as describeOnAllPlatforms, expect, it, vi } from "vitest";
 import { mkdtemp, mkdir, writeFile, readFile, readdir, rm, realpath } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -173,6 +173,10 @@ async function fixture() {
   };
 }
 const RUN = "123e4567-e89b-42d3-a456-426614174000";
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("portable task CLI", () => {
   it("compiles a phase by heading and accepts its receipt as next/status input without effects", async () => {
     const f = await fixture();

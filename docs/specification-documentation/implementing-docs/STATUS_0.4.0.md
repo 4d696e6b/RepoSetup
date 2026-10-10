@@ -2557,3 +2557,50 @@ history and the test passes locally. Added `fetch-depth: 0` to only the affected
 CI/platform checkout steps, using [official checkout documentation](https://github.com/actions/checkout).
 The test/assertion and website source are unchanged. Failed initial runs are
 retained; reruns must establish the fix and later platform results separately.
+
+### No-key hosted qualification harness corrections (2026-10-10)
+
+Authorized draft PR [#20](https://github.com/4d696e6b/RepoSetup/pull/20) remains
+unmerged. At source `c3642e6`, [installation performance](https://github.com/4d696e6b/RepoSetup/actions/runs/38024375747)
+passed on Ubuntu 24.04 x64, macOS 15 arm64 and Windows 2025 x64. This is legacy
+installation evidence, not managed model or task qualification.
+
+The [offline task run](https://github.com/4d696e6b/RepoSetup/actions/runs/38024375690)
+failed on both POSIX hosts at frozen fixture contracts: the dependency fingerprint
+included pnpm-generated `node_modules/.bin` launchers containing absolute checkout
+paths. Exclude precisely that generated directory only when fingerprinting tool
+package payloads. Ordinary fixture/project inventories remain strict; other nested
+dependency files remain fingerprinted. Trusted verification executes pinned package
+entry points directly and retains its complete, host-specific runtime/dependency
+closure validation. Added a regression proving launcher relocation is neutral,
+actual payload edits change the fingerprint, and ordinary inventories include
+launchers. Re-froze only environment/recipe fixture revisions; seeds, references,
+incorrect variants, public/holdout criteria and resource allowances are unchanged.
+The shared dependency artifact is now
+`sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64`.
+
+The Windows workspace job also failed POSIX task filesystem fixtures, with
+`TASK_PROFILE_UNSUPPORTED` and private-mode/closure failures. Mark those concrete
+CLI filesystem fixture suites as Windows-skipped, preserving pure domain/provider
+and existing installer coverage. This does not implement or qualify Windows tasks.
+The legacy end-to-end configuration now excludes task suites; the dedicated POSIX
+workflow runs both ordinary and expensive task suites. Increase general CI/platform
+job allowances to 60 minutes for existing real-tool adapter tests without changing
+individual test/process deadlines or assertions.
+
+The local full verifier attempt on clean `83a370b` was stopped with exit 130 when
+these fixture corrections required a new freeze. It emitted one diagnostic repair
+receipt (3 simulated observations, 1 accepted, 72 missing), but did not finish the
+suite; it is not a passed qualification. Subsequent development checks and clean
+hosted reruns must be reported separately. No provider credentials were used, no
+live model call was made, and no website, runtime feature or package version changed.
+Milestones I/J remain open: production model quality/cost and capability evidence,
+then authorized candidate freeze, three full repeat qualifications and seven-day
+soak. Next work is to resolve and retain actual hosted rerun results.
+
+Validation of these harness corrections: local ordinary task contracts passed
+62/62 tests in 10 files (98.26s), including the new payload fingerprint regression;
+explicit task environment tests passed 3/3. Workspace typecheck, task-test
+typecheck, lint/format and whitespace checks passed. Core rebuild during fixture
+freeze passed; runtime/package source is unchanged. These local development
+receipts have `sourceDirty: true` and do not count as clean candidate qualification.

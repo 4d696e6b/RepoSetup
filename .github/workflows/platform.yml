@@ -25,7 +25,8 @@ jobs:
             architecture: x64
             node: 24
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 30
+    # Full workspace task adapter checks include real pinned tools.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:

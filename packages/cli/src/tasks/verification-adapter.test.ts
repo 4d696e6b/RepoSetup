@@ -1,5 +1,5 @@
 import { createVerificationFixture } from "./verification-fixture.test-helper.js";
-import { describe, expect, it, vi } from "vitest";
+import { describe as describeOnAllPlatforms, expect, it, vi } from "vitest";
 import {
   mkdtemp,
   mkdir,
@@ -56,6 +56,10 @@ async function fixture(lintEffect = false, additionBug = false) {
   );
   return createVerificationFixture(review, lintEffect, additionBug);
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("concrete trusted verification qualification", () => {
   it("completes no-key SDK compilation, routed repair of a failed edit and fresh frozen task/phase acceptance", async () => {
     const f = await fixture(false, true);

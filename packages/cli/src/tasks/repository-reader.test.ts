@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe as describeOnAllPlatforms, expect, it } from "vitest";
 import { mkdtemp, mkdir, writeFile, rm, symlink, link, rename, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -25,6 +25,10 @@ async function fixture() {
   if (!result.success) throw result.error;
   return { root, reader: result.data };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("read-only task repository adapter", () => {
   it("copies reviewed reader authority and enforces deny selectors", async () => {
     const { root } = await fixture();

@@ -1,8 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { describe as describeOnAllPlatforms, expect, it } from "vitest";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { taskByteHash, sealTaskRunCheckpoint, validateTaskRunCheckpoint } from "@reposetup/core";
 import { runFixture, LIMITS } from "./run-fixture.test-helper.js";
+
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
 
 describe("durable focused repair with actual scoped filesystem writes", () => {
   it("retains failed edits, sends only bound failure metadata and unlocks consumers after fresh acceptance", async () => {

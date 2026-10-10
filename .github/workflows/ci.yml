@@ -9,7 +9,8 @@ jobs:
   fast:
     name: Fast checks
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Full workspace task adapter checks include real pinned tools.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:

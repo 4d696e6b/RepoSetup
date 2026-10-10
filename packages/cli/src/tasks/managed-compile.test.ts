@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe as describeOnAllPlatforms, it, expect, vi } from "vitest";
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -126,6 +126,10 @@ async function fixture() {
     });
   return { ...f, review, draft, provider, transport, context, compile: execute };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("managed decomposition ledger and CLI", () => {
   it.each([401, 403, 429, 500])(
     "retains only HTTP %s and outcome for failed calls without releasing allowance",

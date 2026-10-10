@@ -1,8 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe as describeOnAllPlatforms, it, expect } from "vitest";
 import { mkdir, mkdtemp, realpath, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { validateManagedTaskProject } from "./managed-project.js";
+
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
 
 describe("narrow managed project metadata", () => {
   it("requires preinstalled single-package npm/pnpm metadata and rejects unsupported outputs without execution", async () => {

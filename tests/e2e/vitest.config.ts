@@ -4,6 +4,8 @@ export default defineConfig({
   test: {
     include: ["tests/e2e/**/*.test.ts"],
     exclude: [
+      // The POSIX task profile has dedicated ordinary and long-running suites.
+      "tests/e2e/task-*.test.ts",
       "tests/e2e/golden.test.ts",
       "tests/e2e/usability-session.test.ts",
       "tests/e2e/selection-create.test.ts",

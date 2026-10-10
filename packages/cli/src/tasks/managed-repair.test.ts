@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe as describeOnAllPlatforms, it, expect, vi } from "vitest";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -234,6 +234,10 @@ async function fixture(
   };
   return { f, transport, execute, plan };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("serial managed repair and trusted routing (offline SDK transport)", () => {
   it("repairs only the failed producer and independently escalates baseline capability on its third attempt", async () => {
     const { f, transport, execute } = await fixture("repair");

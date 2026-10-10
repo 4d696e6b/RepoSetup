@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe as describeOnAllPlatforms, expect, it, vi } from "vitest";
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -198,6 +198,10 @@ async function openedTrial() {
   const stateFile = path.join(t.stateRoot, taskByteHash(t.root).slice(7), `${runId}.json`);
   return { s, t, c, execute, runId, inspect, stateFile, created: created.checkpoint };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("actual failed and uncertain benchmark run evidence", () => {
   it.each(["invalid", "uncertain"])(
     "retains %s coding intent, exact pre-dispatch byte metadata and honest usage provenance",

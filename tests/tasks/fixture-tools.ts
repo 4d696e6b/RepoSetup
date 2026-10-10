@@ -18,10 +18,21 @@ const managedToolRoots = ["typescript", "eslint", "typescript-eslint", "vitest"]
   name,
   root: path.dirname(require.resolve(`${name}/package.json`)),
 }));
-export async function inventory(root: string): Promise<TaskBenchmarkFixture["seedFiles"]> {
+export async function inventory(
+  root: string,
+  options: { ignorePackageLaunchers?: boolean } = {},
+): Promise<TaskBenchmarkFixture["seedFiles"]> {
   const rows: TaskBenchmarkFixture["seedFiles"] = [];
   async function walk(folder: string) {
     for (const name of (await readdir(folder)).sort()) {
+      // pnpm generates these wrappers with absolute checkout paths. They are not
+      // package payload and trusted recipes launch pinned entry points directly.
+      if (
+        options.ignorePackageLaunchers &&
+        path.relative(root, path.join(folder, name)).split(path.sep).join("/") ===
+          "node_modules/.bin"
+      )
+        continue;
       const full = path.join(folder, name),
         stat = await lstat(full);
       if (stat.isSymbolicLink()) throw new Error("Fixture links are forbidden");
@@ -60,7 +71,10 @@ export async function fixtureManifest(fixtureId: string): Promise<TaskBenchmarkF
     lockfileHash: taskByteHash(await readFile(path.join(workspaceRoot, "pnpm-lock.yaml"))),
     dependencyArtifactId: taskContentHash(
       await Promise.all(
-        managedToolRoots.map(async ({ name, root }) => ({ name, files: await inventory(root) })),
+        managedToolRoots.map(async ({ name, root }) => ({
+          name,
+          files: await inventory(root, { ignorePackageLaunchers: true }),
+        })),
       ),
     ),
     recipeRevision: taskContentHash(

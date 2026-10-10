@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe as describeOnAllPlatforms, it, expect, vi } from "vitest";
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -115,6 +115,10 @@ const request = (runId: string) => ({
   maxOutputTokens: 4096,
   timeoutMs: 1000,
 });
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("durable managed SDK dispatch", () => {
   it("rejects a changed baseline under the creation lease without writing a checkpoint", async () => {
     const f = await runFixture();
