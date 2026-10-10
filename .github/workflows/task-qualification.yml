@@ -60,7 +60,7 @@ jobs:
           test -z "$(git status --porcelain)"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           mkdir -p task-qualification-evidence
-          node -e 'const fs = require("node:fs"); const crypto = require("node:crypto"); fs.writeFileSync("task-qualification-evidence/identity.json", JSON.stringify({schemaVersion: 1, sourceSha: process.env.GITHUB_SHA, platform: process.platform, architecture: process.arch, node: process.version, lockfileHash: crypto.createHash("sha256").update(fs.readFileSync("pnpm-lock.yaml")).digest("hex"), providerMode: "simulated", liveQualification: false}, null, 2) + "\n")'
+          node -e 'const fs = require("node:fs"); const crypto = require("node:crypto"); fs.writeFileSync("task-qualification-evidence/identity.json", JSON.stringify({schemaVersion: 1, sourceSha: process.env.GITHUB_SHA, workflowRunId: process.env.GITHUB_RUN_ID, workflowAttempt: Number(process.env.GITHUB_RUN_ATTEMPT), platform: process.platform, architecture: process.arch, node: process.version, lockfileHash: crypto.createHash("sha256").update(fs.readFileSync("pnpm-lock.yaml")).digest("hex"), providerMode: "simulated", liveQualification: false}, null, 2) + "\n")'
       - name: Review dependency licenses and all advisories without fixes
         shell: bash
         run: |
@@ -93,7 +93,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: offline-task-evidence-${{ matrix.runner }}-${{ github.sha }}
+          name: offline-task-evidence-${{ matrix.runner }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
           path: task-qualification-evidence/
           if-no-files-found: warn
           retention-days: 14

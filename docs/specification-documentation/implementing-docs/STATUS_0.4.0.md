@@ -2817,3 +2817,13 @@ core/CLI source is unchanged between `1d2638e` and `5565463`; subsequent fixes a
 only tests/configuration/documentation. Individually identified development evidence
 can support amended offline acceptance, but cannot become a same-source candidate
 repeat. No release version or soak clock is established.
+
+Offline evidence retention review: qualify task artifact names by workflow attempt
+and include workflow run/attempt in identity metadata, so a retry keeps the first
+failed attempt instead of reusing its artifact name. Official
+[upload-artifact documentation](https://github.com/actions/upload-artifact)
+requires unique names and rejects an existing name unless it is overwritten.
+No overwrite is used. This affects future workflow evidence only; running older
+jobs retain their original definitions and their actual outcomes must be recorded.
+The source safety provenance recheck is committed, confirming unchanged production
+core/CLI source between reviewed `536a090` and tested `5565463`.
