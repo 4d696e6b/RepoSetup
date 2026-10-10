@@ -16,6 +16,7 @@ import os from "node:os";
 import path from "node:path";
 import {
   sealTaskModelCatalog,
+  TASK_BENCHMARK_LIMITS,
   executeTaskVerification,
   executeTaskRun,
   taskByteHash,
@@ -202,7 +203,8 @@ describe("concrete trusted verification qualification", () => {
         maxProviderCalls: 3,
         maxInputTokens: 150000,
         maxOutputTokens: 12288,
-        maxWallTimeMs: 900000,
+        // Real-tool routed qualification uses the existing bounded benchmark allowance.
+        maxWallTimeMs: TASK_BENCHMARK_LIMITS.maxWallTimeMs,
         maxCostMicrousd: 1000000,
       };
       // The independent reviewer inspects current source and the frozen oracle,

@@ -2751,3 +2751,36 @@ unchanged. Local verifier-write and catalog-tamper bodies passed under the previ
 stricter timers (2 passes, six deselected, 80.71s). Workspace typecheck, lint/format
 and whitespace checks passed after the shared configuration change. Hosted full
 requalification is still required; Milestones I/J remain open.
+
+### Managed real-tool fixture allowance correction (2026-10-10)
+
+The Linux concrete suite at branch source `b5ecbe4` completed with six passes
+and two failures. The exit-zero verifier-write case hit its previous 120-second
+outer timer (corrected by `d2f9d4c`). More significantly, the managed repair case
+reached final acceptance after its fixture-specific 900,000ms run allowance;
+the executor returned `TASK_VERIFICATION_STALE` and retained an inspect-required
+durable checkpoint instead of claiming success. Total case duration was
+1,183.369s. This is a failed run, not a timing-only pass.
+
+Use `TASK_BENCHMARK_LIMITS.maxWallTimeMs` (the existing documented 1,800,000ms
+ceiling) for this no-key integration fixture. This changes only the fixture's
+explicit preference, not executor enforcement, benchmark limits, live smoke's
+900,000ms allowance, process/provider deadlines, call/token/cost ceilings or
+acceptance assertions. The smaller supplied budget remains enforced by core.
+The failed attempt is retained at
+[run 38028957975](https://github.com/4d696e6b/RepoSetup/actions/runs/38028957975).
+
+At branch source `d2f9d4c`, ordinary CI and all three platform jobs passed again.
+The superseded `b5ecbe4` macOS job and `d2f9d4c` offline qualification were cancelled
+before full qualification; neither is a pass. The separate same-source macOS
+full-fixture retry at `1d2638e` remains running. Requalify the corrected concrete
+suite and full fixture suite on both supported POSIX hosts. Milestone I remains
+open for complete hosted and production-model evidence; Milestone J remains open
+for an authorized frozen candidate, three full repeats and the seven-day soak.
+
+The corrected managed repair case passed locally (one pass, seven deliberately
+deselected); workspace typecheck, lint/format and whitespace checks passed.
+Installation performance also passed on all three platforms at `d2f9d4c`.
+These are development checks and separately identified platform results, not a
+frozen release qualification or production benchmark. The corrected hosted task
+run is the next pending check; no provider credential or paid call was used.
