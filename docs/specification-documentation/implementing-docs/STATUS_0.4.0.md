@@ -2406,3 +2406,20 @@ zero known advisories, with no suppression. Full workspace regression and the
 ordinary frozen fixture/packed suite are running; final results will follow.
 The dependency findings are remediated, but I/J's empirical, platform,
 version/artifact and repeat/soak gates remain open. No live call or publication.
+
+### J: provider wire-schema review correction (2026-10-10)
+
+Current official Structured Outputs documentation lists nested `anyOf`; direct
+inspection found Zod emitting `oneOf` for task discriminated unions. Updated the
+CLI-only wire transformation to use `anyOf` only after verifying a common required
+literal string discriminator with unique values. Unsupported overlapping unions
+fail closed. Core schemas, task artifact versions and local privacy/length/scope
+validation are unchanged. Added recursive checks for both coding/decomposition
+wire schemas; **30 provider/managed-compilation tests pass**, using fake HTTP.
+The full official provider research recheck is recorded separately. This finding
+cannot establish the cause of the historical failed smoke, and does not qualify
+remote schema/account/model/usage behavior. No live API call occurred.
+
+After the wire change, CLI build/typecheck and workspace lint pass. Workspace and
+task-test typechecks already passed after dependency remediation; core/domain
+source did not change. The full regression/fixture runs remain in progress.

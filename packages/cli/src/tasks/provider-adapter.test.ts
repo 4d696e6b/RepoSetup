@@ -259,6 +259,19 @@ describe("tool-free Responses SDK boundary", () => {
       expect(schema.type).toBe("object");
       expect(schema.additionalProperties).toBe(false);
       expect(schema.required).toEqual(Object.keys(schema.properties!));
+      const inspect = (value: unknown): void => {
+        if (!value || typeof value !== "object") return;
+        if (Array.isArray(value)) return value.forEach(inspect);
+        const node = value as Record<string, unknown>;
+        expect(node).not.toHaveProperty("oneOf");
+        if (node.type === "object") {
+          expect(node.additionalProperties).toBe(false);
+          expect(node.required).toEqual(Object.keys(node.properties as object));
+        }
+        Object.values(node).forEach(inspect);
+      };
+      inspect(schema);
+      expect(JSON.stringify(schema)).toContain('"anyOf"');
     }
   });
 });
