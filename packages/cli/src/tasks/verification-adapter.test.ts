@@ -538,7 +538,7 @@ describe("concrete trusted verification qualification", () => {
     } finally {
       await f.dispose();
     }
-  }, 600000);
+  });
   it.each(["portable", "managed SDK"])(
     "binds %s executor-owned replacement and durable acceptance to real qualified checks",
     async (mode) => {
@@ -704,7 +704,6 @@ describe("concrete trusted verification qualification", () => {
         await f.dispose();
       }
     },
-    600000,
   );
   it("retains and reports an actual exit-zero verifier write, without calling review", async () => {
     const f = await fixture(true);
@@ -724,7 +723,7 @@ describe("concrete trusted verification qualification", () => {
     } finally {
       await f.dispose();
     }
-  }, 120000);
+  });
   it("rejects launch/config/catalog tampering before executing and requires exact pinned runtime", async () => {
     const f = await fixture();
     try {
@@ -812,7 +811,7 @@ describe("concrete trusted verification qualification", () => {
     } finally {
       await f.dispose();
     }
-  }, 60000);
+  });
 });
 describe("complete closure and private scratch guards", () => {
   it("detects unlisted additions, transitive edits and escaping dependency links", async () => {

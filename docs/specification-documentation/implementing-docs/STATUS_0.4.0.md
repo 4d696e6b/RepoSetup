@@ -2725,3 +2725,29 @@ unchanged. Both focused cases passed locally (229.35s total; six other cases
 intentionally deselected). Workspace typecheck, lint/format and whitespace checks
 passed. The complete local eight-case result was already passing, but the hosted
 Linux suite needs requalification with these last outer timer corrections.
+
+Completed Linux full fixture qualification on branch source `1d2638e`, tested PR
+merge source `7326a1a749bf1dcc7a2b5d395e9e8ae4f47de598`: 62 ordinary contracts and
+11/11 full verifier tests passed (full suite 3898.83s). Retained artifact
+`11661690225` from [offline run](https://github.com/4d696e6b/RepoSetup/actions/runs/38025138753)
+contains clean-source Node 24.21.0/Linux x64 evidence. The 75-slot simulated failure
+campaign observed all 75 slots, accepted none and reported `qualification: false`;
+the vetted fixed and repair blocks each observed three simulated trials with one
+actual accepted implementation and 72 missing comparative trials. These establish
+functional regression, not empirical model capability, price or quality.
+
+The first macOS job at that source failed journal-retention timing (120s) and one
+safe verifier-inventory check, with 60/62 ordinary cases passing. A same-source
+macOS-only retry passed all ordinary contracts and reached the full suite; retain
+both attempts. The earlier `9af48a8` macOS concrete run passed five cases and timed
+out two replacement cases plus the exit-zero verifier-write detection case. Its
+following full fixture step was skipped. All of these failed attempts remain failed.
+
+Centralize the concrete fixture outer allowance at 600 seconds in the dedicated
+serial verifier configuration, removing conflicting 60/120/600-second per-case
+values. The separate 30-minute managed workflow outer timer remains. Product,
+process, SDK and benchmark resource limits and every acceptance assertion remain
+unchanged. Local verifier-write and catalog-tamper bodies passed under the previous,
+stricter timers (2 passes, six deselected, 80.71s). Workspace typecheck, lint/format
+and whitespace checks passed after the shared configuration change. Hosted full
+requalification is still required; Milestones I/J remain open.
