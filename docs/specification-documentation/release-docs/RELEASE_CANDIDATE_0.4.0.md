@@ -1,5 +1,12 @@
 # 0.4.0 experimental candidate preparation
 
+**Owner-selected offline scope, 2026-10-10:** J now means offline delivery
+preparation under the [acceptance amendment](../implementing-docs/OFFLINE_ACCEPTANCE_0.4.0.md).
+The original managed/versioned candidate gates below remain deferred release
+prerequisites. Completing offline I/J does not qualify a candidate, start the
+seven-day clock, authorize spending or pass any unobserved remote condition.
+
+
 Updated 2026-10-10. This is preparation, not a qualified artifact or release.
 The owner requested skipping the unavailable Azure quota step and completing
 available local work. Deferred evidence stays unverified; it is not waived.

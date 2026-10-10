@@ -1,4 +1,11 @@
-# Live provider smoke protocol — Milestone I / J release gate
+# Live provider smoke protocol — deferred managed release gate
+
+**Scope amendment, 2026-10-10:** the owner selected offline-only I/J completion.
+This live condition is now a deferred prerequisite before managed production
+qualification, outside the amended offline milestones. Historical gate assignments
+below remain the record of earlier scope; none represents live success. The
+[offline amendment](./OFFLINE_ACCEPTANCE_0.4.0.md) does not renew/enlarge spending.
+
 
 Status: **bounded smoke attempted; failed; live qualification remains open**. On 2026-10-10 the owner explicitly authorized up to two live API calls within a $1 estimated ceiling. This authorizes only the concrete smoke below; benchmark/routing campaigns and further calls remain unauthorized. Earlier transport tests used fake HTTP. The first actual bounded decomposition dispatch on 2026-10-10 stopped in `needs_review`, with no plan and unknown usage/effective configuration. No second call or retry was made.
 This is a finite qualification procedure, not a benchmark, routing qualification

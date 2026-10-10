@@ -145,39 +145,54 @@ completion cannot certify model quality, account availability or savings.
 
 **Likely modules:** core routing/escalation/state and provider mapping. **Dependencies:** E–G. **Tests:** unsupported effort, unavailable models, capability floors, budgets, missing context and repeated failures. **Done:** bounded repair/escalation changes only eligible failed tasks.
 
-## Milestone I — qualification and routing evaluation
+## Milestone I — offline qualification and diagnostic evaluation
 
-**Objective:** separate compilation benefits from routing benefits.
+**Owner-selected scope amendment, 2026-10-10:** complete I/J offline-only under
+[offline acceptance](./OFFLINE_ACCEPTANCE_0.4.0.md). Original empirical/live and
+versioned release conditions remain deferred, unverified release prerequisites.
 
-- [x] Add frozen local types/UI/API/cross-module/security fixture phases and holdout checks.
-- [ ] Compare whole-phase strong, compiled fixed-strong and compiled routed treatments.
-- [ ] Include all compilation, context expansion, retries and verification overhead and every failed trial.
-- [ ] Qualify packed aliases, legacy workflows and task boundaries across the advertised platforms.
-- [ ] Qualify dated production capability/feature profiles and native effort behavior on representative tasks before enabling live routing; synthetic offline H catalogs and official transport mappings cannot establish model quality.
-- [ ] Complete the separately authorized live provider/profile smoke transferred from G: record actual account/model/schema acceptance, effective configuration/usage and independent task/final-phase acceptance under the [finite protocol](./TASK_PROVIDER_SMOKE_0.4.0.md).
+- [x] Freeze five discriminating fixture phases and independent public/holdout checks.
+- [x] Exercise all 75 simulated failure slots across whole-phase, compiled fixed
+      and compiled routed diagnostics, retaining failures, overhead and unknown usage.
+- [x] Exercise vetted successful scoped changes and context/repair joins with real
+      tools, durable final acceptance and independent terminal observations.
+- [x] Qualify ordinary compatibility/platform and installed packed alias/profile
+      boundaries on Linux, macOS and Windows, with identical diagnostic CLI bytes.
+- [x] Keep production profiles unconfirmed and production routing closed.
+- [ ] Complete concrete and full frozen-fixture real-tool qualification on both
+      supported POSIX hosts; retain actual runner outcomes and source identities.
 
-**Likely modules:** task e2e fixtures, benchmark runner and targeted CI jobs. **Dependencies:** D–H. **Tests:** end-to-end acceptance, failure injection, drift, ownership and compatibility. **Done:** reproducible reports with limited, evidence-backed claims; ordinary CI needs no AI credentials.
+**Done:** reproducible offline functional evidence with limited claims. Simulated
+reports retain `qualification: false`; no live provider or model-quality conclusion
+follows. Ordinary CI needs no AI credential. I remains pending the last hosted
+concrete/full results; empirical comparisons are outside the amended milestone.
 
-## Milestone J — experimental candidate
+## Milestone J — offline delivery preparation
 
-**Objective:** prepare a qualified 0.4.0 artifact without claiming unshipped support.
+**Dependencies:** amended I. Completion is development readiness, not release.
 
-- [x] Update help, README, changelog, migration/no-migration notes and experimental limitations.
-- [x] Review safety, dependency licenses, provider research and exact support scope. Source review at 536a090 is recorded in [security review](../security-docs/SECURITY_REVIEW_0.4.0.md); empirical and candidate qualifications remain separate gates.
-- [ ] Intentionally version a candidate only after implementation; test the same identified packed artifact.
-- [ ] Complete required repeated-source/platform qualification and established soak gates.
-- [ ] Require I's live provider/profile smoke evidence before qualifying the managed candidate; offline G completion cannot substitute for that evidence or authorize spending.
+- [x] Describe implemented commands, compatibility/no-migration and experimental limits.
+- [x] Review source safety, dependency licenses/advisories, provider boundary and support.
+- [x] Identify installed diagnostic artifact and packed/platform development provenance;
+      package version remains `0.3.0-alpha.1`.
+- [ ] Close I's offline evidence and record passing applicable checks and retained limits.
 
-**Likely modules:** release documentation, package metadata and qualification workflows. **Dependencies:** I. **Tests:** complete required quality checks and artifact acceptance. **Done:** all gates pass; publication remains separately authorized.
+**Done:** committed reviewable offline implementation, exact support/evidence and
+clear deferred release prerequisites. No candidate version, merge or publication.
 
-Owner steering on 2026-10-10 permits available J preparation while the Azure
-quota/live prerequisite is deferred. The [candidate preparation record](../release-docs/RELEASE_CANDIDATE_0.4.0.md)
-and user guide describe implemented commands and open gates. This advances
-documentation only; it does not waive I, qualify a candidate or authorize a
-version bump/publication. Hosted offline platform infrastructure is present;
-ordinary CI, installed aliases, legacy and platform checks have passed on all
-three advertised hosts as recorded in status. Complete concrete/full task
-qualification and same frozen candidate results remain pending.
+## Deferred managed/versioned release gates
+
+- Actual provider/profile smoke: account/model/schema acceptance, effective
+  configuration/usage and independently reviewed final task/phase acceptance.
+- Production model capability/native effort evidence and 75 actual comparative
+  trials with all compilation/context/retry/verification costs and failures included.
+- Intentionally version and freeze a candidate and test the same identified artifact.
+- Three consecutive complete qualifications of that same frozen candidate and
+  seven calendar days of stability under the inherited release protocol.
+
+These are unverified prerequisites, not successful tests or authorized spending.
+They are outside offline I/J completion and remain mandatory before the corresponding
+managed/versioned release claims. Publication remains separately authorized.
 
 ## Checks and status discipline
 
@@ -193,5 +208,5 @@ Each implementation slice must record targeted tests, `pnpm typecheck`, `pnpm li
 - Dry-run performs no writes, provider calls or subprocesses.
 - State, interruption, partial effects, secrets and budgets have passing regression coverage.
 - Packed/platform gates and a held-out benchmark support the documented experimental contract.
-- I's separately authorized live provider/profile smoke passes before J's managed candidate qualification; offline tests cannot establish remote provider support.
+- Deferred live/profile and empirical gates pass before managed production qualification; offline I/J completion cannot establish remote provider support.
 - MCP, ML, parallelism, automatic worktrees/rollback, local models and broad provider support remain deferred.

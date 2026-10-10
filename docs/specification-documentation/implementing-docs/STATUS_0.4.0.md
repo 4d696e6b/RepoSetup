@@ -4,43 +4,26 @@ Last updated: 2026-10-10.
 
 ## Current position
 
-**Milestones A–H are complete for the reviewed local/offline implementation scope.** Core
-schemas/compiler/context, portable compile/next/status, trusted checks, scoped text
-application, private durable state and interruption reconciliation are implemented.
-Actual tool/state qualification is macOS arm64 on Node 24.21.0; Linux/packed gates
-remain I/J. E/F application/acceptance APIs now support G's reviewed managed CLI;
-D handoff commands stay advisory.
-Milestone G is complete for offline implementation following the owner's
-2026-10-07 request to finish without API access. Provider transport, managed coding
-and decomposition are implemented. G's original separately authorized live provider
-condition is transferred to I and required before J's managed candidate qualification;
-it remains incomplete and unconfirmed. The joined no-key test demonstrates compilation,
-an actual bug fix, real qualified checks and durable final-phase acceptance through
-the managed CLI and real Git with simulated HTTP. See the [roadmap](./ROADMAP_0.4.0.md).
-H is complete for the reviewed offline implementation: trusted dated catalogs,
-explainable model/effort selection, retained reservations, bounded failure-specific
-repair, dependency/evidence invalidation and explicit CLI opt-ins are implemented
-and tested. Production capability profiles remain unconfirmed; live routing fails
-closed until I/J qualification. Milestone I is now in progress (qualification/evaluation). Historical records below retain
-the original G gate; the final scope amendment supersedes that gate assignment.
+**Milestones A–H are complete for the reviewed offline implementation scope.**
+On 2026-10-10 the owner explicitly selected **offline-only** completion for I/J.
+The [offline acceptance amendment](./OFFLINE_ACCEPTANCE_0.4.0.md) now defines their
+active conditions. Historical live/candidate gates below remain retained evidence;
+they are deferred managed/versioned release prerequisites, not passed conditions.
 
-I now has five frozen independently discriminating fixtures, a complete 75-slot
-failure-path diagnostic, vetted G/E success and context/repair joins with privately
-retained terminal observations, and extracted packed task/legacy dry-run coverage.
-These establish local boundaries and accounting, not model quality or savings.
-The required qualified comparative trials, production model/effort evidence,
-separately authorized live smoke and remaining installed/Linux qualification stay
-open. Per owner steering, unavailable prerequisites are skipped as unverified.
-The current development lockfile has both advisory fixes, clean full/production
-audits, re-frozen fixture environment identities and a recorded combined source
-safety review. The installed npm artifact smoke now covers local portable task
-compilation and both aliases on macOS; exact candidate and other-platform
-qualification remain open.
-J now has owner-approved documentation/review preparation while blocked I
-prerequisites are deferred. Its candidate qualification remains open: no version
-bump, release artifact freeze, tag or publication has occurred. The
-[candidate preparation record](../release-docs/RELEASE_CANDIDATE_0.4.0.md) lists
-implemented scope, no-migration notes and exact outstanding gates.
+I's frozen fixtures, complete 75-slot simulated failure diagnostic, vetted real
+successful/repair acceptance, ordinary platform checks and installed packed aliases
+are implemented and verified. Concrete/full real-tool hosted qualification remains
+in progress on the supported POSIX hosts. Production capability profiles remain
+unconfirmed; live routing fails closed. Simulated reports retain `qualification: false`
+and cannot establish model quality, remote support or comparative savings.
+
+J's offline documentation/review/delivery preparation is implemented, pending I's
+final offline evidence. The diagnostic installed CLI has unchanged package version
+`0.3.0-alpha.1`; no versioned candidate, merge, tag or publication is authorized.
+Live smoke, 75 actual model trials, production profile evidence, an intentionally
+versioned/frozen candidate, three same-candidate full repeats and seven calendar
+days of stability remain outside the amended milestones and open before the
+corresponding release claims. The stability clock has not started.
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -71,8 +54,8 @@ implemented scope, no-migration notes and exact outstanding gates.
 - [x] F — Private CAS state, project leases, scoped text/parent effects, original-input/postimage acceptance and honest interruption recovery.
 - [x] G — Single managed provider adapter, complete for offline implementation and no-key integration; live qualification transferred to I/J by the owner.
 - [x] H — Model/effort routing and targeted escalation, complete for the reviewed offline scope.
-- [ ] I — Packed/platform qualification and held-out benchmark.
-- [ ] J — Documentation/review preparation implemented; candidate qualification open.
+- [ ] I — Offline functional qualification; final concrete/full hosted results pending.
+- [ ] J — Offline delivery preparation implemented; pending I closure. Managed/versioned release remains deferred.
 
 ## Verification record
 
@@ -2810,3 +2793,27 @@ feature test was required. Hosted corrected qualification at `5565463` passed th
 62-contract stage on Linux and reached concrete verification; macOS is queued.
 The same-source macOS full-fixture retry remains in progress. Until a different
 scope is explicitly selected, original I/J acceptance conditions remain binding.
+
+### Owner-selected offline-only I/J completion scope (2026-10-10)
+
+The owner answered the explicit scope question with **offline-only**. Added the
+normative offline acceptance amendment and reconciled the roadmap/current status,
+product scope, provider smoke protocol and candidate record. I requires functional
+fixtures, diagnostic failure/accounting, genuine local effects/checks/acceptance,
+packed compatibility and supported-host real-tool qualification. J requires that
+I evidence plus offline documentation/review and identified diagnostic artifact.
+
+The original production smoke, empirical 75-model-trial comparison, capability/
+effort qualification and versioned freeze/repeat/seven-day gates are deferred
+release prerequisites. They are not passed, deleted, simulated as live evidence
+or authorized for spending. Production routing remains closed. No feature code,
+versions, executable commands, website or provider calls are changed by this scope
+amendment. Final hosted evidence is still pending, so I/J are not yet marked complete.
+
+Offline-scope validation: both concrete catalog tests passed, confirming that all
+production capability profiles remain unconfirmed and SDK mappings require no
+dispatch. Workspace typecheck, lint/format and whitespace checks passed. Production
+core/CLI source is unchanged between `1d2638e` and `5565463`; subsequent fixes affect
+only tests/configuration/documentation. Individually identified development evidence
+can support amended offline acceptance, but cannot become a same-source candidate
+repeat. No release version or soak clock is established.

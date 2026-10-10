@@ -97,3 +97,13 @@ Defer MCP, public task SDK, editor extension, multiple providers, local models, 
 The [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md) selects a tool-free OpenAI Responses boundary and records dated official API model IDs, native efforts, observed prices, usage and privacy limits. Pinned SDK/runtime and fixed verifier recipes have reviewed local qualification; account access, remote schema/effective-configuration/usage behavior and shipping model catalogs still require later qualification before managed support claims. The [reuse audit](../implementing-docs/TASK_COMPILER_REUSE_0.4.0.md) records current-source seams and required extensions; the [benchmark protocol](../implementing-docs/TASK_BENCHMARK_0.4.0.md) freezes fixture designs, independent criteria and resource ceilings. None authorizes provider spending or establishes remote provider support.
 
 See [implementation roadmap](../implementing-docs/ROADMAP_0.4.0.md) and [status](../implementing-docs/STATUS_0.4.0.md).
+
+## Owner-selected offline-only milestone scope (2026-10-10)
+
+The [offline acceptance amendment](../implementing-docs/OFFLINE_ACCEPTANCE_0.4.0.md)
+now governs I/J completion. Original live, empirical and versioned candidate gates
+remain deferred release prerequisites. Offline completion establishes functional
+implementation and delivery preparation, not production model support, comparative
+quality/cost claims or a versioned release. Production capability profiles remain
+unconfirmed and routing closed. Historical milestone gate assignments above are
+superseded only as to completion ownership; no remote condition has passed.
