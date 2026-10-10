@@ -4,6 +4,8 @@ import os from "node:os";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
+import { portableFixture } from "../tasks/portable-fixture.js";
+import { inventory } from "../tasks/fixture-tools.js";
 
 import {
   cleanupWorkspace,
@@ -125,12 +127,27 @@ describe("npm pack artifact", () => {
     expect(dryRun.exitCode, dryRun.stderr).toBe(0);
     expect(dryRun.stdout).toContain("No files or commands were executed.");
 
+    const fixture = await portableFixture(path.join(installParent, "portable-task"));
+    const before = await inventory(fixture.project);
+    const compiled = await runNodeCli(
+      artifactBin,
+      ["--json", "task", "compile", "--review", fixture.reviewPath, "--draft", fixture.draftPath],
+      { cwd: fixture.project },
+    );
+    expect(compiled.exitCode, compiled.stdout + compiled.stderr).toBe(0);
+    expect(JSON.parse(compiled.stdout)).toMatchObject({ kind: "task_compilation" });
+    expect(compiled.stdout).not.toContain("PRIVATE_DENIED_MARKER");
+    expect(await inventory(fixture.project)).toEqual(before);
+
     for (const alias of ["rsetup", "reposetup"]) {
       if (process.platform !== "win32") {
         const shim = path.join(installDir, "node_modules", ".bin", alias);
         const shimVersion = await runProcess(shim, ["--version"], { cwd: installDir });
         expect(shimVersion.exitCode, shimVersion.stderr).toBe(0);
         expect(shimVersion.stdout.trim()).toBe(cliPackageVersion());
+        const taskHelp = await runProcess(shim, ["task", "--help"], { cwd: installDir });
+        expect(taskHelp.exitCode, taskHelp.stderr).toBe(0);
+        expect(taskHelp.stdout).toContain("compile");
         continue;
       }
 
@@ -140,5 +157,18 @@ describe("npm pack artifact", () => {
       expect(shimVersion.exitCode, shimVersion.stderr).toBe(0);
       expect(shimVersion.stdout.trim()).toBe(cliPackageVersion());
     }
+    process.stdout.write(
+      `${JSON.stringify({
+        kind: "installed_task_artifact_smoke",
+        qualification: false,
+        artifactHash: `sha256:${sha256}`,
+        packageVersion: cliPackageVersion(),
+        platform: process.platform,
+        architecture: process.arch,
+        node: process.version,
+        scope:
+          "Temporary npm installation, aliases, local task compilation and legacy dry-run; no live provider or final candidate qualification.",
+      })}\n`,
+    );
   });
 });

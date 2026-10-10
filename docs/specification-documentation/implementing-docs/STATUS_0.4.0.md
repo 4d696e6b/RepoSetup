@@ -2444,3 +2444,23 @@ this does not certify a frozen installed candidate. Full workspace CLI tests are
 still running. Version selection/freeze and three full same-candidate passes plus
 seven calendar days of established soak cannot be completed ahead of I's deferred
 empirical/platform evidence. No milestone completion is inferred from preparation.
+
+### J: installed local task artifact smoke (2026-10-10)
+
+Extended the existing real packed-install test to compile the hostile-text portable
+fixture through the **npm-installed** CLI, reject private denied context disclosure,
+and confirm the project inventory is unchanged. Both POSIX installed launchers
+also load task help, alongside existing registry/version and legacy dry-run checks.
+The test emits only a diagnostic artifact hash/runtime/scope record; it explicitly
+sets qualification false. This installs the artifact in a disposable test directory,
+not in a managed project or globally, and adds no runtime installation behavior.
+
+The updated installed smoke **passes**, one test / one file, 12.57 seconds on
+macOS arm64 / Node 24.21.0. Tarball identity is
+`sha256:7a4942e2e93d21cde4325be6b6aeb9e532307f3da50fc05c2b5e51e0fcbbf735`,
+package version unchanged at 0.3.0-alpha.1. This is current development artifact
+local compatibility evidence, not an intentionally versioned frozen candidate,
+real legacy project installation or cross-platform qualification. Standalone strict
+TypeScript checking of the pack test and workspace lint pass; 34 affected local
+document links and whitespace checks pass. Real verifier and full workspace
+regression results are pending and will be recorded separately.
