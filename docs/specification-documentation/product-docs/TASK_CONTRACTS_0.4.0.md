@@ -1,9 +1,10 @@
 # RepoSetup 0.4.0 — frozen task-domain contracts
 
-Status: Milestones A–F implemented/validated for the reviewed local scope on
-2026-10-07. Core domain/context, portable
-compile/next/status, trusted verification, scoped text application and private state
-are implemented. Managed provider execution remains G. Contract versions below
+Status: Milestones A–H implemented/validated for the reviewed local/offline scope
+on 2026-10-10. Core domain/context, portable compile/next/status, trusted
+verification, scoped text application, private state and managed execution are
+implemented. Live provider/profile, comparative and platform qualification remain
+I/J gates. Contract versions below
 are independent of package versions, stack configuration `schemaVersion: 1` and
 selection format v1.
 

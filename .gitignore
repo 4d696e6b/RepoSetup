@@ -24,4 +24,5 @@ logs/
 .local-cli/
 test-results/
 playwright-report/
+task-qualification-evidence/
 apps/website/qualification/

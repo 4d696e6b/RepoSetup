@@ -1,6 +1,12 @@
 # RepoSetup 0.4.0 — task compiler contract
 
-Status: Milestones A–D validated, 2026-10-06. Core exports strict task schemas, pure draft compilation and bounded context preparation. Portable `task compile`, `task next` and `task status` are implemented; trusted verification, durable task effects and managed execution are not.
+Status: Milestones A–H implemented for the reviewed local/offline scope,
+2026-10-10. Portable `task compile`, `task next` and `task status`, trusted
+verification, durable scoped changes and managed compilation/`task run` are
+implemented. Live provider/profile, comparative and platform qualification remain
+open in I; J has documentation/review preparation only. Simulated provider tests
+do not establish remote support, savings or candidate readiness. See
+[current status](../implementing-docs/STATUS_0.4.0.md).
 
 ## Product outcome
 
@@ -38,7 +44,7 @@ The compiler must map each selected requirement to tasks and acceptance evidence
 
 Use strict Zod boundaries and separate versions for task preferences, compiled plans and run state. Preserve the existing integration `VerificationResult`; name task evidence `TaskVerificationResult`.
 
-The normative [versioned contracts](./TASK_CONTRACTS_0.4.0.md) freeze version 1 draft, plan, preference, run and handoff envelopes, identifiers, fields, validation order, states, error codes and dry-run semantics. The initial [support profile](./TASK_SUPPORT_0.4.0.md) freezes managed scope, hard bounds and trusted verification IDs. Milestone B implements strict core schemas, pure compilation and graph/coverage/scope validation; C adds bounded read-only context with source/rule/preimage identities. State transitions, trusted checks, CLI commands and execution remain in later milestones.
+The normative [versioned contracts](./TASK_CONTRACTS_0.4.0.md) freeze version 1 draft, plan, preference, run and handoff envelopes, identifiers, fields, validation order, states, error codes and dry-run semantics. The initial [support profile](./TASK_SUPPORT_0.4.0.md) freezes managed scope, hard bounds and trusted verification IDs. Milestone B implements strict core schemas, pure compilation and graph/coverage/scope validation; C adds bounded read-only context with source/rule/preimage identities. D–H implement the CLI, trusted checks, state transitions, scoped execution, provider boundary and routing/repair amendments. I/J retain live, comparative, platform and release qualification.
 
 - **Task:** stable ID, objective, requirement references, kind, constraints, read/write/deny scopes, acceptance criteria, trusted check IDs, output artifact IDs and evidenced qualitative capability features.
 - **TaskDependency:** predecessor, consumer and required artifact IDs.

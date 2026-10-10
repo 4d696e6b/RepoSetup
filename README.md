@@ -44,6 +44,34 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 ## Quick start
 
+### Experimental task compiler development
+
+The separate `codex/0.4.0-task-compiler` branch implements experimental coding
+tasks alongside the curated installer. Its package version remains
+`0.3.0-alpha.1`; no 0.4.0 candidate is qualified or published. Use the built CLI
+from that branch rather than a floating npm package to try these commands.
+
+`task compile`, `task next` and `task status` support a local handoff to an existing
+coding agent without API keys or RepoSetup AI credits. You supply an independently
+reviewed phase/scope document and a structured draft; omitting the draft returns
+a decomposition request. Compilation validates the draft; it does not establish
+that the requested work is complete. Portable handoffs are advisory.
+
+`task run` and `task compile --managed` implement bounded provider execution with
+separate reviewed authority, explicit usage allowance and exact dry-run approval.
+Real calls require the direct OpenAI environment credential and provider usage
+allowance. Live model/schema/usage qualification and production routing evidence
+remain deferred; Azure is not a supported runtime adapter. Simulated-provider
+tests do not establish live quality, cost savings or release readiness.
+
+See the [task compiler guide](docs/humanOnly/Task_Compiler_0.4.0.md) for the local
+workflow, inputs, safety limits and recovery behavior, and the
+[candidate preparation record](docs/specification-documentation/release-docs/RELEASE_CANDIDATE_0.4.0.md)
+for open qualification gates. Existing stack configs, selections and installer
+commands need no migration.
+
+### Stack composer development
+
 Requires **Node.js 24+** and **pnpm 12.5.1**. Python recipes require **Python 3.12+** and **uv**; 3.12 and 3.13 are qualified for this candidate.
 
 ```bash
@@ -164,18 +192,18 @@ reposetup export
 reposetup registry validate
 ```
 
-| Command | What it does |
-| --- | --- |
-| `create` | Plan (and optionally execute) a new stack from prompts, `--config`, `--preset` or a bounded selection |
-| `add` | Plan an additive delta for one or more integrations, or a bounded selection in an existing project |
-| `remove` | Remove an integration that has an explicit safe recipe |
-| `presets` | List the bundled recipe presets |
-| `search` | Search the local registry (offline) |
-| `info` | Show category, status, requirements, and docs URL for one ID |
-| `stack` | Detect the current project |
-| `doctor` | Read-only health checks, intended-stack comparison and narrow confirmed missing-file repairs |
-| `export` | Write `reposetup.json` (IDs and options only; no `.env` secrets) |
-| `registry validate` | Validate the built-in catalog |
+| Command             | What it does                                                                                          |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| `create`            | Plan (and optionally execute) a new stack from prompts, `--config`, `--preset` or a bounded selection |
+| `add`               | Plan an additive delta for one or more integrations, or a bounded selection in an existing project    |
+| `remove`            | Remove an integration that has an explicit safe recipe                                                |
+| `presets`           | List the bundled recipe presets                                                                       |
+| `search`            | Search the local registry (offline)                                                                   |
+| `info`              | Show category, status, requirements, and docs URL for one ID                                          |
+| `stack`             | Detect the current project                                                                            |
+| `doctor`            | Read-only health checks, intended-stack comparison and narrow confirmed missing-file repairs          |
+| `export`            | Write `reposetup.json` (IDs and options only; no `.env` secrets)                                      |
+| `registry validate` | Validate the built-in catalog                                                                         |
 
 There is no separate `import` command. Apply an exported file with `create --config`.
 
@@ -189,49 +217,49 @@ The 0.3.0 candidate accepts `create --selection TOKEN` or `create --selection-fi
 
 Status is per ID, not “the catalog is production-ready.”
 
-| Status | Meaning during 0.3.0 candidate work |
-| --- | --- |
-| **stable** | Real execute + advertised-platform evidence. **None yet.** |
-| **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |
-| **experimental** | Implemented; not treated as a qualified path. |
-| **deprecated** | None. |
+| Status           | Meaning during 0.3.0 candidate work                                                                                          |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **stable**       | Real execute + advertised-platform evidence. **None yet.**                                                                   |
+| **candidate**    | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |
+| **experimental** | Implemented; not treated as a qualified path.                                                                                |
+| **deprecated**   | None.                                                                                                                        |
 
 ### Catalog
 
-| Category | IDs | Maturity |
-| --- | --- | --- |
-| Runtime | `node`, `python` | candidate |
-| Package manager | `npm`, `pnpm`, `uv`, `pip` | candidate (`bun` is not in the catalog) |
-| Framework | `nextjs`, `react-vite` | candidate |
-| Backend | `express`, `fastapi`, `flask` | candidate |
-| Backend | `fastify` | experimental |
-| Styling / UI | `tailwind` | candidate |
-| Styling / UI | `shadcn` | experimental |
-| Database | `sqlite` | candidate |
-| Database | `postgresql`, `mongodb` | experimental (config only; no server install) |
-| ORM / data | `prisma`, `sqlalchemy`, `alembic` | candidate |
-| ORM / data | `drizzle`, `mongoose` | experimental |
-| Validation | `zod`, `pydantic` | candidate |
-| Application settings | `pydantic-settings` | candidate (FastAPI only) |
-| Testing | `vitest`, `testing-library`, `pytest`, `httpx` | candidate (`testing-library` and `httpx` have generated interaction/API tests) |
-| Testing | `playwright` | experimental |
-| Client state | `tanstack-query` | candidate (React + Vite only) |
-| Quality | `eslint`, `prettier`, `ruff` | candidate |
-| Infrastructure / CI | `docker`, `docker-compose`, `github-actions` | experimental |
+| Category             | IDs                                            | Maturity                                                                       |
+| -------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------ |
+| Runtime              | `node`, `python`                               | candidate                                                                      |
+| Package manager      | `npm`, `pnpm`, `uv`, `pip`                     | candidate (`bun` is not in the catalog)                                        |
+| Framework            | `nextjs`, `react-vite`                         | candidate                                                                      |
+| Backend              | `express`, `fastapi`, `flask`                  | candidate                                                                      |
+| Backend              | `fastify`                                      | experimental                                                                   |
+| Styling / UI         | `tailwind`                                     | candidate                                                                      |
+| Styling / UI         | `shadcn`                                       | experimental                                                                   |
+| Database             | `sqlite`                                       | candidate                                                                      |
+| Database             | `postgresql`, `mongodb`                        | experimental (config only; no server install)                                  |
+| ORM / data           | `prisma`, `sqlalchemy`, `alembic`              | candidate                                                                      |
+| ORM / data           | `drizzle`, `mongoose`                          | experimental                                                                   |
+| Validation           | `zod`, `pydantic`                              | candidate                                                                      |
+| Application settings | `pydantic-settings`                            | candidate (FastAPI only)                                                       |
+| Testing              | `vitest`, `testing-library`, `pytest`, `httpx` | candidate (`testing-library` and `httpx` have generated interaction/API tests) |
+| Testing              | `playwright`                                   | experimental                                                                   |
+| Client state         | `tanstack-query`                               | candidate (React + Vite only)                                                  |
+| Quality              | `eslint`, `prettier`, `ruff`                   | candidate                                                                      |
+| Infrastructure / CI  | `docker`, `docker-compose`, `github-actions`   | experimental                                                                   |
 
 `remove` currently has package-only recipes for `zod`, `prettier`, `pydantic`, `pydantic-settings`, `pytest`, `ruff`, `testing-library`, `tanstack-query`, and `httpx`. Generated source, tests, and `.env.example` files are preserved. `pip uninstall` is refused.
 
 ## Tested stack recipes
 
-| Recipe | Dry-run plan | Real execute |
-| --- | --- | --- |
-| Next.js + TypeScript + Tailwind + SQLite + Prisma + Zod + Vitest + Prettier | yes | retained golden workflow; see candidate record |
-| React + Vite + TypeScript + Tailwind + Zod + Vitest + Prettier | yes | retained golden workflow; see candidate record |
-| Express + TypeScript + Prisma (PostgreSQL **config** only) | yes | retained golden workflow; no live database |
-| FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff | yes | retained golden workflow; see candidate record |
-| Flask + uv + SQLAlchemy + Alembic + pytest + Ruff | yes | retained golden workflow; see candidate record |
-| React + Vite + Vitest + Testing Library + TanStack Query | yes | generated interaction/query tests |
-| FastAPI + Pydantic + pytest + HTTPX + Pydantic Settings | yes | generated HTTPX/settings tests; no real secrets |
+| Recipe                                                                      | Dry-run plan | Real execute                                    |
+| --------------------------------------------------------------------------- | ------------ | ----------------------------------------------- |
+| Next.js + TypeScript + Tailwind + SQLite + Prisma + Zod + Vitest + Prettier | yes          | retained golden workflow; see candidate record  |
+| React + Vite + TypeScript + Tailwind + Zod + Vitest + Prettier              | yes          | retained golden workflow; see candidate record  |
+| Express + TypeScript + Prisma (PostgreSQL **config** only)                  | yes          | retained golden workflow; no live database      |
+| FastAPI + uv + Pydantic + SQLAlchemy + Alembic + pytest + Ruff              | yes          | retained golden workflow; see candidate record  |
+| Flask + uv + SQLAlchemy + Alembic + pytest + Ruff                           | yes          | retained golden workflow; see candidate record  |
+| React + Vite + Vitest + Testing Library + TanStack Query                    | yes          | generated interaction/query tests               |
+| FastAPI + Pydantic + pytest + HTTPX + Pydantic Settings                     | yes          | generated HTTPX/settings tests; no real secrets |
 
 Example configs live in `examples/`.
 

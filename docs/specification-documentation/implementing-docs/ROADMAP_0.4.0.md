@@ -162,13 +162,20 @@ completion cannot certify model quality, account availability or savings.
 
 **Objective:** prepare a qualified 0.4.0 artifact without claiming unshipped support.
 
-- [ ] Update help, README, changelog, migration/no-migration notes and experimental limitations.
+- [x] Update help, README, changelog, migration/no-migration notes and experimental limitations.
 - [ ] Review safety, dependency licenses, provider research and exact support scope.
 - [ ] Intentionally version a candidate only after implementation; test the same identified packed artifact.
 - [ ] Complete required repeated-source/platform qualification and established soak gates.
 - [ ] Require I's live provider/profile smoke evidence before qualifying the managed candidate; offline G completion cannot substitute for that evidence or authorize spending.
 
 **Likely modules:** release documentation, package metadata and qualification workflows. **Dependencies:** I. **Tests:** complete required quality checks and artifact acceptance. **Done:** all gates pass; publication remains separately authorized.
+
+Owner steering on 2026-10-10 permits available J preparation while the Azure
+quota/live prerequisite is deferred. The [candidate preparation record](../release-docs/RELEASE_CANDIDATE_0.4.0.md)
+and user guide describe implemented commands and open gates. This advances
+documentation only; it does not waive I, qualify a candidate or authorize a
+version bump/publication. Hosted offline platform infrastructure is present;
+actual runner results remain unverified.
 
 ## Checks and status discipline
 

@@ -1,0 +1,95 @@
+# 0.4.0 experimental candidate preparation
+
+Updated 2026-10-10. This is preparation, not a qualified artifact or release.
+The owner requested skipping the unavailable Azure quota step and completing
+available local work. Deferred evidence stays unverified; it is not waived.
+No package version, tag, publication, branch merge or website change is authorized
+by this preparation. Package versions remain `0.3.0-alpha.1`.
+
+## Implemented development scope
+
+Milestones A–H implement separate strict task contracts, safe bounded context,
+portable compile/next/status, executor-owned scoped changes/private state,
+independent verification, managed compilation/coding and bounded routing/repair.
+The reviewed tool/state host is macOS arm64 / Node 24.21.0. Local orchestration
+tests use the pinned provider SDK with simulated HTTP. They do not qualify remote
+models or production routing. The initial managed project profile is one trusted
+TypeScript/Node package with preinstalled dependencies and fixed named checks.
+
+The [guide](../../humanOnly/Task_Compiler_0.4.0.md), built `task --help`, root/package
+README and unreleased changelog describe actual commands and limits. Portable
+handoff needs no provider credential or RepoSetup AI credits. It is advisory.
+Managed calls require reviewed authority, exact preview approval, finite allowance
+and the direct provider's environment credential. There is no Azure runtime
+adapter and no public task verify command. Installed npm versions are not evidence
+for this branch's commands.
+
+## Compatibility and migration
+
+No migration is required for stack configuration schema version 1, selection v1,
+existing installer commands/presets or either CLI alias. Task-domain envelopes
+have their own version 1 schemas; do not add task inputs to stack configuration.
+Existing valid private compilation checkpoints remain readable without the
+optional safe numeric provider-result diagnostic. That field cannot reconstruct
+unknown historical usage or authenticate provider success.
+
+Run state stays private outside the tracked project. Unknown/partial effects and
+provider reservations are retained for review; no automatic rollback, state
+adoption, budget reset or dependency/system installation is supported. Importing
+a snapshot never establishes managed acceptance. See the
+[task contracts](../product-docs/TASK_CONTRACTS_0.4.0.md) for exact versions.
+
+## Available qualification infrastructure
+
+Five frozen fixtures cover types, UI state, offline API logic, cross-module work
+and security-sensitive logic, with public criteria and independent terminal
+holdouts. Journals retain compilation/context/repair failures and overhead;
+unknown usage is explicit. Existing extracted tarball tests cover eight task,
+alias and legacy preset/context dry-run cases without installing dependencies.
+They do not establish an installed-artifact or real installer qualification.
+
+The [offline workflow](../../../.github/workflows/task-qualification.yml) runs
+contract and expensive real-tool suites on Linux x64 and macOS arm64 / Node 24.
+It uses read-only permissions, empty provider credentials, serial matrix jobs,
+finite deadlines, exact-source/runtime/lockfile identity and retained failure logs.
+Its provider mode is explicitly simulated. Adding the workflow is not a passing
+hosted run; no remote dispatch or platform result has been claimed.
+
+Dependency-license review on the installed frozen lockfile passed on 2026-10-10:
+197 packages across seven allowed license families, no unreviewed licenses.
+This is license metadata review, not a dependency vulnerability audit or legal
+sign-off. Current CLI source keeps environment credentials transient, disables
+SDK retries/provider tools/background execution, uses fixed provider transport,
+and leaves process/project effects to the executor. Core stays independent of
+provider SDK and terminal UI. The final combined safety review remains a gate.
+
+## Gates before candidate qualification
+
+- [x] Describe implemented commands, compatibility/no-migration and experimental
+      limitations in help, README, changelog and user guide.
+- [x] Prepare credential-free platform qualification infrastructure and identify
+      retained source/runtime/lockfile and diagnostic evidence.
+- [x] Run current installed dependency-license review without dependency changes.
+- [ ] Complete independent combined safety/dependency/provider/support review.
+- [ ] Obtain actual hosted Linux/macOS results, installed packed-artifact and
+      applicable legacy/platform qualification for the same frozen source/artifact.
+- [ ] Qualify the live provider/profile smoke, including strict-schema acceptance,
+      actual effective configuration/usage and independent task/final acceptance.
+- [ ] Qualify production model capability/native effort evidence before live routing.
+- [ ] Complete the 75 actual comparative trials across whole-phase strong,
+      compiled fixed-strong and compiled routed, including all failed-trial overhead.
+- [ ] Intentionally select a candidate version only after prerequisites, then
+      record and test the same identified packed artifact.
+- [ ] Complete required repeated-source/platform qualifications and established
+      soak gates; review remaining release blockers.
+
+The first direct-provider attempt stopped with unknown usage and no accepted plan;
+its reservation and no-retry rule remain intact. Azure resource creation succeeded,
+but compiler model deployment has insufficient quota; no Azure model call occurred.
+These blockers are deferred at the owner's request. A local pass cannot replace
+them or demonstrate savings. Milestone I and J's candidate qualification remain
+open. Publication is a separate action after all applicable gates pass.
+
+Actual changes and check results are recorded in
+[implementation status](../implementing-docs/STATUS_0.4.0.md), with the
+[roadmap](../implementing-docs/ROADMAP_0.4.0.md) defining acceptance.

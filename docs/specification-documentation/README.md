@@ -11,8 +11,14 @@
 - [Task benchmark fixtures, acceptance and allowances](./implementing-docs/TASK_BENCHMARK_0.4.0.md)
 - [Implementation roadmap](./implementing-docs/ROADMAP_0.4.0.md)
 - [Implementation status](./implementing-docs/STATUS_0.4.0.md)
+- [Task compiler user guide](../humanOnly/Task_Compiler_0.4.0.md)
+- [Experimental candidate preparation and open gates](./release-docs/RELEASE_CANDIDATE_0.4.0.md)
 
-These documents freeze the Milestone A design for the experimental coding-task feature. Milestone A supported-runtime validation passed; they do not claim implemented commands or change existing release qualification.
+These documents describe the experimental coding-task design and implemented
+A–H local/offline scope. I's live/comparative/platform evidence and J's candidate
+qualification remain open. The user guide and candidate record distinguish
+implemented commands from unqualified remote support; package versions and
+existing release qualification remain unchanged.
 
 | Folder                                       | Contents                                                          |
 | -------------------------------------------- | ----------------------------------------------------------------- |

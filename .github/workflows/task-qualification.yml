@@ -12,6 +12,7 @@ on:
       - "pnpm-lock.yaml"
       - "package.json"
       - "tsconfig.base.json"
+      - ".gitignore"
       - ".github/workflows/task-qualification.yml"
   workflow_dispatch:
 

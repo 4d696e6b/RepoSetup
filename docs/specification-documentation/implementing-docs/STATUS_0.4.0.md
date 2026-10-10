@@ -14,7 +14,7 @@ Milestone G is complete for offline implementation following the owner's
 2026-10-07 request to finish without API access. Provider transport, managed coding
 and decomposition are implemented. G's original separately authorized live provider
 condition is transferred to I and required before J's managed candidate qualification;
-it remains unrun and unconfirmed. The joined no-key test demonstrates compilation,
+it remains incomplete and unconfirmed. The joined no-key test demonstrates compilation,
 an actual bug fix, real qualified checks and durable final-phase acceptance through
 the managed CLI and real Git with simulated HTTP. See the [roadmap](./ROADMAP_0.4.0.md).
 H is complete for the reviewed offline implementation: trusted dated catalogs,
@@ -31,7 +31,11 @@ These establish local boundaries and accounting, not model quality or savings.
 The required qualified comparative trials, production model/effort evidence,
 separately authorized live smoke and remaining installed/Linux qualification stay
 open. Per owner steering, unavailable prerequisites are skipped as unverified.
-J remains unstarted.
+J now has owner-approved documentation/review preparation while blocked I
+prerequisites are deferred. Its candidate qualification remains open: no version
+bump, release artifact freeze, tag or publication has occurred. The
+[candidate preparation record](../release-docs/RELEASE_CANDIDATE_0.4.0.md) lists
+implemented scope, no-migration notes and exact outstanding gates.
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
@@ -63,7 +67,7 @@ J remains unstarted.
 - [x] G — Single managed provider adapter, complete for offline implementation and no-key integration; live qualification transferred to I/J by the owner.
 - [x] H — Model/effort routing and targeted escalation, complete for the reviewed offline scope.
 - [ ] I — Packed/platform qualification and held-out benchmark.
-- [ ] J — Experimental candidate qualification.
+- [ ] J — Documentation/review preparation implemented; candidate qualification open.
 
 ## Verification record
 
@@ -1448,7 +1452,6 @@ be replaced by schema integrity or synthetic model results. J stays unstarted. T
 source/qualified verifier/config/fixture recipe is unchanged by this pure replay module;
 no expensive verifier rerun is justified solely by the new unused benchmark helper.
 
-
 ## Milestone I — authenticated compilation charges for fresh trial roots (2026-10-09)
 
 Implemented `executeTaskBenchmarkReplay` in core's executor. A newly dispatched,
@@ -1995,7 +1998,6 @@ upgrade the separate dirty-source context/repair observation or close live/model
 installed/Linux qualification. Disposable roots were cleaned and the worktree was
 clean after these checks. Milestone I remains in progress; J remains unstarted.
 
-
 ### I: bounded live-smoke authorization and offline preparation (2026-10-10)
 
 The owner explicitly authorized at most **two live API calls within a $1 estimated
@@ -2054,7 +2056,6 @@ Preparing that initial dispatch after correcting the missing environment does
 not renew an allowance or retry a sent provider request. No credential was read
 or logged. Live smoke and Milestone I remain unqualified; all later gates remain
 open. Documentation-only validation: formatting and whitespace checks passed.
-
 
 ### I: first authorized live dispatch stopped; no retry (2026-10-10)
 
@@ -2273,3 +2274,49 @@ installed legacy qualification and actual hosted Linux/platform results remain
 deferred and unverified. Milestone I stays in progress; proceed with J's available
 documentation/review preparation without qualifying, versioning or publishing a
 candidate. The new workflow is executable infrastructure, not platform evidence.
+
+### J: available documentation and candidate preparation (2026-10-10)
+
+With the owner's approval to skip the unavailable Azure quota step and continue,
+prepared J's available scope without waiving I's qualification requirements.
+Updated task help to name local handoff and reviewed managed execution. Added
+the task compiler user guide with independently reviewed input/structured draft,
+local decomposition/compilation/handoff/status examples, managed preview/allowance
+requirements, exact current commands and interruption/partial-edit limitations.
+Updated root and packaged README, unreleased changelog, specification index and
+stale contract status summaries. Added the 0.4.0 candidate preparation record with
+no-migration notes, license-review results, implemented support and explicit live,
+comparative, installed/platform, safety, version/freeze and repeat/soak gates.
+The roadmap marks J's documentation item complete, not candidate qualification.
+
+The workflow's generated evidence directory is now ignored so its own logs and
+identity file cannot mark an otherwise clean qualification checkout dirty. Changes
+to that ignore policy also trigger the task workflow. The generated directory is
+an upload output only; no task state, credential or candidate source is placed
+there. No remote workflow was dispatched. Existing release/publish workflows are
+unchanged and no release action was performed.
+
+Validation on Node **24.21.0**: **nine CLI task command tests** pass; rebuilt help
+lists only compile/next/status/run and describes both execution paths. All **eight
+extracted packed cases** pass after the help/package README change (6.50 seconds),
+including both aliases and task/legacy dry-runs. This diagnostic packed artifact
+is `sha256:042846f25afdddf2b332293bfc9efdcef96248084883066824bdbcb514b6a301`,
+from dirty `8d9caff` source; it is not a frozen installed candidate. Workspace
+build, workspace and task-test typechecks, lint, explicit changed-Markdown/workflow
+formatting, 101 repository-local links and Git whitespace checks pass. No runtime
+business logic, dependency/lockfile, package version or website source changed.
+
+The targeted real types fixture check from the prior slice also **passes**
+(165.36 seconds): task and distinct final-phase acceptance, five public tests,
+six actual fixed tool launches and unchanged protected project inputs. It used
+dirty `1c0def1` source on macOS arm64 / Node 24.21.0 with closure revision
+`sha256:cdd819f3ab8b84887033aa9d9a3b95e0a227ea7ef59f749342ccd2231aeb62a6`.
+Six other verifier cases were deliberately deselected; the cancelled full rerun
+remains exit 130 and is not claimed passed. This is frozen-reference local
+verification, not live provider, Linux or comparative-trial qualification.
+
+I remains in progress, J's available preparation is implemented and candidate
+qualification remains open. Unavailable Azure/live, real comparative and hosted
+platform gates are deferred; installed legacy checks, combined safety review,
+intentional candidate version/freeze and repeat/soak remain required. No new
+provider call, credential, installation, automatic rollback, merge or publication.
