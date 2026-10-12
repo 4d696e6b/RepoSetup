@@ -36,6 +36,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: candidate
+          fetch-depth: 0
       - uses: actions/checkout@v4
         with:
           ref: a0e48a19479dc574c3f2bc3fba4a39608dc33e77
