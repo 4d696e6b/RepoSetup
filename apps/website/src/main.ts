@@ -167,8 +167,9 @@ async function render(focus = false) {
   } catch {
     if (sequence !== renderSequence) return;
     app.replaceChildren(header(page));
-    const failed = el("main");
+    const failed = el("main", undefined, "main-content");
     failed.id = "main";
+    failed.tabIndex = -1;
     failed.append(
       pageIntro(
         "RETRY THIS PAGE",
@@ -176,7 +177,15 @@ async function render(focus = false) {
         "Reload the page to retry the development preview.",
       ),
     );
+    const retry = el("button", "Retry this section", "button primary");
+    retry.type = "button";
+    retry.addEventListener("click", () => location.reload());
+    failed.append(retry, link("Read documentation", "#/docs", "button secondary"));
     app.append(failed, footer());
+    searchDialog = createSearch();
+    app.append(searchDialog);
+    document.title = "Section unavailable · RepoSetup development";
+    if (focus) failed.focus();
     return;
   }
   if (sequence !== renderSequence) return;

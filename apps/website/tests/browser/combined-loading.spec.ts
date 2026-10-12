@@ -1,5 +1,20 @@
 import { test, expect } from "@playwright/test";
 
+test("a failed beginner download keeps search, docs and an explicit retry usable", async ({
+  page,
+}) => {
+  await page.route("**/assets/entry-*.js", (route) => route.abort());
+  await page.goto("/");
+  await page.getByRole("link", { name: "By goal", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "This section could not load." })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Retry this section" })).toBeVisible();
+  await page.getByRole("button", { name: "Open documentation search" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.getByRole("button", { name: "Close", exact: true }).click();
+  await page.getByRole("link", { name: "Read documentation", exact: true }).click();
+  await expect(page.locator(".docs-layout")).toBeVisible();
+});
+
 test("the stable home and documentation defer beginner code until it is requested", async ({
   page,
 }) => {
