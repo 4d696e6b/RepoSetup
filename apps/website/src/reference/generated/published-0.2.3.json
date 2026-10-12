@@ -1,0 +1,1535 @@
+{
+  "schemaVersion": 1,
+  "source": { "tag": "v0.2.3", "revision": "a213a6a1edf63771aba8d5b91bfdcf44d665de22" },
+  "package": {
+    "name": "rsetup",
+    "version": "0.2.3",
+    "nodeEngine": ">=24",
+    "binNames": ["rsetup", "reposetup"]
+  },
+  "cli": {
+    "name": "reposetup",
+    "usage": "reposetup [options] [command]",
+    "description": "Compose and inspect a project stack from a local integration registry.",
+    "globalFlags": [
+      { "flags": "-V, --version", "description": "output the version number" },
+      { "flags": "--verbose", "description": "include extra detail in output (default: false)" },
+      { "flags": "--quiet", "description": "reduce output (default: false)" },
+      {
+        "flags": "--json",
+        "description": "write versioned machine-readable output (default: false)"
+      },
+      { "flags": "--no-color", "description": "disable ANSI color (output is already plain)" },
+      { "flags": "-h, --help", "description": "display help for command" }
+    ],
+    "commands": [
+      {
+        "id": "create",
+        "path": ["create"],
+        "usage": "reposetup create [options] [name]",
+        "description": "Create a project from prompts or a declarative config",
+        "arguments": [{ "syntax": "name", "description": "project name" }],
+        "flags": [
+          { "flags": "-c, --config <path>", "description": "path to a RepoSetup JSON config" },
+          { "flags": "--preset <id>", "description": "use a bundled guaranteed recipe preset" },
+          {
+            "flags": "--dry-run",
+            "description": "print the installation plan without changing files (default: false)"
+          },
+          {
+            "flags": "--yes",
+            "description": "skip confirmation and execute the plan (default: false)"
+          },
+          { "flags": "--framework <id>", "description": "framework integration id" },
+          { "flags": "--package-manager <id>", "description": "package manager" },
+          {
+            "flags": "--typescript",
+            "description": "set framework option typescript=true (default: false)"
+          },
+          {
+            "flags": "--verbose",
+            "description": "include extra detail in output (default: false)"
+          },
+          { "flags": "--quiet", "description": "reduce output (default: false)" },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "add",
+        "path": ["add"],
+        "usage": "reposetup add [options] <ids...>",
+        "description": "Add one or more integrations to the current project",
+        "arguments": [{ "syntax": "ids", "description": "one or more integration ids" }],
+        "flags": [
+          {
+            "flags": "--dry-run",
+            "description": "print the add plan without changing files (default: false)"
+          },
+          {
+            "flags": "--yes",
+            "description": "skip confirmation and execute the plan (default: false)"
+          },
+          { "flags": "--package-manager <id>", "description": "package manager" },
+          {
+            "flags": "--verbose",
+            "description": "include extra detail in output (default: false)"
+          },
+          { "flags": "--quiet", "description": "reduce output (default: false)" },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "remove",
+        "path": ["remove"],
+        "usage": "reposetup remove [options] <id>",
+        "description": "Remove an integration that has an explicit safe removal recipe",
+        "arguments": [{ "syntax": "id", "description": "integration id" }],
+        "flags": [
+          {
+            "flags": "--dry-run",
+            "description": "print the remove plan without changing files (default: false)"
+          },
+          {
+            "flags": "--yes",
+            "description": "skip confirmation and execute the plan (default: false)"
+          },
+          { "flags": "--package-manager <id>", "description": "package manager" },
+          {
+            "flags": "--verbose",
+            "description": "include extra detail in output (default: false)"
+          },
+          { "flags": "--quiet", "description": "reduce output (default: false)" },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "presets",
+        "path": ["presets"],
+        "usage": "reposetup presets [options]",
+        "description": "List bundled guaranteed recipe presets",
+        "arguments": [],
+        "flags": [{ "flags": "-h, --help", "description": "display help for command" }],
+        "children": []
+      },
+      {
+        "id": "search",
+        "path": ["search"],
+        "usage": "reposetup search [options] [query]",
+        "description": "Search the local registry",
+        "arguments": [
+          {
+            "syntax": "query",
+            "description": "text to match against integration id, name, category, or keywords"
+          }
+        ],
+        "flags": [
+          { "flags": "--category <category>", "description": "limit results to one category" },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "info",
+        "path": ["info"],
+        "usage": "reposetup info [options] <id>",
+        "description": "Show details for one integration",
+        "arguments": [{ "syntax": "id", "description": "integration id" }],
+        "flags": [{ "flags": "-h, --help", "description": "display help for command" }],
+        "children": []
+      },
+      {
+        "id": "stack",
+        "path": ["stack"],
+        "usage": "reposetup stack [options]",
+        "description": "Detect and print the current project stack",
+        "arguments": [],
+        "flags": [{ "flags": "-h, --help", "description": "display help for command" }],
+        "children": []
+      },
+      {
+        "id": "doctor",
+        "path": ["doctor"],
+        "usage": "reposetup doctor [options]",
+        "description": "Run read-only health checks for the current project",
+        "arguments": [],
+        "flags": [{ "flags": "-h, --help", "description": "display help for command" }],
+        "children": []
+      },
+      {
+        "id": "export",
+        "path": ["export"],
+        "usage": "reposetup export [options]",
+        "description": "Write a schemaVersion 1 reposetup.json for the current project",
+        "arguments": [],
+        "flags": [
+          {
+            "flags": "--dry-run",
+            "description": "print the config without writing a file (default: false)"
+          },
+          {
+            "flags": "--yes",
+            "description": "overwrite an existing reposetup.json (default: false)"
+          },
+          {
+            "flags": "--package-manager <id>",
+            "description": "package manager when more than one is detected"
+          },
+          {
+            "flags": "--verbose",
+            "description": "include extra detail in output (default: false)"
+          },
+          { "flags": "--quiet", "description": "reduce output (default: false)" },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "registry",
+        "path": ["registry"],
+        "usage": "reposetup registry [options] [command]",
+        "description": "Registry maintenance commands",
+        "arguments": [],
+        "flags": [{ "flags": "-h, --help", "description": "display help for command" }],
+        "children": ["registry-validate"]
+      },
+      {
+        "id": "registry-validate",
+        "path": ["registry", "validate"],
+        "usage": "reposetup registry validate [options]",
+        "description": "Validate the loaded registry",
+        "arguments": [],
+        "flags": [{ "flags": "-h, --help", "description": "display help for command" }],
+        "children": []
+      }
+    ]
+  },
+  "config": {
+    "schemaVersion": 1,
+    "packageManagers": ["npm", "pnpm", "bun", "uv", "pip"],
+    "runtimes": ["node", "python"],
+    "jsonSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "number", "const": 1 },
+        "project": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "path": { "type": "string", "minLength": 1 }
+          },
+          "required": ["name"],
+          "additionalProperties": false
+        },
+        "runtime": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string", "enum": ["node", "python"] },
+            "version": { "type": "string", "minLength": 1 }
+          },
+          "required": ["id"],
+          "additionalProperties": false
+        },
+        "packageManager": { "type": "string", "enum": ["npm", "pnpm", "bun", "uv", "pip"] },
+        "framework": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "options": {
+              "type": "object",
+              "propertyNames": { "type": "string" },
+              "additionalProperties": {}
+            }
+          },
+          "required": ["id"],
+          "additionalProperties": false
+        },
+        "integrations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "options": {
+                "type": "object",
+                "propertyNames": { "type": "string" },
+                "additionalProperties": {}
+              }
+            },
+            "required": ["id"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "project",
+        "runtime",
+        "packageManager",
+        "framework",
+        "integrations"
+      ],
+      "additionalProperties": false
+    },
+    "validationNotes": [
+      "The CLI also validates safe project names and relative paths; these custom checks are not expressed by JSON Schema.",
+      "Schema acceptance does not guarantee a qualified combination. The CLI resolves relationships and support before changing files."
+    ]
+  },
+  "categories": [
+    "runtime",
+    "package-manager",
+    "framework",
+    "backend-framework",
+    "styling",
+    "ui",
+    "database",
+    "orm",
+    "migration",
+    "validation",
+    "testing",
+    "linting",
+    "formatting",
+    "infrastructure",
+    "ci",
+    "utility"
+  ],
+  "statuses": ["stable", "candidate", "experimental", "deprecated"],
+  "integrations": [
+    {
+      "id": "node",
+      "name": "Node.js",
+      "category": "runtime",
+      "description": "Detects the Node.js runtime before project setup.",
+      "status": "candidate",
+      "documentationUrl": "https://nodejs.org/en/download",
+      "keywords": ["nodejs", "javascript", "runtime"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": false,
+      "verification": { "verifiedAt": "2026-09-21", "runtimeRange": ">=24" },
+      "requirements": [],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "python",
+      "name": "Python",
+      "category": "runtime",
+      "description": "Detects the Python runtime before project setup.",
+      "status": "candidate",
+      "documentationUrl": "https://docs.python.org/3/using/index.html",
+      "keywords": ["python", "runtime"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": false,
+      "verification": { "verifiedAt": "2026-09-22", "runtimeRange": ">=3.9" },
+      "requirements": [],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "npm",
+      "name": "npm",
+      "category": "package-manager",
+      "description": "Detects npm before installing JavaScript packages.",
+      "status": "candidate",
+      "documentationUrl": "https://docs.npmjs.com/cli/v12/commands/npm-install/",
+      "keywords": ["node", "packages"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": false,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "npm installs packages for a Node.js project."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "pnpm",
+      "name": "pnpm",
+      "category": "package-manager",
+      "description": "Detects pnpm before installing JavaScript packages.",
+      "status": "candidate",
+      "documentationUrl": "https://pnpm.io/cli/add",
+      "keywords": ["node", "packages"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": false,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "pnpm installs packages for a Node.js project."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "uv",
+      "name": "uv",
+      "category": "package-manager",
+      "description": "Detects uv before installing Python packages.",
+      "status": "candidate",
+      "documentationUrl": "https://docs.astral.sh/uv/reference/cli/#uv-add",
+      "keywords": ["python", "packages"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": false,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "uv installs packages for a Python project."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "pip",
+      "name": "pip",
+      "category": "package-manager",
+      "description": "Detects pip from a requirements file before installing Python packages.",
+      "status": "candidate",
+      "documentationUrl": "https://pip.pypa.io/en/stable/cli/pip_install/",
+      "keywords": ["python", "packages"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": false,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "pip installs packages for a Python project."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "nextjs",
+      "name": "Next.js",
+      "category": "framework",
+      "description": "Scaffolds a Next.js App Router project with create-next-app.",
+      "status": "candidate",
+      "documentationUrl": "https://nextjs.org/docs/app/getting-started/installation",
+      "keywords": ["react", "app-router", "vercel"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21", "runtimeRange": ">=20.9" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "create-next-app requires Node.js."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "create-next-app is bootstrapped with npm or pnpm."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": { "typescript": { "type": "boolean" } },
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "react-vite",
+      "name": "React + Vite",
+      "category": "framework",
+      "description": "Scaffolds a React app with the official create-vite templates.",
+      "status": "candidate",
+      "documentationUrl": "https://vite.dev/guide/",
+      "keywords": ["react", "vite", "spa"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22", "runtimeRange": ">=20.19" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "create-vite requires Node.js."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "create-vite is bootstrapped with npm or pnpm."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": { "typescript": { "type": "boolean" } },
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "express",
+      "name": "Express",
+      "category": "backend-framework",
+      "description": "Adds Express 5 with the official Hello World server.",
+      "status": "candidate",
+      "documentationUrl": "https://expressjs.com/en/5x/starter/installing/",
+      "keywords": ["api", "http", "server"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "Express requires Node.js 18 or later."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "Express is installed with npm or pnpm."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": { "typescript": { "type": "boolean" } },
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "fastify",
+      "name": "Fastify",
+      "category": "backend-framework",
+      "description": "Adds Fastify with the official first-server ESM example.",
+      "status": "experimental",
+      "documentationUrl": "https://fastify.dev/docs/latest/Guides/Getting-Started/",
+      "keywords": ["api", "http", "server"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "Fastify requires Node.js."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "Fastify is installed with npm or pnpm."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": { "typescript": { "type": "boolean" } },
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "fastapi",
+      "name": "FastAPI",
+      "category": "backend-framework",
+      "description": "Adds FastAPI with the official first-steps main.py app.",
+      "status": "candidate",
+      "documentationUrl": "https://fastapi.tiangolo.com/tutorial/",
+      "keywords": ["api", "http", "python", "server"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "FastAPI requires Python."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "FastAPI is installed with uv or pip."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "flask",
+      "name": "Flask",
+      "category": "backend-framework",
+      "description": "Adds Flask with the official quickstart app.py so flask run works without --app.",
+      "status": "candidate",
+      "documentationUrl": "https://flask.palletsprojects.com/en/stable/installation/",
+      "keywords": ["api", "http", "python", "server"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "runtime" },
+          "reason": "Flask requires Python 3.9 or later."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "package-manager" },
+          "reason": "Flask is installed with uv or pip."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Choose a single application framework."
+        },
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "backend-framework" },
+          "reason": "Choose a single application framework."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "tailwind",
+      "name": "Tailwind CSS",
+      "category": "styling",
+      "description": "Adds Tailwind CSS v4 using the official Next.js PostCSS or Vite plugin guides.",
+      "status": "candidate",
+      "documentationUrl": "https://tailwindcss.com/docs/installation/framework-guides/nextjs",
+      "keywords": ["css", "postcss", "styling"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Tailwind is added to the scaffolded Next.js or Vite application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "shadcn",
+      "name": "shadcn/ui",
+      "category": "ui",
+      "description": "Initializes shadcn/ui in an existing Next.js or Vite app.",
+      "status": "experimental",
+      "documentationUrl": "https://ui.shadcn.com/docs/cli",
+      "keywords": ["ui", "components", "radix"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-10-08" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "tailwind" },
+          "reason": "shadcn/ui is configured on top of Tailwind CSS."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "sqlite",
+      "name": "SQLite",
+      "category": "database",
+      "description": "Selects SQLite as a file-based database. RepoSetup does not install a database server.",
+      "status": "candidate",
+      "documentationUrl": "https://www.prisma.io/docs/orm/v7/core-concepts/supported-databases/sqlite",
+      "keywords": ["database", "file", "libsql"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "database" },
+          "reason": "Choose a single database."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "postgresql",
+      "name": "PostgreSQL",
+      "category": "database",
+      "description": "Selects PostgreSQL as the database. RepoSetup does not install a database server.",
+      "status": "experimental",
+      "documentationUrl": "https://www.prisma.io/docs/orm/v7/core-concepts/supported-databases/postgresql",
+      "keywords": ["database", "postgres", "sql"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "database" },
+          "reason": "Choose a single database."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "mongodb",
+      "name": "MongoDB",
+      "category": "database",
+      "description": "Selects MongoDB as the database. RepoSetup does not install a database server.",
+      "status": "experimental",
+      "documentationUrl": "https://mongoosejs.com/docs/index.html",
+      "keywords": ["database", "mongo", "nosql"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "database" },
+          "reason": "Choose a single database."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "prisma",
+      "name": "Prisma",
+      "category": "orm",
+      "description": "Adds Prisma ORM with the SQLite or PostgreSQL driver adapter.",
+      "status": "candidate",
+      "documentationUrl": "https://www.prisma.io/docs/v7/prisma-orm/add-to-existing-project/sqlite",
+      "keywords": ["orm", "sqlite", "postgresql", "migrate"],
+      "addable": true,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "database" },
+          "reason": "Prisma needs a selected database. This phase implements SQLite and PostgreSQL."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Prisma is added to the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "orm" },
+          "reason": "Choose a single data layer."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "drizzle",
+      "name": "Drizzle ORM",
+      "category": "orm",
+      "description": "Adds Drizzle ORM with the official node-postgres PostgreSQL path.",
+      "status": "experimental",
+      "documentationUrl": "https://orm.drizzle.team/docs/get-started/postgresql-new",
+      "keywords": ["orm", "sql", "postgres"],
+      "addable": true,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "postgresql" },
+          "reason": "This phase implements Drizzle with PostgreSQL (node-postgres) only."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Drizzle is added to the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "orm" },
+          "reason": "Choose a single data layer."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "mongoose",
+      "name": "Mongoose",
+      "category": "orm",
+      "description": "Adds Mongoose with the official MongoDB connection helper.",
+      "status": "experimental",
+      "documentationUrl": "https://mongoosejs.com/docs/index.html",
+      "keywords": ["orm", "mongo", "odm"],
+      "addable": true,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "mongodb" },
+          "reason": "Mongoose connects to MongoDB."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Mongoose is added to the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "orm" },
+          "reason": "Choose a single data layer."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "sqlalchemy",
+      "name": "SQLAlchemy",
+      "category": "orm",
+      "description": "Adds SQLAlchemy with the self-contained Psycopg PostgreSQL driver and engine helper.",
+      "status": "candidate",
+      "documentationUrl": "https://docs.sqlalchemy.org/en/20/intro.html",
+      "keywords": ["orm", "postgresql", "python", "sql"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "SQLAlchemy is installed into the scaffolded application."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "postgresql" },
+          "reason": "This phase configures SQLAlchemy for PostgreSQL."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [
+        {
+          "kind": "conflicts",
+          "target": { "type": "category", "category": "orm" },
+          "reason": "Choose a single data layer."
+        }
+      ],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "alembic",
+      "name": "Alembic",
+      "category": "migration",
+      "description": "Adds Alembic and initializes the official alembic/ environment.",
+      "status": "candidate",
+      "documentationUrl": "https://alembic.sqlalchemy.org/en/latest/tutorial.html",
+      "keywords": ["migration", "python", "sqlalchemy"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "sqlalchemy" },
+          "reason": "Alembic generates SQLAlchemy migration environments."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "zod",
+      "name": "Zod",
+      "category": "validation",
+      "description": "Adds Zod schema validation.",
+      "status": "candidate",
+      "documentationUrl": "https://zod.dev",
+      "keywords": ["schema", "typescript", "validation"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Zod is installed into the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "pydantic",
+      "name": "Pydantic",
+      "category": "validation",
+      "description": "Adds Pydantic data validation.",
+      "status": "candidate",
+      "documentationUrl": "https://docs.pydantic.dev/latest/install/",
+      "keywords": ["python", "schema", "validation"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Pydantic is installed into the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "pydantic-settings",
+      "name": "Pydantic Settings",
+      "category": "utility",
+      "description": "Adds typed environment settings with a safe .env.example and missing-value tests.",
+      "status": "candidate",
+      "documentationUrl": "https://docs.pydantic.dev/latest/concepts/pydantic_settings/",
+      "keywords": ["python", "pydantic", "environment", "settings"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "pydantic" },
+          "reason": "Pydantic Settings extends the Pydantic model layer."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "pytest" },
+          "reason": "The generated settings validation sample runs with pytest."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "vitest",
+      "name": "Vitest",
+      "category": "testing",
+      "description": "Adds Vitest. Next.js uses the official RTL guide; other Node apps install Vitest only.",
+      "status": "candidate",
+      "documentationUrl": "https://vitest.dev/guide/",
+      "keywords": ["test", "vite", "rtl"],
+      "addable": true,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Vitest is added to the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "testing-library",
+      "name": "Testing Library",
+      "category": "testing",
+      "description": "Adds React Testing Library and an accessible interaction test for React + Vite.",
+      "status": "candidate",
+      "documentationUrl": "https://testing-library.com/docs/react-testing-library/intro/",
+      "keywords": ["react", "testing", "accessibility", "vitest"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "vitest" },
+          "reason": "Testing Library samples run with Vitest."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "tanstack-query",
+      "name": "TanStack Query",
+      "category": "utility",
+      "description": "Adds a React + Vite QueryClient provider and a tested server-state query example.",
+      "status": "candidate",
+      "documentationUrl": "https://tanstack.com/query/latest/docs/framework/react/overview",
+      "keywords": ["react", "query", "cache", "server-state"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "testing-library" },
+          "reason": "The TanStack Query sample uses Testing Library for its browser-level assertion."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "category": "testing",
+      "description": "Adds Playwright Test with create-playwright. Browsers are not downloaded.",
+      "status": "experimental",
+      "documentationUrl": "https://playwright.dev/docs/intro",
+      "keywords": ["e2e", "browser", "test"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Playwright is added to the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "pytest",
+      "name": "pytest",
+      "category": "testing",
+      "description": "Adds pytest as a development dependency. Does not write sample tests.",
+      "status": "candidate",
+      "documentationUrl": "https://docs.pytest.org/en/stable/getting-started.html",
+      "keywords": ["python", "test"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "pytest is added to the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "eslint",
+      "name": "ESLint",
+      "category": "linting",
+      "description": "Adds ESLint with the official flat config recommended rules.",
+      "status": "candidate",
+      "documentationUrl": "https://eslint.org/docs/latest/use/getting-started",
+      "keywords": ["lint", "quality"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "ESLint is added to the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "prettier",
+      "name": "Prettier",
+      "category": "formatting",
+      "description": "Adds Prettier with an exact local version and starter config files.",
+      "status": "candidate",
+      "documentationUrl": "https://prettier.io/docs/install",
+      "keywords": ["format", "style"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Prettier is installed into the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "ruff",
+      "name": "Ruff",
+      "category": "linting",
+      "description": "Adds Ruff as a development dependency.",
+      "status": "candidate",
+      "documentationUrl": "https://docs.astral.sh/ruff/installation/",
+      "keywords": ["format", "lint", "python"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "Ruff is added to the scaffolded application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "httpx",
+      "name": "HTTPX",
+      "category": "testing",
+      "description": "Adds HTTPX and an in-process FastAPI API response test.",
+      "status": "candidate",
+      "documentationUrl": "https://www.python-httpx.org/",
+      "keywords": ["python", "http", "api", "testing"],
+      "addable": true,
+      "removable": true,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-21" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "pytest" },
+          "reason": "The HTTPX sample is a pytest API test."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "docker",
+      "name": "Docker",
+      "category": "infrastructure",
+      "description": "Documents Docker as a prerequisite. RepoSetup does not install Docker.",
+      "status": "experimental",
+      "documentationUrl": "https://docs.docker.com/get-docker/",
+      "keywords": ["container", "infrastructure"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "docker-compose",
+      "name": "Docker Compose",
+      "category": "infrastructure",
+      "description": "Adds a Compose file for PostgreSQL. RepoSetup does not start containers.",
+      "status": "experimental",
+      "documentationUrl": "https://hub.docker.com/_/postgres",
+      "keywords": ["compose", "container", "postgres"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "docker" },
+          "reason": "Compose files are run with Docker."
+        },
+        {
+          "kind": "requires",
+          "target": { "type": "integration", "id": "postgresql" },
+          "reason": "This phase writes the official PostgreSQL Compose service."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    },
+    {
+      "id": "github-actions",
+      "name": "GitHub Actions",
+      "category": "ci",
+      "description": "Adds a Node.js CI workflow using actions/checkout and actions/setup-node.",
+      "status": "experimental",
+      "documentationUrl": "https://github.com/actions/setup-node",
+      "keywords": ["ci", "github", "workflow"],
+      "addable": false,
+      "removable": false,
+      "detectable": true,
+      "verifiable": true,
+      "verification": { "verifiedAt": "2026-09-22" },
+      "requirements": [
+        {
+          "kind": "requires",
+          "target": { "type": "category", "category": "framework" },
+          "reason": "The workflow is added to the scaffolded Node.js application."
+        }
+      ],
+      "recommendations": [],
+      "conflicts": [],
+      "includes": [],
+      "alternatives": [],
+      "optionsSchema": null
+    }
+  ],
+  "presets": [
+    {
+      "id": "next-sqlite",
+      "name": "Next.js + SQLite",
+      "description": "Next.js, Tailwind, Prisma, SQLite, Zod, Vitest, and Prettier.",
+      "support": "guaranteed",
+      "config": {
+        "schemaVersion": 1,
+        "project": { "name": "next-sqlite-app" },
+        "runtime": { "id": "node" },
+        "packageManager": "pnpm",
+        "framework": { "id": "nextjs", "options": { "typescript": true } },
+        "integrations": [
+          { "id": "tailwind" },
+          { "id": "sqlite" },
+          { "id": "prisma" },
+          { "id": "zod" },
+          { "id": "vitest" },
+          { "id": "prettier" }
+        ]
+      }
+    },
+    {
+      "id": "react-vite",
+      "name": "React + Vite",
+      "description": "React, Vite, Tailwind, shadcn, Vitest, ESLint, and Prettier.",
+      "support": "guaranteed",
+      "config": {
+        "schemaVersion": 1,
+        "project": { "name": "react-vite-app" },
+        "runtime": { "id": "node" },
+        "packageManager": "pnpm",
+        "framework": { "id": "react-vite", "options": { "typescript": true } },
+        "integrations": [
+          { "id": "tailwind" },
+          { "id": "shadcn" },
+          { "id": "vitest" },
+          { "id": "eslint" },
+          { "id": "prettier" }
+        ]
+      }
+    },
+    {
+      "id": "express-postgres",
+      "name": "Express + PostgreSQL",
+      "description": "Express, PostgreSQL configuration, Prisma, Zod, Docker Compose, and Prettier.",
+      "support": "guaranteed",
+      "config": {
+        "schemaVersion": 1,
+        "project": { "name": "express-postgres-app" },
+        "runtime": { "id": "node" },
+        "packageManager": "pnpm",
+        "framework": { "id": "express", "options": { "typescript": true } },
+        "integrations": [
+          { "id": "postgresql" },
+          { "id": "prisma" },
+          { "id": "zod" },
+          { "id": "prettier" },
+          { "id": "docker" },
+          { "id": "docker-compose" },
+          { "id": "github-actions" }
+        ]
+      }
+    },
+    {
+      "id": "fastapi",
+      "name": "FastAPI",
+      "description": "FastAPI, Pydantic, SQLAlchemy, Alembic, pytest, Ruff, and Docker Compose.",
+      "support": "guaranteed",
+      "config": {
+        "schemaVersion": 1,
+        "project": { "name": "fastapi-app" },
+        "runtime": { "id": "python" },
+        "packageManager": "uv",
+        "framework": { "id": "fastapi" },
+        "integrations": [
+          { "id": "pydantic" },
+          { "id": "postgresql" },
+          { "id": "sqlalchemy" },
+          { "id": "alembic" },
+          { "id": "pytest" },
+          { "id": "ruff" },
+          { "id": "docker" },
+          { "id": "docker-compose" }
+        ]
+      }
+    },
+    {
+      "id": "flask",
+      "name": "Flask",
+      "description": "Flask, SQLAlchemy, Alembic, pytest, Ruff, and Docker Compose.",
+      "support": "guaranteed",
+      "config": {
+        "schemaVersion": 1,
+        "project": { "name": "flask-app" },
+        "runtime": { "id": "python" },
+        "packageManager": "uv",
+        "framework": { "id": "flask" },
+        "integrations": [
+          { "id": "postgresql" },
+          { "id": "sqlalchemy" },
+          { "id": "alembic" },
+          { "id": "pytest" },
+          { "id": "ruff" },
+          { "id": "docker" },
+          { "id": "docker-compose" }
+        ]
+      }
+    }
+  ],
+  "exitCodes": {
+    "SUCCESS": 0,
+    "GENERAL_FAILURE": 1,
+    "INVALID_INPUT": 2,
+    "RESOLUTION_FAILURE": 3,
+    "PREREQUISITE_MISSING": 4,
+    "VERIFICATION_FAILURE": 5
+  }
+}

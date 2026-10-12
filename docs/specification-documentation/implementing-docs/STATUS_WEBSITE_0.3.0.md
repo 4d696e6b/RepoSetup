@@ -1,5 +1,12 @@
 # 0.3.0 companion website — first local slice
 
+## Current integrated release preparation — 12 October 2026
+
+The canonical `codex/release-0.3.0` site prepares stable 0.3.0 metadata. It retains all 37 integration references, five legacy presets, published history/artwork and existing routes, plus the bounded nine-tool beginner catalog, three minimal starters and 45 create/add choices. Current CLI help/registry facts are generated against the reviewed artifact source; an immutable published-0.2.3 snapshot remains independently digest-checked. Four new guides bring the complete documentation count to 76. The site identifies itself as a release candidate and does not falsely list 0.3.0 as published.
+
+Workspace tests/typechecks/lint/build, stable packed handoff and targeted affected browser checks pass locally. Final five-profile and exact-source qualification remain in progress. The owner can perform native desktop screen-reader and physical-mobile checks on the fixed preview; no actual result has been recorded yet. Production remains at 0.2.3 and no freeze or soak delay applies. Use the handoff pin and current release preparation for source identities; the following sections retain historical evidence.
+
+
 ## Owner decision — 12 October 2026
 
 The owner removed the formal freeze, seven-day soak and calendar waiting requirements for 0.3.0. Continue implementation immediately. Exact source/artifact identity, meaningful regression and platform checks, blocker review, manual accessibility/device evidence, and separate publication/deployment authorization still apply. The old soak monitor is paused. Historical freeze/soak statements below describe the preceding policy and do not impose a current waiting gate.

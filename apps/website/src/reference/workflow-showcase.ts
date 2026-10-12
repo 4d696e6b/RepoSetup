@@ -124,7 +124,7 @@ export function workflowShowcase() {
   });
   const footer = el("div", undefined, "showcase-footer");
   footer.append(
-    el("span", "Built for the version you can install today. 0.2.3."),
+    el("span", "Review the prepared 0.3.0 CLI. Installation remains local."),
     link("Choose your recipe  →", "#/presets"),
   );
   section.append(intro, tabs, body, footer);

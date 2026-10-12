@@ -7,7 +7,11 @@ export function home(main: HTMLElement) {
   main.classList.add("home-page");
   const hero = el("section", undefined, "hero");
   const copy = el("div", undefined, "hero-copy");
-  const announcement = link("0.2.3 is here  ↗", "#/release", "release-pill");
+  const announcement = link(
+    "0.3.0 candidate · review the changes  ↗",
+    "#/docs/whats-new-0-3",
+    "release-pill",
+  );
   announcement.prepend(el("span", "", "status-dot"));
   const title = el("h1");
   for (const [text, className] of [
@@ -138,7 +142,7 @@ export function home(main: HTMLElement) {
   const aside = el("div");
   aside.append(
     codeBlock("npx rsetup create", "Copy interactive create command"),
-    link("See what's in 0.2.3  ↗", RELEASE_URL),
+    link("Review the 0.3.0 source  ↗", RELEASE_URL),
     link("View the source  ↗", REPOSITORY),
   );
   callout.append(summary, aside);

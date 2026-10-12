@@ -1,8 +1,9 @@
 import data from "./generated/release.json";
 export const release = data;
-export const VERSION = "0.2.3";
+export const VERSION = data.package.version;
+export const PUBLISHED_VERSION = "0.2.3";
 export const REPOSITORY = "https://github.com/4d696e6b/RepoSetup";
-export const RELEASE_URL = `${REPOSITORY}/releases/tag/v0.2.3`;
+export const RELEASE_URL = `${REPOSITORY}/tree/${data.source.revision}`;
 export const INSTALL = "npm install -g rsetup";
 export type Integration = (typeof release.integrations)[number];
 export type Preset = (typeof release.presets)[number];

@@ -21,7 +21,9 @@ try {
   mkdirSync(join(temp, "source"));
   run("tar", ["-xf", join(temp, "source.tar"), "-C", join(temp, "source")]);
   run("pnpm", ["install", "--frozen-lockfile"], join(temp, "source"));
-  run("pnpm", ["build"], join(temp, "source"));
+  // Archive rebuilds need only the CLI and its workspace dependencies. The site
+  // reference generator requires Git provenance and does not belong in a CLI pack.
+  run("pnpm", ["--filter", "rsetup...", "build"], join(temp, "source"));
   mkdirSync(local, { recursive: true });
   run("pnpm", ["--filter", "rsetup", "pack", "--pack-destination", local], join(temp, "source"));
   const tarball = join(local, `rsetup-${version}.tgz`);

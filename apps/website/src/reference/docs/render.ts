@@ -1,3 +1,4 @@
+import { handoff } from "../../handoff.js";
 import { codeBlock, el, eyebrow, link } from "../dom.js";
 import { docBySlug, docPages, primaryPages, searchPages } from "./model.js";
 import type { DocPage } from "./content.js";
@@ -28,7 +29,7 @@ export function searchResults(container: HTMLElement, query: string) {
 function sidebar(slug?: string) {
   const nav = el("nav", undefined, "docs-sidebar");
   nav.setAttribute("aria-label", "Documentation sections");
-  nav.append(eyebrow("DOCS / 0.2.3"));
+  nav.append(eyebrow("DOCS / 0.3.0"));
   for (const group of ["Start", "Guides", "Reference", "Help"]) {
     nav.append(el("h2", group));
     for (const page of primaryPages.filter((item) => item.group === group)) {
@@ -59,7 +60,7 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
       el("h1", "Find your next step."),
       el(
         "p",
-        "Everything you need to get started with RepoSetup 0.2.3. Pick a guide, look up a command, or explore the tools in your stack.",
+        "Everything you need to get started with RepoSetup 0.3.0. Pick a guide, look up a command, or explore the tools in your stack.",
         "lede",
       ),
     );
@@ -105,7 +106,7 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
   }
   crumbs.append(el("span", "/"), el("span", entry.title));
   article.append(
-    eyebrow(`${entry.group} / VERSION 0.2.3`),
+    eyebrow(`${entry.group} / VERSION 0.3.0`),
     el("h1", entry.title),
     el("p", entry.description, "lede"),
   );
@@ -159,8 +160,8 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
     pager.append(link(`${docPages[index + 1]!.title} →`, `#/docs/${docPages[index + 1]!.slug}`));
   article.append(
     pager,
-    el("p", "Reviewed for the published 0.2.3 release · October 9, 2026", "hint"),
-    link("View release source  ↗", "https://github.com/4d696e6b/RepoSetup/tree/v0.2.3"),
+    el("p", "Reviewed 0.3.0 release candidate · publication pending", "hint"),
+    link("View release source  ↗", `https://github.com/4d696e6b/RepoSetup/tree/${handoff.commit}`),
   );
   if (anchor)
     requestAnimationFrame(() => {

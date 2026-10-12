@@ -15,13 +15,14 @@ export interface DocPage {
   sections: DocSection[];
 }
 
-const source = "https://github.com/4d696e6b/RepoSetup/blob/v0.2.3";
+import { handoff } from "../../handoff.js";
+const source = `https://github.com/4d696e6b/RepoSetup/blob/${handoff.commit}`;
 
 export const authoredPages: DocPage[] = [
   {
     slug: "getting-started",
     title: "Start with a plan",
-    description: "Install the published 0.2.3 CLI, preview a stack, and create your first project.",
+    description: "Install the reviewed 0.3.0 CLI, preview a stack, and create your first project.",
     group: "Start",
     sections: [
       {
@@ -29,7 +30,7 @@ export const authoredPages: DocPage[] = [
         title: "A stack you can inspect",
         paragraphs: [
           "RepoSetup brings supported framework and library setup into one terminal workflow. You choose a stack; the CLI checks requirements and conflicts, orders the work, and prints the installation plan before execution.",
-          "This website documents the published rsetup 0.2.3 package. Browse integrations to understand each tool, compare the five bundled presets, or download a declarative config. Installation runs in your terminal, on your computer.",
+          "This website documents the reviewed rsetup 0.3.0 release candidate. Browse integrations to understand each tool, compare the five bundled presets, or download a declarative config. Installation runs in your terminal, on your computer.",
         ],
         links: [
           { label: "Explore integrations", href: "#/integrations" },
@@ -56,7 +57,7 @@ export const authoredPages: DocPage[] = [
         id: "run-the-cli",
         title: "Run RepoSetup",
         paragraphs: [
-          "Run RepoSetup through npx. npm uses a matching local package when available, or downloads the package. Its download prompt is separate from RepoSetup's confirmation of the project installation plan. This guide describes CLI 0.2.3; use --version to check the CLI you are running.",
+          "Run RepoSetup through npx. npm uses a matching local package when available, or downloads the package. Its download prompt is separate from RepoSetup's confirmation of the project installation plan. This guide describes CLI 0.3.0; use --version to check the CLI you are running.",
           "The npm package is named rsetup. After a global installation, both rsetup and reposetup are command aliases. Use npx rsetup for these examples: npx reposetup identifies a different package.",
         ],
         code: "npx rsetup --version\nnpx rsetup --help",
@@ -122,7 +123,7 @@ export const authoredPages: DocPage[] = [
         title: "Use basic flags for a small stack",
         paragraphs: [
           "A project name together with --framework supplies enough input for the basic flag flow. --package-manager selects the manager, and --typescript sets the framework TypeScript option.",
-          "Styling, databases, testing, and other library choices belong in the interactive flow or a config file. They do not have individual create flags in 0.2.3.",
+          "Styling, databases, testing, and other library choices belong in the interactive flow or a config file. They do not have individual create flags in 0.3.0.",
         ],
         code: "npx rsetup create my-app --framework react-vite --package-manager npm --typescript --dry-run",
       },
@@ -130,7 +131,7 @@ export const authoredPages: DocPage[] = [
         id: "preset-or-config",
         title: "Use one explicit source of choices",
         paragraphs: [
-          "Use --preset for a bundled recipe or --config for a JSON file. With a preset, the positional name overrides the preset's default project name, but does not choose a child directory. Bundled presets target the current directory in 0.2.3: run them only from the empty destination you intend to use. With a config, the file supplies the name, path, and choices.",
+          "Use --preset for a bundled recipe or --config for a JSON file. With a preset, the positional name overrides the preset's default project name, but does not choose a child directory. Bundled presets target the current directory in 0.3.0: run them only from the empty destination you intend to use. With a config, the file supplies the name, path, and choices.",
           "The CLI resolves a config before a preset and a preset before flags or prompts. Avoid mixing these input styles. Edit the config itself when you want to change a config-based project.",
         ],
         code: "npx rsetup create my-app --preset react-vite --dry-run\nnpx rsetup create --config ./reposetup.json --dry-run",
@@ -216,7 +217,7 @@ export const authoredPages: DocPage[] = [
         title: "A recipe, not a new compatibility rule",
         paragraphs: [
           "A preset is a checked-in config: a runtime, package manager, framework, and a specific set of integrations. It saves choosing every item by hand. Presets are broader recipes, so compare their contents before adding tools you will not use. In 0.2.3, bundled presets target the current directory; use an empty destination folder, or download a config with an explicit project.path from the builder.",
-          "The CLI labels these bundled recipes guaranteed. That is a preset label, not a promotion of every included integration to stable. Some preset IDs include experimental components, and no integration ID is stable in the 0.2.3 support contract.",
+          "The CLI labels these bundled recipes guaranteed. That is a preset label, not a promotion of every included integration to stable. Some preset IDs include experimental components, and no integration ID is stable in the 0.3.0 support contract.",
         ],
         code: "npx rsetup presets",
         links: [{ label: "Compare exact preset contents", href: "#/presets" }],
@@ -375,7 +376,7 @@ export const authoredPages: DocPage[] = [
         paragraphs: [
           "--dry-run is available for create, add, remove, and export. Installation commands use the same resolver and planner as execution, then stop before mutation. export prints the config it would write.",
           "A dry-run does not run generators, install packages, connect to services, or verify the application's future runtime. It can catch declared compatibility problems while leaving execution prerequisites and network behavior for the real run.",
-          "Run this basic flag example from the parent directory where you want the new my-app/ folder. Bundled preset commands behave differently in 0.2.3: they target the current directory, so use an empty destination or a downloaded config with an explicit path.",
+          "Run this basic flag example from the parent directory where you want the new my-app/ folder. Bundled preset commands behave differently in 0.3.0: they target the current directory, so use an empty destination or a downloaded config with an explicit path.",
         ],
         code: "npx rsetup create my-app --framework nextjs --package-manager npm --typescript --dry-run",
       },
@@ -467,7 +468,7 @@ export const authoredPages: DocPage[] = [
         id: "maturity",
         title: "Read the label for each integration",
         paragraphs: [
-          "Candidate means official setup commands and plan/detect/doctor tests exist; it is not a promise that every context has real execution evidence. Experimental means implemented but outside the qualified support claim. No built-in integration is stable in the 0.2.3 support contract.",
+          "Candidate means official setup commands and plan/detect/doctor tests exist; it is not a promise that every context has real execution evidence. Experimental means implemented but outside the qualified support claim. No built-in integration is stable in the 0.3.0 support contract.",
           "The recorded qualification covers Ubuntu 24.04 x64, macOS 15 arm64, and Windows Server 2025 x64 recipes, plus representative live database cases. It does not establish native Windows 11 desktop behavior, Linux arm64, every integration permutation, arbitrary service or deployment contexts, general migration workflows, or actual Playwright application journeys.",
           "A passing recipe and an integration's maturity are different kinds of evidence. The recorded development-tool advisory remains; this website makes no audit-clean claim.",
         ],
@@ -554,7 +555,7 @@ export const authoredPages: DocPage[] = [
         id: "report",
         title: "Report enough detail to reproduce",
         paragraphs: [
-          "Include CLI version 0.2.3, operating system, Node/Python version, selected manager, config with credentials removed, the failed operation, and relevant error text. Explain whether the target was new or existing.",
+          "Include CLI version 0.3.0, operating system, Node/Python version, selected manager, config with credentials removed, the failed operation, and relevant error text. Explain whether the target was new or existing.",
           "Do not upload .env files, private registry tokens, or real database URLs. If a log contains credentials, redact them before sharing.",
         ],
         links: [
@@ -603,7 +604,7 @@ export const authoredPages: DocPage[] = [
       },
       {
         id: "python-driver",
-        title: "The PostgreSQL Python driver in 0.2.3",
+        title: "The PostgreSQL Python driver in 0.3.0",
         paragraphs: [
           "SQLAlchemy PostgreSQL recipes include Psycopg's binary driver and a guarded engine helper using the postgresql+psycopg:// URL form. The helper prepares an engine; engine creation alone does not connect to PostgreSQL.",
           "Provide a reachable service and valid local connection settings before application database operations. Representative live SQLAlchemy cases passed acceptance, but RepoSetup does not apply Alembic migrations or qualify arbitrary service and migration contexts.",
@@ -714,7 +715,7 @@ export const authoredPages: DocPage[] = [
   {
     slug: "command-basics",
     title: "Command basics",
-    description: "Every public command and option in rsetup 0.2.3.",
+    description: "Every public command and option in rsetup 0.3.0.",
     group: "Reference",
     sections: [
       {
@@ -921,7 +922,7 @@ export const authoredPages: DocPage[] = [
         title: "Improve the learning path",
         paragraphs: [
           "Examples of confusing output, missing setup explanations, and unclear library tradeoffs help improve the product. Include the page or command that left you uncertain and what you expected to learn.",
-          "Documentation for this site is intentionally scoped to the published 0.2.3 behavior. Changes should use exact public flags, real registry IDs, and honest maturity and qualification labels.",
+          "Documentation for this site follows the reviewed 0.3.0 candidate. Published 0.2.3 service evidence remains historical. Changes should use exact public flags, real registry IDs, and honest maturity and qualification labels.",
         ],
       },
       {
@@ -947,11 +948,11 @@ export const authoredPages: DocPage[] = [
         id: "source",
         title: "Review the published source",
         paragraphs: [
-          "The v0.2.3 source tag is the reference for the behavior described here. Development uses TypeScript and pnpm workspaces, with domain logic, integration definitions, registry validation, and the CLI separated into packages.",
+          "The pinned CLI source is the reference for the behavior described here. Development uses TypeScript and pnpm workspaces, with domain logic, integration definitions, registry validation, and the CLI separated into packages.",
           "Use Node 24+ when testing the published CLI behavior. Read the contribution workflow and existing tests before changing code, and keep user-facing safety and support limits visible.",
         ],
         links: [
-          { label: "v0.2.3 source", href: "https://github.com/4d696e6b/RepoSetup/tree/v0.2.3" },
+          { label: "Reviewed 0.3.0 source", href: `https://github.com/4d696e6b/RepoSetup/tree/${handoff.commit}` },
           { label: "Published npm package", href: "https://www.npmjs.com/package/rsetup/v/0.2.3" },
         ],
       },

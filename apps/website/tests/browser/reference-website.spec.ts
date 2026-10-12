@@ -16,7 +16,10 @@ test("home uses the supplied brand assets and published install command", async 
   await expect(page.locator(".brand img")).toHaveAttribute("src", /brand\/reposetup-wordmark.svg/);
   await expect(page.locator(".hero-art")).toHaveAttribute("src", /brand\/hero-stack.png/);
   await expect(page.locator(".hero-copy")).toContainText("npm install -g rsetup");
-  await expect(page.locator(".hero")).not.toContainText("0.3.0");
+  await expect(page.locator(".hero")).toContainText("0.3.0 candidate");
+  await expect(page.locator(".development-notice")).toContainText(
+    "currently published package remains 0.2.3",
+  );
   await expect(page.locator("body")).not.toContainText("0.4.0");
   expect(
     await page.locator("img").evaluateAll(async (images) => {
@@ -29,7 +32,7 @@ test("home uses the supplied brand assets and published install command", async 
 test("library search and preset exploration link to release-specific docs", async ({ page }) => {
   await page.goto("/#/integrations");
   await page.getByRole("searchbox", { name: "Search integrations" }).fill("postgres");
-  await expect(page.getByRole("status")).toContainText("integrations in release 0.2.3");
+  await expect(page.getByRole("status")).toContainText("integrations in release 0.3.0");
   await page.getByRole("link", { name: "Explore integration" }).first().click();
   await expect(page.getByRole("link", { name: "Official documentation" })).toHaveAttribute(
     "href",

@@ -1,6 +1,7 @@
 import { release, categoryName } from "../release.js";
 import { authoredPages, type DocPage } from "./content.js";
 import { relationshipTarget } from "../relationships.js";
+import { releaseGuides } from "./release-guides.js";
 
 const page = (
   slug: string,
@@ -15,7 +16,7 @@ const commands = release.cli.commands.map((command) =>
       title: "Usage",
       paragraphs: [
         command.description,
-        "Both installed aliases, rsetup and reposetup, invoke this command. The syntax below is generated from the published release's parser.",
+        "Both installed aliases, rsetup and reposetup, invoke this command. The syntax below is generated from the reviewed CLI parser.",
       ],
       code: command.usage,
     },
@@ -23,7 +24,7 @@ const commands = release.cli.commands.map((command) =>
       id: "options",
       title: "Command options",
       paragraphs: [
-        "These descriptions come from the 0.2.3 CLI help. Global options apply where the command's output handler supports them; --json does not make every command emit JSON.",
+        "These descriptions come from the 0.3.0 CLI help. Global options apply where the command's output handler supports them; --json does not make every command emit JSON.",
       ],
       bullets: command.flags.map((flag) => `${flag.flags} — ${flag.description}`),
       links: [{ label: "Global CLI options", href: "#/docs/cli-global" }],
@@ -113,7 +114,7 @@ const presets = release.presets.map((item) =>
       id: "preview",
       title: "Preview before creating",
       paragraphs: [
-        "In 0.2.3 a bundled preset has no project.path, so this command plans for the current directory. A positional name changes the project name, not the destination. Use a new empty directory, or download a config from the setup page to set an explicit child folder. This example only prints the plan.",
+        "In 0.3.0 a bundled preset has no project.path, so this command plans for the current directory. A positional name changes the project name, not the destination. Use a new empty directory, or download a config from the setup page to set an explicit child folder. This example only prints the plan.",
       ],
       code: `npx rsetup create my-app --preset ${item.id} --dry-run`,
     },
@@ -123,7 +124,7 @@ const indexes = [
   page(
     "cli",
     "CLI reference",
-    "Every public command in RepoSetup 0.2.3, from the checked-in CLI help.",
+    "Every public command in RepoSetup 0.3.0, from the checked-in CLI help.",
     [
       {
         id: "commands",
@@ -155,7 +156,7 @@ const indexes = [
       code: "npx rsetup --help",
     },
   ]),
-  page("cli-exit-codes", "CLI exit codes", "Process status categories from the 0.2.3 CLI.", [
+  page("cli-exit-codes", "CLI exit codes", "Process status categories from the 0.3.0 CLI.", [
     {
       id: "statuses",
       title: "Status values",
@@ -168,7 +169,7 @@ const indexes = [
       links: [{ label: "Troubleshooting", href: "#/docs/troubleshooting" }],
     },
   ]),
-  page("integrations", "Integration reference", "All checked-in integration IDs in 0.2.3.", [
+  page("integrations", "Integration reference", "All checked-in integration IDs in 0.3.0.", [
     {
       id: "catalog",
       title: "Browse the definitions",
@@ -178,7 +179,7 @@ const indexes = [
       links: integrations.map((item) => ({ label: item.title, href: `#/docs/${item.slug}` })),
     },
   ]),
-  page("preset-reference", "Preset reference", "The five exact bundled recipes from 0.2.3.", [
+  page("preset-reference", "Preset reference", "The five exact bundled recipes from 0.3.0.", [
     {
       id: "recipes",
       title: "Bundled recipes",
@@ -188,6 +189,7 @@ const indexes = [
   ]),
 ];
 export const docPages: DocPage[] = [
+  ...releaseGuides,
   ...authoredPages,
   ...indexes,
   ...commands,
@@ -195,7 +197,7 @@ export const docPages: DocPage[] = [
   ...presets,
 ];
 export const docBySlug = new Map(docPages.map((item) => [item.slug, item]));
-export const primaryPages = [...authoredPages, ...indexes];
+export const primaryPages = [...releaseGuides, ...authoredPages, ...indexes];
 export const searchPages = (query: string) => {
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (!terms.length) return [];

@@ -22,6 +22,10 @@ const requiredGuides = [
   "command-basics",
   "glossary",
   "contribute",
+  "whats-new-0-3",
+  "selections",
+  "intended-health",
+  "repair-missing-files",
 ];
 const flagNames = (syntax: string) => syntax.match(/--?[A-Za-z][\w-]*/g) ?? [];
 const textOf = (page: (typeof docPages)[number]) =>
@@ -39,7 +43,7 @@ const textOf = (page: (typeof docPages)[number]) =>
     ]),
   ].join("\n");
 
-describe("published 0.2.3 documentation integrity", () => {
+describe("reviewed 0.3.0 documentation integrity", () => {
   it("has every required guide with unique routes and accessible heading metadata", () => {
     expect(docBySlug.size).toBe(docPages.length);
     expect(new Set(docPages.map(({ slug }) => slug)).size).toBe(docPages.length);
@@ -74,10 +78,11 @@ describe("published 0.2.3 documentation integrity", () => {
           const [path, query] = link.href.slice(2).split("?");
           const [route, id, extra] = path!.split("/");
           expect(extra, label).toBeUndefined();
-          expect(["", "docs", "integrations", "presets", "builder", "release"], label).toContain(
-            route,
-          );
-          if (route === "" || route === "release") expect(id, label).toBeUndefined();
+          expect(
+            ["", "docs", "integrations", "presets", "builder", "release", "how-to"],
+            label,
+          ).toContain(route);
+          if (["", "release", "how-to"].includes(route!)) expect(id, label).toBeUndefined();
           if (route === "docs" && id !== undefined) expect(docBySlug.has(id), label).toBe(true);
           if (route === "integrations" && id !== undefined)
             expect(
@@ -203,9 +208,7 @@ describe("published 0.2.3 documentation integrity", () => {
       }
     }
     expect(examples).toBeGreaterThan(50);
-    expect(JSON.stringify(docPages)).not.toMatch(
-      /0\.3\.\d|0\.4\.\d|--selection(?:-file)?|--recipe\b/,
-    );
+    expect(JSON.stringify(docPages)).not.toMatch(/0\.4\.\d|--recipe\b/);
   });
 
   it("keeps authored JSON examples valid against the released schema and registry", () => {

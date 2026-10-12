@@ -27,7 +27,7 @@ export function builder(main: HTMLElement, id: string) {
     pageIntro(
       "YOUR SETUP, EXPLAINED",
       "Start with a clear plan.",
-      "Choose a bundled recipe, name your project, and preview it in your terminal. Everything here uses the published 0.2.3 CLI.",
+      "Choose a bundled recipe, name your project, and preview it in your terminal. Everything here uses the reviewed 0.3.0 CLI.",
     ),
   );
   const layout = el("div", undefined, "builder-layout");

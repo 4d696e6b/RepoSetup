@@ -1,9 +1,13 @@
 {
   "schemaVersion": 1,
-  "source": { "tag": "v0.2.3", "revision": "a213a6a1edf63771aba8d5b91bfdcf44d665de22" },
+  "source": {
+    "tag": "v0.3.0",
+    "revision": "45c81b22735d712652a3f584153e4e854e4c5443",
+    "status": "prepared"
+  },
   "package": {
     "name": "rsetup",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "nodeEngine": ">=24",
     "binNames": ["rsetup", "reposetup"]
   },
@@ -31,10 +35,16 @@
         "arguments": [{ "syntax": "name", "description": "project name" }],
         "flags": [
           { "flags": "-c, --config <path>", "description": "path to a RepoSetup JSON config" },
-          { "flags": "--preset <id>", "description": "use a bundled guaranteed recipe preset" },
+          { "flags": "--preset <id>", "description": "use a bundled recipe preset" },
+          { "flags": "--selection <token>", "description": "review a bounded selection-v1 token" },
+          { "flags": "--selection-file <path>", "description": "review a selection-v1 JSON file" },
           {
             "flags": "--dry-run",
             "description": "print the installation plan without changing files (default: false)"
+          },
+          {
+            "flags": "--diff",
+            "description": "preview file and dependency changes before execution (default: false)"
           },
           {
             "flags": "--yes",
@@ -58,13 +68,25 @@
       {
         "id": "add",
         "path": ["add"],
-        "usage": "reposetup add [options] <ids...>",
+        "usage": "reposetup add [options] [ids...]",
         "description": "Add one or more integrations to the current project",
         "arguments": [{ "syntax": "ids", "description": "one or more integration ids" }],
         "flags": [
           {
+            "flags": "--selection <token>",
+            "description": "review an additive selection-v1 token"
+          },
+          {
+            "flags": "--config <path>",
+            "description": "review an additive selection-v1 JSON file"
+          },
+          {
             "flags": "--dry-run",
             "description": "print the add plan without changing files (default: false)"
+          },
+          {
+            "flags": "--diff",
+            "description": "preview file and dependency changes before execution (default: false)"
           },
           {
             "flags": "--yes",
@@ -90,6 +112,10 @@
           {
             "flags": "--dry-run",
             "description": "print the remove plan without changing files (default: false)"
+          },
+          {
+            "flags": "--diff",
+            "description": "preview file and dependency changes before execution (default: false)"
           },
           {
             "flags": "--yes",
@@ -153,9 +179,27 @@
         "id": "doctor",
         "path": ["doctor"],
         "usage": "reposetup doctor [options]",
-        "description": "Run read-only health checks for the current project",
+        "description": "Check project health and optionally repair known missing recipe files",
         "arguments": [],
-        "flags": [{ "flags": "-h, --help", "description": "display help for command" }],
+        "flags": [
+          {
+            "flags": "--config <path>",
+            "description": "compare the project with a schemaVersion 1 intended-stack config"
+          },
+          {
+            "flags": "--fix",
+            "description": "review a narrow file-only repair plan (default: false)"
+          },
+          {
+            "flags": "--dry-run",
+            "description": "preview repairs without writing files (default: false)"
+          },
+          {
+            "flags": "--yes",
+            "description": "confirm repair without an interactive prompt (default: false)"
+          },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
         "children": []
       },
       {
@@ -1106,7 +1150,7 @@
       "id": "vitest",
       "name": "Vitest",
       "category": "testing",
-      "description": "Adds Vitest. Next.js uses the official RTL guide; other Node apps install Vitest only.",
+      "description": "Adds Vitest. Next.js uses the official RTL guide; React and Express include sample tests.",
       "status": "candidate",
       "documentationUrl": "https://vitest.dev/guide/",
       "keywords": ["test", "vite", "rtl"],
@@ -1210,7 +1254,7 @@
       "id": "pytest",
       "name": "pytest",
       "category": "testing",
-      "description": "Adds pytest as a development dependency. Does not write sample tests.",
+      "description": "Adds pytest as a development dependency and a FastAPI endpoint test.",
       "status": "candidate",
       "documentationUrl": "https://docs.pytest.org/en/stable/getting-started.html",
       "keywords": ["python", "test"],

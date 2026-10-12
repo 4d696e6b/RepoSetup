@@ -197,7 +197,7 @@ async function render(focus = false) {
     app.append(failed, footer());
     searchDialog = createSearch();
     app.append(searchDialog);
-    document.title = "Section unavailable · RepoSetup development";
+    document.title = "Section unavailable · RepoSetup 0.3.0 candidate";
     if (focus) failed.focus();
     return;
   }
@@ -206,7 +206,7 @@ async function render(focus = false) {
   app.replaceChildren(header(page));
   const notice = el(
     "aside",
-    "0.3.0 development preview. Full reference pages describe published 0.2.3; new selections require the reviewed local CLI.",
+    "0.3.0 release candidate. These references and selections require the reviewed 0.3.0 CLI; the currently published package remains 0.2.3.",
     "development-notice",
   );
   notice.setAttribute("aria-label", "Development preview");
@@ -259,7 +259,7 @@ async function render(focus = false) {
   app.append(footer());
   searchDialog = createSearch();
   app.append(searchDialog);
-  document.title = `${main.querySelector("h1")?.textContent ?? "Guide"} · RepoSetup development`;
+  document.title = `${main.querySelector("h1")?.textContent ?? "Guide"} · RepoSetup 0.3.0 candidate`;
   if (focus && !anchor) {
     main.focus();
     window.scrollTo(0, 0);

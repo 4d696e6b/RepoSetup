@@ -4,16 +4,26 @@
 
 The owner removed the formal freeze, seven-day soak and calendar waiting requirements for 0.3.0. Continue implementation immediately. Exact source/artifact identity, meaningful regression and platform checks, blocker review, manual accessibility/device evidence, and separate publication/deployment authorization still apply. The old soak monitor is paused. Historical freeze/soak statements below describe the preceding policy and do not impose a current waiting gate.
 
-Last updated: 2026-10-04.
+Last updated: 2026-10-12.
 
-## 12 October reconciliation checkpoint
+## Current release preparation — 12 October 2026
 
-Implementation continues without formal freeze, soak or calendar waiting. The current CLI artifact is source `8a9644f9e90906f2ae1c7409cb69b4fa85ed42a4`, version `0.3.0-alpha.1`, SHA-256 `04b18a2231f1d8b91251250f1d58358887be8047c51b54497082ef4c1860293b`; the archive rebuild matches. Catalog/matrix revisions are `0.3.0-cli.5` / `0.3.0-selection.5` with merged recipe revision `2026-10-08`. The duplicate Express/Vitest test recipe and CI provenance checkout have been corrected.
+Canonical branch: `codex/release-0.3.0`; workspace: `/Volumes/Developer/zeaek_/.codex/worktrees/release-030-staging/RepoSetup`. Stable 0.3.0 manifests are prepared; nothing is tagged, published or deployed. Exact artifact identities live in `apps/website/src/handoff.ts` and qualification reports. Catalog/matrix revisions remain `0.3.0-cli.5` / `0.3.0-selection.5`, with recipe revision `2026-10-08`.
 
-The integrated development website retains the published 0.2.3 full reference (37 integrations, five presets, 72 docs), artwork, routes, downloads and release history alongside nine beginner explanations, three minimal starters and bounded create/add handoffs. Its new surface is lazy-loaded and navigation races are guarded. The production site remains unchanged; stable reference pages are labeled 0.2.3 until final release-reference preparation.
+- [x] Retain the published 0.2.1–0.2.3 fixes and all legacy input/JSON contracts.
+- [x] Correct Express/Vitest file ownership and reject conflicting exclusive writes during planning.
+- [x] Prepare stable version metadata and release notes.
+- [x] Preserve the published website's full catalog, legacy routes/presets and original artwork; generate current 0.3.0 parser/registry facts from the reviewed CLI, with 76 documentation pages and separately retained 0.2.3 history.
+- [x] Correct packed repair fixtures without weakening dependency-health guards; add missing-dependency refusal coverage.
+- [x] Correct WebKit native keyboard/focus tests and slideshow deadline determinism.
+- [x] Patch the two workspace build-tool advisories; renewed workspace audit reports zero known advisories.
+- [ ] Finish final exact-source platform/selection/golden/five-profile website and three release-workflow qualifications.
+- [ ] Record actual desktop screen-reader and physical-mobile results. The owner can perform both on the prepared preview.
+- [ ] Complete qualified-artifact review, publication authorization and production delivery.
 
-Local evidence: packed contract 105/105, exact-artifact website handoff 6/6, real Node create 16/16 and add 14/14, and combined desktop Chrome/mobile emulation/Firefox browser cases 156/156. Python real execution could not start without uv; the Node-only reports explicitly exclude it and cannot qualify the full matrix. Manual/device/WebKit/platform and final delivery checks remain separate. Details and performance limits are in [reconciliation status](./RECONCILIATION_0.3.0.md).
+Local checkpoint: 1,199 workspace tests (core 301, registry 15, integrations 680, CLI 154, website 49), both typechecks, lint and build pass; all three packed maintenance cases and six stable packed website handoff cases pass. Combined local browser testing passed 156 cases with three stale home-label assertions failing after version preparation; those assertions were updated to require the 0.3.0 candidate and accurate 0.2.3 publication notice, and the three affected cases then passed. A final full clean-source run is still required. The preceding remote platform repair and six-cell real create/add runs pass; they do not qualify changed final source automatically.
 
+The phase checklists below preserve preceding implementation/evidence checkpoints. Current delivery readiness is governed by this section and [release preparation](../release-docs/RELEASE_PREPARATION_0.3.0.md). No formal freeze or soak is required.
 
 ## Current position
 

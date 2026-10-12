@@ -7,7 +7,7 @@ import {
   releaseDateLabel,
   releaseHistory,
 } from "../src/reference/release-history";
-import { release, REPOSITORY, VERSION } from "../src/reference/release";
+import { release, REPOSITORY, PUBLISHED_VERSION } from "../src/reference/release";
 
 const changelog = readFileSync(new URL("../../../CHANGELOG.md", import.meta.url), "utf8");
 const recordedVersions = [...changelog.matchAll(/^## \[(\d+\.\d+\.\d+)\]/gm)].map(
@@ -26,8 +26,8 @@ describe("published release history", () => {
   it("covers the complete recorded npm release series newest first and matches the website baseline", () => {
     expect(releaseHistory.map(({ version }) => version)).toEqual(recordedVersions);
     expect(releaseHistory).toHaveLength(6);
-    expect(releaseHistory[0]!.version).toBe(VERSION);
-    expect(releaseHistory[0]!.version).toBe(release.package.version);
+    expect(releaseHistory[0]!.version).toBe(PUBLISHED_VERSION);
+
     expect(releaseHistory.every(({ version }) => /^0\.[12]\.\d$/.test(version))).toBe(true);
     expect(new Set(releaseHistory.map(({ version }) => version)).size).toBe(releaseHistory.length);
     const publicationTimes = releaseHistory.map(({ publishedAt }) => Date.parse(publishedAt));

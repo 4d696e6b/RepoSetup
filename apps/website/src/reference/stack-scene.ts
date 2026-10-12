@@ -88,7 +88,7 @@ function updateRecipe(experience: HTMLElement, id: string) {
   );
   experience.querySelector<HTMLElement>(".tablet-support")!.textContent = facts.experimental.length
     ? `Bundled recipe · Includes experimental integrations: ${facts.experimental.join(", ")}.`
-    : "Bundled recipe · Ingredients match the published 0.2.3 preset.";
+    : "Bundled recipe · Ingredients match the reviewed 0.3.0 preset.";
   return true;
 }
 

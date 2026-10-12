@@ -1,5 +1,5 @@
 import { el, link } from "./dom.js";
-import { REPOSITORY, VERSION } from "./release.js";
+import { REPOSITORY, PUBLISHED_VERSION } from "./release.js";
 
 export interface ReleaseHistoryEntry {
   readonly version: string;
@@ -247,7 +247,8 @@ export function renderReleaseHistory(): HTMLElement {
     const date = el("time", releaseDateLabel(entry.publishedAt));
     date.dateTime = entry.publishedAt.slice(0, 10);
     meta.append(date, el("span", entry.nodeRequirement, "release-node-requirement"));
-    if (entry.version === VERSION) meta.append(el("span", "Latest published", "release-latest"));
+    if (entry.version === PUBLISHED_VERSION)
+      meta.append(el("span", "Latest published", "release-latest"));
     const heading = el("h2", `${entry.version} · ${entry.title}`, "release-card-heading");
     heading.id = `${id}-title`;
     const changes = el("ul", undefined, "release-card-changes");

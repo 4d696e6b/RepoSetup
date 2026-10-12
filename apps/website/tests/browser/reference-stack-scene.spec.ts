@@ -92,7 +92,7 @@ async function assertRecipe(experience: Locator, preset: (typeof release.presets
     await expect(experience.locator(".tablet-support")).toContainText(integration.name);
   if (experimental.length === 0)
     await expect(experience.locator(".tablet-support")).not.toContainText(/experimental/i);
-  await expect(experience).not.toContainText(/0\.3\.\d|0\.4\.\d|--selection|--recipe\b/);
+  await expect(experience).not.toContainText(/0\.4\.\d|--selection|--recipe\b/);
 }
 
 async function cinematicProgress(experience: Locator) {
@@ -160,7 +160,7 @@ test("the passive scene automatically shows all five exact presets with a stable
   await expect(scene(page)).toHaveCount(0);
 });
 
-test("the independent preset builder still downloads the exact published 0.2.3 configuration", async ({
+test("the independent preset builder still downloads the exact reviewed 0.3.0 configuration", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });

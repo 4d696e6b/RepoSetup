@@ -4,3 +4,9 @@ packages:
 
 allowBuilds:
   esbuild: true
+
+# Maintainer build/test tooling only; generated project recipes keep their own
+# independently qualified versions. Revisit these overrides when upstream ranges update.
+overrides:
+  esbuild: 0.28.1
+  source-map-js: 1.2.2
