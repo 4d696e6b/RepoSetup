@@ -16,9 +16,11 @@ Canonical branch: `codex/release-0.3.0`; workspace: `/Volumes/Developer/zeaek_/.
 - [x] Preserve the published website's full catalog, legacy routes/presets and original artwork; generate current 0.3.0 parser/registry facts from the reviewed CLI, with 76 documentation pages and separately retained 0.2.3 history.
 - [x] Correct packed repair fixtures without weakening dependency-health guards; add missing-dependency refusal coverage.
 - [x] Correct WebKit native keyboard/focus tests and slideshow deadline determinism.
+- [x] Split the 21 legacy page/width accessibility scans into individually reported tests with the original assertions and 60-second per-case budget; no scan, browser or accessibility rule is removed.
 - [x] Patch the two workspace build-tool advisories; renewed workspace audit reports zero known advisories.
 - [ ] Finish final exact-source platform/selection/golden/five-profile website and three release-workflow qualifications.
-- [ ] Record actual desktop screen-reader and physical-mobile results. The owner can perform both on the prepared preview.
+- [x] Run the owner-requested installed Chrome phone extension: invalid-folder recovery, retained guidance choices, create/add exports, context reset, clipboard and actual JSON downloads pass on preview source `6a65d65`. This is emulation, not a physical-device result.
+- [ ] Finish native desktop screen-reader announcement validation; VoiceOver could be enabled but its announcements could not be reliably observed through the desktop control tools. Physical mobile results remain unperformed; the owner requested Chrome simulation instead.
 - [ ] Complete qualified-artifact review, publication authorization and production delivery.
 
 Local checkpoint: 1,199 workspace tests (core 301, registry 15, integrations 680, CLI 154, website 49), both typechecks, lint and build pass; all three packed maintenance cases and six stable packed website handoff cases pass. Combined local browser testing passed 156 cases with three stale home-label assertions failing after version preparation; those assertions were updated to require the 0.3.0 candidate and accurate 0.2.3 publication notice, and the three affected cases then passed. A final full clean-source run is still required. The preceding remote platform repair and six-cell real create/add runs pass; they do not qualify changed final source automatically.

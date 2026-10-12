@@ -169,18 +169,20 @@ test("every docs, integration and builder route loads at 320px without overflow"
   }
   expect(errors).toEqual([]);
 });
-test("key pages pass accessibility and reflow checks", async ({ page }) => {
-  for (const width of [390, 768, 1440]) {
-    await page.setViewportSize({ width, height: 1000 });
-    for (const route of [
-      "/",
-      "/docs/getting-started",
-      "/docs/cli-create",
-      "/integrations",
-      "/integrations/prisma",
-      "/presets",
-      "/builder/fastapi",
-    ]) {
+for (const width of [390, 768, 1440]) {
+  for (const route of [
+    "/",
+    "/docs/getting-started",
+    "/docs/cli-create",
+    "/integrations",
+    "/integrations/prisma",
+    "/presets",
+    "/builder/fastapi",
+  ]) {
+    test(`key page ${route} at ${width}px passes accessibility and reflow checks`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 1000 });
       await page.goto(`/#${route}`);
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
@@ -190,9 +192,9 @@ test("key pages pass accessibility and reflow checks", async ({ page }) => {
         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
         .analyze();
       expect(scan.violations, `${route} at ${width}`).toEqual([]);
-    }
+    });
   }
-});
+}
 test("CSP blocks connections and no-JavaScript fallback links the released guide", async ({
   page,
   browser,
