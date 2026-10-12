@@ -110,7 +110,7 @@ export function builder(main: HTMLElement, contextId: string, params: URLSearchP
       checkbox,
       label,
       description,
-      link("When can I skip it?", `#/integrations/${item.id}`, "text-link"),
+      link("When can I skip it?", `#/learn/libraries/${item.id}`, "text-link"),
     );
     options.append(row);
     checkbox.addEventListener("change", () => {

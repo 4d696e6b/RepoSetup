@@ -9,7 +9,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is an **early-stage** open-source project with published `0.2.3`. This release preparation branch reconciles the unpublished `0.3.0-alpha.1` CLI/website candidate with those shipped fixes; its new source remains unqualified. The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is an **early-stage** open-source project with published `0.2.3`. This release preparation branch prepares stable `0.3.0` CLI/website metadata and retains those shipped fixes. Automated qualification is recorded separately from pending actual accessibility/device checks and publication. The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -38,6 +38,10 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 - Add supported integrations to an existing project
 - Safe `remove` where an explicit recipe exists
 - Project health checks (`doctor`), including installed dependency metadata and bounded Docker/Compose prerequisite probes
+- Curated beginner explanations and minimal React/Vite, Express and FastAPI starters
+- Versioned, size-bounded create/add selections with decoded choices and mandatory local confirmation
+- Structural file previews (`--diff`), intended-stack checks and narrow missing-file repairs
+- Companion website with the full reference, goal discovery and local selection handoff
 - Config export with no secrets
 - Built-in local registry (JavaScript/TypeScript and Python ecosystems)
 - argv-based process execution (`spawn` with `shell: false`)
@@ -66,7 +70,7 @@ git switch --track origin/codex/release-0.3.0
 pnpm install --frozen-lockfile
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.3.0-alpha.1 (development source)
+node packages/cli/dist/bin.js --version   # 0.3.0 (prepared release source)
 ```
 
 Preview a Next.js example without changing files:
@@ -83,7 +87,7 @@ node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.jso
 
 Always try `--dry-run` first on a project you care about.
 
-On the 0.3.0 development branch, add `--diff` to `create`, `add`, or `remove` for a read-only change summary, including existing-file conflicts and external effects that cannot be known before execution. For example, `reposetup add prettier --diff --dry-run` prints the plan and preview without installing anything. `--json` retains the version 1 plan envelope and adds a `preview` field only when `--diff` is requested. File contents and secret values are never printed by the preview. A project file changed after review causes execution to stop and asks you to preview again.
+With the reviewed 0.3.0 CLI, add `--diff` to `create`, `add`, or `remove` for a read-only change summary, including existing-file conflicts and external effects that cannot be known before execution. For example, `reposetup add prettier --diff --dry-run` prints the plan and preview without installing anything. `--json` retains the version 1 plan envelope and adds a `preview` field only when `--diff` is requested. File contents and secret values are never printed by the preview. A project file changed after review causes execution to stop and asks you to preview again.
 
 Use `reposetup doctor --config reposetup.json` to compare an existing project's actual evidence with the stack you intend to maintain. It checks expected integrations even when ordinary detection no longer finds them, reports version differences and extra integrations as information, and makes no project changes. See the [intended-stack doctor contract](docs/specification-documentation/product-docs/INTENDED_DOCTOR_0.3.0.md).
 
@@ -328,7 +332,7 @@ There is no `test:pack` script. The 0.3.0 candidate's identified tarball is exer
 
 See the [0.3.0 implementation status](docs/specification-documentation/implementing-docs/STATUS_0.3.0.md) and [candidate qualification record](docs/specification-documentation/release-docs/RELEASE_CANDIDATE_0.3.0.md) for the current bounded scope, exact artifact identity and open release gates. The [0.2.0 roadmap](docs/specification-documentation/implementing-docs/ROADMAP_0.2.0.md) remains historical context.
 
-- Qualify the integrated 0.3.0 CLI/website candidate on the frozen support matrix, including manual accessibility/device and combined safety gates.
+- Qualify the integrated 0.3.0 CLI/website candidate on the documented support matrix, including actual accessibility/device results and exact artifact review.
 - Retain existing maturity labels until their exact context/platform evidence supports promotion.
 - The owner-approved companion website lives in `apps/website`; browser dependencies remain outside core. It is not deployed.
 
@@ -342,4 +346,4 @@ The 0.3.0 candidate integrates curated beginner `info`/goal search, separate min
 
 The first reviewable slice lives in `apps/website`: goal discovery, nine reviewed integration pages, three minimal starter explanations, and a bounded create/add selection builder. Run `pnpm install`, `pnpm build`, then `pnpm website:dev`. See [website development and exact CLI handoff](apps/website/README.md) for qualification and local artifact setup.
 
-Website commands target the [exact packed 0.3.0 CLI candidate](apps/website/README.md#matching-cli-artifact-required-before-pasting-commands). The combined candidate has not passed release qualification; no website publication or CLI release is implied.
+Website commands target the [exact packed 0.3.0 CLI candidate](apps/website/README.md#matching-cli-artifact-required-before-pasting-commands). The automated CLI/website evidence is recorded in release preparation and current workflow reports. Actual screen-reader/physical-device results and separately authorized delivery are still required; no website production deployment or CLI publication is implied.

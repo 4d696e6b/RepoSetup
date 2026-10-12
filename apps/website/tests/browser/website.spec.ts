@@ -12,6 +12,30 @@ test.beforeEach(async ({ browser }, testInfo) => {
   testInfo.annotations.push({ type: "browser-version", description: browser.version() });
 });
 
+test("builder help opens curated skip guidance and preserves the selection on return", async ({
+  page,
+}) => {
+  await page.goto("/#/builder/express-ts-pnpm");
+  await page.getByLabel("Project name", { exact: true }).fill("keep-app");
+  await page.getByLabel("New project folder", { exact: true }).fill("projects/keep-app");
+  const choice = page.getByLabel("Zod", { exact: true });
+  await choice.check();
+  const command = await page.getByLabel("RepoSetup command", { exact: true }).inputValue();
+  const help = page.locator(".choice").filter({ has: choice }).getByRole("link", {
+    name: "When can I skip it?",
+  });
+  await expect(help).toHaveAttribute("href", "#/learn/libraries/zod");
+  await help.click();
+  await expect(page.getByRole("heading", { name: "When to skip it" })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByLabel("Project name", { exact: true })).toHaveValue("keep-app");
+  await expect(page.getByLabel("New project folder", { exact: true })).toHaveValue(
+    "projects/keep-app",
+  );
+  await expect(choice).toBeChecked();
+  await expect(page.getByLabel("RepoSetup command", { exact: true })).toHaveValue(command);
+});
+
 test("goal discovery, library explanations, minimal presets and bounded selection", async ({
   page,
 }) => {
