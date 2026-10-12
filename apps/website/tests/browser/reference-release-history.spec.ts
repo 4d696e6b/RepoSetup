@@ -50,15 +50,19 @@ test("direct What's new entry includes every published release in newest-first o
 
 test("release sources, documentation, and preset builder remain reachable by keyboard", async ({
   page,
+  browserName,
 }) => {
+  // Safari's default link navigation is Option-Tab (Apple's documented shortcut).
+  const previous = browserName === "webkit" ? "Alt+Shift+Tab" : "Shift+Tab";
+  const next = browserName === "webkit" ? "Alt+Tab" : "Tab";
   const history = page.getByRole("region", { name: "Published release history" });
   for (const version of versions) {
     const source = history.locator(`article[data-version="${version}"]`).getByRole("link", {
       name: new RegExp(`^(?:Release notes|Changelog) ${version.replaceAll(".", "\\.")}$`),
     });
     await source.focus();
-    await source.press("Shift+Tab");
-    await page.keyboard.press("Tab");
+    await source.press(previous);
+    await page.keyboard.press(next);
     await expect(source).toBeFocused();
   }
   const docs = page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", {
@@ -66,8 +70,8 @@ test("release sources, documentation, and preset builder remain reachable by key
     exact: true,
   });
   await docs.focus();
-  await docs.press("Shift+Tab");
-  await page.keyboard.press("Tab");
+  await docs.press(previous);
+  await page.keyboard.press(next);
   await expect(docs).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#\/docs$/);

@@ -452,7 +452,11 @@ test("route cleanup stops detached scene timers and back navigation starts a fre
 test("reading the preset chapter freezes its recipe and preserves the remaining cycle time", async ({
   page,
 }) => {
-  await page.clock.install();
+  // A running fake clock still consumes real assertion time on slower browsers.
+  // Pause before loading so only the explicit ticks count toward the deadline.
+  const start = new Date("2026-10-12T00:00:00Z");
+  await page.clock.install({ time: start });
+  await page.clock.pauseAt(new Date(start.getTime() + 1000));
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   const experience = await visibleScene(page);

@@ -21,8 +21,17 @@ let renderSequence = 0;
 const app = document.querySelector<HTMLDivElement>("#app")!;
 const recordPublicPage = initializeObservability();
 let searchDialog: HTMLDialogElement;
+let searchReturnFocus: HTMLElement | null = null;
 let disposeScene = () => {};
-function showSearch() {
+function showSearch(event?: Event) {
+  // WebKit does not focus a button on pointer click. Remember an explicit
+  // trigger as well as keyboard focus so dismissing the modal is predictable.
+  searchReturnFocus =
+    event?.currentTarget instanceof HTMLElement
+      ? event.currentTarget
+      : document.activeElement instanceof HTMLElement && document.activeElement !== document.body
+        ? document.activeElement
+        : app.querySelector<HTMLElement>(".search-trigger");
   searchDialog.showModal();
   searchDialog.querySelector("input")?.focus();
 }
@@ -35,6 +44,10 @@ function createSearch() {
   const close = el("button", "Close", "chip");
   close.type = "button";
   close.addEventListener("click", () => dialog.close());
+  dialog.addEventListener("close", () => {
+    if (searchReturnFocus?.isConnected) searchReturnFocus.focus({ preventScroll: true });
+    searchReturnFocus = null;
+  });
   top.append(title, close);
   const label = el("label", "Search documentation and integrations");
   label.htmlFor = "global-search";

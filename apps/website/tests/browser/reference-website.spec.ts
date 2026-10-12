@@ -78,7 +78,10 @@ test("recipe download and commands preserve exact selections and explicit projec
     "Includes experimental integrations: PostgreSQL, Docker, Docker Compose, GitHub Actions.",
   );
 });
-test("docs search dialog works with keyboard and hostile text stays literal", async ({ page }) => {
+test("docs search dialog works with keyboard and hostile text stays literal", async ({
+  page,
+  browserName,
+}) => {
   await page.goto("/#/docs");
   await page.getByRole("button", { name: "Open documentation search" }).click();
   const input = page.getByRole("searchbox", { name: "Search documentation and integrations" });
@@ -90,7 +93,7 @@ test("docs search dialog works with keyboard and hostile text stays literal", as
   await expect(input).toBeFocused();
   await input.fill("psycopg");
   await expect(page.getByRole("dialog").getByRole("status")).not.toHaveText("0 results");
-  await input.press("Tab");
+  await input.press(browserName === "webkit" ? "Alt+Tab" : "Tab");
   await expect(page.getByRole("dialog").getByRole("link").first()).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("dialog")).not.toBeVisible();

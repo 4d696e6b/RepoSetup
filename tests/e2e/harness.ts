@@ -92,7 +92,10 @@ export async function createTempWorkspace(prefix: string): Promise<string> {
   return mkdtemp(path.join(os.tmpdir(), prefix));
 }
 
-export async function snapshotTree(root: string): Promise<Record<string, string>> {
+export async function snapshotTree(
+  root: string,
+  excludedDirectories: readonly string[] = [],
+): Promise<Record<string, string>> {
   const snapshot: Record<string, string> = {};
 
   async function walk(current: string): Promise<void> {
@@ -102,7 +105,7 @@ export async function snapshotTree(root: string): Promise<Record<string, string>
       const rel = path.relative(root, full).split(path.sep).join("/");
       if (entry.isDirectory()) {
         snapshot[`${rel}/`] = "dir";
-        await walk(full);
+        if (!excludedDirectories.includes(rel)) await walk(full);
       } else {
         snapshot[rel] = await readFile(full, "utf8");
       }
