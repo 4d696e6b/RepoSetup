@@ -1,6 +1,10 @@
 # RepoSetup 0.3.0 candidate qualification record
 
-Status: **release branch preparing; Phase 9 remains open, not frozen or release-qualified.** No tag, npm publication, or website deployment is authorized by this record.
+## Owner decision — 12 October 2026
+
+The owner removed the formal freeze, seven-day soak and calendar waiting requirements for 0.3.0. Continue implementation immediately. Exact source/artifact identity, meaningful regression and platform checks, blocker review, manual accessibility/device evidence, and separate publication/deployment authorization still apply. The old soak monitor is paused. Historical freeze/soak statements below describe the preceding policy and do not impose a current waiting gate.
+
+Status: **release branch preparing; Phase 9 remains open, not yet release-qualified; no freeze or soak gate.** No tag, npm publication, or website deployment is authorized by this record.
 
 ## Release staging checkpoint — 2026-10-09
 
@@ -29,9 +33,9 @@ The source/artifact identities below are historical predecessor evidence. The me
 ## Open Phase 9 gates
 
 - [x] **9.1 Scope/docs:** root quick start names the integration branch and frozen-lockfile install; CLI command/selection/preview/repair descriptions match built help and the product contracts. Website setup names the exact local artifact and its limits. Current status documents identify the merged candidate and the explicit decision to defer all optional scope.
-- [ ] **9.2 Identity/freeze:** commit website pin and qualification tooling, record exact website source SHA, then freeze both source identities, lockfile, catalog and one tarball hash. Any CLI or website source change after freeze needs renewed applicable evidence.
+- [ ] **9.2 Artifact identity:** record the reviewed CLI/website source, lockfile, catalog/matrix and tarball digest; recheck changed implementation against its actual bytes. No formal freeze is required.
 - [ ] **9.3 Candidate qualification:** pass retained golden, real create/add/legacy, packed selection/transport/maintenance, preview/doctor/repair, and full website/browser/joint handoff checks on the advertised runners with artifact identity and no hidden skips. Local unit or predecessor runs do not close this gate.
-- [ ] **9.4 Repeat/soak:** obtain three consecutive full qualifications for the same frozen candidate pair and seven calendar days without an open P0/P1, data-loss or security defect. The timer has not started.
+- [x] **9.4 Calendar gate removed:** the owner waived formal freeze and soak on 12 October 2026. Repeat application and repair safety remain automated test requirements.
 - [ ] **9.5 Blocker audit:** review failures and support claims, then record no open release-blocking issues with exact evidence. Do not infer this from green unit tests.
 - [ ] **9.6 Manual and combined safety:** run the [screen-reader and physical-device protocol](./MANUAL_ACCESSIBILITY_DEVICE_0.3.0.md) and review the integrated CLI/website candidate for secrets, malformed records, traversal/symlinks, conflicting files, concurrent changes, interruption and repeated repair. Browser emulation and scripted beginner journeys do not replace these checks; observed people remain 0/5 by the owner's Phase 8 substitution.
 

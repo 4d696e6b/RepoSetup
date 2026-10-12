@@ -253,6 +253,49 @@ describe("planInstallation", () => {
 });
 
 describe("validateInstallationPlan", () => {
+  it.each(["sample.ts", "./sample.ts", ".\\sample.ts"])(
+    "refuses duplicate exclusive file creation through path %s before exposing operations",
+    (target) => {
+      const first = {
+        type: "create_file",
+        path: "sample.ts",
+        content: "user source",
+        behavior: "fail_if_exists",
+        description: "First owner",
+      };
+      const result = validateInstallationPlan([first, { ...first, path: target }]);
+      expect(result.valid).toBe(false);
+      expect(result.operations).toEqual([]);
+      expect(result.errors[0]).toMatchObject({
+        code: "PLAN_INVALID",
+        details: { path: "sample.ts", index: 1, previousIndex: 0 },
+      });
+    },
+  );
+
+  it("retains intentional edits after creation and repeated preserve-only creation", () => {
+    const create = {
+      type: "create_file",
+      path: "package.json",
+      content: "{}",
+      behavior: "create_if_missing",
+      description: "Preserve an existing manifest",
+    };
+    const result = validateInstallationPlan([
+      create,
+      create,
+      {
+        type: "modify_json",
+        path: "package.json",
+        merge: { private: true },
+        behavior: "merge",
+        description: "Add a manifest field",
+      },
+    ]);
+    expect(result.valid).toBe(true);
+    expect(result.operations).toHaveLength(3);
+  });
+
   it("accepts typed operations and rejects path traversal", () => {
     const valid = validateInstallationPlan([
       {

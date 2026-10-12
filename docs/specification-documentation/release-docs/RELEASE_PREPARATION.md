@@ -68,7 +68,7 @@ Run feature-specific gates before proposing the final merge. 0.3.0 retains its
 website, handoff, accessibility and final candidate/manual criteria. 0.4.0 also
 requires the remaining task compiler milestones and retained qualification
 evidence; offline fixtures do not establish provider or production readiness.
-Preparation does not waive an existing soak or manual signoff requirement.
+The owner waived the 0.3.0 formal freeze, soak and calendar wait on 12 October 2026. Retain technical qualification and manual signoff requirements.
 
 After review, merge the completed release into main and synchronize the release
 branch to that exact merged source. If main or the source changes during this
@@ -90,9 +90,7 @@ blocked by the shared gate rather than silently receiving weaker qualification.
 Use each branch's final qualification record for the complete additional gates
 and the exact run IDs, source and archive hash.
 
-Keep evidence updates on a separate documentation branch once the source is
-frozen. Changing evidence files on the frozen branch also changes its Git source
-and invalidates the exact-source publication gate.
+Keep the reviewed source and artifact identities explicit. Any implementation change requires applicable checks against the new source; no formal freeze or calendar waiting period applies to 0.3.0.
 
 ## Publication after approval
 

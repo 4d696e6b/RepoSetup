@@ -1,6 +1,10 @@
 # 0.3.0 release preparation
 
-Status: **preparing; not frozen, qualified or authorized for publication.**
+## Owner decision — 12 October 2026
+
+The owner removed the formal freeze, seven-day soak and calendar waiting requirements for 0.3.0. Continue implementation immediately. Exact source/artifact identity, meaningful regression and platform checks, blocker review, manual accessibility/device evidence, and separate publication/deployment authorization still apply. The old soak monitor is paused. Historical freeze/soak statements below describe the preceding policy and do not impose a current waiting gate.
+
+Status: **implementation continuing; qualification and delivery pending. No freeze or soak gate.**
 
 Canonical release branch: `codex/release-0.3.0`. Target: `0.3.0`; current public CLI and private website development version: `0.3.0-alpha.1`. The private core, registry and integrations libraries retain the merged published baseline versions until final version preparation. They remain private.
 
@@ -22,8 +26,8 @@ replace the final release qualification below.
 1. Finish the selected 0.3.0 feature work on this canonical branch. Finalize stable metadata only after that work is complete; no stable version bump is part of this preparation.
 2. Reconcile the generated catalog and frozen selection matrix with the combined planner. Current catalog revision and previous matrix/artifact identities are predecessor evidence, not qualification of the new implementation.
 3. Replace the website's historical handoff source `a410c1d39179d41ed14aae2740470a7267a25282` and digest `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec` with a reviewed identified artifact from the final CLI source. Until then, release/selection artifact guards deliberately reject newly merged CLI bytes. Never bypass them to obtain a green run.
-4. Freeze the final CLI and website source identities, lockfile, catalog/matrix and one tarball digest. Renew workspace, real create/add/legacy, native transport, preview/doctor/repair, retained golden, full browser and exact joint handoff evidence on the advertised matrix. The old candidate's passing runs do not cover this baseline merge.
-5. Close Phase 9's three consecutive qualifications for the same frozen candidate pair, seven-day soak, release blocker audit and combined safety/security review. The existing recorded soak timer has not started.
+4. Record the reviewed CLI and website source identities, lockfile, catalog/matrix and one tarball digest. Renew workspace, real create/add/legacy, native transport, preview/doctor/repair, retained golden, full browser and exact joint handoff evidence on the advertised matrix. The old candidate's passing runs do not cover this baseline merge.
+5. Complete required exact-source qualification, repeat-application regressions, release blocker audit and combined safety/security review. No calendar delay or formal freeze is required.
 6. Complete native desktop screen-reader, physical mobile-device and local CLI handoff sessions in [the manual protocol](MANUAL_ACCESSIBILITY_DEVICE_0.3.0.md). Automated emulation and scripted beginner journeys do not close these gates.
 7. Review the qualified-artifact publisher's final version metadata and exact-source checks, then obtain explicit authorization for immutable tag/publication and website deployment. No tag, publication, deployment or external qualification workflow is initiated by this preparation.
 

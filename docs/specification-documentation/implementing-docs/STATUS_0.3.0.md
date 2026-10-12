@@ -1,5 +1,9 @@
 # RepoSetup 0.3.0 implementation status
 
+## Owner decision — 12 October 2026
+
+The owner removed the formal freeze, seven-day soak and calendar waiting requirements for 0.3.0. Continue implementation immediately. Exact source/artifact identity, meaningful regression and platform checks, blocker review, manual accessibility/device evidence, and separate publication/deployment authorization still apply. The old soak monitor is paused. Historical freeze/soak statements below describe the preceding policy and do not impose a current waiting gate.
+
 Last updated: 2026-10-04.
 
 ## Current position

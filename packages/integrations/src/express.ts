@@ -13,7 +13,7 @@ import {
 
 import { APP_FRAMEWORK_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
-import { addPackages, hasSelectedIntegration } from "./operations.js";
+import { addPackages } from "./operations.js";
 import { QUALIFIED_VERSIONS, npmPin } from "./qualified-versions.js";
 import { supportsNodeNpmPnpm } from "./node-support.js";
 import { createNodePackageJson, usesTypescript } from "./scaffold.js";
@@ -64,38 +64,6 @@ if (process.env.REPOSETUP_NO_LISTEN !== "1") {
     },
   );
 }
-`;
-
-const EXPRESS_ENDPOINT_TEST = `import type { Server } from "node:http";
-
-import { afterAll, beforeAll, expect, it } from "vitest";
-
-let server: Server;
-let origin: string;
-
-beforeAll(async () => {
-  process.env.REPOSETUP_NO_LISTEN = "1";
-  const { app } = await import("../src/app.js");
-  await new Promise<void>((resolve, reject) => {
-    server = app.listen(0, "127.0.0.1", (error?: Error) => {
-      if (error !== undefined) reject(error);
-      else resolve();
-    });
-  });
-  const address = server.address();
-  if (address === null || typeof address === "string")
-    throw new Error("Server did not bind TCP");
-  origin = \`http://127.0.0.1:\${address.port}\`;
-});
-
-afterAll(() => server.close());
-
-it("returns the Hello World response", async () => {
-  const response = await fetch(origin);
-
-  expect(response.status).toBe(200);
-  expect(await response.text()).toBe("Hello World!");
-});
 `;
 
 const EXPRESS_APP_JS = `import express from "express";
@@ -207,15 +175,6 @@ export const expressIntegration = defineIntegration<ExpressOptions>({
           description: "Add Express development, build, and start scripts",
         },
       );
-      if (hasSelectedIntegration(context, "vitest")) {
-        operations.push({
-          type: "create_file",
-          path: "src/app.test.ts",
-          content: EXPRESS_ENDPOINT_TEST,
-          behavior: "fail_if_exists",
-          description: "Add an Express endpoint response test",
-        });
-      }
     } else {
       operations.push({
         type: "create_file",
