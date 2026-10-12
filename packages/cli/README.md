@@ -8,13 +8,13 @@ npx rsetup --help
 
 This is the public npm name for RepoSetup. After `npm install -g rsetup`, both `rsetup` and `reposetup` work.
 
-This is the `0.3.0` CLI release candidate. It requires Node.js 24 or later. Python recipes require Python 3.12 or later with uv or an activated pip environment; 3.12 and 3.13 are in the qualification matrix. Integrations are not all equally mature. Use `--dry-run` before changing an important project.
+This package provides CLI version `0.3.0`. It requires Node.js 24 or later. Python recipes require Python 3.12 or later with uv or an activated pip environment; 3.12 and 3.13 are in the qualification matrix. Integrations are not all equally mature. Use `--dry-run` before changing an important project.
 
 The workspace libraries `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` are bundled into this package. They are not published separately.
 
 Unscoped `reposetup` and `reposetup-cli` cannot be used: npm rejects them as too similar to existing `repo-setup` and `repo-setup-cli`.
 
-Release preparation: `0.3.0`, not yet published. Published npm commands above install the released 0.2.3 CLI; no 0.3.0 package has been published by this work. See [selection v1 contract](../../docs/specification-documentation/product-docs/SELECTION_V1.md).
+Selections require CLI 0.3.0 or later with a matching catalog revision. Use `reposetup --version` to check the installed CLI before pasting an exported selection. The website explains the version required by each handoff; older 0.2.x CLIs retain the legacy config and preset workflows. See the [selection v1 contract](https://github.com/4d696e6b/RepoSetup/blob/main/docs/specification-documentation/product-docs/SELECTION_V1.md).
 Creation verifies required installed dependency metadata before reporting success. `rsetup doctor` checks the existing environment without reinstalling packages. Pip creation records selected dependencies in `requirements.txt`; for uv projects, run commands through `uv run` from the project directory.
 
 RepoSetup 0.3.0 adds curated beginner guidance and minimal React/Vite, Express and FastAPI starting points. A versioned declarative selection carries supported choices from the companion website to the local CLI. The CLI resolves every operation from its built-in registry, shows the decoded choices and installation plan, and requires confirmation. `--dry-run` remains read-only; selection commands cannot use `--yes` to bypass review.

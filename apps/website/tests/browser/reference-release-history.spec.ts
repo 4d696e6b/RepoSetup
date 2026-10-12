@@ -83,8 +83,8 @@ test("release sources, documentation, and preset builder remain reachable by key
     name: /Read the getting started guide/,
   });
   await gettingStarted.focus();
-  await gettingStarted.press("Shift+Tab");
-  await page.keyboard.press("Tab");
+  await gettingStarted.press(previous);
+  await page.keyboard.press(next);
   await expect(gettingStarted).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#\/docs\/getting-started$/);
@@ -93,15 +93,15 @@ test("release sources, documentation, and preset builder remain reachable by key
   await page.goto("/#/release");
   const presets = page.locator("main").getByRole("link", { name: /Explore the presets/ });
   await presets.focus();
-  await presets.press("Shift+Tab");
-  await page.keyboard.press("Tab");
+  await presets.press(previous);
+  await page.keyboard.press(next);
   await expect(presets).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#\/presets$/);
   const recipe = page.getByRole("link", { name: "Explore this recipe ↗", exact: true }).first();
   await recipe.focus();
-  await recipe.press("Shift+Tab");
-  await page.keyboard.press("Tab");
+  await recipe.press(previous);
+  await page.keyboard.press(next);
   await expect(recipe).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#\/builder\/[\w-]+$/);
