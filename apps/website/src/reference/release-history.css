@@ -1,0 +1,109 @@
+.release-history {
+  display: grid;
+  gap: 28px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.release-card {
+  min-width: 0;
+  padding: clamp(24px, 4vw, 48px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--surface);
+}
+.release-card:first-child {
+  border-color: #b9c5a6;
+  background: linear-gradient(135deg, #edf1e4, var(--surface) 65%);
+}
+.release-card-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-bottom: 24px;
+  color: #515b46;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.release-latest {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #35422a;
+  color: #fffefa;
+  font-weight: 600;
+}
+.release-card-heading {
+  font-size: clamp(28px, 3.5vw, 40px);
+  line-height: 1.15;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.release-card-summary {
+  max-width: 740px;
+  margin-top: 18px;
+  color: #505b45;
+  font-size: 18px;
+  line-height: 1.7;
+}
+.release-card-changes {
+  display: grid;
+  gap: 24px;
+  padding: 28px 0;
+  margin: 28px 0 0;
+  list-style: none;
+  border-block: 1px solid var(--line);
+}
+.release-card-changes h3 {
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+.release-card-changes p,
+.release-qualification {
+  margin-top: 8px;
+  color: #53584d;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.release-qualification {
+  padding: 20px 0 4px;
+  font-size: 14px;
+}
+.release-card-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 18px;
+  font-size: 14px;
+}
+.release-card-sources a,
+.release-next-steps a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.release-content {
+  max-width: 860px;
+  margin: 72px auto 0;
+}
+.release-next-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin-top: 20px;
+}
+@media (max-width: 600px) {
+  .release-card {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+  .release-card-summary {
+    font-size: 16px;
+  }
+  .release-card-changes h3 {
+    font-size: 18px;
+  }
+  .release-card-meta {
+    gap: 8px 14px;
+  }
+}

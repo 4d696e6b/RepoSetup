@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <title>RepoSetup</title>
+  <rect x="7" y="19" width="50" height="39" rx="12" fill="#6b7656" />
+  <rect x="7" y="12" width="50" height="39" rx="12" fill="#d9dfcc" />
+  <rect x="7" y="5" width="50" height="39" rx="12" fill="#20211d" />
+  <path d="m21 18 7 7-7 7" stroke="#f6f5f0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M34 32h9" stroke="#d9dfcc" stroke-width="3.5" stroke-linecap="round" />
+</svg>

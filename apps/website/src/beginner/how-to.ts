@@ -24,7 +24,7 @@ export function howTo(main: HTMLElement) {
     setup,
     el(
       "p",
-      "These commands are for a POSIX shell in the local development checkout. The packer requires the exact committed CLI source and records its artifact hash in apps/website/.local-cli/evidence.json. Keep this shell open when pasting the selection command. The published 0.2.0 CLI does not support selection-v1.",
+      "These commands are for a POSIX shell in the local development checkout. The packer requires the exact committed CLI source and records its artifact hash in apps/website/.local-cli/evidence.json. Keep this shell open when pasting the selection command. The published 0.2.3 CLI does not support selection-v1.",
       "hint",
     ),
   );

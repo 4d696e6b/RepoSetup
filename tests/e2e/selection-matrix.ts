@@ -37,6 +37,16 @@ export const journeys = matrix.contexts.flatMap((context) =>
   }),
 );
 
+/** Local targeted checks are reported separately; qualification CI must retain the full matrix. */
+export function selectionJourneys(runtime?: string, qualificationCi = false) {
+  if (runtime === undefined) return journeys;
+  if (qualificationCi)
+    throw new Error("Qualification CI cannot narrow the selection runtime matrix.");
+  if (runtime !== "node" && runtime !== "python")
+    throw new Error("REPOSETUP_SELECTION_RUNTIME must be node or python for a local targeted run.");
+  return journeys.filter((journey) => journey.context.context.runtimeId === runtime);
+}
+
 export function selectionFor(
   context: MatrixContext,
   ids: readonly string[],

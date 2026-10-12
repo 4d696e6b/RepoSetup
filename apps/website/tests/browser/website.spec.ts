@@ -15,7 +15,7 @@ test.beforeEach(async ({ browser }, testInfo) => {
 test("goal discovery, library explanations, minimal presets and bounded selection", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#/goals");
   await page.getByRole("link", { name: "validate input →" }).click();
   await expect(page.getByRole("status")).toHaveText("2 libraries found");
   await page.getByRole("link", { name: "Zod", exact: true }).click();
@@ -24,7 +24,7 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
     "href",
     "https://zod.dev/",
   );
-  await page.getByRole("link", { name: "Presets", exact: true }).click();
+  await page.getByRole("link", { name: "Minimal starters", exact: true }).click();
   await page.getByRole("link", { name: "Explore the minimal preset" }).nth(1).click();
   await expect(page.getByRole("heading", { name: "Optional means optional" })).toBeVisible();
   await expect(page.getByText("Qualified packed create/add", { exact: false })).toBeVisible();
@@ -61,7 +61,7 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
   await expect(page.getByLabel("RepoSetup command", { exact: true })).toHaveValue(
     /^reposetup add --selection /,
   );
-  await page.getByRole("link", { name: "Presets", exact: true }).click();
+  await page.getByRole("link", { name: "Minimal starters", exact: true }).click();
   await page.getByRole("link", { name: "Explore the minimal preset" }).first().click();
   await page.getByRole("link", { name: "Customize this starting point" }).click();
   await expect(page.getByLabel("Project journey")).toHaveValue("create");
@@ -113,7 +113,7 @@ test("maintenance guidance matches the pinned CLI's preview and narrow repair wo
   await expect(
     page.getByText("doctor --config reposetup.json --fix --dry-run", { exact: false }),
   ).toBeVisible();
-  await page.goto("/#/integrations/prettier");
+  await page.goto("/#/learn/libraries/prettier");
   await expect(
     page.getByText("The matching local CLI can review repair", { exact: false }),
   ).toBeVisible();
@@ -126,10 +126,10 @@ test("keyboard navigation, accessible pages and responsive layout", async ({
   test.setTimeout(120_000);
   for (const route of [
     "/",
-    "/integrations",
-    "/presets",
+    "/learn/libraries",
+    "/learn/starters",
     "/how-to",
-    ...catalog.integrations.map((item) => `/integrations/${item.id}`),
+    ...catalog.integrations.map((item) => `/learn/libraries/${item.id}`),
     ...catalog.presets.map((item) => `/presets/${item.id}`),
     ...catalog.contexts.flatMap((item) => [`/builder/${item.id}`, `/builder/${item.id}?mode=add`]),
   ]) {
@@ -165,10 +165,10 @@ test("reflow at narrow mobile, tablet and desktop widths", async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     for (const route of [
       "/",
-      "/integrations",
+      "/learn/libraries",
       "/how-to",
       "/builder/react-vite-ts-pnpm",
-      "/integrations/prettier",
+      "/learn/libraries/prettier",
     ]) {
       await page.goto(`/#${route}`);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -178,7 +178,7 @@ test("reflow at narrow mobile, tablet and desktop widths", async ({ page }) => {
     }
   }
   if (test.info().project.name === "chromium-desktop") {
-    await page.goto("/#/");
+    await page.goto("/#/goals");
     await page.screenshot({ path: "test-results/home-desktop.png", fullPage: true });
     await page.goto("/#/builder/express-ts-pnpm");
     await page.getByLabel("Zod", { exact: true }).check();

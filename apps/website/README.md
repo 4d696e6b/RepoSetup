@@ -1,5 +1,16 @@
 # RepoSetup companion website — local 0.3.0 slice
 
+## Integrated development preview — 12 October 2026
+
+The published website remains at https://reposetupcli.com/. This worktree combines its full 0.2.3 reference (37 integrations, five legacy presets and 72 documentation pages), branding, release history and existing config/download routes with new 0.3.0 beginner workflows. The reference is deliberately labeled published 0.2.3; new selections require the matching local development CLI until a verified release is delivered. No production deployment is performed here.
+
+- `/#/` — retained published home; `/#/docs`, `/#/integrations`, `/#/presets`, `/#/release` — retained reference.
+- `/#/builder/<legacy-preset-id>` — retained schemaVersion 1 download with explicit project name/path.
+- `/#/goals`, `/#/learn/libraries`, `/#/learn/starters` — curated beginner discovery.
+- `/#/builder/<context-id>`, `/#/presets/<beginner-preset-id>`, `/#/how-to` — bounded new workflows and maintenance guidance.
+
+Beginner code/catalog load only when those pages are requested. Source maps and private brand provenance/prompts are excluded from browser output; the runtime boundary and production-only bounded observability remain enforced. Formal freeze, soak and calendar waiting gates were removed by the owner. Technical tests and separate publication/deployment authorization still apply.
+
 A static Vite/TypeScript app in the pnpm workspace, with no runtime framework dependency. English-first pages explain nine reviewed integrations and three starter contexts: React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm, FastAPI + uv. Only their three optional capabilities per context are selectable; 24 create / 21 nonempty add variants are validated at build time by the real registry/core planner. All paths remain candidate maturity.
 
 ## Start locally
@@ -25,7 +36,7 @@ Nothing is published. Vite preview serves the built output locally; it is not a 
 
 ## Matching CLI artifact: required before pasting commands
 
-The displayed `reposetup create|add --selection TOKEN` command is available in the **local candidate CLI** `rsetup@0.3.0-alpha.1`, exact committed source `a410c1d39179d41ed14aae2740470a7267a25282` on `codex/0.3.0-candidate-integration`. Its pinned tarball SHA-256 is `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec`. It is not a published CLI. Do not use a floating npx/npm bootstrap or the published 0.2.0 binary with these commands.
+The displayed `reposetup create|add --selection TOKEN` command is available in the **local candidate CLI** `rsetup@0.3.0-alpha.1`, exact committed source `8a9644f9e90906f2ae1c7409cb69b4fa85ed42a4` on `codex/release-0.3.0`. Its pinned tarball SHA-256 is `04b18a2231f1d8b91251250f1d58358887be8047c51b54497082ef4c1860293b`. It is not a published CLI. Do not use a floating npx/npm bootstrap or the published 0.2.3 binary with these commands.
 
 Prepare that exact artifact without changing the CLI or candidate checkout:
 

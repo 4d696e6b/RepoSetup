@@ -20,7 +20,7 @@ async function exportedSelection(page: Page): Promise<ExportedSelection> {
 test("simulated B01: choose a minimal browser starter and skip optional tools", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#/goals");
   await page.getByRole("link", { name: "Find your starting point →" }).click();
   await page.getByRole("link", { name: "Explore the minimal preset →" }).first().click();
   await expect(page.getByRole("heading", { name: "Minimal React/Vite" })).toBeVisible();
@@ -43,7 +43,7 @@ test("simulated B01: choose a minimal browser starter and skip optional tools", 
 });
 
 test("simulated B02: learn why Zod helps and select it for a frontend", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#/goals");
   await page.getByRole("link", { name: "validate input →" }).click();
   await page.getByRole("link", { name: "Zod", exact: true }).click();
   await expect(
@@ -64,7 +64,7 @@ test("simulated B02: learn why Zod helps and select it for a frontend", async ({
 });
 
 test("simulated B03: choose an Express API and add a test runner", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#/goals");
   await page.getByRole("link", { name: "Find your starting point →" }).click();
   await page.getByRole("link", { name: "Explore the minimal preset →" }).nth(1).click();
   await expect(page.getByRole("heading", { name: "Minimal Express API" })).toBeVisible();
@@ -81,7 +81,7 @@ test("simulated B03: choose an Express API and add a test runner", async ({ page
 });
 
 test("simulated B04: choose a Python API and avoid unavailable Node tools", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#/goals");
   await page.getByRole("link", { name: "Find your starting point →" }).click();
   await page.getByRole("link", { name: "Explore the minimal preset →" }).nth(2).click();
   await expect(page.getByRole("heading", { name: "Minimal FastAPI" })).toBeVisible();
@@ -100,7 +100,7 @@ test("simulated B04: choose a Python API and avoid unavailable Node tools", asyn
 test("simulated B05: add to an existing project, recover from invalid input, and export a file", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#/goals");
   await page.getByRole("link", { name: "validate input →" }).click();
   await page.getByRole("link", { name: "Zod", exact: true }).click();
   await page.getByRole("link", { name: /Express · TypeScript · pnpm/ }).click();

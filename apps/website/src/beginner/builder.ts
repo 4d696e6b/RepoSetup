@@ -22,7 +22,7 @@ export function builder(main: HTMLElement, contextId: string, params: URLSearchP
   main.append(
     el(
       "p",
-      `${handoff.label}. These commands require the packed CLI from that exact commit on your PATH. The 0.2.0 CLI in this website branch does not accept selection-v1.`,
+      `${handoff.label}. These commands require the packed CLI from that exact commit on your PATH. The published 0.2.3 CLI does not accept selection-v1. Prepare the matching local CLI before using these commands.`,
       "notice",
     ),
   );

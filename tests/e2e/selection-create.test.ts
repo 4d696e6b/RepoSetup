@@ -12,9 +12,19 @@ import {
   writeJson,
 } from "./harness.js";
 import { planFingerprint, prepareSelectionArtifact, sha256 } from "./selection-artifact.js";
-import { journeys, matrix, matrixPath, selectionFor, tokenFor } from "./selection-matrix.js";
+import {
+  journeys,
+  selectionJourneys,
+  matrix,
+  matrixPath,
+  selectionFor,
+  tokenFor,
+} from "./selection-matrix.js";
 
-const cases = journeys.filter((journey) => journey.mode === "create");
+const cases = selectionJourneys(
+  process.env.REPOSETUP_SELECTION_RUNTIME,
+  process.env.GITHUB_ACTIONS === "true",
+).filter((journey) => journey.mode === "create");
 interface CaseEvidence {
   id: string;
   transport: "token" | "file";
@@ -43,31 +53,34 @@ beforeAll(async () => {
     expect(Number(process.versions.node.split(".")[0]), "Use the frozen Node major").toBe(
       matrix.runtimes.nodeMajor,
     );
-    const python = process.env.UV_PYTHON ?? (process.platform === "win32" ? "python" : "python3");
-    const resolved = await runProcess(
-      python,
-      ["-c", "import sys; print(sys.executable); print(sys.version.split()[0])"],
-      { cwd: root },
-    );
-    expect(resolved.exitCode, resolved.stderr).toBe(0);
-    const [executable, version] = resolved.stdout.trim().split(/\r?\n/);
-    expect(executable).toBeTruthy();
-    pythonVersion = version ?? "";
-    expect(matrix.runtimes.python).toContain(pythonVersion.split(".").slice(0, 2).join("."));
-    if (process.env.REPOSETUP_SELECTION_PYTHON_TARGET !== undefined)
-      expect(pythonVersion.split(".").slice(0, 2).join(".")).toBe(
-        process.env.REPOSETUP_SELECTION_PYTHON_TARGET,
+    env = { ...process.env };
+    if (cases.some((journey) => journey.context.context.runtimeId === "python")) {
+      const python = process.env.UV_PYTHON ?? (process.platform === "win32" ? "python" : "python3");
+      const resolved = await runProcess(
+        python,
+        ["-c", "import sys; print(sys.executable); print(sys.version.split()[0])"],
+        { cwd: root },
       );
-    env = {
-      ...process.env,
-      UV_PYTHON: executable!,
-      UV_PYTHON_DOWNLOADS: "never",
-      UV_CACHE_DIR: path.join(root, "uv-cache"),
-    };
-    const uv = await runProcess("uv", ["--version"], { cwd: root, env });
-    expect(uv.exitCode, uv.stderr).toBe(0);
-    uvVersion = uv.stdout.trim();
-    expect(uvVersion.split(" ")[1]).toBe(matrix.runtimes.uv);
+      expect(resolved.exitCode, resolved.stderr).toBe(0);
+      const [executable, version] = resolved.stdout.trim().split(/\r?\n/);
+      expect(executable).toBeTruthy();
+      pythonVersion = version ?? "";
+      expect(matrix.runtimes.python).toContain(pythonVersion.split(".").slice(0, 2).join("."));
+      if (process.env.REPOSETUP_SELECTION_PYTHON_TARGET !== undefined)
+        expect(pythonVersion.split(".").slice(0, 2).join(".")).toBe(
+          process.env.REPOSETUP_SELECTION_PYTHON_TARGET,
+        );
+      env = {
+        ...process.env,
+        UV_PYTHON: executable!,
+        UV_PYTHON_DOWNLOADS: "never",
+        UV_CACHE_DIR: path.join(root, "uv-cache"),
+      };
+      const uv = await runProcess("uv", ["--version"], { cwd: root, env });
+      expect(uv.exitCode, uv.stderr).toBe(0);
+      uvVersion = uv.stdout.trim();
+      expect(uvVersion.split(" ")[1]).toBe(matrix.runtimes.uv);
+    }
     artifact = await prepareSelectionArtifact(root);
     expect(artifact.tools.pnpm).toBe(matrix.runtimes.pnpm);
   } catch (error) {
@@ -86,6 +99,11 @@ afterAll(async () => {
         schemaVersion: 1,
         kind: "selection-packed-create",
         releaseQualification: false,
+        runtimeScope: process.env.REPOSETUP_SELECTION_RUNTIME ?? "all",
+        completeMatrix: process.env.REPOSETUP_SELECTION_RUNTIME === undefined,
+        excludedCases: journeys
+          .filter((journey) => journey.mode === "create" && !cases.includes(journey))
+          .map((journey) => journey.id),
         allCasesPassed,
         expectedCases: cases.length,
         confirmation: "packed runCli with reviewed-plan confirmation adapter; native TTY pending",

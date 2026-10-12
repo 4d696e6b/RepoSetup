@@ -12,16 +12,30 @@ The owner removed formal freeze, soak and calendar waiting requirements. The soa
 - [x] Check every beginner optional subset and all five legacy presets for valid plans.
 - [x] Keep the pinned definition provenance available in fast/platform CI with full-history checkout.
 - [x] Review all 45 merged plans under catalog `0.3.0-cli.5` and matrix `0.3.0-selection.5`; 39 fingerprints changed from the predecessor. Recipe revision is `2026-10-08`; old exports receive stale-catalog refusal.
-- [ ] Rebind website handoff to the reviewed merged CLI artifact and repeat packed contract/application checks.
+- [x] Rebind website handoff to the reviewed merged CLI artifact and repeat packed contract/application checks.
 
-Local validation: 1,150 core/registry/integration/CLI tests pass (301/15/680/154), workspace typecheck/lint/build pass. The targeted real Golden C journey passes installation, TypeScript checks, build, endpoint tests, formatting and doctor. Other 39 golden/create cases were deliberately filtered for this targeted check and are not counted as passing.
+Local validation: 1,150 core/registry/integration/CLI tests pass (301/15/680/154), workspace typecheck/lint/build pass. The targeted real Golden C journey passes installation, TypeScript checks, build, endpoint tests, formatting and doctor. Other 39 golden/create cases were deliberately filtered for this targeted check and are not counted as passing. The packed contract subsequently passes 105/105 cases and website handoff 6/6 against the archive-rebuilt CLI at `8a9644f9e90906f2ae1c7409cb69b4fa85ed42a4`, tarball SHA-256 `04b18a2231f1d8b91251250f1d58358887be8047c51b54497082ef4c1860293b`. All 16 Node create and 14 Node add cases pass real packed execution. Python is explicitly excluded from these local targeted reports because uv is unavailable; full qualification CI cannot narrow the matrix. The first full create attempt stopped at setup and its 24 unrun cases are not passes. A fixture refresh initially used the wrong Python project basename; the seven add fingerprints were corrected to the authored `existing-app` root and the packed matrix then passed.
 
 ## Website and delivery
 
-- [ ] Bring the published full documentation, catalog, routes, branding and security safeguards into the development preview alongside the bounded beginner workflows.
-- [ ] Check combined browser behavior, artifact handoff and command/file equivalence.
-- [ ] Compare performance with published 0.2.3 using equivalent workloads; no speed improvement is claimed yet.
+- [x] Bring the published full documentation, catalog, routes, branding and security safeguards into the development preview alongside the bounded beginner workflows.
+- [x] Check combined browser behavior, artifact handoff and command/file equivalence.
+- [x] Compare local startup/planning latency with published 0.2.3; installation/platform comparisons remain pending.
 - [ ] Complete required platform/security/manual checks and artifact review.
 - [ ] Obtain separate authorization for publication and production promotion.
 
 There is no freeze or elapsed-time gate. The historical monitored branch and production deployment remain preserved. This checkpoint is implementation progress, not a completed release.
+
+## Integrated website and performance
+
+The development site retains published 0.2.3 reference pages separately from the new 0.3.0 surface: 37 integration references, five legacy presets, 72 docs, release history, original artwork and legacy builder links coexist with nine curated explanations, three minimal starters and create/add selections. Stable facts are checked against the production website source. Development pages identify the local CLI requirement; published examples do not falsely advertise new flags.
+
+The archived CLI rebuild matches the reviewed tarball hash. Browser checks cover legacy downloads, new token/file choices, invalid-input recovery, context navigation, clipboard fallback, accessibility, responsive layouts and motion cleanup. All 156 combined desktop Chrome/mobile emulation/Firefox browser cases pass; actual screen-reader, physical device and renewed WebKit/platform evidence remain separate.
+
+Lazy loading reduces initial JS from 223.94 KB (56.41 KB gzip) to about 153 KB (44.36 KB gzip); a roughly 73 KB beginner module is loaded only on demand. Navigation sequence checks prevent a delayed module from replacing a newer page. Production telemetry keeps only bounded route labels, including the new pages, with queries/configs/tokens excluded.
+
+Seven alternating local Node 24/macOS arm64 startup/planning trials against the verified published 0.2.3 CLI measured baseline/candidate medians of 64/67 ms for version, 73/75 ms for the Express dry-run, and 73/73 ms for the React dry-run. These small changes are not an installation-speed or cross-platform guarantee. Raw measurements are in ignored `tmp/reconciliation-planning-performance.json`.
+
+Remaining work includes final 0.3.0 release-reference generation/version preparation, complete Python/platform/WebKit/manual qualification and production packaging/promotion. No freeze or soak is required.
+
+Final local workspace validation passes 1,193 unit tests (core 301, registry 15, integrations 680, CLI 154, website 43), workspace and selection-test typechecks, lint, build and registry validation. Original supplied artwork hashes match the published website source. Initial private brand prompt/provenance files are removed from built browser output. Local browser review inspected the retained desktop/mobile builder screenshots. Full renewed CI/platform and Python execution remain required; local targeted reports do not claim them.

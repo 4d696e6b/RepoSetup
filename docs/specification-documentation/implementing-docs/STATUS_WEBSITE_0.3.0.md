@@ -6,6 +6,15 @@ The owner removed the formal freeze, seven-day soak and calendar waiting require
 
 Date: 2026-10-04. Status: reviewable local website slice implemented and checked; not a website deployment or a completed 0.3.0 release.
 
+## 12 October reconciliation checkpoint
+
+Implementation continues without formal freeze, soak or calendar waiting. The current CLI artifact is source `8a9644f9e90906f2ae1c7409cb69b4fa85ed42a4`, version `0.3.0-alpha.1`, SHA-256 `04b18a2231f1d8b91251250f1d58358887be8047c51b54497082ef4c1860293b`; the archive rebuild matches. Catalog/matrix revisions are `0.3.0-cli.5` / `0.3.0-selection.5` with merged recipe revision `2026-10-08`. The duplicate Express/Vitest test recipe and CI provenance checkout have been corrected.
+
+The integrated development website retains the published 0.2.3 full reference (37 integrations, five presets, 72 docs), artwork, routes, downloads and release history alongside nine beginner explanations, three minimal starters and bounded create/add handoffs. Its new surface is lazy-loaded and navigation races are guarded. The production site remains unchanged; stable reference pages are labeled 0.2.3 until final release-reference preparation.
+
+Local evidence: packed contract 105/105, exact-artifact website handoff 6/6, real Node create 16/16 and add 14/14, and combined desktop Chrome/mobile emulation/Firefox browser cases 156/156. Python real execution could not start without uv; the Node-only reports explicitly exclude it and cannot qualify the full matrix. Manual/device/WebKit/platform and final delivery checks remain separate. Details and performance limits are in [reconciliation status](./RECONCILIATION_0.3.0.md).
+
+
 ## Phase position
 
 This slice implements release **Phase 6 (information website)** and **Phase 7 (selection builder)** locally. **Phase 8 is complete for its owner-agreed scripted beginner and bounded automated safety/usability scope.** Across both branches, Phases 1–8 are implemented locally or qualified for their bounded scope; **2 phases remain**. The owner accepted scripted beginner simulations instead of recruiting participants and moved manual screen-reader/physical-device checks plus combined candidate safety review to Phase 9. No human usability result is claimed. See [combined phase progress](./STATUS_0.3.0.md) for the phase list, count definitions and CLI dependencies.

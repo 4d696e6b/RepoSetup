@@ -3,8 +3,8 @@ import { mkdtemp, writeFile, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterEach, beforeAll, expect, it } from "vitest";
-import { catalog, handoff } from "../src/catalog.js";
-import { chooseSelection, exportSelection } from "../src/selection.js";
+import { catalog, handoff } from "../src/beginner/catalog.js";
+import { chooseSelection, exportSelection } from "../src/beginner/selection.js";
 import { verifyArtifact } from "../scripts/verify-artifact.ts";
 
 const local = resolve(".local-cli");

@@ -1,4 +1,6 @@
 import { defineConfig } from "vite";
+import { rmSync } from "node:fs";
+import { browserCsp } from "./src/reference/security.js";
 export default defineConfig({
   plugins: [
     {
@@ -10,12 +12,18 @@ export default defineConfig({
             tag: "meta",
             attrs: {
               "http-equiv": "Content-Security-Policy",
-              content:
-                "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'",
+              content: browserCsp,
             },
             injectTo: "head-prepend",
           },
         ];
+      },
+    },
+    {
+      name: "exclude-private-brand-provenance",
+      closeBundle() {
+        for (const name of ["README.md", "prompts.json"])
+          rmSync(new URL(`./dist/brand/${name}`, import.meta.url), { force: true });
       },
     },
     {
