@@ -1,14 +1,6 @@
-name: Website qualification (0.3.0)
+name: Website published qualification (0.3.0 exact tag)
 
 on:
-  push:
-    branches:
-      [
-        codex/0.3.0-website,
-        codex/0.3.0-candidate-integration,
-        codex/release-0.3.0,
-        codex/release-0.4.0,
-      ]
   workflow_dispatch:
 
 permissions:
@@ -22,7 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: refs/tags/v0.3.0
           fetch-depth: 0
+      - name: Verify the authorized immutable website source
+        run: >-
+          node -e "const { execFileSync } = require('node:child_process');
+          const sha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+          if (sha !== '59976a7fb6bb7bb07e0e7406deab2c8b5033b1c1')
+          throw new Error('Published qualification source differs from the approved tag');"
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -34,6 +33,14 @@ jobs:
       # The exact CLI commit must exist in repository history; never consume a floating branch.
       - run: pnpm --filter @reposetup/website pack:contract
       - run: pnpm --filter @reposetup/website qualify
+        env:
+          REPOSETUP_WEBSITE_RELEASE: published
+      - name: Retain the exact qualified public website output
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-website-static-0.3.0
+          path: apps/website/dist/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -42,4 +49,5 @@ jobs:
             apps/website/qualification
             apps/website/test-results
           if-no-files-found: error
-      # No publishing, project upload, deployment or participant-session claim.
+      # This workflow only checks/retains the immutable source and real npm bytes.
+      # Production promotion remains a separate authorized delivery action.
