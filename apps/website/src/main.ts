@@ -15,6 +15,8 @@ import { renderReleaseHistory } from "./reference/release-history.js";
 import { initializeObservability } from "./reference/observability.js";
 
 import "./beginner.css";
+import "./navigation.css";
+import { navigation } from "./navigation.js";
 import { delivery } from "./publication.js";
 import beginnerRoutes from "./generated/routes.json";
 let lastBuilderContext = beginnerRoutes.contexts[0]!;
@@ -24,6 +26,7 @@ const recordPublicPage = initializeObservability();
 let searchDialog: HTMLDialogElement;
 let searchReturnFocus: HTMLElement | null = null;
 let disposeScene = () => {};
+let disposeNavigation = () => {};
 function showSearch(event?: Event) {
   // WebKit does not focus a button on pointer click. Remember an explicit
   // trigger as well as keyboard focus so dismissing the modal is predictable.
@@ -33,6 +36,8 @@ function showSearch(event?: Event) {
       : document.activeElement instanceof HTMLElement && document.activeElement !== document.body
         ? document.activeElement
         : app.querySelector<HTMLElement>(".search-trigger");
+  if (!searchReturnFocus?.getClientRects().length)
+    searchReturnFocus = app.querySelector<HTMLElement>(".menu-toggle");
   searchDialog.showModal();
   searchDialog.querySelector("input")?.focus();
 }
@@ -69,39 +74,10 @@ function createSearch() {
   return dialog;
 }
 function header(page: string, builderContext = lastBuilderContext) {
-  const header = el("header", undefined, "site-header");
-  const brand = link("", "#/", "brand");
-  brand.setAttribute("aria-label", "RepoSetup home");
-  brand.append(artwork("reposetup-wordmark.svg", "RepoSetup"));
-  const nav = el("nav", undefined, "main-nav");
-  nav.setAttribute("aria-label", "Main navigation");
-  for (const [label, target, href] of [
-    ["Docs", "docs", "#/docs"],
-    ["By goal", "goals", "#/goals"],
-    ["Minimal starters", "learn", "#/learn/starters"],
-    ["Integrations", "integrations", "#/integrations"],
-    ["Presets", "presets", "#/presets"],
-    ["What's new", "release", "#/release"],
-  ]) {
-    const a = link(label!, href!);
-    if (page === target) a.setAttribute("aria-current", "page");
-    nav.append(a);
-  }
-  const selectionLink = link("Build a selection", `#/builder/${builderContext}`, "nav-action");
-  nav.append(selectionLink);
-  const actions = el("div", undefined, "header-actions");
-  const search = el("button", "Search", "search-trigger");
-  search.type = "button";
-  search.setAttribute("aria-label", "Open documentation search");
-  search.append(el("kbd", "⌘ K"));
-  search.addEventListener("click", showSearch);
-  actions.append(
-    search,
-    link("GitHub  ↗", REPOSITORY, "github-link"),
-    link("Get started  ↗", "#/docs/getting-started", "button primary header-cta"),
-  );
-  header.append(brand, nav, actions);
-  return header;
+  disposeNavigation();
+  const result = navigation(page, builderContext, showSearch);
+  disposeNavigation = result.dispose;
+  return result.element;
 }
 function releasePage(main: HTMLElement) {
   main.append(

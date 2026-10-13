@@ -1,3 +1,4 @@
+import { revealNavigation } from "./navigation-helper.js";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
@@ -430,6 +431,7 @@ test("route cleanup stops detached scene timers and back navigation starts a fre
   await page.clock.fastForward(4000);
   const old = await experience.elementHandle();
   expect(old).not.toBeNull();
+  await revealNavigation(page, "Docs");
   await page.getByRole("link", { name: "Docs", exact: true }).click();
   await expect(scene(page)).toHaveCount(0);
   const detached = await old!.evaluate((node) => node.outerHTML);

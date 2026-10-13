@@ -1,3 +1,4 @@
+import { revealNavigation } from "./navigation-helper.js";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
@@ -92,6 +93,7 @@ test("docs search dialog works with keyboard and hostile text stays literal", as
   browserName,
 }) => {
   await page.goto("/#/docs");
+  await revealNavigation(page, "Search");
   await page.getByRole("button", { name: "Open documentation search" }).click();
   const input = page.getByRole("searchbox", { name: "Search documentation and integrations" });
   await expect(input).toBeFocused();

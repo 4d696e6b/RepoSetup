@@ -1,5 +1,17 @@
 # RepoSetup 0.3.0 implementation status
 
+
+## Navigation refinement — 13 October 2026
+
+The owner requested fewer labels and a redesigned navbar after the `a8b250fd1c6ce760f0f18f2bb9afb1346b6b690c` publication-readiness checkpoint. The desktop header now offers Docs, an Explore disclosure, icon search and one Build action. Explore groups goals, minimal starters and how-to guidance separately from integrations, presets and published updates, with GitHub as a secondary link. Mobile uses a compact Menu while keeping Build directly reachable, including at 320px. Existing routes and in-memory builder context/selections are preserved.
+
+Keyboard Escape/outside dismissal, current-page cues, disclosure state, resize cleanup, search shortcut/focus return and expanded-menu accessibility have dedicated browser coverage. Existing navigation journeys now open the appropriate disclosure; their original route, lazy-loading, privacy and selection assertions remain. CLI bytes and publication guards are unchanged.
+
+An initial local browser run passed 233/234 cases, including every new navbar case; the remaining live reduced-motion test failed intermittently. The same unchanged test reproduced 3 failures/2 passes against the retained, previously qualified `a8b250f` website output, independently of the redesign. Diagnostic motion/test changes were discarded. This existing local intermittent result remains visible and is not claimed fixed by the navbar work.
+
+Final local validation passes: 1,218 workspace unit tests, workspace and selection-test typechecks, lint/build, six exact-artifact handoff cases and all 234 Chrome desktop/mobile plus Firefox browser cases (78 per profile, no skips or automatic retries). Twelve of those browser cases cover the new navigation interactions. The initial intermittent motion failure and baseline comparison remain recorded above; a passing rerun is not a claim that this pre-existing timing issue was repaired. Earlier clean-source release/website qualifications apply to their original commit; they do not automatically qualify this later website source. Renew the selected exact-source qualification before publishing the redesigned website. Native reader qualification remains explicitly deferred by the owner. No freeze, soak or calendar waiting gate is added; production is unchanged.
+
+
 ## Owner acceptance and qualification repair — 13 October 2026
 
 The owner explicitly replied: **“Defer native screen-reader qualification for 0.3.0.”** Native desktop announcements remain unverified and are now an accepted release limitation, not a passed session. The earlier physical-phone requirement was replaced by the owner-requested installed Chrome simulator; no physical device/native mobile reader or observed participant result is claimed. The Mac was locked before the additional documented VoiceOver last-spoken-phrase technique could be tried. No native setting was changed by that blocked attempt.

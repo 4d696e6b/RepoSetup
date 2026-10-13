@@ -1,3 +1,4 @@
+import { revealNavigation } from "./navigation-helper.js";
 import { test, expect } from "@playwright/test";
 
 test("a failed beginner download keeps search, docs and an explicit retry usable", async ({
@@ -5,9 +6,11 @@ test("a failed beginner download keeps search, docs and an explicit retry usable
 }) => {
   await page.route("**/assets/entry-*.js", (route) => route.abort());
   await page.goto("/");
+  await revealNavigation(page, "By goal");
   await page.getByRole("link", { name: "By goal", exact: true }).click();
   await expect(page.getByRole("heading", { name: "This section could not load." })).toBeVisible();
   await expect(page.getByRole("button", { name: "Retry this section" })).toBeVisible();
+  await revealNavigation(page, "Search");
   await page.getByRole("button", { name: "Open documentation search" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByRole("button", { name: "Close", exact: true }).click();
@@ -24,12 +27,14 @@ test("the stable home and documentation defer beginner code until it is requeste
   });
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await revealNavigation(page, "Docs");
   await page
     .getByRole("navigation", { name: "Main navigation" })
     .getByRole("link", { name: "Docs", exact: true })
     .click();
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   expect(entries).toEqual([]);
+  await revealNavigation(page, "By goal");
   await page.getByRole("link", { name: "By goal", exact: true }).click();
   await expect(page.getByRole("link", { name: "validate input →" })).toBeVisible();
   expect(entries).toHaveLength(1);
@@ -57,6 +62,7 @@ test("a delayed beginner module cannot overwrite a newer documentation navigatio
     await route.continue();
   });
   await page.goto("/");
+  await revealNavigation(page, "By goal");
   await page.getByRole("link", { name: "By goal", exact: true }).click();
   await arrived;
   await page.evaluate(() => {

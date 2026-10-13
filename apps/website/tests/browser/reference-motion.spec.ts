@@ -1,3 +1,4 @@
+import { revealNavigation } from "./navigation-helper.js";
 import { test, expect, type Locator, type Page } from "@playwright/test";
 
 async function runningAnimations(page: Page) {
@@ -63,6 +64,7 @@ test("motion stays enabled across navigation and reload despite an old saved pau
   for (const card of await page.locator(".feature-card").all()) {
     expect(await fullyVisible(card)).toBe(true);
   }
+  await revealNavigation(page, "Docs");
   await page.getByRole("link", { name: "Docs", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Find your next step.");
   await page.reload();
@@ -122,6 +124,7 @@ test("animated illustrations and scrolling keep the page inside narrow and wide 
       );
     }
     await page.getByRole("link", { name: "RepoSetup home", exact: true }).click();
+    await revealNavigation(page, "Docs");
     await page.getByRole("link", { name: "Docs", exact: true }).click();
     await expect(page.locator(".hero-art-wrap")).toHaveCount(0);
     await page.goBack();

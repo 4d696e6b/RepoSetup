@@ -1,3 +1,4 @@
+import { revealNavigation } from "./navigation-helper.js";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
@@ -48,6 +49,7 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
     "href",
     "https://zod.dev/",
   );
+  await revealNavigation(page, "Minimal starters");
   await page.getByRole("link", { name: "Minimal starters", exact: true }).click();
   await page.getByRole("link", { name: "Explore the minimal preset" }).nth(1).click();
   await expect(page.getByRole("heading", { name: "Optional means optional" })).toBeVisible();
@@ -85,6 +87,7 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
   await expect(page.getByLabel("RepoSetup command", { exact: true })).toHaveValue(
     /^reposetup add --selection /,
   );
+  await revealNavigation(page, "Minimal starters");
   await page.getByRole("link", { name: "Minimal starters", exact: true }).click();
   await page.getByRole("link", { name: "Explore the minimal preset" }).first().click();
   await page.getByRole("link", { name: "Customize this starting point" }).click();

@@ -1,3 +1,4 @@
+import { revealNavigation } from "./navigation-helper.js";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
@@ -23,6 +24,7 @@ test("direct What's new entry includes every published release in newest-first o
   page,
 }) => {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/^What's new[.]?$/);
+  await revealNavigation(page, "What's new");
   await expect(
     page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", {
       name: "What's new",
@@ -84,6 +86,7 @@ test("release sources, documentation, and preset builder remain reachable by key
     await page.keyboard.press(next);
     await expect(source).toBeFocused();
   }
+  await revealNavigation(page, "Docs");
   const docs = page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", {
     name: "Docs",
     exact: true,
