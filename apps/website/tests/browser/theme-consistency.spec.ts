@@ -92,6 +92,9 @@ test("beginner buttons, forms and focus use the shared reference theme", async (
     const style = getComputedStyle(element);
     return {
       font: style.fontFamily,
+      size: style.fontSize,
+      weight: style.fontWeight,
+      lineHeight: style.lineHeight,
       background: style.backgroundColor,
       color: style.color,
       radius: style.borderRadius,
@@ -105,6 +108,9 @@ test("beginner buttons, forms and focus use the shared reference theme", async (
       const style = getComputedStyle(element);
       return {
         font: style.fontFamily,
+        size: style.fontSize,
+        weight: style.fontWeight,
+        lineHeight: style.lineHeight,
         background: style.backgroundColor,
         color: style.color,
         radius: style.borderRadius,
