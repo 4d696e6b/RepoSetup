@@ -1169,6 +1169,43 @@ describe("runCli", () => {
     expect(await snapshotTree(root)).toEqual(before);
   });
 
+  it.each([
+    { flags: [] },
+    { flags: ["--dry-run"] },
+    { flags: ["--quiet"] },
+    { flags: ["--diff", "--dry-run"] },
+  ])("keeps no-op removal machine-readable with $flags", async ({ flags }) => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-remove-json-"));
+    tempDirs.push(root);
+    await writeFile(
+      path.join(root, "package.json"),
+      JSON.stringify({ name: "demo-app", dependencies: { next: "16.0.0" } }),
+    );
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    const before = await snapshotTree(root);
+    const captured = captureIo();
+    const execute = async () => {
+      throw new Error("A no-op must not prompt or execute a process.");
+    };
+    const result = await runCli(["--json", "remove", "zod", ...flags], {
+      cwd: root,
+      io: captured.io,
+      registry: addRegistry(),
+      confirmCreate: execute,
+      runProcess: execute,
+    });
+
+    expect(result.exitCode).toBe(EXIT_CODES.SUCCESS);
+    expect(JSON.parse(captured.stdout())).toMatchObject({
+      version: 1,
+      kind: "plan",
+      dryRun: flags.includes("--dry-run"),
+      plan: { valid: true, operations: [] },
+    });
+    expect(captured.stderr()).toBe("");
+    expect(await snapshotTree(root)).toEqual(before);
+  });
+
   it("refuses remove when no safe recipe exists", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "reposetup-remove-"));
     tempDirs.push(root);

@@ -1,5 +1,9 @@
 # RepoSetup 0.3.0 implementation status
 
+## Post-publication command audit — 13 October 2026
+
+Every documented CLI command was exercised in the owner's test folder. A repeated no-op removal was not machine-readable under --json; the source repair and four regression variants now pass, with affected tests/typecheck/lint/build. The immutable published 0.3.0 remains unchanged; this patch is isolated for a later versioned update. [Audit evidence and limitations](./COMMAND_AUDIT_0.3.0.md) retain expected input/environment refusals and harness corrections. The website theme correction is qualified separately against its existing published CLI.
+
 ## Delivered — 13 October 2026
 
 **0.3.0 is published on npm/GitHub and live at [reposetupcli.com](https://reposetupcli.com/).** Release/tag source is `59976a7fb6bb7bb07e0e7406deab2c8b5033b1c1`; remote main received that exact qualified commit. Phases 1–10 are delivered for the owner's agreed bounded scope. See the [stable delivery record](../release-docs/STABLE_RELEASE_0.3.0.md) for retained artifact identity, three successful release waves, 324 real selection cases, 12 full golden cells, 395 published-mode browser cases, registry acceptance, deployed file hashes and rollback.
