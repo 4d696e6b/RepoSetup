@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-13
+
+- Repeated `remove --json` for an absent integration returns the versioned empty plan, including quiet, dry-run and diff modes. Plain-text output is retained; no-op removal preserves files and does not prompt or execute commands.
+- The companion website targets the exact 0.3.1 CLI artifact while preserving 0.3.0 release history, existing routes, theme and selection-v1 compatibility. No new integration support or automatic dependency repair is introduced.
+
+Exact delivery and qualification are tracked in the [0.3.1 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md).
+
 ## [0.3.0] - 2026-10-13
 
 Published CLI and companion website. Exact qualification, delivery and accepted limits are in the

@@ -1,9 +1,10 @@
 # RepoSetup
 
-This worktree contains the **local, unpublished `0.3.1-test.1` CLI preview**. See
-[the local testing guide](TESTING_0.3.1.md) for isolated launchers and a playground.
-The public npm package and production website remain on the released 0.3.0;
-the release descriptions below refer to that published baseline.
+This worktree prepares the **0.3.1 CLI patch**: repeated no-op `remove --json`
+returns the versioned empty plan. Publication and exact-artifact qualification
+are tracked in [the 0.3.1 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md).
+The local preview remains available separately; the descriptions below retain the
+published 0.3.0 baseline until delivery is recorded.
 
 **Build your stack from the terminal.**
 
