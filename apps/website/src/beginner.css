@@ -1,10 +1,7 @@
 .beginner-surface {
-  --paper: #f7f6ef;
-  --white: #fffef9;
-  --ink: #25362c;
-  --green: #28503b;
-  --muted: #586357;
-  --line: #d1d7ca;
+  /* Share the reference site's palette; keep only local semantic aliases. */
+  --white: var(--surface);
+  --green: var(--accent);
   color-scheme: light;
 }
 
@@ -16,17 +13,16 @@
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font:
-      16px/1.65 system-ui,
-      -apple-system,
-      sans-serif;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1.65;
   }
   a {
-    color: var(--green);
+    color: inherit;
     text-underline-offset: 4px;
   }
   a:hover {
-    color: #18382d;
+    color: var(--accent);
   }
   button,
   input,
@@ -40,7 +36,7 @@
     cursor: pointer;
   }
   :focus-visible {
-    outline: 3px solid #ad4b1b;
+    outline: 3px solid var(--accent);
     outline-offset: 4px;
   }
   .skip {
@@ -49,7 +45,7 @@
     top: -100px;
     z-index: 5;
     padding: 10px;
-    background: white;
+    background: var(--surface);
   }
   .skip:focus {
     top: 12px;
@@ -105,17 +101,19 @@
     margin-top: 0;
   }
   h1 {
-    font:
-      500 clamp(40px, 5.5vw, 72px)/1.06 Georgia,
-      serif;
+    font-family: inherit;
+    font-size: clamp(48px, 6vw, 86px);
+    font-weight: 550;
+    line-height: 1.02;
     letter-spacing: -2.5px;
     max-width: 800px;
     margin-bottom: 25px;
   }
   h2 {
-    font:
-      500 30px/1.25 Georgia,
-      serif;
+    font-family: inherit;
+    font-size: 30px;
+    font-weight: 550;
+    line-height: 1.25;
     letter-spacing: -0.6px;
     margin-bottom: 16px;
   }
@@ -131,11 +129,12 @@
     padding: 25px 0 35px;
   }
   .eyebrow {
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    font-weight: 750;
+    font-size: 10px;
+    letter-spacing: 0.13em;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-weight: 500;
     text-transform: uppercase;
-    color: var(--green);
+    color: var(--muted);
   }
   .lede {
     font-size: 19px;
@@ -152,7 +151,7 @@
   }
   .hero-note {
     border: 1px solid var(--line);
-    background: #e7ede2;
+    background: var(--soft);
     border-radius: 8px;
     padding: 35px;
     transform: rotate(1deg);
@@ -195,41 +194,33 @@
     display: inline-block;
     font-size: 12px;
     padding: 3px 9px;
-    border: 1px solid #adb9a9;
+    border: 1px solid var(--line);
     border-radius: 4px;
-    color: #294734;
-    background: #edf1e8;
+    color: var(--muted);
+    background: var(--soft);
   }
   .hint {
     color: var(--muted);
     font-size: 14px;
   }
   .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--green);
-    color: white;
-    padding: 12px 20px;
-    font-size: 14px;
-    font-weight: 650;
-    border: 1px solid var(--green);
-    border-radius: 6px;
-    text-decoration: none;
-    line-height: 1.5;
+    background: var(--ink);
+    color: var(--surface);
     min-height: 44px;
   }
   .button:hover {
-    background: #173b2e;
-    color: white;
+    background: #3e4239;
+    color: var(--surface);
   }
   .secondary {
     background: transparent;
-    color: var(--green);
+    color: var(--ink);
+    border-color: var(--line);
   }
   .secondary:hover {
-    background: #e3e9de;
-    color: var(--green);
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
   }
   .actions,
   .goal-links {
@@ -282,7 +273,7 @@
   .notice {
     padding: 18px 22px;
     border-left: 3px solid var(--green);
-    background: #e9eee3;
+    background: var(--soft);
     font-size: 14px;
     overflow-wrap: anywhere;
   }
@@ -336,10 +327,10 @@
     margin-bottom: 5px;
   }
   .unavailable {
-    background: #f1f0e9;
+    background: var(--soft);
   }
   .error {
-    color: #8e3019;
+    color: #a63520;
     font-weight: 650;
     margin-bottom: 18px;
   }
@@ -347,12 +338,12 @@
     margin: 0;
   }
   .field-error {
-    color: #8e3019;
+    color: #a63520;
     font-size: 14px;
     margin: 8px 0 0;
   }
   [aria-invalid="true"] {
-    border-color: #8e3019 !important;
+    border-color: #a63520 !important;
   }
   .review {
     grid-column: 2;
@@ -364,6 +355,7 @@
     font:
       13px/1.6 ui-monospace,
       SFMono-Regular,
+      Consolas,
       monospace;
   }
   textarea {
@@ -373,7 +365,7 @@
   }
   pre {
     padding: 15px;
-    background: #f0f2eb;
+    background: var(--soft);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     border-radius: 5px;

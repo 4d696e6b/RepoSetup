@@ -1,5 +1,14 @@
 # 0.3.0 companion website — first local slice
 
+## Theme consistency audit — 13 October 2026
+
+The owner requested consistent font/color styling across the published website while auditing every CLI command in the separate test folder. Live computed styles confirmed that home/docs used Helvetica/graphite but goals and selection builders used Georgia/green. Beginner pages now inherit the shared reference font and paper/graphite/accent tokens; primary/secondary buttons, form controls, code, focus indicators and error colors follow the existing reference theme. Responsive layouts and deliberate semantic error/disabled colors remain.
+
+Two new browser cases check every known reference/integration/documentation/preset/guidance/create/add route, plus shared button and form/focus styling with invalid-input recovery. Six targeted checks pass across desktop/mobile Chrome and Firefox. A first broader run used an alternate port and correctly tripped three existing fixed-origin privacy assertions; a standard-port run passed 242/243 with a new theme-test readiness race in Firefox. Its style assertion now waits for the lazy surface and uses attached-element CSS assertions, preserving expected font/color checks. These failures remain recorded; final clean-source full five-profile qualification is pending.
+
+Workspace 1,218 unit tests, typecheck, lint and real npm-verified published-mode build pass. The release-history unit test now verifies the immutable pre-0.3 history separately from the delivered 0.3 changelog entry; it retains every old publication-date/limit assertion. The companion CLI no-op JSON repair is isolated on codex/0.3.0-command-audit and is not part of this website source or the immutable npm 0.3.0 artifact. CLI source/artifact/catalog pins remain unchanged. Deployment is pending exact-source qualification.
+
+
 ## Delivered — 13 October 2026
 
 **0.3.0 is published on npm/GitHub and live at [reposetupcli.com](https://reposetupcli.com/).** Release/tag source is `59976a7fb6bb7bb07e0e7406deab2c8b5033b1c1`; remote main received that exact qualified commit. Phases 1–10 are delivered for the owner's agreed bounded scope. See the [stable delivery record](../release-docs/STABLE_RELEASE_0.3.0.md) for retained artifact identity, three successful release waves, 324 real selection cases, 12 full golden cells, 395 published-mode browser cases, registry acceptance, deployed file hashes and rollback.

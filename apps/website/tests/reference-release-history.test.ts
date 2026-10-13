@@ -5,9 +5,10 @@ import {
   RELEASE_HISTORY_PUBLICATION_SOURCE,
   RELEASE_HISTORY_VERIFIED_ON,
   releaseDateLabel,
-  releaseHistory,
+  publishedHistory as releaseHistory,
 } from "../src/reference/release-history";
-import { release, REPOSITORY, PUBLISHED_VERSION } from "../src/reference/release";
+import { release, REPOSITORY } from "../src/reference/release";
+import { handoff } from "../src/handoff";
 
 const changelog = readFileSync(new URL("../../../CHANGELOG.md", import.meta.url), "utf8");
 const recordedVersions = [...changelog.matchAll(/^## \[(\d+\.\d+\.\d+)\]/gm)].map(
@@ -23,10 +24,13 @@ const text = (version: string) => {
 };
 
 describe("published release history", () => {
-  it("covers the complete recorded npm release series newest first and matches the website baseline", () => {
-    expect(releaseHistory.map(({ version }) => version)).toEqual(recordedVersions);
+  it("preserves the complete historical npm series separately from the delivered 0.3.0 changelog", () => {
+    expect(recordedVersions).toEqual([
+      handoff.version,
+      ...releaseHistory.map(({ version }) => version),
+    ]);
     expect(releaseHistory).toHaveLength(6);
-    expect(releaseHistory[0]!.version).toBe(PUBLISHED_VERSION);
+    expect(releaseHistory[0]!.version).toBe("0.2.3");
 
     expect(releaseHistory.every(({ version }) => /^0\.[12]\.\d$/.test(version))).toBe(true);
     expect(new Set(releaseHistory.map(({ version }) => version)).size).toBe(releaseHistory.length);
