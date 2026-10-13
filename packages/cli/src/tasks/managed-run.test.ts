@@ -7,6 +7,7 @@ import {
   type TaskProviderAdapter,
   type TaskParseResult,
 } from "@reposetup/core";
+import { TASK_MODEL_CATALOG } from "./model-catalog.js";
 import { createOpenAITaskProvider } from "./provider-adapter.js";
 import { runCli } from "../run-cli.js";
 import { createDefaultFs } from "../io.js";
@@ -534,6 +535,27 @@ describe("managed run CLI review boundary", () => {
         ),
       ).toBe(true);
       expect(routedPreview.routing.decisions).toEqual([]);
+      // A trusted evidence registry with no task coverage blocks preview selection
+      // instead of falling back to a catalog heuristic; it has no execution effects.
+      expect(
+        await runCli([...args, "--routing", "--dry-run"], {
+          ...deps,
+          taskRoutingCatalog: {
+            catalog: TASK_MODEL_CATALOG,
+            qualificationScope: "live",
+            evaluations: [],
+          },
+        }),
+      ).toMatchObject({ exitCode: 0 });
+      const uncoveredPreview = JSON.parse(out.pop()!);
+      expect(uncoveredPreview.routing.decisions).toEqual([]);
+      expect(uncoveredPreview.routing.blocked).toMatchObject([
+        { taskId: "producer", code: "TASK_CAPABILITY_UNAVAILABLE" },
+      ]);
+      expect(host).not.toHaveBeenCalled();
+      expect(processRunner).not.toHaveBeenCalled();
+      expect(prompt).not.toHaveBeenCalled();
+
       expect(
         await runCli(
           [

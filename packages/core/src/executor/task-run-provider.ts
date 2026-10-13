@@ -222,6 +222,7 @@ export async function requestTaskRunProposal(input: {
         allowProviderUsage: true,
         now: new Date().toISOString(),
         maxOutputTokens: input.op.maxOutputTokens,
+        timeoutMs: input.op.timeoutMs,
         remaining: taskRemainingAllowance(c.run),
         ...(previous
           ? {

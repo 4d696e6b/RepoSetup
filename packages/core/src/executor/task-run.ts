@@ -691,6 +691,7 @@ export async function executeTaskRun(input: {
               allowProviderUsage: true,
               now: new Date().toISOString(),
               maxOutputTokens: op.maxOutputTokens,
+              timeoutMs: op.timeoutMs,
               remaining: taskRemainingAllowance(c.run),
               ...(state.status === "needs_repair" && previous
                 ? {

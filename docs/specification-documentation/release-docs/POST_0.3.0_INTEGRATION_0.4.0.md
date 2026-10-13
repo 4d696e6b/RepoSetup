@@ -62,3 +62,12 @@ by this record. Integration of reviewed development code and publishing a versio
 See [offline acceptance](../implementing-docs/OFFLINE_ACCEPTANCE_0.4.0.md),
 [status](../implementing-docs/STATUS_0.4.0.md) and
 [candidate preparation](./RELEASE_CANDIDATE_0.4.0.md).
+
+## Later router extension — 2026-10-13
+
+Owner-requested paper-based evidence routing changes production source after the
+original offline milestone qualification. Its local checks are recorded in status;
+new packed bytes and complete supported-host real-tool checks must be qualified
+again before integration. Retain the original passing source as historical evidence
+and the dependency on actual 0.3.0 publication. See the
+[router evidence contract](../implementing-docs/TASK_ROUTER_EVIDENCE_0.4.0.md).

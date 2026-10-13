@@ -1,6 +1,6 @@
 # RepoSetup 0.4.0 implementation status
 
-Last updated: 2026-10-10.
+Last updated: 2026-10-13.
 
 ## Current position
 
@@ -15,7 +15,9 @@ The complete Linux x64 and macOS arm64 qualification passed at branch source
 `69a2467`, tested clean PR merge source `14bd3ab5bb6d2c831ed6d47ca7e55a494aa03f2f`.
 Each host passed 62 contracts, eight concrete verification cases and 11 full
 fixture cases. Ordinary CI, all three platforms and installation performance passed.
-See the final acceptance evidence at the end of this record.
+That completed qualification applies to its recorded source. The owner-requested
+paper-based router extension below changes production code and has separate local
+validation; its new source/artifact still needs complete hosted requalification.
 
 Production capability profiles remain unconfirmed and routing closed. Simulated
 reports retain `qualification: false`; offline completion establishes implemented
@@ -2972,3 +2974,65 @@ deferred. Next integration work waits for actual 0.3.0 publication.
 Integration preparation validation: workspace typecheck, lint/format and whitespace
 checks passed. Documentation-only changes require no feature tests/build; no
 production or candidate branch state was merged or altered.
+
+### Paper-based router extension — 2026-10-13
+
+Owner requested adapting *Measuring AI Performance and Selecting Models Under
+Quality and Cost Constraints*, v1.0.0, to improve the router. Inspected current
+core routing/catalog, executor attempt and proposal routing, CLI trusted-host
+injection and tests. Starting branch/worktree was clean at `a2e7708`; Node 24.21.0
+was available. Read the supplied 24-page PDF; preserve its independent/not-peer-
+reviewed status and distinction between completed predictive-pipeline experiments
+and the prospective LLM optimizer. Record its hash, methods, limits and official
+statistical reference in TASK_ROUTER_EVIDENCE_0.4.0.md.
+
+Implemented bounded exact-binomial numerical bounds, versioned trusted task-level
+quality/cost/resource evidence and per-candidate assessments in core. Enforce
+absolute pass-rate lower bounds and paired reference-degradation upper bounds,
+family error allocation, full-horizon expected versus upper cost semantics,
+mandatory resource units/statistics, missing/inconclusive evidence and immutable
+model/native effort configuration bindings. Compare supported efforts separately;
+only admitted configurations enter deterministic projected-cost/upper-bound/resource/
+identity ranking. Runtime call/token/cost/time reservations remain independent.
+
+Live routes require live qualification, complete evidence, a pre-confirmation
+frozen winner and held-out confirmation. Failed confirmation invalidates the whole
+protocol; no reference fallback or reselection on held-out outcomes. Evidence
+binds exact task, execution preferences, protocol/splits, catalog and workflow,
+configuration/output/timeout and price identity. A bounded trusted task registry
+flows through CLI dependency injection, preview and executor start/proposal checks;
+no plan/config/model evidence authority, new command, SDK adapter or paid call.
+Receipts and no-selection diagnostics preserve all gates and measured bounds.
+Production catalog stays unconfirmed. Policy revision 2 intentionally invalidates
+fresh resume authority for routed revision-1 checkpoints; effects/reservations
+remain inspectable, with no automatic migration/replay/reset/rollback.
+
+Validation: 63 routing/statistical tests passed, including independent SciPy beta
+quantiles up to 10,000 trials, sparse disagreement, imperfect sample precision,
+missing data/cost/resources, paired gates, reference identity, preference/catalog/
+configuration drift, explicit effort/repair, deterministic ties and held-out winner
+freeze. All 1,072 ordinary workspace tests passed (core 639, registry 15,
+integrations 126, website 14, CLI 278). Extended CLI boundary check passed all ten
+managed-run tests, preserving zero effects with absent trusted task evidence.
+Workspace build/typecheck, task-test typecheck and lint/format passed. Legacy
+generic e2e passed 29 with one existing skip; dedicated selection passed 105;
+ordinary task contracts passed 62. Latest installed/extracted task artifact smoke
+passed with `sha256:0d61346ea5afacbfa241a2ffe47aba54b100356e62a8245cb558f289f922eddc`,
+unchanged package version `0.3.0-alpha.1`, Node 24.21.0/macOS arm64. These are local
+development results with source dirty during testing, not a frozen candidate.
+Earlier intermediate typecheck errors, unused-test-variable lint errors and one
+incorrect mixed-rejection test expectation were corrected; all reported final
+checks above pass. Complete real-tool concrete/full hosted qualification of the
+new runtime remains required; earlier 69a2467 results are not transferred.
+
+A nearly full shared disk initially blocked temporary files. Removed only the
+regenerable installed-tool copies in two old task-owned verifier test fixtures;
+retained their project/state artifacts and the prepared live-smoke parent. No
+unrelated files, credentials or system installation was touched. Initial shell
+cleanup was rejected; the permitted path-checked cleanup removed only the identified
+fixture dependency copies. Final builds/checks ran with available disk space.
+
+Next: commit/push this extension for independent hosted no-key checks on draft
+PR #20; retain the published-0.3.0 integration dependency and rerun affected source/
+artifact qualification. No universal best-model, model-quality or cash-savings
+claim, live qualification, merge, version bump, release or website change.

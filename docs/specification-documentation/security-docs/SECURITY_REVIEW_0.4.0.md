@@ -137,3 +137,30 @@ profiles. Existing environment credentials, process/write ownership, strict
 proposal validation and scope limits are unchanged. This provenance check is not
 an external security audit, hostile-host isolation claim or release freeze.
 See the [offline acceptance amendment](../implementing-docs/OFFLINE_ACCEPTANCE_0.4.0.md).
+
+## Paper-based routing extension review — 2026-10-13
+
+The new production changes are core quality/cost admission and statistics, optional
+catalog/receipt/operation fields, and CLI/executor propagation of trusted evidence
+and timeout. Reviewed `routing-evaluation-schema.ts`, `routing-evaluation.ts`,
+`binomial-bounds.ts`, `routing.ts`, catalog/schema extensions and executor start/
+proposal/managed call sites. Records are strict, versioned and size bounded; no
+model/config/plan can confer empirical authority. Candidate outcomes contain only
+IDs/hashes/booleans/numbers, not source bodies or commands. Sample duplication,
+missing pairing, unsupported dependence, missing costs/resources, stale identities,
+wrong units and changed execution preferences prevent admission. Complete task
+registry evidence is immutable and included in the durable authority hash.
+
+Production routing still requires independently qualified live profiles; no
+catalog was promoted. Held-out confirmation is a host-reviewed verdict, never a
+model assertion. The selection-set winner is frozen before confirmation; failures
+block protocol reuse. Numerical bounds were tested against independently computed
+quantiles. Hashes do not authenticate scientific evidence, prove independence,
+enforce provider immutability or guarantee future population performance.
+
+Process/filesystem/provider ownership, curated installation, credential handling,
+context privacy and verification checks are unchanged. No new process, file mutation,
+network request, dependency, secret persistence or executable plan/config field is
+introduced. Revision-1 routed checkpoints cannot acquire revision-2 resume authority
+silently. Fresh preview/review and separate new-source hosted qualification remain
+required; the earlier full hosted pass does not cover these production changes.

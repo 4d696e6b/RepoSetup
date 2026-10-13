@@ -39,3 +39,6 @@ export * from "./request-footprint.js";
 export * from "./benchmark-run-evidence.js";
 export * from "./benchmark-ledger-projection.js";
 export * from "./benchmark-final-evidence.js";
+export * from "./binomial-bounds.js";
+export * from "./routing-evaluation-schema.js";
+export * from "./routing-evaluation.js";

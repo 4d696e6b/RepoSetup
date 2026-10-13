@@ -46,6 +46,7 @@ export interface CliDeps {
   taskRoutingCatalog?: {
     catalog: import("@reposetup/core").TaskModelCatalog;
     qualificationScope: "offline" | "live";
+    evaluations?: import("@reposetup/core").TaskRoutingEvaluation[];
   };
   createTaskManagedHost?: import("./tasks/managed-command.js").TaskManagedHostFactory;
   createTaskCompilationHost?: import("./tasks/managed-compile.js").TaskCompilationHostFactory;
@@ -69,6 +70,7 @@ export interface ResolvedCliDeps {
   taskRoutingCatalog?: {
     catalog: import("@reposetup/core").TaskModelCatalog;
     qualificationScope: "offline" | "live";
+    evaluations?: import("@reposetup/core").TaskRoutingEvaluation[];
   };
   createTaskManagedHost: import("./tasks/managed-command.js").TaskManagedHostFactory;
   createTaskCompilationHost: import("./tasks/managed-compile.js").TaskCompilationHostFactory;

@@ -589,3 +589,15 @@ separate reviewed opt-ins; default G fixed-run behavior remains compatible. Dry-
 keeps zero effects and labels initial routing/allowance as advisory. Production
 routing remains fail-closed until live qualifications are reviewed in I/J; offline
 implementation completion does not assert model quality or authorize spending.
+
+## Evidence-based routing amendment — 2026-10-13
+
+The [router evidence contract](../implementing-docs/TASK_ROUTER_EVIDENCE_0.4.0.md)
+defines strict version 1 host-only evaluation records, binary paired quality bounds,
+full-policy horizon costs/resource bounds, confirmation freeze, admission statuses
+and optional hashed decision receipts. Plans/preferences/model replies cannot
+supply that authority. Legacy offline routing remains available without empirical
+evidence; live routing requires it and remains closed by the unconfirmed catalog.
+Optional receipt/catalog and routed-start timeout fields preserve inspection of
+existing version 1 artifacts. Routing policy revision 2 requires fresh authority for
+new/resumed routed execution; there is no automatic state adoption or migration.

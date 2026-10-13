@@ -247,6 +247,7 @@ export async function handleManagedTask(
           allowProviderUsage: true,
           now: new Date().toISOString(),
           maxOutputTokens: options.repair ? Math.min(4096, maxOutputTokens) : maxOutputTokens,
+          timeoutMs,
           remaining: {
             calls: preferences.resourceLimits.maxProviderCalls,
             inputTokens: preferences.resourceLimits.maxInputTokens,
