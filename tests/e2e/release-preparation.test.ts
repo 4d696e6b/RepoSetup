@@ -60,6 +60,7 @@ async function workspace(version = "0.3.0") {
   await git(directory, ["commit", "-m", "fixture baseline"]);
   await git(directory, ["update-ref", "refs/remotes/origin/main", "HEAD"]);
   await git(directory, ["branch", "codex/0.3.0-candidate-integration"]);
+  await git(directory, ["branch", "codex/0.3.1-testing"]);
   await git(directory, ["branch", "codex/0.4.0-task-compiler"]);
   await git(directory, ["switch", "-c", `codex/release-${version}`]);
   return directory;
@@ -74,36 +75,42 @@ async function manifests(directory: string) {
 }
 
 describe("future release version finalization", () => {
-  it.each(["0.3.0", "0.4.0"])("previews %s without changing manifests or git", async (version) => {
-    const workspaceRoot = await workspace(version);
-    const before = await manifests(workspaceRoot);
-    const head = await git(workspaceRoot, ["rev-parse", "HEAD"]);
-    const result = await preparation.prepareReleaseVersion({ workspaceRoot, version });
-    expect(result.written).toBe(false);
-    expect(result.changes).toHaveLength(4);
-    expect(result.releaseBranch).toBe(`codex/release-${version}`);
-    expect(await manifests(workspaceRoot)).toEqual(before);
-    expect(await git(workspaceRoot, ["status", "--porcelain"])).toBe("");
-    expect(await git(workspaceRoot, ["rev-parse", "HEAD"])).toBe(head);
-  });
+  it.each(["0.3.0", "0.3.1", "0.4.0"])(
+    "previews %s without changing manifests or git",
+    async (version) => {
+      const workspaceRoot = await workspace(version);
+      const before = await manifests(workspaceRoot);
+      const head = await git(workspaceRoot, ["rev-parse", "HEAD"]);
+      const result = await preparation.prepareReleaseVersion({ workspaceRoot, version });
+      expect(result.written).toBe(false);
+      expect(result.changes).toHaveLength(4);
+      expect(result.releaseBranch).toBe(`codex/release-${version}`);
+      expect(await manifests(workspaceRoot)).toEqual(before);
+      expect(await git(workspaceRoot, ["status", "--porcelain"])).toBe("");
+      expect(await git(workspaceRoot, ["rev-parse", "HEAD"])).toBe(head);
+    },
+  );
 
-  it.each(["0.3.0", "0.4.0"])("finalizes only the four versions for %s", async (version) => {
-    const workspaceRoot = await workspace(version);
-    const before = await manifests(workspaceRoot);
-    const head = await git(workspaceRoot, ["rev-parse", "HEAD"]);
-    await preparation.prepareReleaseVersion({ workspaceRoot, version, write: true });
-    expect(await manifests(workspaceRoot)).toEqual(
-      before.map((manifest) => ({ ...manifest, version })),
-    );
-    expect(await git(workspaceRoot, ["rev-parse", "HEAD"])).toBe(head);
-    expect((await git(workspaceRoot, ["diff", "--name-only"])).split("\n").sort()).toEqual(
-      packageNames.map((name) => `packages/${name}/package.json`).sort(),
-    );
-    await git(workspaceRoot, ["commit", "-am", "finalize versions"]);
-    expect(
-      (await preparation.prepareReleaseVersion({ workspaceRoot, version, write: true })).changes,
-    ).toEqual([]);
-  });
+  it.each(["0.3.0", "0.3.1", "0.4.0"])(
+    "finalizes only the four versions for %s",
+    async (version) => {
+      const workspaceRoot = await workspace(version);
+      const before = await manifests(workspaceRoot);
+      const head = await git(workspaceRoot, ["rev-parse", "HEAD"]);
+      await preparation.prepareReleaseVersion({ workspaceRoot, version, write: true });
+      expect(await manifests(workspaceRoot)).toEqual(
+        before.map((manifest) => ({ ...manifest, version })),
+      );
+      expect(await git(workspaceRoot, ["rev-parse", "HEAD"])).toBe(head);
+      expect((await git(workspaceRoot, ["diff", "--name-only"])).split("\n").sort()).toEqual(
+        packageNames.map((name) => `packages/${name}/package.json`).sort(),
+      );
+      await git(workspaceRoot, ["commit", "-am", "finalize versions"]);
+      expect(
+        (await preparation.prepareReleaseVersion({ workspaceRoot, version, write: true })).changes,
+      ).toEqual([]);
+    },
+  );
 
   it("refuses write on an implementation branch while allowing preview", async () => {
     const workspaceRoot = await workspace();

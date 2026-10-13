@@ -11,6 +11,7 @@ const executeFile = promisify(execFile);
 const defaultWorkspaceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const releaseTargets = {
   "0.3.0": "codex/0.3.0-candidate-integration",
+  "0.3.1": "codex/0.3.1-testing",
   "0.4.0": "codex/0.4.0-task-compiler",
 };
 const packageDirectories = ["cli", "core", "integrations", "registry"];
@@ -38,7 +39,7 @@ export function parsePreparationArguments(arguments_) {
   if (!Object.hasOwn(releaseTargets, version)) {
     throw preparationError(
       "RELEASE_PREPARATION_TARGET",
-      "Prepared release targets are 0.3.0 and 0.4.0.",
+      "Prepared release targets are 0.3.0, 0.3.1 and 0.4.0.",
     );
   }
   return { version, write };
@@ -178,7 +179,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   try {
     if (process.argv.slice(2).length === 1 && process.argv[2] === "--help") {
       process.stdout.write(
-        "Usage: pnpm release:prepare --version <0.3.0|0.4.0> [--write]\nDefault: preview only. --write requires a clean matching release branch with current implementation and origin/main merged.\n",
+        "Usage: pnpm release:prepare --version <0.3.0|0.3.1|0.4.0> [--write]\nDefault: preview only. --write requires a clean matching release branch with current implementation and origin/main merged.\n",
       );
     } else {
       process.stdout.write(

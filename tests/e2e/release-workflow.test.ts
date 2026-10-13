@@ -11,6 +11,7 @@ describe("release publishing workflow", () => {
       const workflow = await readFile(path.join(repoRoot, ".github", "workflows", file), "utf8");
       const push = workflow.split("  push:\n")[1]?.split("  pull_request:")[0];
       expect(push).toContain("codex/release-0.3.0");
+      expect(push).toContain("codex/release-0.3.1");
       expect(push).toContain("codex/release-0.4.0");
     }
   });
@@ -92,6 +93,7 @@ describe("0.3.0 release staging artifact protection", () => {
       const push = workflow.split("  push:\n")[1]?.split("  workflow_dispatch:")[0];
       expect(push).toBeDefined();
       expect(push).toContain("codex/release-0.3.0");
+      expect(push).toContain("codex/release-0.3.1");
       expect(push).toContain("codex/release-0.4.0");
     },
   );
