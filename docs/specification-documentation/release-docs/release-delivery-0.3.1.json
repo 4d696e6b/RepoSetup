@@ -1,0 +1,28 @@
+{
+  "version": "0.3.1",
+  "deploymentId": "dpl_pnBPEQGjebLTN1yR7QGhszWPfAJ6",
+  "sourceSha": "faa3d979bdde6d9de6b45cb8b1c5a9e07a07a1cc",
+  "url": "https://reposetupcli.com",
+  "matchedFiles": [
+    "assets/entry-BBipmbTE.js",
+    "assets/index-Bs7CaF3t.js",
+    "assets/index-DsVAuko2.css",
+    "brand/feature-compatibility.png",
+    "brand/feature-compose.png",
+    "brand/feature-preview.png",
+    "brand/hero-stack.png",
+    "brand/reposetup-logo.png",
+    "brand/reposetup-mark.svg",
+    "brand/reposetup-wordmark.svg",
+    "brand/section-background.png",
+    "brand/setup-flow.png",
+    "brand/tablet-gesture.png",
+    "brand/tablet-hand.png",
+    "index.html"
+  ],
+  "securityHeadersVerified": true,
+  "checkedAt": "2026-10-13T14:02:54.654Z",
+  "npmPublicationRun": 38405423433,
+  "websiteQualificationRun": 38406137483,
+  "githubRelease": "https://github.com/4d696e6b/RepoSetup/releases/tag/v0.3.1"
+}

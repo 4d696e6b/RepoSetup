@@ -1,10 +1,6 @@
 # RepoSetup
 
-This worktree prepares the **0.3.1 CLI patch**: repeated no-op `remove --json`
-returns the versioned empty plan. Publication and exact-artifact qualification
-are tracked in [the 0.3.1 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md).
-The local preview remains available separately; the descriptions below retain the
-published 0.3.0 baseline until delivery is recorded.
+**0.3.1 is published on npm/GitHub and live on the companion website.** The patch fixes repeated no-op `remove --json` output and keeps the 0.3.0 workflows and theme. See [the delivery record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md). The owner's isolated preview remains available separately.
 
 **Build your stack from the terminal.**
 
@@ -15,7 +11,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is an **early-stage** open-source project with published `0.3.0` and a [companion website](https://reposetupcli.com/). It retains the shipped 0.2.3 fixes. Exact qualification, delivery and owner-accepted accessibility limits are recorded in the [stable release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is an **early-stage** open-source project with published `0.3.1` and a [companion website](https://reposetupcli.com/). It retains the shipped 0.2.3 fixes. Exact qualification, delivery and owner-accepted accessibility limits are recorded in the [stable release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
