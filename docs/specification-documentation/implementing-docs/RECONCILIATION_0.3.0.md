@@ -1,5 +1,12 @@
 # 0.3.0 reconciliation with published 0.2.3
 
+## Delivered — 13 October 2026
+
+**0.3.0 is published on npm/GitHub and live at [reposetupcli.com](https://reposetupcli.com/).** Release/tag source is `59976a7fb6bb7bb07e0e7406deab2c8b5033b1c1`; remote main received that exact qualified commit. Phases 1–10 are delivered for the owner's agreed bounded scope. See the [stable delivery record](../release-docs/STABLE_RELEASE_0.3.0.md) for retained artifact identity, three successful release waves, 324 real selection cases, 12 full golden cells, 395 published-mode browser cases, registry acceptance, deployed file hashes and rollback.
+
+The owner removed freeze/soak, accepted scripted journeys/Chrome phone simulation and explicitly deferred native screen-reader qualification. No human, physical-device or native-reader pass is claimed. Original timeout failures and browser-control limits remain recorded. The generated Next development-tool advisory remains documented; no integration maturity or arbitrary-combination promotion applies. All sections below this current record retain their historical checkpoints unless explicitly updated.
+
+
 
 ## PC responsive navigation — 13 October 2026
 

@@ -1,5 +1,12 @@
 # RepoSetup 0.3.0 implementation status
 
+## Delivered — 13 October 2026
+
+**0.3.0 is published on npm/GitHub and live at [reposetupcli.com](https://reposetupcli.com/).** Release/tag source is `59976a7fb6bb7bb07e0e7406deab2c8b5033b1c1`; remote main received that exact qualified commit. Phases 1–10 are delivered for the owner's agreed bounded scope. See the [stable delivery record](../release-docs/STABLE_RELEASE_0.3.0.md) for retained artifact identity, three successful release waves, 324 real selection cases, 12 full golden cells, 395 published-mode browser cases, registry acceptance, deployed file hashes and rollback.
+
+The owner removed freeze/soak, accepted scripted journeys/Chrome phone simulation and explicitly deferred native screen-reader qualification. No human, physical-device or native-reader pass is claimed. Original timeout failures and browser-control limits remain recorded. The generated Next development-tool advisory remains documented; no integration maturity or arbitrary-combination promotion applies. All sections below this current record retain their historical checkpoints unless explicitly updated.
+
+
 
 ## PC responsive navigation — 13 October 2026
 
@@ -71,7 +78,7 @@ Local checkpoint: 1,199 workspace tests (core 301, registry 15, integrations 680
 
 The phase checklists below preserve preceding implementation/evidence checkpoints. Current delivery readiness is governed by this section and [release preparation](../release-docs/RELEASE_PREPARATION_0.3.0.md). No formal freeze or soak is required.
 
-## Current position
+## Earlier development position (superseded by delivery record)
 
 **Phases 1–8 are implemented or qualified for their agreed bounded scopes across the CLI and website branches.** At CLI source `b212d35727300325486c70a9a7b0cc54c912d581`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37177775883), [three-runner contract/transport/maintenance run](https://github.com/4d696e6b/RepoSetup/actions/runs/37177775882), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37177775966) passed. The companion website's [clean-source five-profile qualification at `f96f28e`](https://github.com/4d696e6b/RepoSetup/actions/runs/37178840138) passed 70/70 browser cases against that packed CLI source. The owner accepted scripted beginner-style journeys in place of recruiting participants for Phase 8; no person has been observed. The owner also moved manual screen-reader/physical-device checks and combined candidate safety review to Phase 9. Phases 9–10 remain; the 0.3.0 release is not finished or authorized for publication.
 
@@ -204,31 +211,25 @@ Exit condition: every advertised website export succeeds or fails consistently w
 
 Phase 8 exit condition for the agreed scope: all five scripted journeys and maintenance paths run without undocumented repair, known usability defects in the tested flows are corrected, and bounded safety fixtures pass. Simulations cannot measure beginner comprehension. Release claims remain gated by Phase 9.
 
-## Phase 9 — Freeze and qualify the release candidate
+## Phase 9 — Qualify the release source
 
-**Status: in progress.** The CLI and website branches have been integrated on `codex/0.3.0-candidate-integration`; the [0.3.0 candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) identifies a provisional CLI tarball and the remaining freeze, platform, manual and soak gates. Existing predecessor runs and local integration checks are not a fully qualified frozen candidate.
+**Status: complete for the owner-agreed bounded scope.** Final source is `59976a7`; [delivery evidence](../release-docs/STABLE_RELEASE_0.3.0.md) preserves the original failures and exact scopes.
 
-- [x] **9.1 Reconcile scope and docs:** the integrated README, CLI/selection/preview/doctor contracts, website setup and status now agree on implemented commands, three bounded contexts, local artifact use and limits. No optional feature was selected; release freeze is still separate gate 9.2.
-- [ ] **9.2 Candidate identity:** exact source SHA, catalog revision, one packed artifact and cryptographic hash.
-- [ ] **9.3 Complete qualification:** retained golden workflows and new create/add/preview/doctor/repair workflows pass on advertised platforms without hidden qualification skips; website and joint handoff checks pass independently.
-- [ ] **9.4 Repeated passes/soak:** carry forward three consecutive passing full qualifications from the same candidate SHA and seven-calendar-day soak unless explicitly revised by the maintainer.
-- [ ] **9.5 Release blockers:** no open P0/P1, security or data-loss defects; required evidence and quality checks recorded.
-- [ ] **9.6 Manual and combined safety gates:** perform screen-reader and physical-device checks, then review the frozen CLI/website candidate together for secret suppression, malformed records, traversal/symlinks, conflicting files, concurrent changes, interruption and repeated repair. Record limits and resolve blocking findings before release.
-
-Phase 9 integration checkpoint: merge commit `a410c1d39179d41ed14aae2740470a7267a25282` preserves the CLI executor and adds the website app/public catalog. Frozen-lockfile installation, workspace build, unit tests, typecheck and lint passed; the provisional tarball SHA-256 is `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec`. At integrated source `3659d584003da6812243b14b0b43e41159a21aa8`, the [packed contract/transport/maintenance run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314747), [six-cell real create/add run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314748), [six-cell golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314764), [broader release workflow](https://github.com/4d696e6b/RepoSetup/actions/runs/37184319967) and [clean-source browser/handoff qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314746) all passed; the website run covered 70/70 browser cases. These are one provisional source wave, not a frozen same-SHA release qualification. The [candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) tracks remaining manual and soak gates.
-
-Exit condition: the frozen candidate satisfies every selected release gate. Source changes after freezing require renewed evidence appropriate to the change; local unit success alone is insufficient.
+- [x] **9.1 Scope/docs:** 0.2.3 fixes, legacy contracts and bounded 0.3.0 CLI/website behavior reconciled.
+- [x] **9.2 Identity:** immutable source, catalog/matrix, retained tarball and cryptographic hashes recorded.
+- [x] **9.3 Qualification:** platform, full golden, real create/add/legacy, packed maintenance/transport and five-profile website/handoff gates passed at the release source.
+- [x] **9.4 Repeated passes:** three consecutive first-attempt full release waves passed. Freeze/soak were explicitly removed; their absence is not a passed soak.
+- [x] **9.5 Bounded blocker review:** reported issue/security evidence and clean workspace audit recorded, with the inherited generated Next dev-tool advisory and scope limits retained.
+- [x] **9.6 Agreed safety/accessibility scope:** bounded preservation, secret suppression, validation, conflict, interruption and repeat fixtures passed. Owner deferred native reader checks and substituted Chrome simulation for a physical phone; zero observed participants and no independent specialist review are claimed.
 
 ## Phase 10 — Publish and verify delivery
 
-**Status: pending delivery; requires Phase 9 and later explicit authorization.**
+**Status: delivered.** [Stable record](../release-docs/STABLE_RELEASE_0.3.0.md) identifies actual delivery and remaining accepted limits.
 
-- [ ] **10.1 CLI authorization:** obtain the owner's explicit release request after presenting the concrete qualified artifact/evidence.
-- [ ] **10.2 CLI delivery:** publish the previously qualified artifact, create the authorized release/tag and verify installed version, both aliases and supported commands.
-- [ ] **10.3 Website authorization/delivery:** obtain a separate deployment request, publish the qualified site and verify catalog/version/export behavior.
-- [ ] **10.4 Final evidence:** record delivered artifact identities and URLs, and update implementation/release documents.
-
-Exit condition: delivered artifacts match their qualification evidence. Website hosting delays can have a separate delivery milestone; they do not justify advertising an unqualified builder or CLI handoff.
+- [x] **10.1 Authorization:** owner explicitly requested publication everywhere on the existing delivery surfaces.
+- [x] **10.2 CLI:** retained artifact published as npm latest 0.3.0, immutable tag/GitHub release created, all three OS registry-acceptance jobs passed.
+- [x] **10.3 Website:** real published-mode full qualification passed; exact retained output promoted on the existing Vercel project/domain; live hashes, headers, history, redirects and JSON-to-CLI dry-run verified.
+- [x] **10.4 Evidence:** delivered source/package/deployment identities, URLs, failure history, owner substitutions and rollback recorded. Documentation follows delivery without moving the immutable tag or deployed source.
 
 ## Optional scope — not selected
 

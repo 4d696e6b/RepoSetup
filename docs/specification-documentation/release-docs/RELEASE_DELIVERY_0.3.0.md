@@ -1,6 +1,6 @@
 # RepoSetup 0.3.0 delivery procedure
 
-Status: implementation and automated qualification are being finalized on `codex/release-0.3.0`; publication and production deployment have not happened. No freeze, soak or calendar waiting period applies. This procedure prepares a reviewable delivery; it is not owner authorization to publish.
+Status: delivered on 13 October 2026; actual source/artifact/registry/website evidence and accepted limits are in [the stable record](./STABLE_RELEASE_0.3.0.md). The owner explicitly authorized publication on the existing delivery surfaces. The procedure below is retained for reproducibility; the immutable tag and published bytes must not be replaced. No freeze, soak or calendar waiting period applies.
 
 ## Identify the release
 

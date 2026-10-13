@@ -1,6 +1,6 @@
-# RepoSetup companion website — 0.3.0 release preparation
+# RepoSetup companion website — 0.3.0
 
-The published website remains [reposetupcli.com](https://reposetupcli.com/) at 0.2.3. This canonical `codex/release-0.3.0` worktree combines its full documentation, 37 integration references, five legacy presets, artwork and existing routes with the bounded 0.3.0 beginner workflows. Active parser/registry facts are generated from the reviewed 0.3.0 CLI. The original 0.2.3 facts remain an immutable digest-checked snapshot; published release history never lists an unpublished candidate.
+The published website is [reposetupcli.com](https://reposetupcli.com/) at 0.3.0. Its exact deployment and qualification are in the [stable delivery record](../../docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md). This canonical `codex/release-0.3.0` worktree combines its full documentation, 37 integration references, five legacy presets, artwork and existing routes with the bounded 0.3.0 beginner workflows. Active parser/registry facts are generated from the reviewed 0.3.0 CLI. The original 0.2.3 facts remain an immutable digest-checked snapshot; published release history never lists an unpublished candidate.
 
 The site has 76 documentation pages, nine curated explanations, three minimal starters, 24 create and 21 nonempty add choices. It supports React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm and FastAPI + uv. Choices start empty and actual local context remains authoritative. Integration maturity and prerequisites are explicit.
 
@@ -27,9 +27,9 @@ Beginner code/catalog load only when requested. Returning from an explanation pr
 
 ## Matching CLI artifact: required before pasting commands
 
-The selection handoff requires reviewed `rsetup@0.3.0`, CLI source `ae4b9011c47d23d176770a749cde2560c64775c8`, tarball SHA-256 `cf458b036cf78e25445416dc1ba9e73ab2d40c3591828afac576cbd1a406d7e4`. The public package remains 0.2.3 until delivery. Its binary does not accept selection v1; do not use a floating npm/npx bootstrap for the candidate's new flags. The single authoritative pin is `src/handoff.ts`.
+The selection handoff requires reviewed `rsetup@0.3.0`, CLI source `ae4b9011c47d23d176770a749cde2560c64775c8`, tarball SHA-256 `cf458b036cf78e25445416dc1ba9e73ab2d40c3591828afac576cbd1a406d7e4`. The public npm package is 0.3.0 and its verified bytes match this pin. Install `npm install -g rsetup@0.3.0` before using these exports. Older 0.2.x CLIs do not accept selection v1. The single authoritative pin is `src/handoff.ts`.
 
-Prepare the exact artifact locally:
+For development qualification, prepare the exact artifact locally:
 
 ```sh
 pnpm --filter @reposetup/website pack:contract
@@ -78,7 +78,7 @@ The macOS-15 workflow supplies full WebKit evidence. Local macOS 14.7.2 cannot r
 
 ## Delivery status
 
-Formal freeze, soak and calendar waiting gates were removed by the owner. Current product evidence and exact-source qualification are in [reconciliation](../../docs/specification-documentation/implementing-docs/RECONCILIATION_0.3.0.md), [release preparation](../../docs/specification-documentation/release-docs/RELEASE_PREPARATION_0.3.0.md) and the latest workflow reports. Actual screen-reader/physical-mobile results and explicit publication/deployment authorization remain required. Keep published 0.2.3 in production until verified 0.3.0 delivery; candidate success is not a deployment.
+Formal freeze, soak and calendar waiting gates were removed by the owner. Current product evidence and exact-source qualification are in [reconciliation](../../docs/specification-documentation/implementing-docs/RECONCILIATION_0.3.0.md), [release preparation](../../docs/specification-documentation/release-docs/RELEASE_PREPARATION_0.3.0.md) and the latest workflow reports. Publication/deployment were explicitly authorized and 0.3.0 is delivered. Native screen-reader qualification is explicitly deferred; the owner requested Chrome phone simulation, and no physical-device pass is claimed. The stable delivery record preserves live-check/control limitations and rollback.
 
 ## Verified publication mode
 

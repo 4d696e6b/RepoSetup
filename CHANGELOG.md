@@ -6,9 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### RepoSetup 0.3.0 release preparation
+## [0.3.0] - 2026-10-13
 
-This section describes the prepared release; it is not a publication record.
+Published CLI and companion website. Exact qualification, delivery and accepted limits are in the
+[stable release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md).
 
 - Curated beginner guidance, reusable minimal starters and goal discovery cover bounded React/Vite, Express and FastAPI contexts, derived from the built-in registry.
 - Versioned declarative selections support create/add via a bounded token or JSON file. The local CLI validates context, IDs, options and size limits, shows decoded choices and the installation plan, and requires confirmation. `--dry-run` remains available.
@@ -16,8 +17,8 @@ This section describes the prepared release; it is not a publication record.
 - The companion website combines the full published documentation/catalog and existing routes/artwork with beginner explanations, minimal starters and the create/add builder. It keeps choices local and lazy-loads the builder.
 - All published 0.2.1–0.2.3 fixes, schemaVersion 1 configs, five legacy presets, positional add and supported JSON envelopes are retained. Express/Vitest sample ownership is corrected and conflicting exclusive file writes fail during planning.
 
-Qualification and remaining delivery steps are recorded in
-[release preparation](docs/specification-documentation/release-docs/RELEASE_PREPARATION_0.3.0.md).
+- Compact, responsive navigation groups secondary destinations under Explore, keeps Build accessible and fits laptop/desktop windows and short viewports.
+- npm/GitHub delivery and the existing website are verified against the same retained release artifacts. Native screen-reader qualification is explicitly deferred; phone checks are emulation.
 
 ## [0.2.3] - 2026-10-09
 

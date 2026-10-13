@@ -1,5 +1,12 @@
 # RepoSetup 0.3.0 candidate qualification record
 
+## Delivered — 13 October 2026
+
+**0.3.0 is published on npm/GitHub and live at [reposetupcli.com](https://reposetupcli.com/).** Release/tag source is `59976a7fb6bb7bb07e0e7406deab2c8b5033b1c1`; remote main received that exact qualified commit. Phases 1–10 are delivered for the owner's agreed bounded scope. See the [stable delivery record](../release-docs/STABLE_RELEASE_0.3.0.md) for retained artifact identity, three successful release waves, 324 real selection cases, 12 full golden cells, 395 published-mode browser cases, registry acceptance, deployed file hashes and rollback.
+
+The owner removed freeze/soak, accepted scripted journeys/Chrome phone simulation and explicitly deferred native screen-reader qualification. No human, physical-device or native-reader pass is claimed. Original timeout failures and browser-control limits remain recorded. The generated Next development-tool advisory remains documented; no integration maturity or arbitrary-combination promotion applies. All sections below this current record retain their historical checkpoints unless explicitly updated.
+
+
 ## Owner acceptance and qualification repair — 13 October 2026
 
 The owner explicitly replied: **“Defer native screen-reader qualification for 0.3.0.”** Native desktop announcements remain unverified and are now an accepted release limitation, not a passed session. The earlier physical-phone requirement was replaced by the owner-requested installed Chrome simulator; no physical device/native mobile reader or observed participant result is claimed. The Mac was locked before the additional documented VoiceOver last-spoken-phrase technique could be tried. No native setting was changed by that blocked attempt.
