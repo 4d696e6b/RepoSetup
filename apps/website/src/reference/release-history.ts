@@ -14,7 +14,7 @@ export interface ReleaseHistoryEntry {
   readonly sources: readonly { readonly label: string; readonly href: string }[];
 }
 
-export const RELEASE_HISTORY_VERIFIED_ON = "2026-10-09";
+export const RELEASE_HISTORY_VERIFIED_ON = "2026-10-13";
 export const RELEASE_HISTORY_PUBLICATION_SOURCE = "https://registry.npmjs.org/rsetup";
 
 const npmSource = (version: string) => ({
@@ -33,6 +33,34 @@ const changelogSource = (version: string) => ({
 
 /** Curated from published notes and pinned changelogs; npm confirms this complete version list. */
 export const publishedHistory: readonly ReleaseHistoryEntry[] = [
+  {
+    version: "0.3.0",
+    publishedAt: "2026-10-13T07:26:26.268Z",
+    title: "Understand choices and review local changes",
+    summary:
+      "Curated beginner guidance, declarative selections, file previews, intended-stack health and bounded missing-file repair, with the shipped 0.2.3 fixes retained.",
+    nodeRequirement: "Node 24+",
+    changes: [
+      {
+        title: "Choose a minimal starter",
+        description:
+          "React/Vite, Express and FastAPI guidance starts small and explains optional tools. The full catalog and legacy presets remain available.",
+      },
+      {
+        title: "Carry choices to your terminal",
+        description:
+          "Versioned selection tokens and JSON files resolve through the built-in registry. The CLI shows the local plan and requires confirmation before execution.",
+      },
+      {
+        title: "Inspect and repair carefully",
+        description:
+          "Structural dry-run previews, intended-stack doctor and narrow missing-file repair preserve user files and refuse unhealthy automatic repair.",
+      },
+    ],
+    qualification:
+      "Recorded platform and bounded create/add/legacy recipes are qualified. Browser emulation is separate from native screen-reader and physical-device evidence; arbitrary combinations and integration maturity are unchanged.",
+    sources: releaseSources("0.3.0"),
+  },
   {
     version: "0.2.3",
     publishedAt: "2026-10-09T02:48:16.084Z",
@@ -233,33 +261,31 @@ export const releaseHistory: readonly ReleaseHistoryEntry[] = publication
       {
         version: publication.version,
         publishedAt: publication.publishedAt,
-        title: "Understand choices and review local changes",
+        title: "Consistent JSON removal output",
         summary:
-          "Curated beginner guidance, declarative selections, file previews, intended-stack health and bounded missing-file repair, with the shipped 0.2.3 fixes retained.",
+          "Repeated removal of an absent integration returns a machine-readable empty plan while preserving existing files.",
         nodeRequirement: "Node 24+",
         changes: [
           {
-            title: "Choose a minimal starter",
+            title: "Read no-op plans in JSON",
             description:
-              "React/Vite, Express and FastAPI guidance starts small and explains optional tools. The full catalog and legacy presets remain available.",
+              "remove --json retains the versioned plan envelope for default, quiet, dry-run and diff modes. A no-op does not prompt or execute commands.",
           },
           {
-            title: "Carry choices to your terminal",
+            title: "Keep existing workflows",
             description:
-              "Versioned selection tokens and JSON files resolve through the built-in registry. The CLI shows the local plan and requires confirmation before execution.",
-          },
-          {
-            title: "Inspect and repair carefully",
-            description:
-              "Structural dry-run previews, intended-stack doctor and narrow missing-file repair preserve user files and refuse unhealthy automatic repair.",
+              "The 0.3.0 selections, registry, presets, configuration and website theme remain compatible. Doctor still performs only allowlisted file repair; dependency installation remains deliberate.",
           },
         ],
         qualification:
-          "Recorded platform and bounded create/add/legacy recipes are qualified. Browser emulation is separate from native screen-reader and physical-device evidence; arbitrary combinations and integration maturity are unchanged.",
+          "Exact-artifact platform, recipe, failure-path and website checks are recorded for this patch. Native screen-reader qualification remains deferred; mobile checks are emulation, arbitrary combinations are not qualified and integration maturity is unchanged.",
         sources: [
           npmSource(publication.version),
           { label: "Reviewed release source", href: `${REPOSITORY}/tree/${publication.sourceSha}` },
-          { label: "What’s new", href: "#/docs/whats-new-0-3" },
+          {
+            label: `Release notes ${publication.version}`,
+            href: `${REPOSITORY}/releases/tag/v${publication.version}`,
+          },
         ],
       },
       ...publishedHistory,

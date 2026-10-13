@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { publicationForBuild, verifyPublication } from "../scripts/verify-publication.ts";
+import { handoff } from "../src/handoff.ts";
 import { publicationPresentation } from "../src/publication.ts";
 
 const bytes = Buffer.from("reviewed synthetic package bytes; no executable fixture");
@@ -123,23 +124,34 @@ describe("website publication guard", () => {
 
 it("keeps candidate instructions distinct from verified public installation", () => {
   const candidate = publicationPresentation(null);
-  expect(candidate.publishedVersion).toBe("0.2.3");
-  expect(candidate.notice).toContain("currently published package remains 0.2.3");
+  expect(candidate.publishedVersion).toBe("0.3.0");
+  expect(candidate.notice).toContain("currently published package remains 0.3.0");
   expect(candidate.builder).toContain("exact commit");
-  const published = publicationPresentation({ version: "0.3.0", sourceSha, sha256, publishedAt });
-  expect(published.install).toBe("npm install -g rsetup@0.3.0");
-  expect(published.packageUrl).toBe("https://www.npmjs.com/package/rsetup/v/0.3.0");
+  const published = publicationPresentation({
+    version: handoff.version,
+    sourceSha,
+    sha256,
+    publishedAt,
+  });
+  expect(published.install).toBe(`npm install -g rsetup@${handoff.version}`);
+  expect(published.packageUrl).toBe(`https://www.npmjs.com/package/rsetup/v/${handoff.version}`);
   for (const value of Object.values(published).filter((value) => typeof value === "string")) {
     expect(value).not.toMatch(/candidate|unpublished|publication pending|0\.2\.3|packed CLI/);
   }
   expect(published.builder).toContain("asks for confirmation");
 });
 
-it("adds 0.3.0 history only after verification, preserving actual older history", async () => {
-  vi.stubGlobal("__REPOSETUP_PUBLICATION__", { version: "0.3.0", sourceSha, sha256, publishedAt });
+it("adds the current patch only after verification, preserving 0.3.0 history", async () => {
+  vi.stubGlobal("__REPOSETUP_PUBLICATION__", {
+    version: handoff.version,
+    sourceSha,
+    sha256,
+    publishedAt,
+  });
   const { releaseHistory, publishedHistory } = await import("../src/reference/release-history.ts");
-  expect(releaseHistory[0]?.version).toBe("0.3.0");
+  expect(releaseHistory[0]?.version).toBe(handoff.version);
   expect(releaseHistory[0]?.publishedAt).toBe(publishedAt);
   expect(releaseHistory.slice(1)).toEqual(publishedHistory);
-  expect(publishedHistory[0]?.version).toBe("0.2.3");
+  expect(publishedHistory[0]?.version).toBe("0.3.0");
+  expect(releaseHistory[0]?.title).toBe("Consistent JSON removal output");
 });

@@ -18,7 +18,7 @@ import release from "../src/reference/generated/release.json";
 describe("reviewed 0.3.0 public release catalog", () => {
   it("matches the built CLI, checked-in registry, presets, and config schema", () => {
     expect(release).toEqual(generateReleaseFacts());
-    expect(release.package.version).toBe("0.3.0");
+    expect(release.package.version).toBe("0.3.1");
     expect(release.source.revision).toBe(RELEASE_SOURCE);
     expect(release.integrations).toHaveLength(37);
     expect(release.presets).toHaveLength(5);
@@ -26,7 +26,7 @@ describe("reviewed 0.3.0 public release catalog", () => {
   });
 
   it("rejects other package versions and mismatched built CLI versions", () => {
-    expect(() => assertReleaseVersion("0.3.0", "0.3.0\n")).not.toThrow();
+    expect(() => assertReleaseVersion("0.3.1", "0.3.1\n")).not.toThrow();
     expect(() => assertReleaseVersion("0.2.3", "0.2.3")).toThrow("documents only");
     expect(() => assertReleaseVersion("0.3.0", "0.2.3")).toThrow("documents only");
     expect(() => assertReleaseVersion("0.4.0", "0.3.0")).toThrow("documents only");

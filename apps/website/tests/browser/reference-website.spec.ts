@@ -2,6 +2,7 @@ import { revealNavigation } from "./navigation-helper.js";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
+import { handoff } from "../../src/handoff.js";
 import { authoredPages } from "../../src/reference/docs/content.js";
 
 const data = JSON.parse(
@@ -12,7 +13,7 @@ const data = JSON.parse(
   cli: { commands: { id: string }[] };
 };
 const published = process.env.REPOSETUP_WEBSITE_RELEASE === "published";
-const publishedVersion = published ? "0.3.0" : "0.2.3";
+const publishedVersion = published ? handoff.version : "0.3.0";
 const forbiddenPin = new RegExp(`rsetup@(?!${publishedVersion.replaceAll(".", "\\.")}(?:\\s|$))`);
 
 test("home uses the supplied brand assets and published install command", async ({ page }) => {
@@ -22,10 +23,12 @@ test("home uses the supplied brand assets and published install command", async 
   await expect(page.locator(".hero-art")).toHaveAttribute("src", /brand\/hero-stack.png/);
   await expect(page.locator(".hero-copy")).toContainText("npm install -g rsetup");
   await expect(page.locator(".hero")).toContainText(
-    published ? "0.3.0 · review" : "0.3.0 candidate",
+    published ? `${handoff.version} · review` : `${handoff.version} candidate`,
   );
   await expect(page.locator(".development-notice")).toContainText(
-    published ? "use the published 0.3.0 CLI" : "currently published package remains 0.2.3",
+    published
+      ? `use the published ${handoff.version} CLI`
+      : "currently published package remains 0.3.0",
   );
   await expect(page.locator("body")).not.toContainText("0.4.0");
   expect(
@@ -39,7 +42,9 @@ test("home uses the supplied brand assets and published install command", async 
 test("library search and preset exploration link to release-specific docs", async ({ page }) => {
   await page.goto("/#/integrations");
   await page.getByRole("searchbox", { name: "Search integrations" }).fill("postgres");
-  await expect(page.getByRole("status")).toContainText("integrations in release 0.3.0");
+  await expect(page.getByRole("status")).toContainText(
+    `integrations in release ${handoff.version}`,
+  );
   await page.getByRole("link", { name: "Explore integration" }).first().click();
   await expect(page.getByRole("link", { name: "Official documentation" })).toHaveAttribute(
     "href",

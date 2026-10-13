@@ -126,7 +126,9 @@ test("maintenance guidance matches the pinned CLI's preview and narrow repair wo
   await page.goto("/#/how-to");
   await expect(page.getByRole("heading", { name: "Use the matching local CLI" })).toBeVisible();
   if (process.env.REPOSETUP_WEBSITE_RELEASE === "published") {
-    await expect(page.locator("pre code")).toContainText("npm install -g rsetup@0.3.0");
+    await expect(page.locator("pre code")).toContainText(
+      `npm install -g rsetup@${handoff.version}`,
+    );
     await expect(page.locator("pre code")).not.toContainText("pack:contract");
   } else {
     await expect(page.locator("pre code")).toContainText(
