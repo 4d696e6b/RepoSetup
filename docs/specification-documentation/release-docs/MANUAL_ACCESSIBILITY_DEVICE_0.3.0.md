@@ -1,5 +1,14 @@
 # 0.3.0 manual accessibility and device qualification
 
+## Owner acceptance and qualification repair — 13 October 2026
+
+The owner explicitly replied: **“Defer native screen-reader qualification for 0.3.0.”** Native desktop announcements remain unverified and are now an accepted release limitation, not a passed session. The earlier physical-phone requirement was replaced by the owner-requested installed Chrome simulator; no physical device/native mobile reader or observed participant result is claimed. The Mac was locked before the additional documented VoiceOver last-spoken-phrase technique could be tried. No native setting was changed by that blocked attempt.
+
+At `7d98153226f1896507655473f8de8de0aa8f5579`, local 1,218 workspace tests, both typechecks, lint/build, 222 synthetic published-mode browser cases and exact CLI artifact/launchers pass. Both fast CI and three-runner platform/performance checks pass. [Release qualification wave 1](https://github.com/4d696e6b/RepoSetup/actions/runs/38326769539) failed one Ubuntu end-to-end fixture cleanup: `ENOTEMPTY` removing a test-owned `.git/info` after the release-version assertions. The suite reported 239/240 passing; this is retained failed evidence. Temporary-fixture cleanup now uses five bounded 100ms incremental retries, and automatic Git maintenance is disabled only inside these disposable fixture repositories. No application logic, assertions, workflow skips or automatic test retries are changed. Final exact-source qualification runs at the corrected commit; preceding runs are not counted for changed source.
+
+All readiness gates now comprise the selected automated qualification, exact retained-artifact review, bounded blocker review and these explicit owner accessibility substitutions. Publication/deployment authorization and actual delivery remain separate. This section supersedes earlier pending native-reader decision statements; the reader test itself remains unperformed. No freeze or soak applies.
+
+
 Status: **protocol ready; no manual screen-reader or physical mobile-device result recorded.** This is Phase 9 gate 9.6, separate from the 70/70 automated browser cases and owner-approved scripted beginner journeys. Do not mark a row passed from emulation, an accessibility tree, or a screenshot alone.
 
 ## Owner-requested Chrome substitution — 12 October 2026

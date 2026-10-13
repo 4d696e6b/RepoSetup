@@ -1,5 +1,14 @@
 # 0.3.0 companion website — first local slice
 
+## Owner acceptance and qualification repair — 13 October 2026
+
+The owner explicitly replied: **“Defer native screen-reader qualification for 0.3.0.”** Native desktop announcements remain unverified and are now an accepted release limitation, not a passed session. The earlier physical-phone requirement was replaced by the owner-requested installed Chrome simulator; no physical device/native mobile reader or observed participant result is claimed. The Mac was locked before the additional documented VoiceOver last-spoken-phrase technique could be tried. No native setting was changed by that blocked attempt.
+
+At `7d98153226f1896507655473f8de8de0aa8f5579`, local 1,218 workspace tests, both typechecks, lint/build, 222 synthetic published-mode browser cases and exact CLI artifact/launchers pass. Both fast CI and three-runner platform/performance checks pass. [Release qualification wave 1](https://github.com/4d696e6b/RepoSetup/actions/runs/38326769539) failed one Ubuntu end-to-end fixture cleanup: `ENOTEMPTY` removing a test-owned `.git/info` after the release-version assertions. The suite reported 239/240 passing; this is retained failed evidence. Temporary-fixture cleanup now uses five bounded 100ms incremental retries, and automatic Git maintenance is disabled only inside these disposable fixture repositories. No application logic, assertions, workflow skips or automatic test retries are changed. Final exact-source qualification runs at the corrected commit; preceding runs are not counted for changed source.
+
+All readiness gates now comprise the selected automated qualification, exact retained-artifact review, bounded blocker review and these explicit owner accessibility substitutions. Publication/deployment authorization and actual delivery remain separate. This section supersedes earlier pending native-reader decision statements; the reader test itself remains unperformed. No freeze or soak applies.
+
+
 ## Current delivery implementation — 13 October 2026
 
 All selected automated gates passed on reviewed source `506069c960e6a914b5f459c03e9d74786ad38dbd`: 370/370 five-profile browser cases (zero skips/flaky retries), 324 real create/add/legacy cases across six cells, all 12 full golden cells, packed contract/transport/maintenance, platform/performance and three full first-attempt [release qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/38261147473) waves ([first](https://github.com/4d696e6b/RepoSetup/actions/runs/38260972313), [second](https://github.com/4d696e6b/RepoSetup/actions/runs/38261071124)). The retained CLI artifact and actual launchers were verified against the website pin. These are predecessor exact-source results; the following website delivery implementation requires renewed qualification at its own committed source.

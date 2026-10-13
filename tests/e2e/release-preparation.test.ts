@@ -18,7 +18,11 @@ const packageNames = ["cli", "core", "integrations", "registry"];
 
 afterEach(async () => {
   await Promise.all(
-    directories.splice(0).map((directory) => rm(directory, { recursive: true, force: true })),
+    directories
+      .splice(0)
+      .map((directory) =>
+        rm(directory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }),
+      ),
   );
 });
 
@@ -48,6 +52,8 @@ async function workspace(version = "0.3.0") {
     );
   }
   await git(directory, ["init", "--initial-branch=baseline"]);
+  // Keep automatic Git housekeeping from outliving this disposable fixture.
+  await git(directory, ["config", "maintenance.auto", "false"]);
   await git(directory, ["config", "user.name", "Release fixture"]);
   await git(directory, ["config", "user.email", "release-fixture@example.invalid"]);
   await git(directory, ["add", "."]);
