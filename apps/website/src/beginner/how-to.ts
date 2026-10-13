@@ -31,7 +31,7 @@ export function howTo(main: HTMLElement) {
       "p",
       delivery.published
         ? "The installation command works in your terminal. Run the copied create command from the new folder’s parent, or the add command from the existing project’s package directory. Selections still require local review and confirmation."
-        : "These commands are for a POSIX shell in the local development checkout. The packer requires the exact committed CLI source and records its artifact hash in apps/website/.local-cli/evidence.json. Keep this shell open when pasting the selection command. The published 0.2.3 CLI does not support selection-v1.",
+        : "These commands are for a POSIX shell in the local development checkout. The packer requires the exact committed CLI source and records its artifact hash in apps/website/.local-cli/evidence.json. Keep this shell open when pasting the selection command. The published 0.3.0 CLI is the previous release; use the matching local candidate for this patch.",
       "hint",
     ),
   );

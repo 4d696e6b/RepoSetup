@@ -1,3 +1,4 @@
+import { handoff } from "../handoff.js";
 import { categoryName, experimentalIngredients, release, type Integration } from "./release.js";
 import { artwork, codeBlock, el, eyebrow, link, pageIntro, tag } from "./dom.js";
 import { relationshipTarget } from "./relationships.js";
@@ -73,7 +74,7 @@ export function integrations(main: HTMLElement, params: URLSearchParams) {
     pageIntro(
       "THE INTEGRATION LIBRARY",
       "Find the right tool.",
-      "Understand what each integration does, where it fits, and what RepoSetup 0.3.0 supports.",
+      `Understand what each integration does, where it fits, and what RepoSetup ${handoff.version} supports.`,
     ),
   );
   const controls = el("div", undefined, "catalog-controls");
@@ -116,7 +117,7 @@ export function integrations(main: HTMLElement, params: URLSearchParams) {
   const grid = el("div", undefined, "integration-grid");
   const update = () => {
     const filtered = filterIntegrations(search.value, select.value, selectedGoal);
-    count.textContent = `${filtered.length} integrations in release 0.3.0`;
+    count.textContent = `${filtered.length} integrations in release ${handoff.version}`;
     grid.replaceChildren(...filtered.map(integrationCard));
     if (!filtered.length)
       grid.append(el("p", "No matches. Try another term or category.", "empty-state"));
@@ -169,7 +170,7 @@ export function integrationDetail(main: HTMLElement, id: string) {
     el(
       "p",
       item.status === "experimental"
-        ? "This recipe is experimental. It is documented here because it exists in 0.3.0; it is not a promise of a fully qualified application path."
+        ? `This recipe is experimental. It is documented here because it exists in ${handoff.version}; it is not a promise of a fully qualified application path.`
         : "This definition retains its candidate maturity in the published CLI. Qualification applies to the recorded recipes, not every possible combination.",
     ),
   );
@@ -219,7 +220,7 @@ export function presets(main: HTMLElement) {
     pageIntro(
       "CURATED STARTING POINTS",
       "A head start.\nYour next big thing.",
-      "Five bundled recipes in RepoSetup 0.3.0. Compare their ingredients, understand the prerequisites, and preview the one that fits.",
+      `Five bundled recipes in RepoSetup ${handoff.version}. Compare their ingredients, understand the prerequisites, and preview the one that fits.`,
     ),
   );
   const grid = el("div", undefined, "preset-grid");

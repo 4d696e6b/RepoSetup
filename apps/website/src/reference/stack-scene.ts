@@ -1,3 +1,4 @@
+import { handoff } from "../handoff.js";
 import { artwork, el, link } from "./dom.js";
 import { experimentalIngredients, release } from "./release.js";
 
@@ -88,7 +89,7 @@ function updateRecipe(experience: HTMLElement, id: string) {
   );
   experience.querySelector<HTMLElement>(".tablet-support")!.textContent = facts.experimental.length
     ? `Bundled recipe · Includes experimental integrations: ${facts.experimental.join(", ")}.`
-    : "Bundled recipe · Ingredients match the reviewed 0.3.0 preset.";
+    : `Bundled recipe · Ingredients match the reviewed ${handoff.version} preset.`;
   return true;
 }
 

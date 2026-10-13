@@ -30,7 +30,7 @@ export function searchResults(container: HTMLElement, query: string) {
 function sidebar(slug?: string) {
   const nav = el("nav", undefined, "docs-sidebar");
   nav.setAttribute("aria-label", "Documentation sections");
-  nav.append(eyebrow("DOCS / 0.3.0"));
+  nav.append(eyebrow(`DOCS / ${handoff.version}`));
   for (const group of ["Start", "Guides", "Reference", "Help"]) {
     nav.append(el("h2", group));
     for (const page of primaryPages.filter((item) => item.group === group)) {
@@ -61,7 +61,7 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
       el("h1", "Find your next step."),
       el(
         "p",
-        "Everything you need to get started with RepoSetup 0.3.0. Pick a guide, look up a command, or explore the tools in your stack.",
+        `Everything you need to get started with RepoSetup ${handoff.version}. Pick a guide, look up a command, or explore the tools in your stack.`,
         "lede",
       ),
     );
@@ -107,7 +107,7 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
   }
   crumbs.append(el("span", "/"), el("span", entry.title));
   article.append(
-    eyebrow(`${entry.group} / VERSION 0.3.0`),
+    eyebrow(`${entry.group} / VERSION ${handoff.version}`),
     el("h1", entry.title),
     el("p", entry.description, "lede"),
   );

@@ -1,3 +1,4 @@
+import { handoff } from "../handoff.js";
 import { codeBlock, el, eyebrow, link, pageIntro, tag } from "./dom.js";
 import { experimentalIngredients, release } from "./release.js";
 import validateNpmName from "validate-npm-package-name";
@@ -27,7 +28,7 @@ export function builder(main: HTMLElement, id: string) {
     pageIntro(
       "YOUR SETUP, EXPLAINED",
       "Start with a clear plan.",
-      "Choose a bundled recipe, name your project, and preview it in your terminal. Everything here uses the reviewed 0.3.0 CLI.",
+      `Choose a bundled recipe, name your project, and preview it in your terminal. Everything here uses the reviewed ${handoff.version} CLI.`,
     ),
   );
   const layout = el("div", undefined, "builder-layout");

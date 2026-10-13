@@ -1,3 +1,4 @@
+import { handoff } from "../handoff.js";
 import { delivery } from "../publication.js";
 import { artwork, codeBlock, el, eyebrow, link, tag } from "./dom.js";
 import { INSTALL, release, RELEASE_URL, REPOSITORY } from "./release.js";
@@ -8,7 +9,7 @@ export function home(main: HTMLElement) {
   main.classList.add("home-page");
   const hero = el("section", undefined, "hero");
   const copy = el("div", undefined, "hero-copy");
-  const announcement = link(delivery.announcement, "#/docs/whats-new-0-3", "release-pill");
+  const announcement = link(delivery.announcement, "#/release", "release-pill");
   announcement.prepend(el("span", "", "status-dot"));
   const title = el("h1");
   for (const [text, className] of [
@@ -139,7 +140,7 @@ export function home(main: HTMLElement) {
   const aside = el("div");
   aside.append(
     codeBlock("npx rsetup create", "Copy interactive create command"),
-    link("Review the 0.3.0 source  ↗", RELEASE_URL),
+    link(`Review the ${handoff.version} source  ↗`, RELEASE_URL),
     link("View the source  ↗", REPOSITORY),
   );
   callout.append(summary, aside);

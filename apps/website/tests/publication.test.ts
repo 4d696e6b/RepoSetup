@@ -155,3 +155,18 @@ it("adds the current patch only after verification, preserving 0.3.0 history", a
   expect(publishedHistory[0]?.version).toBe("0.3.0");
   expect(releaseHistory[0]?.title).toBe("Consistent JSON removal output");
 });
+
+it("pins every published documentation installation example to the current CLI", async () => {
+  vi.stubGlobal("__REPOSETUP_PUBLICATION__", {
+    version: handoff.version,
+    sourceSha,
+    sha256,
+    publishedAt,
+  });
+  const { authoredPages } = await import("../src/reference/docs/content.ts");
+  const pins = [...JSON.stringify(authoredPages).matchAll(/rsetup@(\d+\.\d+\.\d+)/g)].map(
+    (match) => match[1],
+  );
+  expect(pins.length).toBeGreaterThan(0);
+  expect(new Set(pins)).toEqual(new Set([handoff.version]));
+});

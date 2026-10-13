@@ -1,3 +1,4 @@
+import { handoff } from "../handoff.js";
 import { delivery } from "../publication.js";
 import { artwork, codeBlock, el, eyebrow, link } from "./dom.js";
 
@@ -128,8 +129,8 @@ export function workflowShowcase() {
     el(
       "span",
       delivery.published
-        ? "Use the published 0.3.0 CLI. Installation remains local."
-        : "Review the prepared 0.3.0 CLI. Installation remains local.",
+        ? `Use the published ${handoff.version} CLI. Installation remains local.`
+        : `Review the prepared ${handoff.version} CLI. Installation remains local.`,
     ),
     link("Choose your recipe  →", "#/presets"),
   );

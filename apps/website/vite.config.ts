@@ -1,6 +1,7 @@
 import { defineConfig, type UserConfig } from "vite";
 import { rmSync } from "node:fs";
 import { resolve } from "node:path";
+import { publicationHtml } from "./scripts/publication-html.ts";
 import { publicationForBuild } from "./scripts/verify-publication.ts";
 import { browserCsp } from "./src/reference/security.js";
 export default defineConfig(async (): Promise<UserConfig> => {
@@ -14,12 +15,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
         apply: "build",
         transformIndexHtml(html) {
           return {
-            html: publication
-              ? html
-                  .replace("0.3.0 development", "0.3.0")
-                  .replace("blob/v0.2.3/docs/humanOnly/RepoSetup_0.2.3.md", "blob/v0.3.0/README.md")
-                  .replace("0.2.3 user guide", "0.3.0 user guide")
-              : html,
+            html: publicationHtml(html, publication),
             tags: [
               {
                 tag: "meta",

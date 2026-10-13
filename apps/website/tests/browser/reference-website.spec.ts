@@ -131,10 +131,12 @@ test("heading links, back and forward, mobile navigation and copy feedback", asy
     .click();
   await expect(page.getByText("Copied", { exact: true })).toBeVisible();
   await page.goto("/#/docs/create");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Create a project");
   const anchor = page.locator(".heading-anchor").first();
+  await expect(anchor).toHaveAttribute("href", /^#\/docs\/create#/);
   const href = await anchor.getAttribute("href");
   await anchor.click();
-  expect(page.url()).toContain(href!);
+  await expect(page).toHaveURL((url) => url.href.includes(href!));
   await page.goto("/#/docs/inspect");
   await page.goBack();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Create a project");
