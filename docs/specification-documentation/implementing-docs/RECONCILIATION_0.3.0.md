@@ -1,5 +1,10 @@
 # 0.3.0 reconciliation with published 0.2.3
 
+## Theme audit delivered — 13 October 2026
+
+The beginner and reference routes now share typography, palette and button/form styling on the live website. Exact source 0a5305a passed all 405 five-profile browser cases plus workspace/platform checks; all 15 live file hashes and security/cache headers match the retained output. [Theme delivery evidence](./WEBSITE_THEME_AUDIT_0.3.0.md) records per-route comparisons, original/cancelled runs, rollback and unchanged CLI pins. Earlier pending statements below are historical checkpoints. The CLI JSON no-op repair remains a separately tested, unpublished patch.
+
+
 ## Theme consistency audit — 13 October 2026
 
 The owner requested consistent font/color styling across the published website while auditing every CLI command in the separate test folder. Live computed styles confirmed that home/docs used Helvetica/graphite but goals and selection builders used Georgia/green. Beginner pages now inherit the shared reference font and paper/graphite/accent tokens; primary/secondary buttons, form controls, code, focus indicators and error colors follow the existing reference theme. Responsive layouts and deliberate semantic error/disabled colors remain.
