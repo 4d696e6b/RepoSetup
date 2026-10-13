@@ -1,3 +1,4 @@
+import { delivery } from "../../publication.js";
 import { handoff } from "../../handoff.js";
 import { codeBlock, el, eyebrow, link } from "../dom.js";
 import { docBySlug, docPages, primaryPages, searchPages } from "./model.js";
@@ -160,7 +161,7 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
     pager.append(link(`${docPages[index + 1]!.title} →`, `#/docs/${docPages[index + 1]!.slug}`));
   article.append(
     pager,
-    el("p", "Reviewed 0.3.0 release candidate · publication pending", "hint"),
+    el("p", delivery.reference, "hint"),
     link("View release source  ↗", `https://github.com/4d696e6b/RepoSetup/tree/${handoff.commit}`),
   );
   if (anchor)

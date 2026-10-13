@@ -1,5 +1,10 @@
 # RepoSetup 0.3.0 candidate qualification record
 
+## Current delivery checkpoint — 13 October 2026
+
+Use [current implementation status](../implementing-docs/STATUS_0.3.0.md#current-delivery-implementation--13-october-2026) and [the delivery procedure](./RELEASE_DELIVERY_0.3.0.md) for current source and gates. All selected automated gates, including three full release-workflow waves, passed at `506069c960e6a914b5f459c03e9d74786ad38dbd`. The following website publication-mode implementation requires renewed qualification at its own source; results at an older SHA are not substituted. Native screen-reader announcements remain unverified, pending an actual test or explicit owner deferral. The Chrome phone substitution is accurately recorded as emulation. No main merge, tag, npm publication or production deployment has happened; no freeze or soak gate applies. Older preparation/alpha statements below are historical checkpoints.
+
+
 ## Owner decision — 12 October 2026
 
 The owner removed the formal freeze, seven-day soak and calendar waiting requirements for 0.3.0. Continue implementation immediately. Exact source/artifact identity, meaningful regression and platform checks, blocker review, manual accessibility/device evidence, and separate publication/deployment authorization still apply. The old soak monitor is paused. Historical freeze/soak statements below describe the preceding policy and do not impose a current waiting gate.

@@ -1,3 +1,4 @@
+import { delivery } from "../publication.js";
 import { artwork, codeBlock, el, eyebrow, link, tag } from "./dom.js";
 import { INSTALL, release, RELEASE_URL, REPOSITORY } from "./release.js";
 import { createStackScene } from "./stack-scene.js";
@@ -7,11 +8,7 @@ export function home(main: HTMLElement) {
   main.classList.add("home-page");
   const hero = el("section", undefined, "hero");
   const copy = el("div", undefined, "hero-copy");
-  const announcement = link(
-    "0.3.0 candidate · review the changes  ↗",
-    "#/docs/whats-new-0-3",
-    "release-pill",
-  );
+  const announcement = link(delivery.announcement, "#/docs/whats-new-0-3", "release-pill");
   announcement.prepend(el("span", "", "status-dot"));
   const title = el("h1");
   for (const [text, className] of [

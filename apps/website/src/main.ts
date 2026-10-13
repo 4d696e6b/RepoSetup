@@ -15,6 +15,7 @@ import { renderReleaseHistory } from "./reference/release-history.js";
 import { initializeObservability } from "./reference/observability.js";
 
 import "./beginner.css";
+import { delivery } from "./publication.js";
 import beginnerRoutes from "./generated/routes.json";
 let lastBuilderContext = beginnerRoutes.contexts[0]!;
 let renderSequence = 0;
@@ -151,7 +152,7 @@ function footer() {
     link("Documentation", "#/docs"),
     link("Integrations", "#/integrations"),
     link("Website privacy", "#/docs/safety#website-privacy"),
-    link("npm package ↗", "https://www.npmjs.com/package/rsetup/v/0.2.3"),
+    link("npm package ↗", delivery.packageUrl),
     link("Report an issue ↗", `${REPOSITORY}/issues`),
   );
   top.append(brand, links);
@@ -159,7 +160,7 @@ function footer() {
   const bottom = el("div", undefined, "footer-bottom");
   bottom.append(
     el("span", "Open source under MIT. Built for clarity."),
-    el("span", "Documentation & tools for CLI 0.2.3"),
+    el("span", `Documentation & tools for CLI ${delivery.publishedVersion}`),
   );
   footer.append(bottom);
   return footer;
@@ -197,19 +198,15 @@ async function render(focus = false) {
     app.append(failed, footer());
     searchDialog = createSearch();
     app.append(searchDialog);
-    document.title = "Section unavailable · RepoSetup 0.3.0 candidate";
+    document.title = `Section unavailable · ${delivery.title}`;
     if (focus) failed.focus();
     return;
   }
   if (sequence !== renderSequence) return;
   if (contextRoute) lastBuilderContext = id!;
   app.replaceChildren(header(page));
-  const notice = el(
-    "aside",
-    "0.3.0 release candidate. These references and selections require the reviewed 0.3.0 CLI; the currently published package remains 0.2.3.",
-    "development-notice",
-  );
-  notice.setAttribute("aria-label", "Development preview");
+  const notice = el("aside", delivery.notice, "development-notice");
+  notice.setAttribute("aria-label", delivery.published ? "CLI version" : "Development preview");
   notice.append(" ", link("Set up the matching CLI", "#/how-to"));
   app.append(notice);
   const main = el("main", undefined, "main-content");
@@ -259,7 +256,7 @@ async function render(focus = false) {
   app.append(footer());
   searchDialog = createSearch();
   app.append(searchDialog);
-  document.title = `${main.querySelector("h1")?.textContent ?? "Guide"} · RepoSetup 0.3.0 candidate`;
+  document.title = `${main.querySelector("h1")?.textContent ?? "Guide"} · ${delivery.title}`;
   if (focus && !anchor) {
     main.focus();
     window.scrollTo(0, 0);

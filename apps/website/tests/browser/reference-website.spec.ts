@@ -10,15 +10,21 @@ const data = JSON.parse(
   presets: { id: string }[];
   cli: { commands: { id: string }[] };
 };
+const published = process.env.REPOSETUP_WEBSITE_RELEASE === "published";
+const publishedVersion = published ? "0.3.0" : "0.2.3";
+const forbiddenPin = new RegExp(`rsetup@(?!${publishedVersion.replaceAll(".", "\\.")}(?:\\s|$))`);
+
 test("home uses the supplied brand assets and published install command", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Your stack.Ready to build.");
   await expect(page.locator(".brand img")).toHaveAttribute("src", /brand\/reposetup-wordmark.svg/);
   await expect(page.locator(".hero-art")).toHaveAttribute("src", /brand\/hero-stack.png/);
   await expect(page.locator(".hero-copy")).toContainText("npm install -g rsetup");
-  await expect(page.locator(".hero")).toContainText("0.3.0 candidate");
+  await expect(page.locator(".hero")).toContainText(
+    published ? "0.3.0 · review" : "0.3.0 candidate",
+  );
   await expect(page.locator(".development-notice")).toContainText(
-    "currently published package remains 0.2.3",
+    published ? "use the published 0.3.0 CLI" : "currently published package remains 0.2.3",
   );
   await expect(page.locator("body")).not.toContainText("0.4.0");
   expect(
@@ -160,7 +166,7 @@ test("every docs, integration and builder route loads at 320px without overflow"
     await expect(page.getByRole("heading", { level: 1 }), route).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 }), route).not.toHaveText(/not found/i);
     expect(await page.locator("code").allTextContents(), route).not.toEqual(
-      expect.arrayContaining([expect.stringMatching(/rsetup@/)]),
+      expect.arrayContaining([expect.stringMatching(forbiddenPin)]),
     );
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
@@ -213,8 +219,11 @@ test("CSP blocks connections and no-JavaScript fallback links the released guide
   const context = await browser.newContext({ javaScriptEnabled: false });
   const noJs = await context.newPage();
   await noJs.goto(new URL("/", page.url()).href);
-  const guide = noJs.getByRole("link", { name: "0.2.3 user guide" });
+  const guide = noJs.getByRole("link", { name: `${publishedVersion} user guide` });
   await expect(guide).toBeVisible();
-  await expect(guide).toHaveAttribute("href", /v0\.2\.3/);
+  await expect(guide).toHaveAttribute(
+    "href",
+    new RegExp(`v${publishedVersion.replaceAll(".", "\\.")}`),
+  );
   await context.close();
 });

@@ -1,3 +1,4 @@
+import { delivery } from "../../publication.js";
 import type { DocPage } from "./content.js";
 
 export const releaseGuides: DocPage[] = [
@@ -11,8 +12,8 @@ export const releaseGuides: DocPage[] = [
         id: "choices",
         title: "Start small and understand the tools",
         paragraphs: [
-          "The 0.3.0 release candidate adds goal discovery, curated explanations and three minimal React/Vite, Express and FastAPI starters. Optional tools are never selected automatically. The bounded create/add combinations come from the built-in registry; the full catalog and five broader bundled presets remain available.",
-          "The currently published package remains 0.2.3. Use the matching reviewed 0.3.0 CLI for these new workflows. Publication history records actual releases separately from candidate work.",
+          `${delivery.published ? "RepoSetup 0.3.0" : "The 0.3.0 release candidate"} adds goal discovery, curated explanations and three minimal React/Vite, Express and FastAPI starters. Optional tools are never selected automatically. The bounded create/add combinations come from the built-in registry; the full catalog and five broader bundled presets remain available.`,
+          delivery.releaseSummary,
         ],
         links: [{ label: "Prepare the matching CLI", href: "#/how-to" }],
       },

@@ -15,6 +15,7 @@ export interface DocPage {
   sections: DocSection[];
 }
 
+import { delivery } from "../../publication.js";
 import { handoff } from "../../handoff.js";
 const source = `https://github.com/4d696e6b/RepoSetup/blob/${handoff.commit}`;
 
@@ -30,7 +31,7 @@ export const authoredPages: DocPage[] = [
         title: "A stack you can inspect",
         paragraphs: [
           "RepoSetup brings supported framework and library setup into one terminal workflow. You choose a stack; the CLI checks requirements and conflicts, orders the work, and prints the installation plan before execution.",
-          "This website documents the reviewed rsetup 0.3.0 release candidate. Browse integrations to understand each tool, compare the five bundled presets, or download a declarative config. Installation runs in your terminal, on your computer.",
+          delivery.introduction,
         ],
         links: [
           { label: "Explore integrations", href: "#/integrations" },
@@ -57,11 +58,16 @@ export const authoredPages: DocPage[] = [
         id: "run-the-cli",
         title: "Run RepoSetup",
         paragraphs: [
-          "Run RepoSetup through npx. npm uses a matching local package when available, or downloads the package. Its download prompt is separate from RepoSetup's confirmation of the project installation plan. This guide describes CLI 0.3.0; use --version to check the CLI you are running.",
+          delivery.published
+            ? "Run the matching published CLI through npx rsetup@0.3.0, or install it globally. The npm download prompt is separate from RepoSetup’s confirmation of the project installation plan. Use --version to check the CLI you are running."
+            : "New 0.3.0 workflows require the reviewed local candidate. Follow the matching CLI instructions on How it works before using these examples. Floating npx rsetup still resolves the published 0.2.3 package.",
           "The npm package is named rsetup. After a global installation, both rsetup and reposetup are command aliases. Use npx rsetup for these examples: npx reposetup identifies a different package.",
         ],
-        code: "npx rsetup --version\nnpx rsetup --help",
+        code: delivery.published
+          ? "npx rsetup@0.3.0 --version\nnpx rsetup@0.3.0 --help"
+          : "reposetup --version\nreposetup --help",
         links: [
+          { label: "Set up the matching CLI", href: "#/how-to" },
           { label: "How npx runs packages", href: "https://docs.npmjs.com/cli/v11/commands/npx/" },
         ],
       },
@@ -71,7 +77,9 @@ export const authoredPages: DocPage[] = [
         paragraphs: [
           "A global installation makes rsetup and reposetup available as aliases in your terminal. Use --version to check the installed CLI. The npx examples below also work without a global installation.",
         ],
-        code: "npm install -g rsetup\nrsetup --version\nreposetup --version",
+        code: delivery.published
+          ? `${delivery.install}\nrsetup --version\nreposetup --version`
+          : "# Prepare the reviewed local CLI on How it works first\nreposetup --version",
         links: [
           {
             label: "npm global installation",
@@ -302,7 +310,7 @@ export const authoredPages: DocPage[] = [
           "The website setup page preserves a selected preset's exact ingredients and options, and sets only the project name and explicit path. For other choices, review the integration definitions and checked-in example configs. A structurally valid JSON file can still fail resolution because its IDs, options, requirements, or context are invalid. Always run the real CLI preview.",
         ],
         code: "npx rsetup create --config ./reposetup.json --dry-run",
-        links: [{ label: "0.2.3 example configs", href: `${source}/examples` }],
+        links: [{ label: "Reviewed example configs", href: `${source}/examples` }],
       },
       {
         id: "sharing",
@@ -649,7 +657,9 @@ export const authoredPages: DocPage[] = [
           "Check npx rsetup --version. The published package is rsetup, while a global install exposes both rsetup and reposetup aliases. npx reposetup invokes a different package.",
           "Use Node 24 or later. Upgrading the CLI does not update an already-generated application's source or reinstall its dependencies.",
         ],
-        code: "npx rsetup --version\nnpx rsetup --help",
+        code: delivery.published
+          ? "npx rsetup@0.3.0 --version\nnpx rsetup@0.3.0 --help"
+          : "reposetup --version\nreposetup --help",
       },
       {
         id: "invalid-choice",
@@ -914,7 +924,7 @@ export const authoredPages: DocPage[] = [
         ],
         links: [
           { label: "Repository issues", href: "https://github.com/4d696e6b/RepoSetup/issues" },
-          { label: "0.2.3 security policy", href: `${source}/SECURITY.md` },
+          { label: "Reviewed security policy", href: `${source}/SECURITY.md` },
         ],
       },
       {
@@ -933,7 +943,7 @@ export const authoredPages: DocPage[] = [
           "Verify external flags and setup instructions against current official documentation, record verification evidence, and add plan, detection, and doctor/verification tests. Start new IDs as experimental; stable promotion requires real execution and advertised-platform evidence.",
         ],
         links: [
-          { label: "Contribution guide at 0.2.3", href: `${source}/CONTRIBUTING.md` },
+          { label: "Reviewed contribution guide", href: `${source}/CONTRIBUTING.md` },
           {
             label: "Integration system",
             href: `${source}/docs/specification-documentation/product-docs/INTEGRATION_SYSTEM.md`,
@@ -953,7 +963,7 @@ export const authoredPages: DocPage[] = [
         ],
         links: [
           { label: "Reviewed 0.3.0 source", href: `https://github.com/4d696e6b/RepoSetup/tree/${handoff.commit}` },
-          { label: "Published npm package", href: "https://www.npmjs.com/package/rsetup/v/0.2.3" },
+          { label: "Published npm package", href: delivery.packageUrl },
         ],
       },
     ],

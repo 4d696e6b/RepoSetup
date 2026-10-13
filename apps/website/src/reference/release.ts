@@ -1,10 +1,11 @@
 import data from "./generated/release.json";
 export const release = data;
 export const VERSION = data.package.version;
-export const PUBLISHED_VERSION = "0.2.3";
+import { delivery } from "../publication.js";
+export const PUBLISHED_VERSION = delivery.publishedVersion;
 export const REPOSITORY = "https://github.com/4d696e6b/RepoSetup";
 export const RELEASE_URL = `${REPOSITORY}/tree/${data.source.revision}`;
-export const INSTALL = "npm install -g rsetup";
+export const INSTALL = delivery.install;
 export type Integration = (typeof release.integrations)[number];
 export type Preset = (typeof release.presets)[number];
 export function experimentalIngredients(preset: Preset) {

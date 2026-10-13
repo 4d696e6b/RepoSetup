@@ -1,3 +1,4 @@
+import { delivery } from "../publication.js";
 import { artwork, codeBlock, el, eyebrow, link } from "./dom.js";
 
 export const workflowSteps = [
@@ -124,7 +125,12 @@ export function workflowShowcase() {
   });
   const footer = el("div", undefined, "showcase-footer");
   footer.append(
-    el("span", "Review the prepared 0.3.0 CLI. Installation remains local."),
+    el(
+      "span",
+      delivery.published
+        ? "Use the published 0.3.0 CLI. Installation remains local."
+        : "Review the prepared 0.3.0 CLI. Installation remains local.",
+    ),
     link("Choose your recipe  →", "#/presets"),
   );
   section.append(intro, tabs, body, footer);

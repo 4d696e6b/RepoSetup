@@ -1,7 +1,18 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-const versions = ["0.2.3", "0.2.2", "0.2.1", "0.2.0", "0.1.1", "0.1.0"];
+const published = process.env.REPOSETUP_WEBSITE_RELEASE === "published";
+const publishedVersion = published ? "0.3.0" : "0.2.3";
+const forbiddenPin = new RegExp(`rsetup@(?!${publishedVersion.replaceAll(".", "\\.")}(?:\\s|$))`);
+const versions = [
+  ...(published ? ["0.3.0"] : []),
+  "0.2.3",
+  "0.2.2",
+  "0.2.1",
+  "0.2.0",
+  "0.1.1",
+  "0.1.0",
+];
 
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -33,7 +44,10 @@ test("direct What's new entry includes every published release in newest-first o
     expect(await card.locator(".release-card-changes > li").count()).toBeGreaterThan(0);
     await expect(card.locator(".release-qualification")).not.toHaveText("");
     const source = card.getByRole("link", {
-      name: new RegExp(`^(?:Release notes|Changelog) ${version.replaceAll(".", "\\.")}$`),
+      name:
+        version === "0.3.0"
+          ? "Reviewed release source"
+          : new RegExp(`^(?:Release notes|Changelog) ${version.replaceAll(".", "\\.")}$`),
     });
     await expect(source).toHaveAttribute("href", /^https:\/\/github\.com\/4d696e6b\/RepoSetup\//);
     await expect(source).toHaveAttribute("rel", /noreferrer/);
@@ -42,10 +56,12 @@ test("direct What's new entry includes every published release in newest-first o
     ).toHaveAttribute("href", `https://www.npmjs.com/package/rsetup/v/${version}`);
   }
   await expect(history.getByText("Latest published", { exact: true })).toHaveCount(1);
-  await expect(history.locator('article[data-version="0.2.3"]')).toContainText("Latest published");
-  await expect(history).not.toContainText(/0\.[34]\.\d/);
+  await expect(history.locator(`article[data-version="${publishedVersion}"]`)).toContainText(
+    "Latest published",
+  );
+  await expect(history).not.toContainText(published ? /0\.4\.\d/ : /0\.[34]\.\d/);
   for (const command of await page.locator("main code").allTextContents())
-    expect(command).not.toMatch(/rsetup@/);
+    expect(command).not.toMatch(forbiddenPin);
 });
 
 test("release sources, documentation, and preset builder remain reachable by keyboard", async ({
@@ -58,7 +74,10 @@ test("release sources, documentation, and preset builder remain reachable by key
   const history = page.getByRole("region", { name: "Published release history" });
   for (const version of versions) {
     const source = history.locator(`article[data-version="${version}"]`).getByRole("link", {
-      name: new RegExp(`^(?:Release notes|Changelog) ${version.replaceAll(".", "\\.")}$`),
+      name:
+        version === "0.3.0"
+          ? "Reviewed release source"
+          : new RegExp(`^(?:Release notes|Changelog) ${version.replaceAll(".", "\\.")}$`),
     });
     await source.focus();
     await source.press(previous);

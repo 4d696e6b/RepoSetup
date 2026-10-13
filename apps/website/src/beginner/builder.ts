@@ -1,4 +1,5 @@
-import { catalog, handoff } from "./catalog.js";
+import { delivery } from "../publication.js";
+import { catalog } from "./catalog.js";
 import { el, link, list, field, select } from "./dom.js";
 import { intro, contextLabel, contextOf, nameOf, presetOf, draft } from "./ui.js";
 import { chooseSelection, exportSelection, projectChoiceErrors } from "./selection.js";
@@ -19,13 +20,7 @@ export function builder(main: HTMLElement, contextId: string, params: URLSearchP
       "SELECTION BUILDER / LOCAL PREVIEW",
     ),
   );
-  main.append(
-    el(
-      "p",
-      `${handoff.label}. These commands require the packed CLI from that exact commit on your PATH. The published 0.2.3 CLI does not accept selection-v1. Prepare the matching local CLI before using these commands.`,
-      "notice",
-    ),
-  );
+  main.append(el("p", delivery.builder, "notice"));
   const layout = el("div", undefined, "builder-layout");
   const form = el("form", undefined, "panel");
   form.addEventListener("submit", (e) => e.preventDefault());

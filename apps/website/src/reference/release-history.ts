@@ -1,3 +1,4 @@
+import { publication } from "../publication.js";
 import { el, link } from "./dom.js";
 import { REPOSITORY, PUBLISHED_VERSION } from "./release.js";
 
@@ -31,7 +32,7 @@ const changelogSource = (version: string) => ({
 });
 
 /** Curated from published notes and pinned changelogs; npm confirms this complete version list. */
-export const releaseHistory: readonly ReleaseHistoryEntry[] = [
+export const publishedHistory: readonly ReleaseHistoryEntry[] = [
   {
     version: "0.2.3",
     publishedAt: "2026-10-09T02:48:16.084Z",
@@ -226,6 +227,44 @@ export const releaseHistory: readonly ReleaseHistoryEntry[] = [
     sources: [changelogSource("0.1.0"), npmSource("0.1.0")],
   },
 ];
+
+export const releaseHistory: readonly ReleaseHistoryEntry[] = publication
+  ? [
+      {
+        version: publication.version,
+        publishedAt: publication.publishedAt,
+        title: "Understand choices and review local changes",
+        summary:
+          "Curated beginner guidance, declarative selections, file previews, intended-stack health and bounded missing-file repair, with the shipped 0.2.3 fixes retained.",
+        nodeRequirement: "Node 24+",
+        changes: [
+          {
+            title: "Choose a minimal starter",
+            description:
+              "React/Vite, Express and FastAPI guidance starts small and explains optional tools. The full catalog and legacy presets remain available.",
+          },
+          {
+            title: "Carry choices to your terminal",
+            description:
+              "Versioned selection tokens and JSON files resolve through the built-in registry. The CLI shows the local plan and requires confirmation before execution.",
+          },
+          {
+            title: "Inspect and repair carefully",
+            description:
+              "Structural dry-run previews, intended-stack doctor and narrow missing-file repair preserve user files and refuse unhealthy automatic repair.",
+          },
+        ],
+        qualification:
+          "Recorded platform and bounded create/add/legacy recipes are qualified. Browser emulation is separate from native screen-reader and physical-device evidence; arbitrary combinations and integration maturity are unchanged.",
+        sources: [
+          npmSource(publication.version),
+          { label: "Reviewed release source", href: `${REPOSITORY}/tree/${publication.sourceSha}` },
+          { label: "What’s new", href: "#/docs/whats-new-0-3" },
+        ],
+      },
+      ...publishedHistory,
+    ]
+  : publishedHistory;
 
 export function releaseDateLabel(publishedAt: string) {
   return new Intl.DateTimeFormat("en", {

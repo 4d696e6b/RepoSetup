@@ -79,3 +79,15 @@ The macOS-15 workflow supplies full WebKit evidence. Local macOS 14.7.2 cannot r
 ## Delivery status
 
 Formal freeze, soak and calendar waiting gates were removed by the owner. Current product evidence and exact-source qualification are in [reconciliation](../../docs/specification-documentation/implementing-docs/RECONCILIATION_0.3.0.md), [release preparation](../../docs/specification-documentation/release-docs/RELEASE_PREPARATION_0.3.0.md) and the latest workflow reports. Actual screen-reader/physical-mobile results and explicit publication/deployment authorization remain required. Keep published 0.2.3 in production until verified 0.3.0 delivery; candidate success is not a deployment.
+
+## Verified publication mode
+
+Default builds remain candidate previews and perform no registry lookup. After the qualified CLI has actually been published, run the same clean-source full website qualification in verified publication mode:
+
+```sh
+REPOSETUP_WEBSITE_RELEASE=published pnpm --filter @reposetup/website qualify
+```
+
+This verifies the canonical npm metadata and downloaded tarball against the committed handoff before generating the site. It requires the exact version to be `latest`, an actual publication timestamp and matching SHA-512/SHA-256 bytes. Registry outages, redirects, wrong versions, malformed/oversized responses or changed bytes fail the build. It does not execute downloaded packages, tag, publish or deploy. The registry may omit `gitHead` when publishing a retained tarball; the displayed reviewed source comes from the committed byte-matched CLI pin rather than inventing registry provenance.
+
+The verified build changes public installation instructions, candidate labels, footer/package links and 0.3.0 release history together. The immutable 0.2.3 snapshot and earlier publication dates stay intact. Browser tests exercise the same journeys in both modes; before npm delivery, synthetic unit fixtures cover published presentation and refusal cases without claiming an actual publication. Use the [delivery procedure](../../docs/specification-documentation/release-docs/RELEASE_DELIVERY_0.3.0.md) for the final explicitly authorized promotion.
