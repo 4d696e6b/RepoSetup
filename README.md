@@ -1,5 +1,10 @@
 # RepoSetup
 
+This worktree contains the **local, unpublished `0.3.1-test.1` CLI preview**. See
+[the local testing guide](TESTING_0.3.1.md) for isolated launchers and a playground.
+The public npm package and production website remain on the released 0.3.0;
+the release descriptions below refer to that published baseline.
+
 **Build your stack from the terminal.**
 
 RepoSetup is an open-source CLI that composes, validates, and configures development stacks from a curated integration registry.

@@ -98,6 +98,10 @@ export async function handleRemove(input: {
   }
 
   if (planned.result.operations.length === 0) {
+    if (input.globals.json) {
+      writeLine(input.deps.io.writeOut, rendered);
+      return EXIT_CODES.SUCCESS;
+    }
     if (!input.globals.quiet) {
       writeLine(
         input.deps.io.writeOut,
