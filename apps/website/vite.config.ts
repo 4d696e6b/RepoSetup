@@ -1,9 +1,11 @@
 import { defineConfig, type UserConfig } from "vite";
 import { rmSync } from "node:fs";
+import { resolve } from "node:path";
 import { publicationForBuild } from "./scripts/verify-publication.ts";
 import { browserCsp } from "./src/reference/security.js";
 export default defineConfig(async (): Promise<UserConfig> => {
   const publication = await publicationForBuild(process.env.REPOSETUP_WEBSITE_RELEASE);
+  let publicOutput = "";
   return {
     define: { __REPOSETUP_PUBLICATION__: JSON.stringify(publication) },
     plugins: [
@@ -33,9 +35,12 @@ export default defineConfig(async (): Promise<UserConfig> => {
       },
       {
         name: "exclude-private-brand-provenance",
+        configResolved(config) {
+          publicOutput = resolve(config.root, config.build.outDir);
+        },
         closeBundle() {
           for (const name of ["README.md", "prompts.json"])
-            rmSync(new URL(`./dist/brand/${name}`, import.meta.url), { force: true });
+            rmSync(resolve(publicOutput, "brand", name), { force: true });
         },
       },
       {
