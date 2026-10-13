@@ -1,6 +1,14 @@
 # 0.3.0 reconciliation with published 0.2.3
 
 
+## PC responsive navigation — 13 October 2026
+
+Desktop navbar spacing, padding and brand size now scale between compact laptop windows and wide monitors. The Explore disclosure is bounded by viewport height and scrolls internally in short windows; its keyboard-reachable links stay inside the visible panel. Mobile retains its existing Menu/Build layout, with no nested dropdown scrolling.
+
+All 15 navigation browser cases pass across Chrome desktop/mobile and Firefox. The new PC case checks ten windows from 761px through 2560px, including 768×360 and 1024×320, plus the 760px menu transition: controls remain on one row without overlap, the disclosure stays inside the viewport, its final link is reachable and document width does not overflow. Workspace unit tests (1,218), both typechecks, lint and affected website build pass. The existing intermittent motion-test evidence and deferred native-reader qualification below remain unchanged. This UI revision requires renewed clean-source release qualification before publication; no deployment or waiting gate is introduced.
+
+
+
 ## Navigation refinement — 13 October 2026
 
 The owner requested fewer labels and a redesigned navbar after the `a8b250fd1c6ce760f0f18f2bb9afb1346b6b690c` publication-readiness checkpoint. The desktop header now offers Docs, an Explore disclosure, icon search and one Build action. Explore groups goals, minimal starters and how-to guidance separately from integrations, presets and published updates, with GitHub as a secondary link. Mobile uses a compact Menu while keeping Build directly reachable, including at 320px. Existing routes and in-memory builder context/selections are preserved.

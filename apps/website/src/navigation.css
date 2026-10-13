@@ -3,14 +3,20 @@
   z-index: 20;
   flex-wrap: nowrap;
   min-height: 88px;
-  gap: 32px;
+  gap: clamp(16px, 2.2vw, 32px);
+  padding-inline: clamp(20px, 3.2vw, 48px);
+}
+.compact-header .brand,
+.compact-header .brand img {
+  width: clamp(145px, 12vw, 185px);
+  margin-right: 0;
 }
 .compact-header .main-nav {
   width: auto;
   margin-left: auto;
   order: initial;
   flex-wrap: nowrap;
-  gap: 28px;
+  gap: clamp(16px, 2vw, 28px);
   border: 0;
 }
 .compact-header .main-nav .nav-direct,
@@ -46,7 +52,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  width: 520px;
+  width: min(520px, calc(100vw - 40px));
+  max-height: calc(100dvh - 112px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 24px 20px 0;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -213,6 +222,9 @@
   .explore-panel {
     position: static;
     width: auto;
+    max-height: none;
+    overflow: visible;
+    overscroll-behavior: auto;
     padding: 16px 0 0;
     gap: 18px;
     box-shadow: none;

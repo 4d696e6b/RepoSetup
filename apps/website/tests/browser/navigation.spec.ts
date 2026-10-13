@@ -107,3 +107,74 @@ test("outside clicks and viewport changes dismiss navigation without stale liste
   await expect(explore).toBeFocused();
   await expect(header.locator(".explore-trigger")).toHaveAttribute("aria-expanded", "false");
 });
+
+test("PC navigation stays in one row and Explore fits laptop, wide and short windows", async ({
+  page,
+}) => {
+  await page.goto("/#/goals");
+  const header = page.locator(".site-header");
+  for (const [width, height] of [
+    [761, 700],
+    [768, 700],
+    [900, 700],
+    [1024, 600],
+    [1280, 720],
+    [1440, 900],
+    [1920, 1080],
+    [2560, 1440],
+    [768, 360],
+    [1024, 320],
+  ] as const) {
+    await page.setViewportSize({ width: width, height: height });
+    const docs = header.getByRole("link", { name: "Docs", exact: true });
+    const explore = header.getByRole("button", { name: "Explore", exact: true });
+    const search = header.getByRole("button", { name: "Open documentation search" });
+    const build = header.getByRole("link", { name: "Build a selection" });
+    await expect(header.getByRole("button", { name: "Open navigation", exact: true })).toBeHidden();
+    const controls = [
+      header.getByRole("link", { name: "RepoSetup home" }),
+      docs,
+      explore,
+      search,
+      build,
+    ];
+    const boxes = [];
+    for (const control of controls) {
+      await expect(control).toBeVisible();
+      boxes.push((await control.boundingBox())!);
+    }
+    for (let index = 0; index < boxes.length; index++) {
+      const box = boxes[index]!;
+      expect(box.x, `${width}×${height}: left edge`).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width, `${width}×${height}: right edge`).toBeLessThanOrEqual(width);
+      expect(Math.abs(box.y + box.height / 2 - (boxes[0]!.y + boxes[0]!.height / 2))).toBeLessThan(
+        3,
+      );
+      if (index > 0)
+        expect(box.x).toBeGreaterThanOrEqual(boxes[index - 1]!.x + boxes[index - 1]!.width);
+    }
+    await explore.click();
+    const panel = header.locator(".explore-panel");
+    const bounds = (await panel.boundingBox())!;
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+    expect(bounds.y).toBeGreaterThanOrEqual(0);
+    expect(bounds.y + bounds.height, `${width}×${height}: dropdown bottom`).toBeLessThanOrEqual(
+      height,
+    );
+    const github = panel.getByRole("link", { name: "GitHub ↗", exact: true });
+    await github.focus();
+    await expect(github).toBeFocused();
+    const linkBounds = (await github.boundingBox())!;
+    expect(linkBounds.y).toBeGreaterThanOrEqual(bounds.y);
+    expect(linkBounds.y + linkBounds.height).toBeLessThanOrEqual(bounds.y + bounds.height + 1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await explore.press("Escape");
+  }
+  await page.setViewportSize({ width: 760, height: 700 });
+  await expect(header.getByRole("button", { name: "Open navigation", exact: true })).toBeVisible();
+  await expect(header.getByRole("link", { name: "Docs", exact: true })).toBeHidden();
+  await expect(header.getByRole("link", { name: "Build a selection" })).toBeVisible();
+});
