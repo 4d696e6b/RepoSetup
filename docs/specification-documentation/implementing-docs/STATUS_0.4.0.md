@@ -3332,3 +3332,19 @@ to the website reference, and qualify the exact candidate. Paid provider/model
 qualification remains unavailable under the owner's offline-only constraint;
 production live routing stays disabled. No tag, merge into main, npm publication
 or website deployment occurred.
+
+
+## Versioned CLI preparation (2026-10-14)
+
+Clean canonical merge `4a46ea2` contains current implementation and published
+`origin/main` ancestry. The guarded `release:prepare --version 0.4.0 --write`
+succeeded after its preview: CLI and all three private library manifests now
+identify 0.4.0; private libraries remain private. README, packaged CLI README,
+changelog and command-tree specification distinguish the prepared candidate from
+published 0.3.1, document offline task availability and preserve experimental
+managed/live qualification limits. No existing npm version or tag was changed.
+
+Validation of this metadata slice: guarded preparation, frozen offline dependency
+resolution, CLI/dependency build, actual CLI version/help and release-context/
+preparation tests. The coupled website still needs its newly packed byte identity
+and regenerated command reference before the workspace build can qualify 0.4.0.

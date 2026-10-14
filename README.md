@@ -63,10 +63,10 @@ For a global install, run `npm install -g rsetup@0.3.1`. Both `rsetup` and `repo
 
 ## Experimental task compiler development
 
-The separate `codex/0.4.0-task-compiler` branch implements experimental coding
-tasks alongside the curated installer. Its integrated package version is
-`0.3.1`; no 0.4.0 candidate is qualified or published. Use the built CLI
-from that branch rather than a floating npm package to try these commands.
+The `codex/release-0.4.0` branch prepares version `0.4.0` with coding tasks
+alongside the curated installer. The candidate is not published or release-qualified
+yet; npm `latest` remains the immutable `0.3.1` installer. Use the exact built
+candidate or identified packed artifact to try task commands.
 
 `task compile`, `task next` and `task status` support a local handoff to an existing
 coding agent without API keys or RepoSetup AI credits. You supply an independently
@@ -97,7 +97,7 @@ cd RepoSetup
 pnpm install --frozen-lockfile
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.3.0
+node packages/cli/dist/bin.js --version   # 0.4.0 candidate
 ```
 
 Preview a Next.js example without changing files:

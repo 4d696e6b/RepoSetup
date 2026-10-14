@@ -4,10 +4,12 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — experimental 0.4.0 task compiler development
+## [0.4.0] — release candidate, publication pending
 
-These changes live on `codex/0.4.0-task-compiler`. The integrated development tree inherits version
-`0.3.1`; this entry does not announce a release or qualified candidate.
+These changes are prepared on `codex/release-0.4.0` with intentional `0.4.0`
+package metadata. Publication and exact candidate qualification remain pending.
+The offline workflow needs no API key. Managed execution remains experimental,
+and production live routing is disabled without trusted model evidence.
 
 ### Added
 

@@ -1,4 +1,4 @@
-# CLI Specification — released 0.3.1 and experimental task extension
+# CLI Specification — 0.4.0 candidate and experimental managed tasks
 
 ## 1. Current command tree
 
@@ -15,10 +15,15 @@ reposetup
 ├── export
 ├── registry
 │   └── validate
+├── task
+│   ├── compile
+│   ├── next
+│   ├── status
+│   └── run
 └── version/help
 ```
 
-This tree reflects the integrated `0.3.1` development source in [runCli](../../../packages/cli/src/run-cli.ts). `import` remains a proposal, as described below. The experimental task command group is implemented as described at the end of this document; live provider qualification remains open.
+The installer commands below are retained in the `0.4.0` candidate source in [runCli](../../../packages/cli/src/run-cli.ts). `import` remains a proposal, as described below. The experimental task command group is implemented as described at the end of this document; live provider qualification remains open.
 The command tree and create flags above/below match the current CLI help. Recipe-record import remains a proposed workflow, not an implemented command. Older design examples do not authorize arbitrary config commands.
 
 ## 2. `reposetup create`

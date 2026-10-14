@@ -8,7 +8,7 @@ npx rsetup --help
 
 This is the public npm name for RepoSetup. After `npm install -g rsetup`, both `rsetup` and `reposetup` work.
 
-This package provides CLI version `0.3.1`. It fixes repeated no-op `remove --json` returning plain text: JSON output now includes the versioned empty plan, including quiet, dry-run and diff modes. It requires Node.js 24 or later. Python recipes require Python 3.12 or later with uv or an activated pip environment; 3.12 and 3.13 are in the qualification matrix. Integrations are not all equally mature. Use `--dry-run` before changing an important project.
+This package prepares CLI version `0.4.0`. It fixes repeated no-op `remove --json` returning plain text: JSON output now includes the versioned empty plan, including quiet, dry-run and diff modes. It requires Node.js 24 or later. Python recipes require Python 3.12 or later with uv or an activated pip environment; 3.12 and 3.13 are in the qualification matrix. Integrations are not all equally mature. Use `--dry-run` before changing an important project.
 
 The workspace libraries `@reposetup/core`, `@reposetup/registry`, and `@reposetup/integrations` are bundled into this package. They are not published separately.
 
@@ -23,15 +23,18 @@ RepoSetup 0.3.0 adds curated beginner guidance and minimal React/Vite, Express a
 
 Existing schemaVersion 1 configs, all five bundled `--preset` IDs, positional `add`, supported JSON output and the shipped 0.2.3 reliability fixes are retained. Not every registry combination is qualified; integration maturity and required system prerequisites remain explicit.
 
-On the separate `codex/0.4.0-task-compiler` development branch, the inherited 0.3.1
-development package version also includes experimental coding-task commands. Inspect
-`reposetup task --help` using the exact locally built artifact from that branch;
-a floating npm package does not select it. `task compile`, `task next` and
-`task status` support local structured drafts/advisory handoffs without API keys
-or RepoSetup AI credits. They require independent reviewed inputs and do not
-certify completion. `task run` and `task compile --managed` require reviewed
-authority, exact preview approval and explicit provider usage allowance for real
-model calls. Live provider qualification, production routing and comparative
-quality/cost evidence remain deferred. Azure has no runtime adapter. Existing
-installer commands and configs need no migration. No 0.4.0 release is qualified
-or published; simulated-provider tests establish local behavior only.
+The 0.4.0 candidate includes coding-task commands. Inspect `reposetup task --help`
+on the exact candidate artifact. Publication is pending; the published 0.3.1
+package does not include these commands. `task compile`, `task next` and
+`task status` accept local structured drafts and produce advisory coding-agent
+handoffs without API keys or RepoSetup AI credits. Independent review is required;
+a portable handoff does not certify completion or switch your agent's model.
+
+`task run` and `task compile --managed` remain experimental. Real model calls
+require reviewed authority, exact preview approval, a credential in the process
+environment and explicit provider usage allowance. Live provider qualification,
+production routing and comparative quality/cost evidence remain deferred.
+Production routing rejects unqualified model profiles before provider execution.
+Azure has no runtime adapter. Existing installer commands, configuration and
+selection inputs remain compatible and need no migration. Read the complete
+[task compiler guide](https://github.com/4d696e6b/RepoSetup/blob/codex/release-0.4.0/docs/humanOnly/Task_Compiler_0.4.0.md).
