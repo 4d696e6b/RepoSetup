@@ -18,9 +18,13 @@ export interface ExecutorFileSystem {
 export interface ProcessRunRequest {
   command: string;
   args: readonly string[];
+  /** Explicit environment replaces inheritance; omitted preserves installer behavior. */
+  env?: Readonly<Record<string, string>>;
   cwd: string;
   signal?: AbortSignal;
   timeoutMs?: number;
+  /** Optional task-check escalation after SIGTERM; installer behavior stays unchanged. */
+  terminationGraceMs?: number;
   onOutput?: (event: ProcessOutputEvent) => void;
 }
 

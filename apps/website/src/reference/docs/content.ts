@@ -11,7 +11,7 @@ export interface DocPage {
   slug: string;
   title: string;
   description: string;
-  group: "Start" | "Guides" | "Reference" | "Help";
+  group: "Start" | "Guides" | "Reference" | "Help" | "Preview";
   sections: DocSection[];
 }
 
@@ -60,7 +60,7 @@ export const authoredPages: DocPage[] = [
         paragraphs: [
           delivery.published
             ? `Run the matching published CLI through npx rsetup@${handoff.version}, or install it globally. The npm download prompt is separate from RepoSetup’s confirmation of the project installation plan. Use --version to check the CLI you are running.`
-            : `New ${handoff.version} workflows require the reviewed local candidate. Follow the matching CLI instructions on How it works before using these examples. Floating npx rsetup still resolves the previous published 0.3.0 package.`,
+            : `New ${handoff.version} workflows require the reviewed local candidate. Follow the matching CLI instructions on How it works before using these examples. Floating npx rsetup still resolves the previous published ${delivery.publishedVersion} package.`,
           "The npm package is named rsetup. After a global installation, both rsetup and reposetup are command aliases. Use npx rsetup for these examples: npx reposetup identifies a different package.",
         ],
         code: delivery.published

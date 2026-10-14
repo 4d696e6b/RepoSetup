@@ -93,7 +93,9 @@ async function assertRecipe(experience: Locator, preset: (typeof release.presets
     await expect(experience.locator(".tablet-support")).toContainText(integration.name);
   if (experimental.length === 0)
     await expect(experience.locator(".tablet-support")).not.toContainText(/experimental/i);
-  await expect(experience).not.toContainText(/0\.4\.\d|--selection|--recipe\b/);
+  await expect(experience).not.toContainText(/--selection|--recipe\b/);
+  if (experimental.length === 0)
+    await expect(experience.locator(".tablet-support")).toContainText(release.package.version);
 }
 
 async function cinematicProgress(experience: Locator) {

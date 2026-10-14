@@ -24,15 +24,16 @@ const text = (version: string) => {
 };
 
 describe("published release history", () => {
-  it("preserves the complete historical npm series separately from the delivered 0.3.0 changelog", () => {
+  it("preserves the complete historical npm series separately from the prepared task release", () => {
     expect(recordedVersions).toEqual([
       handoff.version,
       ...releaseHistory.map(({ version }) => version),
     ]);
-    expect(releaseHistory).toHaveLength(7);
-    expect(releaseHistory[0]!.version).toBe("0.3.0");
+    expect(releaseHistory).toHaveLength(8);
+    expect(releaseHistory[0]!.version).toBe("0.3.1");
 
     expect(releaseHistory.map(({ version }) => version)).toEqual([
+      "0.3.1",
       "0.3.0",
       "0.2.3",
       "0.2.2",
@@ -51,15 +52,15 @@ describe("published release history", () => {
     expect(RELEASE_HISTORY_PUBLICATION_SOURCE).toBe("https://registry.npmjs.org/rsetup");
     expect(RELEASE_HISTORY_VERIFIED_ON).toBe("2026-10-13");
     // The package shipped after the October 8 preparation/changelog date.
-    expect(releaseHistory[0]!.publishedAt).toBe("2026-10-13T07:26:26.268Z");
-    expect(releaseHistory[1]!.publishedAt).toBe("2026-10-09T02:48:16.084Z");
+    expect(releaseHistory[0]!.publishedAt).toBe("2026-10-13T13:32:26.884Z");
+    expect(releaseHistory[2]!.publishedAt).toBe("2026-10-09T02:48:16.084Z");
     expect(releaseDateLabel(releaseHistory[0]!.publishedAt)).toBe("October 13, 2026");
-    expect(releaseDateLabel(releaseHistory[1]!.publishedAt)).toBe("October 9, 2026");
+    expect(releaseDateLabel(releaseHistory[2]!.publishedAt)).toBe("October 9, 2026");
     expect(releaseDateLabel("2026-10-09T23:59:59Z")).toBe("October 9, 2026");
-    expect(releaseHistory.slice(0, 5).map(({ nodeRequirement }) => nodeRequirement)).toEqual(
-      Array.from({ length: 5 }, () => "Node 24+"),
+    expect(releaseHistory.slice(0, 6).map(({ nodeRequirement }) => nodeRequirement)).toEqual(
+      Array.from({ length: 6 }, () => "Node 24+"),
     );
-    expect(releaseHistory.slice(5).map(({ nodeRequirement }) => nodeRequirement)).toEqual(
+    expect(releaseHistory.slice(6).map(({ nodeRequirement }) => nodeRequirement)).toEqual(
       Array.from({ length: 2 }, () => "Node 20+ at publication"),
     );
   });
@@ -112,8 +113,6 @@ describe("published release history", () => {
     expect(text("0.2.3")).toContain("representative live database cases");
     expect(text("0.2.3")).toContain("Arbitrary combinations");
     expect(text("0.2.3")).toContain("maturity");
-    expect(JSON.stringify(releaseHistory)).not.toMatch(
-      /0\.3\.1|0\.4\.\d|0\.1\.0-alpha|--selection/,
-    );
+    expect(JSON.stringify(releaseHistory)).not.toMatch(/0\.4\.\d|0\.1\.0-alpha|--selection/);
   });
 });

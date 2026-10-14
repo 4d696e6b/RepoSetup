@@ -53,7 +53,11 @@ export { planDoctorRepair } from "./doctor/plan-repair.js";
 export type { DoctorRepairPlan } from "./doctor/plan-repair.js";
 export type { DoctorCheck, DoctorResult, RunDoctorResult } from "./doctor/run-doctor.js";
 export { existingEnvKeys } from "./executor/env-example.js";
-export { redactProcessOutput, summarizeFailedProcessOutput } from "./executor/output-snippet.js";
+export {
+  hasIncompleteSecretAssignment,
+  redactProcessOutput,
+  summarizeFailedProcessOutput,
+} from "./executor/output-snippet.js";
 export { pathPrerequisite } from "./prerequisites/path.js";
 export type { PathPrerequisite, PathPrerequisiteId } from "./prerequisites/path.js";
 export { createDetectionContext } from "./detection/context.js";
@@ -181,3 +185,17 @@ export type {
 export { beginnerCatalogSchema } from "./selection/catalog.js";
 export type { BeginnerCatalog } from "./selection/catalog.js";
 export { planSelectionCreate } from "./selection/plan-create.js";
+
+// Coding tasks remain separate from curated installation operations.
+export * from "./tasks/index.js";
+
+export * from "./executor/task-verification.js";
+export * from "./executor/task-run-types.js";
+export * from "./executor/task-run.js";
+export * from "./executor/task-managed.js";
+export * from "./tasks/compilation-context.js";
+export * from "./tasks/compilation-state.js";
+export * from "./executor/task-compilation.js";
+export * from "./executor/task-benchmark.js";
+export * from "./executor/task-benchmark-replay.js";
+export * from "./executor/task-benchmark-evidence.js";

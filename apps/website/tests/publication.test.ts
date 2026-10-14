@@ -124,8 +124,8 @@ describe("website publication guard", () => {
 
 it("keeps candidate instructions distinct from verified public installation", () => {
   const candidate = publicationPresentation(null);
-  expect(candidate.publishedVersion).toBe("0.3.0");
-  expect(candidate.notice).toContain("currently published package remains 0.3.0");
+  expect(candidate.publishedVersion).toBe("0.3.1");
+  expect(candidate.notice).toContain("currently published package remains 0.3.1");
   expect(candidate.builder).toContain("exact commit");
   const published = publicationPresentation({
     version: handoff.version,
@@ -141,7 +141,7 @@ it("keeps candidate instructions distinct from verified public installation", ()
   expect(published.builder).toContain("asks for confirmation");
 });
 
-it("adds the current patch only after verification, preserving 0.3.0 history", async () => {
+it("adds the task release only after verification, preserving published patch history", async () => {
   vi.stubGlobal("__REPOSETUP_PUBLICATION__", {
     version: handoff.version,
     sourceSha,
@@ -152,8 +152,9 @@ it("adds the current patch only after verification, preserving 0.3.0 history", a
   expect(releaseHistory[0]?.version).toBe(handoff.version);
   expect(releaseHistory[0]?.publishedAt).toBe(publishedAt);
   expect(releaseHistory.slice(1)).toEqual(publishedHistory);
-  expect(publishedHistory[0]?.version).toBe("0.3.0");
-  expect(releaseHistory[0]?.title).toBe("Consistent JSON removal output");
+  expect(publishedHistory[0]?.version).toBe("0.3.1");
+  expect(releaseHistory[0]?.title).toBe("Reviewed coding tasks and portable agent handoffs");
+  expect(publishedHistory[0]?.title).toBe("Consistent JSON removal output");
 });
 
 it("pins every published documentation installation example to the current CLI", async () => {

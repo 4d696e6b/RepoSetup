@@ -1,8 +1,10 @@
+import { delivery } from "../../publication.js";
 import { handoff } from "../../handoff.js";
 import { release, categoryName } from "../release.js";
 import { authoredPages, type DocPage } from "./content.js";
 import { relationshipTarget } from "../relationships.js";
 import { releaseGuides } from "./release-guides.js";
+import { taskGuides } from "./task-guides.js";
 
 const page = (
   slug: string,
@@ -34,7 +36,7 @@ const commands = release.cli.commands.map((command) =>
       id: "help",
       title: "Get help locally",
       paragraphs: ["Inspect the installed command's help before applying it to a project."],
-      code: `npx rsetup ${command.path.join(" ")} --help`,
+      code: `${delivery.published ? `npx rsetup@${handoff.version}` : "reposetup"} ${command.path.join(" ")} --help`,
       links: [{ label: "Command behavior and confirmation", href: "#/docs/command-basics" }],
     },
   ]),
@@ -192,13 +194,14 @@ const indexes = [
 export const docPages: DocPage[] = [
   ...releaseGuides,
   ...authoredPages,
+  ...taskGuides,
   ...indexes,
   ...commands,
   ...integrations,
   ...presets,
 ];
 export const docBySlug = new Map(docPages.map((item) => [item.slug, item]));
-export const primaryPages = [...releaseGuides, ...authoredPages, ...indexes];
+export const primaryPages = [...releaseGuides, ...authoredPages, ...taskGuides, ...indexes];
 export const searchPages = (query: string) => {
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (!terms.length) return [];

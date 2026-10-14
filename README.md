@@ -52,14 +52,40 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and the selected manager (**uv** or an activated **pip** environment); Python 3.12 and 3.13 were covered by the 0.2.x qualification matrix. RepoSetup does not install these system prerequisites for you.
 
-Version 0.3.0 is published as npm `latest`. Exact-version installation, both aliases and real project execution passed on Linux, macOS and Windows. See the [release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md) for qualification and limits:
+Version 0.3.1 is published as npm `latest`. Exact-version installation, both aliases and real project execution passed on Linux, macOS and Windows. See the [release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md) for qualification and limits:
 
 ```bash
-npx rsetup@0.3.0 --help
-npx rsetup@0.3.0 --version
+npx rsetup@0.3.1 --help
+npx rsetup@0.3.1 --version
 ```
 
-For a global install, run `npm install -g rsetup@0.3.0`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
+For a global install, run `npm install -g rsetup@0.3.1`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
+
+## Experimental task compiler development
+
+The `codex/release-0.4.0` branch prepares version `0.4.0` with coding tasks
+alongside the curated installer. The candidate is not published or release-qualified
+yet; npm `latest` remains the immutable `0.3.1` installer. Use the exact built
+candidate or identified packed artifact to try task commands.
+
+`task compile`, `task next` and `task status` support a local handoff to an existing
+coding agent without API keys or RepoSetup AI credits. You supply an independently
+reviewed phase/scope document and a structured draft; omitting the draft returns
+a decomposition request. Compilation validates the draft; it does not establish
+that the requested work is complete. Portable handoffs are advisory.
+
+`task run` and `task compile --managed` implement bounded provider execution with
+separate reviewed authority, explicit usage allowance and exact dry-run approval.
+Real calls require the direct OpenAI environment credential and provider usage
+allowance. Live model/schema/usage qualification and production routing evidence
+remain deferred; Azure is not a supported runtime adapter. Simulated-provider
+tests do not establish live quality, cost savings or release readiness.
+
+See the [task compiler guide](docs/humanOnly/Task_Compiler_0.4.0.md) for the local
+workflow, inputs, safety limits and recovery behavior, and the
+[candidate preparation record](docs/specification-documentation/release-docs/RELEASE_CANDIDATE_0.4.0.md)
+for open qualification gates. Existing stack configs, selections and installer
+commands need no migration.
 
 ## Develop from source
 
@@ -71,7 +97,7 @@ cd RepoSetup
 pnpm install --frozen-lockfile
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.3.0
+node packages/cli/dist/bin.js --version   # 0.4.0 candidate
 ```
 
 Preview a Next.js example without changing files:

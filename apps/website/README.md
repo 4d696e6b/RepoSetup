@@ -1,8 +1,19 @@
-# RepoSetup companion website — 0.3.0
+# RepoSetup companion website — 0.4.0 candidate
 
-The published website is [reposetupcli.com](https://reposetupcli.com/) at 0.3.0. Its exact deployment and qualification are in the [stable delivery record](../../docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md). This canonical `codex/release-0.3.0` worktree combines its full documentation, 37 integration references, five legacy presets, artwork and existing routes with the bounded 0.3.0 beginner workflows. Active parser/registry facts are generated from the reviewed 0.3.0 CLI. The original 0.2.3 facts remain an immutable digest-checked snapshot; published release history never lists an unpublished candidate.
+The existing companion website is [reposetupcli.com](https://reposetupcli.com/). Its
+0.3.1 delivery is recorded in the [stable delivery record](../../docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md).
+This release checkout prepares the 0.4.0 reference while preserving published
+0.3.1 and 0.2.3 snapshots, all 37 integrations, five legacy presets, artwork,
+routes and beginner selection workflows. The active reference is byte-checked
+and generated from the exact 0.4.0 CLI handoff, including all 16 actual commands.
+Fact regeneration requires unchanged reviewed release definitions.
 
-The site has 76 documentation pages, nine curated explanations, three minimal starters, 24 create and 21 nonempty add choices. It supports React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm and FastAPI + uv. Choices start empty and actual local context remains authoritative. Integration maturity and prerequisites are explicit.
+The candidate site has 84 documentation pages, including five generated task
+command references, a portable workflow guide and two experimental managed guides. It retains nine curated explanations,
+three minimal starters, 24 create and 21 nonempty add choices. It supports
+React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm and FastAPI + uv.
+Choices start empty and actual local context remains authoritative.
+Integration maturity and prerequisites are explicit. These new guides are not deployed.
 
 ## Local development and routes
 
@@ -18,6 +29,7 @@ Open `http://127.0.0.1:5173`. Supported hash routes include:
 
 - `/#/` — full home and workflow discovery.
 - `/#/docs`, `/#/integrations`, `/#/presets`, `/#/release` — full references and published history.
+- `/#/docs/task-compiler`, `/#/docs/task-router`, `/#/docs/task-troubleshooting` — coding-task guides, copyable prompts, exact local commands and recovery.
 - `/#/builder/<legacy-preset-id>` — schemaVersion 1 download with explicit name/folder.
 - `/#/goals`, `/#/learn/libraries`, `/#/learn/libraries/<id>`, `/#/learn/starters` — curated guidance.
 - `/#/builder/react-vite-ts-pnpm`, `/#/builder/express-ts-pnpm?mode=add` — bounded create/add choices.
@@ -27,7 +39,15 @@ Beginner code/catalog load only when requested. Returning from an explanation pr
 
 ## Matching CLI artifact: required before pasting commands
 
-The selection handoff requires reviewed `rsetup@0.3.0`, CLI source `ae4b9011c47d23d176770a749cde2560c64775c8`, tarball SHA-256 `cf458b036cf78e25445416dc1ba9e73ab2d40c3591828afac576cbd1a406d7e4`. The public npm package is 0.3.0 and its verified bytes match this pin. Install `npm install -g rsetup@0.3.0` before using these exports. Older 0.2.x CLIs do not accept selection v1. The single authoritative pin is `src/handoff.ts`.
+The selection handoff requires reviewed `rsetup@0.4.0`, CLI byte-source
+`9758e84074f9a862f1b8ed91340a277c2ca3e1ce`, tarball SHA-256
+`55d9af9243a376de92104e98b6a23f75ebcdfa744d31032b2b451f68e2a9e97e`.
+Prepare that candidate with `pack:contract` below. After registry-verified
+publication, install `npm install -g rsetup@0.4.0` before using these exports.
+The single authoritative pin is `src/handoff.ts`. Published-mode builds verify
+registry bytes before displaying public installation instructions. Candidate task examples use the exact reviewed local CLI. After verified
+publication, the guides switch to exact-version npm aliases. Published 0.3.1
+does not contain task commands. Production model routing remains unqualified.
 
 For development qualification, prepare the exact artifact locally:
 

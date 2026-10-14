@@ -1,5 +1,22 @@
 # Specification documentation
 
+## Version 0.4.0 task compiler specifications
+
+- [Task compiler contract](./product-docs/TASK_COMPILER_0.4.0.md)
+- [Frozen task-domain contracts](./product-docs/TASK_CONTRACTS_0.4.0.md)
+- [Managed support, trusted checks and portable handoff](./product-docs/TASK_SUPPORT_0.4.0.md)
+- [Current-source reuse and extension audit](./implementing-docs/TASK_COMPILER_REUSE_0.4.0.md)
+- [Single-provider official-documentation research](./implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md)
+- [Live provider smoke protocol, I/J release gate and separate allowance](./implementing-docs/TASK_PROVIDER_SMOKE_0.4.0.md)
+- [Task benchmark fixtures, acceptance and allowances](./implementing-docs/TASK_BENCHMARK_0.4.0.md)
+- [Implementation roadmap](./implementing-docs/ROADMAP_0.4.0.md)
+- [Implementation status](./implementing-docs/STATUS_0.4.0.md)
+- [Task compiler user guide](../humanOnly/Task_Compiler_0.4.0.md)
+- [Experimental candidate preparation and open gates](./release-docs/RELEASE_CANDIDATE_0.4.0.md)
+
+These documents describe the implemented A–J offline scope and the experimental coding-task design. Live production-model qualification and versioned release gates remain deferred. The integrated tree inherits 0.3.1 metadata without publishing the task compiler.
+
+
 | Folder | Contents |
 | --- | --- |
 | [`product-docs/`](./product-docs/) | Requirements, architecture, CLI, integrations, detection, config |

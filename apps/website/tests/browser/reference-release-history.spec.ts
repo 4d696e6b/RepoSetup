@@ -4,10 +4,11 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 const published = process.env.REPOSETUP_WEBSITE_RELEASE === "published";
-const publishedVersion = published ? handoff.version : "0.3.0";
+const publishedVersion = published ? handoff.version : "0.3.1";
 const forbiddenPin = new RegExp(`rsetup@(?!${publishedVersion.replaceAll(".", "\\.")}(?:\\s|$))`);
 const versions = [
   ...(published ? [handoff.version] : []),
+  "0.3.1",
   "0.3.0",
   "0.2.3",
   "0.2.2",
@@ -63,7 +64,9 @@ test("direct What's new entry includes every published release in newest-first o
   await expect(history.locator(`article[data-version="${publishedVersion}"]`)).toContainText(
     "Latest published",
   );
-  await expect(history).not.toContainText(published ? /0\.4\.\d/ : /0\.3\.1|0\.4\.\d/);
+  if (!published)
+    await expect(history.locator(`article[data-version="${handoff.version}"]`)).toHaveCount(0);
+  await expect(history).not.toContainText(/0\.1\.0-alpha/);
   for (const command of await page.locator("main code").allTextContents())
     expect(command).not.toMatch(forbiddenPin);
 });

@@ -9,24 +9,37 @@ import { describe, expect, it } from "vitest";
 
 import {
   RELEASE_SOURCE,
+  RELEASE_VERSION,
+  assertReleaseDefinitionsMatch,
   assertReleaseVersion,
   generateReleaseFacts,
   parseHelp,
+  verifyReleaseSnapshot,
 } from "../scripts/generate-release";
 import release from "../src/reference/generated/release.json";
 
-describe("reviewed 0.3.0 public release catalog", () => {
+describe("reviewed 0.4.0 candidate release catalog", () => {
   it("matches the built CLI, checked-in registry, presets, and config schema", () => {
-    expect(release).toEqual(generateReleaseFacts());
-    expect(release.package.version).toBe("0.3.1");
+    expect(release).toEqual(verifyReleaseSnapshot());
+    expect(release.package.version).toBe(RELEASE_VERSION);
     expect(release.source.revision).toBe(RELEASE_SOURCE);
     expect(release.integrations).toHaveLength(37);
     expect(release.presets).toHaveLength(5);
-    expect(release.cli.commands).toHaveLength(11);
+    expect(release.cli.commands).toHaveLength(16);
+  });
+
+  it("rejects changed definitions and tampered pinned facts", () => {
+    expect(generateReleaseFacts()).toEqual(release);
+    expect(() => assertReleaseDefinitionsMatch("packages/cli/src/run-cli.ts")).toThrow(
+      "Release definitions differ",
+    );
+    expect(() =>
+      verifyReleaseSnapshot(Buffer.from(JSON.stringify({ ...release, cli: {} }))),
+    ).toThrow("Pinned reference bytes differ");
   });
 
   it("rejects other package versions and mismatched built CLI versions", () => {
-    expect(() => assertReleaseVersion("0.3.1", "0.3.1\n")).not.toThrow();
+    expect(() => assertReleaseVersion(RELEASE_VERSION, `${RELEASE_VERSION}\n`)).not.toThrow();
     expect(() => assertReleaseVersion("0.2.3", "0.2.3")).toThrow("documents only");
     expect(() => assertReleaseVersion("0.3.0", "0.2.3")).toThrow("documents only");
     expect(() => assertReleaseVersion("0.4.0", "0.3.0")).toThrow("documents only");
@@ -80,6 +93,11 @@ describe("reviewed 0.3.0 public release catalog", () => {
       "stack",
       "doctor",
       "export",
+      "task",
+      "task-compile",
+      "task-next",
+      "task-status",
+      "task-run",
       "registry",
       "registry-validate",
     ]);
@@ -94,6 +112,12 @@ describe("reviewed 0.3.0 public release catalog", () => {
     expect(flags.some((flag) => /--recipe/.test(flag))).toBe(false);
     expect(release.cli.commands.find((command) => command.id === "registry")?.children).toEqual([
       "registry-validate",
+    ]);
+    expect(release.cli.commands.find((command) => command.id === "task")?.children).toEqual([
+      "task-compile",
+      "task-next",
+      "task-status",
+      "task-run",
     ]);
   });
 });

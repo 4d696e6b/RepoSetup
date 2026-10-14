@@ -2,13 +2,13 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
 import { afterEach, expect, it } from "vitest";
 import { handoff } from "../src/handoff.js";
 import { normalizeTarEntry, parseTarEntries, verifyArtifact } from "../scripts/verify-artifact.ts";
 
 const roots: string[] = [];
-function fixture() {
+function fixture(extraExecutable?: string) {
   const root = mkdtempSync(join(tmpdir(), "site-artifact-check-"));
   roots.push(root);
   const installed = join(root, "installed/node_modules/rsetup");
@@ -19,6 +19,10 @@ function fixture() {
     writeFileSync(join(base, "package.json"), metadata);
     writeFileSync(join(base, "dist/bin.js"), "// fixture, never executed\n");
     writeFileSync(join(base, "dist/chunk.js"), "// bundled implementation\n");
+    if (extraExecutable) {
+      mkdirSync(dirname(join(base, extraExecutable)), { recursive: true });
+      writeFileSync(join(base, extraExecutable), "// nested fixture, never executed\n");
+    }
   }
   const tarball = join(root, `rsetup-${handoff.version}.tgz`);
   execFileSync("tar", ["-czf", tarball, "-C", root, "package"]);
@@ -73,3 +77,22 @@ it("refuses stale identity, substituted tarballs and missing installed files", (
   rmSync(join(missing.installed, "dist/chunk.js"));
   expect(() => verifyArtifact(missing.root, missing.evidence.tarballSha256)).toThrow();
 });
+
+it("verifies the explicit nested task benchmark entry and rejects installed tampering", () => {
+  const { root, installed, evidence } = fixture("dist/tasks/benchmark-store.js");
+  expect(verifyArtifact(root, evidence.tarballSha256)).toEqual(evidence);
+  writeFileSync(join(installed, "dist/tasks/benchmark-store.js"), "// substituted bytes\n");
+  expect(() => verifyArtifact(root, evidence.tarballSha256)).toThrow(
+    "differs from its packed artifact",
+  );
+});
+
+it.each(["dist/tasks/other.js", "dist/tasks/deep/benchmark-store.js", "outside.js"])(
+  "rejects the unreviewed executable path %s even with matching recorded bytes",
+  (entry) => {
+    const { root, evidence } = fixture(entry);
+    expect(() => verifyArtifact(root, evidence.tarballSha256)).toThrow(
+      "Unexpected executable path",
+    );
+  },
+);

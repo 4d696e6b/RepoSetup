@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   commandFailureSuggestion,
+  hasIncompleteSecretAssignment,
+  redactProcessOutput,
   isTransientDownloadFailure,
   summarizeFailedProcessOutput,
 } from "./output-snippet.js";
@@ -46,5 +48,33 @@ describe("commandFailureSuggestion", () => {
     expect(commandFailureSuggestion("EEXIST: mkdir '/example/project'")).toBe(
       "Inspect the command output, fix the project, and re-run the plan.",
     );
+  });
+});
+
+describe("streaming secret-assignment context", () => {
+  it.each(["TOKEN=\n", "AUTH_TOKEN:\r\n  ", "DATABASE_URL\r\n", "password\n=\n", "API_KEY : \n"])(
+    "keeps the incomplete prefix %j with its future value",
+    (prefix) => {
+      expect(hasIncompleteSecretAssignment(prefix)).toBe(true);
+      const completed = prefix + (/[:=]/.test(prefix) ? "" : "=\n") + "fictional-value\n";
+      expect(redactProcessOutput(completed)).toMatch(/=<redacted>\n$/);
+      expect(hasIncompleteSecretAssignment(completed)).toBe(false);
+    },
+  );
+  it.each([
+    "ordinary output\n",
+    "TOKEN=fictional-value\n",
+    "API_KEYWORD\n",
+    "USER_NAME=\n",
+    "finished\r\n",
+    "1TOKEN=\n",
+    "TOKEN==\n",
+  ])("does not hold the complete/unrelated record %j", (record) => {
+    expect(hasIncompleteSecretAssignment(record)).toBe(false);
+  });
+  it("examines only the final key while retaining the existing assignment grammar", () => {
+    expect(hasIncompleteSecretAssignment("TOKEN\n".repeat(21000))).toBe(true);
+    expect(hasIncompleteSecretAssignment("TOKEN\n".repeat(21000) + "done\n")).toBe(false);
+    expect(hasIncompleteSecretAssignment("prefix: /AUTH_TOKEN\r\n : \t\n")).toBe(true);
   });
 });

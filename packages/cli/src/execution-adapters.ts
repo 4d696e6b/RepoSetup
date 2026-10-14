@@ -19,6 +19,7 @@ import os from "node:os";
 
 import {
   redactProcessOutput,
+  hasIncompleteSecretAssignment,
   type ExecutionLock,
   type ExecutionJournal,
   type ExecutableResolver,
@@ -201,7 +202,12 @@ export function createDefaultProcessRunner(): ProcessRunner {
 
     const launch =
       process.platform === "win32"
-        ? resolveWindowsLaunch(request.command, request.args, process.env, existsSync)
+        ? resolveWindowsLaunch(
+            request.command,
+            request.args,
+            request.env ?? process.env,
+            existsSync,
+          )
         : { command: request.command, args: request.args };
     if ("error" in launch) {
       return Promise.resolve({ exitCode: 1, stdout: "", stderr: launch.error });
@@ -210,7 +216,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
     return new Promise((resolve) => {
       const child = spawn(launch.command, [...launch.args], {
         cwd: request.cwd,
-        env: childProcessEnvironment(process.env),
+        env: request.env ?? childProcessEnvironment(process.env),
         shell: false,
         stdio: ["ignore", "pipe", "pipe"],
         windowsHide: true,
@@ -224,6 +230,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
       let timedOut = false;
       let settled = false;
       let timer: NodeJS.Timeout | undefined;
+      let killTimer: NodeJS.Timeout | undefined;
       const stdoutOutput = createOutputEmitter("stdout", request.onOutput);
       const stderrOutput = createOutputEmitter("stderr", request.onOutput);
 
@@ -240,6 +247,7 @@ export function createDefaultProcessRunner(): ProcessRunner {
         if (timer !== undefined) {
           clearTimeout(timer);
         }
+        if (killTimer !== undefined) clearTimeout(killTimer);
         request.signal?.removeEventListener("abort", abort);
         stdoutOutput.flush();
         stderrOutput.flush();
@@ -258,6 +266,17 @@ export function createDefaultProcessRunner(): ProcessRunner {
           timedOut = true;
         }
         terminateProcessTree(child);
+        if (
+          killTimer === undefined &&
+          request.terminationGraceMs !== undefined &&
+          Number.isSafeInteger(request.terminationGraceMs) &&
+          request.terminationGraceMs >= 0
+        ) {
+          killTimer = setTimeout(
+            () => terminateProcessTree(child, "SIGKILL"),
+            request.terminationGraceMs,
+          );
+        }
       };
       const abort = () => terminate("abort");
 
@@ -382,17 +401,20 @@ function isSafeWindowsShimToken(value: string): boolean {
   return !value.includes("\0") && !/[\r\n"&|<>^%]/.test(value);
 }
 
-function terminateProcessTree(child: ReturnType<typeof spawn>): void {
+function terminateProcessTree(
+  child: ReturnType<typeof spawn>,
+  signal: NodeJS.Signals = "SIGTERM",
+): void {
   if (process.platform !== "win32" && child.pid !== undefined) {
     try {
-      process.kill(-child.pid, "SIGTERM");
+      process.kill(-child.pid, signal);
       return;
     } catch {
       // The process may have exited before its process group was signalled.
     }
   }
 
-  child.kill("SIGTERM");
+  child.kill(signal);
 }
 
 export function createDefaultCommandExists(
@@ -496,27 +518,70 @@ function createOutputEmitter(
   stream: "stdout" | "stderr",
   onOutput: ((event: { stream: "stdout" | "stderr"; text: string }) => void) | undefined,
 ): { write(chunk: string): void; flush(): void } {
+  // Verification has no callback; do not retain a second copy of its output.
+  if (onOutput === undefined) return { write() {}, flush() {} };
+  const omitted = "[output record omitted: exceeds byte limit; streaming suppressed]\n";
   let pending = "";
+  let pendingBytes = 0;
+  let suppressed = false;
+  let incompleteAssignment = false;
 
-  const emit = (text: string) => {
-    if (text.length > 0) {
-      onOutput?.({ stream, text: redactProcessOutput(text) });
+  const suppress = () => {
+    pending = "";
+    pendingBytes = 0;
+    incompleteAssignment = false;
+    suppressed = true;
+    onOutput({ stream, text: omitted });
+  };
+  const emit = () => {
+    if (pending.length === 0) return;
+    const redacted = redactProcessOutput(pending);
+    if (Buffer.byteLength(redacted) > MAX_CAPTURED_OUTPUT_BYTES) {
+      suppress();
+    } else {
+      pending = "";
+      pendingBytes = 0;
+      incompleteAssignment = false;
+      onOutput({ stream, text: redacted });
     }
   };
 
   return {
     write(chunk) {
-      pending += chunk;
-      const lastNewline = Math.max(pending.lastIndexOf("\n"), pending.lastIndexOf("\r"));
-      if (lastNewline < 0) {
-        return;
+      if (suppressed) return;
+      const delimiters = /\r\n|[\r\n]/g;
+      let offset = 0;
+      while (offset < chunk.length) {
+        const boundary = delimiters.exec(chunk);
+        const end = boundary === null ? chunk.length : delimiters.lastIndex;
+        const piece = chunk.slice(offset, end);
+        const bytes = Buffer.byteLength(piece);
+        if (pendingBytes + bytes > MAX_CAPTURED_OUTPUT_BYTES) {
+          // Suppress this stream after overflow: an omitted prefix may still
+          // introduce a secret value after arbitrary whitespace or delimiters.
+          suppress();
+          return;
+        }
+        pending += piece;
+        pendingBytes += bytes;
+        const hasContent = /\S/.test(piece);
+        if (boundary !== null) {
+          // Whitespace alone cannot complete an incomplete assignment. Avoid
+          // rescanning the growing prefix for each newline in a whitespace flood.
+          if (!incompleteAssignment || hasContent) {
+            incompleteAssignment = hasIncompleteSecretAssignment(pending);
+          }
+          if (!incompleteAssignment) emit();
+        } else if (hasContent) {
+          // A partial value/key changes the context: recheck at the next boundary.
+          incompleteAssignment = false;
+        }
+        if (suppressed) return;
+        offset = end;
       }
-      emit(pending.slice(0, lastNewline + 1));
-      pending = pending.slice(lastNewline + 1);
     },
     flush() {
-      emit(pending);
-      pending = "";
+      if (!suppressed) emit();
     },
   };
 }

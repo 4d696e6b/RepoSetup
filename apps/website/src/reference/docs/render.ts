@@ -31,7 +31,7 @@ function sidebar(slug?: string) {
   const nav = el("nav", undefined, "docs-sidebar");
   nav.setAttribute("aria-label", "Documentation sections");
   nav.append(eyebrow(`DOCS / ${handoff.version}`));
-  for (const group of ["Start", "Guides", "Reference", "Help"]) {
+  for (const group of ["Start", "Guides", "Reference", "Help", "Preview"]) {
     nav.append(el("h2", group));
     for (const page of primaryPages.filter((item) => item.group === group)) {
       const a = link(page.title, `#/docs/${page.slug}`);
@@ -85,7 +85,7 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
     article.append(label, search, count, results);
     const cards = el("div", undefined, "docs-start-grid");
     for (const page of primaryPages.filter((item) =>
-      ["getting-started", "presets", "inspect", "recovery", "cli", "configuration"].includes(
+      ["getting-started", "presets", "inspect", "recovery", "cli", "configuration", "task-compiler"].includes(
         item.slug,
       ),
     )) {
@@ -107,7 +107,7 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
   }
   crumbs.append(el("span", "/"), el("span", entry.title));
   article.append(
-    eyebrow(`${entry.group} / VERSION ${handoff.version}`),
+    eyebrow(entry.group === "Preview" ? "EXPERIMENTAL MANAGED TASKS / 0.4.0" : `${entry.group} / VERSION ${handoff.version}`),
     el("h1", entry.title),
     el("p", entry.description, "lede"),
   );
