@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { describe, expect, it, vi } from "vitest";
 
@@ -326,6 +327,132 @@ describe("createDefaultProcessRunner", () => {
     expect(result.outputTruncated).toBe(true);
     expect(Buffer.byteLength(result.stdout)).toBeLessThanOrEqual(MAX_CAPTURED_OUTPUT_BYTES);
     expect(result.stdout).toMatch(/x+$/);
+  });
+
+  it("drains oversized newline-free stdout and stderr under a fixed parent heap without callbacks", async () => {
+    const moduleUrl = new URL("./execution-adapters.ts", import.meta.url).href;
+    const child =
+      "const b=Buffer.alloc(16384, 120); for(let i=0;i<4096;i++){process.stdout.write(b);process.stderr.write(b)}";
+    const script = `import {createDefaultProcessRunner,MAX_CAPTURED_OUTPUT_BYTES} from ${JSON.stringify(moduleUrl)};
+      const result=await createDefaultProcessRunner()({command:process.execPath,args:['-e',${JSON.stringify(child)}],cwd:process.cwd(),timeoutMs:15000});
+      if(result.exitCode!==0 || result.timedOut || !result.outputTruncated || Buffer.byteLength(result.stdout)!==MAX_CAPTURED_OUTPUT_BYTES || Buffer.byteLength(result.stderr)!==MAX_CAPTURED_OUTPUT_BYTES) process.exitCode=1;
+      console.log(JSON.stringify({exitCode:result.exitCode,truncated:result.outputTruncated,stdoutBytes:Buffer.byteLength(result.stdout),stderrBytes:Buffer.byteLength(result.stderr)}));`;
+    const result = await createDefaultProcessRunner()({
+      command: process.execPath,
+      args: [
+        "--max-old-space-size=48",
+        "--experimental-strip-types",
+        "--input-type=module",
+        "-e",
+        script,
+      ],
+      cwd: path.dirname(fileURLToPath(import.meta.url)),
+      env: { PATH: process.env.PATH ?? "", LANG: "C", LC_ALL: "C" },
+      timeoutMs: 20000,
+      terminationGraceMs: 100,
+    });
+    expect(result.exitCode, result.stderr).toBe(0);
+    expect(result.timedOut).not.toBe(true);
+    expect(JSON.parse(result.stdout)).toEqual({
+      exitCode: 0,
+      truncated: true,
+      stdoutBytes: MAX_CAPTURED_OUTPUT_BYTES,
+      stderrBytes: MAX_CAPTURED_OUTPUT_BYTES,
+    });
+  }, 30000);
+
+  it.each(["stdout", "stderr"] as const)(
+    "bounds oversized callback records on %s while draining the process",
+    async (stream) => {
+      const output: string[] = [];
+      const result = await createDefaultProcessRunner()({
+        command: process.execPath,
+        args: [
+          "-e",
+          `const s=process.${stream}; s.write('x'.repeat(${MAX_CAPTURED_OUTPUT_BYTES * 8})); s.write('\\nTOKEN=fixture-secret\\r\\nfinished\\n');`,
+        ],
+        cwd: process.cwd(),
+        onOutput(event) {
+          expect(event.stream).toBe(stream);
+          expect(Buffer.byteLength(event.text)).toBeLessThanOrEqual(MAX_CAPTURED_OUTPUT_BYTES);
+          output.push(event.text);
+        },
+      });
+      expect(result.exitCode).toBe(0);
+      expect(result.outputTruncated).toBe(true);
+      expect(output.join("")).toBe(
+        "[output record omitted: exceeds byte limit; streaming suppressed]\n",
+      );
+      expect(output.join("")).not.toContain("fixture-secret");
+    },
+  );
+
+  it("discards a multibyte overlong secret line through EOF without emitting credential fragments", async () => {
+    const output: string[] = [];
+    const result = await createDefaultProcessRunner()({
+      command: process.execPath,
+      args: [
+        "-e",
+        `process.stdout.write('TOKEN='); process.stdout.write('🦀'.repeat(${MAX_CAPTURED_OUTPUT_BYTES / 2})); process.stdout.write('fictional-secret-tail');`,
+      ],
+      cwd: process.cwd(),
+      onOutput(event) {
+        output.push(event.text);
+      },
+    });
+    expect(result.exitCode).toBe(0);
+    expect(result.outputTruncated).toBe(true);
+    expect(output.join("")).toBe(
+      "[output record omitted: exceeds byte limit; streaming suppressed]\n",
+    );
+    expect(output.join("")).not.toContain("fictional-secret-tail");
+  });
+
+  it.each([
+    ["TOKEN=\nfictional-secret\n"],
+    ["TOKEN=\n", "fictional-secret\n"],
+    ["TOKEN=\r\n", "fictional-secret\r\n"],
+    ["TOKEN\n", "=\n", "fictional-secret\n"],
+    ["AUTH_TOKEN=\r", "\nfictional-secret\n"],
+  ])(
+    "preserves multiline secret redaction across callback chunks %j",
+    async (...chunks: string[]) => {
+      const output: string[] = [];
+      const script = `for (const part of ${JSON.stringify(chunks)}) {process.stdout.write(part);await new Promise(r=>setTimeout(r,10))}`;
+      const result = await createDefaultProcessRunner()({
+        command: process.execPath,
+        args: ["--input-type=module", "-e", script],
+        cwd: process.cwd(),
+        onOutput(event) {
+          output.push(event.text);
+        },
+      });
+      expect(result.exitCode).toBe(0);
+      expect(output.join("")).toMatch(/(?:TOKEN|AUTH_TOKEN)=<redacted>\r?\n$/);
+      expect(output.join("")).not.toContain("fictional-secret");
+    },
+  );
+
+  it("suppresses values after an oversized multiline assignment prefix and whitespace", async () => {
+    const output: string[] = [];
+    const result = await createDefaultProcessRunner()({
+      command: process.execPath,
+      args: [
+        "-e",
+        `process.stdout.write('TOKEN=\\n'); process.stdout.write(' '.repeat(${MAX_CAPTURED_OUTPUT_BYTES + 1})); process.stdout.write('\\nfictional-secret\\n');`,
+      ],
+      cwd: process.cwd(),
+      onOutput(event) {
+        output.push(event.text);
+      },
+    });
+    expect(result.exitCode).toBe(0);
+    expect(result.outputTruncated).toBe(true);
+    expect(output.join("")).toBe(
+      "[output record omitted: exceeds byte limit; streaming suppressed]\n",
+    );
+    expect(output.join("")).not.toContain("fictional-secret");
+    expect(result.stdout).toContain("fictional-secret"); // bounded raw capture remains available to its trusted caller
   });
 
   it("redacts a secret assignment split across output chunks before emitting it", async () => {

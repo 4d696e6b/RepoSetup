@@ -3417,3 +3417,47 @@ marked passed. No tag, main merge, npm publication, deployment or paid call occu
 Logs: `/tmp/reposetup-040-candidate-*`, `/tmp/reposetup-040-website-unit.log`, and
 ignored local website installed-artifact/browser evidence. Hosted qualification
 will retain source/runtime/lockfile and immutable artifact receipts independently.
+
+## Release security repair — 2026-10-15
+
+An independent read-only source review found an unbounded secondary output buffer
+in the shared process adapter. Verification has no streaming callback, but the
+adapter still accumulated newline-free process output. A reproducible 64 MiB
+stdout plus 64 MiB stderr probe exhausted a 48 MiB parent heap on source `5f3250b`
+(exit -6). This affects trusted verification of model-authored project modules.
+
+The CLI adapter now creates no secondary buffer without a callback. Callback
+records have a 128 KiB byte limit; overflow emits one omission notice and suppresses
+that stream's later callbacks while the process continues to drain into bounded
+raw capture. Core owns recognition/redaction of incomplete secret assignments.
+Recognized keys and separators stay together with future values across LF, CRLF,
+whitespace and chunk boundaries. Permanent suppression prevents an omitted secret
+prefix from exposing a later value. No executor authority, shell launch, project
+mutation, dependency, provider call or configuration behavior was added.
+
+Validation: Node 24.21.0; 35 adapter regressions, all 682 core and 320 CLI unit
+cases pass. The formerly crashing low-memory subprocess now drains both streams
+and returns exactly 128 KiB each with the truncation flag. CLI/dependency build,
+workspace and task-infrastructure typechecks, lint and diff whitespace checks pass.
+The independent scoped recheck passed 3,624 synthetic chunk partitions and overflow
+probes with no actionable finding. The specialized security plugin was unavailable;
+this is source review, not external certification or a hostile-host sandbox claim.
+
+An initial repair mishandled newline-spanning assignments; it was corrected before
+commit and covered by regressions. One new core test initially omitted the required
+separator after a bare key; corrected input now tests the actual assignment grammar.
+An earlier concurrent typecheck/build observed temporarily absent declarations;
+serialized post-build typechecks pass. Failed development logs are retained.
+
+The previous `5f3250b` website gate passed 430/430, packed and real selection gates
+passed, and CI/platform checks passed. They cover the previous artifact only. Three
+old-source manual release waves and unfinished old-source golden/offline runs were
+cancelled because this repair changes CLI bytes; they are not qualified repeats.
+Next: commit this repair, repack from its committed source, recouple website/reference
+identity, validate the joint candidate, then run fresh mandatory release/platform/
+website/selection gates. Publication remains pending. Live model/comparative evidence
+is deferred under offline-only scope; production live routing remains blocked.
+
+Logs: `/tmp/reposetup-040-output-bound-*`; the isolated baseline failure receipt is
+`/tmp/reposetup-040-output-bound-before.json`. No paid API call, tag, merge to main,
+registry publication or website deployment occurred.

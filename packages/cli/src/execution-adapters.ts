@@ -19,6 +19,7 @@ import os from "node:os";
 
 import {
   redactProcessOutput,
+  hasIncompleteSecretAssignment,
   type ExecutionLock,
   type ExecutionJournal,
   type ExecutableResolver,
@@ -517,27 +518,56 @@ function createOutputEmitter(
   stream: "stdout" | "stderr",
   onOutput: ((event: { stream: "stdout" | "stderr"; text: string }) => void) | undefined,
 ): { write(chunk: string): void; flush(): void } {
+  // Verification has no callback; do not retain a second copy of its output.
+  if (onOutput === undefined) return { write() {}, flush() {} };
+  const omitted = "[output record omitted: exceeds byte limit; streaming suppressed]\n";
   let pending = "";
+  let pendingBytes = 0;
+  let suppressed = false;
 
-  const emit = (text: string) => {
-    if (text.length > 0) {
-      onOutput?.({ stream, text: redactProcessOutput(text) });
+  const suppress = () => {
+    pending = "";
+    pendingBytes = 0;
+    suppressed = true;
+    onOutput({ stream, text: omitted });
+  };
+  const emit = () => {
+    if (pending.length === 0) return;
+    const redacted = redactProcessOutput(pending);
+    if (Buffer.byteLength(redacted) > MAX_CAPTURED_OUTPUT_BYTES) {
+      suppress();
+    } else {
+      pending = "";
+      pendingBytes = 0;
+      onOutput({ stream, text: redacted });
     }
   };
 
   return {
     write(chunk) {
-      pending += chunk;
-      const lastNewline = Math.max(pending.lastIndexOf("\n"), pending.lastIndexOf("\r"));
-      if (lastNewline < 0) {
-        return;
+      if (suppressed) return;
+      const delimiters = /\r\n|[\r\n]/g;
+      let offset = 0;
+      while (offset < chunk.length) {
+        const boundary = delimiters.exec(chunk);
+        const end = boundary === null ? chunk.length : delimiters.lastIndex;
+        const piece = chunk.slice(offset, end);
+        const bytes = Buffer.byteLength(piece);
+        if (pendingBytes + bytes > MAX_CAPTURED_OUTPUT_BYTES) {
+          // Suppress this stream after overflow: an omitted prefix may still
+          // introduce a secret value after arbitrary whitespace or delimiters.
+          suppress();
+          return;
+        }
+        pending += piece;
+        pendingBytes += bytes;
+        if (boundary !== null && !hasIncompleteSecretAssignment(pending)) emit();
+        if (suppressed) return;
+        offset = end;
       }
-      emit(pending.slice(0, lastNewline + 1));
-      pending = pending.slice(lastNewline + 1);
     },
     flush() {
-      emit(pending);
-      pending = "";
+      if (!suppressed) emit();
     },
   };
 }

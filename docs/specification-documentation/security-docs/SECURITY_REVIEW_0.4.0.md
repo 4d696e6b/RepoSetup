@@ -164,3 +164,35 @@ network request, dependency, secret persistence or executable plan/config field 
 introduced. Revision-1 routed checkpoints cannot acquire revision-2 resume authority
 silently. Fresh preview/review and separate new-source hosted qualification remain
 required; the earlier full hosted pass does not cover these production changes.
+
+## Shared process output repair — 2026-10-15
+
+Independent branch source review identified a P2 memory-exhaustion defect in
+`packages/cli/src/execution-adapters.ts`: a secondary line-emission buffer grew
+without bound even when no callback was supplied. Task verification executes
+model-authored modules through trusted tools, so a newline-free output flood could
+kill the parent before orderly timeout/lease handling. A baseline 48 MiB heap
+probe with 64 MiB per stream reproduced parent exhaustion.
+
+The adapter now retains no secondary buffer without a callback and bounds callback
+records at 128 KiB. After overflow it emits a fixed omission notice, then suppresses
+that stream for the process's remainder. Existing bounded raw tail capture, output
+truncation reporting, process draining, cancellation and deadlines remain intact.
+Raw results are for trusted callers; they must pass through existing redaction
+before rendering or durable evidence.
+
+An initial line-at-a-time fix exposed newline-spanning secret values. Core now
+recognizes incomplete assignments, allowing the adapter to preserve bounded
+redaction context across delimiters and chunks. Overflow suppression cannot resume
+at a delimiter because arbitrary whitespace may separate a discarded key from its
+value. Tests cover bare keys, separators, LF/CRLF, split chunks, multibyte output,
+both streams, EOF and oversized whitespace prefixes.
+
+The corrected low-memory probe passes; 35 adapter cases, 682 core and 320 CLI cases,
+build/types/lint pass. An independent read-only scoped recheck exercised 3,624 chunk
+partitions and overflow without exposing synthetic credentials; no actionable
+finding remains in this repair. The specialized security plugin was unavailable.
+This is an independent source review, not external security certification. The
+trusted-host, live provider/profile and empirical routing limitations still apply.
+New runtime bytes require fresh artifact and platform qualification; earlier hosted
+passes cannot qualify this repair. No provider call or actual secret was used.

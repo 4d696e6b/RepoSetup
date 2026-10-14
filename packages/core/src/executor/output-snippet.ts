@@ -1,5 +1,12 @@
-const SECRET_ASSIGNMENT =
-  /\b([A-Za-z_]*(?:SECRET|TOKEN|PASSWORD|PASSWD|API_?KEY|CREDENTIAL)|DATABASE_URL)\s*[:=]\s*\S+/gi;
+const SECRET_NAME =
+  /\b([A-Za-z_]*(?:SECRET|TOKEN|PASSWORD|PASSWD|API_?KEY|CREDENTIAL)|DATABASE_URL)/.source;
+const SECRET_ASSIGNMENT = new RegExp(`${SECRET_NAME}\\s*[:=]\\s*\\S+`, "gi");
+const INCOMPLETE_SECRET_ASSIGNMENT = new RegExp(`${SECRET_NAME}\\s*(?:[:=]\\s*)?$`, "i");
+
+/** Keep a recognized key/separator with its future value, including newline whitespace. */
+export function hasIncompleteSecretAssignment(output: string): boolean {
+  return INCOMPLETE_SECRET_ASSIGNMENT.test(output);
+}
 
 const MAX_SNIPPET_CHARS = 2000;
 const MAX_SNIPPET_LINES = 24;
