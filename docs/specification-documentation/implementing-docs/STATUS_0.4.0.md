@@ -37,10 +37,14 @@ types, lint, registry validation, license review and audit passed (zero workspac
 advisories). Local generic E2E **136 passed, one existing uv/Python skip**;
 the previously unavailable scaffold dependency now resolves successfully. Packed
 selections **105/105** passed, and the retained real guide walkthrough passed.
-Full task contracts and website browser/handoff checks are still running; their
-final results will be appended. Local WebKit remains blocked by its protocol
-mismatch; use the existing macOS-15 hosted website gate rather than changing
-driver or browser dependencies to conceal it.
+Full local task contracts then passed **63/63**, website browser checks **258/258**
+across Chrome desktop/mobile and Firefox, and exact 0.3.1 website handoff **6/6**.
+The broader real application suite passed **32** cases, failed four Python cases
+because `python` was absent, and skipped four configured cases. Both pip cases
+passed after exposing existing Python 3.13.1 through a test-folder-only alias;
+the two uv bare cases remain unavailable locally. No system interpreter, tool or
+shell configuration was installed or changed. Local WebKit remains blocked by its
+protocol mismatch; its supported-host automated scope is qualified below.
 
 Retained hosted run
 [38512801135](https://github.com/4d696e6b/RepoSetup/actions/runs/38512801135) passed
@@ -59,8 +63,35 @@ The managed success, failed-edit/context repair, five frozen reference verifiers
 earlier incomplete local fixture run's integration uncertainty on those supported
 hosts; it does not erase that interruption or qualify live models/billing.
 
-New-source Windows Platform and macOS-15 full website checks must validate these
-test/documentation changes. Live managed provider/model qualification, real
+Commit `f8f9c27c6af6b6f66fe96b4f86cb2b367fc80d1c` is pushed with the guide
+regression and outer test allowances. CI
+[38586399185](https://github.com/4d696e6b/RepoSetup/actions/runs/38586399185),
+all three Platform hosts
+[38586399127](https://github.com/4d696e6b/RepoSetup/actions/runs/38586399127),
+and installation performance
+[38586399125](https://github.com/4d696e6b/RepoSetup/actions/runs/38586399125) pass.
+Windows confirms 136 generic E2E cases and 105 packed selections pass, resolving
+its earlier cold-artifact timeouts. Windows still skips 119 POSIX-specific task
+unit cases; managed Windows support is not claimed.
+
+The full hosted website gate
+[38586419569](https://github.com/4d696e6b/RepoSetup/actions/runs/38586419569) passed
+at clean `f8f9c27` on macOS arm64 Node 24.20.0. All **430 browser cases**, five
+profiles including WebKit desktop/mobile, passed with zero skipped/flaky cases.
+Build, 1,752 units, types, lint and six pinned handoff cases also passed.
+Artifact `11905449596` is retained in the environment; it records
+`automatedScopePassed: true`, `wholeReleaseQualified: false`, and working tree
+`f112888a4c7665872b5b2271170fb7ab92737d628e1a708d32fc3d2b0edcb99a`.
+This resolves automated WebKit coverage on the supported host, not the local
+runtime mismatch or native device/reader gates. No deployment occurred.
+
+The new long task repeat
+[38586399191](https://github.com/4d696e6b/RepoSetup/actions/runs/38586399191) remains
+in progress. Earlier complete task results qualify their recorded source and
+unchanged CLI bytes; the new repeat is not yet claimed passing. The
+[workflow validation record](./WORKFLOW_VALIDATION_0.4.0.md) maps every supported
+offline workflow, artifacts, original failures, reproductions and limitations.
+Live managed provider/model qualification, real
 comparative quality/cost trials and versioned-release gates remain deferred;
 production routing must stay closed. No model call, package bump, system software
 installation, main merge, publication or website deployment occurred.
