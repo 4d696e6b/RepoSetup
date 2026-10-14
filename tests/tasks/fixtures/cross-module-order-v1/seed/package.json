@@ -1,0 +1,8 @@
+{
+  "name": "cross-module-order-v1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  }
+}

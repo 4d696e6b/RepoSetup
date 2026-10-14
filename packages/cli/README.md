@@ -22,3 +22,16 @@ RepoSetup 0.3.0 adds curated beginner guidance and minimal React/Vite, Express a
 `create`, `add`, and `remove` support structural previews through `--diff`. `doctor --config reposetup.json` compares the intended stack with detected evidence. `doctor --config reposetup.json --fix --dry-run` previews narrowly allowlisted missing-file repairs; confirm a reviewed repair without `--dry-run`. Existing user files, source code, dependencies and secrets are preserved. Installed dependencies must be healthy before a repair can run.
 
 Existing schemaVersion 1 configs, all five bundled `--preset` IDs, positional `add`, supported JSON output and the shipped 0.2.3 reliability fixes are retained. Not every registry combination is qualified; integration maturity and required system prerequisites remain explicit.
+
+On the separate `codex/0.4.0-task-compiler` development branch, the inherited 0.3.1
+development package version also includes experimental coding-task commands. Inspect
+`reposetup task --help` using the exact locally built artifact from that branch;
+a floating npm package does not select it. `task compile`, `task next` and
+`task status` support local structured drafts/advisory handoffs without API keys
+or RepoSetup AI credits. They require independent reviewed inputs and do not
+certify completion. `task run` and `task compile --managed` require reviewed
+authority, exact preview approval and explicit provider usage allowance for real
+model calls. Live provider qualification, production routing and comparative
+quality/cost evidence remain deferred. Azure has no runtime adapter. Existing
+installer commands and configs need no migration. No 0.4.0 release is qualified
+or published; simulated-provider tests establish local behavior only.

@@ -1,8 +1,19 @@
-# RepoSetup companion website — 0.3.0
+# RepoSetup companion website — 0.3.1 reference and task preview
 
-The published website is [reposetupcli.com](https://reposetupcli.com/) at 0.3.0. Its exact deployment and qualification are in the [stable delivery record](../../docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md). This canonical `codex/release-0.3.0` worktree combines its full documentation, 37 integration references, five legacy presets, artwork and existing routes with the bounded 0.3.0 beginner workflows. Active parser/registry facts are generated from the reviewed 0.3.0 CLI. The original 0.2.3 facts remain an immutable digest-checked snapshot; published release history never lists an unpublished candidate.
+The existing companion website is [reposetupcli.com](https://reposetupcli.com/). Its
+0.3.1 delivery is recorded in the [stable delivery record](../../docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md).
+This task-compiler worktree preserves the published documentation, 37 integration
+references, five legacy presets, artwork, routes and beginner selection workflows.
+Published parser facts remain an immutable, byte-checked 0.3.1 snapshot; development
+task commands do not enter that reference. Explicit fact regeneration still requires
+unchanged release definitions. The original 0.2.3 snapshot and history are retained.
 
-The site has 76 documentation pages, nine curated explanations, three minimal starters, 24 create and 21 nonempty add choices. It supports React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm and FastAPI + uv. Choices start empty and actual local context remains authoritative. Integration maturity and prerequisites are explicit.
+The development site has 79 documentation pages: the existing 76 plus three
+explicitly unreleased task preview guides. It retains nine curated explanations,
+three minimal starters, 24 create and 21 nonempty add choices. It supports
+React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm and FastAPI + uv.
+Choices start empty and actual local context remains authoritative.
+Integration maturity and prerequisites are explicit. These new guides are not deployed.
 
 ## Local development and routes
 
@@ -18,6 +29,7 @@ Open `http://127.0.0.1:5173`. Supported hash routes include:
 
 - `/#/` — full home and workflow discovery.
 - `/#/docs`, `/#/integrations`, `/#/presets`, `/#/release` — full references and published history.
+- `/#/docs/task-compiler`, `/#/docs/task-router`, `/#/docs/task-troubleshooting` — unreleased coding-task guides, copyable prompts, exact local commands and recovery.
 - `/#/builder/<legacy-preset-id>` — schemaVersion 1 download with explicit name/folder.
 - `/#/goals`, `/#/learn/libraries`, `/#/learn/libraries/<id>`, `/#/learn/starters` — curated guidance.
 - `/#/builder/react-vite-ts-pnpm`, `/#/builder/express-ts-pnpm?mode=add` — bounded create/add choices.
@@ -27,7 +39,15 @@ Beginner code/catalog load only when requested. Returning from an explanation pr
 
 ## Matching CLI artifact: required before pasting commands
 
-The selection handoff requires reviewed `rsetup@0.3.0`, CLI source `ae4b9011c47d23d176770a749cde2560c64775c8`, tarball SHA-256 `cf458b036cf78e25445416dc1ba9e73ab2d40c3591828afac576cbd1a406d7e4`. The public npm package is 0.3.0 and its verified bytes match this pin. Install `npm install -g rsetup@0.3.0` before using these exports. Older 0.2.x CLIs do not accept selection v1. The single authoritative pin is `src/handoff.ts`.
+The selection handoff requires reviewed `rsetup@0.3.1`, CLI source
+`f306e1c877887fe9c2861619ea434a26b996fe2c`, tarball SHA-256
+`34a8d5f871333f248af45c28b9d2aa2bde466f04cc23f10d4d395856be827135`.
+Install `npm install -g rsetup@0.3.1` before using these selection exports.
+The single authoritative pin is `src/handoff.ts`. Published-mode builds verify
+registry bytes before displaying public installation instructions. Preview task
+examples instead use the separately built task-compiler checkout; published 0.3.1
+does not contain task commands, and development version metadata is insufficient
+to establish feature availability. Production model routing remains unqualified.
 
 For development qualification, prepare the exact artifact locally:
 

@@ -1,5 +1,17 @@
 # 0.3.0 reconciliation with published 0.2.3
 
+## Task compiler follow-up on released 0.3.1 — 14 October 2026
+
+The task worktree now integrates released main `763b333` in commit `41db620`.
+Published installer fixes, selection definitions, website artwork/history and
+dependency overrides are retained. Three clearly unreleased website task guides
+are prepared locally alongside the byte-pinned 0.3.1 reference. Normal and
+registry-verified published builds, guide unit/types/lint and Chrome/Firefox
+browser checks pass. WebKit setup has a local protocol mismatch; full integrated
+CLI qualification also retains an upstream scaffold-resolution failure and an
+incomplete real-tool fixture run. No deployment or new release is claimed.
+Detailed evidence and next checks are in [0.4.0 status](./STATUS_0.4.0.md).
+
 ## Theme audit delivered — 13 October 2026
 
 The beginner and reference routes now share typography, palette and button/form styling on the live website. Exact source 0a5305a passed all 405 five-profile browser cases plus workspace/platform checks; all 15 live file hashes and security/cache headers match the retained output. [Theme delivery evidence](./WEBSITE_THEME_AUDIT_0.3.0.md) records per-route comparisons, original/cancelled runs, rollback and unchanged CLI pins. Earlier pending statements below are historical checkpoints. The CLI JSON no-op repair remains a separately tested, unpublished patch.

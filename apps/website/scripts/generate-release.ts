@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -56,6 +57,18 @@ export function assertReleaseVersion(packageVersion: string, cliVersion: string)
       `This website documents only RepoSetup ${RELEASE_VERSION}; package=${packageVersion}, CLI=${cliVersion.trim()}.`,
     );
   }
+}
+
+/** Development commands must never leak into the pinned published CLI reference. */
+export function verifyReleaseSnapshot(bytes = readFileSync(outputPath)) {
+  if (createHash("sha256").update(bytes).digest("hex") !== handoff.referenceSha256) {
+    throw new Error("Published reference bytes differ from the reviewed 0.3.1 snapshot.");
+  }
+  const facts = JSON.parse(bytes.toString("utf8")) as ReturnType<typeof generateReleaseFacts>;
+  if (facts.package.version !== RELEASE_VERSION || facts.source.revision !== RELEASE_SOURCE) {
+    throw new Error("Published reference identity differs from the pinned handoff.");
+  }
+  return facts;
 }
 
 function cliOutput(args: string[]): string {
@@ -223,10 +236,15 @@ export function generateReleaseFacts() {
 }
 
 if (process.argv[1] !== undefined && pathToFileURL(process.argv[1]).href === import.meta.url) {
-  const facts = generateReleaseFacts();
+  const verifyOnly = process.argv.includes("--verify-snapshot");
+  const facts = verifyOnly ? verifyReleaseSnapshot() : generateReleaseFacts();
   const formatting = await resolveFormatting(fileURLToPath(outputPath));
-  writeFileSync(outputPath, await format(JSON.stringify(facts), { ...formatting, parser: "json" }));
+  if (!verifyOnly)
+    writeFileSync(
+      outputPath,
+      await format(JSON.stringify(facts), { ...formatting, parser: "json" }),
+    );
   process.stdout.write(
-    `Generated RepoSetup ${facts.package.version}: ${facts.cli.commands.length} commands, ${facts.integrations.length} integrations, ${facts.presets.length} presets.\n`,
+    `${verifyOnly ? "Verified pinned" : "Generated"} RepoSetup ${facts.package.version}: ${facts.cli.commands.length} commands, ${facts.integrations.length} integrations, ${facts.presets.length} presets.\n`,
   );
 }

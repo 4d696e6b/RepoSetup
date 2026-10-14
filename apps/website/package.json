@@ -17,7 +17,7 @@
     "test:handoff": "vitest run --config vitest.handoff.config.ts",
     "qualify": "node scripts/qualify.mjs",
     "qualify:local": "node scripts/qualify.mjs --local",
-    "reference": "node --experimental-strip-types scripts/generate-release.ts"
+    "reference": "node --experimental-strip-types scripts/generate-release.ts --verify-snapshot"
   },
   "devDependencies": {
     "@reposetup/core": "workspace:*",

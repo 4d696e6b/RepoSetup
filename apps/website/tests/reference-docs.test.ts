@@ -52,7 +52,7 @@ describe("reviewed 0.3.0 documentation integrity", () => {
       expect(page.slug, page.title).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
       expect(page.title.trim().length).toBeGreaterThan(0);
       expect(page.description.trim().length).toBeGreaterThan(0);
-      expect(["Start", "Guides", "Reference", "Help"]).toContain(page.group);
+      expect(["Start", "Guides", "Reference", "Help", "Preview"]).toContain(page.group);
       expect(page.sections.length, page.slug).toBeGreaterThan(0);
       expect(new Set(page.sections.map(({ id }) => id)).size, page.slug).toBe(page.sections.length);
       for (const section of page.sections) {
@@ -208,7 +208,9 @@ describe("reviewed 0.3.0 documentation integrity", () => {
       }
     }
     expect(examples).toBeGreaterThan(50);
-    expect(JSON.stringify(docPages)).not.toMatch(/0\.4\.\d|--recipe\b/);
+    expect(JSON.stringify(docPages.filter((page) => page.group !== "Preview"))).not.toMatch(
+      /0\.4\.\d|--recipe\b/,
+    );
   });
 
   it("keeps authored JSON examples valid against the released schema and registry", () => {

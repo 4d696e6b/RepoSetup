@@ -65,11 +65,37 @@ describe("release publishing workflow", () => {
     expect(workflow).toContain("workflow_dispatch:");
     expect(workflow).toContain("faults:");
     expect(workflow).toContain("pack-candidate:");
-    expect(workflow).toContain("needs: [platform, golden, faults]");
+    expect(workflow).toContain(
+      "needs: [platform, golden, faults, offline-tasks, full-task-verifier]",
+    );
     expect(workflow).toContain("artifact-acceptance:");
     expect(workflow).toContain('REPOSETUP_USABILITY_OCCUPY_DEV_PORT: "1"');
     expect(workflow).toContain("verify-packed-artifact.mjs --directory candidate");
     expect(workflow).not.toContain("npm publish");
+  });
+
+  it("implements the four task jobs required by the 0.4.0 publication guard", async () => {
+    const workflow = await readFile(path.join(repoRoot, ".github/workflows/release.yml"), "utf8");
+    for (const [id, name, command] of [
+      ["offline-tasks", "Offline task qualification", "--config vitest.verification.config.ts"],
+      [
+        "full-task-verifier",
+        "Full task verifier qualification",
+        "--config tests/e2e/vitest.task-verifier.config.ts",
+      ],
+    ]) {
+      const job = workflow.split(`  ${id}:\n`)[1]?.split(/^ {2}[a-z][\w-]*:\n/m)[0];
+      expect(job).toBeDefined();
+      expect(job).toContain("name: " + name + " (${{ matrix.os }})");
+      expect(job).toContain("os: [ubuntu-24.04, macos-15]");
+      expect(job).toContain('OPENAI_API_KEY: ""');
+      expect(job).toContain('AZURE_OPENAI_API_KEY: ""');
+      expect(job).toContain(command);
+      expect(job).toContain('test "$(git rev-parse HEAD)" = "$GITHUB_SHA"');
+      expect(job).toContain("git diff --exit-code && git diff --cached --exit-code");
+      expect(job).toContain("if: always()");
+      expect(job).not.toContain("continue-on-error");
+    }
   });
 });
 

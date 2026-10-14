@@ -12,17 +12,25 @@ import {
   assertReleaseVersion,
   generateReleaseFacts,
   parseHelp,
+  verifyReleaseSnapshot,
 } from "../scripts/generate-release";
 import release from "../src/reference/generated/release.json";
 
 describe("reviewed 0.3.0 public release catalog", () => {
   it("matches the built CLI, checked-in registry, presets, and config schema", () => {
-    expect(release).toEqual(generateReleaseFacts());
+    expect(release).toEqual(verifyReleaseSnapshot());
     expect(release.package.version).toBe("0.3.1");
     expect(release.source.revision).toBe(RELEASE_SOURCE);
     expect(release.integrations).toHaveLength(37);
     expect(release.presets).toHaveLength(5);
     expect(release.cli.commands).toHaveLength(11);
+  });
+
+  it("refuses to regenerate published facts from an extended development CLI", () => {
+    expect(() => generateReleaseFacts()).toThrow("Release definitions differ");
+    expect(() =>
+      verifyReleaseSnapshot(Buffer.from(JSON.stringify({ ...release, cli: {} }))),
+    ).toThrow("Published reference bytes differ");
   });
 
   it("rejects other package versions and mismatched built CLI versions", () => {

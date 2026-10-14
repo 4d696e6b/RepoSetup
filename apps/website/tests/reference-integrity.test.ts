@@ -18,7 +18,7 @@ it("retains the published full reference beside the separately versioned beginne
   expect(release.source.status).toBe("prepared");
   expect(release.integrations).toHaveLength(37);
   expect(release.presets).toHaveLength(5);
-  expect(docPages).toHaveLength(76);
+  expect(docPages).toHaveLength(79);
   expect(catalog.integrations).toHaveLength(9);
   expect(catalog.presets).toHaveLength(3);
   for (const preset of release.presets) {

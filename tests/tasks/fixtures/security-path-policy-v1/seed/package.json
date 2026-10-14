@@ -1,0 +1,8 @@
+{
+  "name": "security-path-policy-v1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  }
+}
