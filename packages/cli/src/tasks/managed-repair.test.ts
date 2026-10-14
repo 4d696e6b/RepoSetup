@@ -239,6 +239,8 @@ async function fixture(
 const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
 
 describe("serial managed repair and trusted routing (offline SDK transport)", () => {
+  // Four real Git/fs-backed attempts, although SDK replies are simulated. Keep
+  // their outer test allowance separate from the per-call 1000ms deadline.
   it("repairs only the failed producer and independently escalates baseline capability on its third attempt", async () => {
     const { f, transport, execute } = await fixture("repair");
     try {
@@ -275,7 +277,7 @@ describe("serial managed repair and trusted routing (offline SDK transport)", ()
     } finally {
       await f.cleanup();
     }
-  });
+  }, 30_000);
   it("increases known incomplete output within the approved ceiling, retaining the original reservation and configuration", async () => {
     const { f, transport, execute } = await fixture("incomplete");
     try {

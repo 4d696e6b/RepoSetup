@@ -2,6 +2,69 @@
 
 Last updated: 2026-10-14.
 
+## Isolated all-workflow validation — 2026-10-14
+
+Created sibling test environment
+`/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-test-environment`
+with separate projects, temporary files and retained evidence. No provider key is
+read or required. Two unused verifier tool copies from the earlier interrupted run
+were removed to recover disk space; their project/state evidence was preserved.
+
+Executing the website's actual portable guide revealed missing `--run-id` and
+`--attempt` flags on the non-dry `task next` example. Corrected website/human
+examples and explained their advisory semantics. Added `task-user-workflow.test.ts`
+to execute all six guide commands against the real built CLI and an isolated
+review/draft/project. It checks expected decomposition failure, compilation,
+metadata-only dry-run, complete handoff, external-root status, privacy and unchanged
+project bytes, and retains input/receipt/packet/output artifacts when an explicit
+external test environment is supplied. This exercises the actual commands rather
+than only checking their help flags. It does not implement the agent's task or
+fabricate managed acceptance.
+
+Windows Platform job `115684892014` failed at the old generic 60-second packed
+maintenance hook and 180-second combined artifact acceptance test. Matched the
+hook to the dedicated packed suites' 180-second cold-install allowance and gave
+the two-install/build/test artifact scenario a 600-second outer allowance. No
+assertion, product deadline, dependency recipe or compatibility check was removed.
+The first new workspace run also exposed a 5-second outer timeout on a four-attempt
+Git/fs-backed repair test while other suites ran. Its isolated 12-case rerun passed;
+the multi-attempt test now has a 30-second outer allowance while provider deadlines
+and original resource ceilings remain unchanged.
+
+Final local workspace tests **1,752/1,752** passed (core 672, registry 15,
+integrations 680, CLI 309, website 76). Build, workspace types, task/selection-test
+types, lint, registry validation, license review and audit passed (zero workspace
+advisories). Local generic E2E **136 passed, one existing uv/Python skip**;
+the previously unavailable scaffold dependency now resolves successfully. Packed
+selections **105/105** passed, and the retained real guide walkthrough passed.
+Full task contracts and website browser/handoff checks are still running; their
+final results will be appended. Local WebKit remains blocked by its protocol
+mismatch; use the existing macOS-15 hosted website gate rather than changing
+driver or browser dependencies to conceal it.
+
+Retained hosted run
+[38512801135](https://github.com/4d696e6b/RepoSetup/actions/runs/38512801135) passed
+the integrated source's complete task matrix on **Linux x64 Node 24.21.0** and
+**macOS arm64 Node 24.20.0**. Each passed **62 task contracts, eight concrete CLI
+verification cases and 11 full fixture cases**. Artifacts `11875963008` and
+`11883728101` were downloaded into the environment, including exact identity,
+contract, verifier, license and audit evidence. They identify clean tested PR merge
+source `8bda5e3a08b1e621b6e434abe7486e581c39ad1d` for branch source
+`8dbcaaa5022ae7846118f008ebf6466f47f509cd`, lockfile
+`sha256:19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824`
+and CLI artifact
+`sha256:626aba31d3042c74a203263dfffd212c9ea5c8488bd4eaa8eac9f3b98d971b45`.
+The managed success, failed-edit/context repair, five frozen reference verifiers,
+75 failure slots and independent acceptance tests all passed. This resolves the
+earlier incomplete local fixture run's integration uncertainty on those supported
+hosts; it does not erase that interruption or qualify live models/billing.
+
+New-source Windows Platform and macOS-15 full website checks must validate these
+test/documentation changes. Live managed provider/model qualification, real
+comparative quality/cost trials and versioned-release gates remain deferred;
+production routing must stay closed. No model call, package bump, system software
+installation, main merge, publication or website deployment occurred.
+
 ## Released 0.3.1 baseline reconciliation — 2026-10-14
 
 Owner requested reconciliation with 0.3.1 and a complete companion website task

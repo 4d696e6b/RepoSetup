@@ -19,7 +19,9 @@ export default defineConfig({
       "tests/e2e/live-services.test.ts",
     ],
     testTimeout: 180_000,
-    hookTimeout: 60_000,
+    // Cold packed SDK dependency installation needs the same allowance as the
+    // dedicated selection/maintenance suites, particularly on Windows runners.
+    hookTimeout: 180_000,
     fileParallelism: false,
   },
 });

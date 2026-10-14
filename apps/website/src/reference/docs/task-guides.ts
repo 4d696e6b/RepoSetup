@@ -96,10 +96,10 @@ export const taskGuides: DocPage[] = [
         id: "handoff",
         title: "4. Give the next task packet to your agent",
         paragraphs: [
-          "The first command previews context/scope/check metadata without source bodies. The second prepares the bounded task packet; redirect it outside the project if you want to attach it to your agent. --task <id> can select an independent task explicitly. A packet can contain permitted source text, so share it only with your chosen agent.",
+          "The first command previews context/scope/check metadata without source bodies. The second prepares the bounded task packet; redirect it outside the project if you want to attach it to your agent. Supply --run-id with a UUID you choose for this advisory dispatch and --attempt with 1, 2 or 3 within the reviewed ceiling. The example UUID is illustrative; neither flag creates durable run state or advances a counter. --task <id> can select an independent task explicitly. A packet can contain permitted source text, so share it only with your chosen agent.",
           "Copy the implementation prompt below together with that packet. The agent uses its own tools; RepoSetup does not launch or control the agent, enforce its behavior or select its host model. Scope and attempt identities are advisory in this path.",
         ],
-        code: `${cli} task next ${inputs} --plan ../task-compilation.json --dry-run --json\n${cli} task next ${inputs} --plan ../task-compilation.json --json > ../task-packet.json`,
+        code: `${cli} task next ${inputs} --plan ../task-compilation.json --dry-run --json\n${cli} task next ${inputs} --plan ../task-compilation.json --run-id 123e4567-e89b-42d3-a456-426614174000 --attempt 1 --json > ../task-packet.json`,
       },
       {
         id: "implement",
