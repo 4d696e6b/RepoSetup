@@ -1,9 +1,30 @@
 import { describe, expect, it } from "vitest";
-import { planSelectionCreate } from "@reposetup/core";
+import { planInstallation, planSelectionCreate } from "@reposetup/core";
 import { BEGINNER_CATALOG } from "./beginner-catalog.js";
 import { createBuiltInRegistry } from "./catalog.js";
+import { BUNDLED_PRESETS } from "./presets.js";
 
 describe("beginner create recipe regressions", () => {
+  it("gives every exclusive generated file one owner across all starters, subsets and legacy presets", () => {
+    const registry = createBuiltInRegistry();
+    for (const preset of BEGINNER_CATALOG.presets) {
+      const context = BEGINNER_CATALOG.contexts.find((item) => item.id === preset.contextId)!;
+      for (let mask = 0; mask < 1 << context.optionalIds.length; mask++) {
+        const integrations = context.optionalIds
+          .filter((_, index) => mask & (1 << index))
+          .map((id) => ({ id }));
+        const result = planSelectionCreate({ ...preset.config, integrations }, registry);
+        expect(result.errors, `${preset.id}/${mask}`).toEqual([]);
+        expect(result.valid).toBe(true);
+      }
+    }
+    for (const preset of BUNDLED_PRESETS) {
+      const result = planInstallation(preset.config, registry);
+      expect(result.errors, preset.id).toEqual([]);
+      expect(result.valid).toBe(true);
+    }
+  });
+
   it.each([false, true])("advertises the FastAPI test command only when pytest=%s", (pytest) => {
     const preset = BEGINNER_CATALOG.presets.find(({ id }) => id === "beginner-fastapi")!;
     const result = planSelectionCreate(
@@ -62,6 +83,11 @@ describe("beginner create recipe regressions", () => {
       exclude: ["node_modules", "dist", "**/*.test.ts"],
     });
     expect(JSON.stringify(result.operations)).toContain("esbuild");
+    expect(
+      result.operations.filter(
+        (op) => op.type === "create_file" && op.path.endsWith("src/app.test.ts"),
+      ),
+    ).toHaveLength(vitest ? 1 : 0);
     expect(result.operations).toContainEqual(
       expect.objectContaining({
         type: "modify_json",

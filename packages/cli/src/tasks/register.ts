@@ -12,7 +12,7 @@ export function registerTaskCommands(
 ): void {
   const task = program
     .command("task")
-    .description("Compile and inspect experimental portable coding tasks");
+    .description("Experimental coding tasks: local handoff and reviewed managed execution");
   task.action(() => {
     writeLine(deps.io.writeErr, "Missing task command. See task --help.");
     task.outputHelp({ error: true });

@@ -190,6 +190,42 @@ describe("createDefaultProcessRunner", () => {
     }
   });
 
+  it("keeps a supplied verifier environment isolated from the host", async () => {
+    vi.stubEnv("REPOSETUP_PARENT_ONLY", "parent");
+    try {
+      const result = await createDefaultProcessRunner()({
+        command: process.execPath,
+        args: [
+          "-e",
+          "console.log(JSON.stringify({parent: process.env.REPOSETUP_PARENT_ONLY ?? null, supplied: process.env.REPOSETUP_CHECK_ONLY}))",
+        ],
+        cwd: process.cwd(),
+        env: { REPOSETUP_CHECK_ONLY: "check" },
+        timeoutMs: 5000,
+      });
+      expect(result.exitCode).toBe(0);
+      expect(JSON.parse(result.stdout)).toEqual({ parent: null, supplied: "check" });
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("filters outer npm launch options when no explicit environment is supplied", async () => {
+    vi.stubEnv("npm_config_package", "outer-package");
+    try {
+      const result = await createDefaultProcessRunner()({
+        command: process.execPath,
+        args: ["-e", "console.log(process.env.npm_config_package ?? 'absent')"],
+        cwd: process.cwd(),
+        timeoutMs: 5000,
+      });
+      expect(result.exitCode).toBe(0);
+      expect(result.stdout.trim()).toBe("absent");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it("terminates a timed-out process and reports the timeout", async () => {
     const runner = createDefaultProcessRunner();
     const result = await runner({

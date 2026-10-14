@@ -11,15 +11,18 @@
 - [Task benchmark fixtures, acceptance and allowances](./implementing-docs/TASK_BENCHMARK_0.4.0.md)
 - [Implementation roadmap](./implementing-docs/ROADMAP_0.4.0.md)
 - [Implementation status](./implementing-docs/STATUS_0.4.0.md)
+- [Task compiler user guide](../humanOnly/Task_Compiler_0.4.0.md)
+- [Experimental candidate preparation and open gates](./release-docs/RELEASE_CANDIDATE_0.4.0.md)
 
-These documents describe the experimental coding-task contracts and the reviewed local/offline implementation through milestone H. Milestone I remains in progress and J is unstarted; development evidence does not qualify a release.
+These documents describe the implemented A–J offline scope and the experimental coding-task design. Live production-model qualification and versioned release gates remain deferred. The integrated tree inherits 0.3.1 metadata without publishing the task compiler.
 
-| Folder                                       | Contents                                                          |
-| -------------------------------------------- | ----------------------------------------------------------------- |
-| [`product-docs/`](./product-docs/)           | Requirements, architecture, CLI, integrations, detection, config  |
+
+| Folder | Contents |
+| --- | --- |
+| [`product-docs/`](./product-docs/) | Requirements, architecture, CLI, integrations, detection, config |
 | [`implementing-docs/`](./implementing-docs/) | Plan, status, acceptance tests, support matrix, research template |
-| [`security-docs/`](./security-docs/)         | Safety rules and security review                                  |
-| [`release-docs/`](./release-docs/)           | Release process, checklist, hardening, notes                      |
+| [`security-docs/`](./security-docs/) | Safety rules and security review |
+| [`release-docs/`](./release-docs/) | Release process, checklist, hardening, notes |
 
 Dependency-health repair delivered in published 0.2.2: [post-create dependency health](./implementing-docs/POST_CREATE_DEPENDENCY_HEALTH.md).
 

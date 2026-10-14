@@ -233,3 +233,41 @@ fake HTTP cannot prove RepoSetup task quality or account access. Core's trusted-
 catalog supports separately bound offline/live qualification evidence and rejects
 offline evidence for live routing. I must record actual capability fixture evidence
 before J can claim managed routed support. No model invocation or paid research occurred.
+
+## Owner-requested Azure investigation (2026-10-10)
+
+After the bounded direct-provider attempt failed, the owner requested Azure
+keyless testing using Azure for Students credits. The [Azure qualification
+prerequisites](./TASK_AZURE_QUALIFICATION_0.4.0.md) record current Microsoft sources,
+actual portal access observations, required transport/provenance extension,
+credit/quota/authentication limits and unresolved account prerequisites. This is
+an investigated alternative, not implemented or qualified Azure support. The
+single-provider runtime and existing direct-provider artifacts remain unchanged.
+
+## Candidate source recheck — 2026-10-10
+
+Re-fetched the official [Structured Outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs),
+[Sol model page](https://developers.openai.com/api/docs/models/gpt-6.1-sol),
+[pricing](https://developers.openai.com/api/docs/pricing),
+[data controls](https://developers.openai.com/api/docs/guides/your-data) and
+[TypeScript SDK reference](https://developers.openai.com/api/reference/typescript).
+The source still uses explicit foreground Responses with separate model/effort,
+no tools, no persisted conversation and disabled automatic retries. Sol's supported
+efforts remain low/medium/high/xhigh/max. Reservations use cache-write upper input
+rates and the regional margin, rather than claiming the lower plain-input tariff.
+Retention disclosure remains necessary even with `store:false`.
+
+The wire-schema review found Zod's discriminated unions emitting `oneOf`, while
+the official subset lists nested `anyOf`. The CLI adapter now converts only unions
+with a common required string literal discriminator and mutually distinct tags.
+Overlapping or untagged unions fail closed. Strict domain validation remains
+unchanged, including local string/byte limits; the adapter does not grant any
+execution authority. Recursive regression checks cover both emitted schemas'
+union keyword, required fields and closed objects with no network requests.
+
+This is a documentation/subset compatibility correction, not proof of remote
+acceptance. The historical failed request has no retained response body/status
+establishing its cause; do not attribute it to this finding. Remote schema
+acceptance, actual account/model access, effective configuration and usage remain
+owned by I's deferred smoke. Production profiles remain unconfirmed. No model call,
+price revision, capability qualification or Azure adapter was added by this review.

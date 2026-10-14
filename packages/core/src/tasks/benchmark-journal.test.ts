@@ -34,6 +34,40 @@ describe("read-only benchmark journal audit and interrupted accounting", () => {
     expect(r.data.inclusiveKnownCashLedger).toEqual(r.data.terminalReport.cashLedger);
     expect(r.data.qualification).toBe(false);
   });
+  it("keeps dispatch accounting unresolved when all slots finish but a durable request remains pending", async () => {
+    const f = await records();
+    const first = f.events.find((e) => e.event.type === "trial_finished")!.event;
+    if (first.type !== "trial_finished") throw new Error("event");
+    Object.assign(first.trial, {
+      outcome: "failed",
+      failureCode: "TASK_NEEDS_REVIEW",
+      failureStage: "execution",
+    });
+    Object.assign(first.trial.requests[0]!, {
+      outcome: "pending",
+      durationMs: null,
+      ledgerUsage: null,
+      inputTokens: { provenance: "unknown" },
+      outputTokens: { provenance: "unknown" },
+      reasoningTokens: { provenance: "unknown" },
+      cachedInputTokens: { provenance: "unknown" },
+      chargedCostMicrousd: { provenance: "unknown" },
+      calculatedCostMicrousd: null,
+    });
+    rechain(f.events);
+    const r = summarizeTaskBenchmarkJournal({ campaign: f.campaign, events: f.events });
+    if (!r.success) throw new Error(r.error.code);
+    expect(r.data.terminalReport.complete).toBe(true);
+    expect(r.data.pendingOperation).toBeNull();
+    expect(r.data.unassignedCompilations).toEqual([]);
+    expect(r.data.inclusiveKnownCashLedger).toMatchObject({
+      providerCalls: null,
+      uncertainProviderCalls: 1,
+      retainedRequestIntents: 100,
+      settledRequestIntents: 99,
+    });
+    expect(r.data.dispatchAccountingComplete).toBe(false);
+  });
   it("includes compilation requests that have not yet been assigned to a terminal trial", async () => {
     const f = await records();
     const prefix = f.events.slice(0, 6);

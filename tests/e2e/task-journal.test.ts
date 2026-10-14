@@ -51,10 +51,14 @@ describe("private offline campaign retention through the executor port", () => {
     expect(await readdir(f.root)).toEqual([]);
     const result = await executeTaskBenchmark({
       campaign: f.campaign,
-      ports: { ...f.ports, retain: f.store.retain },
+      ports: { ...f.ports, retain: f.store.retain, now: f.store.now },
     });
     if (!result.success) throw new Error(result.error.code);
     expect(result.data.complete).toBe(true);
+    expect(result.data.hostTiming).toMatchObject({
+      provenance: "measured",
+      retentionMs: expect.any(Number),
+    });
     const audited = await f.store.inspect();
     if (!audited.success) throw new Error(audited.error.code);
     expect(audited.data.events).toEqual(result.data.retainedEvents);
@@ -73,7 +77,8 @@ describe("private offline campaign retention through the executor port", () => {
     });
     expect(f.ports.prepareBlock).toHaveBeenCalledTimes(25);
     expect(await readFile(path.join(f.store.folderPath, "000.json"))).toEqual(bytes);
-  });
+  }, 300000);
+
   it("reads an interrupted compilation without fabricating a trial or repeating any work", async () => {
     const f = await setup();
     const events = await prefix(f);

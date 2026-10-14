@@ -32,6 +32,25 @@ export function providerWireSchema(purpose: "coding" | "decomposition") {
   // The only optional domain field in these schemas is source.lineRange. The
   // Responses subset requires it as nullable. No unknown keys are discarded.
   const visit = (node: Record<string, unknown>): void => {
+    if (node.oneOf) {
+      const branches = node.oneOf as Record<string, unknown>[];
+      // Zod emits oneOf for tagged unions. The provider documents anyOf;
+      // equivalence requires a common required tag with distinct literal values.
+      const properties = branches.map(
+        (branch) => branch.properties as Record<string, Record<string, unknown>> | undefined,
+      );
+      const disjoint = Object.keys(properties[0] ?? {}).some((key) => {
+        const tags = properties.map((fields) => fields?.[key]?.const);
+        return (
+          tags.every((tag) => typeof tag === "string") &&
+          new Set(tags).size === branches.length &&
+          branches.every((branch) => (branch.required as string[] | undefined)?.includes(key))
+        );
+      });
+      if (!disjoint || node.anyOf) throw new Error("unsupported overlapping wire union");
+      node.anyOf = branches;
+      delete node.oneOf;
+    }
     if (node.type === "object") {
       const properties = node.properties as Record<string, Record<string, unknown>>;
       const required = node.required as string[];

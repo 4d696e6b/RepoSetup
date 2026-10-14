@@ -250,7 +250,14 @@ export async function executeTaskRun(input: {
             "TASK_BUDGET_EXHAUSTED",
             "Compilation already exceeds this phase allowance.",
           );
-        compilation = { compilationId: checked.data.compilationId, reservation: reserved, usage };
+        compilation = {
+          compilationId: checked.data.compilationId,
+          reservation: reserved,
+          usage,
+          ...(checked.data.benchmarkReplay
+            ? { benchmarkReplay: checked.data.benchmarkReplay }
+            : {}),
+        };
       }
       c = sealTaskRunCheckpoint({
         kind: "task_run_checkpoint",
@@ -684,6 +691,7 @@ export async function executeTaskRun(input: {
               allowProviderUsage: true,
               now: new Date().toISOString(),
               maxOutputTokens: op.maxOutputTokens,
+              timeoutMs: op.timeoutMs,
               remaining: taskRemainingAllowance(c.run),
               ...(state.status === "needs_repair" && previous
                 ? {

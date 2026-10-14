@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe as describeOnAllPlatforms, it, expect, vi } from "vitest";
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -7,6 +7,8 @@ import {
   prepareTaskCompilationContext,
   taskContentHash,
   taskByteHash,
+  validateTaskCompilationCheckpoint,
+  sealTaskCompilationCheckpoint,
   type TaskParseResult,
   type TaskReview,
 } from "@reposetup/core";
@@ -124,7 +126,80 @@ async function fixture() {
     });
   return { ...f, review, draft, provider, transport, context, compile: execute };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("managed decomposition ledger and CLI", () => {
+  it.each([401, 403, 429, 500])(
+    "retains only HTTP %s and outcome for failed calls without releasing allowance",
+    async (httpStatus) => {
+      const f = await fixture();
+      try {
+        f.transport.mockImplementationOnce(
+          async () =>
+            new Response(
+              JSON.stringify({
+                error: { message: "fake-compilation-key private provider detail", type: "error" },
+              }),
+              { status: httpStatus, headers: { "content-type": "application/json" } },
+            ),
+        );
+        expect(await f.compile()).toMatchObject({
+          success: false,
+          error: { code: "TASK_NEEDS_REVIEW" },
+        });
+        const dir = path.join(f.stateRoot, taskByteHash(f.root).slice(7));
+        const name = (await readdir(dir)).find(
+          (n) => n.startsWith("compilation-") && n.endsWith(".json"),
+        )!;
+        const raw = await readFile(path.join(dir, name), "utf8");
+        const checkpoint = JSON.parse(raw);
+        expect(checkpoint).toMatchObject({
+          status: "needs_review",
+          plan: null,
+          providerResult: { outcome: "failed", httpStatus },
+          usage: { inputTokens: { provenance: "unknown" }, reserved: { calls: 1 } },
+        });
+        expect(validateTaskCompilationCheckpoint(checkpoint).success).toBe(true);
+        expect(raw).not.toContain("fake-compilation-key");
+        expect(raw).not.toContain("private provider detail");
+        // Existing v1 terminal receipts remain valid without the additive diagnostic.
+        const { checkpointHash: _hash, providerResult: _result, ...legacy } = checkpoint;
+        void _hash;
+        void _result;
+        expect(
+          validateTaskCompilationCheckpoint(sealTaskCompilationCheckpoint(legacy)).success,
+        ).toBe(true);
+        expect(
+          validateTaskCompilationCheckpoint(
+            sealTaskCompilationCheckpoint({
+              ...legacy,
+              providerResult: { outcome: "failed", httpStatus, message: "not permitted" },
+            }),
+          ).success,
+        ).toBe(false);
+        expect(
+          validateTaskCompilationCheckpoint(
+            sealTaskCompilationCheckpoint({
+              ...legacy,
+              stateRevision: 1,
+              status: "pending",
+              usage: null,
+              providerResult: { outcome: "failed", httpStatus },
+            }),
+          ).success,
+        ).toBe(false);
+        expect(await f.compile()).toMatchObject({
+          success: false,
+          error: { code: "TASK_NEEDS_REVIEW" },
+        });
+        expect(f.transport).toHaveBeenCalledTimes(1);
+      } finally {
+        await f.cleanup();
+      }
+    },
+  );
   it("retains cancellation of a hung dispatch and refuses replay", async () => {
     const f = await fixture();
     try {

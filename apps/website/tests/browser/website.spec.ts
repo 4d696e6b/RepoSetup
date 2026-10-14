@@ -1,3 +1,4 @@
+import { revealNavigation } from "./navigation-helper.js";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFileSync } from "node:fs";
@@ -12,10 +13,34 @@ test.beforeEach(async ({ browser }, testInfo) => {
   testInfo.annotations.push({ type: "browser-version", description: browser.version() });
 });
 
+test("builder help opens curated skip guidance and preserves the selection on return", async ({
+  page,
+}) => {
+  await page.goto("/#/builder/express-ts-pnpm");
+  await page.getByLabel("Project name", { exact: true }).fill("keep-app");
+  await page.getByLabel("New project folder", { exact: true }).fill("projects/keep-app");
+  const choice = page.getByLabel("Zod", { exact: true });
+  await choice.check();
+  const command = await page.getByLabel("RepoSetup command", { exact: true }).inputValue();
+  const help = page.locator(".choice").filter({ has: choice }).getByRole("link", {
+    name: "When can I skip it?",
+  });
+  await expect(help).toHaveAttribute("href", "#/learn/libraries/zod");
+  await help.click();
+  await expect(page.getByRole("heading", { name: "When to skip it" })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByLabel("Project name", { exact: true })).toHaveValue("keep-app");
+  await expect(page.getByLabel("New project folder", { exact: true })).toHaveValue(
+    "projects/keep-app",
+  );
+  await expect(choice).toBeChecked();
+  await expect(page.getByLabel("RepoSetup command", { exact: true })).toHaveValue(command);
+});
+
 test("goal discovery, library explanations, minimal presets and bounded selection", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#/goals");
   await page.getByRole("link", { name: "validate input →" }).click();
   await expect(page.getByRole("status")).toHaveText("2 libraries found");
   await page.getByRole("link", { name: "Zod", exact: true }).click();
@@ -24,7 +49,8 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
     "href",
     "https://zod.dev/",
   );
-  await page.getByRole("link", { name: "Presets", exact: true }).click();
+  await revealNavigation(page, "Minimal starters");
+  await page.getByRole("link", { name: "Minimal starters", exact: true }).click();
   await page.getByRole("link", { name: "Explore the minimal preset" }).nth(1).click();
   await expect(page.getByRole("heading", { name: "Optional means optional" })).toBeVisible();
   await expect(page.getByText("Qualified packed create/add", { exact: false })).toBeVisible();
@@ -37,7 +63,7 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
   const decoded = JSON.parse(Buffer.from(command.split(" ").at(-1)!, "base64url").toString());
   expect(decoded.config.integrations).toEqual([{ id: "zod" }]);
   expect(decoded.config.framework.options).toEqual({ typescript: true });
-  expect(decoded.catalogRevision).toBe("0.3.0-cli.4");
+  expect(decoded.catalogRevision).toBe("0.3.0-cli.5");
   await page.getByLabel("New project folder").fill("../bad");
   await expect(page.getByRole("button", { name: "Copy RepoSetup command" })).toHaveCount(0);
   await expect(page.locator("#selection-error")).toContainText("relative folder");
@@ -61,7 +87,8 @@ test("goal discovery, library explanations, minimal presets and bounded selectio
   await expect(page.getByLabel("RepoSetup command", { exact: true })).toHaveValue(
     /^reposetup add --selection /,
   );
-  await page.getByRole("link", { name: "Presets", exact: true }).click();
+  await revealNavigation(page, "Minimal starters");
+  await page.getByRole("link", { name: "Minimal starters", exact: true }).click();
   await page.getByRole("link", { name: "Explore the minimal preset" }).first().click();
   await page.getByRole("link", { name: "Customize this starting point" }).click();
   await expect(page.getByLabel("Project journey")).toHaveValue("create");
@@ -98,13 +125,20 @@ test("maintenance guidance matches the pinned CLI's preview and narrow repair wo
 }) => {
   await page.goto("/#/how-to");
   await expect(page.getByRole("heading", { name: "Use the matching local CLI" })).toBeVisible();
-  await expect(page.locator("pre code")).toContainText(
-    "pnpm --filter @reposetup/website pack:contract",
-  );
-  await expect(page.locator("pre code")).toContainText(
-    'export PATH="$PWD/apps/website/.local-cli/bin:$PATH"',
-  );
-  await expect(page.getByText(handoff.commit, { exact: false })).toBeVisible();
+  if (process.env.REPOSETUP_WEBSITE_RELEASE === "published") {
+    await expect(page.locator("pre code")).toContainText(
+      `npm install -g rsetup@${handoff.version}`,
+    );
+    await expect(page.locator("pre code")).not.toContainText("pack:contract");
+  } else {
+    await expect(page.locator("pre code")).toContainText(
+      "pnpm --filter @reposetup/website pack:contract",
+    );
+    await expect(page.locator("pre code")).toContainText(
+      'export PATH="$PWD/apps/website/.local-cli/bin:$PATH"',
+    );
+    await expect(page.getByText(handoff.commit, { exact: false })).toBeVisible();
+  }
   await expect(page.getByRole("heading", { name: "Preview before confirming" })).toBeVisible();
   await expect(page.getByText("--diff --dry-run", { exact: false })).toBeVisible();
   await expect(
@@ -113,7 +147,7 @@ test("maintenance guidance matches the pinned CLI's preview and narrow repair wo
   await expect(
     page.getByText("doctor --config reposetup.json --fix --dry-run", { exact: false }),
   ).toBeVisible();
-  await page.goto("/#/integrations/prettier");
+  await page.goto("/#/learn/libraries/prettier");
   await expect(
     page.getByText("The matching local CLI can review repair", { exact: false }),
   ).toBeVisible();
@@ -126,10 +160,10 @@ test("keyboard navigation, accessible pages and responsive layout", async ({
   test.setTimeout(120_000);
   for (const route of [
     "/",
-    "/integrations",
-    "/presets",
+    "/learn/libraries",
+    "/learn/starters",
     "/how-to",
-    ...catalog.integrations.map((item) => `/integrations/${item.id}`),
+    ...catalog.integrations.map((item) => `/learn/libraries/${item.id}`),
     ...catalog.presets.map((item) => `/presets/${item.id}`),
     ...catalog.contexts.flatMap((item) => [`/builder/${item.id}`, `/builder/${item.id}?mode=add`]),
   ]) {
@@ -165,10 +199,10 @@ test("reflow at narrow mobile, tablet and desktop widths", async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     for (const route of [
       "/",
-      "/integrations",
+      "/learn/libraries",
       "/how-to",
       "/builder/react-vite-ts-pnpm",
-      "/integrations/prettier",
+      "/learn/libraries/prettier",
     ]) {
       await page.goto(`/#${route}`);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -178,7 +212,7 @@ test("reflow at narrow mobile, tablet and desktop widths", async ({ page }) => {
     }
   }
   if (test.info().project.name === "chromium-desktop") {
-    await page.goto("/#/");
+    await page.goto("/#/goals");
     await page.screenshot({ path: "test-results/home-desktop.png", fullPage: true });
     await page.goto("/#/builder/express-ts-pnpm");
     await page.getByLabel("Zod", { exact: true }).check();

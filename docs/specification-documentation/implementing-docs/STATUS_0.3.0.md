@@ -1,8 +1,84 @@
 # RepoSetup 0.3.0 implementation status
 
-Last updated: 2026-10-04.
+## Delivered — 13 October 2026
 
-## Current position
+**0.3.0 is published on npm/GitHub and live at [reposetupcli.com](https://reposetupcli.com/).** Release/tag source is `59976a7fb6bb7bb07e0e7406deab2c8b5033b1c1`; remote main received that exact qualified commit. Phases 1–10 are delivered for the owner's agreed bounded scope. See the [stable delivery record](../release-docs/STABLE_RELEASE_0.3.0.md) for retained artifact identity, three successful release waves, 324 real selection cases, 12 full golden cells, 395 published-mode browser cases, registry acceptance, deployed file hashes and rollback.
+
+The owner removed freeze/soak, accepted scripted journeys/Chrome phone simulation and explicitly deferred native screen-reader qualification. No human, physical-device or native-reader pass is claimed. Original timeout failures and browser-control limits remain recorded. The generated Next development-tool advisory remains documented; no integration maturity or arbitrary-combination promotion applies. All sections below this current record retain their historical checkpoints unless explicitly updated.
+
+
+
+## PC responsive navigation — 13 October 2026
+
+Desktop navbar spacing, padding and brand size now scale between compact laptop windows and wide monitors. The Explore disclosure is bounded by viewport height and scrolls internally in short windows; its keyboard-reachable links stay inside the visible panel. Mobile retains its existing Menu/Build layout, with no nested dropdown scrolling.
+
+All 15 navigation browser cases pass across Chrome desktop/mobile and Firefox. The new PC case checks ten windows from 761px through 2560px, including 768×360 and 1024×320, plus the 760px menu transition: controls remain on one row without overlap, the disclosure stays inside the viewport, its final link is reachable and document width does not overflow. Workspace unit tests (1,218), both typechecks, lint and affected website build pass. The existing intermittent motion-test evidence and deferred native-reader qualification below remain unchanged. This UI revision requires renewed clean-source release qualification before publication; no deployment or waiting gate is introduced.
+
+
+
+## Navigation refinement — 13 October 2026
+
+The owner requested fewer labels and a redesigned navbar after the `a8b250fd1c6ce760f0f18f2bb9afb1346b6b690c` publication-readiness checkpoint. The desktop header now offers Docs, an Explore disclosure, icon search and one Build action. Explore groups goals, minimal starters and how-to guidance separately from integrations, presets and published updates, with GitHub as a secondary link. Mobile uses a compact Menu while keeping Build directly reachable, including at 320px. Existing routes and in-memory builder context/selections are preserved.
+
+Keyboard Escape/outside dismissal, current-page cues, disclosure state, resize cleanup, search shortcut/focus return and expanded-menu accessibility have dedicated browser coverage. Existing navigation journeys now open the appropriate disclosure; their original route, lazy-loading, privacy and selection assertions remain. CLI bytes and publication guards are unchanged.
+
+An initial local browser run passed 233/234 cases, including every new navbar case; the remaining live reduced-motion test failed intermittently. The same unchanged test reproduced 3 failures/2 passes against the retained, previously qualified `a8b250f` website output, independently of the redesign. Diagnostic motion/test changes were discarded. This existing local intermittent result remains visible and is not claimed fixed by the navbar work.
+
+Final local validation passes: 1,218 workspace unit tests, workspace and selection-test typechecks, lint/build, six exact-artifact handoff cases and all 234 Chrome desktop/mobile plus Firefox browser cases (78 per profile, no skips or automatic retries). Twelve of those browser cases cover the new navigation interactions. The initial intermittent motion failure and baseline comparison remain recorded above; a passing rerun is not a claim that this pre-existing timing issue was repaired. Earlier clean-source release/website qualifications apply to their original commit; they do not automatically qualify this later website source. Renew the selected exact-source qualification before publishing the redesigned website. Native reader qualification remains explicitly deferred by the owner. No freeze, soak or calendar waiting gate is added; production is unchanged.
+
+
+## Owner acceptance and qualification repair — 13 October 2026
+
+The owner explicitly replied: **“Defer native screen-reader qualification for 0.3.0.”** Native desktop announcements remain unverified and are now an accepted release limitation, not a passed session. The earlier physical-phone requirement was replaced by the owner-requested installed Chrome simulator; no physical device/native mobile reader or observed participant result is claimed. The Mac was locked before the additional documented VoiceOver last-spoken-phrase technique could be tried. No native setting was changed by that blocked attempt.
+
+At `7d98153226f1896507655473f8de8de0aa8f5579`, local 1,218 workspace tests, both typechecks, lint/build, 222 synthetic published-mode browser cases and exact CLI artifact/launchers pass. Both fast CI and three-runner platform/performance checks pass. [Release qualification wave 1](https://github.com/4d696e6b/RepoSetup/actions/runs/38326769539) failed one Ubuntu end-to-end fixture cleanup: `ENOTEMPTY` removing a test-owned `.git/info` after the release-version assertions. The suite reported 239/240 passing; this is retained failed evidence. Temporary-fixture cleanup now uses five bounded 100ms incremental retries, and automatic Git maintenance is disabled only inside these disposable fixture repositories. No application logic, assertions, workflow skips or automatic test retries are changed. Final exact-source qualification runs at the corrected commit; preceding runs are not counted for changed source.
+
+All readiness gates now comprise the selected automated qualification, exact retained-artifact review, bounded blocker review and these explicit owner accessibility substitutions. Publication/deployment authorization and actual delivery remain separate. This section supersedes earlier pending native-reader decision statements; the reader test itself remains unperformed. No freeze or soak applies.
+
+
+## Current delivery implementation — 13 October 2026
+
+All selected automated gates passed on reviewed source `506069c960e6a914b5f459c03e9d74786ad38dbd`: 370/370 five-profile browser cases (zero skips/flaky retries), 324 real create/add/legacy cases across six cells, all 12 full golden cells, packed contract/transport/maintenance, platform/performance and three full first-attempt [release qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/38261147473) waves ([first](https://github.com/4d696e6b/RepoSetup/actions/runs/38260972313), [second](https://github.com/4d696e6b/RepoSetup/actions/runs/38261071124)). The retained CLI artifact and actual launchers were verified against the website pin. These are predecessor exact-source results; the following website delivery implementation requires renewed qualification at its own committed source.
+
+The website now has a guarded publication mode. Default/candidate builds remain offline and correctly identify npm 0.2.3. Published builds must verify npm's exact 0.3.0/latest record, actual publication timestamp, canonical registry tarball and matching SHA-512/SHA-256 bytes against the reviewed CLI handoff. The browser receives only public publication facts, never registry execution capabilities. Verified mode changes installation guidance, labels, package links and new release history together, while preserving immutable 0.2.3 history. An actual published-mode build correctly refused while npm remains at 0.2.3. No environment setting can force an unchecked public release claim.
+
+Local checks for the delivery implementation pass: 1,217 workspace unit tests (website 67, including 18 new guard/presentation cases), both typechecks, lint and build. An initial browser run passed 216/222 cases; six assertions incorrectly prohibited every version-pinned installation command. They now allow only the displayed published version and still reject other pins; all 12 affected home/history/all-route/maintenance checks pass across Chrome desktop/mobile and Firefox. Candidate and post-publication browser expectations retain the same journeys and assertions. Final clean-source CI is required after this change; predecessor results are not silently reused.
+
+A synthetic published-mode build using the actual reviewed tarball exposed private artwork provenance retained in a custom output directory. The default deployment output was clean; no private fixture was deployed. Cleanup now resolves Vite's actual output directory, and a real custom-directory build regression verifies private notes/prompts are excluded while public artwork remains. Website unit tests now pass 68/68 (1,218 combined workspace cases); typecheck, lint and build pass. Qualification started at `82a0fbf` was cancelled after this finding so final checks can run on the corrected source. Published-mode fixtures are explicitly synthetic and are never delivery artifacts or actual npm evidence.
+
+Native desktop screen-reader announcements remain unverified. The owner-requested installed Chrome phone simulator checks passed and are recorded as emulation, with zero observed beginner participants and no physical-device/native mobile-reader result. The owner has been asked to retain or explicitly defer native desktop qualification. No deferral is inferred from a request to continue implementation. The generated Next development-tool advisory remains a documented inherited limitation; the clean workspace audit reported zero advisories, which is a separate scope.
+
+Canonical branch/worktree remain `codex/release-0.3.0` / `/Volumes/Developer/zeaek_/.codex/worktrees/release-030-staging/RepoSetup`. CLI source `ae4b9011c47d23d176770a749cde2560c64775c8`, tarball SHA-256 `cf458b036cf78e25445416dc1ba9e73ab2d40c3591828afac576cbd1a406d7e4`, lockfile SHA-256 `3273e9f1aa3024f00aef2d661f88feafcb1f8a708093b4c83745d0c0a791ec08`, catalog/matrix `0.3.0-cli.5` / `0.3.0-selection.5` are unchanged. See [delivery procedure](../release-docs/RELEASE_DELIVERY_0.3.0.md) and [draft PR #21](https://github.com/4d696e6b/RepoSetup/pull/21) for exact latest-source qualification. No main merge, immutable tag, npm publication or production deployment has occurred. There is no freeze, soak or calendar waiting gate.
+
+
+## Owner decision — 12 October 2026
+
+The owner removed the formal freeze, seven-day soak and calendar waiting requirements for 0.3.0. Continue implementation immediately. Exact source/artifact identity, meaningful regression and platform checks, blocker review, manual accessibility/device evidence, and separate publication/deployment authorization still apply. The old soak monitor is paused. Historical freeze/soak statements below describe the preceding policy and do not impose a current waiting gate.
+
+Last updated: 2026-10-12.
+
+## Current release preparation — 12 October 2026
+
+Canonical branch: `codex/release-0.3.0`; workspace: `/Volumes/Developer/zeaek_/.codex/worktrees/release-030-staging/RepoSetup`. Stable 0.3.0 manifests are prepared; nothing is tagged, published or deployed. Exact artifact identities live in `apps/website/src/handoff.ts` and qualification reports. Catalog/matrix revisions remain `0.3.0-cli.5` / `0.3.0-selection.5`, with recipe revision `2026-10-08`.
+
+- [x] Retain the published 0.2.1–0.2.3 fixes and all legacy input/JSON contracts.
+- [x] Correct Express/Vitest file ownership and reject conflicting exclusive writes during planning.
+- [x] Prepare stable version metadata and release notes.
+- [x] Preserve the published website's full catalog, legacy routes/presets and original artwork; generate current 0.3.0 parser/registry facts from the reviewed CLI, with 76 documentation pages and separately retained 0.2.3 history.
+- [x] Correct packed repair fixtures without weakening dependency-health guards; add missing-dependency refusal coverage.
+- [x] Correct WebKit native keyboard/focus tests and slideshow deadline determinism.
+- [x] Split the 21 legacy page/width accessibility scans into individually reported tests with the original assertions and 60-second per-case budget; no scan, browser or accessibility rule is removed.
+- [x] Patch the two workspace build-tool advisories; renewed workspace audit reports zero known advisories.
+- [ ] Finish final exact-source platform/selection/golden/five-profile website and three release-workflow qualifications.
+- [x] Run the owner-requested installed Chrome phone extension: invalid-folder recovery, retained guidance choices, create/add exports, context reset, clipboard and actual JSON downloads pass on preview source `6a65d65`. This is emulation, not a physical-device result.
+- [ ] Finish native desktop screen-reader announcement validation; VoiceOver could be enabled but its announcements could not be reliably observed through the desktop control tools. Physical mobile results remain unperformed; the owner requested Chrome simulation instead.
+- [ ] Complete qualified-artifact review, publication authorization and production delivery.
+
+Local checkpoint: 1,199 workspace tests (core 301, registry 15, integrations 680, CLI 154, website 49), both typechecks, lint and build pass; all three packed maintenance cases and six stable packed website handoff cases pass. Combined local browser testing passed 156 cases with three stale home-label assertions failing after version preparation; those assertions were updated to require the 0.3.0 candidate and accurate 0.2.3 publication notice, and the three affected cases then passed. A final full clean-source run is still required. The preceding remote platform repair and six-cell real create/add runs pass; they do not qualify changed final source automatically.
+
+The phase checklists below preserve preceding implementation/evidence checkpoints. Current delivery readiness is governed by this section and [release preparation](../release-docs/RELEASE_PREPARATION_0.3.0.md). No formal freeze or soak is required.
+
+## Earlier development position (superseded by delivery record)
 
 **Phases 1–8 are implemented or qualified for their agreed bounded scopes across the CLI and website branches.** At CLI source `b212d35727300325486c70a9a7b0cc54c912d581`, the [six-cell create/add/legacy run](https://github.com/4d696e6b/RepoSetup/actions/runs/37177775883), [three-runner contract/transport/maintenance run](https://github.com/4d696e6b/RepoSetup/actions/runs/37177775882), and [historical golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37177775966) passed. The companion website's [clean-source five-profile qualification at `f96f28e`](https://github.com/4d696e6b/RepoSetup/actions/runs/37178840138) passed 70/70 browser cases against that packed CLI source. The owner accepted scripted beginner-style journeys in place of recruiting participants for Phase 8; no person has been observed. The owner also moved manual screen-reader/physical-device checks and combined candidate safety review to Phase 9. Phases 9–10 remain; the 0.3.0 release is not finished or authorized for publication.
 
@@ -135,31 +211,25 @@ Exit condition: every advertised website export succeeds or fails consistently w
 
 Phase 8 exit condition for the agreed scope: all five scripted journeys and maintenance paths run without undocumented repair, known usability defects in the tested flows are corrected, and bounded safety fixtures pass. Simulations cannot measure beginner comprehension. Release claims remain gated by Phase 9.
 
-## Phase 9 — Freeze and qualify the release candidate
+## Phase 9 — Qualify the release source
 
-**Status: in progress.** The CLI and website branches have been integrated on `codex/0.3.0-candidate-integration`; the [0.3.0 candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) identifies a provisional CLI tarball and the remaining freeze, platform, manual and soak gates. Existing predecessor runs and local integration checks are not a fully qualified frozen candidate.
+**Status: complete for the owner-agreed bounded scope.** Final source is `59976a7`; [delivery evidence](../release-docs/STABLE_RELEASE_0.3.0.md) preserves the original failures and exact scopes.
 
-- [x] **9.1 Reconcile scope and docs:** the integrated README, CLI/selection/preview/doctor contracts, website setup and status now agree on implemented commands, three bounded contexts, local artifact use and limits. No optional feature was selected; release freeze is still separate gate 9.2.
-- [ ] **9.2 Candidate identity:** exact source SHA, catalog revision, one packed artifact and cryptographic hash.
-- [ ] **9.3 Complete qualification:** retained golden workflows and new create/add/preview/doctor/repair workflows pass on advertised platforms without hidden qualification skips; website and joint handoff checks pass independently.
-- [ ] **9.4 Repeated passes/soak:** carry forward three consecutive passing full qualifications from the same candidate SHA and seven-calendar-day soak unless explicitly revised by the maintainer.
-- [ ] **9.5 Release blockers:** no open P0/P1, security or data-loss defects; required evidence and quality checks recorded.
-- [ ] **9.6 Manual and combined safety gates:** perform screen-reader and physical-device checks, then review the frozen CLI/website candidate together for secret suppression, malformed records, traversal/symlinks, conflicting files, concurrent changes, interruption and repeated repair. Record limits and resolve blocking findings before release.
-
-Phase 9 integration checkpoint: merge commit `a410c1d39179d41ed14aae2740470a7267a25282` preserves the CLI executor and adds the website app/public catalog. Frozen-lockfile installation, workspace build, unit tests, typecheck and lint passed; the provisional tarball SHA-256 is `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec`. At integrated source `3659d584003da6812243b14b0b43e41159a21aa8`, the [packed contract/transport/maintenance run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314747), [six-cell real create/add run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314748), [six-cell golden run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314764), [broader release workflow](https://github.com/4d696e6b/RepoSetup/actions/runs/37184319967) and [clean-source browser/handoff qualification](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314746) all passed; the website run covered 70/70 browser cases. These are one provisional source wave, not a frozen same-SHA release qualification. The [candidate record](../release-docs/RELEASE_CANDIDATE_0.3.0.md) tracks remaining manual and soak gates.
-
-Exit condition: the frozen candidate satisfies every selected release gate. Source changes after freezing require renewed evidence appropriate to the change; local unit success alone is insufficient.
+- [x] **9.1 Scope/docs:** 0.2.3 fixes, legacy contracts and bounded 0.3.0 CLI/website behavior reconciled.
+- [x] **9.2 Identity:** immutable source, catalog/matrix, retained tarball and cryptographic hashes recorded.
+- [x] **9.3 Qualification:** platform, full golden, real create/add/legacy, packed maintenance/transport and five-profile website/handoff gates passed at the release source.
+- [x] **9.4 Repeated passes:** three consecutive first-attempt full release waves passed. Freeze/soak were explicitly removed; their absence is not a passed soak.
+- [x] **9.5 Bounded blocker review:** reported issue/security evidence and clean workspace audit recorded, with the inherited generated Next dev-tool advisory and scope limits retained.
+- [x] **9.6 Agreed safety/accessibility scope:** bounded preservation, secret suppression, validation, conflict, interruption and repeat fixtures passed. Owner deferred native reader checks and substituted Chrome simulation for a physical phone; zero observed participants and no independent specialist review are claimed.
 
 ## Phase 10 — Publish and verify delivery
 
-**Status: pending delivery; requires Phase 9 and later explicit authorization.**
+**Status: delivered.** [Stable record](../release-docs/STABLE_RELEASE_0.3.0.md) identifies actual delivery and remaining accepted limits.
 
-- [ ] **10.1 CLI authorization:** obtain the owner's explicit release request after presenting the concrete qualified artifact/evidence.
-- [ ] **10.2 CLI delivery:** publish the previously qualified artifact, create the authorized release/tag and verify installed version, both aliases and supported commands.
-- [ ] **10.3 Website authorization/delivery:** obtain a separate deployment request, publish the qualified site and verify catalog/version/export behavior.
-- [ ] **10.4 Final evidence:** record delivered artifact identities and URLs, and update implementation/release documents.
-
-Exit condition: delivered artifacts match their qualification evidence. Website hosting delays can have a separate delivery milestone; they do not justify advertising an unqualified builder or CLI handoff.
+- [x] **10.1 Authorization:** owner explicitly requested publication everywhere on the existing delivery surfaces.
+- [x] **10.2 CLI:** retained artifact published as npm latest 0.3.0, immutable tag/GitHub release created, all three OS registry-acceptance jobs passed.
+- [x] **10.3 Website:** real published-mode full qualification passed; exact retained output promoted on the existing Vercel project/domain; live hashes, headers, history, redirects and JSON-to-CLI dry-run verified.
+- [x] **10.4 Evidence:** delivered source/package/deployment identities, URLs, failure history, owner substitutions and rollback recorded. Documentation follows delivery without moving the immutable tag or deployed source.
 
 ## Optional scope — not selected
 

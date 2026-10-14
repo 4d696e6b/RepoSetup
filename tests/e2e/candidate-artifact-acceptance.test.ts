@@ -54,5 +54,7 @@ describe("candidate packed-artifact acceptance", () => {
       pathToFileURL(path.join(repoRoot, "scripts/verify-registry-release.mjs")).href
     );
     await delivery.verifyDelivery(tarball);
-  });
+    // Two independent package installations plus a generated Express build/test.
+    // Keep this outer allowance separate from individual installer deadlines.
+  }, 600_000);
 });

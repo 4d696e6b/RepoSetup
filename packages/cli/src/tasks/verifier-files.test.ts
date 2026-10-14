@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe as describeOnAllPlatforms, expect, it } from "vitest";
 import {
   mkdtemp,
   mkdir,
@@ -34,6 +34,10 @@ async function fixture() {
   const root = await realpath(await mkdtemp(path.join(os.tmpdir(), "reposetup-verifier-files-")));
   return { root, dispose: () => rm(root, { recursive: true, force: true }) };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("verifier filesystem boundaries", () => {
   it("audits public content and private/ignored metadata without following an external symlink", async () => {
     const f = await fixture();

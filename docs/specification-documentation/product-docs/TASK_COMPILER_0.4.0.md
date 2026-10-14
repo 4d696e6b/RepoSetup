@@ -1,6 +1,12 @@
 # RepoSetup 0.4.0 — task compiler contract
 
-Status: Milestones A–D validated, 2026-10-06. Core exports strict task schemas, pure draft compilation and bounded context preparation. Portable `task compile`, `task next` and `task status` are implemented; trusted verification, durable task effects and managed execution are not.
+Status: Milestones A–H implemented for the reviewed local/offline scope,
+2026-10-10. Portable `task compile`, `task next` and `task status`, trusted
+verification, durable scoped changes and managed compilation/`task run` are
+implemented. Live provider/profile, comparative and platform qualification remain
+open in I; J has documentation/review preparation only. Simulated provider tests
+do not establish remote support, savings or candidate readiness. See
+[current status](../implementing-docs/STATUS_0.4.0.md).
 
 ## Product outcome
 
@@ -38,7 +44,7 @@ The compiler must map each selected requirement to tasks and acceptance evidence
 
 Use strict Zod boundaries and separate versions for task preferences, compiled plans and run state. Preserve the existing integration `VerificationResult`; name task evidence `TaskVerificationResult`.
 
-The normative [versioned contracts](./TASK_CONTRACTS_0.4.0.md) freeze version 1 draft, plan, preference, run and handoff envelopes, identifiers, fields, validation order, states, error codes and dry-run semantics. The initial [support profile](./TASK_SUPPORT_0.4.0.md) freezes managed scope, hard bounds and trusted verification IDs. Milestone B implements strict core schemas, pure compilation and graph/coverage/scope validation; C adds bounded read-only context with source/rule/preimage identities. State transitions, trusted checks, CLI commands and execution remain in later milestones.
+The normative [versioned contracts](./TASK_CONTRACTS_0.4.0.md) freeze version 1 draft, plan, preference, run and handoff envelopes, identifiers, fields, validation order, states, error codes and dry-run semantics. The initial [support profile](./TASK_SUPPORT_0.4.0.md) freezes managed scope, hard bounds and trusted verification IDs. Milestone B implements strict core schemas, pure compilation and graph/coverage/scope validation; C adds bounded read-only context with source/rule/preimage identities. D–H implement the CLI, trusted checks, state transitions, scoped execution, provider boundary and routing/repair amendments. I/J retain live, comparative, platform and release qualification.
 
 - **Task:** stable ID, objective, requirement references, kind, constraints, read/write/deny scopes, acceptance criteria, trusted check IDs, output artifact IDs and evidenced qualitative capability features.
 - **TaskDependency:** predecessor, consumer and required artifact IDs.
@@ -91,3 +97,13 @@ Defer MCP, public task SDK, editor extension, multiple providers, local models, 
 The [provider research](../implementing-docs/TASK_PROVIDER_RESEARCH_0.4.0.md) selects a tool-free OpenAI Responses boundary and records dated official API model IDs, native efforts, observed prices, usage and privacy limits. Pinned SDK/runtime and fixed verifier recipes have reviewed local qualification; account access, remote schema/effective-configuration/usage behavior and shipping model catalogs still require later qualification before managed support claims. The [reuse audit](../implementing-docs/TASK_COMPILER_REUSE_0.4.0.md) records current-source seams and required extensions; the [benchmark protocol](../implementing-docs/TASK_BENCHMARK_0.4.0.md) freezes fixture designs, independent criteria and resource ceilings. None authorizes provider spending or establishes remote provider support.
 
 See [implementation roadmap](../implementing-docs/ROADMAP_0.4.0.md) and [status](../implementing-docs/STATUS_0.4.0.md).
+
+## Owner-selected offline-only milestone scope (2026-10-10)
+
+The [offline acceptance amendment](../implementing-docs/OFFLINE_ACCEPTANCE_0.4.0.md)
+now governs I/J completion. Original live, empirical and versioned candidate gates
+remain deferred release prerequisites. Offline completion establishes functional
+implementation and delivery preparation, not production model support, comparative
+quality/cost claims or a versioned release. Production capability profiles remain
+unconfirmed and routing closed. Historical milestone gate assignments above are
+superseded only as to completion ownership; no remote condition has passed.

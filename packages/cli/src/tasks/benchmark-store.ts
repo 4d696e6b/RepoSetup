@@ -1,3 +1,4 @@
+import { performance } from "node:perf_hooks";
 import { mkdir, readdir } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -69,12 +70,17 @@ export async function createTaskBenchmarkStore(input: { stateRoot: string; campa
       let bytes = 0;
       for (const name of names) {
         const data = await readPrivateTaskStateFile(observed, name);
-        if (!data || (bytes += data.length) > MAX_JOURNAL_BYTES) throw new Error("Bound");
+        if (!data || data.length > 262144 || (bytes += data.length) > MAX_JOURNAL_BYTES)
+          throw new Error("Bound");
         const decoded = decodeTaskJson(data);
         if (!decoded.success || taskContainsPrivateMaterial(decoded.data))
           throw new Error("Record");
         events.push(decoded.data);
       }
+      await verifyVerifierRoot(observed);
+      await capturePrivateTaskStateDirectory(folderPath);
+      if (taskContentHash((await readdir(folderPath)).sort()) !== taskContentHash(names))
+        throw new Error("Inventory changed");
       await guardBase();
       return validateTaskBenchmarkJournal({ campaign, events });
     } catch {
@@ -137,5 +143,8 @@ export async function createTaskBenchmarkStore(input: { stateRoot: string; campa
       busy = false;
     }
   };
-  return { success: true as const, data: { campaignId, folderPath, retain, inspect } };
+  return {
+    success: true as const,
+    data: { campaignId, folderPath, retain, inspect, now: () => performance.now() },
+  };
 }

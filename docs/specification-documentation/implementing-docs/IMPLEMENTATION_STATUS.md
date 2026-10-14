@@ -1,5 +1,7 @@
 # Implementation Status
 
+Current delivery: **0.3.1 published on npm/GitHub and live on the website**. See [the final patch release record](../release-docs/STABLE_RELEASE_0.3.1.md) for qualification and delivery evidence. Native screen-reader checks remain explicitly deferred. Historical entries below retain their original context.
+
 Cursor/maintainers should update this file as phases are completed.
 
 For the current phase-by-phase 0.3.0 tracker, see [0.3.0 implementation status](./STATUS_0.3.0.md). It separates locally implemented sections from pending qualification, website, maintenance and release work.

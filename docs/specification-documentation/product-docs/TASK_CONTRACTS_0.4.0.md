@@ -1,9 +1,10 @@
 # RepoSetup 0.4.0 — frozen task-domain contracts
 
-Status: Milestones A–F implemented/validated for the reviewed local scope on
-2026-10-07. Core domain/context, portable
-compile/next/status, trusted verification, scoped text application and private state
-are implemented. Managed provider execution remains G. Contract versions below
+Status: Milestones A–H implemented/validated for the reviewed local/offline scope
+on 2026-10-10. Core domain/context, portable compile/next/status, trusted
+verification, scoped text application, private state and managed execution are
+implemented. Live provider/profile, comparative and platform qualification remain
+I/J gates. Contract versions below
 are independent of package versions, stack configuration `schemaVersion: 1` and
 selection format v1.
 
@@ -490,6 +491,14 @@ pending records cannot be retried automatically. Context/complete baseline check
 run before dispatch and again before accepting the compiled result. Compilation is
 not project acceptance and never executes a process or mutates project files.
 
+The optional additive `providerResult` records only the parsed provider outcome
+and nullable numeric HTTP status for a revision 2 observation. It is forbidden
+on pending records; completed records require a completed provider outcome when
+present. Existing version 1 checkpoints without it remain valid. Unknown usage
+still retains the reservation and needs manual review, even when the HTTP status
+is known. No provider error text, body, headers or credentials are retained, and
+historical omitted status cannot be reconstructed or inferred.
+
 The additive managed compilation receipt field `managedCompilationId` binds a
 subsequent managed run to the completed private ledger. The initial reservation
 uses `attemptId: null` and `reservationId: compilation`. All coding reservations
@@ -580,3 +589,15 @@ separate reviewed opt-ins; default G fixed-run behavior remains compatible. Dry-
 keeps zero effects and labels initial routing/allowance as advisory. Production
 routing remains fail-closed until live qualifications are reviewed in I/J; offline
 implementation completion does not assert model quality or authorize spending.
+
+## Evidence-based routing amendment — 2026-10-13
+
+The [router evidence contract](../implementing-docs/TASK_ROUTER_EVIDENCE_0.4.0.md)
+defines strict version 1 host-only evaluation records, binary paired quality bounds,
+full-policy horizon costs/resource bounds, confirmation freeze, admission statuses
+and optional hashed decision receipts. Plans/preferences/model replies cannot
+supply that authority. Legacy offline routing remains available without empirical
+evidence; live routing requires it and remains closed by the unconfirmed catalog.
+Optional receipt/catalog and routed-start timeout fields preserve inspection of
+existing version 1 artifacts. Routing policy revision 2 requires fresh authority for
+new/resumed routed execution; there is no automatic state adoption or migration.

@@ -1,5 +1,7 @@
 # RepoSetup
 
+**0.3.1 is published on npm/GitHub and live on the companion website.** The patch fixes repeated no-op `remove --json` output and keeps the 0.3.0 workflows and theme. See [the delivery record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md). The owner's isolated preview remains available separately.
+
 **Build your stack from the terminal.**
 
 RepoSetup is an open-source CLI that composes, validates, and configures development stacks from a curated integration registry.
@@ -9,7 +11,7 @@ A modern project often means piecing together setup instructions from several do
 [![CI](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml/badge.svg)](https://github.com/4d696e6b/RepoSetup/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-RepoSetup is an **early-stage** open-source project with published `0.2.3`. This release preparation branch reconciles the unpublished `0.3.0-alpha.1` CLI/website candidate with those shipped fixes; its new source remains unqualified. The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
+RepoSetup is an **early-stage** open-source project with published `0.3.1` and a [companion website](https://reposetupcli.com/). It retains the shipped 0.2.3 fixes. Exact qualification, delivery and owner-accepted accessibility limits are recorded in the [stable release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md). The core CLI and integration architecture are implemented. Integration maturity varies; some IDs remain experimental. This is not `1.0.0`.
 
 The public package name on npm is **`rsetup`**. Unscoped `reposetup` / `reposetup-cli` are blocked by npm as too similar to `repo-setup` / `repo-setup-cli`.
 
@@ -38,6 +40,10 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 - Add supported integrations to an existing project
 - Safe `remove` where an explicit recipe exists
 - Project health checks (`doctor`), including installed dependency metadata and bounded Docker/Compose prerequisite probes
+- Curated beginner explanations and minimal React/Vite, Express and FastAPI starters
+- Versioned, size-bounded create/add selections with decoded choices and mandatory local confirmation
+- Structural file previews (`--diff`), intended-stack checks and narrow missing-file repairs
+- Companion website with the full reference, goal discovery and local selection handoff
 - Config export with no secrets
 - Built-in local registry (JavaScript/TypeScript and Python ecosystems)
 - argv-based process execution (`spawn` with `shell: false`)
@@ -46,14 +52,40 @@ Configs are declarative. They cannot carry shell scripts, callbacks, or remote e
 
 The published CLI requires **Node.js 24+**. Python recipes additionally require **Python 3.12+** and the selected manager (**uv** or an activated **pip** environment); Python 3.12 and 3.13 were covered by the 0.2.x qualification matrix. RepoSetup does not install these system prerequisites for you.
 
-Version 0.2.3 is the published installed-stack stability patch. npm `latest` identifies it; both pinned and unversioned installs are verified. See the [release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md) for qualification and delivery evidence:
+Version 0.3.1 is published as npm `latest`. Exact-version installation, both aliases and real project execution passed on Linux, macOS and Windows. See the [release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md) for qualification and limits:
 
 ```bash
-npx rsetup@0.2.3 --help
-npx rsetup@0.2.3 --version
+npx rsetup@0.3.1 --help
+npx rsetup@0.3.1 --version
 ```
 
-For a global install, run `npm install -g rsetup@0.2.3`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
+For a global install, run `npm install -g rsetup@0.3.1`. Both `rsetup` and `reposetup` then work as command names. `npx reposetup` refers to a different package.
+
+## Experimental task compiler development
+
+The separate `codex/0.4.0-task-compiler` branch implements experimental coding
+tasks alongside the curated installer. Its integrated package version is
+`0.3.1`; no 0.4.0 candidate is qualified or published. Use the built CLI
+from that branch rather than a floating npm package to try these commands.
+
+`task compile`, `task next` and `task status` support a local handoff to an existing
+coding agent without API keys or RepoSetup AI credits. You supply an independently
+reviewed phase/scope document and a structured draft; omitting the draft returns
+a decomposition request. Compilation validates the draft; it does not establish
+that the requested work is complete. Portable handoffs are advisory.
+
+`task run` and `task compile --managed` implement bounded provider execution with
+separate reviewed authority, explicit usage allowance and exact dry-run approval.
+Real calls require the direct OpenAI environment credential and provider usage
+allowance. Live model/schema/usage qualification and production routing evidence
+remain deferred; Azure is not a supported runtime adapter. Simulated-provider
+tests do not establish live quality, cost savings or release readiness.
+
+See the [task compiler guide](docs/humanOnly/Task_Compiler_0.4.0.md) for the local
+workflow, inputs, safety limits and recovery behavior, and the
+[candidate preparation record](docs/specification-documentation/release-docs/RELEASE_CANDIDATE_0.4.0.md)
+for open qualification gates. Existing stack configs, selections and installer
+commands need no migration.
 
 ## Develop from source
 
@@ -62,11 +94,10 @@ The repository uses **pnpm 12.5.1**:
 ```bash
 git clone https://github.com/4d696e6b/RepoSetup.git
 cd RepoSetup
-git switch --track origin/codex/release-0.3.0
 pnpm install --frozen-lockfile
 pnpm build
 node packages/cli/dist/bin.js --help
-node packages/cli/dist/bin.js --version   # 0.3.0-alpha.1 (development source)
+node packages/cli/dist/bin.js --version   # 0.3.0
 ```
 
 Preview a Next.js example without changing files:
@@ -83,11 +114,11 @@ node packages/cli/dist/bin.js create --config examples/reposetup.next-sqlite.jso
 
 Always try `--dry-run` first on a project you care about.
 
-On the 0.3.0 development branch, add `--diff` to `create`, `add`, or `remove` for a read-only change summary, including existing-file conflicts and external effects that cannot be known before execution. For example, `reposetup add prettier --diff --dry-run` prints the plan and preview without installing anything. `--json` retains the version 1 plan envelope and adds a `preview` field only when `--diff` is requested. File contents and secret values are never printed by the preview. A project file changed after review causes execution to stop and asks you to preview again.
+With the reviewed 0.3.0 CLI, add `--diff` to `create`, `add`, or `remove` for a read-only change summary, including existing-file conflicts and external effects that cannot be known before execution. For example, `reposetup add prettier --diff --dry-run` prints the plan and preview without installing anything. `--json` retains the version 1 plan envelope and adds a `preview` field only when `--diff` is requested. File contents and secret values are never printed by the preview. A project file changed after review causes execution to stop and asks you to preview again.
 
 Use `reposetup doctor --config reposetup.json` to compare an existing project's actual evidence with the stack you intend to maintain. It checks expected integrations even when ordinary detection no longer finds them, reports version differences and extra integrations as information, and makes no project changes. See the [intended-stack doctor contract](docs/specification-documentation/product-docs/INTENDED_DOCTOR_0.3.0.md).
 
-The package currently available through npm may be an older release. These commands do not select or qualify the unpublished 0.3.0 CLI:
+Unversioned npm commands follow the current latest release. Pin 0.3.0 for these documented selection workflows:
 
 ```text
 npx rsetup
@@ -103,7 +134,7 @@ rsetup --help
 reposetup --help
 ```
 
-`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project. Use the [exact local candidate artifact](apps/website/README.md#matching-cli-artifact-required-before-pasting-commands) for 0.3.0 website handoffs; do not paste a selection into a floating `npx` invocation.
+`npx` uses the package name `rsetup`. After a global install, both `rsetup` and `reposetup` are on PATH. `npx reposetup` is not this project. Install `rsetup@0.3.0` for the [matching website handoff](apps/website/README.md#matching-cli-artifact-required-before-pasting-commands). A selection requires its advertised CLI/catalog version; do not assume an older installation accepts it.
 
 ## Example
 
@@ -192,17 +223,17 @@ reposetup registry validate
 
 There is no separate `import` command. Apply an exported file with `create --config`.
 
-The 0.3.0 candidate accepts `create --selection TOKEN` or `create --selection-file selection.json` for a new project, and `add --selection TOKEN` or `add --config selection.json` for an existing project. A selection is versioned declarative data restricted to three reviewed contexts; it cannot carry commands or secrets. The CLI decodes choices, checks the actual project context, shows the local plan and requires an interactive confirmation. `--yes` is refused with selection inputs. `--dry-run` previews without execution. Token/file limits, incompatible-flag errors and the catalog revision are in the [selection contract](docs/specification-documentation/product-docs/SELECTION_V1.md). Existing schemaVersion 1 `create --config`, existing preset IDs, positional `add` and JSON envelopes remain supported.
+The 0.3.0 CLI accepts `create --selection TOKEN` or `create --selection-file selection.json` for a new project, and `add --selection TOKEN` or `add --config selection.json` for an existing project. A selection is versioned declarative data restricted to three reviewed contexts; it cannot carry commands or secrets. The CLI decodes choices, checks the actual project context, shows the local plan and requires an interactive confirmation. `--yes` is refused with selection inputs. `--dry-run` previews without execution. Token/file limits, incompatible-flag errors and the catalog revision are in the [selection contract](docs/specification-documentation/product-docs/SELECTION_V1.md). Existing schemaVersion 1 `create --config`, existing preset IDs, positional `add` and JSON envelopes remain supported.
 
 `create`, `add` and `remove` also support `--diff` for a conservative file/dependency preview. External tool effects stay unknown until execution. `doctor --config reposetup.json` checks an intended stack; `doctor --config reposetup.json --fix --dry-run` previews only the reviewed missing-file repairs. A real repair requires confirmation or explicit `--yes`, followed by a fresh health check. See the [preview](docs/specification-documentation/product-docs/PREVIEW_0.3.0.md) and [doctor/repair](docs/specification-documentation/product-docs/INTENDED_DOCTOR_0.3.0.md) contracts.
 
-`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. No 0.3.0 maturity promotion is claimed before candidate qualification.
+`reposetup info <id>` prints `experimental`, `candidate`, `stable`, or `deprecated`. The 0.3.0 release does not promote integration maturity.
 
 ## Integration status
 
 Status is per ID, not “the catalog is production-ready.”
 
-| Status | Meaning during 0.3.0 candidate work |
+| Status | Meaning in the 0.3.0 registry |
 | --- | --- |
 | **stable** | Real execute + advertised-platform evidence. **None yet.** |
 | **candidate** | Official commands verified; plan/detect/doctor tests exist. Cross-platform or real execute evidence may still be incomplete. |
@@ -328,7 +359,7 @@ There is no `test:pack` script. The 0.3.0 candidate's identified tarball is exer
 
 See the [0.3.0 implementation status](docs/specification-documentation/implementing-docs/STATUS_0.3.0.md) and [candidate qualification record](docs/specification-documentation/release-docs/RELEASE_CANDIDATE_0.3.0.md) for the current bounded scope, exact artifact identity and open release gates. The [0.2.0 roadmap](docs/specification-documentation/implementing-docs/ROADMAP_0.2.0.md) remains historical context.
 
-- Qualify the integrated 0.3.0 CLI/website candidate on the frozen support matrix, including manual accessibility/device and combined safety gates.
+- Qualify the integrated 0.3.0 CLI/website candidate on the documented support matrix, including actual accessibility/device results and exact artifact review.
 - Retain existing maturity labels until their exact context/platform evidence supports promotion.
 - The owner-approved companion website lives in `apps/website`; browser dependencies remain outside core. It is not deployed.
 
@@ -342,4 +373,4 @@ The 0.3.0 candidate integrates curated beginner `info`/goal search, separate min
 
 The first reviewable slice lives in `apps/website`: goal discovery, nine reviewed integration pages, three minimal starter explanations, and a bounded create/add selection builder. Run `pnpm install`, `pnpm build`, then `pnpm website:dev`. See [website development and exact CLI handoff](apps/website/README.md) for qualification and local artifact setup.
 
-Website commands target the [exact packed 0.3.0 CLI candidate](apps/website/README.md#matching-cli-artifact-required-before-pasting-commands). The combined candidate has not passed release qualification; no website publication or CLI release is implied.
+Website commands target the [exact packed 0.3.0 CLI candidate](apps/website/README.md#matching-cli-artifact-required-before-pasting-commands). The automated CLI/website evidence is recorded in release preparation and current workflow reports. Actual screen-reader/physical-device results and separately authorized delivery are still required; no website production deployment or CLI publication is implied.

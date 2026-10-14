@@ -1,6 +1,14 @@
 # RepoSetup 0.4.0 — task benchmark and test protocol
 
-Contract frozen for Milestone A on 2026-10-06. Milestone I now has frozen fixture source, independent oracle source and offline qualification tests. The trial runner, retained real trial evidence and provider comparisons are still absent. This document authorizes no provider calls or spending.
+Contract frozen for Milestone A on 2026-10-06. Milestone I now has frozen fixture source, independent oracle source and offline qualification tests. Partial offline managed trial drivers and private evidence stores are implemented. Full campaign/provider comparisons remain unqualified. This document authorizes no provider calls or spending.
+
+**Offline-only amendment, 2026-10-10:** I/J completion now follows
+[offline acceptance](./OFFLINE_ACCEPTANCE_0.4.0.md). Diagnostic simulated trials
+validate functional paths and accounting only. The original empirical protocol
+below is unchanged and remains a deferred prerequisite for comparative model,
+quality or savings claims. Offline milestone completion cannot change a report's
+`qualification: false` into a qualified comparison.
+
 
 Read the [task compiler contract](../product-docs/TASK_COMPILER_0.4.0.md), [task domain contracts](../product-docs/TASK_CONTRACTS_0.4.0.md), [support profile](../product-docs/TASK_SUPPORT_0.4.0.md) and [provider research](./TASK_PROVIDER_RESEARCH_0.4.0.md). The [Phase 23 installation benchmark](./PHASE_23_BENCHMARK_PROTOCOL.md) remains independent. Its source baseline, installation measurements and performance targets are not task-compiler evidence.
 
@@ -120,7 +128,7 @@ Fixture hydration and preinstalled-tool validation happen before timed execution
 1. Qualify fixtures/oracles locally, confirm Node 24+ and pinned tool versions, preinstalled dependencies, clean Git baseline and no secrets. Record runner/source/artifact, host/OS/architecture, runtime, dependency/lockfile, recipe, support, model catalog and routing-policy hashes. No system or dependency installation occurs in the runner.
 2. Freeze the qualified strong profile and native effort, all routed candidate profiles/efforts and dated prices. Use exact provider snapshot IDs where available; record requested/effective IDs and effort. If effective configuration is unreported, mark it unknown and limit attribution. Do not choose the strong profile retrospectively from successful runs.
 3. Run five paired trial blocks for each of the five fixtures, with a fresh clean fixture checkout and fresh run state for each treatment: 25 trials per treatment, 75 total. Execute sequentially on one host with no worker parallelism. Rotate treatment order deterministically by block (`whole`, `fixed`, `routed`; then `fixed`, `routed`, `whole`; then `routed`, `whole`, `fixed`, repeating). Record order and provider request identities.
-4. For each paired block, generate one decomposition using the frozen strong compiler configuration, validate/freeze its plan and use that exact plan for both compiled treatments. Do not regenerate a routed plan to favor routing. Charge the full measured compilation usage/time to **each** compiled treatment in analytical totals, identifying the replay and shared source request; also report actual billed calls separately so the reused call is not billed twice in the cash ledger. A failed compilation fails both paired compiled trials and remains included.
+4. For each paired block, generate one decomposition using the frozen strong compiler configuration, validate/freeze its exact logical task graph and acceptance contents for both compiled treatments. Preserve the source plan and decomposition identity; separately revalidate the same draft against each treatment's independently reviewed physical baseline and qualified check bindings. Do not copy or rewrite the source plan's root/baseline hashes, or regenerate a routed decomposition to favor routing. Charge the full measured compilation usage/time to **each** compiled treatment in analytical totals, identifying the replay and shared source request; also report actual billed calls separately so the reused call is not billed twice in the cash ledger. A failed compilation fails both paired compiled trials and remains included.
 5. Provide no hidden manual assistance. A fixture-level setup failure before any provider request blocks its full paired block; retain the record and qualify the environment before a new explicitly identified block. Once a request starts, timeout, provider failure, missing context, budget exhaustion and product defects are included trial outcomes. Never discard or silently restart them.
 6. Run independent holdout evaluation at completion/limit. Store all attempts and terminal outcomes with their source/proposal/output revisions, context provenance, verification and failure classification. Do not mark a claimed completion accepted until the evidence agrees.
 
@@ -475,3 +483,334 @@ Nine core cases and ten ordinary real-filesystem cases exercise these boundaries
 including a full simulated 75-slot journal. No actual provider or trial driver was
 added. Coordinator timing, concrete plan/task/verifier joining, scoped budgets,
 authenticated artifacts and platform/live qualification remain required work.
+
+## Host timing and diagnostic journal reports (2026-10-09)
+
+The offline coordinator optionally uses a trusted monotonic `now` port. Its returned
+`hostTiming` accounts one invocation's preparation, compilation, trial calls, all
+retention calls and residual coordinator time; thrown ports remain included. The
+measured categories add to the elapsed interval, without double-counting the shared
+compilation. Missing/invalid clock evidence yields `provenance: unknown`; a bad clock
+stops further work while preserving known outcomes. The CLI store supplies the concrete
+performance clock. These durations are volatile host diagnostics, exclude final return/
+report serialization, and do not replace the campaign's per-treatment analytical timing,
+request usage or durable authenticated artifacts. Do not claim a full resource comparison
+from them. Eight core cases exercise full, interrupted, missing and invalid timing.
+
+The developer report tool supports:
+
+```sh
+pnpm benchmark:tasks:report --journal /absolute/fresh-offline-campaign.json /absolute/private-state-root
+```
+
+This mode reads the existing campaign-derived journal and computes the inclusive known
+request ledger and pending intent. It neither allocates a folder nor invokes retention,
+setup, compilation, execution or recovery. A partial dispatch exits 3, malformed/unsafe
+input exits 2, and a complete offline dispatch still has `qualification: false`. Two
+ordinary report subprocess tests cover legacy campaign mode and interrupted journal
+mode without credentials. The internal CLI adapter is bundled as a separate module for
+Node's built-artifact consumption; no public task command or package version changed.
+
+## Vetted candidate executor/full-verifier join (2026-10-09)
+
+The expensive serial suite now includes `task-managed-fixture.test.ts`. It hydrates a
+fresh cross-module seed with preinstalled tools, compiles a host-authored reference
+task, and applies only the guarded totals replacement through the actual core executor
+and CLI filesystem/private-state adapters. The owned parent-directory metadata changes
+with atomic replacement; other protected entries stay exact. A dry-run launches no
+checks and changes no state/project files. Task verification, final task refresh and
+phase acceptance each run the three actual curated tools and reference-identity review.
+The succeeding private checkpoint contains fresh receipts and exact accepted output
+hashes, with zero provider calls and empty verifier scratch.
+
+After managed success, a separate terminal evaluator checks frozen public/compatibility/
+private behavior and must pass. Its private results never feed a repair request. The
+corrected case passed in 344.70 seconds on Node 24.21.0/macOS arm64. This establishes a
+concrete vetted-candidate E/application/state/behavior join only. Git baseline identity
+and requested configuration are simulated; the test does not execute G/H provider/routing,
+a compiled DAG or the paired three-treatment campaign. Review accepts exact reference
+bytes, so general criterion review/hostile-candidate isolation remains unqualified.
+Diagnostic output binds source/fixture/closure/host/plan and evidence IDs with explicit
+`qualification: false`. No source-clean/platform/live qualification or quality/savings
+claim follows. No fixture recipe freezes, package versions or public commands changed.
+
+## Exact decomposition with fresh physical plan bindings (2026-10-09)
+
+“Exact shared plan” means the same frozen task graph, scope, requirements, criteria,
+capability facts and outputs. An executable TaskPlan also binds a physical root,
+baseline inventory and qualified check catalog, so it cannot be copied into another
+fresh treatment checkout or have its hashes overwritten. Core now provides pure
+`freezeTaskBenchmarkDecomposition`/`replayTaskBenchmarkDecomposition` helpers: retain
+one validated source plan/policy and logical verifier identity, then revalidate that
+same draft against each independently reviewed physical baseline/catalog. No new
+model decomposition request occurs; derived plan IDs differ while logical identity
+and coverage remain identical.
+
+Version 1 decomposition/binding schemas retain full record, logical decomposition,
+source plan, fresh review and derived plan identities. Reconstructed bindings must
+match the independently supplied review exactly. Replay rejects changed public phase,
+authority, profile, path semantics, checks or logical runtime/tool/config/oracle revision;
+only physical project/catalog binding differs. Artifacts are bounded and screened for
+private material, with at most six tasks. These pure functions do not read files,
+execute processes, acquire leases, dispatch a provider, import acceptance, bypass
+checks or grant artifact execution authority. A hash cannot authenticate a host's
+claimed logical verification identity; actual qualified checks remain required.
+
+The existing campaign's shared compilation metadata continues to identify the source
+compilation. A future concrete driver must retain source/decomposition and derived-plan
+bindings as actual trial evidence and bridge G's root-bound durable compilation usage
+without resetting or importing budget/acceptance authority. Revalidation time belongs
+in trial overhead; source compilation cost/time is still charged fully to each compiled
+analytical treatment and once in the cash ledger. This helper does not by itself wire
+that driver or establish the 75-trial comparison. Campaign/fixture/protocol revisions
+and public task/configuration contracts are unchanged.
+
+
+### Executor-owned replay charges
+
+`executeTaskBenchmarkReplay` bridges a newly dispatched, durable G compilation to the
+two fresh compiled treatment roots. Only the original returned checkpoint object from
+the successful current-process dispatch can issue the pair. Clones, cached reads and
+replay records cannot authorize a new pair or resume after process loss. Each treatment
+binds one distinct reviewed physical root, retains a pending CAS intent, rechecks its
+baseline and seals a completed charge. Failed/uncertain retention remains review-owned.
+
+The private checkpoint's optional version 1 `benchmarkReplay` provenance distinguishes
+source compilation/checkpoint/plan/root identities from logical decomposition and fresh
+binding identities. Request/context hashes and source usage describe the original call;
+no second call occurred. Both TaskRuns reserve and consume the full source charge, with
+local replay overhead added to duration. Cash accounting deduplicates by source identity.
+A private replay slot blocks omission and new decomposition dispatch through existing G
+allowance checks. Serialized provenance grants no acceptance or model qualification.
+
+Dry-run performs pure validation and invokes no ports. This bridge has offline synthetic
+provider and real filesystem coverage, not live-provider, platform or comparative
+qualification. Inclusive host measurements must additionally cover final persistence,
+lease release and other overhead; the final ledger write cannot measure its own tail.
+The frozen protocol, fixture recipes and campaign schema are unchanged.
+
+### Private request/run evidence for failed trials
+
+Compilation and coding intents now retain an optional version 1 `requestFootprint` before
+dispatch. `inputDocumentBytes` measures the exact JSON document handed to provider
+preparation (including repair metadata); `preparedPayloadBytes` measures the complete
+adapter payload. These byte counts, document hash and prepared pricing revision contain
+no bodies. They are separate from reservation token bounds, observed tokens and costs.
+Legacy missing footprints remain unknown rather than reconstructed or replaced with zero.
+
+`collectTaskBenchmarkRunEvidence` validates plan/private checkpoint bindings and creates
+a bounded version 1 diagnostic record. `inspectTaskBenchmarkRun` obtains that record
+through the existing executor-owned lease, including private compilation metadata where
+available and current project drift. It retains pending/null usage, original provenance,
+all coding reservations, compilation charges, attempt hashes/failures/effects and final
+verification identity. It never reconciles or dispatches verification, writes a checkpoint,
+retries a call or mutates the project. Lease metadata follows the existing adapter lifecycle.
+
+These records keep `acceptanceAuthenticated` and `qualificationEligible` false. A stored
+pass, succeeded run, checksum or synthetic host token report cannot replace independently
+observed acceptance or production/provider qualification. Missing private compilation
+ports are explicit charge-only evidence; unavailable/corrupt private state stops inspection.
+The actual campaign driver must still join these records with terminal evaluator results,
+inclusive host timings and measured/calculated/unknown request fields. Neither footprint
+sizes nor reservations should be relabelled as measured token usage or paid provider cost.
+
+### Actual ledger projection and uncertain request accounting
+
+Core's pure `projectTaskBenchmarkCompilation` and `projectTaskBenchmarkRunRequests`
+project original private compilation and diagnostic run records into campaign request
+rows. Original compilation identity is retained once for cash accounting; analytical
+fresh-root replay checkpoints are rejected as additional compilation calls. Every coding
+intent is included, even after refusal, invalid output, cancellation or transport failure.
+The projection carries raw reservation/usage and source checkpoint identity. It provides
+integrity/privacy validation, never acceptance, execution or production qualification.
+
+Request duration, input-document bytes and pricing revision can now be null when absent.
+Pending intents have null usage/duration and unknown measured tokens/cost; missing legacy
+footprints or purpose remain unknown. `retainedRequestIntents`, `settledRequestIntents`
+and `uncertainProviderCalls` distinguish held intents from settled dispatch accounting;
+the aggregate `providerCalls` is null when an intent remains pending. Settled dispatch
+accounting does not prove an HTTP response or billed provider usage. The journal cannot
+declare dispatch accounting complete while a retained request remains pending, even if
+all 75 trial slots have terminal records. Pending requests cannot accompany acceptance.
+
+Token fields become measured only from raw `reported` usage. Host-reported/estimated token
+values remain in the raw ledger and project as unknown measurements. Estimated cost and
+reported charged cost stay separate; reservation ceilings never become token estimates.
+Unknown request metadata blocks quantitative comparison. Observed compilation preflight
+failures can retain zero intents; completed compilations still require a source request.
+Existing lowercase failure labels and actual task executor error codes are both accepted.
+
+New coding intents retain implementation/repair purpose before dispatch. A validated
+context-request reply durably classifies that exact call as context before expansion.
+Optional fields preserve compatibility with older private checkpoints and report inputs.
+The pre-release version 1 contract extensions leave fixture/protocol freezes, treatment
+order and allowances unchanged. The actual driver and independent terminal evaluator
+must still join these records with measured full host overhead and frozen fixture authority.
+
+### Frozen managed failure block (offline diagnostic)
+
+The ordinary offline suite now includes `task-managed-benchmark.test.ts`, using a bounded
+test-only driver/host. It hydrates the exact first frozen types seed into three independent
+treatment roots and a fourth compilation root, preserving all public files. Real fixed Git
+baselines/probes, concrete CLI project/private-state adapters and the core G/H executor run
+under the existing serial coordinator. One simulated decomposition dispatch supplies an
+identical two-task graph to fixed/routed analytical consumers with separate physical bindings.
+Whole uses one host-authored phase task with explicit strong configuration; routed selection
+uses an explicitly synthetic offline catalog and separates model profile from native effort.
+
+The simulated whole transport throws after its durable intent; both compiled coding requests
+return refusal. Repair is enabled to verify these failures do not trigger automatic retries.
+E definition ports are simulated and E check/reviewer launches deliberately throw if reached;
+this is not an installed managed-profile or SDK/HTTP qualification test. No candidate source
+is modified or accepted. Each terminal failed seed goes through the real independent local
+compiler/public/compatibility/private evaluator exactly once, outside provider feedback.
+
+The private campaign store retains/audits all ten first-block events and all three terminal
+failures. Full original compilation is charged once in cash and to both analytical consumers;
+the unresolved whole intent keeps call/usage totals unknown. The coordinator is deliberately
+cancelled after that observed block, leaving 72 missing slots, false qualification and no
+pending coordinator operation. Private pending-call accounting still remains unresolved.
+
+The diagnostic records actual source SHA/dirty state, driver-file identity, frozen fixture,
+host, terminal hashes and measured coordinator buckets plus full driver elapsed time through
+journal inspection. Source/setup/compilation persistence and replay/inspection/terminal
+evaluation are measured in their corresponding spans; cleanup timing is explicitly excluded.
+Independent evaluator records are test-memory-only and disposable journal/state roots are
+cleaned afterward: this does not close durable campaign-artifact retention or release gates.
+Only failure paths of one frozen block are joined. Successful/repair/context paths, all five
+fixtures/75 trials, qualified E candidate review/isolation, production profiles/live smoke
+and installed/platform qualification remain open. No model-quality or savings claim follows.
+
+## Independent terminal record retention (Milestone I)
+
+`task_benchmark_final_evidence` revision 1 binds a bounded independent evaluator
+record to the fresh campaign hash, fixture, block and treatment. Its record hash is
+exactly the terminal trial's `finalEvidenceHash`. Core validates frozen public,
+holdout and type-test inventories, duplicate IDs, executed/unexecuted type checks,
+fixture revisions, aggregate pass claims and strict metadata fields. Compiler
+failure retains null unexecuted runtime suites and false/unexecuted type results.
+No source, prompts, process output, project paths or credentials are retained.
+
+The CLI evidence store is a read-only factory over an existing canonical owned
+0700 directory. Only the executor-host terminal recorder invokes its retention
+port. It exclusively allocates a separate campaign evidence directory, writes
+immutable 0600 slot records with no-follow/exclusive creation and file/directory
+fsync, and checks ownership, permissions, hardlinks, inventory and content before
+further retention. Limits are 75 records, 256 KiB per record and 16 MiB aggregate.
+Imported records may be inspected but cannot resume writes or dispatch work.
+
+Read-only joining compares terminal hashes and public/private observations to the
+journal. Missing artifacts remain explicit; a record written before interrupted
+terminal-event retention is visible only for the currently pending slot. Unrelated
+future-slot records, duplicate records and substituted terminal records fail closed.
+Parsing and hashing establish consistency, not evaluator execution, candidate
+acceptance or qualification. All inspection results retain false acceptance and
+qualification flags. No imported record grants project effects, retries or spending.
+
+The frozen managed failure block now records all three real independent terminal
+evaluations to this private store and reads them back against retained trial events.
+Storage and joining time remain within measured driver/trial overhead. Its owned
+temporary roots are removed after tests; no long-lived campaign or live comparison
+is claimed. The evaluator and frozen fixture/tool/oracle revisions are unchanged.
+
+### Reviewer coverage and executable test counts
+
+Benchmark check rows may retain explicit executor/reviewer provenance and a count
+of reviewed criteria. Reviewer acceptance has no executed test inventory: retain
+`executedTests: null` with reviewer provenance and positive observed criterion
+coverage, rather than inventing test execution. Unit and compatibility checks still
+require positive executed test counts. Legacy rows with their existing positive
+counts remain parse-compatible. These reporting fields never authenticate imported
+reviews, weaken the executor's current task/phase review gate or qualify a campaign.
+
+## Vetted fixed-treatment success joined to the coordinator
+
+The expensive credential-free verifier suite includes one bounded types-fixture
+block joining the actual G decomposition receipt/replay, real Git and private state,
+15 actual qualified E tool launches, current task/phase reviews, diagnostic ledgers
+and independent retained terminal evaluation. The result task uses a validated
+no-change outcome for the already-correct interface and produces its accepted module
+artifact. The dependent page task receives that artifact and applies only vetted
+reference bytes to `src/page.ts`. Both task receipts are refreshed on the final
+revision before phase acceptance. The draft promises existing module outputs; its
+optional agent-test write path is not falsely promised as a produced artifact.
+
+The reviewer answers the executor's current target/plan/catalog/criterion request;
+it checks the result module for the result task and both vetted modules for page/
+phase acceptance. This reviewer qualifies frozen reference identity only. Actual
+candidate projection/compiler/public/compatibility/holdout/type checks independently
+pass after the final phase. Three terminal oracle records are privately retained and
+joined; protected project inputs remain unchanged. No hidden oracle feedback enters
+provider inputs.
+
+Whole remains a simulated uncertain dispatch and routed remains a simulated refusal
+under H's offline baseline/none selection. Exactly one source compilation is charged
+once in cash and replayed to both compiled roots. The block stops after three slots:
+one accepted and two failed, with 72 missing slots and one uncertain request intent.
+No resource comparison, production capability, HTTP/SDK execution, general candidate
+isolation or full treatment qualification is established. Tool hydration/setup,
+state/retention/verification and independent terminal evaluation remain within
+reported host/driver overhead; cleanup is separately excluded. The test uses only
+preinstalled tools and lives outside ordinary fast fixture CI.
+
+### Frozen fixture compilation and ready-frontier routing
+
+Credential-free compilation tests now use all five actual frozen seeds, real Git,
+private G state and executor-authenticated replay to two fresh roots each. Independently
+authored drafts preserve four-requirement coverage and promise module artifacts rather
+than optional agent-test files. API declares query → handler; cross-module declares
+both domain → totals/presenter and totals → presenter; security declares path → context.
+UI remains one task for its single-module contract. The first dependency-free task is
+materialized from actual seed bytes and routed through H's synthetic offline catalog.
+Cross-module/security tasks require strong capability; their selected low effort is
+recorded separately. Other ready frontiers select baseline/none. Offline catalogs
+are rejected for live use in every fixture. These tests prove compilation/replay/
+routing boundaries, not coding, acceptance, model quality or comparative results.
+
+### Complete frozen failure-path campaign
+
+The optional expensive credential-free verifier suite also runs all five actual
+frozen seeds through five blocks and the three rotated treatments. Each block uses
+four fresh roots and one actual G dispatch to a simulated provider. Original-receipt
+replay binds that graph and source charge to two distinct compiled roots. One
+synthetic offline catalog, including its qualification dates, is frozen across the
+entire campaign. Whole/fixed use explicit strong/low; routed uses H's actual ready
+frontier and capability floor independently of effort.
+
+Whole records transport uncertainty and fixed/routed record refusal. Each terminal
+seed receives actual independent compiler/public/compatibility/holdout/type checks,
+with an immutable private observation retained before its terminal journal event.
+All 250 serial events and 75 observations are read back and joined before disposable
+cleanup. Compilation, replay, setup, state, routing, verification preflight, terminal
+oracles and retention remain in measured host/driver overhead; cleanup is excluded.
+
+A complete slot inventory is not a qualified comparison. These 75 trials all fail;
+no candidate is accepted or changed. E definition checks are simulated and E launch/
+review ports remain unreachable. Actual managed processes are fixed Git probes.
+The 25 uncertain whole intents keep dispatch accounting incomplete. Cash counts
+each of 25 original compilations once, plus 75 coding intents; analytical treatment
+ledgers include source compilation for both compiled treatments. Simulated usage
+does not establish provider calls, tokens, billing or cost per accepted task. All
+qualification flags remain false; production/live/platform gates remain open.
+
+### Vetted context expansion and retained-edit repair
+
+An additional expensive local fixed-treatment case requests unchanged compiler
+settings while working on the Result interface. The executor retains the context
+call, expands only the declared reference, updates the input revision and reuses
+the same attempt. Its dependent page task first proposes an independently authored
+safe variant that returns success for invalid input. Actual public unit checks must
+fail before any automatic implementation repair is eligible. Those failed checks
+skip acceptance review; only passing tools permit the current frozen-reference
+review. The reviewer does not supply hidden oracle feedback or fabricate executable
+check results.
+
+The second page attempt receives the existing bounded repair metadata and retained
+failed edit. Its exact preimage/hash is the failed variant, and the executor replaces
+that variant with the frozen reference without rollback. Real task checks, refreshed
+reviews and final phase checks precede independent terminal evaluation and private
+record retention. Every context/implementation/repair intent and actual verification
+launch remains in the diagnostic ledger and host overhead. The private holdout is
+used only once at each treatment's terminal state. This fixed reference exercise
+still does not establish general candidate isolation, model quality, production
+routing or full comparative qualification.

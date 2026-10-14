@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe as describeOnAllPlatforms, expect, it } from "vitest";
 import { createRequire } from "node:module";
 import {
   mkdtemp,
@@ -109,6 +109,10 @@ async function fixture() {
   }
   return { project, scratch, run, dispose: () => rm(parent, { recursive: true, force: true }) };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("pinned trusted check recipe smoke qualification", () => {
   it("executes all three installed entry points with fixed argv, separate temp output and real nonzero test identities", async () => {
     const f = await fixture();

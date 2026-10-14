@@ -17,3 +17,14 @@ await writeFile(
 console.log(
   `Validated ${catalog.integrations.length} integrations and ${catalog.variants.length} finite variants.`,
 );
+await writeFile(
+  `${directory}/routes.json`,
+  await format(
+    JSON.stringify({
+      contexts: catalog.contexts.map(({ id }) => id),
+      presets: catalog.presets.map(({ id }) => id),
+      libraries: catalog.integrations.map(({ id }) => id),
+    }),
+    { ...(await resolveConfig(`${directory}/routes.json`)), parser: "json" },
+  ),
+);

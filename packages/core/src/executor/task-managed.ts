@@ -205,7 +205,13 @@ export async function executeManagedTaskPhase(input: {
       }
       for (const operation of [
         input.routing
-          ? { type: "begin_routed" as const, runId, taskId, maxOutputTokens: outputTokens }
+          ? {
+              type: "begin_routed" as const,
+              runId,
+              taskId,
+              maxOutputTokens: outputTokens,
+              timeoutMs: input.timeoutMs,
+            }
           : {
               type: "begin" as const,
               runId,

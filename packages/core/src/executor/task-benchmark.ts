@@ -1,4 +1,9 @@
 import {
+  createTaskBenchmarkTimer,
+  isInvalidBenchmarkClock,
+  type TaskBenchmarkHostTiming,
+} from "../tasks/benchmark-timing.js";
+import {
   taskBenchmarkSetupSchema,
   type TaskBenchmarkEvent,
   type TaskBenchmarkEventPayload,
@@ -28,6 +33,8 @@ type Slot = Block &
   }>;
 /** Trusted host ports only. Implementations own isolation, allowances and actual evidence. */
 export interface TaskBenchmarkExecutionPorts {
+  /** Optional host monotonic clock. Missing clock keeps timing explicitly unknown. */
+  now?: () => number;
   /** Retain before acknowledging. Never dispatch work from an artifact or event. */
   retain(event: TaskBenchmarkEvent): Promise<TaskParseResult<true>>;
   /** Preflight all three fresh treatment roots before any request in this paired block. */
@@ -41,6 +48,7 @@ export interface TaskBenchmarkExecutionPorts {
 }
 export type TaskBenchmarkExecution = {
   complete: boolean;
+  hostTiming: TaskBenchmarkHostTiming;
   campaign: TaskBenchmarkCampaign;
   retainedEvents: readonly TaskBenchmarkEvent[];
   /** Known event whose retention was not acknowledged; never automatic replay authority. */
@@ -61,6 +69,8 @@ export async function executeTaskBenchmark(input: {
   signal?: AbortSignal;
 }): Promise<TaskParseResult<TaskBenchmarkExecution>> {
   input = { ...input, ports: { ...input.ports } };
+  const timer = createTaskBenchmarkTimer(input.ports.now);
+  if (!timer.success) return timer;
   const checked = validateTaskBenchmarkCampaign(input.campaign);
   if (!checked.success) return checked;
   if (checked.data.provenance !== "offline" || checked.data.trials.length !== 0)
@@ -94,8 +104,13 @@ export async function executeTaskBenchmark(input: {
     const record = freezeTaskValue({ ...payload, eventHash: taskContentHash(payload) });
     let saved: TaskParseResult<true>;
     try {
-      saved = await input.ports.retain(record);
-    } catch {
+      saved = await timer.data.measure("retention", () => input.ports.retain(record));
+    } catch (error) {
+      if (isInvalidBenchmarkClock(error)) {
+        unacknowledgedEvent = record;
+        stopCode = "TASK_BENCHMARK_INVALID";
+        return false;
+      }
       saved = taskFailure("TASK_STATE_WRITE_FAILED", "Campaign event storage failed.");
     }
     if (!saved || saved.success !== true || saved.data !== true) {
@@ -131,7 +146,9 @@ export async function executeTaskBenchmark(input: {
         )
           break blocks;
         const setup = taskBenchmarkSetupSchema.safeParse(
-          await input.ports.prepareBlock(descriptor, input.signal),
+          await timer.data.measure("prepare", () =>
+            input.ports.prepareBlock(descriptor, input.signal),
+          ),
         );
         if (!setup.success || setup.data.ready !== (setup.data.failureCode === null)) {
           stopCode = "TASK_BENCHMARK_INVALID";
@@ -178,12 +195,14 @@ export async function executeTaskBenchmark(input: {
             if (!(await retain({ type: "compile_started", fixtureId, block })) || stopped())
               break blocks;
             const parsed = taskBenchmarkCompilationSchema.safeParse(
-              await input.ports.compile(
-                freezeTaskValue({
-                  ...descriptor,
-                  strongConfiguration: campaign.strongConfiguration,
-                }),
-                input.signal,
+              await timer.data.measure("compile", () =>
+                input.ports.compile(
+                  freezeTaskValue({
+                    ...descriptor,
+                    strongConfiguration: campaign.strongConfiguration,
+                  }),
+                  input.signal,
+                ),
               ),
             );
             if (!parsed.success) {
@@ -237,7 +256,9 @@ export async function executeTaskBenchmark(input: {
             order,
             compilation: treatment === "whole" ? null : compilation,
           });
-          const observed = await input.ports.runTrial(slot, input.signal);
+          const observed = await timer.data.measure("trial", () =>
+            input.ports.runTrial(slot, input.signal),
+          );
           const next = validateTaskBenchmarkCampaign({
             ...campaign,
             trials: [...campaign.trials, observed],
@@ -262,15 +283,25 @@ export async function executeTaskBenchmark(input: {
         }
       }
     }
-  } catch {
+  } catch (error) {
     // A started operation with unreported outcome/usage stays pending. Do not fabricate zeros or retry.
-    stopCode = "TASK_EXECUTION_INTERRUPTED";
+    stopCode = isInvalidBenchmarkClock(error)
+      ? "TASK_BENCHMARK_INVALID"
+      : "TASK_EXECUTION_INTERRUPTED";
   } finally {
     active.delete(campaignId);
+  }
+  let hostTiming: TaskBenchmarkHostTiming;
+  try {
+    hostTiming = timer.data.finish();
+  } catch {
+    hostTiming = { provenance: "unknown" };
+    stopCode ??= "TASK_BENCHMARK_INVALID";
   }
   return {
     success: true,
     data: freezeTaskValue({
+      hostTiming,
       complete: campaign.trials.length === 75 && stopCode === null,
       campaign,
       retainedEvents: retained,

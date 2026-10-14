@@ -17,6 +17,8 @@ import {
   type TaskCompilationCheckpoint,
 } from "../tasks/compilation-state.js";
 import type { TaskRunAdapter } from "./task-run-types.js";
+import { registerTaskCompilationReceipt } from "./task-compilation-receipt.js";
+import { taskRequestFootprint } from "../tasks/request-footprint.js";
 
 /** One durable, explicitly allowed decomposition call. Repeated identical approval is read-only,
  * never a second request. Unknown/interrupted calls remain retained review-owned state. */
@@ -63,6 +65,7 @@ export async function executeTaskCompilation(input: {
   const lease = acquired.data;
   const start = performance.now();
   let result: Awaited<ReturnType<typeof executeTaskCompilation>>;
+  let dispatched = false;
   try {
     result = await execute();
   } catch {
@@ -72,6 +75,8 @@ export async function executeTaskCompilation(input: {
     );
   }
   const released = await lease.release();
+  if (released.success && dispatched && result.success && !result.data.dryRun)
+    registerTaskCompilationReceipt(result.data.checkpoint);
   return released.success ? result : released;
 
   async function execute(): Promise<Awaited<ReturnType<typeof executeTaskCompilation>>> {
@@ -90,9 +95,10 @@ export async function executeTaskCompilation(input: {
         "TASK_CONTEXT_STALE",
         "Compilation context differs from the approved preview.",
       );
+    const document = { review: review.data!, context: packet.data };
     const prepared = input.provider.prepare({
       purpose: "decomposition",
-      document: { review: review.data!, context: packet.data },
+      document,
       maxOutputTokens: input.maxOutputTokens,
       timeoutMs: Math.min(input.timeoutMs, limits.data!.maxWallTimeMs),
     });
@@ -113,6 +119,11 @@ export async function executeTaskCompilation(input: {
     if (previous.data) {
       const c = validateTaskCompilationCheckpoint(previous.data);
       if (!c.success) return c;
+      if (c.data.benchmarkReplay)
+        return taskFailure(
+          "TASK_NEEDS_REVIEW",
+          "This allowance retains a benchmark replay charge, not a new decomposition call.",
+        );
       if (
         c.data.rootInstance !== input.adapter.rootInstance ||
         c.data.reviewHash !== taskContentHash(review.data!) ||
@@ -189,6 +200,7 @@ export async function executeTaskCompilation(input: {
       status: "pending",
       usage: null,
       plan: null,
+      requestFootprint: taskRequestFootprint(document, prepared.data),
     });
     const stored = await lease.saveCompilation(c, null);
     if (!stored.success) return stored;
@@ -218,6 +230,7 @@ export async function executeTaskCompilation(input: {
     let onAbort: (() => void) | undefined;
     let observed: unknown;
     try {
+      dispatched = true;
       observed = await Promise.race([
         input.provider.dispatch(prepared.data, signal),
         new Promise<never>((_resolve, reject) => {
@@ -321,6 +334,10 @@ export async function executeTaskCompilation(input: {
       status,
       usage,
       effectiveConfiguration: observation.data.effectiveConfiguration,
+      providerResult: {
+        outcome: observation.data.outcome,
+        httpStatus: observation.data.httpStatus,
+      },
       plan,
     });
     const saved = await lease.saveCompilation(c, 1);

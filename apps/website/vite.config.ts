@@ -1,35 +1,57 @@
-import { defineConfig } from "vite";
-export default defineConfig({
-  plugins: [
-    {
-      name: "static-preview-browser-policy",
-      apply: "build",
-      transformIndexHtml() {
-        return [
-          {
-            tag: "meta",
-            attrs: {
-              "http-equiv": "Content-Security-Policy",
-              content:
-                "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'",
-            },
-            injectTo: "head-prepend",
-          },
-        ];
+import { defineConfig, type UserConfig } from "vite";
+import { rmSync } from "node:fs";
+import { resolve } from "node:path";
+import { publicationHtml } from "./scripts/publication-html.ts";
+import { publicationForBuild } from "./scripts/verify-publication.ts";
+import { browserCsp } from "./src/reference/security.js";
+export default defineConfig(async (): Promise<UserConfig> => {
+  const publication = await publicationForBuild(process.env.REPOSETUP_WEBSITE_RELEASE);
+  let publicOutput = "";
+  return {
+    define: { __REPOSETUP_PUBLICATION__: JSON.stringify(publication) },
+    plugins: [
+      {
+        name: "static-preview-browser-policy",
+        apply: "build",
+        transformIndexHtml(html) {
+          return {
+            html: publicationHtml(html, publication),
+            tags: [
+              {
+                tag: "meta",
+                attrs: {
+                  "http-equiv": "Content-Security-Policy",
+                  content: browserCsp,
+                },
+                injectTo: "head-prepend",
+              },
+            ],
+          };
+        },
       },
-    },
-    {
-      name: "presentation-only-browser-boundary",
-      generateBundle() {
-        for (const id of this.getModuleIds()) {
-          if (
-            id.includes("/packages/") ||
-            id.startsWith("node:") ||
-            id.includes("__vite-browser-external")
-          )
-            throw new Error(`Node/workspace runtime capability entered browser bundle: ${id}`);
-        }
+      {
+        name: "exclude-private-brand-provenance",
+        configResolved(config) {
+          publicOutput = resolve(config.root, config.build.outDir);
+        },
+        closeBundle() {
+          for (const name of ["README.md", "prompts.json"])
+            rmSync(resolve(publicOutput, "brand", name), { force: true });
+        },
       },
-    },
-  ],
+      {
+        name: "presentation-only-browser-boundary",
+        generateBundle() {
+          for (const id of this.getModuleIds()) {
+            if (
+              id.includes("/packages/") ||
+              id.startsWith("node:") ||
+              id.includes("__vite-browser-external")
+            )
+              throw new Error(`Node/workspace runtime capability entered browser bundle: ${id}`);
+          }
+        },
+      },
+    ],
+  };
 });

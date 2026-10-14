@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe as describeOnAllPlatforms, it, expect, vi } from "vitest";
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -7,6 +7,7 @@ import {
   type TaskProviderAdapter,
   type TaskParseResult,
 } from "@reposetup/core";
+import { TASK_MODEL_CATALOG } from "./model-catalog.js";
 import { createOpenAITaskProvider } from "./provider-adapter.js";
 import { runCli } from "../run-cli.js";
 import { createDefaultFs } from "../io.js";
@@ -115,6 +116,10 @@ const request = (runId: string) => ({
   maxOutputTokens: 4096,
   timeoutMs: 1000,
 });
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("durable managed SDK dispatch", () => {
   it("rejects a changed baseline under the creation lease without writing a checkpoint", async () => {
     const f = await runFixture();
@@ -187,6 +192,7 @@ describe("durable managed SDK dispatch", () => {
       const c = await f.requireRun(request(runId), { provider: p.adapter });
       expect(c.run.attempts).toHaveLength(1);
       expect(c.providerCalls).toHaveLength(2);
+      expect(c.providerCalls!.map((call) => call.purpose)).toEqual(["context", "implementation"]);
       expect(c.providerCalls![0]!.inputRevision).not.toBe(c.providerCalls![1]!.inputRevision);
       expect(c.run.attempts[0]!.inputRevision).toBe(c.providerCalls![1]!.inputRevision);
       expect(c.run.attempts[0]!.usage.totalTokens).toMatchObject({ value: 60 });
@@ -529,6 +535,27 @@ describe("managed run CLI review boundary", () => {
         ),
       ).toBe(true);
       expect(routedPreview.routing.decisions).toEqual([]);
+      // A trusted evidence registry with no task coverage blocks preview selection
+      // instead of falling back to a catalog heuristic; it has no execution effects.
+      expect(
+        await runCli([...args, "--routing", "--dry-run"], {
+          ...deps,
+          taskRoutingCatalog: {
+            catalog: TASK_MODEL_CATALOG,
+            qualificationScope: "live",
+            evaluations: [],
+          },
+        }),
+      ).toMatchObject({ exitCode: 0 });
+      const uncoveredPreview = JSON.parse(out.pop()!);
+      expect(uncoveredPreview.routing.decisions).toEqual([]);
+      expect(uncoveredPreview.routing.blocked).toMatchObject([
+        { taskId: "producer", code: "TASK_CAPABILITY_UNAVAILABLE" },
+      ]);
+      expect(host).not.toHaveBeenCalled();
+      expect(processRunner).not.toHaveBeenCalled();
+      expect(prompt).not.toHaveBeenCalled();
+
       expect(
         await runCli(
           [

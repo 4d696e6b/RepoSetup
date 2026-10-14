@@ -2,16 +2,20 @@ name: CI
 
 on:
   push:
-    branches: [main, master, dev, codex/release-0.3.0, codex/release-0.4.0]
+    branches: [main, master, dev, codex/release-0.3.0, codex/release-0.3.1, codex/release-0.4.0]
   pull_request:
 
 jobs:
   fast:
     name: Fast checks
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Full workspace task adapter checks include real pinned tools.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Existing catalog provenance tests read a pinned ancestor commit.
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:

@@ -188,7 +188,13 @@ describe("Phase 13 JS ecosystem plans", () => {
     );
     expect(
       expressIntegration
-        .plan(planContext({ frameworkId: "express", options: { typescript: true } }))
+        .plan(
+          planContext({
+            frameworkId: "express",
+            options: { typescript: true },
+            integrations: [{ id: "vitest" }],
+          }),
+        )
         .some(
           (operation) => operation.type === "create_file" && operation.path === "src/app.test.ts",
         ),

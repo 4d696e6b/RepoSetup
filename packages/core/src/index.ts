@@ -193,3 +193,5 @@ export * from "./tasks/compilation-context.js";
 export * from "./tasks/compilation-state.js";
 export * from "./executor/task-compilation.js";
 export * from "./executor/task-benchmark.js";
+export * from "./executor/task-benchmark-replay.js";
+export * from "./executor/task-benchmark-evidence.js";

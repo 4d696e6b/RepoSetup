@@ -4,7 +4,58 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [Unreleased] — experimental 0.4.0 task compiler development
+
+These changes live on `codex/0.4.0-task-compiler`. The integrated development tree inherits version
+`0.3.1`; this entry does not announce a release or qualified candidate.
+
+### Added
+
+- Separate version 1 task-plan, review, preference, context and private run-state
+  contracts with requirement coverage, dependency ordering and exact file scopes.
+- Local `task compile`, `task next` and `task status` for structured drafts and
+  portable coding-agent handoffs without provider credentials or AI credits.
+- Experimental managed compilation and `task run`, with explicit allowance and
+  reviewed dry-run approval, bounded typed text changes and private durable state.
+- Independent fixed TypeScript, ESLint and unit checks, current task/final-phase
+  acceptance, retained partial effects and interruption review without rollback.
+- Model capability and native effort selection as separate variables, finite
+  reservation accounting and opt-in bounded failure-specific repair/routing.
+- Five frozen offline benchmark fixtures, independent terminal acceptance,
+  inclusive failure journals, packed compatibility tests and credential-free
+  Linux/macOS qualification workflow preparation.
+
+### Compatibility and limitations
+
+- Existing installer commands, stack configuration schema version 1 and selection
+  v1 inputs are unchanged. No automatic migration or dependency installation.
+- Local qualification uses simulated provider responses with actual Git, tools
+  and filesystem effects. Live account/model/schema/usage acceptance, production
+  routing capability, comparative quality/cost results and release/platform gates
+  remain unverified. Azure resource preparation adds no runtime Azure adapter.
+- No new task `verify` command, parallel task workers, MCP,
+  automatic rollback, package-version bump, release tag or publication.
+
+## [0.3.1] - 2026-10-13
+
+- Repeated `remove --json` for an absent integration returns the versioned empty plan, including quiet, dry-run and diff modes. Plain-text output is retained; no-op removal preserves files and does not prompt or execute commands.
+- The companion website targets the exact 0.3.1 CLI artifact while preserving 0.3.0 release history, existing routes, theme and selection-v1 compatibility. No new integration support or automatic dependency repair is introduced.
+
+Exact delivery and qualification are tracked in the [0.3.1 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md).
+
+## [0.3.0] - 2026-10-13
+
+Published CLI and companion website. Exact qualification, delivery and accepted limits are in the
+[stable release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md).
+
+- Curated beginner guidance, reusable minimal starters and goal discovery cover bounded React/Vite, Express and FastAPI contexts, derived from the built-in registry.
+- Versioned declarative selections support create/add via a bounded token or JSON file. The local CLI validates context, IDs, options and size limits, shows decoded choices and the installation plan, and requires confirmation. `--dry-run` remains available.
+- Structural `--diff` previews explain file changes without printing secret contents. Intended-stack doctor compares a schemaVersion 1 config with local evidence. Allowlisted repair creates eligible missing recipe files only after review; installed-dependency health and user-file safeguards remain mandatory.
+- The companion website combines the full published documentation/catalog and existing routes/artwork with beginner explanations, minimal starters and the create/add builder. It keeps choices local and lazy-loads the builder.
+- All published 0.2.1–0.2.3 fixes, schemaVersion 1 configs, five legacy presets, positional add and supported JSON envelopes are retained. Express/Vitest sample ownership is corrected and conflicting exclusive file writes fail during planning.
+
+- Compact, responsive navigation groups secondary destinations under Explore, keeps Build accessible and fits laptop/desktop windows and short viewports.
+- npm/GitHub delivery and the existing website are verified against the same retained release artifacts. Native screen-reader qualification is explicitly deferred; phone checks are emulation.
 
 ## [0.2.3] - 2026-10-09
 

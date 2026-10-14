@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe as describeOnAllPlatforms, it, expect, vi } from "vitest";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
@@ -234,7 +234,13 @@ async function fixture(
   };
   return { f, transport, execute, plan };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("serial managed repair and trusted routing (offline SDK transport)", () => {
+  // Four real Git/fs-backed attempts, although SDK replies are simulated. Keep
+  // their outer test allowance separate from the per-call 1000ms deadline.
   it("repairs only the failed producer and independently escalates baseline capability on its third attempt", async () => {
     const { f, transport, execute } = await fixture("repair");
     try {
@@ -255,6 +261,12 @@ describe("serial managed repair and trusted routing (offline SDK transport)", ()
       ]);
       expect(r.checkpoint.bindings.every((b) => Boolean(b.routing))).toBe(true);
       expect(r.checkpoint.run.resourceLedger.reservations).toHaveLength(4);
+      expect(r.checkpoint.providerCalls!.map((call) => call.purpose)).toEqual([
+        "implementation",
+        "repair",
+        "repair",
+        "implementation",
+      ]);
       expect(r.checkpoint.run.attempts[2]!.effectiveConfiguration).toMatchObject({
         provenance: "provider_reported",
         configuration: { modelProfileId: "gpt-6.1-sol", nativeEffortId: "low" },
@@ -265,7 +277,7 @@ describe("serial managed repair and trusted routing (offline SDK transport)", ()
     } finally {
       await f.cleanup();
     }
-  });
+  }, 30_000);
   it("increases known incomplete output within the approved ceiling, retaining the original reservation and configuration", async () => {
     const { f, transport, execute } = await fixture("incomplete");
     try {

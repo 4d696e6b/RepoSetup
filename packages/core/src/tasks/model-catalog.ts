@@ -33,6 +33,8 @@ export const taskModelProfileSchema = z.strictObject({
       z.strictObject({
         nativeEffortId: taskIdSchema,
         minimumOutputTokens: taskPositiveCounterSchema.max(16384),
+        // Host-reviewed binding for measured complete configuration evidence.
+        configurationId: taskHashSchema.optional(),
       }),
     )
     .min(1)

@@ -1,13 +1,20 @@
-# Live provider smoke protocol — Milestone I / J release gate
+# Live provider smoke protocol — deferred managed release gate
 
-Status: **not authorized or run**. All existing transport tests use fake HTTP.
+**Scope amendment, 2026-10-10:** the owner selected offline-only I/J completion.
+This live condition is now a deferred prerequisite before managed production
+qualification, outside the amended offline milestones. Historical gate assignments
+below remain the record of earlier scope; none represents live success. The
+[offline amendment](./OFFLINE_ACCEPTANCE_0.4.0.md) does not renew/enlarge spending.
+
+
+Status: **bounded smoke attempted; failed; live qualification remains open**. On 2026-10-10 the owner explicitly authorized up to two live API calls within a $1 estimated ceiling. This authorizes only the concrete smoke below; benchmark/routing campaigns and further calls remain unauthorized. Earlier transport tests used fake HTTP. The first actual bounded decomposition dispatch on 2026-10-10 stopped in `needs_review`, with no plan and unknown usage/effective configuration. No second call or retry was made.
 This is a finite qualification procedure, not a benchmark, routing qualification
 or release endorsement. The owner expressly prohibited paid calls in the initial
 request. On 2026-10-07 the owner requested completion of G without API access.
 G now closes offline implementation; its original live smoke condition moves to
 I and remains mandatory before J's managed candidate qualification. This changes
 milestone ownership, not the required evidence or spending boundary. No live
-condition has passed, and no provider call is authorized by this amendment.
+condition has passed. The original G amendment did not authorize provider calls; the later bounded owner authorization above is separate.
 
 ## Testing without an API key
 
@@ -18,7 +25,7 @@ The test rejects default `fetch` and asserts that it was never invoked. On Node
 24+ with the existing installed development dependencies, run:
 
 ```sh
-pnpm --filter rsetup test src/tasks/verification-adapter.test.ts -t 'completes no-key'
+pnpm --filter rsetup exec vitest run --config vitest.verification.config.ts -t 'completes no-key'
 ```
 
 The fixture starts with subtraction, freezes positive/negative/zero addition tests
@@ -111,3 +118,45 @@ live provider/profile smoke condition, required before J's managed candidate
 qualification. A failed, unapproved or simulated run cannot. Cancellation/unknown usage is
 covered offline; this budget does not authorize extra failure probes. H routing,
 capability and repair, and I/J platform/packed/benchmark/release remain open.
+
+## Preparing the approved smoke without credential access
+
+`scripts/prepare-task-provider-smoke.ts` prepares only a fresh private disposable
+addition project, copies already installed verifier dependencies, creates the
+reviewed pre-model Git baseline, freezes oracle/tool/check authority, and stores
+an exact CLI compilation preview. It reads no API key and constructs no provider;
+its dry-run dependencies reject host construction and process execution. Fixture
+setup Git operations are fixed developer operations with a filtered environment.
+Fixture construction never grants task or phase acceptance; the shared helper
+requires a caller-supplied reviewer and preparation supplies a rejecting callback.
+
+Using the existing pinned build tool (no install), build the developer preparation
+script from the workspace root:
+
+```sh
+pnpm exec tsup scripts/prepare-task-provider-smoke.ts --no-config --format esm --target es2022 --out-dir packages/cli/node_modules/.cache/reposetup-smoke --external openai --external commander --external @inquirer/prompts
+node packages/cli/node_modules/.cache/reposetup-smoke/prepare-task-provider-smoke.js "$PWD"
+```
+
+The output identifies the private parent, `compile-preview.json` and
+`preparation.json`. The latter records source SHA/dirty status, SDK/runtime and
+runner identities, oracle/review hashes, finite resource limits, CLI argument
+arrays, the exact compilation approval, and private receipt destination. These
+metadata are evidence, never execution or acceptance authority. Setup failures
+retain the reported private parent for inspection. Do not repeat preparation or
+renew allowances after a live attempt to bypass the owner's total two-call cap.
+
+Inspect the complete `review.json`, scoped `project/docs/phase.md` and
+`project/src/add.ts`, compilation preview and retention disclosure before using
+its approval. Execute the existing CLI in the user's terminal holding the transient
+key, writing the decoded compilation receipt privately to `plan.json` (umask 077).
+The preparation script does not perform this paid step or print its command.
+On failure, stop and inspect retained private state; do not rerun or repair.
+
+After the first call, inspect the actual receipt and requirement/scope/check
+coverage, then obtain the existing `task run --dry-run --json` preview with that
+full receipt, `authority.json` and the same private state/scratch roots. Use its
+exact approval without routing or repair only if it fits the remaining one-call
+allowance. Independent CLI acceptance prompts require inspection of the actual
+resulting source and frozen tests at the requested revision; never answer them
+from model claims. No live success is implied by successful preparation.

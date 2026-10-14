@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { hostname } from "node:os";
 import { pathToFileURL } from "node:url";
 import { createDefaultProcessRunner } from "../execution-adapters.js";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe as describeOnAllPlatforms, expect, it, vi } from "vitest";
 import {
   readFile,
   writeFile,
@@ -33,6 +33,10 @@ async function diskState(f: Awaited<ReturnType<typeof fixture>>, runId: string) 
   const folder = path.join(f.stateRoot, taskByteHash(f.root).slice(7));
   return { folder, file: path.join(folder, `${runId}.json`) };
 }
+// Real task filesystem fixtures target the initial Linux/macOS profile.
+// Windows task execution remains unsupported; pure core/provider tests still run.
+const describe = describeOnAllPlatforms.skipIf(process.platform === "win32");
+
 describe("durable scoped task executor", () => {
   it("makes dry-run zero-port-call and leaves state/project untouched", async () => {
     const f = await fixture();

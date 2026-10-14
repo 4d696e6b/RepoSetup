@@ -1,4 +1,4 @@
-# CLI Specification — current development source
+# CLI Specification — released 0.3.1 and experimental task extension
 
 ## 1. Current command tree
 
@@ -18,7 +18,8 @@ reposetup
 └── version/help
 ```
 
-This tree reflects the inspected `0.3.0-alpha.1` source in [runCli](../../../packages/cli/src/run-cli.ts). `import` remains a proposal, as described below. The experimental task command group is implemented as described at the end of this document; live provider qualification remains open. The command tree and create flags above/below match the current CLI help. Recipe-record import remains a proposed workflow, not an implemented command. Older design examples do not authorize arbitrary config commands.
+This tree reflects the integrated `0.3.1` development source in [runCli](../../../packages/cli/src/run-cli.ts). `import` remains a proposal, as described below. The experimental task command group is implemented as described at the end of this document; live provider qualification remains open.
+The command tree and create flags above/below match the current CLI help. Recipe-record import remains a proposed workflow, not an implemented command. Older design examples do not authorize arbitrary config commands.
 
 ## 2. `reposetup create`
 
@@ -54,6 +55,15 @@ Only show choices that are valid/relevant to the selected context.
 Example:
 
 ```bash
+reposetup create my-app \
+  --framework nextjs \
+  --package-manager pnpm \
+  --typescript
+```
+
+The current parser supports `--config`, `--preset`, `--selection`, `--selection-file`, `--framework`, `--package-manager`, `--typescript`, `--diff`, `--dry-run` and `--yes`. Use a validated config/preset for additional integrations; category-specific flags are not implemented. Selection v1 retains its existing mutually exclusive inputs and interactive confirmation policy; it cannot be combined with `--yes`. See [selection v1](./SELECTION_V1.md).
+
+```bash
 reposetup create my-app --preset next-sqlite --dry-run
 reposetup create my-app --preset next-sqlite --yes
 ```
@@ -64,8 +74,6 @@ flags are `--framework`, `--package-manager`, `--typescript`, `--preset` and
 `--config`, plus preview/confirmation/output flags. Integration selections use
 prompts, a preset or declarative configuration. `--tailwind`, `--database`, `--orm`
 and `--validation` are not implemented create flags.
-
-The current parser also supports `--selection` and `--selection-file`, with mutually exclusive inputs and interactive confirmation; selection cannot be combined with `--yes`. See [selection v1](./SELECTION_V1.md).
 
 ### Config
 
@@ -214,7 +222,6 @@ Checks:
 Exit codes should distinguish healthy vs issues.
 
 The inspected source implements `doctor --config <path>` for an intended schemaVersion 1 stack and `doctor --fix --config <path>` for narrow, reviewed reconstruction of absent known recipe files. `--dry-run` and `--yes` require `--fix`; `--fix` requires `--config`. Existing user files are preserved, dependencies are not installed, and findings outside the allowlist receive manual guidance. Default doctor and repair dry-run can perform runtime version probes; neither constitutes coding-task acceptance. See [handleDoctor](../../../packages/cli/src/doctor.ts) and [planDoctorRepair](../../../packages/core/src/doctor/plan-repair.ts).
-
 Doctor checks installed dependency metadata in
 addition to configuration. Node checks required runtime and development packages;
 Python checks project requirements and the default development group. FastAPI's

@@ -1,3 +1,4 @@
+import { taskRoutingEvaluationReceiptSchema } from "./routing-evaluation-schema.js";
 import * as z from "zod";
 import { TASK_ERROR_CODES } from "./errors.js";
 import {
@@ -110,6 +111,7 @@ export const taskRoutingSchema = z.strictObject({
     enforcement: z.enum(["managed", "advisory"]),
     effectiveConfiguration: taskEffectiveConfigurationSchema,
   }),
+  evaluation: taskRoutingEvaluationReceiptSchema.optional(),
   rejectedCandidates: z
     .array(
       z.strictObject({
@@ -129,6 +131,12 @@ export const taskRoutingSchema = z.strictObject({
               "model_unqualified",
               "qualification_expired",
               "repair_configuration_policy",
+              "evaluation_missing",
+              "evaluation_insufficient",
+              "evaluation_quality_unproven",
+              "evaluation_operational_limit",
+              "evaluation_configuration_mismatch",
+              "evaluation_confirmation_failed",
             ]),
           )
           .min(1),
