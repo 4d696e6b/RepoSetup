@@ -67,7 +67,14 @@ describe("streaming secret-assignment context", () => {
     "API_KEYWORD\n",
     "USER_NAME=\n",
     "finished\r\n",
+    "1TOKEN=\n",
+    "TOKEN==\n",
   ])("does not hold the complete/unrelated record %j", (record) => {
     expect(hasIncompleteSecretAssignment(record)).toBe(false);
+  });
+  it("examines only the final key while retaining the existing assignment grammar", () => {
+    expect(hasIncompleteSecretAssignment("TOKEN\n".repeat(21000))).toBe(true);
+    expect(hasIncompleteSecretAssignment("TOKEN\n".repeat(21000) + "done\n")).toBe(false);
+    expect(hasIncompleteSecretAssignment("prefix: /AUTH_TOKEN\r\n : \t\n")).toBe(true);
   });
 });

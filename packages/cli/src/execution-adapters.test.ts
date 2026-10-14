@@ -433,6 +433,34 @@ describe("createDefaultProcessRunner", () => {
     },
   );
 
+  it.each([
+    ["whitespace", "'TOKEN=\\n' + '\\n'.repeat(131072 - 128)", "TOKEN=<redacted>\nfinished\n"],
+    [
+      "repeated keys",
+      "'TOKEN\\n'.repeat(21000)",
+      "TOKEN\n".repeat(20999) + "TOKEN=<redacted>\nfinished\n",
+    ],
+  ])(
+    "drains bounded multiline %s without delaying the process deadline",
+    async (_label, prefix, expected) => {
+      const output: string[] = [];
+      const result = await createDefaultProcessRunner()({
+        command: process.execPath,
+        args: ["-e", `process.stdout.write(${prefix} + '=fictional-secret\\nfinished\\n');`],
+        cwd: process.cwd(),
+        timeoutMs: 2000,
+        onOutput(event) {
+          output.push(event.text);
+        },
+      });
+      expect(result.exitCode).toBe(0);
+      expect(result.timedOut).not.toBe(true);
+      expect(result.outputTruncated).not.toBe(true);
+      expect(output.join("")).toBe(expected);
+    },
+    30000,
+  );
+
   it("suppresses values after an oversized multiline assignment prefix and whitespace", async () => {
     const output: string[] = [];
     const result = await createDefaultProcessRunner()({

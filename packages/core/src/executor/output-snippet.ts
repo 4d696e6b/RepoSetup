@@ -1,11 +1,22 @@
 const SECRET_NAME =
   /\b([A-Za-z_]*(?:SECRET|TOKEN|PASSWORD|PASSWD|API_?KEY|CREDENTIAL)|DATABASE_URL)/.source;
 const SECRET_ASSIGNMENT = new RegExp(`${SECRET_NAME}\\s*[:=]\\s*\\S+`, "gi");
-const INCOMPLETE_SECRET_ASSIGNMENT = new RegExp(`${SECRET_NAME}\\s*(?:[:=]\\s*)?$`, "i");
+const COMPLETE_SECRET_NAME = new RegExp(`^${SECRET_NAME}$`, "i");
 
 /** Keep a recognized key/separator with its future value, including newline whitespace. */
 export function hasIncompleteSecretAssignment(output: string): boolean {
-  return INCOMPLETE_SECRET_ASSIGNMENT.test(output);
+  // Only the suffix can be incomplete. Search backwards to avoid rescanning all
+  // earlier keys for every output record in a retained multiline assignment.
+  let end = output.length;
+  while (end > 0 && /\s/.test(output.charAt(end - 1))) end--;
+  if (end > 0 && /[:=]/.test(output.charAt(end - 1))) {
+    end--;
+    while (end > 0 && /\s/.test(output.charAt(end - 1))) end--;
+  }
+  let start = end;
+  while (start > 0 && /[A-Za-z_]/.test(output.charAt(start - 1))) start--;
+  if (start > 0 && /\w/.test(output.charAt(start - 1))) return false;
+  return COMPLETE_SECRET_NAME.test(output.slice(start, end));
 }
 
 const MAX_SNIPPET_CHARS = 2000;

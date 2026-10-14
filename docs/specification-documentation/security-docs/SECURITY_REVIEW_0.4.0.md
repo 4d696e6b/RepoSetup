@@ -196,3 +196,17 @@ This is an independent source review, not external security certification. The
 trusted-host, live provider/profile and empirical routing limitations still apply.
 New runtime bytes require fresh artifact and platform qualification; earlier hosted
 passes cannot qualify this repair. No provider call or actual secret was used.
+
+### Deadline-preserving follow-up — 2026-10-15
+
+Local output-flood timing revealed excessive repeated context scans after the
+initial repair. The adapter retains incomplete context across whitespace-only
+pieces, and core identifies only the final assignment suffix. This preserves the
+prior assignment grammar while avoiding scans over earlier keys on each delimiter.
+All 685 core and 322 CLI cases pass; two process-deadline regressions cover bounded
+newline and repeated-key output. Local differential probes pass 2,450 grammar cases
+and 3,118 chunk partitions. Build, types and lint pass. The earlier independent
+review covers the pre-optimization repair. The follow-up reviewer failed first
+with a service risk flag, then with a usage limit on its permitted retry; no final
+independent review pass is claimed. This limitation does not change trusted-host
+or live-model limitations. New artifact/platform qualification remains mandatory.

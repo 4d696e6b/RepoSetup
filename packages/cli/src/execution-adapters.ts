@@ -524,10 +524,12 @@ function createOutputEmitter(
   let pending = "";
   let pendingBytes = 0;
   let suppressed = false;
+  let incompleteAssignment = false;
 
   const suppress = () => {
     pending = "";
     pendingBytes = 0;
+    incompleteAssignment = false;
     suppressed = true;
     onOutput({ stream, text: omitted });
   };
@@ -539,6 +541,7 @@ function createOutputEmitter(
     } else {
       pending = "";
       pendingBytes = 0;
+      incompleteAssignment = false;
       onOutput({ stream, text: redacted });
     }
   };
@@ -561,7 +564,18 @@ function createOutputEmitter(
         }
         pending += piece;
         pendingBytes += bytes;
-        if (boundary !== null && !hasIncompleteSecretAssignment(pending)) emit();
+        const hasContent = /\S/.test(piece);
+        if (boundary !== null) {
+          // Whitespace alone cannot complete an incomplete assignment. Avoid
+          // rescanning the growing prefix for each newline in a whitespace flood.
+          if (!incompleteAssignment || hasContent) {
+            incompleteAssignment = hasIncompleteSecretAssignment(pending);
+          }
+          if (!incompleteAssignment) emit();
+        } else if (hasContent) {
+          // A partial value/key changes the context: recheck at the next boundary.
+          incompleteAssignment = false;
+        }
         if (suppressed) return;
         offset = end;
       }

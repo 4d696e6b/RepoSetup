@@ -3461,3 +3461,29 @@ is deferred under offline-only scope; production live routing remains blocked.
 Logs: `/tmp/reposetup-040-output-bound-*`; the isolated baseline failure receipt is
 `/tmp/reposetup-040-output-bound-before.json`. No paid API call, tag, merge to main,
 registry publication or website deployment occurred.
+
+### Output deadline follow-up — 2026-10-15
+
+A further local timing probe showed that rescanning an incomplete assignment for
+every newline delayed a 1-second process deadline to 8.3 seconds. Retaining
+whitespace-only context avoids those scans; core now examines only the final
+key/separator suffix instead of all earlier keys. A repeated-key probe also exposed
+5.15 seconds of scanning; the final implementation took 46 ms on the same input.
+A newline-flood probe took 12 ms. These measurements are local observations, not
+cross-platform performance guarantees.
+
+All 685 core and 322 CLI tests pass, including 37 adapter cases and two bounded
+output-flood deadline regressions. CLI/dependency build, workspace/task types and
+lint pass. A local differential probe checked 2,450 assignment grammar cases
+against the prior regex and 3,118 chunk partitions against whole-record redaction.
+Both pass using fictional values only. The original independent review passed
+before this optimization; its follow-up could not complete (service risk flag,
+then usage-limit error on the permitted retry). No independent final-optimization
+review is claimed. The unavailable review is recorded, not counted as a pass.
+
+Intermediate development checks also passed 66 ordinary task cases, six installed
+website handoffs, 105 packed selections, 137 generic e2e cases (one existing uv
+prerequisite skip), and 258 local browser cases. They were running during this
+follow-up and used intermediate build/pin identities, so they are not final joint
+qualification. After this commit the website must be repinned and exact installed
+checks renewed before hosted qualification. No live provider calls occurred.
