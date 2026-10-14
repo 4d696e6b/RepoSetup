@@ -3,6 +3,7 @@ import { release, categoryName } from "../release.js";
 import { authoredPages, type DocPage } from "./content.js";
 import { relationshipTarget } from "../relationships.js";
 import { releaseGuides } from "./release-guides.js";
+import { taskGuides } from "./task-guides.js";
 
 const page = (
   slug: string,
@@ -192,13 +193,14 @@ const indexes = [
 export const docPages: DocPage[] = [
   ...releaseGuides,
   ...authoredPages,
+  ...taskGuides,
   ...indexes,
   ...commands,
   ...integrations,
   ...presets,
 ];
 export const docBySlug = new Map(docPages.map((item) => [item.slug, item]));
-export const primaryPages = [...releaseGuides, ...authoredPages, ...indexes];
+export const primaryPages = [...releaseGuides, ...authoredPages, ...taskGuides, ...indexes];
 export const searchPages = (query: string) => {
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (!terms.length) return [];

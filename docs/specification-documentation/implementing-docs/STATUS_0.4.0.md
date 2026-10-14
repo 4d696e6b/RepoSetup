@@ -35,13 +35,67 @@ manifests; seed, holdout, reference, mutations and acceptance remain unchanged.
 Lockfile SHA-256 is `19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824`.
 Frozen dependency installation passed offline with four cached packages and zero
 downloads after reconciling the SDK entries with the released dependency overrides.
-New task contracts/concrete verification checks are in progress; their final results
-will be recorded below. Linux/macOS hosted checks must qualify this integrated tree
+Refreshed frozen task contracts then passed **62/62**. The extracted packed receipt
+reports source `41db620c3a8d5e64f3e41e65aa1b74aa8dd1f570`, clean at receipt capture,
+diagnostic artifact `sha256:626aba31d3042c74a203263dfffd212c9ea5c8488bd4eaa8eac9f3b98d971b45`
+and version 0.3.1. Earlier tests in the same invocation started on dirty pre-merge
+source; do not describe the whole invocation as a clean same-source qualification.
+The separate full real-tool fixture run reported one managed-repair failure at
+2,602,688 ms and did not complete. It was interrupted after approximately 69 minutes
+(exit 130), with no final per-test error summary; its cause is unresolved and it is
+not passing evidence. Linux/macOS hosted checks must qualify this integrated tree
 again. No provider call, system installation, main merge or deployment occurred.
 
 Next: finish the task/compiler/router website guides and their browser checks;
 resolve the scaffold registry blocker and qualify this new source before release.
 Historical A–J records below apply to their recorded sources, not this merge.
+
+## Complete task website guides — 2026-10-14
+
+Added three searchable, linked **Preview** guides beside the unchanged 0.3.1
+reference: AI-written plan to portable agent handoff, evidence-based managed
+routing, and errors/recovery. The docs landing page links the easiest path.
+Copyable preparation/implementation prompts require independent review; exact
+local-build and compile/next/status examples follow the actual parser. The guides
+explain all required artifacts, scope/freshness/acceptance, advisory external-agent
+status, dependent-task blocking, finite allowance, exact managed preview approval,
+repair and production qualification limits. No raw Markdown-to-execution shortcut
+or automatic Codex model switching is advertised. The human guide and README
+indexes are updated too. Published 0.3.1 remains distinct from the inherited-version
+development binary and future task release. Website uploads, credentials, task
+execution and project scanning were not added.
+
+Guide validation on Node 24.21.0 / pnpm 12.5.1:
+
+- **76 website unit tests passed**, including every runnable task example's flags
+  against the actual built parser, discovery, published-reference separation and
+  prompt authority/billing limits. Workspace typecheck and lint passed; normal and
+  registry-verified published-mode website builds passed. The latter verifies the
+  unchanged 0.3.1 artifact pin rather than publishing task commands.
+- **99 browser cases passed** across desktop/mobile Chrome and Firefox for new
+  guides plus existing reference behavior. They cover copied prompt fallback,
+  navigation, deep links, reflow and accessibility.
+- The published-mode five-profile follow-up passed all **15 Chrome/Firefox guide
+  cases**. WebKit failed during page setup with protocol error
+  `Page.overrideSetting: Unknown setting: PushAPIEnabled`: six failed setup cases,
+  three interrupted, one not run after cancelling the remaining unusable runtime.
+  No guide assertion was reached on WebKit. A compatible test runtime/host is
+  required; WebKit, physical devices and native screen readers are not qualified
+  by these results. No browser/system software was installed.
+- Local published-mode preview returned HTTP 200 and was opened at
+  `http://127.0.0.1:4176/#/docs/task-compiler`. No deployment took place.
+- Offline qualification checkout now retains full Git history for the integrated
+  website's pinned ancestor comparisons. This is infrastructure preparation, not
+  a passing hosted result for the integrated source.
+
+Reconciliation is committed as `41db620`. The previous router extension's hosted
+offline run [38422355120](https://github.com/4d696e6b/RepoSetup/actions/runs/38422355120)
+is confirmed successful at `cb935c661cbda45b95adb2355db10be9e21c1b60`; it does not
+qualify the changed integrated tree. Remaining blockers are the unavailable
+scaffold dependency, incomplete real-tool fixture run, local WebKit mismatch and
+new-source hosted qualification. Live routing/profile and versioned release gates
+remain deferred. Next: resolve/qualify these blockers on supported hosts while
+keeping PR #20 draft; no further feature milestone or release is implied.
 
 ## Current position
 
@@ -57,8 +111,9 @@ The complete Linux x64 and macOS arm64 qualification passed at branch source
 Each host passed 62 contracts, eight concrete verification cases and 11 full
 fixture cases. Ordinary CI, all three platforms and installation performance passed.
 That completed qualification applies to its recorded source. The owner-requested
-paper-based router extension below changes production code and has separate local
-validation; its new source/artifact still needs complete hosted requalification.
+paper-based router extension was subsequently qualified offline at `cb935c6`.
+The 0.3.1 baseline integration above changes its source again and needs new hosted
+qualification; original results remain historical evidence.
 
 Production capability profiles remain unconfirmed and routing closed. Simulated
 reports retain `qualification: false`; offline completion establishes implemented
@@ -3019,8 +3074,8 @@ production or candidate branch state was merged or altered.
 
 ### Paper-based router extension — 2026-10-13
 
-Owner requested adapting *Measuring AI Performance and Selecting Models Under
-Quality and Cost Constraints*, v1.0.0, to improve the router. Inspected current
+Owner requested adapting _Measuring AI Performance and Selecting Models Under
+Quality and Cost Constraints_, v1.0.0, to improve the router. Inspected current
 core routing/catalog, executor attempt and proposal routing, CLI trusted-host
 injection and tests. Starting branch/worktree was clean at `a2e7708`; Node 24.21.0
 was available. Read the supplied 24-page PDF; preserve its independent/not-peer-

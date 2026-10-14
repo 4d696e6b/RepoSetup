@@ -11,7 +11,7 @@ export interface DocPage {
   slug: string;
   title: string;
   description: string;
-  group: "Start" | "Guides" | "Reference" | "Help";
+  group: "Start" | "Guides" | "Reference" | "Help" | "Preview";
   sections: DocSection[];
 }
 

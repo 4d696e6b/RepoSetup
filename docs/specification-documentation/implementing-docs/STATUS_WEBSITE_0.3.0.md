@@ -1,5 +1,33 @@
 # 0.3.0 companion website — first local slice
 
+## Task guide preview on the 0.3.1 baseline — 14 October 2026
+
+The owner requested complete task/compiler/router guidance while reconciling the
+0.4.0 branch with released 0.3.1. This development work preserves the live site's
+artwork, routes, selections and published CLI facts; it does not deploy changes.
+Three clearly labeled Preview pages bring the development docs count to 79:
+`/docs/task-compiler`, `/docs/task-router`, `/docs/task-troubleshooting`. The first
+is linked from the docs landing page and starts with copyable coding-agent prompts
+and independently reviewed inputs. The rest explain managed approval, allowance,
+quality/cost routing, repair and recovery. Published 0.3.1 has no task commands;
+the guide uses the exact local preview binary and does not promote production
+models or advertise automatic Codex model changes.
+
+Published references remain pinned to CLI source
+`f306e1c877887fe9c2861619ea434a26b996fe2c` and artifact SHA-256
+`34a8d5f871333f248af45c28b9d2aa2bde466f04cc23f10d4d395856be827135`.
+Builds verify the immutable reference snapshot instead of projecting development
+commands into released help. The registry-verified published-mode build passed.
+Website unit tests 76/76, workspace types/lint, and 99 new/legacy browser cases
+across Chrome desktop/mobile and Firefox passed. The published-mode follow-up
+passed 15 guide cases on those browsers. Local WebKit cannot initialize a page
+(`Unknown setting: PushAPIEnabled`); six failed setup cases were retained before
+the remaining run was cancelled. It establishes no WebKit result for the guides.
+The local preview was opened; no new website delivery or physical/native-reader
+qualification is claimed. See [0.4.0 status](./STATUS_0.4.0.md) for integration
+test failures, provenance and remaining release gates. The records below describe
+historical delivered website sources.
+
 ## Theme audit delivered — 13 October 2026
 
 The beginner and reference routes now share typography, palette and button/form styling on the live website. Exact source 0a5305a passed all 405 five-profile browser cases plus workspace/platform checks; all 15 live file hashes and security/cache headers match the retained output. [Theme delivery evidence](./WEBSITE_THEME_AUDIT_0.3.0.md) records per-route comparisons, original/cancelled runs, rollback and unchanged CLI pins. Earlier pending statements below are historical checkpoints. The CLI JSON no-op repair remains a separately tested, unpublished patch.

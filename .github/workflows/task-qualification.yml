@@ -43,6 +43,9 @@ jobs:
       CI: "1"
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The integrated website tests compare the pinned published CLI ancestor.
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
