@@ -2,6 +2,34 @@
 
 Last updated: 2026-10-14.
 
+## Versioned release preparation started — 2026-10-14
+
+The owner requested publication, then requested completing implementation/testing
+until the release is ready. Offline-only provider scope is retained while preparing
+the candidate; no paid call or production catalog promotion is authorized by this
+work. Publication has not occurred.
+
+The integrated release workflow had lost the four POSIX task jobs while the
+publication guard still required them. Restored two Linux/macOS matrices with
+the exact names `Offline task qualification` and `Full task verifier qualification`.
+Packing now depends on both in addition to platform, recipe and fault checks.
+Jobs use empty provider credentials, exact source/lock/runtime receipts, fixed
+offline suites, license/advisory review, unchanged-source checks and retained
+failure evidence. Existing guard requirements remain intact. The offline matrix
+includes concrete CLI verification and the full matrix runs all real-tool fixtures.
+
+Targeted release workflow/preparation/qualification tests passed **69/69**;
+task-test typecheck and final workspace lint passed. Initial lint rejected a
+two-space regular expression in the new regression; corrected without changing
+the assertions. No runtime build is affected by this workflow/test-only change.
+
+Next: integrate reviewed implementation into the existing clean canonical
+`codex/release-0.4.0` preparation worktree, reconcile released 0.3.1 behavior,
+prepare intentional version/artifact/website identities, update release-facing
+instructions and run the three complete exact-source qualifications. Live model
+qualification, actual cost/quality claims and release conditions remain explicitly
+unverified; do not silently waive them or publish before applicable guards pass.
+
 ## Isolated all-workflow validation — 2026-10-14
 
 Created sibling test environment

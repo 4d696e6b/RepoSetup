@@ -103,9 +103,130 @@ jobs:
           path: usability-fault-evidence.json
           if-no-files-found: error
 
+  offline-tasks:
+    name: Offline task qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    env:
+      # All task qualification uses fake transport; never inherit live credentials.
+      OPENAI_API_KEY: ""
+      AZURE_OPENAI_API_KEY: ""
+      CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm typecheck:task-tests
+      - run: pnpm lint
+      - name: Record exact task source and runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          mkdir -p task-qualification-evidence
+          node -e 'const fs = require("node:fs"); const crypto = require("node:crypto"); fs.writeFileSync("task-qualification-evidence/identity.json", JSON.stringify({schemaVersion: 1, sourceSha: process.env.GITHUB_SHA, workflowRunId: process.env.GITHUB_RUN_ID, workflowAttempt: Number(process.env.GITHUB_RUN_ATTEMPT), platform: process.platform, architecture: process.arch, node: process.version, lockfileHash: crypto.createHash("sha256").update(fs.readFileSync("pnpm-lock.yaml")).digest("hex"), providerMode: "simulated", liveQualification: false}, null, 2) + "\n")'
+      - name: Review dependency licenses and advisories without fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm review:licenses 2>&1 | tee task-qualification-evidence/licenses.log
+          pnpm audit --prod --json 2>&1 | tee task-qualification-evidence/production-audit.json
+          pnpm audit --json 2>&1 | tee task-qualification-evidence/workspace-audit.json
+      - name: Frozen task and packed compatibility contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm exec vitest run --config tests/e2e/vitest.tasks.config.ts 2>&1 | tee task-qualification-evidence/check-1.log
+      - name: Concrete CLI verification and routed repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter rsetup exec vitest run --config vitest.verification.config.ts 2>&1 | tee task-qualification-evidence/check-2.log
+      - name: Require unchanged source after qualification
+        run: git diff --exit-code && git diff --cached --exit-code
+      - name: Retain task evidence including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-offline-tasks-${{ matrix.os }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: task-qualification-evidence/
+          if-no-files-found: error
+          retention-days: 14
+
+  full-task-verifier:
+    name: Full task verifier qualification (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    env:
+      # All task qualification uses fake transport; never inherit live credentials.
+      OPENAI_API_KEY: ""
+      AZURE_OPENAI_API_KEY: ""
+      CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm typecheck:task-tests
+      - run: pnpm lint
+      - name: Record exact task source and runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain)"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          mkdir -p task-qualification-evidence
+          node -e 'const fs = require("node:fs"); const crypto = require("node:crypto"); fs.writeFileSync("task-qualification-evidence/identity.json", JSON.stringify({schemaVersion: 1, sourceSha: process.env.GITHUB_SHA, workflowRunId: process.env.GITHUB_RUN_ID, workflowAttempt: Number(process.env.GITHUB_RUN_ATTEMPT), platform: process.platform, architecture: process.arch, node: process.version, lockfileHash: crypto.createHash("sha256").update(fs.readFileSync("pnpm-lock.yaml")).digest("hex"), providerMode: "simulated", liveQualification: false}, null, 2) + "\n")'
+      - name: Review dependency licenses and advisories without fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm review:licenses 2>&1 | tee task-qualification-evidence/licenses.log
+          pnpm audit --prod --json 2>&1 | tee task-qualification-evidence/production-audit.json
+          pnpm audit --json 2>&1 | tee task-qualification-evidence/workspace-audit.json
+      - name: Real tools, scoped effects, acceptance and retained failure accounting
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm exec vitest run --config tests/e2e/vitest.task-verifier.config.ts 2>&1 | tee task-qualification-evidence/check-1.log
+      - name: Require unchanged source after qualification
+        run: git diff --exit-code && git diff --cached --exit-code
+      - name: Retain task evidence including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-full-task-verifier-${{ matrix.os }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: task-qualification-evidence/
+          if-no-files-found: error
+          retention-days: 14
+
   pack-candidate:
     name: Pack identified candidate
-    needs: [platform, golden, faults]
+    needs: [platform, golden, faults, offline-tasks, full-task-verifier]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
