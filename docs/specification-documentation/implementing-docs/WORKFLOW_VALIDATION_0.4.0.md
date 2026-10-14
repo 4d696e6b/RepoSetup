@@ -184,3 +184,24 @@ hosted website acceptance remain pending. Existing hosted development runs above
 are not substituted for those gates. Local uv/WebKit limitations remain explicit.
 No paid model calls, production routing qualification, publication or deployment
 is established by these local results.
+
+## Renewed output-repair artifact — 2026-10-15
+
+The security buffer and deadline fixes are committed in CLI byte-source
+`9758e84074f9a862f1b8ed91340a277c2ca3e1ce`. Its actual 0.4.0 tarball and independent
+archive rebuild match SHA-256
+`55d9af9243a376de92104e98b6a23f75ebcdfa744d31032b2b451f68e2a9e97e`.
+Website and source guide pins now target these bytes. The final local joint checks
+pass 1,783 unit cases, build/types/lint, 66 ordinary task contracts, six installed
+website handoffs, 105 packed selections, 137 generic e2e cases with one existing uv
+skip, and 258 local Chrome/Firefox browser cases. Actual npm-installed portable
+guide commands, both aliases, unchanged inventory/privacy and a real Express
+build/HTTP-response check pass. License review and both dependency audits pass.
+
+Local artifacts and logs are retained in the external test environment under
+`evidence/candidate-9758e84/`. Intermediate `19ec733`/`5f3250b` evidence is historical,
+not final qualification. Live usage/model comparisons remain unverified. The
+independent reviewer covered the initial repair; its final optimization follow-up
+was unavailable after service/usage errors. Final exact joint-source hosted
+qualifications, full WebKit matrix and all documented release conditions remain
+required; these working-tree checks do not publish or qualify a frozen release.

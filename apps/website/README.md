@@ -40,8 +40,8 @@ Beginner code/catalog load only when requested. Returning from an explanation pr
 ## Matching CLI artifact: required before pasting commands
 
 The selection handoff requires reviewed `rsetup@0.4.0`, CLI byte-source
-`cfdb6c710706d8a280cdd8d81195aae371a1fa74`, tarball SHA-256
-`a4a95e7f1cb6e95bb1bc2fa73650c1ebc6626c1be0fb6777d9ca28fa782f7345`.
+`9758e84074f9a862f1b8ed91340a277c2ca3e1ce`, tarball SHA-256
+`55d9af9243a376de92104e98b6a23f75ebcdfa744d31032b2b451f68e2a9e97e`.
 Prepare that candidate with `pack:contract` below. After registry-verified
 publication, install `npm install -g rsetup@0.4.0` before using these exports.
 The single authoritative pin is `src/handoff.ts`. Published-mode builds verify

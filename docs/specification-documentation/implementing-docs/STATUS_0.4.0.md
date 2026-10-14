@@ -3487,3 +3487,51 @@ prerequisite skip), and 258 local browser cases. They were running during this
 follow-up and used intermediate build/pin identities, so they are not final joint
 qualification. After this commit the website must be repinned and exact installed
 checks renewed before hosted qualification. No live provider calls occurred.
+
+## Renewed joint artifact checks — 2026-10-15
+
+CLI byte-source `9758e84074f9a862f1b8ed91340a277c2ca3e1ce` includes both output
+repairs and packs as 0.4.0, SHA-256
+`55d9af9243a376de92104e98b6a23f75ebcdfa744d31032b2b451f68e2a9e97e`.
+An independent committed-source archive rebuild reproduces those bytes and installs
+them outside the workspace. The website, README and portable source guide now pin
+that identity. The regenerated reference still has 16 actual commands, 37
+integrations and five presets; its new SHA-256 is
+`fc85952da9afae3dba19f4c23cd0558f4518a6cb80542956e8727b45c6f08e7f`.
+The frozen lockfile and immutable published 0.3.1 reference hashes are unchanged.
+No command, package version, installation selection or production catalog was added.
+
+Final local joint working-tree validation on Node 24.21.0/macOS arm64:
+
+- All 1,783 workspace unit cases pass: core 685, registry 15, integrations 680,
+  CLI 322 and website 81.
+- Workspace build, workspace/task/selection infrastructure typechecks, lint and
+  diff whitespace checks pass.
+- All 66 ordinary task cases pass, including the complete workspace and actual
+  npm-installed portable guide, both aliases and unchanged project/privacy checks.
+- Six exact-artifact website handoffs, 105 packed-selection cases and 137 generic
+  e2e cases pass. One existing uv prerequisite case is skipped; no system tool
+  was installed. The actual local tarball passes aliases, legacy dry-run, task
+  compilation, and an Express build/HTTP-response check. This is local tarball
+  delivery acceptance, not actual published npm evidence.
+- All 258 local Chrome desktop/mobile and Firefox desktop browser cases pass.
+  WebKit is unavailable on this macOS 14 host; full five-profile acceptance is
+  assigned to the hosted macOS 15 gate.
+- License metadata review passes 201 packages across seven allowlisted families;
+  production and full-workspace dependency audits report zero known advisories.
+
+These final checks cover the renewed artifact; no intermediate artifact is counted
+as final. They remain development evidence because the website coupling was not
+yet committed during validation. The next commit establishes the clean joint
+source for fresh hosted release repetitions, website and selection/platform checks.
+The earlier reviewer limitation and original deferred live/stability conditions
+remain recorded; no condition was silently removed or marked passed. Live provider
+qualification and real comparative model quality/cost evidence stay deferred, and
+production routing remains blocked. No API credit was spent.
+
+Logs and packed/archive receipts are retained outside the checkout in
+`RepoSetup-0.4.0-test-environment/evidence/candidate-9758e84/`, with temporary source
+logs `/tmp/reposetup-040-final-*`. Next: push the clean joint candidate, run three
+consecutive first-attempt 20-job release qualifications at its unchanged SHA,
+inspect retained exact-artifact and full website evidence, and resolve any remaining
+release gates before tag/publication/deployment. No main merge or delivery occurred.

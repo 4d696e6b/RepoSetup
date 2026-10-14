@@ -44,7 +44,7 @@ The commands below check out the reviewed CLI byte-source. Record git rev-parse 
 ```text
 git clone --branch codex/release-0.4.0 https://github.com/4d696e6b/RepoSetup.git RepoSetup-task-preview
 cd RepoSetup-task-preview
-git checkout cfdb6c710706d8a280cdd8d81195aae371a1fa74
+git checkout 9758e84074f9a862f1b8ed91340a277c2ca3e1ce
 node --version
 pnpm --version
 pnpm install --frozen-lockfile

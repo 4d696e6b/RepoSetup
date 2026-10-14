@@ -7,6 +7,22 @@ prerequisites. Completing offline I/J does not qualify a candidate, start the
 seven-day clock, authorize spending or pass any unobserved remote condition.
 
 
+## Output-repair artifact update — 2026-10-15
+
+The shared process output security repair is committed as CLI byte-source
+`9758e84074f9a862f1b8ed91340a277c2ca3e1ce`. The new 0.4.0 tarball has SHA-256
+`55d9af9243a376de92104e98b6a23f75ebcdfa744d31032b2b451f68e2a9e97e`; the website
+now pins it and the regenerated 16-command reference, SHA-256 `fc85952da9afae3dba19f4c23cd0558f4518a6cb80542956e8727b45c6f08e7f`.
+The version and frozen lockfile are unchanged. The earlier `cfdb6c7` identity and
+`5f3250b` hosted results below are historical evidence for the superseded artifact.
+They cannot qualify this repair. Three manual old-source release waves were
+cancelled; new joint-source release repeats and website/selection acceptance are
+required. Independent scoped source review covers the initial buffer repair; the
+subsequent timeout optimization passes local core/CLI and differential regressions.
+Its independent follow-up was unavailable after service/usage errors. Live model
+qualification remains deferred and production routing stays closed.
+
+
 ## Versioned preparation update — 2026-10-14
 
 The owner subsequently requested preparing and publishing 0.4.0 everywhere,
