@@ -126,7 +126,7 @@ No merge, tag, publication or stability-clock start is implied.
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
-- Integrated base branch: `main` (PR retarget pending).
+- Integrated base branch: `main`; PR #20 is retargeted and remains draft.
 - Integrated base source: `763b333ff8f7ab05ba5f0f70a61a91bcb2abd857`.
 - Preparation inspected HEAD: `9fa2389176cb822ebae89d7edd301c0a3dbb6cb4`, then runtime source matched the integrated base. Milestone D started at `47db339` with a clean Git status; subsequent runtime extensions are recorded below.
 - CLI package version: inherited `0.3.1`; no new release bump or tag.

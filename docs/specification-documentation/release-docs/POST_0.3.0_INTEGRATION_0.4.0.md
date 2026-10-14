@@ -13,8 +13,9 @@ Build/types/lint/unit/packed selection checks pass. A real React/Vite scaffold
 check reproduces an unavailable upstream ESLint plugin version; complete
 integration/platform qualification remains open. See
 [current status](../implementing-docs/STATUS_0.4.0.md) for detailed evidence.
-Keep PR #20 draft, retarget its review to main after the integration commit, and
-qualify the resulting source. No main merge, tag, npm publish, paid call or live
+PR #20 remains draft and is now retargeted to main. Reconciliation commit `41db620`
+and guide commit `509adad` are pushed; new hosted checks are in progress, not passed.
+Qualify the resulting source. No main merge, tag, npm publish, paid call or live
 website deployment is authorized by this reconciliation. The following preparation
 checkpoints are historical.
 
