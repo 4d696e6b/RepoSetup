@@ -41,4 +41,32 @@ describe("postCreateCommands", () => {
       }),
     ).toEqual(["pnpm dev", "pnpm build", "pnpm start", "pnpm exec vitest run"]);
   });
+  it.each(["express", "fastify"])("uses the default TypeScript scripts for %s", (id) => {
+    expect(
+      postCreateCommands({
+        schemaVersion: 1,
+        project: { name: "demo" },
+        runtime: { id: "node" },
+        packageManager: "npm",
+        framework: { id },
+        integrations: [],
+      }),
+    ).toEqual(["npm run dev", "npm run build", "npm run start"]);
+  });
+
+  it.each([
+    ["express", "app.js"],
+    ["fastify", "server.js"],
+  ])("prints the JavaScript entry for %s", (id, entry) => {
+    expect(
+      postCreateCommands({
+        schemaVersion: 1,
+        project: { name: "demo" },
+        runtime: { id: "node" },
+        packageManager: "npm",
+        framework: { id, options: { typescript: false } },
+        integrations: [],
+      }),
+    ).toEqual([`node ${entry}`]);
+  });
 });

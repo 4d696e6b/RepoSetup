@@ -9,8 +9,9 @@ import {
   SELECTION_LIMITS,
   selectionCommand,
 } from "@reposetup/core";
-import { catalog, handoff } from "../src/catalog.js";
-import { chooseSelection, exportSelection, type Choice } from "../src/selection.js";
+import { catalog, handoff } from "../src/beginner/catalog.js";
+import { chooseSelection, exportSelection, type Choice } from "../src/beginner/selection.js";
+import routes from "../src/generated/routes.json";
 
 const registry = createBuiltInRegistry();
 function choice(contextId = catalog.contexts[0]!.id): Choice {
@@ -33,6 +34,11 @@ describe("curated public catalog", () => {
     ])
       expect(serialized).not.toContain(forbidden);
     expect(catalog.limits).toEqual(SELECTION_LIMITS);
+    expect(routes).toEqual({
+      contexts: catalog.contexts.map(({ id }) => id),
+      presets: catalog.presets.map(({ id }) => id),
+      libraries: catalog.integrations.map(({ id }) => id),
+    });
   });
   it("uses the committed CLI definitions and contract rather than an unrelated registry", () => {
     for (const file of [
@@ -146,7 +152,7 @@ describe("bounded website choices and command transport", () => {
 });
 
 it("project errors identify the invalid field and ignore hidden create controls in add mode", async () => {
-  const { projectChoiceErrors } = await import("../src/selection.js");
+  const { projectChoiceErrors } = await import("../src/beginner/selection.js");
   const valid = {
     contextId: "express-ts-pnpm",
     mode: "create" as const,

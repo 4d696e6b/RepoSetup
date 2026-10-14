@@ -1,3 +1,4 @@
+import { delivery } from "../publication.js";
 import { handoff } from "./catalog.js";
 import { el, section } from "./dom.js";
 import { intro } from "./ui.js";
@@ -11,20 +12,26 @@ export function howTo(main: HTMLElement) {
   );
   const localCli = section(
     "Use the matching local CLI",
-    `This preview targets rsetup ${handoff.version}, committed at ${handoff.commit}. Have Node 24, pnpm and the required project manager available. From this repository’s root, prepare the pinned CLI artifact before using a selection command:`,
+    delivery.published
+      ? `Install rsetup ${handoff.version}. Have Node 24 and the required project manager available. Then check the CLI version before using a selection command:`
+      : `This preview targets rsetup ${handoff.version}, committed at ${handoff.commit}. Have Node 24, pnpm and the required project manager available. From this repository’s root, prepare the pinned CLI artifact before using a selection command:`,
   );
   const setup = el("pre");
   setup.append(
     el(
       "code",
-      'pnpm --filter @reposetup/website pack:contract\nexport PATH="$PWD/apps/website/.local-cli/bin:$PATH"\nreposetup --version',
+      delivery.published
+        ? `${delivery.install}\nreposetup --version`
+        : 'pnpm --filter @reposetup/website pack:contract\nexport PATH="$PWD/apps/website/.local-cli/bin:$PATH"\nreposetup --version',
     ),
   );
   localCli.append(
     setup,
     el(
       "p",
-      "These commands are for a POSIX shell in the local development checkout. The packer requires the exact committed CLI source and records its artifact hash in apps/website/.local-cli/evidence.json. Keep this shell open when pasting the selection command. The published 0.2.0 CLI does not support selection-v1.",
+      delivery.published
+        ? "The installation command works in your terminal. Run the copied create command from the new folder’s parent, or the add command from the existing project’s package directory. Selections still require local review and confirmation."
+        : "These commands are for a POSIX shell in the local development checkout. The packer requires the exact committed CLI source and records its artifact hash in apps/website/.local-cli/evidence.json. Keep this shell open when pasting the selection command. The published 0.3.0 CLI is the previous release; use the matching local candidate for this patch.",
       "hint",
     ),
   );
@@ -46,10 +53,7 @@ export function howTo(main: HTMLElement) {
       "Missing prerequisites",
       "Install Node, Python and your manager yourself using their official instructions. RepoSetup reports missing prerequisites; it does not install system software silently.",
     ),
-    section(
-      "Stale catalog or wrong CLI",
-      "If the CLI reports SELECTION_INVALID with a catalog or version reason, use this preview’s exact local CLI artifact and regenerate the selection. Do not edit encoded tokens to bypass validation. Local detection may also reject an incompatible project.",
-    ),
+    section("Stale catalog or wrong CLI", delivery.staleCli),
     section(
       "Selection too large",
       "The command limit is 4,200 characters, the token limit is 4,096 characters / 3,072 bytes. Use the validated selection.json fallback for larger inputs, up to 16 KiB. Download into the command directory and use the displayed mode-specific file command.",

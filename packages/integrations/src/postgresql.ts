@@ -12,6 +12,7 @@ import {
 
 import { DATABASE_CONFLICTS } from "./conflicts.js";
 import { defineIntegration } from "./define.js";
+import { hasSelectedIntegration } from "./operations.js";
 import { pythonManifestText } from "./python-detect.js";
 import { supportsNodeOrPython } from "./python-support.js";
 import { failVerify, mergeVerify } from "./verify.js";
@@ -34,7 +35,9 @@ export const postgresqlIntegration = defineIntegration({
     const schema = await context.files.readText("prisma/schema.prisma");
     const hasProvider = schema !== undefined && /provider\s*=\s*"postgresql"/.test(schema);
     const envExample = await context.files.readText(".env.example");
-    const hasUrl = envExample !== undefined && /DATABASE_URL\s*=\s*"?postgresql:/.test(envExample);
+    const hasUrl =
+      envExample !== undefined &&
+      /DATABASE_URL\s*=\s*"?postgresql(?:\+[a-z0-9_]+)?:/.test(envExample);
     const sqlalchemyDeclared = textDeclaresPythonPackage(
       await pythonManifestText(context),
       "SQLAlchemy",
@@ -65,7 +68,12 @@ export const postgresqlIntegration = defineIntegration({
 
     return detectedResult(hasProvider || hasUrl ? "certain" : "likely", items);
   },
-  plan() {
+  plan(context) {
+    const host = hasSelectedIntegration(context, "docker-compose") ? "127.0.0.1" : "localhost";
+    const driver =
+      context.config.runtime.id === "python" && hasSelectedIntegration(context, "sqlalchemy")
+        ? "postgresql+psycopg"
+        : "postgresql";
     return [
       {
         type: "show_message",
@@ -79,7 +87,7 @@ export const postgresqlIntegration = defineIntegration({
         entries: [
           {
             key: "DATABASE_URL",
-            placeholder: "postgresql://USER:PASSWORD@localhost:5432/DATABASE?schema=public",
+            placeholder: `${driver}://USER:PASSWORD@${host}:5432/DATABASE${driver === "postgresql" ? "?schema=public" : ""}`,
           },
         ],
         description: "Document the PostgreSQL DATABASE_URL placeholder",
@@ -99,7 +107,7 @@ export const postgresqlIntegration = defineIntegration({
     const envIssue =
       env !== undefined &&
       existingEnvKeys(env).has("DATABASE_URL") &&
-      !/DATABASE_URL\s*=\s*"?postgresql:/.test(env)
+      !/DATABASE_URL\s*=\s*"?postgresql(?:\+[a-z0-9_]+)?:/.test(env)
         ? failVerify(
             ".env.example DATABASE_URL is not a postgresql: URL.",
             "Use a postgresql: DATABASE_URL placeholder. Doctor does not write env files.",

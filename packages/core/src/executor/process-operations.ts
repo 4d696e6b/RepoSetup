@@ -1,3 +1,8 @@
+import {
+  NODE_DEPENDENCY_PROBE,
+  PYTHON_DEPENDENCY_PROBE,
+  dependencyProbeResultSchema,
+} from "../doctor/dependency-probe.js";
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import { toPackageManagerCommand } from "../package-managers/lookup.js";
 import type {
@@ -31,7 +36,7 @@ export async function executeCheckPrerequisite(
       message: `Unknown prerequisite "${operation.id}".`,
       details: { id: operation.id },
       suggestion:
-        "PATH checks cover node, npm, pnpm, python, uv, and pip. Do not install system software automatically.",
+        "PATH checks cover node, npm, pnpm, python, uv, pip, and docker. Do not install system software automatically.",
     });
   }
 
@@ -216,6 +221,35 @@ export async function executeVerify(
     return undefined;
   }
 
+  if (args.includes(NODE_DEPENDENCY_PROBE) || args.includes(PYTHON_DEPENDENCY_PROBE)) {
+    let report;
+    try {
+      report = dependencyProbeResultSchema.safeParse(JSON.parse(result.stdout));
+    } catch {
+      report = undefined;
+    }
+    if (report?.success === true) {
+      return createRepoSetupError({
+        code: "VERIFICATION_FAILED",
+        message:
+          report.data.missing.length > 0
+            ? `Required packages are not installed: ${report.data.missing.join(", ")}.`
+            : "Installed dependency metadata could not be verified.",
+        details: {
+          missing: report.data.missing,
+          environment: report.data.environment,
+          errors: report.data.errors,
+        },
+        suggestion:
+          operation.command === "uv"
+            ? "Run uv sync in the generated project, then rerun rsetup doctor."
+            : operation.command === "python"
+              ? "Activate the installation environment, run python -m pip install -r requirements.txt, then rerun rsetup doctor."
+              : "Run the selected package manager's install command in the generated project, then rerun rsetup doctor.",
+      });
+    }
+  }
+
   return createRepoSetupError({
     code: "VERIFICATION_FAILED",
     message: failed.message,
@@ -339,9 +373,11 @@ function commandFailure(
   }
 
   if (result.timedOut === true) {
+    const snippet = recordFailedProcessOutput(result, context);
+    const summary = `Command "${command}" exceeded its execution time limit.`;
     return createRepoSetupError({
       code: "COMMAND_TIMED_OUT",
-      message: `Command "${command}" exceeded its execution time limit.`,
+      message: snippet === undefined ? summary : `${summary}\n${snippet}`,
       details: { command, args: [...args] },
       suggestion: "Check network, package-manager, and project state before retrying the plan.",
     });
@@ -361,11 +397,7 @@ function commandFailure(
     return undefined;
   }
 
-  const snippet = summarizeFailedProcessOutput(result.stdout, result.stderr);
-  if (snippet !== undefined) {
-    context.logger.info(snippet);
-    context.logs.push(snippet);
-  }
+  const snippet = recordFailedProcessOutput(result, context);
 
   const summary = `Command "${command}" exited with code ${result.exitCode}.`;
   return createRepoSetupError({
@@ -378,6 +410,18 @@ function commandFailure(
     },
     suggestion: commandFailureSuggestion(snippet),
   });
+}
+
+function recordFailedProcessOutput(
+  result: ProcessRunResult,
+  context: ExecutionContext,
+): string | undefined {
+  const snippet = summarizeFailedProcessOutput(result.stdout, result.stderr);
+  if (snippet !== undefined) {
+    context.logger.info(snippet);
+    context.logs.push(snippet);
+  }
+  return snippet;
 }
 
 function timeoutFor(

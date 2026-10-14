@@ -5,7 +5,8 @@ packages:
 allowBuilds:
   esbuild: true
 
-# Reviewed development-tool security updates; keep unaffected versions unchanged.
+# Maintainer build/test tooling only; generated project recipes keep their own
+# independently qualified versions. Revisit these overrides when upstream ranges update.
 overrides:
-  "source-map-js@1.2.1": "1.2.2"
-  "esbuild@0.27.7": "0.28.1"
+  esbuild: 0.28.1
+  source-map-js: 1.2.2

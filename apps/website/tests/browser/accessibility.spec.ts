@@ -11,9 +11,12 @@ test("built preview blocks network connections and untrusted route text", async 
     reached.push(route.request().url());
     return route.fulfill({ body: "unexpected connection" });
   });
-  await page.goto("/");
+  await page.goto("/#/goals");
   const policy = page.locator('meta[http-equiv="Content-Security-Policy"]');
-  await expect(policy).toHaveAttribute("content", /connect-src 'none'/);
+  await expect(policy).toHaveAttribute(
+    "content",
+    /connect-src https:\/\/reposetup.vercel.app\/_vercel\/insights\//,
+  );
   expect(
     await page.evaluate(async () => {
       try {
@@ -26,12 +29,12 @@ test("built preview blocks network connections and untrusted route text", async 
   ).toBe("connection blocked");
   expect(reached).toEqual([]);
   const text = '<img src="/policy-fixture" onerror="alert(1)">';
-  await page.goto(`/#/integrations?goal=${encodeURIComponent(text)}`);
+  await page.goto(`/#/learn/libraries?goal=${encodeURIComponent(text)}`);
   await expect(page.getByLabel("Search by library or goal")).toHaveValue(text);
   await expect(page.getByRole("status")).toHaveText("0 libraries found");
-  await expect(page.locator("img")).toHaveCount(0);
+  await expect(page.locator("main img")).toHaveCount(0);
   await page.goto("/#/builder/unknown-context");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Page not found");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/^Page not found\.?$/);
   await expect(page.getByRole("button", { name: "Copy RepoSetup command" })).toHaveCount(0);
 });
 

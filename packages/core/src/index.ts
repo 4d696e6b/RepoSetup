@@ -43,6 +43,11 @@ export type {
 } from "./integrations/definition.js";
 export { detectProject } from "./detection/detect-project.js";
 export type { DetectProjectResult } from "./detection/detect-project.js";
+export {
+  NODE_DEPENDENCY_PROBE,
+  PYTHON_DEPENDENCY_PROBE,
+  dependencyProbeResultSchema,
+} from "./doctor/dependency-probe.js";
 export { errorsFromDoctor, failedDoctorChecks, runDoctor } from "./doctor/run-doctor.js";
 export { planDoctorRepair } from "./doctor/plan-repair.js";
 export type { DoctorRepairPlan } from "./doctor/plan-repair.js";

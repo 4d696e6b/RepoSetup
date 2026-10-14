@@ -10,7 +10,14 @@ export function el<K extends keyof HTMLElementTagNameMap>(
 }
 export function link(text: string, href: string, className?: string) {
   const node = el("a", text, className);
-  node.href = href;
+  node.href =
+    href === "#/"
+      ? "#/goals"
+      : href.startsWith("#/integrations")
+        ? href.replace("#/integrations", "#/learn/libraries")
+        : href === "#/presets"
+          ? "#/learn/starters"
+          : href;
   return node;
 }
 export function section(title: string, text?: string) {

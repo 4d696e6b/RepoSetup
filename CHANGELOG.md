@@ -6,8 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased] — experimental 0.4.0 task compiler development
 
-These changes live on `codex/0.4.0-task-compiler`. Package versions remain
-`0.3.0-alpha.1`; this entry does not announce a release or qualified candidate.
+These changes live on `codex/0.4.0-task-compiler`. The integrated development tree inherits version
+`0.3.1`; this entry does not announce a release or qualified candidate.
 
 ### Added
 
@@ -33,8 +33,92 @@ These changes live on `codex/0.4.0-task-compiler`. Package versions remain
   and filesystem effects. Live account/model/schema/usage acceptance, production
   routing capability, comparative quality/cost results and release/platform gates
   remain unverified. Azure resource preparation adds no runtime Azure adapter.
-- No new task `verify` command, website changes, parallel task workers, MCP,
+- No new task `verify` command, parallel task workers, MCP,
   automatic rollback, package-version bump, release tag or publication.
+
+## [0.3.1] - 2026-10-13
+
+- Repeated `remove --json` for an absent integration returns the versioned empty plan, including quiet, dry-run and diff modes. Plain-text output is retained; no-op removal preserves files and does not prompt or execute commands.
+- The companion website targets the exact 0.3.1 CLI artifact while preserving 0.3.0 release history, existing routes, theme and selection-v1 compatibility. No new integration support or automatic dependency repair is introduced.
+
+Exact delivery and qualification are tracked in the [0.3.1 release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md).
+
+## [0.3.0] - 2026-10-13
+
+Published CLI and companion website. Exact qualification, delivery and accepted limits are in the
+[stable release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md).
+
+- Curated beginner guidance, reusable minimal starters and goal discovery cover bounded React/Vite, Express and FastAPI contexts, derived from the built-in registry.
+- Versioned declarative selections support create/add via a bounded token or JSON file. The local CLI validates context, IDs, options and size limits, shows decoded choices and the installation plan, and requires confirmation. `--dry-run` remains available.
+- Structural `--diff` previews explain file changes without printing secret contents. Intended-stack doctor compares a schemaVersion 1 config with local evidence. Allowlisted repair creates eligible missing recipe files only after review; installed-dependency health and user-file safeguards remain mandatory.
+- The companion website combines the full published documentation/catalog and existing routes/artwork with beginner explanations, minimal starters and the create/add builder. It keeps choices local and lazy-loads the builder.
+- All published 0.2.1–0.2.3 fixes, schemaVersion 1 configs, five legacy presets, positional add and supported JSON envelopes are retained. Express/Vitest sample ownership is corrected and conflicting exclusive file writes fail during planning.
+
+- Compact, responsive navigation groups secondary destinations under Explore, keeps Build accessible and fits laptop/desktop windows and short viewports.
+- npm/GitHub delivery and the existing website are verified against the same retained release artifacts. Native screen-reader qualification is explicitly deferred; phone checks are emulation.
+
+## [0.2.3] - 2026-10-09
+
+Published installed-stack stability patch; qualification and delivery evidence are in the
+[release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md).
+
+### Fixed
+
+- Fresh Node scaffolds and selected development package additions include required dev dependencies even under production/omit settings.
+- PostgreSQL SQLAlchemy recipes install the pinned Psycopg binary driver and provide a guarded engine helper. JavaScript Prisma recipes import their generated client using supported Node 24 TypeScript paths.
+- Docker selections persist prerequisite guidance; doctor reports missing or unusable Docker/Compose CLIs with bounded probes. PostgreSQL Compose publishes a loopback port with aligned environment placeholders, a required password and persistent storage.
+- Cache permission failures and partial creation explain safe recovery and the actual project directory. Completion output distinguishes package installation from manual system-service setup and names the correct database environment variable.
+- Node prerequisite text and metadata match the existing Node 24 requirement.
+- Timed-out installations retain bounded, redacted installer diagnostics and still stop before later operations.
+- Doctor recovery commands restore development packages under production/omit settings and rebuild damaged pnpm package links; packed regressions follow those commands through a successful repair.
+
+See the [installed stack audit](docs/specification-documentation/implementing-docs/INSTALLED_STACK_AUDIT.md) for qualification and limits. These fixes are delivered in 0.2.3; the immutable published 0.2.2 package is unchanged.
+
+## [0.2.2] - 2026-10-08
+
+Published dependency-health stability patch; qualification and delivery evidence are in the
+[release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.2.md).
+
+### Fixed
+
+- Pip creation records every selected pinned runtime/development dependency in a new `requirements.txt`, so doctor detects the actual generated project instead of a parent config or no project.
+- Create verifies installed dependency metadata before reporting success; doctor detects missing required Node/Python packages instead of treating declarations as proof of installation.
+- FastAPI standard checks include its CLI and Uvicorn. Doctor inspects uv's existing project environment without syncing or recreating it; pip uses the active interpreter, including activated environments on Windows.
+- Python README/startup guidance explains environment activation, `uv run` and dependency recovery. Configuration checks describe their actual scope.
+
+### Changed
+
+- Packed create tests assert the canonical generated root, framework and installed dependency checks; damaged package metadata and missing uv environments are regression-tested across twenty bare solutions and fourteen recipes.
+- Node 24+, existing catalog maturity and native/live-service/browser qualification limits remain unchanged. Installed metadata does not prove all imports, transitive compatibility or live services.
+
+## [0.2.1] - 2026-10-08
+
+Stability patch; qualification/publication status is in the
+[release record](docs/specification-documentation/release-docs/STABLE_RELEASE_0.2.1.md).
+
+### Fixed
+
+- Named and nested create destinations now scope generated files and installation commands correctly, including Next.js `app/layout.tsx` and Python initialization.
+- Bare Vite dependencies and pnpm Express esbuild approval are installed before verification; dependency pins, install ordering and destination lockfile safeguards apply consistently.
+- Tailwind/Vite setup and shadcn TypeScript/JavaScript aliases, defaults and configuration-file verification produce usable generated projects.
+- npm launch settings and package-manager identity no longer leak into nested generators; Playwright uses the selected manager and Prisma initialization does not fetch coding-agent skills.
+- Next.js Vitest uses compatible pinned test tooling and canonical roots on Windows; doctor distinguishes a test-only Vite dependency from a Vite application.
+- Express/Fastify startup paths, server feedback, README commands and Python testing guidance match generated files; Compose context survives subsequent add operations.
+- Text insertion preserves LF/CRLF and workflow evidence is parsed before upload.
+
+### Changed
+
+- Next.js generator/framework/eslint pins use the qualified 16.3.6 security patch.
+- All six frameworks have packed-npx bare-solution coverage, with npm/pnpm, TypeScript/JavaScript and isolated uv/pip; fourteen recipes and five presets have expanded cross-platform regression coverage.
+- Node.js 24+ remains required. Native Windows 11, Linux arm64, live services and actual Playwright browser journeys remain outside the qualified matrix. No catalog integration is promoted to stable.
+- Generated development-tool advisory GHSA-vfj7-8cjw-p6xm has no published fix as of the release review; do not describe generated stacks as audit-clean.
+
+## [0.2.0] - 2026-10-07
+
+- Published the terminal-first CLI with Node 24+, Python 3.12/3.13 qualification, five curated presets, reproducible pinned recipes, consolidated installs, platform adapters and safer execution/recovery diagnostics.
+- Added React Testing Library/TanStack Query and FastAPI HTTPX/Pydantic Settings examples.
+- Qualified and verified registry delivery on Ubuntu 24.04, macOS 15 and Windows Server 2025. Individual integration maturity and external-service limitations remain explicit.
+- See the immutable [0.2.0 evidence record](docs/specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md).
 
 ## [0.1.1] - 2026-09-22
 

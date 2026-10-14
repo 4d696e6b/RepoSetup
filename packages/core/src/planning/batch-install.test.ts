@@ -98,6 +98,15 @@ describe("batchInstallPackages", () => {
     ]);
   });
 
+  it("keeps the explicit development installation policy when batching", () => {
+    const explicit = install(["zod@4.6.5"], { includeDev: true });
+    const inherited = install(["left-pad@1.3.0"]);
+    expect(batchInstallPackages([explicit, inherited])).toEqual({
+      ok: true,
+      operations: [explicit, inherited],
+    });
+  });
+
   it("unions allowBuild when merging", () => {
     const result = batchInstallPackages([
       install(["prisma@7.10.0"], {

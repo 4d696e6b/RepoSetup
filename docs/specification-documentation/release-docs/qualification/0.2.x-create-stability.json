@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-08",
+  "status": "repair-qualification-delivered-as-0.2.1",
+  "branch": "codex/fix-create-project-paths",
+  "productSourceCommit": "448beb43d945dffa81ff403553200c7e04d3cba1",
+  "local": {
+    "unitTestsPassed": 959,
+    "planMatrixTestsPassed": 495,
+    "packagedE2ETestsPassed": 37,
+    "packagedE2ETestsSkipped": 1,
+    "skippedReason": "External release-candidate artifact check",
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "registryDefinitionsValidated": 37
+  },
+  "fullMatrix": {
+    "runId": 37703591131,
+    "url": "https://github.com/4d696e6b/RepoSetup/actions/runs/37703591131",
+    "scope": "full",
+    "jobsPassed": 12,
+    "testCasesPerJob": 34,
+    "passedTestExecutions": 408,
+    "bareSolutionCases": 20,
+    "recipeCases": 14,
+    "platforms": [
+      "ubuntu-24.04/x64",
+      "macos-15/arm64",
+      "windows-2025/x64"
+    ],
+    "nodeMajor": 24,
+    "pythonVersions": [
+      "3.12",
+      "3.13"
+    ],
+    "javascriptPackageManagers": [
+      "npm",
+      "pnpm"
+    ],
+    "pythonPackageManagersCovered": [
+      "uv",
+      "pip"
+    ],
+    "allJobsSucceeded": true
+  },
+  "presets": {
+    "runId": 37703595169,
+    "sessionsPassed": 15,
+    "checksPassed": 117,
+    "expectedOccupiedPortFailures": 3,
+    "liveDatabaseConnectionsTested": false
+  },
+  "evidenceFormat": {
+    "sourceCommit": "86352e314f6013f9838971f34d625fae59bdcb07",
+    "writerRunId": 37704261590,
+    "scope": "evidence-only",
+    "validGoldenJSONFiles": 12,
+    "validPlatformJSONFiles": 3,
+    "note": "The full product run's four Windows JSON artifacts have a literal backslash-n trailer. Original artifacts were retained; all twelve semantic payloads were validated. The separately qualified writer fixes the newline and parses JSON before upload. Product files are unchanged after the full run's source revision."
+  },
+  "additionalSuccessfulRuns": {
+    "focusedNextVitest": 37703256893,
+    "fastCI": 37704216808,
+    "platform": 37704216810,
+    "controlledInstallationPerformance": 37704216851
+  },
+  "notQualified": [
+    "Every possible integration permutation",
+    "Native Windows 11",
+    "Linux arm64",
+    "Live PostgreSQL/MongoDB/container connections",
+    "SQLAlchemy PostgreSQL DBAPI connectivity",
+    "Playwright browser execution"
+  ],
+  "securityReview": {
+    "unresolvedGeneratedDevelopmentToolAdvisory": "GHSA-vfj7-8cjw-p6xm",
+    "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "publishedPatchAvailable": false
+  },
+  "publication": {
+    "npmUnchanged": false,
+    "patchVersionNotPublished": false,
+    "maintainerReleaseReviewRequired": false,
+    "deliveredVersion": "0.2.1",
+    "releaseRecord": "../STABLE_RELEASE_0.2.1.md",
+    "releaseSourceCommit": "c61b88a88e18ef5d9c92291131f3c938fc0b521a"
+  }
+}

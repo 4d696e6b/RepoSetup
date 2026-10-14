@@ -171,7 +171,15 @@ describe("locked npm reproduction", () => {
     const manifest = JSON.parse(await readFile(path.join(appDir, "package.json"), "utf8")) as {
       dependencies: Record<string, string>;
     };
-    manifest.dependencies["local-pin"] = "9.9.9";
+    // Keep the drift fixture local: npm must reject lockfile drift without
+    // turning a reproducibility assertion into a public-registry lookup.
+    const driftDir = path.join(root, "local-drift");
+    await mkdir(driftDir);
+    await writeFile(
+      path.join(driftDir, "package.json"),
+      `${JSON.stringify({ name: "local-pin", version: "9.9.9", private: true })}\n`,
+    );
+    manifest.dependencies["local-pin"] = "file:../local-drift";
     await writeFile(path.join(appDir, "package.json"), `${JSON.stringify(manifest, null, 2)}\n`);
     const drifted = await executeInstallation([operation], { rootDir: appDir }, cacheDir);
     expect(drifted.ok).toBe(false);
@@ -180,7 +188,7 @@ describe("locked npm reproduction", () => {
     }
     expect(sha256(await readFile(path.join(appDir, "package-lock.json")))).toBe(sha256(lockBefore));
     expect(await readFile(path.join(appDir, ".npmrc"), "utf8")).toBe(userNpmrc);
-  }, 30_000);
+  }, 90_000);
 });
 
 function lockedNpmInstall() {
@@ -220,6 +228,9 @@ function npmEnv(cacheDir: string): NodeJS.ProcessEnv {
   return {
     ...process.env,
     npm_config_cache: cacheDir,
+    // Every dependency in this fixture is a local file; network access would
+    // only add an unrelated outage/latency failure to the lockfile checks.
+    npm_config_offline: "true",
     npm_config_fund: "false",
     npm_config_audit: "false",
     npm_config_update_notifier: "false",

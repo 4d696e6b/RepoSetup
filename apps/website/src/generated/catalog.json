@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": "0.3.0-cli.4",
-  "recipeRevision": "2026-09-23",
+  "revision": "0.3.0-cli.5",
+  "recipeRevision": "2026-10-08",
   "directVersions": {
     "react-vite": ["create-vite@8.3.0", "react@^19.2.0", "react-dom@^19.2.0", "vite@^7.3.1"],
     "express": ["express@5.2.1", "typescript@5.9.3", "@types/express@5.0.6", "@types/node@22.20.4"],
@@ -9,11 +9,13 @@
     "zod": ["zod@4.6.5"],
     "vitest": [
       "vitest@5.0.1",
+      "vite@8.3.0",
       "@vitejs/plugin-react@6.1.1",
       "jsdom@28.1.0",
       "@testing-library/react@16.3.3",
       "@testing-library/dom@10.4.2",
-      "vite-tsconfig-paths@6.1.1"
+      "vite-tsconfig-paths@6.1.1",
+      "@types/node@22.20.4"
     ],
     "prettier": ["prettier@3.9.8"],
     "pydantic": ["pydantic==2.13.5"],
@@ -545,7 +547,7 @@
       "ids": [],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -560,12 +562,13 @@
       "add": null,
       "createImpact": [
         "Reserve new project directory my-frontend; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
         "Scaffold React with create-vite",
         "Allow the Vite esbuild dependency build script",
-        "Install scaffold dependencies skipped by the generator"
+        "Install scaffold dependencies skipped by the generator",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": []
     },
@@ -574,7 +577,7 @@
       "ids": ["zod"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -588,7 +591,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -601,21 +604,22 @@
       },
       "createImpact": [
         "Reserve new project directory my-frontend; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
         "Scaffold React with create-vite",
         "Allow the Vite esbuild dependency build script",
-        "Install Zod"
+        "Install Zod",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
-      "addImpact": ["Install Zod"]
+      "addImpact": ["Create the selected project directory", "Install Zod"]
     },
     {
       "contextId": "react-vite-ts-pnpm",
       "ids": ["vitest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -629,7 +633,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -642,7 +646,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-frontend; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
         "Scaffold React with create-vite",
@@ -652,9 +656,11 @@
         "Add a Vitest config so doctor can find it",
         "Add a React sample module",
         "Add a React sample assertion",
-        "Add the official Vitest test script"
+        "Add the official Vitest test script",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
         "Install Vitest",
         "Add a Vitest config so doctor can find it",
@@ -668,7 +674,7 @@
       "ids": ["zod", "vitest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -682,7 +688,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -695,7 +701,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-frontend; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
         "Scaffold React with create-vite",
@@ -707,9 +713,11 @@
         "Add a React sample module",
         "Add a React sample assertion",
         "Add the official Vitest test script",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
         "Install Vitest",
         "Add a Vitest config so doctor can find it",
@@ -724,7 +732,7 @@
       "ids": ["prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -738,7 +746,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -751,16 +759,18 @@
       },
       "createImpact": [
         "Reserve new project directory my-frontend; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
         "Scaffold React with create-vite",
         "Allow the Vite esbuild dependency build script",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
-        "Ignore build artifacts from Prettier"
+        "Ignore build artifacts from Prettier",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier"
@@ -771,7 +781,7 @@
       "ids": ["zod", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -785,7 +795,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -798,7 +808,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-frontend; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
         "Scaffold React with create-vite",
@@ -806,9 +816,11 @@
         "Assemble package.json dependencies before a consolidated install",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
@@ -820,7 +832,7 @@
       "ids": ["vitest", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -834,7 +846,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -847,7 +859,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-frontend; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
         "Scaffold React with create-vite",
@@ -861,9 +873,11 @@
         "Add a React sample module",
         "Add a React sample assertion",
         "Add the official Vitest test script",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
@@ -880,7 +894,7 @@
       "ids": ["zod", "vitest", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -894,7 +908,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -907,7 +921,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-frontend; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Require Node.js ^20.19.0 || >=22.12.0 (Vite 8.3.0).",
         "Scaffold React with create-vite",
@@ -921,9 +935,11 @@
         "Add a React sample module",
         "Add a React sample assertion",
         "Add the official Vitest test script",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
@@ -941,7 +957,7 @@
       "ids": [],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -956,7 +972,7 @@
       "add": null,
       "createImpact": [
         "Reserve new project directory my-api; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Create package.json (package manager init is interactive, so RepoSetup writes it)",
         "Assemble package.json dependencies before a consolidated install",
@@ -966,7 +982,8 @@
         "Add the official Express TypeScript Hello World server",
         "Add Express development, build, and start scripts",
         "Add Express run instructions",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": []
     },
@@ -975,7 +992,7 @@
       "ids": ["zod"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -989,7 +1006,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1002,7 +1019,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-api; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Create package.json (package manager init is interactive, so RepoSetup writes it)",
         "Assemble package.json dependencies before a consolidated install",
@@ -1012,16 +1029,17 @@
         "Add the official Express TypeScript Hello World server",
         "Add Express development, build, and start scripts",
         "Add Express run instructions",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
-      "addImpact": ["Install Zod"]
+      "addImpact": ["Create the selected project directory", "Install Zod"]
     },
     {
       "contextId": "express-ts-pnpm",
       "ids": ["vitest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1035,7 +1053,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1048,7 +1066,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-api; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Create package.json (package manager init is interactive, so RepoSetup writes it)",
         "Assemble package.json dependencies before a consolidated install",
@@ -1062,9 +1080,11 @@
         "Add a Vitest config so doctor can find it",
         "Add an Express endpoint response test",
         "Add the official Vitest test script",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
         "Install Vitest",
         "Add a Vitest config so doctor can find it",
@@ -1077,7 +1097,7 @@
       "ids": ["zod", "vitest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1091,7 +1111,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1104,7 +1124,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-api; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Create package.json (package manager init is interactive, so RepoSetup writes it)",
         "Assemble package.json dependencies before a consolidated install",
@@ -1118,9 +1138,11 @@
         "Add a Vitest config so doctor can find it",
         "Add an Express endpoint response test",
         "Add the official Vitest test script",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Require Node.js ^22.12.0 || ^24.0.0 || >=26.0.0 (Vitest 5.0.1).",
         "Install Vitest",
         "Add a Vitest config so doctor can find it",
@@ -1134,7 +1156,7 @@
       "ids": ["prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1148,7 +1170,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1161,7 +1183,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-api; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Create package.json (package manager init is interactive, so RepoSetup writes it)",
         "Assemble package.json dependencies before a consolidated install",
@@ -1173,9 +1195,11 @@
         "Add Express run instructions",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier"
@@ -1186,7 +1210,7 @@
       "ids": ["zod", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1200,7 +1224,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1213,7 +1237,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-api; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Create package.json (package manager init is interactive, so RepoSetup writes it)",
         "Assemble package.json dependencies before a consolidated install",
@@ -1225,9 +1249,11 @@
         "Add Express run instructions",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
@@ -1239,7 +1265,7 @@
       "ids": ["vitest", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1253,7 +1279,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1266,7 +1292,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-api; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Create package.json (package manager init is interactive, so RepoSetup writes it)",
         "Assemble package.json dependencies before a consolidated install",
@@ -1282,9 +1308,11 @@
         "Add a Vitest config so doctor can find it",
         "Add an Express endpoint response test",
         "Add the official Vitest test script",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
@@ -1300,7 +1328,7 @@
       "ids": ["zod", "vitest", "prettier"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1314,7 +1342,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": {
@@ -1327,7 +1355,7 @@
       },
       "createImpact": [
         "Reserve new project directory my-api; refuse an existing target",
-        "Require Node.js on PATH (Next.js documents a minimum of 20.9).",
+        "Require Node.js 24 or later on PATH for RepoSetup and its generated recipes.",
         "Require pnpm on PATH.",
         "Create package.json (package manager init is interactive, so RepoSetup writes it)",
         "Assemble package.json dependencies before a consolidated install",
@@ -1343,9 +1371,11 @@
         "Add a Vitest config so doctor can find it",
         "Add an Express endpoint response test",
         "Add the official Vitest test script",
-        "Install assembled package.json dependencies"
+        "Install assembled package.json dependencies",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Prettier as an exact dev dependency",
         "Add the project Prettier config so editors detect Prettier",
         "Ignore build artifacts from Prettier",
@@ -1362,7 +1392,7 @@
       "ids": [],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1383,7 +1413,8 @@
         "Install FastAPI with the official standard extras",
         "Add the official FastAPI first-steps app",
         "Add FastAPI run instructions",
-        "Explain how to start the FastAPI development server"
+        "Explain how to start the FastAPI development server",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": []
     },
@@ -1392,7 +1423,7 @@
       "ids": ["pydantic"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1406,7 +1437,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1420,16 +1451,17 @@
         "Install fastapi[standard]==0.141.1, pydantic==2.13.5",
         "Add the official FastAPI first-steps app",
         "Add FastAPI run instructions",
-        "Explain how to start the FastAPI development server"
+        "Explain how to start the FastAPI development server",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
-      "addImpact": ["Install Pydantic"]
+      "addImpact": ["Create the selected project directory", "Install Pydantic"]
     },
     {
       "contextId": "fastapi-uv",
       "ids": ["pytest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1443,7 +1475,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1459,16 +1491,21 @@
         "Add FastAPI run instructions",
         "Explain how to start the FastAPI development server",
         "Install pytest",
-        "Add a FastAPI endpoint response test"
+        "Add a FastAPI endpoint response test",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
-      "addImpact": ["Install pytest", "Add a FastAPI endpoint response test"]
+      "addImpact": [
+        "Create the selected project directory",
+        "Install pytest",
+        "Add a FastAPI endpoint response test"
+      ]
     },
     {
       "contextId": "fastapi-uv",
       "ids": ["pydantic", "pytest"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1482,7 +1519,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1498,16 +1535,22 @@
         "Add FastAPI run instructions",
         "Explain how to start the FastAPI development server",
         "Install pytest",
-        "Add a FastAPI endpoint response test"
+        "Add a FastAPI endpoint response test",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
-      "addImpact": ["Install Pydantic", "Install pytest", "Add a FastAPI endpoint response test"]
+      "addImpact": [
+        "Create the selected project directory",
+        "Install Pydantic",
+        "Install pytest",
+        "Add a FastAPI endpoint response test"
+      ]
     },
     {
       "contextId": "fastapi-uv",
       "ids": ["ruff"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1521,7 +1564,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1536,16 +1579,20 @@
         "Add the official FastAPI first-steps app",
         "Add FastAPI run instructions",
         "Explain how to start the FastAPI development server",
-        "Install Ruff as a development dependency"
+        "Install Ruff as a development dependency",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
-      "addImpact": ["Install Ruff as a development dependency"]
+      "addImpact": [
+        "Create the selected project directory",
+        "Install Ruff as a development dependency"
+      ]
     },
     {
       "contextId": "fastapi-uv",
       "ids": ["pydantic", "ruff"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1559,7 +1606,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1574,16 +1621,21 @@
         "Add the official FastAPI first-steps app",
         "Add FastAPI run instructions",
         "Explain how to start the FastAPI development server",
-        "Install Ruff as a development dependency"
+        "Install Ruff as a development dependency",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
-      "addImpact": ["Install Pydantic", "Install Ruff as a development dependency"]
+      "addImpact": [
+        "Create the selected project directory",
+        "Install Pydantic",
+        "Install Ruff as a development dependency"
+      ]
     },
     {
       "contextId": "fastapi-uv",
       "ids": ["pytest", "ruff"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1597,7 +1649,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1613,9 +1665,11 @@
         "Add FastAPI run instructions",
         "Explain how to start the FastAPI development server",
         "Install pytest==9.1.1, ruff==0.16.8",
-        "Add a FastAPI endpoint response test"
+        "Add a FastAPI endpoint response test",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install pytest",
         "Add a FastAPI endpoint response test",
         "Install Ruff as a development dependency"
@@ -1626,7 +1680,7 @@
       "ids": ["pydantic", "pytest", "ruff"],
       "create": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "create",
         "config": {
@@ -1640,7 +1694,7 @@
       },
       "add": {
         "selectionVersion": 1,
-        "catalogRevision": "0.3.0-cli.4",
+        "catalogRevision": "0.3.0-cli.5",
         "cliContract": "selection-v1",
         "mode": "add",
         "context": { "runtimeId": "python", "frameworkId": "fastapi", "packageManager": "uv" },
@@ -1656,9 +1710,11 @@
         "Add FastAPI run instructions",
         "Explain how to start the FastAPI development server",
         "Install pytest==9.1.1, ruff==0.16.8",
-        "Add a FastAPI endpoint response test"
+        "Add a FastAPI endpoint response test",
+        "Verify declared dependencies are installed before reporting creation complete"
       ],
       "addImpact": [
+        "Create the selected project directory",
         "Install Pydantic",
         "Install pytest",
         "Add a FastAPI endpoint response test",

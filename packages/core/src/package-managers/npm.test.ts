@@ -36,7 +36,7 @@ describe("npmAdapter", () => {
       dev: true,
     });
 
-    expectArgs(result, "npm", ["install", "--save-dev", "vitest"]);
+    expectArgs(result, "npm", ["install", "--save-dev", "--include=dev", "vitest"]);
   });
 
   it("adds an exact version pin with --save-exact", () => {
@@ -48,7 +48,13 @@ describe("npmAdapter", () => {
       exact: true,
     });
 
-    expectArgs(result, "npm", ["install", "--save-dev", "--save-exact", "prettier"]);
+    expectArgs(result, "npm", [
+      "install",
+      "--save-dev",
+      "--include=dev",
+      "--save-exact",
+      "prettier",
+    ]);
   });
 
   it("installs a frozen project with npm ci", () => {
@@ -68,6 +74,28 @@ describe("npmAdapter", () => {
     });
 
     expectArgs(result, "npm", ["install"]);
+  });
+
+  it("includes development dependencies only when explicitly requested", () => {
+    expectArgs(
+      npmAdapter.install({
+        cwd: ".",
+        description: "Install development scaffold",
+        includeDev: true,
+      }),
+      "npm",
+      ["install", "--include=dev"],
+    );
+    expectArgs(
+      npmAdapter.add({
+        packages: ["express"],
+        cwd: ".",
+        description: "Install scaffold",
+        includeDev: true,
+      }),
+      "npm",
+      ["install", "--include=dev", "express"],
+    );
   });
 
   it("rejects a package spec that would be parsed as a CLI flag", () => {

@@ -54,6 +54,7 @@ describe("Phase 26 curated integration plans", () => {
         "pnpm",
         "add",
         "--save-dev",
+        "--prod=false",
         "@testing-library/react@16.3.3",
         "@testing-library/dom@10.4.2",
         "@testing-library/user-event@14.6.7",

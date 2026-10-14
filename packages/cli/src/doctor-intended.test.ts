@@ -2,6 +2,7 @@ import { mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { NODE_DEPENDENCY_PROBE, PYTHON_DEPENDENCY_PROBE } from "@reposetup/core";
 import { runCli } from "./run-cli.js";
 
 const dirs: string[] = [];
@@ -62,7 +63,15 @@ describe("doctor --config", () => {
       io: captured.io,
       commandExists: async () => true,
       resolveExecutable: async (command) => command,
-      runProcess: async () => ({ exitCode: 0, stdout: "v24.21.0", stderr: "" }),
+      runProcess: async (request) => ({
+        exitCode: 0,
+        stdout:
+          request.args.includes(NODE_DEPENDENCY_PROBE) ||
+          request.args.includes(PYTHON_DEPENDENCY_PROBE)
+            ? JSON.stringify({ missing: [], checked: [], errors: [], environment: request.cwd })
+            : "v24.21.0",
+        stderr: "",
+      }),
     });
     expect(result.exitCode).toBe(0);
     const output = JSON.parse(captured.out()) as {
@@ -82,6 +91,39 @@ describe("doctor --config", () => {
     );
     expect(await readFile(path.join(root, "package.json"), "utf8")).toBe(before);
     expect(captured.err()).toBe("");
+  });
+
+  it("retains installed-dependency failures alongside intended configuration checks", async () => {
+    const root = await fixture();
+    const before = await readFile(path.join(root, "package.json"), "utf8");
+    const captured = io();
+    const result = await runCli(["--json", "doctor", "--config", "reposetup.json"], {
+      cwd: root,
+      io: captured.io,
+      commandExists: async () => true,
+      resolveExecutable: async (command) => command,
+      runProcess: async (request) =>
+        request.args.includes(NODE_DEPENDENCY_PROBE)
+          ? {
+              exitCode: 1,
+              stdout: JSON.stringify({
+                missing: ["prettier"],
+                checked: ["react", "vite"],
+                errors: [],
+                environment: root,
+              }),
+              stderr: "",
+            }
+          : { exitCode: 0, stdout: "v24.21.0", stderr: "" },
+    });
+    expect(result.exitCode).toBe(5);
+    expect(JSON.parse(captured.out()).result.checks).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "dependencies:node", ok: false }),
+        expect.objectContaining({ id: "intended:prettier", ok: true }),
+      ]),
+    );
+    expect(await readFile(path.join(root, "package.json"), "utf8")).toBe(before);
   });
 
   it("returns a versioned error for malformed config", async () => {
@@ -117,7 +159,15 @@ describe("doctor --config", () => {
       io: captured.io,
       commandExists: async () => true,
       resolveExecutable: async (command) => command,
-      runProcess: async () => ({ exitCode: 0, stdout: "v24.21.0", stderr: "" }),
+      runProcess: async (request) => ({
+        exitCode: 0,
+        stdout:
+          request.args.includes(NODE_DEPENDENCY_PROBE) ||
+          request.args.includes(PYTHON_DEPENDENCY_PROBE)
+            ? JSON.stringify({ missing: [], checked: [], errors: [], environment: request.cwd })
+            : "v24.21.0",
+        stderr: "",
+      }),
     });
     expect(result.exitCode).toBe(5);
     const output = JSON.parse(captured.out()) as {
@@ -162,7 +212,15 @@ describe("doctor --config", () => {
       io: captured.io,
       commandExists: async () => true,
       resolveExecutable: async (command) => command,
-      runProcess: async () => ({ exitCode: 0, stdout: "Python 3.13.1", stderr: "" }),
+      runProcess: async (request) => ({
+        exitCode: 0,
+        stdout:
+          request.args.includes(NODE_DEPENDENCY_PROBE) ||
+          request.args.includes(PYTHON_DEPENDENCY_PROBE)
+            ? JSON.stringify({ missing: [], checked: [], errors: [], environment: request.cwd })
+            : "Python 3.13.1",
+        stderr: "",
+      }),
     });
     expect(result.exitCode).toBe(0);
     const output = JSON.parse(captured.out()) as {

@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:6b6dfd736829e53b3809e360b0d6127d7ad56d31fbeadc2fcd97af94a2308880",
+  "fixtureRevision": "sha256:18638364b78642ee693d0ca25b80e8b814f3549f3cc9f0982a2c21970c5f6db1",
   "fixtureId": "api-offline-v1",
   "fixtureVersion": 1,
   "phaseId": "offline-pagination-handler",
@@ -87,7 +87,7 @@
     }
   ],
   "phaseDocumentHash": "sha256:4a6b2f2214d07e7eff98e008ccb452e8aec1b7a047a8d7e8dc02fa5c20a2633f",
-  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "lockfileHash": "sha256:19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824",
   "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
   "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
   "supportProfileId": "managed-ts-node-v1",

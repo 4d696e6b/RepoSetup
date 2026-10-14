@@ -25,8 +25,13 @@ export function redactProcessOutput(output: string): string {
 }
 
 export function commandFailureSuggestion(snippet: string | undefined): string {
-  if (snippet?.includes("cache folder contains root-owned files") === true) {
-    return "npm cannot write its cache because some files are owned by root. Run the chown command npm printed, then retry. RepoSetup will not run sudo for you.";
+  if (
+    snippet !== undefined &&
+    (snippet.includes("cache folder contains root-owned files") ||
+      (/\b(?:EACCES|EPERM|EEXIST)\b/i.test(snippet) &&
+        /(?:_cacache|npm[^\n]*cache)/i.test(snippet)))
+  ) {
+    return "npm could not write its cache. Use a writable npm cache for the failed command. If the generated project has package.json, run npm install --include=dev --cache <writable-cache-directory> there, then finish any remaining setup steps and run rsetup doctor. If scaffolding did not finish, review partial files before retrying the failed generator with a writable cache. Do not rerun create over existing files or use --force; RepoSetup will not run sudo for you.";
   }
 
   return "Inspect the command output, fix the project, and re-run the plan.";

@@ -2,7 +2,8 @@ name: Platform
 
 on:
   push:
-    branches: [main, dev, "release/**"]
+    branches:
+      [main, dev, "release/**", codex/release-0.3.0, codex/release-0.3.1, codex/release-0.4.0]
   pull_request:
   schedule:
     - cron: "0 6 * * 1"
@@ -60,7 +61,9 @@ jobs:
         run: >-
           node -e "require('node:fs').writeFileSync('platform-evidence.json',
           JSON.stringify({ platform: process.platform, architecture: process.arch,
-          node: process.version }, null, 2) + '\\n')"
+          node: process.version }, null, 2) + String.fromCharCode(10))"
+      - name: Validate platform evidence JSON
+        run: node -e "JSON.parse(require('node:fs').readFileSync('platform-evidence.json', 'utf8'))"
       - uses: actions/upload-artifact@v4
         with:
           name: platform-evidence-${{ matrix.runner }}-node-${{ matrix.node }}

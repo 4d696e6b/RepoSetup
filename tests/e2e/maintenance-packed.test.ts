@@ -6,7 +6,8 @@ import {
   createTempWorkspace,
   keepOnFailure,
   runNodeCli,
-  snapshotTree,
+  runProcess,
+  snapshotTree as snapshotAll,
 } from "./harness.js";
 import { prepareSelectionArtifact } from "./selection-artifact.js";
 
@@ -14,7 +15,11 @@ let artifactRoot: string;
 let artifact: Awaited<ReturnType<typeof prepareSelectionArtifact>>;
 const roots: string[] = [];
 const passed = new Set<string>();
-const expectedCases = ["repair-lifecycle", "unsafe-inputs-and-links"];
+const expectedCases = ["repair-lifecycle", "unsafe-inputs-and-links", "missing-dependency-refusal"];
+
+// User files and the actual lockfile are checked byte-for-byte. Installed package
+// trees are exercised by doctor rather than recursively decoding binary assets.
+const snapshotTree = (root: string) => snapshotAll(root, ["node_modules"]);
 
 beforeAll(async () => {
   artifactRoot = await createTempWorkspace("reposetup-maintenance-pack-");
@@ -75,7 +80,8 @@ async function fixture() {
     }),
   );
   await writeFile(path.join(root, "vite.config.ts"), "export default {};\n");
-  await writeFile(path.join(root, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+  const installed = await runProcess("pnpm", ["install", "--ignore-scripts"], { cwd: root });
+  expect(installed.exitCode, installed.stderr + installed.stdout).toBe(0);
   await writeFile(
     path.join(root, "reposetup.json"),
     JSON.stringify({
@@ -126,6 +132,24 @@ it("previews, refuses without consent, repairs once and preserves user files", a
     expect(result.stdout + result.stderr).not.toContain("private-fixture-value");
   }
   passed.add("repair-lifecycle");
+});
+
+it("refuses automatic repair when declared dependencies are missing", async () => {
+  const root = await fixture();
+  await rm(path.join(root, "node_modules"), { recursive: true });
+  const before = await snapshotTree(root);
+  for (const flags of [["--dry-run"], ["--yes"]]) {
+    const result = await run(root, "--fix", ...flags);
+    expect(result.exitCode).not.toBe(0);
+    const output = JSON.parse(result.stdout);
+    expect(output.result.checks).toContainEqual(
+      expect.objectContaining({ id: "dependencies:node", ok: false }),
+    );
+    expect(output.repair).toMatchObject({ planned: 0, executed: 0 });
+    expect(await snapshotTree(root)).toEqual(before);
+    expect(result.stdout + result.stderr).not.toContain("private-fixture-value");
+  }
+  passed.add("missing-dependency-refusal");
 });
 
 it("preserves an alternative config and refuses malformed or linked repair targets", async () => {

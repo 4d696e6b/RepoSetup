@@ -32,6 +32,10 @@ const PATH_PREREQUISITES = {
     hint: "Install Python, which provides python -m pip, and ensure python is on PATH. RepoSetup will not install pip.",
     minimumVersion: [3, 12, 0],
   },
+  docker: {
+    command: "docker",
+    hint: "Install Docker from https://docs.docker.com/get-docker/ or fix PATH so docker --version runs successfully. If Docker is already installed, check for an older Docker CLI earlier on PATH. RepoSetup generates configuration only; it does not install Docker or start containers.",
+  },
 } as const satisfies Record<string, PathPrerequisite>;
 
 export type PathPrerequisiteId = keyof typeof PATH_PREREQUISITES;

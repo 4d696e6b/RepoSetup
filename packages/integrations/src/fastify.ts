@@ -28,6 +28,7 @@ type FastifyOptions = z.infer<typeof fastifyOptionsSchema>;
 const FASTIFY_TSCONFIG = `{
   "compilerOptions": {
     "target": "esnext",
+    "rootDir": ".",
     "module": "nodenext",
     "rewriteRelativeImportExtensions": true,
     "erasableSyntaxOnly": true,
@@ -47,11 +48,12 @@ app.get("/", function () {
 });
 
 if (process.env.REPOSETUP_NO_LISTEN !== "1") {
-  app.listen({ port: Number(process.env.PORT ?? "3000"), host: "127.0.0.1" }, (error) => {
+  app.listen({ port: Number(process.env.PORT ?? "3000"), host: "127.0.0.1" }, (error, address) => {
     if (error) {
-      app.log.error(error);
+      console.error(error);
       process.exit(1);
     }
+    console.log(address);
   });
 }
 `;
@@ -170,7 +172,7 @@ export const fastifyIntegration = defineIntegration<FastifyOptions>({
             scripts: {
               dev: "tsx watch src/server.ts",
               build: "tsc --outDir dist",
-              start: "node dist/server.js",
+              start: "node dist/src/server.js",
             },
           },
           behavior: "merge",

@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:4758b5056770442e823ba7db530758288835ec6c3ec5ce08e3652eabcd1947b0",
+  "fixtureRevision": "sha256:ce25a2af1e57a217912d763dfdacf3fe516c5d367ad13b1a38bbbee66031624b",
   "fixtureId": "ui-view-model-v1",
   "fixtureVersion": 1,
   "phaseId": "list-view-state",
@@ -82,7 +82,7 @@
     }
   ],
   "phaseDocumentHash": "sha256:f9fb999164a5e2518add95751ac71240f08c1049fdc2f436434be371df446943",
-  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "lockfileHash": "sha256:19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824",
   "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
   "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
   "supportProfileId": "managed-ts-node-v1",

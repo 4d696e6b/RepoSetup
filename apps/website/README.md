@@ -1,10 +1,12 @@
-# RepoSetup companion website — local 0.3.0 slice
+# RepoSetup companion website — 0.3.0
 
-A static Vite/TypeScript app in the pnpm workspace, with no runtime framework dependency. English-first pages explain nine reviewed integrations and three starter contexts: React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm, FastAPI + uv. Only their three optional capabilities per context are selectable; 24 create / 21 nonempty add variants are validated at build time by the real registry/core planner. All paths remain candidate maturity.
+The published website is [reposetupcli.com](https://reposetupcli.com/) at 0.3.0. Its exact deployment and qualification are in the [stable delivery record](../../docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.0.md). This canonical `codex/release-0.3.0` worktree combines its full documentation, 37 integration references, five legacy presets, artwork and existing routes with the bounded 0.3.0 beginner workflows. Active parser/registry facts are generated from the reviewed 0.3.0 CLI. The original 0.2.3 facts remain an immutable digest-checked snapshot; published release history never lists an unpublished candidate.
 
-## Start locally
+The site has 76 documentation pages, nine curated explanations, three minimal starters, 24 create and 21 nonempty add choices. It supports React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm and FastAPI + uv. Choices start empty and actual local context remains authoritative. Integration maturity and prerequisites are explicit.
 
-Use Node 24 and the workspace’s pnpm version. From the repository root:
+## Local development and routes
+
+Use Node 24 and the workspace's pinned pnpm version. From the repository root:
 
 ```sh
 pnpm install --frozen-lockfile
@@ -12,22 +14,22 @@ pnpm build
 pnpm website:dev
 ```
 
-Open `http://127.0.0.1:5173`. Hash routes work with a static server:
+Open `http://127.0.0.1:5173`. Supported hash routes include:
 
-- `/#/` — goals and the learn/choose/review journey
-- `/#/integrations` and `/#/integrations/zod` — search/filter and library explanations
-- `/#/presets` and `/#/presets/beginner-fastapi` — compare minimal starters and optional tools
-- `/#/builder/react-vite-ts-pnpm` — new-project selection
-- `/#/builder/express-ts-pnpm?mode=add` — existing-project capability selection
-- `/#/how-to` — prerequisites, confirmation, stale-input and fallback guidance
+- `/#/` — full home and workflow discovery.
+- `/#/docs`, `/#/integrations`, `/#/presets`, `/#/release` — full references and published history.
+- `/#/builder/<legacy-preset-id>` — schemaVersion 1 download with explicit name/folder.
+- `/#/goals`, `/#/learn/libraries`, `/#/learn/libraries/<id>`, `/#/learn/starters` — curated guidance.
+- `/#/builder/react-vite-ts-pnpm`, `/#/builder/express-ts-pnpm?mode=add` — bounded create/add choices.
+- `/#/presets/<beginner-preset-id>` and `/#/how-to` — minimal starters and local maintenance/handoff guidance.
 
-Nothing is published. Vite preview serves the built output locally; it is not a production hosting service. No analytics, uploads, accounts, secrets, project scanning or browser installation are included. Drafts stay in memory; selections are not saved in URLs or browser storage.
+Beginner code/catalog load only when requested. Returning from an explanation preserves the builder draft. Navigation sequence checks prevent delayed imports from replacing a newer page. Optional-tool help opens curated purpose/skip guidance rather than the general catalog reference.
 
 ## Matching CLI artifact: required before pasting commands
 
-The displayed `reposetup create|add --selection TOKEN` command is available in the **local candidate CLI** `rsetup@0.3.0-alpha.1`, exact committed source `a410c1d39179d41ed14aae2740470a7267a25282` on `codex/0.3.0-candidate-integration`. Its pinned tarball SHA-256 is `442d922754b7798839640d3556e2c1ae60d09b4b80e8ed759a60d36b3e8795ec`. It is not a published CLI. Do not use a floating npx/npm bootstrap or the published 0.2.0 binary with these commands.
+The selection handoff requires reviewed `rsetup@0.3.0`, CLI source `ae4b9011c47d23d176770a749cde2560c64775c8`, tarball SHA-256 `cf458b036cf78e25445416dc1ba9e73ab2d40c3591828afac576cbd1a406d7e4`. The public npm package is 0.3.0 and its verified bytes match this pin. Install `npm install -g rsetup@0.3.0` before using these exports. Older 0.2.x CLIs do not accept selection v1. The single authoritative pin is `src/handoff.ts`.
 
-Prepare that exact artifact without changing the CLI or candidate checkout:
+For development qualification, prepare the exact artifact locally:
 
 ```sh
 pnpm --filter @reposetup/website pack:contract
@@ -35,76 +37,57 @@ export PATH="$PWD/apps/website/.local-cli/bin:$PATH"
 reposetup --version
 ```
 
-The tool uses `git archive` of the recorded commit, builds in a disposable directory, packs, verifies the pinned tarball SHA-256, installs it into ignored `.local-cli/installed`, and records source/version/Node/platform/hash in `.local-cli/evidence.json`. It requires Node 24 on PATH and uses argument-array processes. It does not install system prerequisites or modify the two development worktrees. If the commit is missing, fetch the candidate source; never silently target a different commit.
+The tool archives the pinned Git commit into a disposable directory, builds only the CLI dependency graph, packs and verifies its digest, installs into ignored `.local-cli/installed`, and records version/source/runtime/hash in `.local-cli/evidence.json`. It uses argument arrays and requires existing Node/pnpm prerequisites. It does not alter the original candidate, source worktrees, system tools or production deployment. An unavailable source or changed hash fails rather than silently substituting another artifact.
 
-Now use the browser’s primary Copy RepoSetup command. For create, paste in the parent directory of the new folder. For add, paste in the existing project package directory. The CLI decodes and shows the actual local plan, then asks for interactive confirmation. It refuses noninteractive execution and `--yes` for selections. Preview-only is available as the secondary `--dry-run` command.
+For create, paste the exported command in the parent directory of a new relative folder. For add, paste from the existing project's package directory. The CLI independently validates the decoded choices and local context, displays its installation plan and requests interactive confirmation. Selection execution refuses `--yes` and a noninteractive terminal; `--dry-run` remains available.
 
-For large selections the exporter checks 3,072 decoded bytes, 4,096 token characters and 4,200 complete command characters including the preview suffix. It switches to a validated file handoff rather than truncating. Download `selection.json` and run the displayed command from that directory:
+The token is limited to 4,096 characters / 3,072 decoded bytes. Commands are bounded to 4,200 characters including the preview suffix. Larger selections use a validated JSON fallback, limited to 16 KiB, with the same supported choices:
 
 ```sh
 reposetup create --selection-file selection.json
 reposetup add --config selection.json
 ```
 
-File limit: 16 KiB. Current bounded form selections all fit the token route. Tests use semantically identical JSON whitespace overhead to exercise the true token boundary and larger file route with the packed CLI. The file does not expand supported library/context choices.
+Download into the command directory. No configuration contains executable commands or real secrets; exports carry public choices only.
 
-## Shared data and boundaries
+## Data, execution and privacy boundaries
 
-`packages/integrations/src/beginner-catalog.ts` is the curated education/preset source synchronized verbatim from the committed CLI contract. `packages/registry/src/selection.ts` validates it and every finite subset against the actual core planner. Registry’s `createWebsiteCatalog` adds public definition names/relationships and plan **descriptions**, never operations, commands, generated source content or executable functions. The website build writes `src/generated/catalog.json`; its committed snapshot is checked for reproducibility.
+Curated definitions live in integrations. Registry exports planner-validated public JSON for every offered subset. The browser chooses a generated variant and validates form controls; it has no separate compatibility registry, executor, process adapter or project-scanning capability. Its bundle refuses Node/workspace runtime modules. Business logic remains in core and execution in the local CLI.
 
-The website only chooses a generated variant and validates name/folder controls; it does not reimplement integration compatibility. Browser serialization is checked against the committed core decoder and packed CLI. Type imports erase at build time; the Vite bundle guard refuses Node/workspace runtime modules. UI dependencies exist only in the app. A catalog update must rerun generation, selection tests and packed joint qualification before changing the displayed CLI identity.
+Drafts stay in memory; project names, choices, queries and tokens are absent from storage and analytics. Production-only observability retains bounded public route labels on the explicitly allowed production origins. Local/unknown hosts do not initialize it. Built CSP restricts resources and telemetry destinations, blocks project uploads/form submissions and refuses object/base injection. Source maps, private artwork prompts/provenance, credentials and repository sources are excluded from the public build. Production hosting must preserve the reviewed HTTP security headers.
 
-Built HTML also applies a Content Security Policy: scripts/styles and resources are restricted to this static site, network connections and form submissions are blocked, and object/base injection is refused. Browser tests check blocked fetch and literal hostile route text alongside working copy/download flows. This is a built-preview policy; Vite development HMR is unaffected. It does not replace validation or qualify a future hosting provider's headers.
-
-The candidate integration branch merges the independently reviewed CLI and website development branches, both descended from original 0.2.0 candidate `145e167e6b60897da96942545ba6dbd40359ad4a`. The CLI remains authoritative for parsing and execution; the website consumes catalog revision `0.3.0-cli.4` and exports only validated selections. Any later CLI code change requires a new exact-source artifact pin and joint qualification.
-
-## Checks
+## Qualification
 
 ```sh
-pnpm test
-pnpm typecheck
-pnpm lint
 pnpm build
-pnpm --filter @reposetup/website test:browser
-pnpm --filter @reposetup/website test:browser:local
-pnpm --filter @reposetup/website test:browser:webkit
+pnpm --filter @reposetup/website test
 pnpm --filter @reposetup/website pack:contract
 pnpm --filter @reposetup/website test:handoff
-pnpm --filter @reposetup/website qualify:local
-# On a compatible host, require the entire browser matrix:
 pnpm --filter @reposetup/website qualify
 ```
 
-Handoff tests are a separate explicit gate and fail if the pinned artifact or Node 24 is missing; there are no hidden skips. They validate every exported create/add variant, token/file plan equivalence, no project mutation during previews, actual detected-context refusal, stale/hostile inputs, real size boundaries, and Bash/zsh launch with confirmation required.
+`qualify` verifies the exact artifact, runs workspace build/unit/typecheck/lint, checks the packed handoff and executes all five browser profiles: desktop/mobile Chrome, desktop Firefox and desktop/mobile WebKit. It records clean source, lockfile/catalog/CLI/build hashes and step results under ignored `qualification/`; source changes during a run are refused. `wholeReleaseQualified` remains false while actual manual/device or delivery gates are open.
 
-Before any CLI execution, qualification verifies the committed target/version, the recorded tarball SHA-256 and byte equality of the installed package metadata and all executable chunks with that tarball. Altered or missing local artifacts fail; `pack:contract` is an explicit preparation step. Browser labels and the packer use one target in `src/handoff.ts`.
-
-`qualify` runs artifact verification, workspace build/unit/typecheck/lint, packed handoff and the full browser suite, stopping on failure. `qualify:local` explicitly selects Chrome/Firefox instead. It writes timestamped, ignored `qualification/<run>/report.json`, step logs and the browser report; records commit/dirty flag/working-tree digest, Node/platform, lockfile/catalog/artifact/build-asset hashes; and refuses source changes during a run. Its `automatedScopePassed` result applies only to the named scope. `wholeReleaseQualified` stays false because manual accessibility/device, candidate qualification and freeze/soak gates require separate evidence. No installation into a project, publication, upload or automatic test-browser setup occurs.
-
-The [website qualification workflow](../../.github/workflows/website-qualification.yml) prepares the full test matrix on macOS 15 with Node 24. The [integrated candidate run](https://github.com/4d696e6b/RepoSetup/actions/runs/37184314746) passed the pinned handoff and all 70 browser cases. It requires the exact pinned CLI commit in repository history and Chrome on the runner. It performs no deployment or project upload; changing source/catalog/CLI identities requires a fresh joint run. Native Windows qualification remains separate because this tool currently checks POSIX launchers.
-
-`test:browser` is the full five-profile gate: Chrome desktop/mobile, Firefox desktop and WebKit desktop/mobile. `test:browser:local` explicitly selects the three locally available Chrome/Firefox profiles; `test:browser:webkit` requires a compatible host. Tests cover all 22 routes with axe WCAG A/AA scans, keyboard controls, copying/downloading, invalid linked-field errors, context/draft preservation, clipboard denial, no data transmission/storage, five scripted beginner-style journeys and reflow at 320, 768 and 1440 pixels. Browser versions and screenshots are saved under ignored `test-results/`. Mobile profiles emulate viewports/touch, not physical devices.
-
-Chrome must already be installed. Obtain the matching test-only Firefox/WebKit binaries explicitly if needed:
+`qualify:local` and `test:browser:local` explicitly select Chrome/Firefox. Mobile profiles emulate viewport/touch; they cannot establish physical-device or native screen-reader behavior. Chrome must already exist. Matching test-only Firefox/WebKit binaries can be installed explicitly:
 
 ```sh
 pnpm --filter @reposetup/website exec playwright install firefox webkit
 ```
 
-Builds, tests and the website do not automatically install browsers or system prerequisites. This local qualification downloaded those test binaries to Playwright's user cache; no OS packages were installed. On macOS 14.7.2 arm64, Playwright 1.63.0's frozen WebKit r2251 fails page setup with `Unknown setting: PushAPIEnabled`. The separate macOS 15 workflow passed the full WebKit matrix without removing assertions or counting unavailable tests as passing. See [current validation evidence](../../docs/specification-documentation/implementing-docs/STATUS_WEBSITE_0.3.0.md).
+The macOS-15 workflow supplies full WebKit evidence. Local macOS 14.7.2 cannot run the pinned WebKit build; unavailable cases are never counted as passing. Tests cover the full retained/new routes, clipboard denial, file export, field-linked errors, navigation/draft preservation, keyboard/reflow/WCAG checks, privacy, motion and the five owner-approved scripted beginner journeys. No person is represented by those simulations.
 
-The unusable WebKit r2251 download was subsequently removed to recover space during qualification; the failed evidence remains. Set up the test binary explicitly on the compatible host before running the full matrix. The local Chrome/Firefox run does not need WebKit.
+## Delivery status
 
-## Remaining release gates
+Formal freeze, soak and calendar waiting gates were removed by the owner. Current product evidence and exact-source qualification are in [reconciliation](../../docs/specification-documentation/implementing-docs/RECONCILIATION_0.3.0.md), [release preparation](../../docs/specification-documentation/release-docs/RELEASE_PREPARATION_0.3.0.md) and the latest workflow reports. Publication/deployment were explicitly authorized and 0.3.0 is delivered. Native screen-reader qualification is explicitly deferred; the owner requested Chrome phone simulation, and no physical-device pass is claimed. The stable delivery record preserves live-check/control limitations and rollback.
 
-Publication/version-pinned bootstrap remains unqualified. The CLI track has qualified bounded create/add, native selection transport and packed maintenance safety on Linux, macOS and Windows; the website's packed tests establish plan/confirmation equivalence only. The full WebKit matrix passed on macOS 15. At the owner's request, five scripted beginner-style journeys replace the planned participant gate for Phase 8; no people were observed, so actual beginner comprehension remains unknown. Phase 8 is complete for that scripted and bounded automated scope. Physical-device checks, screen-reader/manual accessibility, combined candidate safety and release qualification remain Phase 9 gates. The [beginner-session protocol](../../docs/specification-documentation/implementing-docs/BEGINNER_SESSIONS_0.3.0.md) retains an optional future human-study template. This slice does not claim a complete 0.3.0 release or promote any integration to stable.
+## Verified publication mode
 
-## Research checked 2026-10-03
+Default builds remain candidate previews and perform no registry lookup. After the qualified CLI has actually been published, run the same clean-source full website qualification in verified publication mode:
 
-The build/dev/preview behavior was checked against [Vite’s official guide](https://vite.dev/guide/) and [static build guidance](https://vite.dev/guide/build.html). Form labeling follows [WAI’s labeling guidance](https://www.w3.org/WAI/tutorials/forms/labels/); browser checks use [Playwright assertions](https://playwright.dev/docs/test-assertions). The nine integration guidance links were opened against current official project documentation; recipe setup/pins still come from the committed curated definitions and recorded parent evidence, not latest upstream versions. Hosting choice and published bootstrap remain research-required.
+```sh
+REPOSETUP_WEBSITE_RELEASE=published pnpm --filter @reposetup/website qualify
+```
 
-Phase 8 linked-field feedback follows [WAI form notifications](https://www.w3.org/WAI/tutorials/forms/notifications/). Clipboard recovery was checked against [MDN writeText](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText). Binary/engine and mobile-emulation limits follow [Playwright browser guidance](https://playwright.dev/docs/browsers); the macOS-14 WebKit failure above is direct local test evidence.
+This verifies the canonical npm metadata and downloaded tarball against the committed handoff before generating the site. It requires the exact version to be `latest`, an actual publication timestamp and matching SHA-512/SHA-256 bytes. Registry outages, redirects, wrong versions, malformed/oversized responses or changed bytes fail the build. It does not execute downloaded packages, tag, publish or deploy. The registry may omit `gitHead` when publishing a retained tarball; the displayed reviewed source comes from the committed byte-matched CLI pin rather than inventing registry provenance.
 
-The build-only HTML policy uses [Vite's plugin API](https://vite.dev/guide/api-plugin) and [MDN CSP guidance](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy), including its [form-action directive](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/form-action). The manually authored runner follows [Playwright CI guidance](https://playwright.dev/docs/ci) and [JSON reporter guidance](https://playwright.dev/docs/test-reporters). The integrated candidate's retained workflow report identifies the exact source, artifact and automated browser scope; it does not establish manual device or whole-release qualification.
-
-Chrome availability for the proposed macOS-15 workflow was checked in the [official runner image inventory](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md). Actual browser versions must still come from each run's annotations; the workflow is not a physical Safari/device qualification.
+The verified build changes public installation instructions, candidate labels, footer/package links and 0.3.0 release history together. The immutable 0.2.3 snapshot and earlier publication dates stay intact. Browser tests exercise the same journeys in both modes; before npm delivery, synthetic unit fixtures cover published presentation and refusal cases without claiming an actual publication. Use the [delivery procedure](../../docs/specification-documentation/release-docs/RELEASE_DELIVERY_0.3.0.md) for the final explicitly authorized promotion.

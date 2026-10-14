@@ -14,15 +14,18 @@
 - [Task compiler user guide](../humanOnly/Task_Compiler_0.4.0.md)
 - [Experimental candidate preparation and open gates](./release-docs/RELEASE_CANDIDATE_0.4.0.md)
 
-These documents describe the experimental coding-task design and implemented
-A–H local/offline scope. I's live/comparative/platform evidence and J's candidate
-qualification remain open. The user guide and candidate record distinguish
-implemented commands from unqualified remote support; package versions and
-existing release qualification remain unchanged.
+These documents describe the implemented A–J offline scope and the experimental coding-task design. Live production-model qualification and versioned release gates remain deferred. The integrated tree inherits 0.3.1 metadata without publishing the task compiler.
 
-| Folder                                       | Contents                                                          |
-| -------------------------------------------- | ----------------------------------------------------------------- |
-| [`product-docs/`](./product-docs/)           | Requirements, architecture, CLI, integrations, detection, config  |
+
+| Folder | Contents |
+| --- | --- |
+| [`product-docs/`](./product-docs/) | Requirements, architecture, CLI, integrations, detection, config |
 | [`implementing-docs/`](./implementing-docs/) | Plan, status, acceptance tests, support matrix, research template |
-| [`security-docs/`](./security-docs/)         | Safety rules and security review                                  |
-| [`release-docs/`](./release-docs/)           | Release process, checklist, hardening, notes                      |
+| [`security-docs/`](./security-docs/) | Safety rules and security review |
+| [`release-docs/`](./release-docs/) | Release process, checklist, hardening, notes |
+
+Dependency-health repair delivered in published 0.2.2: [post-create dependency health](./implementing-docs/POST_CREATE_DEPENDENCY_HEALTH.md).
+
+Current installed-stack patch: [0.2.3 release status](./release-docs/STABLE_RELEASE_0.2.3.md) and [installed-stack audit](./implementing-docs/INSTALLED_STACK_AUDIT.md). Historical delivery records remain unchanged.
+
+Future 0.3.0/0.4.0 branches and version-aware publication: [release preparation](./release-docs/RELEASE_PREPARATION.md). These releases remain in development; branch preparation does not mark their feature or qualification gates complete.

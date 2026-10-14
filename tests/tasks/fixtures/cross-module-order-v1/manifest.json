@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:c5209828814051915d28c10668a0a67a9b99ad883df0747b274a7e52ea4dc58b",
+  "fixtureRevision": "sha256:6638b9a7da5fa50d890ff632492135e935cc920b2a243c97218a92c0ad40f9c8",
   "fixtureId": "cross-module-order-v1",
   "fixtureVersion": 1,
   "phaseId": "dependency-output-contract",
@@ -92,7 +92,7 @@
     }
   ],
   "phaseDocumentHash": "sha256:14b6fb8d62e1a4635fbd4573b26a048c972aee47721a96bc3a8d9e92138dfb6c",
-  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "lockfileHash": "sha256:19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824",
   "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
   "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
   "supportProfileId": "managed-ts-node-v1",

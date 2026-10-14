@@ -1,4 +1,5 @@
 import type { ZodType } from "zod";
+import path from "node:path";
 
 import { createRepoSetupError, type RepoSetupError } from "../errors/model.js";
 import type { PlanContext } from "../integrations/definition.js";
@@ -14,6 +15,8 @@ import type {
 import { validateInstallationPlan } from "./validate-plan.js";
 import { batchInstallPackages } from "./batch-install.js";
 import { consolidateManifestInstalls } from "./consolidate-manifests.js";
+import { createPipRequirements } from "./pip-requirements.js";
+import { dependencyVerificationOperation } from "../doctor/dependency-probe.js";
 import { ensureScaffoldDependencyInstall } from "./ensure-scaffold-install.js";
 
 export function planInstallation(
@@ -82,7 +85,28 @@ function planResolvedIds(
   return {
     ...resolved,
     orderedIntegrations: ordered,
-    operations: validation.operations,
+    operations:
+      projectRoot === "."
+        ? validation.operations
+        : [
+            {
+              type: "create_directory",
+              path: projectRoot,
+              behavior: "create_if_missing",
+              description: "Create the selected project directory",
+            },
+            ...validation.operations.map((operation) =>
+              "path" in operation
+                ? {
+                    ...operation,
+                    path: path.posix.join(
+                      projectRoot.replaceAll("\\", "/"),
+                      operation.path.replaceAll("\\", "/"),
+                    ),
+                  }
+                : operation,
+            ),
+          ],
   };
 }
 
@@ -96,7 +120,7 @@ function withBatchedInstalls(result: ResolutionResult): ResolutionResult {
     return invalidPlan(result, [batched.error]);
   }
 
-  const consolidated = consolidateManifestInstalls(batched.operations);
+  const consolidated = consolidateManifestInstalls(batched.operations, { includeDev: true });
   if (!consolidated.ok) {
     return invalidPlan(result, [consolidated.error]);
   }
@@ -112,7 +136,19 @@ function withBatchedInstalls(result: ResolutionResult): ResolutionResult {
 
   return {
     ...result,
-    operations: ensured.operations,
+    operations: [
+      ...ensured.operations,
+      ...(result.config.packageManager === "pip"
+        ? [createPipRequirements(ensured.operations, projectRootFrom(result))].filter(
+            (operation): operation is NonNullable<typeof operation> => operation !== undefined,
+          )
+        : []),
+      dependencyVerificationOperation(
+        result.config.runtime.id,
+        result.config.packageManager,
+        projectRootFrom(result),
+      ),
+    ],
   };
 }
 

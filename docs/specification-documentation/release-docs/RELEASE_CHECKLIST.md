@@ -1,4 +1,64 @@
-# Release checklist (historical 0.1.x record)
+# Release checklists
+
+## Current 0.2.3 patch — 2026-10-09
+
+Published and delivery accepted; npm `latest` is 0.2.3.
+[Final source, attempts, artifact and signed delivery evidence](./STABLE_RELEASE_0.2.3.md).
+
+- [x] Merge repair/preparation PR #17/#18; all workspace versions and current guides target 0.2.3.
+- [x] Local 1,043 unit/38 packed E2E tests, build, typecheck, lint and 37 registry definitions pass; production audit has zero known vulnerabilities.
+- [x] Bounded live acceptance passes five retained-helper macOS cases and two fresh Linux service tests/seven checks with cleanup verified.
+- [x] Fifteen preset sessions/117 checks and 120 controlled benchmark trials pass.
+- [x] Three consecutive first-attempt release runs pass all sixteen required jobs and every required step on unchanged source.
+- [x] Full matrix passes all 480 cases with no skips after one Windows job retry; initial failures, cancellation and filtered diagnostic scope remain recorded.
+- [x] Retain exact artifact ID, byte count, hash, source and clean license review.
+- [x] New immutable v0.2.3 identifies the qualified source; tag-bound dry-run passes.
+- [x] Publish only retained bytes with approved OIDC; verify registry archive integrity and signed provenance.
+- [x] Fresh registry acceptance passes on Linux/macOS/Windows; unversioned npm install, both aliases and signature verification pass.
+- [x] GitHub release is public and current documentation/status records final delivery.
+
+## Historical 0.2.2 patch — 2026-10-08
+
+See [the release record](./STABLE_RELEASE_0.2.2.md) for exact source, artifact,
+completed qualification, signed publication and three-platform delivery evidence.
+At its closeout, npm latest and the GitHub release were 0.2.2.
+
+- [x] Merge dependency-health repair PR #13; its 408-case matrix passes.
+- [x] Prepare 0.2.2 manifests, publication checks and current guides.
+- [x] Local 977 unit tests, 38 packed E2E tests, typecheck, lint, build and 37 registry definitions pass.
+- [x] Three full first-attempt exact-source release runs pass all required steps.
+- [x] Full golden matrix, preset sessions and controlled benchmarks pass on the candidate; the original Windows install timeout and successful same-source retry are retained in the release record.
+- [x] Record final immutable artifact, bytes, hash, source and license review.
+- [x] Tag-bound publication dry-run passes.
+- [x] Publish the qualified artifact with OIDC; verify integrity and provenance.
+- [x] Fresh registry acceptance passes on Linux/macOS/Windows.
+- [x] Publish GitHub release and close current documentation/status.
+
+## Historical 0.2.1 patch — 2026-10-08
+
+The patch repairs published create regressions. Qualification links, source
+revisions and exclusions are in the [stability plan](../implementing-docs/STABILITY_0.2.x.md)
+and [acceptance checklist](../implementing-docs/ACCEPTANCE_TESTS.md).
+
+- [x] Confirmed create defects have regression fixes and tests on `codex/fix-create-project-paths`.
+- [x] Unit tests, typecheck, lint, build and registry validation pass.
+- [x] Packed CLI E2E passes with the external artifact skip disclosed.
+- [x] Full twelve-job / 408-execution matrix passes on product source `448beb4`.
+- [x] All fifteen packaged preset sessions pass.
+- [x] Platform CI, controlled installation benchmarks and corrected JSON evidence writers pass.
+- [x] Source revisions, failed attempts and manual/service limitations are documented.
+- [x] Existing npm trusted publisher was configured and validated by the 0.2.0 release; this does not qualify or publish the patch.
+- [x] Owner authorizes the release; the [bounded patch security review](../security-docs/SECURITY_REVIEW_0.2.1.md) records production audit results and the unresolved generated-tool advisory.
+- [x] Patch manifests and active publication checks target 0.2.1; exact-source qualification remains required.
+- [x] Owner requests 0.2.1 publication on October 8; [release progress](./STABLE_RELEASE_0.2.1.md) retains the remaining gates.
+- [x] Final 0.2.1 source/artifact passes all required exact-source gates.
+- [x] New immutable v0.2.1 and npm 0.2.1 are published with matching provenance, registry integrity and latest.
+- [x] Fresh install-from-registry acceptance passes on Ubuntu/macOS/Windows; [final evidence](./STABLE_RELEASE_0.2.1.md).
+
+Native/live-service/browser gaps remain documented in the stability plan;
+no additional seven-day freeze is required by that plan.
+
+## Historical 0.1.x record
 
 This file preserves the 0.1.x release record. It is not a current qualification checklist for 0.2.0. See [Phase 19 baseline and acceptance scope](../implementing-docs/PHASE_19_BASELINE.md) and the 0.2.0 roadmap for current gates.
 

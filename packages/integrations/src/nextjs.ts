@@ -110,7 +110,7 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
       context.config.packageManager === "pnpm" ? "--use-pnpm" : "--use-npm",
       // Official create-next-app flag: skip the generator's install so later
       // install_package ops (or a deferred project install) own node_modules.
-      // Verified for create-next-app@16.3.5 via --help and
+      // Verified for create-next-app@16.3.6 via --help and
       // https://nextjs.org/docs/app/api-reference/cli/create-next-app
       "--skip-install",
       "--yes",
@@ -148,7 +148,7 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
     const pnpmBuildPolicy: InstallationOperation | undefined =
       context.config.packageManager === "pnpm"
         ? {
-            // create-next-app 16.3.5 writes this placeholder policy when its
+            // create-next-app 16.3.6 writes this placeholder policy when its
             // install is skipped. Replace it before RepoSetup's consolidated
             // install so the generator's known native dependencies can build.
             type: "modify_text",
@@ -162,7 +162,7 @@ export const nextjsIntegration = defineIntegration<NextjsOptions>({
         : undefined;
     const standaloneTypecheckFix: InstallationOperation | undefined = typescript
       ? {
-          // create-next-app 16.3.5's default LayoutProps global is emitted
+          // create-next-app 16.3.6's default LayoutProps global is emitted
           // by Next's type generation. Use an explicit type so `tsc --noEmit`
           // works before a development server or build has run.
           type: "modify_text",

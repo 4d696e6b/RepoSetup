@@ -5,6 +5,9 @@ export function npmAddArgs(request: AddPackagesRequest): string[] {
   if (request.dev === true) {
     args.push("--save-dev");
   }
+  if (request.dev === true || request.includeDev === true) {
+    args.push("--include=dev");
+  }
   if (request.exact === true) {
     args.push("--save-exact");
   }
@@ -16,6 +19,9 @@ export function pnpmAddArgs(request: AddPackagesRequest): string[] {
   const args = ["add"];
   if (request.dev === true) {
     args.push("--save-dev");
+  }
+  if (request.dev === true || request.includeDev === true) {
+    args.push("--prod=false");
   }
   if (request.exact === true) {
     args.push("--save-exact");

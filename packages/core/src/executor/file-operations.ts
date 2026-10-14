@@ -213,8 +213,10 @@ export async function executeModifyText(
     : content.includes(crlfOldText)
       ? crlfOldText
       : operation.oldText;
-  const replacementText =
-    matchedText === crlfOldText ? operation.newText.replaceAll("\n", "\r\n") : operation.newText;
+  const usesCrlf = operation.oldText.includes("\n")
+    ? matchedText === crlfOldText && crlfOldText !== operation.oldText
+    : content.includes("\r\n");
+  const replacementText = usesCrlf ? operation.newText.replaceAll("\n", "\r\n") : operation.newText;
   const matches = content.split(matchedText).length - 1;
   if (matches === 0) {
     return mutationFailed(`Text to replace was not found in "${operation.path}".`, {

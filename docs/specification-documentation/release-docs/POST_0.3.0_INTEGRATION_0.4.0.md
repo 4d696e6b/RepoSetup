@@ -1,5 +1,23 @@
 # Prepare 0.4.0 integration after 0.3.0 publication
 
+## Current reconciliation — 14 October 2026
+
+0.3.0 and its 0.3.1 patch are published. The owner requested reconciliation and
+website task guidance. The existing task branch now integrates default-branch
+source `763b333ff8f7ab05ba5f0f70a61a91bcb2abd857`, retaining published package
+metadata 0.3.1. This does not change the immutable npm package or publish new task
+commands under that version. The website retains its exact released CLI/artifact
+pin, while task guidance must be explicitly marked an unreleased preview.
+
+Build/types/lint/unit/packed selection checks pass. A real React/Vite scaffold
+check reproduces an unavailable upstream ESLint plugin version; complete
+integration/platform qualification remains open. See
+[current status](../implementing-docs/STATUS_0.4.0.md) for detailed evidence.
+Keep PR #20 draft, retarget its review to main after the integration commit, and
+qualify the resulting source. No main merge, tag, npm publish, paid call or live
+website deployment is authorized by this reconciliation. The following preparation
+checkpoints are historical.
+
 Owner instruction, 2026-10-10: prepare integration now and wait until 0.3.0 is
 published. This record authorizes preparation, not merging or publishing 0.4.0.
 Keep [PR #20](https://github.com/4d696e6b/RepoSetup/pull/20) draft until the

@@ -13,7 +13,7 @@ import {
 import type { CreateAnswers, PromptCreateContext } from "./types.js";
 
 const PACKAGE_MANAGERS_BY_RUNTIME: Record<RuntimeId, readonly PackageManager[]> = {
-  node: ["npm", "pnpm", "bun"],
+  node: ["npm", "pnpm"],
   python: ["uv", "pip"],
 };
 

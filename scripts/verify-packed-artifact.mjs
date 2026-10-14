@@ -88,6 +88,12 @@ async function main() {
     record?.schemaVersion !== 1 ||
     record.package !== "rsetup" ||
     typeof record.version !== "string" ||
+    !/^[0-9a-f]{40}$/.test(record.sourceSha ?? "") ||
+    record.bytes !== tarballStats.size ||
+    (process.env.EXPECTED_SOURCE_SHA !== undefined &&
+      record.sourceSha !== process.env.EXPECTED_SOURCE_SHA) ||
+    (process.env.EXPECTED_PACKAGE_VERSION !== undefined &&
+      record.version !== process.env.EXPECTED_PACKAGE_VERSION) ||
     record.artifact !== path.basename(tarballPath) ||
     typeof record.sha256 !== "string" ||
     !SHA256_PATTERN.test(record.sha256)

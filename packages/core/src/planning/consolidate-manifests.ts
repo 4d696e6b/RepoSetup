@@ -19,12 +19,20 @@ export type ConsolidateManifestResult =
  */
 export function consolidateManifestInstalls(
   operations: readonly InstallationOperation[],
+  options: { includeDev?: boolean } = {},
 ): ConsolidateManifestResult {
+  const prepared = operations.map((operation) =>
+    options.includeDev === true &&
+    operation.type === "install_package" &&
+    (operation.packageManager === "npm" || operation.packageManager === "pnpm")
+      ? { ...operation, includeDev: true }
+      : operation,
+  );
   const output: InstallationOperation[] = [];
   let index = 0;
 
-  while (index < operations.length) {
-    const current = operations[index];
+  while (index < prepared.length) {
+    const current = prepared[index];
     if (current === undefined) {
       break;
     }
@@ -36,8 +44,8 @@ export function consolidateManifestInstalls(
     }
 
     const segment: InstallationOperation[] = [];
-    while (index < operations.length) {
-      const operation = operations[index];
+    while (index < prepared.length) {
+      const operation = prepared[index];
       if (operation === undefined || isBarrier(operation)) {
         break;
       }
@@ -140,6 +148,9 @@ function consolidateSegment(segment: readonly InstallationOperation[]): Consolid
     cwd,
     description: "Install assembled package.json dependencies",
     preferOffline: true,
+    ...(installs.some((install) => install.dev === true || install.includeDev === true)
+      ? { includeDev: true }
+      : {}),
     ...(packageManager === "pnpm" && allowBuild.size > 0 ? { allowBuild: [...allowBuild] } : {}),
   });
   if (!installed.ok) {

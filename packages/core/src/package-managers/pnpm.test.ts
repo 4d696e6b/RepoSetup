@@ -36,7 +36,7 @@ describe("pnpmAdapter", () => {
       dev: true,
     });
 
-    expectArgs(result, ["add", "--save-dev", "vitest"]);
+    expectArgs(result, ["add", "--save-dev", "--prod=false", "vitest"]);
   });
 
   it("adds an exact version pin with --save-exact", () => {
@@ -48,7 +48,7 @@ describe("pnpmAdapter", () => {
       exact: true,
     });
 
-    expectArgs(result, ["add", "--save-dev", "--save-exact", "prettier"]);
+    expectArgs(result, ["add", "--save-dev", "--prod=false", "--save-exact", "prettier"]);
   });
 
   it("allows named dependency build scripts with --allow-build", () => {
@@ -63,6 +63,7 @@ describe("pnpmAdapter", () => {
     expectArgs(result, [
       "add",
       "--save-dev",
+      "--prod=false",
       "--allow-build=prisma",
       "--allow-build=@prisma/engines",
       "prisma",
@@ -102,6 +103,26 @@ describe("pnpmAdapter", () => {
     });
 
     expectArgs(result, ["install", "--no-frozen-lockfile"]);
+  });
+
+  it("includes development dependencies only when explicitly requested", () => {
+    expectArgs(
+      pnpmAdapter.install({
+        cwd: ".",
+        description: "Install development scaffold",
+        includeDev: true,
+      }),
+      ["install", "--no-frozen-lockfile", "--prod=false"],
+    );
+    expectArgs(
+      pnpmAdapter.add({
+        packages: ["express"],
+        cwd: ".",
+        description: "Install scaffold",
+        includeDev: true,
+      }),
+      ["add", "--prod=false", "express"],
+    );
   });
 
   it("removes packages with pnpm remove", () => {

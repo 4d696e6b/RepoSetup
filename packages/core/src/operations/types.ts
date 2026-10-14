@@ -19,6 +19,8 @@ export interface InstallPackageOperation {
   cwd: ProjectRelativePath;
   description: string;
   dev?: boolean;
+  /** Explicitly include development dependencies for a fresh development scaffold. */
+  includeDev?: boolean;
   exact?: boolean;
   allowBuild?: string[];
   requiresNetwork?: boolean;

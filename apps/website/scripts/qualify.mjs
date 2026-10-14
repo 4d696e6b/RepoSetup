@@ -70,7 +70,7 @@ const report = {
     scope === "local" ? "WebKit desktop/mobile" : "Full five-profile browser matrix",
     "Manual screen-reader and physical-device checks",
     "Whole-release safety review",
-    "Cross-branch release-candidate qualification and repeated passes/soak",
+    "Integrated exact-artifact qualification (no calendar waiting gate)",
     "Explicit delivery authorization",
   ],
 };

@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:48ef690bd3f52c6365e7a7e947f112ef22bbd6d2d4a821673c2fdceefe61ccaf",
+  "fixtureRevision": "sha256:f86339e7c87783dbc7ff66264c02ae357bca8075e243bc714b9cf371685bf263",
   "fixtureId": "types-result-v1",
   "fixtureVersion": 1,
   "phaseId": "typed-input-boundary",
@@ -82,7 +82,7 @@
     }
   ],
   "phaseDocumentHash": "sha256:fb85ba9e2941b10c510b019fd58c5228677028e02813eadb86d3ad0e59948714",
-  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "lockfileHash": "sha256:19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824",
   "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
   "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
   "supportProfileId": "managed-ts-node-v1",

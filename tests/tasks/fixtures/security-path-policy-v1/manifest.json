@@ -1,7 +1,7 @@
 {
   "kind": "task_benchmark_fixture",
   "schemaVersion": 1,
-  "fixtureRevision": "sha256:0d5b837758f19b98910387bfcb2945cb62c603b91263c2e03d07de869cfb3f89",
+  "fixtureRevision": "sha256:376c32072176a07a8e174ca05094aa5711e9391ea28b0e54a4f27a0e938cbd64",
   "fixtureId": "security-path-policy-v1",
   "fixtureVersion": 1,
   "phaseId": "scoped-path-policy",
@@ -87,7 +87,7 @@
     }
   ],
   "phaseDocumentHash": "sha256:006d4faa22473a05f315f79654200de8e041d1e64d35e85c1c6d733d0707f23e",
-  "lockfileHash": "sha256:5ca94e4303b65895fe51240e05508f0331c0f460e79e65f7a7ce7dc4311f365c",
+  "lockfileHash": "sha256:19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824",
   "dependencyArtifactId": "sha256:ad6fb65323ab1562c6914eb4fd14df900197e5f07ea532c39e7639fece652e64",
   "recipeRevision": "sha256:d5735b955acb23627a4aa0509e4678757c02d6c372ba2c38597b36e085eeab38",
   "supportProfileId": "managed-ts-node-v1",

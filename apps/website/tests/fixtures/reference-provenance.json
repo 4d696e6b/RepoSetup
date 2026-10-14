@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "5e40fa839c2c80391de145547bf4ff2eea5f09a1",
+  "sourceKind": "Verified production source deployment; commit is local and not available through GitHub",
+  "reviewedSnapshotCommit": "78ffaac4bfc195c6236cedd58ed0db562ca93895",
+  "releaseJsonSha256": "f6cb57b1171785ef3aad8492ff717b5a545443166a8d51fa7e8be83f0ace75ba",
+  "artworkSha256": {
+    "reposetup-wordmark.svg": "50ca57a5539f58ca961cce031e276c98d0e1f0add6b8326ed36f3d183a348e3a",
+    "hero-stack.png": "8b6446ca55924a0ca25c05d60ff1c36b6e8a37bdd1a5a45abda10c21b0d3a84b",
+    "tablet-hand.png": "77069251d741de3a49e35e3e1c6ea17938637fe24c30e0e735e35042a0a37cd2"
+  }
+}

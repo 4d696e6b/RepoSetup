@@ -463,6 +463,33 @@ describe("executeInstallation", () => {
     expect(await readFile(path.join(root, "generator.txt"), "utf8")).toBe("updated\r\ncontent\r\n");
   });
 
+  it.each(["\n", "\r\n"])(
+    "preserves %j endings when a single-line anchor gains lines",
+    async (ending) => {
+      const root = await tempRoot();
+      await writeFile(
+        path.join(root, "vite.config.ts"),
+        ["before", "import react", "after", ""].join(ending),
+      );
+      const result = await executeInstallation(
+        [
+          {
+            type: "modify_text",
+            path: "vite.config.ts",
+            oldText: "import react",
+            newText: "import react\nimport tailwind",
+            description: "Insert a plugin import",
+          },
+        ],
+        { rootDir: root, runProcess: recordingRunner([]) },
+      );
+      expect(result.ok).toBe(true);
+      expect(await readFile(path.join(root, "vite.config.ts"), "utf8")).toBe(
+        ["before", "import react", "import tailwind", "after", ""].join(ending),
+      );
+    },
+  );
+
   it("preserves CRLF when appending to an existing environment example", async () => {
     const root = await tempRoot();
     await writeFile(path.join(root, ".env.example"), "EXISTING=value\r\n", "utf8");
@@ -609,6 +636,50 @@ describe("executeInstallation", () => {
     if (!timedOut.ok) {
       expect(timedOut.error.code).toBe("COMMAND_TIMED_OUT");
     }
+  });
+
+  it("retains bounded redacted timeout diagnostics and stops before subsequent changes", async () => {
+    const root = await tempRoot();
+    const messages: string[] = [];
+    const result = await executeInstallation(
+      [
+        {
+          type: "run_command",
+          command: "npm",
+          args: ["install", "--include=dev"],
+          cwd: ".",
+          description: "Install dependencies",
+        },
+        {
+          type: "create_file",
+          path: "after.txt",
+          content: "must not be written",
+          behavior: "fail_if_exists",
+          description: "Must not run after timeout",
+        },
+      ],
+      {
+        rootDir: root,
+        logger: { info: (message) => messages.push(message), verbose() {} },
+        runProcess: async () => ({
+          exitCode: 1,
+          timedOut: true,
+          stdout: `${"earlier download output\n".repeat(200)}installing native dependency\nDATABASE_URL=super-secret`,
+          stderr: "token=super-secret",
+        }),
+      },
+    );
+    expect(result).toMatchObject({ ok: false, executed: 0 });
+    if (result.ok) return;
+    expect(result.error.code).toBe("COMMAND_TIMED_OUT");
+    expect(result.error.message).toContain("installing native dependency");
+    expect(result.error.message).toContain("DATABASE_URL=<redacted>");
+    expect(result.error.message.length).toBeLessThan(2100);
+    expect(result.error.details).toEqual({ command: "npm", args: ["install", "--include=dev"] });
+    expect(JSON.stringify(result)).not.toContain("super-secret");
+    expect(messages.join("\n")).toContain("installing native dependency");
+    expect(messages.join("\n")).not.toContain("super-secret");
+    await expect(readFile(path.join(root, "after.txt"), "utf8")).rejects.toThrow();
   });
 
   it("passes distinct regular and long-running timeout limits to process runners", async () => {
@@ -1025,6 +1096,70 @@ describe("executeInstallation", () => {
     expect(runs).toEqual([]);
   });
 
+  it("checks a child install lockfile independently of the parent manager", async () => {
+    const root = await tempRoot();
+    await mkdir(path.join(root, "app"));
+    await writeFile(path.join(root, "pnpm-lock.yaml"), "parent lockfile");
+    const runs: ProcessRunRequest[] = [];
+    const operations: InstallationOperation[] = [
+      {
+        type: "run_command",
+        command: "npm",
+        args: ["install"],
+        cwd: "app",
+        description: "Install child",
+      },
+    ];
+    const result = await executeInstallation(operations, {
+      rootDir: root,
+      runProcess: recordingRunner(runs),
+    });
+    expect(result.ok).toBe(true);
+    expect(runs).toHaveLength(1);
+    await writeFile(path.join(root, "app", "pnpm-lock.yaml"), "child lockfile");
+    runs.splice(0);
+    const conflict = await executeInstallation(operations, {
+      rootDir: root,
+      runProcess: recordingRunner(runs),
+    });
+    expect(conflict).toMatchObject({
+      ok: false,
+      executed: 0,
+      error: { code: "LOCKFILE_CONFLICT" },
+    });
+    expect(runs).toEqual([]);
+  });
+
+  it("requires the locked-install file in the command's cwd", async () => {
+    const root = await tempRoot();
+    await mkdir(path.join(root, "app"));
+    await writeFile(path.join(root, "package-lock.json"), "{}");
+    const runs: ProcessRunRequest[] = [];
+    const operations: InstallationOperation[] = [
+      {
+        type: "run_command",
+        command: "npm",
+        args: ["ci"],
+        cwd: "app",
+        requiresLockfile: "package-lock.json",
+        description: "Locked child install",
+      },
+    ];
+    const missing = await executeInstallation(operations, {
+      rootDir: root,
+      runProcess: recordingRunner(runs),
+    });
+    expect(missing).toMatchObject({ ok: false, executed: 0, error: { code: "LOCKFILE_CONFLICT" } });
+    expect(runs).toEqual([]);
+    await writeFile(path.join(root, "app", "package-lock.json"), "{}");
+    const present = await executeInstallation(operations, {
+      rootDir: root,
+      runProcess: recordingRunner(runs),
+    });
+    expect(present.ok).toBe(true);
+    expect(runs).toHaveLength(1);
+  });
+
   it("does not run npm ci when the required lockfile is missing", async () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];
@@ -1155,7 +1290,7 @@ describe("executeInstallation", () => {
     const root = await tempRoot();
     const runs: ProcessRunRequest[] = [];
     const result = await executeInstallation(
-      [{ type: "check_prerequisite", id: "docker", description: "Require Docker" }],
+      [{ type: "check_prerequisite", id: "unknown-system-tool", description: "Unknown tool" }],
       { rootDir: root, runProcess: recordingRunner(runs) },
     );
 

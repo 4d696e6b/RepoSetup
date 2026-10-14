@@ -1,6 +1,47 @@
 # RepoSetup 0.4.0 implementation status
 
-Last updated: 2026-10-13.
+Last updated: 2026-10-14.
+
+## Released 0.3.1 baseline reconciliation — 2026-10-14
+
+Owner requested reconciliation with 0.3.1 and a complete companion website task
+guide. Integrated released `origin/main` source
+`763b333ff8f7ab05ba5f0f70a61a91bcb2abd857` into the existing task worktree.
+Preserved the published installer/selection fixes, release tooling, website,
+artwork, history and dependency overrides. Metadata inherits **0.3.1**, without a
+new release version or publication; the development CLI has additional commands
+that the immutable published 0.3.1 package does not contain.
+
+The shared process adapter retains 0.3.1 filtering of outer npm launcher options
+for installers and the task verifier's explicit isolated environment. Two real
+subprocess regressions verify those boundaries. Published website CLI facts remain
+byte-pinned to their reviewed 0.3.1 snapshot. Website builds verify that snapshot
+instead of deriving published commands from the extended development CLI; explicit
+regeneration still rejects changed release definitions.
+
+On Node 24.21.0 / pnpm 12.5.1: build, workspace typecheck, task-test typecheck,
+lint and **1,749 workspace tests** passed (core 672, registry 15, integrations 680,
+CLI 309, website 73). Packed selections **105/105** passed. Generic E2E returned
+**135 passed, one failed, one existing Python/uv skip**. The failed React/Vite
+scaffold requests unavailable `@typescript-eslint/eslint-plugin@8.71.2`; the
+registry reports 8.71.1 as latest. A targeted retry reproduced it. No released
+integration pin, generated dependency or test assertion was weakened to hide it.
+This external package-resolution blocker prevents claiming full integration
+qualification.
+
+The first frozen task-contract run correctly rejected the new workspace lockfile
+(26 failed, 36 passed). Refreshed only lockfile and fixture identities in the five
+manifests; seed, holdout, reference, mutations and acceptance remain unchanged.
+Lockfile SHA-256 is `19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824`.
+Frozen dependency installation passed offline with four cached packages and zero
+downloads after reconciling the SDK entries with the released dependency overrides.
+New task contracts/concrete verification checks are in progress; their final results
+will be recorded below. Linux/macOS hosted checks must qualify this integrated tree
+again. No provider call, system installation, main merge or deployment occurred.
+
+Next: finish the task/compiler/router website guides and their browser checks;
+resolve the scaffold registry blocker and qualify this new source before release.
+Historical A–J records below apply to their recorded sources, not this merge.
 
 ## Current position
 
@@ -22,17 +63,18 @@ validation; its new source/artifact still needs complete hosted requalification.
 Production capability profiles remain unconfirmed and routing closed. Simulated
 reports retain `qualification: false`; offline completion establishes implemented
 behavior and delivery preparation, not remote support, quality or comparative savings.
-Package version remains `0.3.0-alpha.1`. Live smoke, 75 actual model trials,
+The original qualified development package was `0.3.0-alpha.1`; the integrated
+development metadata now inherits `0.3.1`. Live smoke, 75 actual model trials,
 production profile evidence, candidate version/freeze, three same-candidate full
 repeats and seven calendar days of stability remain deferred release prerequisites.
 No merge, tag, publication or stability-clock start is implied.
 
 - Development branch: `codex/0.4.0-task-compiler`.
 - Worktree: `/Volumes/Developer/zeaek_/Desktop/Content/Soft-En-TU/Project/RepoSetup-0.4.0-task-compiler`.
-- Base branch: `codex/0.3.0-candidate-integration`.
-- Base source: `bfeab2f66806d42fa7d32ac4c144d1464bd88a48`.
+- Integrated base branch: `main` (PR retarget pending).
+- Integrated base source: `763b333ff8f7ab05ba5f0f70a61a91bcb2abd857`.
 - Preparation inspected HEAD: `9fa2389176cb822ebae89d7edd301c0a3dbb6cb4`, then runtime source matched the integrated base. Milestone D started at `47db339` with a clean Git status; subsequent runtime extensions are recorded below.
-- CLI package version: inherited `0.3.0-alpha.1`; no release bump or tag.
+- CLI package version: inherited `0.3.1`; no new release bump or tag.
 - Prior release qualification stays in its own records; this branch does not close those gates.
 
 ## Preparation

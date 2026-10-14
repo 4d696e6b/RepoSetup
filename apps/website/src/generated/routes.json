@@ -1,0 +1,15 @@
+{
+  "contexts": ["react-vite-ts-pnpm", "express-ts-pnpm", "fastapi-uv"],
+  "presets": ["beginner-react-vite", "beginner-express", "beginner-fastapi"],
+  "libraries": [
+    "react-vite",
+    "express",
+    "fastapi",
+    "zod",
+    "vitest",
+    "prettier",
+    "pydantic",
+    "pytest",
+    "ruff"
+  ]
+}

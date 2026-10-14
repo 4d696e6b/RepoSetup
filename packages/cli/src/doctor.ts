@@ -12,6 +12,7 @@ import {
 import { lstat } from "node:fs/promises";
 import path from "node:path";
 
+import { createDependencyHealthCheck } from "./dependency-health.js";
 import { EXIT_CODES, exitCodeForError, exitCodeForErrors } from "./exit-codes.js";
 import { formatError } from "./format-error.js";
 import { renderErrorJson } from "./machine-output.js";
@@ -86,8 +87,7 @@ export async function handleDoctor(input: {
   const result = await runDoctor({
     startDir: targetDir,
     registry: input.deps.registry,
-    commandExists: input.deps.commandExists,
-    resolveExecutable: input.deps.resolveExecutable,
+    ...doctorEnvironmentChecks(input.deps),
     ...(input.commandVersion === undefined ? {} : { commandVersion: input.commandVersion }),
     ...(config === undefined ? {} : { expectedConfig: config }),
   });
@@ -258,8 +258,7 @@ async function handleRepair(
     ? await runDoctor({
         startDir: doctor.projectRoot,
         registry: input.deps.registry,
-        commandExists: input.deps.commandExists,
-        resolveExecutable: input.deps.resolveExecutable,
+        ...doctorEnvironmentChecks(input.deps),
         expectedConfig: currentConfig.config,
         ...(input.commandVersion === undefined ? {} : { commandVersion: input.commandVersion }),
       })
@@ -313,8 +312,7 @@ async function handleRepair(
   const checked = await runDoctor({
     startDir: doctor.projectRoot,
     registry: input.deps.registry,
-    commandExists: input.deps.commandExists,
-    resolveExecutable: input.deps.resolveExecutable,
+    ...doctorEnvironmentChecks(input.deps),
     expectedConfig: config,
     ...(input.commandVersion === undefined ? {} : { commandVersion: input.commandVersion }),
   });
@@ -330,6 +328,31 @@ async function handleRepair(
     executed: executed.executed,
     dryRun: false,
   });
+}
+
+function doctorEnvironmentChecks(deps: ResolvedCliDeps) {
+  return {
+    commandExists: deps.commandExists,
+    resolveExecutable: deps.resolveExecutable,
+    checkCommand: async (command: string, args: readonly string[]) => {
+      const resolved = await deps.resolveExecutable(command);
+      if (resolved === undefined) return false;
+      const result = await deps.runProcess({
+        command: resolved,
+        args: [...args],
+        cwd: deps.cwd,
+        timeoutMs: 5_000,
+        ...(deps.signal === undefined ? {} : { signal: deps.signal }),
+      });
+      return (
+        result.exitCode === 0 &&
+        result.notFound !== true &&
+        result.timedOut !== true &&
+        result.aborted !== true
+      );
+    },
+    checkInstalledDependencies: createDependencyHealthCheck(deps),
+  };
 }
 
 async function hasSymlinkComponent(root: string, relativePath: string): Promise<boolean> {

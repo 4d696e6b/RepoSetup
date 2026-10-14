@@ -1,6 +1,12 @@
 # npm trusted publishing setup
 
-This is a **manual npmjs.com** step. RepoSetup cannot complete it from the repository.
+Status — 2026-10-09: the owner configured and authorized the `rsetup` GitHub
+trusted publisher, and the 0.2.0 publish validated it. See
+[stable qualification](./specification-documentation/release-docs/STABLE_QUALIFICATION_0.2.0.md).
+The 0.2.1, 0.2.2 and 0.2.3 publishes also succeeded through that approved publisher. No bootstrap/login setup is outstanding for current delivery.
+
+Changing publisher settings is a **manual npmjs.com** step; it is not performed
+by editing the repository. The setup instructions below remain a reference.
 
 Official docs: [Trusted publishing for npm packages](https://docs.npmjs.com/trusted-publishers/).
 
@@ -52,7 +58,7 @@ Workflow filename: publish-npm.yml
 Environment name: (leave empty)
 ```
 
-5. Allow **`npm publish`** (not stage-only) for this project's tag-triggered workflow.
+5. Allow **`npm publish`** (not stage-only) for this project's manually dispatched workflow at its qualified tag.
 6. Save. npm does **not** validate the fields until the next publish.
 
 Optional later hardening (after a successful Actions publish):
@@ -67,11 +73,16 @@ Optional later hardening (after a successful Actions publish):
 3. Bump the public CLI version in `packages/cli/package.json` (keep workspace library versions in lockstep when they change).
 4. Merge the release to `main`.
 5. Create annotated tag `vX.Y.Z` on that commit (do not move an existing tag).
-6. Push the tag.
-7. `.github/workflows/publish-npm.yml` runs quality gates, then publishes with OIDC.
-8. Confirm `npm view rsetup@version version`.
-9. Publish or update the GitHub Release for the same tag.
+6. Push the tag. A tag push does not itself trigger the current publication workflow.
+7. Manually dispatch `publish-npm.yml` at the qualified tag with the three exact-source qualification run IDs. First use `publish: false`; after review use `publish: true`. It downloads and verifies the retained qualified tarball and publishes those same bytes with OIDC, without rebuilding.
+8. Confirm registry version, integrity, provenance and dist-tag, then complete fresh delivery acceptance.
+9. Publish or update the GitHub Release for the same immutable tag.
 
-The workflow skips `npm publish` when that exact version already exists. npm versions are immutable; never force-overwrite.
+The current workflow and validation scripts target 0.2.3. Qualify its exact
+source/artifact before publication; the previous create-regression matrix alone
+is not publication qualification.
+See [the patch release record](./specification-documentation/release-docs/STABLE_RELEASE_0.2.3.md).
+An existing version is accepted only if its integrity matches the qualified
+artifact. npm versions are immutable; never force-overwrite.
 
 Pull requests do not get `id-token: write` publish jobs.

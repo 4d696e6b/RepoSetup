@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-08",
+  "version": "0.2.1",
+  "status": "published-delivery-accepted",
+  "sourceCommit": "c61b88a88e18ef5d9c92291131f3c938fc0b521a",
+  "sourceBranch": "codex/release-0.2.1",
+  "tag": "v0.2.1",
+  "artifact": {
+    "id": 11528501250,
+    "runId": 37721836811,
+    "filename": "rsetup-0.2.1.tgz",
+    "bytes": 108421,
+    "sha256": "ea15d8bdcdf029833301d14196715259a755112f6392d88c8d5f5e37e90348b9",
+    "integrity": "sha512-uI34mLBGsXSitbVYiXo6Cm8jW3708JH9FFASFsZNsNqYrCfcQxtmEDJDvuyGKpbS/38NLuw1YviH8P0Sy11gcQ=="
+  },
+  "qualification": {
+    "runs": [
+      37721829998,
+      37721833738,
+      37721836811
+    ],
+    "requiredJobsPerRun": 16,
+    "allRequiredJobsAndStepsPassed": true,
+    "firstAttemptsOnly": true,
+    "calendarSoakRequired": false
+  },
+  "expandedGolden": {
+    "runId": 37721839706,
+    "scope": "full",
+    "jobsPassed": 12,
+    "testsPerJob": 34,
+    "passedExecutions": 408,
+    "skippedCases": 0,
+    "validJSONFiles": 12,
+    "bareSolutionsPerJob": 20,
+    "recipesPerJob": 14
+  },
+  "presets": {
+    "runId": 37721843189,
+    "sessionsPassed": 15,
+    "checksPassed": 117,
+    "expectedOccupiedPortRefusals": 3
+  },
+  "local": {
+    "unitTestsPassed": 959,
+    "targetedReleaseTestsPassed": 20,
+    "packagedE2ETestsPassed": 38,
+    "packagedE2ETestsSkipped": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "registryDefinitionsValidated": 37
+  },
+  "support": {
+    "platforms": [
+      "ubuntu-24.04/x64",
+      "macos-15/arm64",
+      "windows-2025/x64"
+    ],
+    "node": "24.21.0",
+    "python": [
+      "3.12",
+      "3.13"
+    ],
+    "javascriptManagers": [
+      "npm",
+      "pnpm"
+    ],
+    "pythonManagers": [
+      "uv",
+      "isolated-pip"
+    ]
+  },
+  "benchmarkRunId": 37721846284,
+  "fastCIRunId": 37721828876,
+  "platformRunId": 37721828880,
+  "publication": {
+    "dryRunId": 37727544749,
+    "dryRun": "passed",
+    "runId": 37727624068,
+    "registryVisibilityVerified": true,
+    "registryIntegrityVerified": true,
+    "latestVerified": true,
+    "provenanceVerified": true,
+    "deliveryJobsPassed": 3,
+    "status": "passed",
+    "provenanceLogIndex": "3140942397",
+    "registrySignaturePackagesVerified": 27,
+    "attestedPackagesVerified": 20,
+    "githubRelease": "https://github.com/4d696e6b/RepoSetup/releases/tag/v0.2.1"
+  },
+  "limitations": [
+    "Native Windows 11",
+    "Linux arm64",
+    "Every integration permutation",
+    "Live PostgreSQL/MongoDB/container connections",
+    "SQLAlchemy DBAPI connections",
+    "Actual Playwright browser journeys"
+  ],
+  "security": {
+    "productionAuditVulnerabilities": 0,
+    "unpatchedGeneratedToolAdvisory": "GHSA-vfj7-8cjw-p6xm",
+    "reviewDocument": "../../security-docs/SECURITY_REVIEW_0.2.1.md"
+  }
+}
