@@ -8,8 +8,8 @@ const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 it("links the actual previous published guide in an offline candidate build", () => {
   const output = publicationHtml(html, null);
   expect(output).toContain(`${handoff.version} candidate`);
-  expect(output).toContain("blob/v0.3.0/README.md");
-  expect(output).toContain("0.3.0 user guide");
+  expect(output).toContain("blob/v0.3.1/README.md");
+  expect(output).toContain("0.3.1 user guide");
   expect(output).not.toContain("0.2.3 user guide");
 });
 

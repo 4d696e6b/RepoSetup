@@ -2,18 +2,24 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { taskPreparePrompt } from "../../src/reference/docs/task-guides.js";
 
-test("plan guide is discoverable and clearly separated from the released CLI", async ({ page }) => {
+test("plan guide describes candidate availability and experimental managed routing", async ({
+  page,
+}) => {
   await page.goto("/#/docs");
   await page
     .locator(".docs-start-card")
     .filter({ hasText: "Use an AI-written coding plan" })
     .click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Use an AI-written coding plan");
-  await expect(page.locator(".docs-article > .eyebrow")).toHaveText(
-    "UNRELEASED TASK COMPILER / 0.4.0 PREVIEW",
-  );
-  await expect(page.locator(".docs-article")).toContainText("Published rsetup 0.3.1");
-  await expect(page.locator(".docs-article")).toContainText("does not contain task commands");
+  await expect(page.locator(".docs-article > .eyebrow")).toHaveText("Guides / VERSION 0.4.0");
+  if (process.env.REPOSETUP_WEBSITE_RELEASE === "published") {
+    await expect(page.locator(".docs-article")).toContainText(
+      "RepoSetup 0.4.0 includes task compile",
+    );
+  } else {
+    await expect(page.locator(".docs-article")).toContainText("Published rsetup 0.3.1");
+    await expect(page.locator(".docs-article")).toContainText("does not contain task commands");
+  }
   await page
     .locator(".docs-article")
     .getByRole("link", { name: "How the managed router works", exact: false })
@@ -25,7 +31,7 @@ test("plan guide is discoverable and clearly separated from the released CLI", a
     "Production model capability profiles are unconfirmed",
   );
   await page.goto("/#/docs/cli");
-  await expect(page.locator(".docs-article")).not.toContainText("rsetup task");
+  await expect(page.locator(".docs-article")).toContainText("rsetup task");
 });
 
 test("copying the preparation prompt has an accessible keyboard fallback", async ({ page }) => {

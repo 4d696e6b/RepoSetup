@@ -62,7 +62,7 @@ export function assertReleaseVersion(packageVersion: string, cliVersion: string)
 /** Development commands must never leak into the pinned published CLI reference. */
 export function verifyReleaseSnapshot(bytes = readFileSync(outputPath)) {
   if (createHash("sha256").update(bytes).digest("hex") !== handoff.referenceSha256) {
-    throw new Error("Published reference bytes differ from the reviewed 0.3.1 snapshot.");
+    throw new Error(`Pinned reference bytes differ from the reviewed ${RELEASE_VERSION} snapshot.`);
   }
   const facts = JSON.parse(bytes.toString("utf8")) as ReturnType<typeof generateReleaseFacts>;
   if (facts.package.version !== RELEASE_VERSION || facts.source.revision !== RELEASE_SOURCE) {
@@ -144,6 +144,12 @@ function relationships(items: IntegrationRelationship[] | undefined): Integratio
   return (items ?? []).map(({ kind, target, reason }) => ({ kind, target: { ...target }, reason }));
 }
 
+export function assertReleaseDefinitionsMatch(changed: string): void {
+  if (changed.trim() !== "") {
+    throw new Error(`Release definitions differ from reviewed CLI ${RELEASE_VERSION}:\n${changed}`);
+  }
+}
+
 function assertUnchangedReleaseDefinitions(): void {
   const changed = execFileSync(
     "git",
@@ -160,9 +166,7 @@ function assertUnchangedReleaseDefinitions(): void {
     ],
     { cwd: repoRoot, encoding: "utf8" },
   ).trim();
-  if (changed !== "") {
-    throw new Error(`Release definitions differ from reviewed CLI ${RELEASE_VERSION}:\n${changed}`);
-  }
+  assertReleaseDefinitionsMatch(changed);
 }
 
 export function generateReleaseFacts() {

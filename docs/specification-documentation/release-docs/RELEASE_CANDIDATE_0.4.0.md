@@ -7,6 +7,35 @@ prerequisites. Completing offline I/J does not qualify a candidate, start the
 seven-day clock, authorize spending or pass any unobserved remote condition.
 
 
+## Versioned preparation update — 2026-10-14
+
+The owner subsequently requested preparing and publishing 0.4.0 everywhere,
+retaining offline-only model validation. The canonical `codex/release-0.4.0`
+checkout now integrates current implementation and published 0.3.1/main ancestry.
+The guarded version-preparation helper wrote 0.4.0 metadata only after checking
+clean source and both required ancestors. CLI byte-source is
+`cfdb6c710706d8a280cdd8d81195aae371a1fa74`; its packed SHA-256 is
+`a4a95e7f1cb6e95bb1bc2fa73650c1ebc6626c1be0fb6777d9ca28fa782f7345`.
+An independent source archive rebuilt identical bytes and installed them outside
+the workspace. The website now binds that identity and derives all 16 commands
+from actual parser help, preserving the immutable 0.3.1 reference and history.
+
+The integrated unit/build/type/lint checks and renewed license/audit checks pass.
+Current joint browser, installed handoff, release guards and portable workflow
+checks are being recorded in implementation status. No new artifact is qualified
+by old-source evidence. Three consecutive successful first-attempt 20-job
+qualifications and renewed website/selection acceptance remain pending.
+
+This preparation does not change the original unfulfilled live/model/comparative
+or stability conditions below into passing evidence. The offline publication
+scope presents managed execution as experimental and keeps production routing
+unqualified and blocked. No paid call, tag, npm publication or deployment occurred.
+The October 10 material below records its historical source and conditions; its
+old package version and lack of version-preparation authorization are superseded
+by the owner's subsequent release request, not by an assumed successful live test.
+
+## Historical October 10 preparation record
+
 Updated 2026-10-10. This is preparation, not a qualified artifact or release.
 The owner requested skipping the unavailable Azure quota step and completing
 available local work. Deferred evidence stays unverified; it is not waived.

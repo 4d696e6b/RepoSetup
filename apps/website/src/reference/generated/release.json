@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "source": {
-    "tag": "v0.3.1",
-    "revision": "f306e1c877887fe9c2861619ea434a26b996fe2c",
+    "tag": "v0.4.0",
+    "revision": "cfdb6c710706d8a280cdd8d81195aae371a1fa74",
     "status": "prepared"
   },
   "package": {
     "name": "rsetup",
-    "version": "0.3.1",
+    "version": "0.4.0",
     "nodeEngine": ">=24",
     "binNames": ["rsetup", "reposetup"]
   },
@@ -226,6 +226,225 @@
             "description": "include extra detail in output (default: false)"
           },
           { "flags": "--quiet", "description": "reduce output (default: false)" },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "task",
+        "path": ["task"],
+        "usage": "reposetup task [options] [command]",
+        "description": "Experimental coding tasks: local handoff and reviewed managed execution",
+        "arguments": [],
+        "flags": [{ "flags": "-h, --help", "description": "display help for command" }],
+        "children": ["task-compile", "task-next", "task-status", "task-run"]
+      },
+      {
+        "id": "task-compile",
+        "path": ["task", "compile"],
+        "usage": "reposetup task compile [options]",
+        "description": "Validate an independently reviewed Markdown phase and structured draft",
+        "arguments": [],
+        "flags": [
+          { "flags": "--review <path>", "description": "independent version 1 task_review JSON" },
+          {
+            "flags": "--root <path>",
+            "description": "reviewed project root (default current directory)"
+          },
+          {
+            "flags": "--preferences <path>",
+            "description": "separate task_preferences JSON (default local handoff)"
+          },
+          {
+            "flags": "--dry-run",
+            "description": "read and preview without writes, calls, subprocesses or attempts (default: false)"
+          },
+          { "flags": "--json", "description": "write output-version 1 task JSON" },
+          { "flags": "--quiet", "description": "reduce output" },
+          { "flags": "--verbose", "description": "include extra detail" },
+          {
+            "flags": "--draft <path>",
+            "description": "version 1 task_plan_draft JSON; omitted input returns a decomposition request"
+          },
+          {
+            "flags": "--heading <text>",
+            "description": "exact unique ATX heading matching the reviewed range"
+          },
+          {
+            "flags": "--lines <start:end>",
+            "description": "inclusive range matching the reviewed phase"
+          },
+          {
+            "flags": "--managed",
+            "description": "request one structured draft under explicit provider allowance (default: false)"
+          },
+          {
+            "flags": "--state-root <path>",
+            "description": "preexisting private compilation ledger directory"
+          },
+          {
+            "flags": "--effort <id>",
+            "description": "explicit native effort for fixed gpt-6.1-sol decomposition"
+          },
+          {
+            "flags": "--max-output-tokens <count>",
+            "description": "managed output ceiling (default 4096)"
+          },
+          { "flags": "--timeout-ms <count>", "description": "managed deadline (default 120000)" },
+          {
+            "flags": "--allow-provider-usage",
+            "description": "explicitly allow a potentially billable draft call (default: false)"
+          },
+          {
+            "flags": "--approve-compilation <hash>",
+            "description": "exact managed compilation dry-run summaryId"
+          },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "task-next",
+        "path": ["task", "next"],
+        "usage": "reposetup task next [options]",
+        "description": "Prepare an advisory packet for one independent task; no execution",
+        "arguments": [],
+        "flags": [
+          { "flags": "--review <path>", "description": "independent version 1 task_review JSON" },
+          {
+            "flags": "--root <path>",
+            "description": "reviewed project root (default current directory)"
+          },
+          {
+            "flags": "--preferences <path>",
+            "description": "separate task_preferences JSON (default local handoff)"
+          },
+          {
+            "flags": "--dry-run",
+            "description": "read and preview without writes, calls, subprocesses or attempts (default: false)"
+          },
+          { "flags": "--json", "description": "write output-version 1 task JSON" },
+          { "flags": "--quiet", "description": "reduce output" },
+          { "flags": "--verbose", "description": "include extra detail" },
+          {
+            "flags": "--plan <path>",
+            "description": "frozen task plan or task_compilation receipt"
+          },
+          {
+            "flags": "--task <id>",
+            "description": "independent task ID (default first in stable DAG order)"
+          },
+          {
+            "flags": "--run-id <uuid>",
+            "description": "caller-supplied advisory dispatch UUID; no durable run is opened"
+          },
+          {
+            "flags": "--attempt <1-3>",
+            "description": "caller-supplied advisory attempt identity; no counter is advanced"
+          },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "task-status",
+        "path": ["task", "status"],
+        "usage": "reposetup task status [options]",
+        "description": "Inspect a task plan and optionally report an unverified run snapshot",
+        "arguments": [],
+        "flags": [
+          { "flags": "--review <path>", "description": "independent version 1 task_review JSON" },
+          {
+            "flags": "--root <path>",
+            "description": "reviewed project root (default current directory)"
+          },
+          {
+            "flags": "--preferences <path>",
+            "description": "separate task_preferences JSON (default local handoff)"
+          },
+          {
+            "flags": "--dry-run",
+            "description": "read and preview without writes, calls, subprocesses or attempts (default: false)"
+          },
+          { "flags": "--json", "description": "write output-version 1 task JSON" },
+          { "flags": "--quiet", "description": "reduce output" },
+          { "flags": "--verbose", "description": "include extra detail" },
+          {
+            "flags": "--plan <path>",
+            "description": "frozen task plan or task_compilation receipt"
+          },
+          {
+            "flags": "--state <path>",
+            "description": "explicit phase_run snapshot; reported evidence remains unverified"
+          },
+          { "flags": "-h, --help", "description": "display help for command" }
+        ],
+        "children": []
+      },
+      {
+        "id": "task-run",
+        "path": ["task", "run"],
+        "usage": "reposetup task run [options]",
+        "description": "Execute an explicitly reviewed experimental managed coding phase",
+        "arguments": [],
+        "flags": [
+          { "flags": "--review <path>", "description": "independent version 1 task_review JSON" },
+          {
+            "flags": "--root <path>",
+            "description": "reviewed project root (default current directory)"
+          },
+          {
+            "flags": "--preferences <path>",
+            "description": "separate task_preferences JSON (default local handoff)"
+          },
+          {
+            "flags": "--dry-run",
+            "description": "read and preview without writes, calls, subprocesses or attempts (default: false)"
+          },
+          { "flags": "--json", "description": "write output-version 1 task JSON" },
+          { "flags": "--quiet", "description": "reduce output" },
+          { "flags": "--verbose", "description": "include extra detail" },
+          { "flags": "--plan <path>", "description": "frozen task plan or compilation receipt" },
+          {
+            "flags": "--authority <path>",
+            "description": "separate independently reviewed fixed-check host authority"
+          },
+          {
+            "flags": "--state-root <path>",
+            "description": "preexisting private 0700 state directory outside the project"
+          },
+          {
+            "flags": "--scratch-root <path>",
+            "description": "reviewed preexisting verifier scratch parent outside the project"
+          },
+          {
+            "flags": "--effort <id>",
+            "description": "native effort; minimum_supported requires --routing"
+          },
+          {
+            "flags": "--max-output-tokens <count>",
+            "description": "per-call output ceiling including reasoning (default: \"4096\")"
+          },
+          {
+            "flags": "--timeout-ms <count>",
+            "description": "per-call deadline within the phase allowance (default: \"120000\")"
+          },
+          {
+            "flags": "--allow-provider-usage",
+            "description": "explicitly allow potentially billable provider calls (default: false)"
+          },
+          {
+            "flags": "--repair",
+            "description": "allow bounded failure-specific task repair within reviewed limits (default: false)"
+          },
+          {
+            "flags": "--routing",
+            "description": "use trusted qualified model/native effort routing (default: false)"
+          },
+          {
+            "flags": "--approve-run <hash>",
+            "description": "exact summaryId reviewed from task run --dry-run --json"
+          },
           { "flags": "-h, --help", "description": "display help for command" }
         ],
         "children": []

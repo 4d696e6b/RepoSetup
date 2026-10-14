@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { parseHelp } from "../scripts/generate-release.js";
 import { docBySlug, searchPages } from "../src/reference/docs/model.js";
 import {
@@ -10,10 +10,16 @@ import {
 } from "../src/reference/docs/task-guides.js";
 import { release } from "../src/reference/release.js";
 
-describe("unreleased task compiler guides beside the published reference", () => {
-  it("makes preview workflows discoverable without promoting commands into 0.3.1", () => {
-    expect(release.cli.commands.some((command) => command.path[0] === "task")).toBe(false);
-    expect(taskGuides.every((page) => page.group === "Preview")).toBe(true);
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.resetModules();
+});
+
+describe("candidate task compiler guides and experimental managed workflow", () => {
+  it("documents candidate task commands while preserving managed limitations", () => {
+    expect(release.cli.commands.some((command) => command.path[0] === "task")).toBe(true);
+    expect(taskGuides[0]?.group).toBe("Guides");
+    expect(taskGuides.slice(1).every((page) => page.group === "Preview")).toBe(true);
     for (const page of taskGuides) expect(docBySlug.get(page.slug)).toBe(page);
     expect(searchPages("coding plan").some((page) => page.slug === "task-compiler")).toBe(true);
     expect(searchPages("model routing").some((page) => page.slug === "task-router")).toBe(true);
@@ -49,6 +55,26 @@ describe("unreleased task compiler guides beside the published reference", () =>
       }
     }
     expect(checked).toBeGreaterThanOrEqual(7);
+  });
+
+  it("uses exact-version aliases only after verified publication", async () => {
+    vi.stubGlobal("__REPOSETUP_PUBLICATION__", {
+      version: "0.4.0",
+      sourceSha: "5".repeat(40),
+      sha256: "6".repeat(64),
+      publishedAt: "2026-10-14T00:00:00.000Z",
+    });
+    vi.resetModules();
+    const { taskGuides: published } = await import("../src/reference/docs/task-guides.js");
+    const local = JSON.stringify(published[0]);
+    expect(local).toContain("RepoSetup 0.4.0 includes task compile");
+    expect(local).toContain("npm install -g rsetup@0.4.0");
+    expect(local).toContain("npx rsetup@0.4.0 task compile");
+    expect(local).toContain("--run-id");
+    expect(local).toContain("--attempt 1");
+    expect(local).not.toContain("publication is pending");
+    expect(local).not.toContain("node /absolute/path");
+    expect(JSON.stringify(published[1])).toContain("TASK_CAPABILITY_UNAVAILABLE");
   });
 
   it("distinguishes local advisory handoffs, qualified routing and spending approval", () => {

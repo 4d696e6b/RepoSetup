@@ -4,6 +4,40 @@ Prepared 2026-10-09. **Implementation and qualification are in progress. This
 branch is prepared for eventual integration; it is not a qualified release or an
 authorization to publish, deploy, tag, run providers or spend money.**
 
+## Current preparation checkpoint — 2026-10-14
+
+The owner requested publication preparation after the 0.3.1 release, retaining
+**offline-only** validation. Canonical branch `codex/release-0.4.0` now integrates
+reviewed task source `e66d35f` and published-main ancestry through merge `4a46ea2`.
+CLI byte-source `cfdb6c710706d8a280cdd8d81195aae371a1fa74` intentionally identifies
+0.4.0; all three private libraries match. Its first packed artifact is
+`sha256:a4a95e7f1cb6e95bb1bc2fa73650c1ebc6626c1be0fb6777d9ca28fa782f7345`.
+The lockfile remains `sha256:19cf5e782ce2f4364aaf253ff61727a3b76a8c006f656eb8168f6db5da4cd824`.
+
+The website is being coupled to these reviewed bytes and all 16 actual CLI
+commands. Published 0.3.1 history and its immutable reference are preserved;
+candidate instructions remain distinct from registry-verified publication.
+The mandatory 20-job workflow uses `offline-tasks` (120 minutes) and
+`full-task-verifier` (180 minutes), including ordinary contracts, eight concrete
+CLI cases and eleven full real-tool fixture cases on Linux/macOS. Retained
+source/runtime/lockfile and failure evidence accompany each cell.
+
+The integrated 1,753 unit cases, build, workspace/task types, lint, 69 release
+policy cases and three tool-inventory tests passed. Metadata preparation, actual
+0.4.0 version/task help, frozen offline install and 38 context/preparation cases
+passed. Exact versioned joint artifact/platform/browser qualification is pending;
+previous development runs do not count as release repeats. Current acceptance
+still requires three consecutive successful first-attempt 20-job runs at the
+unchanged final joint source, installed acceptance and matching website evidence.
+
+Live provider/profile, real-model comparative benchmark and routing quality/cost
+gates remain deferred. Managed functionality stays experimental and production
+live routing stays blocked; no paid calls are authorized by this preparation.
+Earlier I/J completion statements refer to their recorded offline scope. The
+2026-10-09 sections below are historical preparation records, not current package
+identity or claims that their old open checks have passed. Follow current status,
+workflow validation and exact candidate receipts for the remaining release gates.
+
 ## Branch and source identities
 
 - Canonical release preparation branch: `codex/release-0.4.0`.

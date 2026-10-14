@@ -34,6 +34,29 @@ const changelogSource = (version: string) => ({
 /** Curated from published notes and pinned changelogs; npm confirms this complete version list. */
 export const publishedHistory: readonly ReleaseHistoryEntry[] = [
   {
+    version: "0.3.1",
+    publishedAt: "2026-10-13T13:32:26.884Z",
+    title: "Consistent JSON removal output",
+    summary:
+      "Repeated removal of an absent integration returns a machine-readable empty plan while preserving existing files.",
+    nodeRequirement: "Node 24+",
+    changes: [
+      {
+        title: "Read no-op plans in JSON",
+        description:
+          "remove --json retains the versioned plan envelope for default, quiet, dry-run and diff modes. A no-op does not prompt or execute commands.",
+      },
+      {
+        title: "Keep existing workflows",
+        description:
+          "The 0.3.0 selections, registry, presets, configuration and website theme remain compatible. Doctor still performs only allowlisted file repair; dependency installation remains deliberate.",
+      },
+    ],
+    qualification:
+      "Exact-artifact platform, recipe, failure-path and website checks are recorded for this patch. Native screen-reader qualification remains deferred; mobile checks are emulation, arbitrary combinations are not qualified and integration maturity is unchanged.",
+    sources: releaseSources("0.3.1"),
+  },
+  {
     version: "0.3.0",
     publishedAt: "2026-10-13T07:26:26.268Z",
     title: "Understand choices and review local changes",
@@ -261,24 +284,29 @@ export const releaseHistory: readonly ReleaseHistoryEntry[] = publication
       {
         version: publication.version,
         publishedAt: publication.publishedAt,
-        title: "Consistent JSON removal output",
+        title: "Reviewed coding tasks and portable agent handoffs",
         summary:
-          "Repeated removal of an absent integration returns a machine-readable empty plan while preserving existing files.",
+          "Turn a reviewed coding plan into bounded tasks, validate their scope and obtain an advisory packet for an existing coding agent without RepoSetup API keys.",
         nodeRequirement: "Node 24+",
         changes: [
           {
-            title: "Read no-op plans in JSON",
+            title: "Compile and hand off locally",
             description:
-              "remove --json retains the versioned plan envelope for default, quiet, dry-run and diff modes. A no-op does not prompt or execute commands.",
+              "task compile validates independently reviewed version 1 inputs; task next produces one advisory packet; task status inspects the plan. These local commands make no provider calls and do not certify agent completion.",
           },
           {
-            title: "Keep existing workflows",
+            title: "Keep managed execution explicit",
             description:
-              "The 0.3.0 selections, registry, presets, configuration and website theme remain compatible. Doctor still performs only allowlisted file repair; dependency installation remains deliberate.",
+              "Managed execution remains experimental. Real calls require reviewed authority, exact dry-run approval and provider usage allowance. Production live routing is blocked without trusted model evidence; simulated tests do not establish live quality or cost savings.",
+          },
+          {
+            title: "Preserve installer compatibility",
+            description:
+              "The curated installer, schemaVersion 1 configuration, selections, existing routes and published history remain compatible. Coding tasks do not install dependencies, accept executable model commands or automatically roll back changes.",
           },
         ],
         qualification:
-          "Exact-artifact platform, recipe, failure-path and website checks are recorded for this patch. Native screen-reader qualification remains deferred; mobile checks are emulation, arbitrary combinations are not qualified and integration maturity is unchanged.",
+          "Qualification covers the recorded offline and simulated-provider scope and exact artifact. Live provider/model and comparative benchmark qualification remain deferred. Initial managed verification targets TypeScript/Node on Linux x64 and macOS arm64; Windows managed tasks are unsupported. Mobile browser checks are emulation; native screen readers and arbitrary integration combinations remain outside the recorded matrix.",
         sources: [
           npmSource(publication.version),
           { label: "Reviewed release source", href: `${REPOSITORY}/tree/${publication.sourceSha}` },

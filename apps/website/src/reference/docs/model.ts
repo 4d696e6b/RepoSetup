@@ -1,3 +1,4 @@
+import { delivery } from "../../publication.js";
 import { handoff } from "../../handoff.js";
 import { release, categoryName } from "../release.js";
 import { authoredPages, type DocPage } from "./content.js";
@@ -35,7 +36,7 @@ const commands = release.cli.commands.map((command) =>
       id: "help",
       title: "Get help locally",
       paragraphs: ["Inspect the installed command's help before applying it to a project."],
-      code: `npx rsetup ${command.path.join(" ")} --help`,
+      code: `${delivery.published ? `npx rsetup@${handoff.version}` : "reposetup"} ${command.path.join(" ")} --help`,
       links: [{ label: "Command behavior and confirmation", href: "#/docs/command-basics" }],
     },
   ]),

@@ -1,6 +1,6 @@
 # Experimental task compiler guide
 
-Updated 2026-10-14. Applies to `codex/0.4.0-task-compiler`, not a published 0.4.0 release. The integrated development tree inherits 0.3.1 metadata; the immutable published 0.3.1 package does not contain task commands.
+Updated 2026-10-14. Applies to the versioned `codex/release-0.4.0` candidate. Publication is pending; the immutable published 0.3.1 package does not contain task commands. The local candidate reports 0.4.0.
 
 This guide follows the companion website preview pages. Its easiest path uses an existing coding agent without RepoSetup model calls. Production routing remains unqualified.
 
@@ -8,11 +8,11 @@ This guide follows the companion website preview pages. Its easiest path uses an
 
 ## Use an AI-written coding plan
 
-Preview: turn your plan document into reviewed tasks for an existing coding agent.
+Turn your plan document into reviewed tasks for an existing coding agent.
 
 ### Check availability first
 
-The task compiler is an unreleased 0.4.0 preview. Published rsetup 0.3.1 contains the stack installer and selection builder, but does not contain task commands. This development branch inherits 0.3.1 metadata; --version alone cannot distinguish its extended CLI from the published package. Check task --help on the exact artifact you intend to use.
+The reviewed 0.4.0 candidate includes task commands. Published rsetup 0.3.1 contains the stack installer and selection builder, but does not contain task commands. Use the exact local candidate while publication is pending; check --version and task --help.
 
 Use the local task-compiler build below today. Once a release explicitly includes these commands, its installed rsetup or reposetup alias can replace the long node path. Do not paste task commands into npx rsetup@0.3.1 expecting this preview.
 
@@ -35,15 +35,16 @@ The website is a guide, not a runner. It does not read your project, upload your
 
 [How the managed router works](#task-router)
 
-### Prepare the preview CLI once
+### Prepare the matching CLI once
 
 Have Git, Node 24+ and the repository-pinned pnpm 12.5.1 available first. These commands clone into a new folder, install RepoSetup's development dependencies and build the CLI and its workspace dependencies. They do not install dependencies into the project you want to edit. If a prerequisite is missing, arrange it explicitly before continuing.
 
-The branch is moving development source. Record git rev-parse HEAD if you need to reproduce the exact preview. After building, change to your own project directory and replace /absolute/path/to/RepoSetup with this checkout's full path in every example.
+The commands below check out the reviewed CLI byte-source. Record git rev-parse HEAD to identify the exact candidate. After building, change to your own project directory and replace /absolute/path/to/RepoSetup with this checkout's full path in every example.
 
 ```text
-git clone --branch codex/0.4.0-task-compiler https://github.com/4d696e6b/RepoSetup.git RepoSetup-task-preview
+git clone --branch codex/release-0.4.0 https://github.com/4d696e6b/RepoSetup.git RepoSetup-task-preview
 cd RepoSetup-task-preview
+git checkout cfdb6c710706d8a280cdd8d81195aae371a1fa74
 node --version
 pnpm --version
 pnpm install --frozen-lockfile
@@ -51,6 +52,24 @@ pnpm --filter 'rsetup...' build
 node packages/cli/dist/bin.js task --help
 git rev-parse HEAD
 ```
+
+After 0.4.0 is actually published, install the exact version and use its aliases in place of the long local Node path:
+
+```text
+npm install -g rsetup@0.4.0
+rsetup --version
+rsetup task --help
+```
+
+For example, the published alias workflow is:
+
+```text
+rsetup task compile --root . --review ../task-review.json --draft ../task-draft.json --json > ../task-compilation.json
+rsetup task next --root . --review ../task-review.json --plan ../task-compilation.json --run-id 11111111-1111-4111-8111-111111111111 --attempt 1 --json > ../task-packet.json
+rsetup task status --root . --review ../task-review.json --plan ../task-compilation.json --json
+```
+
+Use a new valid UUID for each advisory run, keep the attempt number explicit and only consume redirected artifacts after a successful exit. Publication pending means these npm instructions are not available yet.
 
 [Official pnpm installation options](https://pnpm.io/cli/install)
 
@@ -146,7 +165,7 @@ Preview: understand model selection, quality evidence, spending limits and curre
 
 ### Automatic routing is not qualified yet
 
-The router is implemented in the unreleased task compiler. Production model capability profiles are unconfirmed, so live --routing execution stops with TASK_CAPABILITY_UNAVAILABLE before provider construction or calls. Offline tests establish routing behavior; they do not establish real model quality, billing or savings.
+The router is implemented in the experimental task compiler. Production model capability profiles are unconfirmed, so live --routing execution stops with TASK_CAPABILITY_UNAVAILABLE before provider construction or calls. Offline tests establish routing behavior; they do not establish real model quality, billing or savings.
 
 There is no public benchmark-import command or flag that promotes a model. Plans, preferences and AI responses cannot provide trusted qualification. Use the existing-agent workflow now; publishing the CLI alone would not qualify production routing.
 

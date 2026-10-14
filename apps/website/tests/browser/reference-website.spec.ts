@@ -13,7 +13,7 @@ const data = JSON.parse(
   cli: { commands: { id: string }[] };
 };
 const published = process.env.REPOSETUP_WEBSITE_RELEASE === "published";
-const publishedVersion = published ? handoff.version : "0.3.0";
+const publishedVersion = published ? handoff.version : "0.3.1";
 const forbiddenPin = new RegExp(`rsetup@(?!${publishedVersion.replaceAll(".", "\\.")}(?:\\s|$))`);
 
 test("home uses the supplied brand assets and published install command", async ({ page }) => {
@@ -28,9 +28,9 @@ test("home uses the supplied brand assets and published install command", async 
   await expect(page.locator(".development-notice")).toContainText(
     published
       ? `use the published ${handoff.version} CLI`
-      : "currently published package remains 0.3.0",
+      : "currently published package remains 0.3.1",
   );
-  await expect(page.locator("body")).not.toContainText("0.4.0");
+  await expect(page.locator(".hero")).toContainText(handoff.version);
   expect(
     await page.locator("img").evaluateAll(async (images) => {
       const assets = images as HTMLImageElement[];

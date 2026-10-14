@@ -107,7 +107,7 @@ export function docs(main: HTMLElement, slug?: string, anchor?: string) {
   }
   crumbs.append(el("span", "/"), el("span", entry.title));
   article.append(
-    eyebrow(entry.group === "Preview" ? "UNRELEASED TASK COMPILER / 0.4.0 PREVIEW" : `${entry.group} / VERSION ${handoff.version}`),
+    eyebrow(entry.group === "Preview" ? "EXPERIMENTAL MANAGED TASKS / 0.4.0" : `${entry.group} / VERSION ${handoff.version}`),
     el("h1", entry.title),
     el("p", entry.description, "lede"),
   );

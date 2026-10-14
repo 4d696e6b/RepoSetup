@@ -1,8 +1,12 @@
+import { delivery } from "../../publication.js";
+import { handoff } from "../../handoff.js";
 import type { DocPage } from "./content.js";
 
-const source = "https://github.com/4d696e6b/RepoSetup/blob/codex/0.4.0-task-compiler";
-const guide = `${source}/docs/humanOnly/Task_Compiler_0.4.0.md`;
-const cli = "node /absolute/path/to/RepoSetup/packages/cli/dist/bin.js";
+const source = `https://github.com/4d696e6b/RepoSetup/blob/${handoff.commit}`;
+const guide = "https://github.com/4d696e6b/RepoSetup/blob/codex/release-0.4.0/docs/humanOnly/Task_Compiler_0.4.0.md";
+const cli = delivery.published
+  ? `npx rsetup@${handoff.version}`
+  : "node /absolute/path/to/RepoSetup/packages/cli/dist/bin.js";
 const inputs = "--root . --review ../task-review.json";
 
 export const taskPreparePrompt = `Read PLAN.md and inspect this repository and its AGENTS.md instructions.
@@ -23,15 +27,17 @@ export const taskGuides: DocPage[] = [
   {
     slug: "task-compiler",
     title: "Use an AI-written coding plan",
-    description: "Preview: turn your plan document into reviewed tasks for an existing coding agent.",
-    group: "Preview",
+    description: "Turn your plan document into reviewed tasks for an existing coding agent.",
+    group: "Guides",
     sections: [
       {
         id: "availability",
         title: "Check availability first",
         paragraphs: [
-          "The task compiler is an unreleased 0.4.0 preview. Published rsetup 0.3.1 contains the stack installer and selection builder, but does not contain task commands. This development branch inherits 0.3.1 metadata; --version alone cannot distinguish its extended CLI from the published package. Check task --help on the exact artifact you intend to use.",
-          "Use the local task-compiler build below today. Once a release explicitly includes these commands, its installed rsetup or reposetup alias can replace the long node path. Do not paste task commands into npx rsetup@0.3.1 expecting this preview.",
+          delivery.published
+            ? `RepoSetup ${handoff.version} includes task compile, task next and task status for offline handoffs. Install the exact version below; these commands make no model calls. Managed execution remains experimental and production model routing is unqualified.`
+            : `The reviewed ${handoff.version} candidate includes task commands. Published rsetup ${delivery.publishedVersion} contains the stack installer and selection builder, but does not contain task commands. Use the exact local candidate below while publication is pending.`,
+          "Check --version and task --help on the exact CLI artifact you intend to use. Both rsetup and reposetup are aliases of the rsetup package. Your coding agent's own usage allowance is separate.",
         ],
         code: `${cli} task --help`,
         links: [{ label: "Published CLI reference", href: "#/docs/cli" }, { label: "Task compiler source guide", href: guide }],
@@ -48,12 +54,13 @@ export const taskGuides: DocPage[] = [
       },
       {
         id: "local-build",
-        title: "Prepare the preview CLI once",
-        paragraphs: [
-          "Have Git, Node 24+ and the repository-pinned pnpm 12.5.1 available first. These commands clone into a new folder, install RepoSetup's development dependencies and build the CLI and its workspace dependencies. They do not install dependencies into the project you want to edit. If a prerequisite is missing, arrange it explicitly before continuing.",
-          "The branch is moving development source. Record git rev-parse HEAD if you need to reproduce the exact preview. After building, change to your own project directory and replace /absolute/path/to/RepoSetup with this checkout's full path in every example.",
-        ],
-        code: "git clone --branch codex/0.4.0-task-compiler https://github.com/4d696e6b/RepoSetup.git RepoSetup-task-preview\ncd RepoSetup-task-preview\nnode --version\npnpm --version\npnpm install --frozen-lockfile\npnpm --filter 'rsetup...' build\nnode packages/cli/dist/bin.js task --help\ngit rev-parse HEAD",
+        title: "Prepare the matching CLI once",
+        paragraphs: delivery.published
+          ? ["Have Node 24+ available. Install the matching package, then change to your project directory. RepoSetup does not silently install system software or project dependencies for coding tasks."]
+          : ["Have Git, Node 24+ and pnpm 12.5.1 available. Build the reviewed candidate at the exact source below. This installs only RepoSetup's development dependencies. After building, change to your project and replace /absolute/path/to/RepoSetup in every example with this checkout's absolute path."],
+        code: delivery.published
+          ? `npm install -g rsetup@${handoff.version}\nrsetup --version\nrsetup task --help`
+          : `git clone --branch codex/release-0.4.0 https://github.com/4d696e6b/RepoSetup.git RepoSetup-task-preview\ncd RepoSetup-task-preview\ngit checkout ${handoff.commit}\nnode --version\npnpm --version\npnpm install --frozen-lockfile\npnpm --filter 'rsetup...' build\nnode packages/cli/dist/bin.js task --help\ngit rev-parse HEAD`,
         links: [{ label: "Official pnpm installation options", href: "https://pnpm.io/cli/install" }, { label: "Official pnpm dependency filtering", href: "https://pnpm.io/filtering" }],
       },
       {
@@ -131,7 +138,7 @@ export const taskGuides: DocPage[] = [
         id: "availability",
         title: "Automatic routing is not qualified yet",
         paragraphs: [
-          "The router is implemented in the unreleased task compiler. Production model capability profiles are unconfirmed, so live --routing execution stops with TASK_CAPABILITY_UNAVAILABLE before provider construction or calls. Offline tests establish routing behavior; they do not establish real model quality, billing or savings.",
+          "The router is implemented in the experimental task compiler. Production model capability profiles are unconfirmed, so live --routing execution stops with TASK_CAPABILITY_UNAVAILABLE before provider construction or calls. Offline tests establish routing behavior; they do not establish real model quality, billing or savings.",
           "There is no public benchmark-import command or flag that promotes a model. Plans, preferences and AI responses cannot provide trusted qualification. Use the existing-agent workflow now; publishing the CLI alone would not qualify production routing.",
         ],
         links: [{ label: "Use your existing coding agent", href: "#/docs/task-compiler" }],
@@ -211,7 +218,7 @@ export const taskGuides: DocPage[] = [
       {
         id: "command-unavailable",
         title: "The CLI does not recognize task",
-        paragraphs: ["Published 0.3.1 does not have task commands. Use the exact local task-compiler build and inspect task --help. Do not reinstall the same published package repeatedly or infer feature availability from its version alone."],
+        paragraphs: [delivery.published ? `Install rsetup@${handoff.version}, check --version and inspect task --help. An older global alias can shadow the intended CLI.` : `Published ${delivery.publishedVersion} does not have task commands. Use the exact local ${handoff.version} candidate and inspect task --help.`],
         links: [{ label: "Prepare the preview and start a task", href: "#/docs/task-compiler" }],
       },
       {

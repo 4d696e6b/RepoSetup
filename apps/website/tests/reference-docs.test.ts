@@ -43,7 +43,7 @@ const textOf = (page: (typeof docPages)[number]) =>
     ]),
   ].join("\n");
 
-describe("reviewed 0.3.0 documentation integrity", () => {
+describe("reviewed candidate documentation integrity", () => {
   it("has every required guide with unique routes and accessible heading metadata", () => {
     expect(docBySlug.size).toBe(docPages.length);
     expect(new Set(docPages.map(({ slug }) => slug)).size).toBe(docPages.length);
@@ -209,7 +209,7 @@ describe("reviewed 0.3.0 documentation integrity", () => {
     }
     expect(examples).toBeGreaterThan(50);
     expect(JSON.stringify(docPages.filter((page) => page.group !== "Preview"))).not.toMatch(
-      /0\.4\.\d|--recipe\b/,
+      /--recipe\b/,
     );
   });
 

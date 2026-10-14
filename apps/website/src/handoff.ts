@@ -1,8 +1,8 @@
 /** One committed target shared by the browser label and local qualification tools. */
 export const handoff = {
-  version: "0.3.1",
-  commit: "f306e1c877887fe9c2861619ea434a26b996fe2c",
-  artifactSha256: "34a8d5f871333f248af45c28b9d2aa2bde466f04cc23f10d4d395856be827135",
-  referenceSha256: "035ae9bd174d36c40f1c95600165921c435a01c2f6642e02939ada25c2ea1b89",
-  label: "Release candidate CLI · 0.3.1 · f306e1c",
+  version: "0.4.0",
+  commit: "cfdb6c710706d8a280cdd8d81195aae371a1fa74",
+  artifactSha256: "a4a95e7f1cb6e95bb1bc2fa73650c1ebc6626c1be0fb6777d9ca28fa782f7345",
+  referenceSha256: "adc892c860261df6868a96af8211886bec4e917a0f2cd41904bf77ebd465ccf1",
+  label: "Release candidate CLI · 0.4.0 · cfdb6c7",
 };

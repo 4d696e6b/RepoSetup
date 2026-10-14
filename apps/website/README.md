@@ -1,15 +1,15 @@
-# RepoSetup companion website — 0.3.1 reference and task preview
+# RepoSetup companion website — 0.4.0 candidate
 
 The existing companion website is [reposetupcli.com](https://reposetupcli.com/). Its
 0.3.1 delivery is recorded in the [stable delivery record](../../docs/specification-documentation/release-docs/STABLE_RELEASE_0.3.1.md).
-This task-compiler worktree preserves the published documentation, 37 integration
-references, five legacy presets, artwork, routes and beginner selection workflows.
-Published parser facts remain an immutable, byte-checked 0.3.1 snapshot; development
-task commands do not enter that reference. Explicit fact regeneration still requires
-unchanged release definitions. The original 0.2.3 snapshot and history are retained.
+This release checkout prepares the 0.4.0 reference while preserving published
+0.3.1 and 0.2.3 snapshots, all 37 integrations, five legacy presets, artwork,
+routes and beginner selection workflows. The active reference is byte-checked
+and generated from the exact 0.4.0 CLI handoff, including all 16 actual commands.
+Fact regeneration requires unchanged reviewed release definitions.
 
-The development site has 79 documentation pages: the existing 76 plus three
-explicitly unreleased task preview guides. It retains nine curated explanations,
+The candidate site has 84 documentation pages, including five generated task
+command references, a portable workflow guide and two experimental managed guides. It retains nine curated explanations,
 three minimal starters, 24 create and 21 nonempty add choices. It supports
 React/Vite + TypeScript + pnpm, Express + TypeScript + pnpm and FastAPI + uv.
 Choices start empty and actual local context remains authoritative.
@@ -29,7 +29,7 @@ Open `http://127.0.0.1:5173`. Supported hash routes include:
 
 - `/#/` — full home and workflow discovery.
 - `/#/docs`, `/#/integrations`, `/#/presets`, `/#/release` — full references and published history.
-- `/#/docs/task-compiler`, `/#/docs/task-router`, `/#/docs/task-troubleshooting` — unreleased coding-task guides, copyable prompts, exact local commands and recovery.
+- `/#/docs/task-compiler`, `/#/docs/task-router`, `/#/docs/task-troubleshooting` — coding-task guides, copyable prompts, exact local commands and recovery.
 - `/#/builder/<legacy-preset-id>` — schemaVersion 1 download with explicit name/folder.
 - `/#/goals`, `/#/learn/libraries`, `/#/learn/libraries/<id>`, `/#/learn/starters` — curated guidance.
 - `/#/builder/react-vite-ts-pnpm`, `/#/builder/express-ts-pnpm?mode=add` — bounded create/add choices.
@@ -39,15 +39,15 @@ Beginner code/catalog load only when requested. Returning from an explanation pr
 
 ## Matching CLI artifact: required before pasting commands
 
-The selection handoff requires reviewed `rsetup@0.3.1`, CLI source
-`f306e1c877887fe9c2861619ea434a26b996fe2c`, tarball SHA-256
-`34a8d5f871333f248af45c28b9d2aa2bde466f04cc23f10d4d395856be827135`.
-Install `npm install -g rsetup@0.3.1` before using these selection exports.
+The selection handoff requires reviewed `rsetup@0.4.0`, CLI byte-source
+`cfdb6c710706d8a280cdd8d81195aae371a1fa74`, tarball SHA-256
+`a4a95e7f1cb6e95bb1bc2fa73650c1ebc6626c1be0fb6777d9ca28fa782f7345`.
+Prepare that candidate with `pack:contract` below. After registry-verified
+publication, install `npm install -g rsetup@0.4.0` before using these exports.
 The single authoritative pin is `src/handoff.ts`. Published-mode builds verify
-registry bytes before displaying public installation instructions. Preview task
-examples instead use the separately built task-compiler checkout; published 0.3.1
-does not contain task commands, and development version metadata is insufficient
-to establish feature availability. Production model routing remains unqualified.
+registry bytes before displaying public installation instructions. Candidate task examples use the exact reviewed local CLI. After verified
+publication, the guides switch to exact-version npm aliases. Published 0.3.1
+does not contain task commands. Production model routing remains unqualified.
 
 For development qualification, prepare the exact artifact locally:
 

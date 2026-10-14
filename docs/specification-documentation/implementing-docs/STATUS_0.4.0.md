@@ -3348,3 +3348,72 @@ Validation of this metadata slice: guarded preparation, frozen offline dependenc
 resolution, CLI/dependency build, actual CLI version/help and release-context/
 preparation tests. The coupled website still needs its newly packed byte identity
 and regenerated command reference before the workspace build can qualify 0.4.0.
+
+
+## Coupled 0.4.0 candidate preparation and local validation (2026-10-14)
+
+CLI byte-source `cfdb6c710706d8a280cdd8d81195aae371a1fa74` packs as 0.4.0,
+SHA-256 `a4a95e7f1cb6e95bb1bc2fa73650c1ebc6626c1be0fb6777d9ca28fa782f7345`.
+An independent committed-source archive rebuilt identical bytes, installed them
+outside the workspace and recorded Node 24.21.0/macOS arm64 identity. The website
+now pins that exact artifact and a regenerated 16-command reference, SHA-256
+`adc892c860261df6868a96af8211886bec4e917a0f2cd41904bf77ebd465ccf1`.
+All 37 integrations, five presets and schemaVersion 1 selections remain compatible.
+Published 0.3.1 parser facts are preserved unchanged as `published-0.3.1.json`
+with original snapshot digest `035ae9bd174d36c40f1c95600165921c435a01c2f6642e02939ada25c2ea1b89`;
+published 0.2.3 facts/artwork/history are also retained. Website private metadata
+now identifies 0.4.0. Candidate presentation correctly points public installation
+at 0.3.1; only actual registry verification enables 0.4.0 publication labels,
+installation examples and task aliases. No deployed website was changed.
+
+Added actual npm-installed execution of all six portable guide commands with
+both aliases, minimal credential-free subprocess environments, unchanged project
+inventory and denied-context assertions. Updated task guides, generated command
+reference and published-mode examples explicitly retain advisory completion and
+experimental managed/routing limits. The website artifact verifier initially
+rejected the newly packaged nested benchmark entry. Its allowlist now includes
+only `dist/tasks/benchmark-store.js` in addition to the previous flat executables.
+Regression cases verify those installed bytes, reject tampering and refuse three
+unreviewed nested/outside executable paths even when recorded hashes match.
+
+Final local results on the prepared working tree:
+
+- 1,758 workspace unit cases passed (core 672, registry 15, integrations 680,
+  CLI 310, website 81).
+- Workspace build, website rebuild, workspace/task/selection typechecks and lint
+  passed; frozen offline dependency resolution required no lockfile update.
+- Ordinary task contracts passed 65 cases, including preserved inventory tests;
+  the extended workspace/npm-installed guide walkthrough subsequently passed
+  both cases. No provider calls, state authority or project mutations occurred.
+- 101 release workflow/context/preparation/handoff/stable-guard tests passed.
+- 105 packed-selection cases and six installed website handoff cases passed.
+- Generic e2e passed 137 with one existing uv prerequisite skip. Installed task
+  compilation, both aliases, legacy dry-run and a real Express build/HTTP test
+  passed on the actual 0.4.0 tarball. Missing uv is not silently installed.
+- Local browser matrix passed 258/258 across Chrome desktop/mobile and Firefox
+  desktop. WebKit remains unavailable on this macOS 14 host; full five-profile
+  verification belongs to the hosted macOS 15 gate.
+- License review passed 201 packages across seven allowed license families;
+  production and whole-workspace dependency audits report zero known advisories.
+
+The initial browser run passed 243/258: failures were stale pre-0.4 assertions
+forbidding the new version label and expecting the old preview heading/history.
+Corrected assertions still reject unsupported flags and unpublished history;
+the complete rerun passed. An initial broad unit run concurrent with browser
+work timed out three 5-second campaign/journal/timing cases. An isolated full
+workspace rerun passed all 1,758 without changing their deadlines or assertions.
+The initial artifact handoff stopped before all six cases because of the old
+allowlist; the repaired verifier and complete six-case rerun pass. Earlier failed
+logs remain retained rather than being counted as release qualifications.
+
+These local working-tree results are development evidence, not three clean-source
+release repeats. Next: commit and push the joint candidate, run required 20-job
+release qualifications at its unchanged SHA, and obtain renewed full website and
+selection acceptance. Live provider/model/native-effort and real comparative
+benchmark qualification remain deferred under offline-only scope; production
+routing remains blocked. Original live/stability conditions are not silently
+marked passed. No tag, main merge, npm publication, deployment or paid call occurred.
+
+Logs: `/tmp/reposetup-040-candidate-*`, `/tmp/reposetup-040-website-unit.log`, and
+ignored local website installed-artifact/browser evidence. Hosted qualification
+will retain source/runtime/lockfile and immutable artifact receipts independently.

@@ -20,7 +20,11 @@ export function verifyArtifact(local: string, expectedSha256 = handoff.artifactS
   if (!files.some(({ normalized }) => normalized === "package/dist/bin.js"))
     throw new Error("Packed CLI entry point is missing.");
   for (const { raw, normalized } of files) {
-    if (!/^package\/(?:package\.json|dist\/[a-zA-Z0-9_.-]+\.js)$/.test(normalized))
+    if (
+      !/^package\/(?:package\.json|dist\/[a-zA-Z0-9_.-]+\.js|dist\/tasks\/benchmark-store\.js)$/.test(
+        normalized,
+      )
+    )
       throw new Error("Unexpected executable path in the packed CLI.");
     const packed = execFileSync("tar", ["-xOzf", tarball, raw]);
     const installed = readFileSync(

@@ -154,3 +154,33 @@ that rerun is claimed until it completes.
 Versioned release qualification/publication also remains open. Keep PR #20 draft;
 no model call, main merge, tag, package publication or production deployment is
 implied by this validation. See [implementation status](./STATUS_0.4.0.md).
+
+
+## Versioned candidate preparation — 14 October 2026
+
+Canonical release checkout: `codex/release-0.4.0`. CLI byte-source
+`cfdb6c710706d8a280cdd8d81195aae371a1fa74`, version 0.4.0, tarball SHA-256
+`a4a95e7f1cb6e95bb1bc2fa73650c1ebc6626c1be0fb6777d9ca28fa782f7345`.
+The source-archive rebuild and temporary npm installation reproduce those bytes.
+The active website reference contains all 16 commands; prior published snapshots
+and history remain immutable. Candidate builds do not advertise 0.4.0 as published.
+
+New walkthrough coverage executes every portable guide command through both the
+workspace CLI and a real npm-installed tarball, checks both aliases and preserves
+project/context/advisory boundaries. Both walkthroughs pass without provider keys.
+The ordinary task suite previously passed 65 cases; the added installed mode is
+an additional case, not a live-model acceptance. Generic e2e passes 137 with one
+missing-uv skip; real Express installation/build/HTTP-response acceptance passes.
+
+The coupled candidate working tree passes 1,758 units, build, workspace/task/
+selection types, lint, 101 release guards, 105 packed selections, six installed
+website handoffs and 258 local browser cases. The source-specific status record
+retains initial stale browser assertions, artifact-allowlist failure and concurrent
+unit timing failures together with their complete passing reruns. License review
+covers 201 packages and both dependency audits have zero known advisories.
+
+Exact clean-source 20-job repeated release qualification and renewed five-profile
+hosted website acceptance remain pending. Existing hosted development runs above
+are not substituted for those gates. Local uv/WebKit limitations remain explicit.
+No paid model calls, production routing qualification, publication or deployment
+is established by these local results.
